@@ -1,0 +1,761 @@
+@import "compass/css3";
+@import "compass/css3/images";
+@import "compass/css3/transform";
+@import "compass/utilities/general/clearfix";
+
+// Bootstrap
+// To tweak the path to images and where the nav switches to
+// the responsive layout, I had to hack it with the following
+// variables.
+$bootstrap_imgs_dir: '/bundles/decoy/img/bootstrap';
+$bootstrap_nav_break: 767px;
+@import "plugins/bootstrap";
+@import "plugins/bootstrap-responsive";
+
+// UI plugins
+@import "plugins/jquery-ui-1.9.0.custom";
+@import "plugins/datepicker";
+@import "plugins/bootstrap-wysihtml5";
+@import "plugins/bootstrap-notify";
+
+// ---------------------------------------------------------------------
+// General
+// ---------------------------------------------------------------------
+
+$light-grey: whiteSmoke;
+$light-opacity: .3;
+$near-black: #333;
+
+// Add a little breathing room to bottom of the page
+body {
+	padding-bottom: 40px;
+}
+
+// Push the page down a bit
+body > .container {
+	padding-top: 20px;
+}
+
+// Tweak the look of disabled buttons
+.btn.disabled {
+	@include opacity($light-opacity);
+}
+
+// Container for the Growl style notifications
+.notifications {
+	position: fixed;
+	right: 15px;
+	z-index: 9999;
+	top: 60px;
+}
+
+// The negative margin compensates for the left margin
+// on the leftest column and allows the full grid to be flush
+// with the edges of the page.  Additionally, bootstrap has
+// different margins based on the media query.
+@mixin flush-child-spans {
+	@include clearfix;
+	margin-bottom: -20px;
+	@media (min-width: $bootstrap_nav_break + 1px) {
+	  & { margin-left: -20px; }
+	}
+	@media (min-width: 1200px) {
+		& { margin-left: -30px; }
+	}
+}
+
+// Make a striped background.  From: https://gist.github.com/1947254
+@mixin striped-background($stripe1, $stripe2, $angle: -45deg, $size: 40px, $other-backgrounds: false) {
+	@include background-image(linear-gradient($angle, $stripe1 25%, $stripe2 25%, $stripe2 50%, $stripe1 50%, $stripe1 75%, $stripe2 75%, $stripe2), $other-backgrounds);
+	background-repeat: repeat;
+	@include background-size(unquote("#{$size} #{$size}"));
+}
+
+
+
+// ---------------------------------------------------------------------
+// Navigation
+// ---------------------------------------------------------------------
+
+// Nav stuff
+.navbar {
+	
+	// Add a shadow
+	@include box-shadow(rgba(black,.2) 0 2px 2px);
+	
+	// Gravatar sizing
+	.gravatar {
+		width: 22px;
+		height: 22px;
+	}
+	
+	// Make the dropdown menu active state look better
+	.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+		background-color: $near-black;
+		background-image: none;
+		color: $light-grey;
+	}
+	
+	// Make the account pulldown flush to the right edge
+	.nav.pull-right .dropdown-toggle {
+		padding-right: 0;
+	} 
+}
+
+// ---------------------------------------------------------------------
+// Page Header
+// ---------------------------------------------------------------------
+
+// Title
+h1 {
+	margin-bottom: 30px;
+	
+	// Count of posts
+	.badge {
+		position: relative;
+		top: -5px;
+	}
+	
+	// Elements in the title area
+	.pull-right {
+		margin-top: 10px;
+		margin-left: 20px;
+		.btn {
+			font-weight: normal;
+		}
+	}	
+}
+
+// The page breadcrumbs
+.breadcrumbs {
+	background: whiteSmoke;
+	padding: 5px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+	
+	// Make the font size a little smaller
+	font-size: 12px;
+	i {
+		margin-top: 0;
+	}
+	
+	// Container gives the breadcrumbs the proper bounds, matching the page
+	.container {
+		
+		// Center the contents better
+		margin-top: 3px;
+		margin-bottom: -2px;
+		
+		// Make the links and icons softer
+		a {
+			color: black;
+		}
+		& > * {
+			@include opacity($light-opacity);
+		}
+		a:hover {
+			@include opacity(1);
+		}
+		
+		// Some breadcrumb titles make include thumbnails
+		img {
+			height: 13px;
+		}
+		
+		// The back button
+		.back {
+			float: right;
+		}
+	}
+}
+
+// Make the breadcrumbs flush with the bottom of the nav
+@media (min-width: $bootstrap_nav_break + 1px) {
+ body {
+		margin-top:40px;
+	}
+}
+@media (max-width: $bootstrap_nav_break) {
+	.navbar {
+		position: relative; // Ajax Progress needed this
+	}
+	.navbar-fixed-top {
+		margin-bottom:0px;
+	}
+	.breadcrumbs {
+		margin-right: -20px;
+		margin-left: -20px;
+		.container {
+			margin-left: 5px;
+		}
+	}
+}
+
+// The progress bar (and makes a nice shadow when not animating)
+#ajax-progress {
+	
+	// Remove the rounding so it's flush with edges and reduce the height
+	@include border-radius(0);
+	height: 3px;
+	margin: 0;
+	
+	// Make the background invisible
+	background: none;
+	@include box-shadow(none);
+	
+	// Pin it to the bottom of the nav var
+	position: absolute;
+	bottom: -3px;
+	width: 100%;
+	
+}
+
+// ---------------------------------------------------------------------
+// Standard listing
+// ---------------------------------------------------------------------
+
+// Listing tables for the most part
+.table {
+
+	// Add border lines to the bottom rather than top of row	
+	td,th {
+		border-bottom: 1px solid #ddd;
+		border-top: none;
+	}
+	
+	thead {
+		background: $light-grey;
+		
+		// Dim the color on the header content and
+		// make the text smaller
+		th {
+			@include opacity($light-opacity);
+			font-size: 12px;
+			padding: 5px;
+			padding-left: 8px;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+			
+			// Bulk action rollover
+			&.select-all:hover {
+				@include opacity(1);
+			}
+		}
+	}
+	
+	// The select all al button
+	.select-all {
+		cursor: pointer;
+	}
+	
+	// Row that contains bulk action interface
+	tr.warning, tr.error {
+		td {
+			text-align: center;
+			vertical-align: center;
+		}
+	}
+	
+	// Always make the second column the widest, assuming
+	// that to be the title
+	td,th {
+		white-space: nowrap;
+	}
+	td:first-child + td {
+		width: 100%;
+	}
+	
+	// Vertically center align all cells, for rows with image thumbnails in there
+	td {
+		vertical-align: middle;
+		input[type="radio"], input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+	
+	// Add a slight rollover so it's easier to track with the eyes
+	tbody tr:hover {
+		background-color: #FCFCFC;
+	}
+
+	// Styles related to drag and drop.
+	// Note: I've noticed that table rows tend have a decremented height after being
+	// interacted with.  Which causes elements that are lower on the page to move slightly.
+	// It's a little irritant that I've found no solution for.
+	.ui-sortable {
+		
+		// This is the drop box
+		.placeholder { 
+			background: $light-grey;
+		}
+		
+		// This is the unit that gets dragged around
+		.helper {
+			background: rgba(255,255,255,.9);
+			border: 1px dashed #ddd;
+			
+			// Compensate for the left and top border on the row being added
+			td { 
+				border: none;
+				position: relative; 
+				left: -1px; 
+				top: -1px;
+			}
+		}
+		tr {
+			cursor: move;
+		}
+		&.ui-sortable-disabled tr {
+			cursor: auto;
+		}
+	}
+	
+	// Give images a border
+	tr img {
+		border: 1px solid #ddd;
+	}
+	
+	// Make gravatar images a good size (for the admins view)
+	.gravatar {
+		width: 40px;
+		height: 40px;
+	}
+	
+	// If there are multiple badges in a row, give them a little breathing roomt
+	.label {
+		margin: 0 2px;
+	}
+	
+	// This is the icon that indicates whether a row is visible or not
+	.visibility {
+		width: 14px;
+		height: 14px;
+		padding: 1px;
+		display: inline-block;
+		border: 1px inset #EEE;
+		line-height: 0;
+		position: relative;
+		top: 2px;
+		
+		// Icons have a margin top from bootstrap
+		i { margin-top: 0;}
+	}
+	
+	// Center align the actions title
+	th:last-child {
+		text-align: center;
+		padding-right: 10px;
+	}
+}
+
+// Center the pagination on the page
+.pagination {
+	text-align: center;
+}
+
+// On small browsers, only show the second and last columns in tables
+@media (max-width: $bootstrap_nav_break) {
+	.table {
+		th, td {
+			display: none;
+		}
+		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
+			display: table-cell;
+		}	
+	}
+}
+
+// ---------------------------------------------------------------------
+// Moderation (maybe this becomes a general gallery)
+// ---------------------------------------------------------------------
+
+// Making the gallery view used in moderation
+.moderation .listing {
+	@include flush-child-spans;
+	min-height: 1px; // Makes it so the pagination isn't flush wiith the tabs when all photos are approved
+	
+	// One of the cells
+	.item {
+		@include box-sizing('border-box');
+		background-color: $light-grey;
+		padding: 10px;
+		margin-bottom: 20px;
+		position: relative;
+		
+		// Title / caption text
+		.rollover {
+			display: none;
+			position: absolute;
+			z-index: 1;
+			background-color: rgba(0,0,0,.8);
+			color: whiteSmoke;
+			padding: 4px;
+			left:10px;
+			right:10px;
+			
+			.stats {
+				@include opacity(.5);
+				&:hover {
+					@include opacity(1);
+				}
+			}
+			
+			.caption {
+				margin-bottom: 5px;
+			}
+			a {
+				color: whiteSmoke;
+			}
+		}
+		
+		// Show the rollver on mouse over
+		&:hover .rollover {
+			display: block;
+		}
+		
+		// The image
+		img {
+			width: 100%;
+		}
+		
+		// The moderation buttons
+		.actions {
+			margin-top: 6px;
+			.btn {
+				@include box-sizing('border-box');
+				width: 49%;
+			}
+		}
+		
+		// A pulldown that might follow actions (this is application specific)
+		label {
+			display: none;
+		}
+		select {
+			margin: 0;
+			margin-top: 6px;
+			width: 100%;
+		}
+		
+		// Approved state
+		&.approved {
+			border: 2px solid #7CC27C;
+			@include box-shadow(rgba(55, 129, 55, 0.3) 0 0 10px);
+			padding: 8px;
+			
+			// Hide the approve button
+			.actions {
+				.approve {
+					@include opacity(.3);
+				}
+				.deny {
+				}
+			}
+		}
+		
+		// Denied state
+		&.denied {
+			border: 2px solid #FBB450;
+			@include box-shadow(rgba(251, 180, 80, 0.3) 0 0 10px);
+			padding: 8px;
+			
+			// Hide the deny button
+			.actions {
+				.deny { 
+					@include opacity(.3);
+				}
+			}
+		}
+		
+		// These outro classes are used when an item is clicked and it is
+		// fading out
+		&.approved-outro {
+			border: 2px solid #7CC27C;
+			@include box-shadow(rgba(55, 129, 55, 0.3) 0 0 10px);
+		}
+		&.denied-outro {
+			border: 2px solid #FBB450;
+			@include box-shadow(rgba(251, 180, 80, 0.3) 0 0 10px);
+		}
+	}
+}
+
+// Make the none message be spaced down a bit
+.moderation .none {
+	margin-top: 20px;
+}
+
+// ---------------------------------------------------------------------
+// Forms
+// ---------------------------------------------------------------------
+
+// Related content sidebar
+.related {
+	
+	// Increase spacing between related modules
+	& > div {
+		margin-bottom: 35px;
+	}
+	
+	// This is the title unit
+	legend {
+		margin-bottom: 0;
+		
+		// The count needs shifting up a tad
+		.badge {
+			position: relative;
+			top: -2px;
+		}
+		
+		// Make the link in the title less obstrusive
+		& a {
+			color: $near-black;
+			&.btn-info {
+				color: white;
+			}
+		}
+		
+		// Autocomplete form
+		form {
+			margin: 0;
+			line-height: 0;
+			
+			// Make the input form match the small add button
+			input {
+				font-size: 11.9px;
+				@include box-sizing(border-box); // This was needed for mobile
+				height: 26px;
+				min-height: 26px;
+			}
+		}
+	}
+	
+	// Move the "see full list" link up to overlap the bottom line of th elist
+	.full-list {
+		margin-top: -22px;
+	}
+
+}
+
+// Parapraphs inside of the form are for larger description blocks.  Given
+// them more padding
+form > p {
+	margin-bottom: 20px;
+}
+
+// Toning down the required icons
+i.required {
+	@include opacity($light-opacity);
+	&:hover {
+		@include opacity(1);
+	}
+}
+
+// Doning down the help signs
+.help-block .icon-question-sign {
+	@include opacity($light-opacity);
+	.control-group:hover & {
+		@include opacity(1);
+	}
+}
+
+// Making the counts in moderation tabs match the colors of the text
+.nav-tabs {
+	a { color: #999; }
+	.badge { background-color: #999; }
+	.active {
+		a { color: $near-black; }
+		.badge { background-color: $near-black; }
+	}
+}
+
+// Distinguish between labels and help blocks
+label {
+	color: black;
+	font-size: 14.5px;
+}
+.help-block {
+	color: #999;
+	
+	// Don't make the help block text red.  The actual error message will be in an
+	// inline help block
+	.control-group.error & { 
+		color: #999;
+	}
+	
+	// Darken the text on rollover
+	.control-group:hover & {
+		color: $near-black;
+	}
+}
+
+// Highlight each control group on rollover
+.control-group {
+	padding: 8px;
+	margin: -8px;
+	@include border-radius(4px);
+	margin-bottom: 14px;
+	input, textarea {
+		margin-bottom: 0;
+	}
+	&:hover {
+		background-color: $light-grey;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	}
+	&.error:hover {
+		background-color: #F2DEDE; // This is the Boostrap error bkgd red color
+	}
+}
+
+// Show validation error messages (which show up in inline blocks)
+// on their own line.  It looks better
+.control-group.error {
+	.help-inline {
+		display: block;
+		padding: 0;
+		margin-top: 5px;
+		font-weight: bold;
+	}
+}
+
+// Don't change the color of inputs on validation errors
+.control-group.error {
+	input, textarea, select {
+		color: inherit;
+	}
+}
+
+// Tweaks to the typehead menu
+.typeahead {
+	
+	// Make the rollover state look better
+	.active a {
+		color: white;
+		&:hover {
+			color: white;
+		}
+	}
+	
+	// Reduce the size of images
+	li img {
+		height: 18px;
+	}
+	
+	// Reduce the margins (looks better when there are images in there )
+	li > a {
+		padding: 5px;
+	}
+}
+
+// Shift icons that are in labels down a smidge
+label i {
+	position: relative;
+	top: 1px;
+}
+
+// Chrome currently is screwing up the display of the label
+// when line height is set: http://cl.ly/image/1o2W1V2y0d21
+input[type="file"] {
+	line-height: inherit;
+	position: relative;
+	top: 4px;
+	height: inherit;
+	margin-bottom: 5px;
+}
+
+// Change the margins on the help block.  The specificity here is because Bootstrap
+// has it's own styles for horizontal forms
+.help-block,
+.form-horizontal input + .help-block, 
+.form-horizontal select + .help-block, 
+.form-horizontal textarea + .help-block {
+	margin-top: 5px;
+	margin-bottom: 0;
+}
+
+// These are the image upload control groups.  The 10px margins here just seemd to
+// look better than the 5px that is generally the spacing on the help block.
+.help-block {
+	.img-polaroid { 
+		margin-top: 10px; 
+		&.no-help { // There is no help text, so we don't need to push away from it
+			margin-top: 5px;
+		}
+	}
+	.image-delete { 
+		margin-top: 10px;
+		color: #D14;
+		a { color: #D14;}
+		i {
+			position: relative;
+			top: -1px;
+		}
+		code { background: none; }
+	}
+	.image-help { display: block; }
+}
+
+// Fix spacing amongst linline radio fields
+.radio.inline, .checkbox.inline {
+	margin-right: 10px;
+}
+
+// Buttons and autocompletes within legends need to be pushed down a tad
+legend .btn-small.pull-right, legend .many-to-many-form.pull-right {
+	margin-top: 8px;
+}
+
+// This field doesn't need to be so big
+#seo_description {
+	height: 6em;
+}
+
+// ---------------------------------------------------------------------
+// Tasks
+// ---------------------------------------------------------------------
+
+// The list of seed tasks
+#tasks {
+	@include flush-child-spans;
+	
+	// Make the table span the whole block
+	table {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	
+	// These are the execute buttons
+	td:first-child {
+		padding-right: 10px;
+		width:1px;
+	}
+	
+	// These are the method names
+	td:last-child {
+		font-weight: bold;
+		span {
+			font-weight: normal;
+		}
+	}
+	
+	// Increase line spacing over the default
+	td {
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+	
+	// Spinner
+	td img {
+		width: 18px;
+		height: 18px;
+		margin-left: 5px;
+		display: none;
+	}
+
+}
+
+// ---------------------------------------------------------------------
+// Admins
+// ---------------------------------------------------------------------
+
+body.admins.index .table .status {
+	text-align: right;
+}
