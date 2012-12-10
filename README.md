@@ -24,13 +24,11 @@ For now, this Bundle is not available to the artisan bundle installer, it must b
 1. [Download](http://laravel.com/download) and install Laravel
 2. Download this repo and put it at /bundles/decoy.  I recomment `git init`-ing a new repo at /bundles/decoy and adding this repo as a remote (`git remote add origin git@github.com:BKWLD/decoy.git`.  Then `pull`-ing so you have an easy way to get updates and push up your own fixes and features.
 3. [Install](http://laravel.com/docs/bundles#installing-bundles) all the bundle dependencies:
-
    * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handlin utilities
    * [croppa](http://bundles.laravel.com/bundle/croppa) - Used for thumbnail generation
    * [sentry](http://bundles.laravel.com/bundle/sentry) - Used to handle access control to the CMS
    * [former](http://bundles.laravel.com/bundle/former) - Used to make generating form elements more terse
    * [messages](http://bundles.laravel.com/bundle/messages) - Used for sending HTML email
-
 4. Initialize Decoy in the bundles.php file with: `'decoy' => array('auto' => true, 'handles' => 'admin'),`
 5. To customize the default user credentialt, edit the `default_login` and `default_password` fields within the config file (/config/decoy.php)
 6. Run a general migration to create the standard decoy databae tables and generate the default user.
