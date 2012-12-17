@@ -128,6 +128,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			return $this->get_index_child($parent_id);
 		}
 		
+		// Stop if a parent_id was required but wasn't in the URL
+		if ($this->is_child()) return Response::error('404');
+		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
 		$this->layout->nest('content', 'decoy::shared._standard_list', array(
@@ -563,7 +566,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	// the replace-* input and moves it to the more expected, just column name
 	// parameter of the FILES array.
 	// - $column - The column name (i.e. 'image', not 'replace-image')
-	static protected function move_replace_file_input($input_name) {
+	static protected function move_replace_file_input($column) {
 		if (!array_key_exists(UPLOAD_REPLACE.$column, $_FILES)) return;
 		$_FILES[$column] = $_FILES[UPLOAD_REPLACE.$column];
 		unset($_FILES[UPLOAD_REPLACE.$column]);
@@ -710,6 +713,12 @@ abstract class Decoy_Base_Controller extends Controller {
 			}
 		}
 		return $relationship;
+	}
+	
+	// Return a boolean that indicates if this controller is a child of another
+	private function is_child() {
+		$parents = $this->find_parent_controllers(Config::get('decoy::decoy.routes'));
+		return !empty($parents);
 	}
 	
 }
