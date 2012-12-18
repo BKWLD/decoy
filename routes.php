@@ -1,5 +1,9 @@
 <?php
 
+// If Decoy hasn't been officially started yet, do that.  It's neeed, 
+// at the very least, for the Decoy_Auth class alias
+Bundle::start('decoy');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

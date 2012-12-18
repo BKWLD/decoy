@@ -25,17 +25,17 @@ class Auth implements Auth_Interface {
 	
 	// The URL to if they don't have access
 	static public function denied_url() {
-		return URL::to_action('decoy::account@login');
+		return action('decoy::account@login');
 	}
 	
 	// Get their photo
 	static public function user_photo() {
-		return HTML::gravatar(Sentry::user()->get('email'));
+		return \Laravel\HTML::gravatar(\Sentry::user()->get('email'));
 	}
 	
 	// Get their name
 	static public function user_name() {
-		return Sentry::user()->get('metadata.first_name');
+		return \Sentry::user()->get('metadata.first_name');
 	}
 	
 	// Get the URL to their profile

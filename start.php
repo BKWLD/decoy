@@ -12,6 +12,7 @@ Autoloader::alias('Former\Former', 'Former');
 Bundle::start('bkwld');
 Bundle::start('messages');
 Bundle::start('croppa');
+if (Bundle::exists('sentry')) Bundle::start('sentry');
 
 // Load specific interal classes
 Autoloader::map(array(
@@ -48,9 +49,12 @@ require_once('helpers.php');
 // Decoy config file
 Config::set('messages::config.default', Config::get('decoy::decoy.messages_default_transport'));
 
-// Alias the auth class for easier referencing
-$auth_class = Config::get('decoy::decoy.auth_class');
-if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
-class_alias(Config::get('decoy::decoy.auth_class'), 'Decoy_Auth', true);
-if (!is_a(new Decoy_Auth, 'Decoy\Auth_Interface')) throw new Exception('Auth class does not implement Decoy\Auth_Interface:'.$auth_class);
-Decoy_Auth::check();
+// Alias the auth class that is defined in the config for easier referencing.
+// Call it "Decoy_Auth"
+if (!class_exists('Decoy_Auth')) {
+	$auth_class = Config::get('decoy::decoy.auth_class');
+	if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
+	class_alias(Config::get('decoy::decoy.auth_class'), 'Decoy_Auth', true);
+	if (!is_a(new Decoy_Auth, 'Decoy\Auth_Interface')) throw new Exception('Auth class does not implement Decoy\Auth_Interface:'.$auth_class);
+	Decoy_Auth::check();
+}
