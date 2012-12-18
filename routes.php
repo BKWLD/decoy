@@ -121,7 +121,7 @@ Router::register(array('GET', 'POST'),
 
 // Add routing for the login screen
 Route::any('(:bundle)', array(
-	'uses' => 'decoy::account@login'
+	'uses' => Decoy_Auth::login_action(),
 ));
 
 // Take the user back to the page they were on before they were on the
@@ -178,10 +178,10 @@ function filter_sentry_acl() {
 		URI::full() == action('decoy::account@forgot') ||
 		strpos(URI::full(), action('decoy::account@reset')) !== false) return false;
 
-	// Everything else in admin requires a logged in user.  So redurect
+	// Everything else in admin requires a logged in user.  So redirect
 	// to login and pass along the current url so we can take the user there.
 	if (!Decoy_Auth::check()) {
-		return Redirect::to_action('decoy::account@login')
+		return Redirect::to(Decoy_Auth::denied_url())
 			->with('login_error', 'You must login first.')
 			->with('login_redirect', URL::current());
 	}

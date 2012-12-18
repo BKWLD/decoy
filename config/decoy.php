@@ -28,7 +28,7 @@ $config =  array(
 	'routes' => array(),
 	
 	// Where should the post sign in redirect go to
-	'post_login_redirect' => action('admin.latest'),
+	'post_login_redirect' => action('admin.news'),
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

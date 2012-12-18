@@ -13,19 +13,34 @@ class Auth implements Auth_Interface {
 		return \Sentry::check() && \Sentry::user()->in_group('admins');
 	}
 	
+	// Controller action that renders the login form
+	static public function login_action() {
+		return 'decoy::account@login';
+	}
+	
+	// URL to go to that will process their logout
+	static public function logout_url() {
+		return action('admin.account@logout');
+	}
+	
+	// The URL to if they don't have access
+	static public function denied_url() {
+		return URL::to_action('decoy::account@login');
+	}
+	
 	// Get their photo
-	static public function photo() {
-		
+	static public function user_photo() {
+		return HTML::gravatar(Sentry::user()->get('email'));
 	}
 	
 	// Get their name
-	static public function name() {
-		
+	static public function user_name() {
+		return Sentry::user()->get('metadata.first_name');
 	}
 	
 	// Get the URL to their profile
-	static public function url() {
-		
+	static public function user_url() {
+		return action('admin.account');
 	}
 	
 }
