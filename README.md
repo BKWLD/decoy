@@ -80,7 +80,7 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 
 ## The config file
 
-The Decoy config file (./config/decoy.php) defines a number of high level parameters.
+The Decoy config file (./config/decoy.php) defines a number of high level parameters.  Not only can you change them from within the bundle, but you can **also** create a config file at /application/config/decoy.php which will override settings within /bundles/decoy/config/decoy.php.
 
 ### Per-application configs
 
