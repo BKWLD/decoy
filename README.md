@@ -26,7 +26,7 @@ For now, this Bundle is not available to the artisan bundle installer, it must b
 3. [Install](http://laravel.com/docs/bundles#installing-bundles) all the bundle dependencies:
    * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handlin utilities
    * [croppa](http://bundles.laravel.com/bundle/croppa) - Used for thumbnail generation
-   * [sentry](http://bundles.laravel.com/bundle/sentry) - Used to handle access control to the CMS
+   * [sentry](http://bundles.laravel.com/bundle/sentry) - Technically optional, but required for Decoy auth and admin management
    * [former](http://bundles.laravel.com/bundle/former) - Used to make generating form elements more terse
    * [messages](http://bundles.laravel.com/bundle/messages) - Used for sending HTML email
 4. Initialize Decoy in the bundles.php file with: `'decoy' => array('auto' => true, 'handles' => 'admin'),`

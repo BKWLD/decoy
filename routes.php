@@ -180,7 +180,7 @@ function filter_sentry_acl() {
 
 	// Everything else in admin requires a logged in user.  So redurect
 	// to login and pass along the current url so we can take the user there.
-	if (!Sentry::check() || !Sentry::user()->in_group('admins')) {
+	if (!Decoy_Auth::check()) {
 		return Redirect::to_action('decoy::account@login')
 			->with('login_error', 'You must login first.')
 			->with('login_redirect', URL::current());
