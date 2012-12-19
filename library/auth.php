@@ -8,10 +8,28 @@
  */
 class Auth implements Auth_Interface {
 	
-	// Check if the user is an admin
+	// ---------------------------------------------------------------
+	// Methods for inspecting properties of the user
+	// ---------------------------------------------------------------
+	
+	// Boolean for whether the user is logged in and an admin
 	static public function check() {
 		return \Sentry::check() && \Sentry::user()->in_group('admins');
 	}
+	
+	// The logged in user's permissions role
+	static public function role() {
+		return \Sentry::user()->groups();
+	}
+
+	// Boolean as to whether the user has developer entitlements
+	static public function developer() {
+		return strpos(\Sentry::user()->get('email'), '@bkwld.com') !== false;
+	}
+	
+	// ---------------------------------------------------------------
+	// Urls related to the login process
+	// ---------------------------------------------------------------
 	
 	// Controller action that renders the login form
 	static public function login_action() {
@@ -27,6 +45,10 @@ class Auth implements Auth_Interface {
 	static public function denied_url() {
 		return action('decoy::account@login');
 	}
+	
+	// ---------------------------------------------------------------
+	// These return properites of the logged in user
+	// ---------------------------------------------------------------
 	
 	// Get their photo
 	static public function user_photo() {

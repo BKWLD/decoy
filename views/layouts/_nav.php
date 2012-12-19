@@ -58,6 +58,10 @@
 									<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
 									<li class="divider"></li>
 								<? endif ?>
+								<? if (Decoy_Auth::developer()): ?>
+									<li><a href="<?=action('decoy::tasks')?>">Tasks</a></li>
+									<li class="divider"></li>
+								<? endif ?>
 								<li><a href="<?=Decoy_Auth::user_url()?>">Account</a></li>
 								<li><a href="<?=Decoy_Auth::logout_url()?>">Log out</a></li>
 							</ul>
