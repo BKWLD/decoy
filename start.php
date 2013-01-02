@@ -58,3 +58,6 @@ if (!class_exists('Decoy_Auth')) {
 	if (!is_a(new Decoy_Auth, 'Decoy\Auth_Interface')) throw new Exception('Auth class does not implement Decoy\Auth_Interface:'.$auth_class);
 	Decoy_Auth::check();
 }
+
+// Change former's required field HTML
+Former\Config::set('required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');

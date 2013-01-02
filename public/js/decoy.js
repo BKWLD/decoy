@@ -81,11 +81,10 @@ define(function (require) {
 		// Enable date picker.  The container needs to have a date class
 		$('.input-append:has(.date)').addClass('date').datepicker();
 		
-		// Add "Required" icons.  The second case is for file input fields where we're manually applying
+		// Add "Required" icons to file input fields where we're manually applying
 		// a required class with Former, which puts it on the input rather than the control group.  We
 		// want these fields to look required but not actually be enforced by the browser.
 		var required_html = ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>';
-		$('.control-group.required label').append(required_html);
 		$('input.required').closest('.control-group').find('label').append(required_html);
 		
 		// And "Help" icons
