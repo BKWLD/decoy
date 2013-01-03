@@ -19,7 +19,8 @@ abstract class Decoy_Base_Model extends Eloquent {
 		$title = '';
 		
 		// Add a thumbnail to the title if there is an "image" field
-		if (isset($this->image)) $title .= '<img src="'.Croppa::url($this->image, 40, 40).'"/> ';
+		if (method_exists($this, 'image') && $this->image()) $title .= '<img src="'.Croppa::url($this->image(), 40, 40).'"/> ';
+		elseif (isset($this->image)) $title .= '<img src="'.Croppa::url($this->image, 40, 40).'"/> ';
 		
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
