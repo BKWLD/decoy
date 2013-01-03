@@ -5,6 +5,9 @@ if (!defined('MANY_TO_MANY'))    define('MANY_TO_MANY', 'MANY_TO_MANY');
 if (!defined('UPLOAD_DELETE'))   define('UPLOAD_DELETE', 'delete-');
 if (!defined('UPLOAD_OLD'))      define('UPLOAD_OLD', 'old-');
 if (!defined('UPLOAD_REPLACE'))  define('UPLOAD_REPLACE', 'replace-');
+if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
+if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
+if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
 // Bring in bundle dependencies
 Bundle::start('former');
