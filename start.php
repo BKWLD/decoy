@@ -56,7 +56,6 @@ if (!class_exists('Decoy_Auth')) {
 	if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
 	class_alias(Config::get('decoy::decoy.auth_class'), 'Decoy_Auth', true);
 	if (!is_a(new Decoy_Auth, 'Decoy\Auth_Interface')) throw new Exception('Auth class does not implement Decoy\Auth_Interface:'.$auth_class);
-	Decoy_Auth::check();
 }
 
 // Change former's required field HTML
