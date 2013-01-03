@@ -15,7 +15,7 @@
 				<form class="many-to-many-form pull-right">
 					<div class="input-append">
 					  <input class="span2" type="text" placeholder="Search">
-					  <button class="btn btn-info btn-small disabled" disabled type="submit"><i class="icon-plus icon-white"></i> Add</button>
+					  <button class="btn btn-info btn-small disabled" disabled type="submit"><i class="icon-tag icon-white"></i> Add</button>
 					</div>
 				</form>
 				
