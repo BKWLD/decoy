@@ -160,7 +160,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		$query = Model::ordered()->where($foreign_key, '=', $parent_id);
 
 		// If it's a many to many, we need to join the pivot table because that is
-		// what the foreign key is on
+		// what the foreign key is on.  This is done just so we can get the pivot_id
+		// for doing things like delete_remove().  But this is, again, only required
+		// because of trying to support ordered() in the listing
 		if ($this->is_many_to_many) {
 			
 			// Get references to the listing and pivot tables so we can get the table name
