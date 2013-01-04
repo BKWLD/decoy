@@ -10,6 +10,10 @@ class Decoy_Default_Admin {
 	public function up()
 	{
 		
+		// Do nothing if no creds were defined in the config file.  It' assumed that the 
+		// site doesn't want to use Sentry in this case
+		if (!Config::get('decoy::decoy.default_login') || !Config::get('decoy::decoy.default_password')) return;
+		
 		// These were both required to be able to mess with Sentry
 		Session::load();
 		Bundle::start('sentry');
@@ -40,6 +44,12 @@ class Decoy_Default_Admin {
 	 */
 	public function down()
 	{
+		
+		// Do nothing if no creds were defined in the config file.  It' assumed that the 
+		// site doesn't want to use Sentry in this case
+		if (!Config::get('decoy::decoy.default_login') || !Config::get('decoy::decoy.default_password')) return;
+		
+		// Remove the admins
 		Session::load();
 		Bundle::start('sentry');
 		Sentry::user(Config::get('decoy::decoy.default_login'))->delete();

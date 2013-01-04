@@ -3,7 +3,7 @@
 // The account controller deals with auth
 class Decoy_Account_Controller extends Decoy_Base_Controller {
 	
-	// Validateion rules for resetting password
+	// Validation rules for resetting password
 	static private $reset_rules = array(
 		'rules' => array(
 			'email' => 'required|email',
@@ -14,10 +14,9 @@ class Decoy_Account_Controller extends Decoy_Base_Controller {
 		)
 	);
 	
-	// Get info on your account.  Will later redirect the user to
-	// their detail page within admins
+	// Redirect to the profile managament page
 	public function get_index() {
-		return Redirect::to_route('decoy::admins@edit', Sentry::user()->get('id'));
+		return Redirect::to(Decoy_Auth::user_url());
 	}
 
 	// Login Functionality.  Users can get bounced here by a filter in routes.php.
@@ -28,7 +27,7 @@ class Decoy_Account_Controller extends Decoy_Base_Controller {
 		Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (Sentry::check()) return Redirect::to(Config::get('decoy::decoy.post_login_redirect'));
+		if (Decoy_Auth::check()) return Redirect::to(Config::get('decoy::decoy.post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(

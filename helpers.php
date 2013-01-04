@@ -31,9 +31,9 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
 	
 	// Date formats
 	$date_formats = array(
-		'date'     => 'm/d/y',
-		'datetime' => 'm/d/y g:i a',
-		'time'     => 'g:i a',
+		'date'     => FORMAT_DATE,
+		'datetime' => FORMAT_DATETIME,
+		'time'     => FORMAT_TIME,
 	);
 	
 	// If the object has a method defined with the column vaue, use it

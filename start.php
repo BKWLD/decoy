@@ -5,19 +5,23 @@ if (!defined('MANY_TO_MANY'))    define('MANY_TO_MANY', 'MANY_TO_MANY');
 if (!defined('UPLOAD_DELETE'))   define('UPLOAD_DELETE', 'delete-');
 if (!defined('UPLOAD_OLD'))      define('UPLOAD_OLD', 'old-');
 if (!defined('UPLOAD_REPLACE'))  define('UPLOAD_REPLACE', 'replace-');
+if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
+if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
+if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
 // Bring in bundle dependencies
 Bundle::start('former');
 Autoloader::alias('Former\Former', 'Former');
 Bundle::start('bkwld');
 Bundle::start('messages');
-Bundle::start('sentry');
 Bundle::start('croppa');
+if (Bundle::exists('sentry')) Bundle::start('sentry');
 
 // Load specific interal classes
 Autoloader::map(array(
 	'Decoy_Base_Controller' => Bundle::path('decoy').'controllers/base.php',
 	'Decoy_Base_Model' => Bundle::path('decoy').'models/base.php',
+	'Decoy\Auth_Interface' => Bundle::path('decoy').'library/auth_interface.php',
 ));
 
 // Load all models
@@ -47,3 +51,15 @@ require_once('helpers.php');
 // Tell the Messages bundle to use the transport defined in the
 // Decoy config file
 Config::set('messages::config.default', Config::get('decoy::decoy.messages_default_transport'));
+
+// Alias the auth class that is defined in the config for easier referencing.
+// Call it "Decoy_Auth"
+if (!class_exists('Decoy_Auth')) {
+	$auth_class = Config::get('decoy::decoy.auth_class');
+	if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
+	class_alias(Config::get('decoy::decoy.auth_class'), 'Decoy_Auth', true);
+	if (!is_a(new Decoy_Auth, 'Decoy\Auth_Interface')) throw new Exception('Auth class does not implement Decoy\Auth_Interface:'.$auth_class);
+}
+
+// Change former's required field HTML
+Former\Config::set('required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');

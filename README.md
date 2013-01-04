@@ -26,7 +26,7 @@ For now, this Bundle is not available to the artisan bundle installer, it must b
 3. [Install](http://laravel.com/docs/bundles#installing-bundles) all the bundle dependencies:
    * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handlin utilities
    * [croppa](http://bundles.laravel.com/bundle/croppa) - Used for thumbnail generation
-   * [sentry](http://bundles.laravel.com/bundle/sentry) - Used to handle access control to the CMS
+   * [sentry](http://bundles.laravel.com/bundle/sentry) - Technically optional, but required for Decoy auth and admin management
    * [former](http://bundles.laravel.com/bundle/former) - Used to make generating form elements more terse
    * [messages](http://bundles.laravel.com/bundle/messages) - Used for sending HTML email
 4. Initialize Decoy in the bundles.php file with: `'decoy' => array('auto' => true, 'handles' => 'admin'),`
@@ -80,7 +80,7 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 
 ## The config file
 
-The Decoy config file (./config/decoy.php) defines a number of high level parameters.
+The Decoy config file (./config/decoy.php) defines a number of high level parameters.  Not only can you change them from within the bundle, but you can **also** create a config file at /application/config/decoy.php which will override settings within /bundles/decoy/config/decoy.php.
 
 ### Per-application configs
 
@@ -209,6 +209,7 @@ The following protected proprties allow you to customize how Decoy works from th
 * `DESCRIPTION` - An optional sentenance or two that is displayed with the title in the header of the page.
 * `SLUG_COLUMN` - What column should be used as the basis for the slug.  If left undefined but a slug is identified in the validation rules on the model, Decoy will try to use the "name" or "title" columns, if they exist.
 * `COLUMNS` - An array of key value pairs used to describe what table columns to have in the listing view.  The default is: `array('Title' => 'title')`.  The key is the label of the column, shown in the header of the table.  The value is the source for the data for the column.  Decoy first checks if there is a method defined on the model with the value and, if so, executes it to return the value.  If there is no method, it checks to see if the model has a property (or dynamic property) with that name and uses it's value of it does.  Finally, if none of those cases are true, it will use the value literally, rendering it in every row of the table.  Note: the default value, `title`, is the name of a method defined in `Decoy_Base_Model`.
+* `SHOW_VIEW` - The path, in the Laravel format, to the view for the new/edit view.  I.e. 'admin.news.show'.
 
 The following properties are only relevant if a controller is a parent or child of another, as in `has_many()`, `has_many_and_belongs_to()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
 

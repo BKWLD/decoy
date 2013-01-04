@@ -15,7 +15,7 @@
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
-				<? if (Sentry::check() && Sentry::user()->in_group('admins')): ?>
+				<? if (Decoy_Auth::check()): ?>
 					
 					<?// The menu ?>
 					<ul class="nav">
@@ -49,17 +49,21 @@
 					<ul class="nav pull-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span>Hi, 
-									<?=Sentry::user()->get('metadata.first_name')?>!
-								</span>
-								<img src="<?=HTML::gravatar(Sentry::user()->get('email'))?>" class="gravatar"/>
+								<span>Hi, <?=Decoy_Auth::user_name()?>!</span>
+								<img src="<?=Decoy_Auth::user_photo()?>" class="gravatar"/>
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
-								<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
-								<li class="divider"></li>
-								<li><a href="<?=action('admin.account')?>">Account</a></li>
-								<li><a href="<?=action('admin.account@logout')?>">Log out</a></li>
+								<? if (is_a(new Decoy_Auth, 'Decoy\Auth')): ?>
+									<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
+									<li class="divider"></li>
+								<? endif ?>
+								<? if (Decoy_Auth::developer()): ?>
+									<li><a href="<?=action('decoy::tasks')?>">Tasks</a></li>
+									<li class="divider"></li>
+								<? endif ?>
+								<li><a href="<?=Decoy_Auth::user_url()?>">Account</a></li>
+								<li><a href="<?=Decoy_Auth::logout_url()?>">Log out</a></li>
 							</ul>
 						</ul>
 					

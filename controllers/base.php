@@ -24,6 +24,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected $DESCRIPTION; // i.e. 'Relevant news about the brand'
 	protected $SLUG_COLUMN; // i.e. 'title'
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
+	protected $SHOW_VIEW;   // i.e. 'admin.news.show'
 	
 	// More of the same, but these are just involved in relationships
 	protected $PARENT_MODEL;
@@ -60,6 +61,10 @@ abstract class Decoy_Base_Controller extends Controller {
 			// If it begins with decoy, it should be like decoy::admin instead of decoy.admin
 			if (Str::is('decoy*', $this->CONTROLLER)) $this->CONTROLLER = str_replace('decoy.', 'decoy::', $this->CONTROLLER);
 		}
+		
+		// Figure out what the show view should be.  This is the path to the show view file.  Such
+		// as 'admin.news.show'
+		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->CONTROLLER.'.show';
 		
 		// Try to suss out the model by singularizing the controller
 		if (empty($this->MODEL)) {
@@ -208,7 +213,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Return view
-		$this->layout->nest('content', $this->CONTROLLER.'.show', array(
+		$this->layout->nest('content', $this->SHOW_VIEW, array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
@@ -262,7 +267,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Render the view
-		$this->layout->nest('content', $this->CONTROLLER.'.show', array(
+		$this->layout->nest('content', $this->SHOW_VIEW, array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
