@@ -165,7 +165,7 @@ Route::post('(:bundle)/tasks/(:any)/(:any)', array('uses' => 'decoy::tasks@execu
 
 require_once('composers/layouts._nav.php');
 require_once('composers/layouts._breadcrumbs.php');
-require_once('composers/shared._standard_list.php');
+require_once('composers/shared.list._standard.php');
 
 /*
 |--------------------------------------------------------------------------

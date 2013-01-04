@@ -202,7 +202,7 @@ If you don't need any complicated behavior, it's very possible that an applicati
 
 The logic of the build in restful actions is described below:
 
-* `get_index([mixed $key])` - Lists rows.  If `$key` is numeric, it is assumed the list is of rows from a model that is a child.  The `routes` property of the config is used to determine who the parent is.  If `$key` is a string, it is ignored (the expectation is that you are overriding the `get_index()` method to do something custom, like filter the list).  The rendered output uses the `decoy::shared._standard_list` view partial.  If the request is XHR, then a JSON representation of the list will be returned)
+* `get_index([mixed $key])` - Lists rows.  If `$key` is numeric, it is assumed the list is of rows from a model that is a child.  The `routes` property of the config is used to determine who the parent is.  If `$key` is a string, it is ignored (the expectation is that you are overriding the `get_index()` method to do something custom, like filter the list).  The rendered output uses the `decoy::shared.list._standard` view partial.  If the request is XHR, then a JSON representation of the list will be returned)
 
 * `get_new([int $id])` - Displays a create new item form.  If `$id` is present, it is assumed that the new item will be added as a child of the parent (defined in the `routes` config property) identified by the `$id`.  Validation logic will be pulled from the model's `$rules` static property.  The rendered output expects there to be a view file at ADMIN_CONTROLLER_VIEWS_PATH.'/show.php'.  For instance, for the `admin.clients` controller, it expects there to be a view file that can be referenced by `admin.clients.show`.  The show.php file should implement form fields using Former.
 

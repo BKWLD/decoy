@@ -50,7 +50,7 @@ as part of when the view was created.  As in View::make()->with()
 
 	  
 */
-View::composer('decoy::shared._standard_list', function($view) {
+View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Required fields
 	$required = array('title', 'listing', 'controller', 'columns');

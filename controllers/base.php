@@ -137,7 +137,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
-		$this->layout->nest('content', 'decoy::shared._standard_list', array(
+		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
@@ -182,7 +182,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 
 		// Render the view
-		$this->layout->nest('content', 'decoy::shared._standard_list', array(
+		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,

@@ -21,7 +21,7 @@ class Decoy_Admins_Controller extends Decoy_Base_Controller {
 		}
 	
 		// Bind to view
-		$this->layout->nest('content', 'decoy::shared._standard_list', array(
+		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
