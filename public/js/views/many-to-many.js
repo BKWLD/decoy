@@ -23,7 +23,12 @@ define(function (require) {
 			this.$icon = this.$submit.find('i');
 			
 			// Add extra events
-			this.events['submit form'] = 'add';
+			this.events['submit form'] = 'attach';
+		},
+		
+		// Define a new query method so we can pass the parent_id
+		query: function(query, process) {
+			this.execute({query:query, parent_id: this.parent_id}, process);
 		},
 		
 		// Overide the match function to toggle the state of the add button
@@ -42,9 +47,8 @@ define(function (require) {
 			}
 		},
 		
-		
-		// Set item to approved
-		add: function (e) {
+		// Tell the server to attach the selected item
+		attach: function (e) {
 			e.preventDefault();
 				
 			// Make the request

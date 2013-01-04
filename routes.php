@@ -103,6 +103,11 @@ function addRoutes($routes, $parent = null) {
 			"(:bundle)/$controller/remove/(:any)", 
 			array('uses' => "$controller_path@remove", 'as' => "$controller_path@remove"));
 		
+		// Autocomplete, run a search query for an autocomplete
+		Router::register(array('GET'), 
+			"(:bundle)/$controller/autocomplete", 
+			array('uses' => "$controller_path@autocomplete", 'as' => "$controller_path@autocomplete"));
+		
 		// List, used for one-to-many relationships
 		if ($parent) Router::register(array('GET'), 
 			"(:bundle)/$parent/(:num)/$controller/(:any?)", 
