@@ -22,7 +22,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected $CONTROLLER;  // i.e. 'admin.posts'
 	protected $TITLE;       // i.e. 'News Posts'
 	protected $DESCRIPTION; // i.e. 'Relevant news about the brand'
-	protected $SLUG_COLUMN; // i.e. 'title'
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
 	protected $SHOW_VIEW;   // i.e. 'admin.news.show'
 	
@@ -126,15 +125,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Listing page
 	public function get_index() {
 		
-		// If it's an XRF request, return JSON based on the format parameter
-		if (Request::ajax()) {
-			$format = Input::get('format', 'autocomplete'); // Default to autocomplete
-			switch($format) {
-				case 'autocomplete': return $this->get_index_autocomplete();
-				default: throw new Exception('Index XHR format not supported');
-			}	
-		}
-		
 		// There may be a parent id.  This isn't defined in the function definition
 		// because I don't want all child classes to have to implement it
 		if (is_numeric(URI::segment(3))) {
@@ -184,10 +174,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// we get with new Model is a child of another model.  So we are trying to get back to
 			// our parent, and we do that with CHILD_RELATIONSHIP, which is the reference declared
 			// ON the child.
-			$listing_instance = new Model;
-			$listing_column = $listing_instance->table().'.'.$listing_instance::$key;
-			$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
-			$pivot_column = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
+			list($pivot_table, $pivot_column) = $this->pivot();
 			
 			// Add the join to the pivot table and make the id columns explicit
 			$query = $query->join($pivot_table, $listing_column, '=', $pivot_column)
@@ -212,7 +199,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// List as JSON for autocomplete widgets
-	private function get_index_autocomplete() {
+	public function get_autocomplete() {
 		
 		// Do nothing if the query is too short
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
@@ -221,6 +208,24 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
 		$query = Model::ordered()
 			->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+			
+		// Don't return any rows already attached to the parent.  So make sure the id is not already
+		// in the pivot table for the parent
+		if ($this->is_many_to_many) {
+			
+			// Require parent_id
+			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
+			$parent_id = Input::get('parent_id');
+			
+			// Lookup pivot values
+			list($pivot_table, $child_foreign_key, $parent_foreign_key) = $this->pivot();
+			
+			// Add condition to query
+			$parent_id = DB::connection()->pdo->quote($parent_id);
+			$query = $query->where('id', 'NOT IN', DB::raw(
+				"(SELECT {$child_foreign_key} FROM {$pivot_table} WHERE {$parent_foreign_key} = {$parent_id})"
+			));
+		}
 		
 		// Produce the output in the format the autocomplete expects
 		$output = array();
@@ -428,8 +433,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		$pivot_ids = explode('-', $pivot_ids);
 		
 		// Loop through each item and delete the relationship
-		$listing_instance = new Model;
-		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
+		list($pivot_table) = $this->pivot();
 		foreach($pivot_ids as $id) {
 			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
 		}
@@ -585,9 +589,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Model must have rules and they must have a slug
 		if (empty(Model::$rules) || !in_array('slug', array_keys(Model::$rules))) return;
 		
-		// If a SLUG_COLUMN is set, use that input for the slug
-		if (!empty($this->SLUG_COLUMN) && Input::has($this->SLUG_COLUMN)) {
-			Input::merge(array('slug' => Str::slug(Input::get($this->SLUG_COLUMN))));
+		// If a Model::$TITLE_COLUMN is set, use that input for the slug
+		if (!empty(Model::$TITLE_COLUMN) && Input::has(Model::$TITLE_COLUMN)) {
+			Input::merge(array('slug' => Str::slug(Input::get(Model::$TITLE_COLUMN))));
 		
 		// Else it looks like the model has a slug, so try and set it
 		} else if (Input::has('name')) {
@@ -756,14 +760,15 @@ abstract class Decoy_Base_Controller extends Controller {
 				if ($parent) {
 					
 					// If this route is for a many-to-many controller AND it's not a child index view, 
-					// OR we're not processing a remove/attach (which needs parent context), then return an
-					// empty array, meaning that it has no parents.  This is because
+					// OR we're not processing a remove/attach/autocomplete (which needs parent context), then 
+					// return an empty array, meaning that it has no parents.  This is because
 					// many to many's new/edit/index etc should operate like a parentless controller.
 					// You're not creating rows that belong to a parent; they're independent.
 					if ($is_many_to_many 
 						&& !Request::route()->is($this->CONTROLLER.'@child')
 						&& !Request::route()->is($this->CONTROLLER.'@remove')
-						&& !Request::route()->is($this->CONTROLLER.'@attach')) return array();
+						&& !Request::route()->is($this->CONTROLLER.'@attach')
+						&& !Request::route()->is($this->CONTROLLER.'@autocomplete')) return array();
 					
 					// The route is a many to many and it IS a child index, so remember at the
 					// instance level.  The get_index_child method will use this to switch the
@@ -819,4 +824,23 @@ abstract class Decoy_Base_Controller extends Controller {
 		return !empty($parents);
 	}
 	
+	// Get the pivot table name and the child foreign key (the active Model) is probably
+	// the child, and the parent foreign key column name
+	private function pivot() {
+		
+		// If the request doesn't know it's child of another class (often because an exeption)
+		// needs to be added to find_parent_controllers() for the route), this won't work
+		if (empty($this->CHILD_RELATIONSHIP) || empty($this->PARENT_RELATIONSHIP)) {
+			throw new Exception('Empty relationships in pivot');
+		}
+		
+		// Lookup the table and column
+		$listing_instance = new Model;
+		$parent_instance = new $this->PARENT_MODEL;
+		$listing_column = $listing_instance->table().'.'.$listing_instance::$key;
+		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
+		$child_foreign_key = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
+		$parent_foreign_key = $pivot_table.'.'.$parent_instance->{$this->PARENT_RELATIONSHIP}()->foreign_key();
+		return array($pivot_table, $child_foreign_key, $parent_foreign_key);
+	}
 }
