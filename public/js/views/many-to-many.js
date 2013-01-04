@@ -105,9 +105,9 @@ define(function (require) {
 				id = row.id;
 				
 			// Make the request
-			$.ajax(this.controllerRoute+'/'+id, {
+			$.ajax(this.controllerRoute+'/attach/'+id, {
 				data: {parent_id: this.parent_id},
-				type:'PUT',
+				type:'POST',
 				dataType: 'JSON'
 			})
 			
@@ -121,8 +121,7 @@ define(function (require) {
 				this.match();
 				
 				// Tell the editable list to add the new entry
-				var payload = { id: id, pivot_id: data.pivot_id, label: label };
-				if (row.image) payload.label = '<img src="'+row.image+'"/> '+payload.label;
+				var payload = { id: id, pivot_id: data.pivot_id, label: row.columns.title };
 				this.$el.trigger('insert', payload);
 				
 			}, this));

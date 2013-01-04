@@ -180,13 +180,29 @@ The Decoy Base implements a full set of restful methods that respond to requests
 	POST   /admin/projects/4/delete       Admin_Projects_Controller->delete_delete(4)
 	```
 
+The following are used just by many to many relationships and the autocomplete widgets that the user interacts with:
+
+* Attach
+
+	```
+	POST   /admin/projects/4/attach       Admin_Projects_Controller->post_attach(4)
+	```
+
+* Remove
+
+	```
+	GET    /admin/projects/41/remove    Admin_Projects_Controller->get_remove(41)
+	DELETE /admin/projects/41/remove    Admin_Projects_Controller->delete_remove(41)
+	```
+
+
 ### Restful actions
 
 If you don't need any complicated behavior, it's very possible that an application's admin controller needn't define their own resful actions and can rely on Decoy's default behavior.  Or, maybe just one of the actions (like `get_index()`) needs custom behavior and the rest can inherit from the parent.  Or, maybe your override one of the actions, do something custom (like add an additional `Input` property), and then call the parent action (i.e. `parent::post_new()`).
 
 The logic of the build in restful actions is described below:
 
-* `get_index([mixed $key])` - Lists rows.  If `$key` is numeric, it is assumed the list is of rows from a model that is a child.  The `routes` property of the config is used to determine who the parent is.  If `$key` is a string, it is ignored (the expectation is that you are overriding the `get_index()` method to do something custom, like filter the list).  The rendered output uses the `decoy::shared._standard_list` view partial.
+* `get_index([mixed $key])` - Lists rows.  If `$key` is numeric, it is assumed the list is of rows from a model that is a child.  The `routes` property of the config is used to determine who the parent is.  If `$key` is a string, it is ignored (the expectation is that you are overriding the `get_index()` method to do something custom, like filter the list).  The rendered output uses the `decoy::shared._standard_list` view partial.  If the request is XHR, then a JSON representation of the list will be returned)
 
 * `get_new([int $id])` - Displays a create new item form.  If `$id` is present, it is assumed that the new item will be added as a child of the parent (defined in the `routes` config property) identified by the `$id`.  Validation logic will be pulled from the model's `$rules` static property.  The rendered output expects there to be a view file at ADMIN_CONTROLLER_VIEWS_PATH.'/show.php'.  For instance, for the `admin.clients` controller, it expects there to be a view file that can be referenced by `admin.clients.show`.  The show.php file should implement form fields using Former.
 
@@ -197,6 +213,10 @@ The logic of the build in restful actions is described below:
 * `put_edit(int $id)` - Updates a record.  `post_edit($id)` is an alias of this function.  It handles validation, slugification, and file saving like `post_new()`.  If called via AJAX, will return a 200 code on success.
 
 * `delete_delete(int $id)` - Deletes a record.  `get_delete($id)` and `post_delete($id)` are aliases of this function.  If called via AJAX, will return a 200 code on success.
+
+* `post_attach(int $id)` - Attaches one record to another as in a many-to-many relationship.  It expects to be invoked on the child controller and there to be a POST var of `parent_id` which is the id of the parent row to relate to.
+
+* `delete_remove(int $pivot_id)` - Removes a relationship by deleting the row from the pivot table.
 
 
 ### Protected properties

@@ -84,6 +84,11 @@ function addRoutes($routes, $parent = null) {
 			"(:bundle)/$controller/(:num)", 
 			array('uses' => "$controller_path@edit", 'as' => "$controller_path@edit"));
 		
+		// Attach, as in add a many to many relationship
+		Router::register(array('POST'), 
+			"(:bundle)/$controller/attach/(:num)", 
+			array('uses' => "$controller_path@attach", 'as' => "$controller_path@attach"));
+		
 		// Delete
 		Router::register(array('DELETE'), 
 			"(:bundle)/$controller/(:any)", 

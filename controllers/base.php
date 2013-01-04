@@ -180,7 +180,10 @@ abstract class Decoy_Base_Controller extends Controller {
 		if ($this->is_many_to_many) {
 			
 			// Get references to the listing and pivot tables so we can get the table name
-			// and key column names from them.
+			// and key column names from them.  CHILD_RELATIONSHIP is used because the instance
+			// we get with new Model is a child of another model.  So we are trying to get back to
+			// our parent, and we do that with CHILD_RELATIONSHIP, which is the reference declared
+			// ON the child.
 			$listing_instance = new Model;
 			$listing_column = $listing_instance->table().'.'.$listing_instance::$key;
 			$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
@@ -212,7 +215,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	private function get_index_autocomplete() {
 		
 		// Do nothing if the query is too short
-		if (strlen(Input::get('query')) <= 1) return Response::json(null);
+		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
 		// Get data matching the query
 		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
@@ -241,7 +244,6 @@ abstract class Decoy_Base_Controller extends Controller {
 			// Add the item to the output
 			$output[] = $item;
 		}
-		
 		
 		// Return result
 		return Response::json($output);
@@ -371,6 +373,22 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
+	// Attach a model to a parent_id, like with a many to many style
+	// autocomplete widget
+	public function post_attach($id) {
+		
+		// Require there to be a parent id and a valid id for the resource
+		if (!Input::has('parent_id')) return Response::json(null, 404);
+		if (!($item = Model::find($id))) return Response::json(null, 404);
+		
+		// Do the attach
+		$item->{$this->CHILD_RELATIONSHIP}()->attach(Input::get('parent_id'));
+		return Response::json(array(
+			'pivot_id' => DB::connection('mysql')->pdo->lastInsertId()
+		));
+		
+	}
+	
 	// Delete one or multiple.  This accepts a dash
 	// delimited list of ids.  Commas don't appear to be allowed
 	// using simple Laravel routing.
@@ -399,6 +417,27 @@ abstract class Decoy_Base_Controller extends Controller {
 			if (strpos(Request::referrer(), route($this->CONTROLLER)) === false) return Redirect::to_route('decoy::back');
 			else return Redirect::to_route('decoy::back', 2);
 		}
+	}
+	
+	// Remove a relationship.  Very similar to delete, except that we're
+	// not actually deleting from the database
+	public function get_remove($pivot_ids) { return $this->delete_remove($pivot_ids); }
+	public function delete_remove($pivot_ids) {
+
+		// Look for the mentioned rows
+		$pivot_ids = explode('-', $pivot_ids);
+		
+		// Loop through each item and delete the relationship
+		$listing_instance = new Model;
+		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
+		foreach($pivot_ids as $id) {
+			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
+		}
+		
+		// Redirect.  We can use back cause this is never called from a "show"
+		// page like get_delete is.
+		if (Request::ajax()) return Response::json('null');
+		else return Redirect::back();
 	}
 	
 	//---------------------------------------------------------------------------
@@ -717,10 +756,14 @@ abstract class Decoy_Base_Controller extends Controller {
 				if ($parent) {
 					
 					// If this route is for a many-to-many controller AND it's not a child index view, 
-					// then return an empty array, meaning that it has no parents.  This is because
+					// OR we're not processing a remove/attach (which needs parent context), then return an
+					// empty array, meaning that it has no parents.  This is because
 					// many to many's new/edit/index etc should operate like a parentless controller.
 					// You're not creating rows that belong to a parent; they're independent.
-					if ($is_many_to_many && !Request::route()->is($this->CONTROLLER.'@child')) return array();
+					if ($is_many_to_many 
+						&& !Request::route()->is($this->CONTROLLER.'@child')
+						&& !Request::route()->is($this->CONTROLLER.'@remove')
+						&& !Request::route()->is($this->CONTROLLER.'@attach')) return array();
 					
 					// The route is a many to many and it IS a child index, so remember at the
 					// instance level.  The get_index_child method will use this to switch the
@@ -735,7 +778,6 @@ abstract class Decoy_Base_Controller extends Controller {
 				// an empty array to signifiy no parents
 				return array();
 			}
-				
 		}
 		return array(); // None found (this should never probably be reached)
 	}
