@@ -21,7 +21,7 @@ define(function (require) {
 		visibleIconClass = 'icon-eye-open';
 
 	// public view module
-	var EditListView = Backbone.View.extend({
+	var StandardList = Backbone.View.extend({
 		
 		initialize: function () {
 			_.bindAll(this);
@@ -475,7 +475,7 @@ define(function (require) {
 			
 			// Update the visibilty state
 			if (model && model.has('visible')) {
-				var $row = this.findRows(model.id)[0];
+				var $row = this.findRows(model.id)[0],
 					$icon = $row.find('.visibility i');
 
 				// Toggle icon
@@ -510,5 +510,5 @@ define(function (require) {
 		}
 	});
 	
-	return EditListView;
+	return StandardList;
 });

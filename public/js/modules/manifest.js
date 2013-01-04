@@ -6,7 +6,7 @@ define(function (require) {
 	// list each module by ID and require path
 	// (note: they must be required here for the build step)
 	return {
-		'editable-list': require('decoy/views/editable-list'),
+		'standard-list': require('decoy/views/standard-list'),
 		'moderation': require('decoy/views/moderation'),
 		'autocomplete': require('decoy/views/autocomplete'),
 		'datalist': require('decoy/views/datalist'),
