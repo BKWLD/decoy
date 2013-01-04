@@ -6,11 +6,16 @@ use BKWLD\Utils\File;
 abstract class Decoy_Base_Model extends Eloquent {
 	
 	// Auto populate timestamps
-	public static $timestamps = true;
+	static public $timestamps = true;
 	
-	// This should be overriden by Models to store the array of their 
+	// This should be overridden by Models to store the array of their 
 	// Laravel validation rules
-	public static $rules = array();
+	static public $rules = array();
+	
+	// This is designed to be overridden to store the DB column name that
+	// should be used as the source for titles.  Used in the title() function
+	// and in autocompletes.
+	static public $TITLE_COLUMN;
 	
 	// Return the title for the row for the purpose of displaying
 	// in admin list views and breadcrumbs.  It looks for columns
@@ -25,7 +30,8 @@ abstract class Decoy_Base_Model extends Eloquent {
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
 		$row = $this->to_array();
-		if (isset($row['name'])) $title .=  $row['name'];
+		if (!empty(static::$TITLE_COLUMN)) $title .=  $row[static::$TITLE_COLUMN];
+		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
 		else if (isset($row['title'])) $title .= $row['title'];
 		else if (Request::route()->controller_action == 'edit')  $title .= 'Edit';
 		
