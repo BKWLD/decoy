@@ -78,4 +78,14 @@ abstract class Decoy_Base_Model extends Eloquent {
 		return $model->table();
 	}
 	
+	// The pivot_id may be accessible at $this->pivot->id if the result was fetched
+	// through a relationship OR it may be named pivot_id out of convention (something
+	// currently done in Decoy_Base_Controller->get_index_child()).  This function
+	// checks for either
+	public function pivot_id() {
+		if (!empty($this->pivot->id)) return $this->pivot->id;
+		else if (!empty($this->pivot_id)) return $this->pivot_id;
+		else return null;
+	}
+	
 }

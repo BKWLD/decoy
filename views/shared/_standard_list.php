@@ -88,7 +88,7 @@
 			foreach ($iterator as $item):
 			?>
 				<tr 
-					data-model-id="<?=$many_to_many?$item->pivot_id: $item->id?>"
+					data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
 					<? if (isset($item->position)):?>data-position="<?=$item->position?>"<? endif ?>
 				>
 					<td><input type="checkbox" name="select-row"></td>
@@ -130,7 +130,7 @@
 						 
 						 <?// Many to many listings have remove icons instead of trash?>
 						<? if ($many_to_many): ?>
-							<a href="<?=route($controller.'@remove', $item->pivot_id)?>" class="remove-now"><i class="icon-remove js-tooltip" data-placement='left' title="Remove relationship"></i></a>
+							<a href="<?=route($controller.'@remove', $item->pivot_id())?>" class="remove-now"><i class="icon-remove js-tooltip" data-placement='left' title="Remove relationship"></i></a>
 							
 						<?// Regular listings actually delete rows ?>
 						<? else: ?> 
