@@ -6,106 +6,49 @@ define(function (require) {
 	// dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone');
-	
-	// private static vars
-	var app;
+		Backbone = require('backbone'),
+		Autocomplete = require('decoy/views/autocomplete');
 			
 	// public view module
-	var ManyToManyView = Backbone.View.extend({
+	var ManyToManyView = Autocomplete.extend({
 		
 		initialize: function () {
-			_.bindAll(this);
-			app = this.options.app;
+			Autocomplete.prototype.initialize.call(this);
 
-			// Get the path to the controller.  If this is not specified via a
-			// data attribtue of "controller-route" then we attempt to infer it from
-			// the current URL.
-			this.controllerRoute = this.$el.data('controller-route');
-			if (!this.controllerRoute) {
-				this.controllerRoute = window.location.pathname;
-			}
-			
 			// There must be a parent-id defined for the saving to work
 			this.parent_id = this.$el.data('parent-id');
 			
 			// Cache selectors
-			this.$input = this.$('.many-to-many-form input');
-			this.$submit = this.$('.many-to-many-form button');
-
-			// Initialize the Bootstrap typahead plugin, which generates the
-			// autocomplete menu
-			this.data = {}; // This is where the response data will get stored
-			this.$input.typeahead({
-				source: _.debounce(this.query, 200) // Throttle rquests
-			});
+			this.$submit = this.$('button[type="submit"]');
+			this.$icon = this.$submit.find('i');
 			
+			// Add extra events
+			this.events['submit form'] = 'add';
 		},
 		
-		// Register interaction events
-		events: {
-			'submit .many-to-many-form': 'add',
-			'input .many-to-many-form input': 'match', // I *think* "input" is well supported
-			'change .many-to-many-form input': 'match'
-		},
-		
-		// Query and parse the sever data
-		query: function(query, process) {
-			
-			// Make the request
-			$.ajax(this.controllerRoute, {
-				data: {query:query, parent_id: this.parent_id},
-				type:'GET',
-				dataType: 'JSON'
-			})
-			
-			// Success
-			.done(_.bind(function(data) {
-							
-				// Loop through results and massage the results.  We need an array
-				// of just labels for the typeahead.  And we need a key/val pairs
-				// to get the id back from the label when saving it.
-				this.data = {};
-				var labels = [];
-				_.each(data, function(row) {
-					labels.push(row.title);
-					this.data[row.title] = row;
-				}, this);
-				
-				// Tell typeahead about the labels
-				process(labels);
-				
-				// Check again if there is a match in the textfield
-				this.match();
-				
-			}, this));
-		},
-		
-		// Callback from after the user inputs anything in the textfield.  Basically,
-		// we wantt to constantly check if what they've entered is valid rather than
-		// rely on bootstrap to tell us.  Cause their events to fire with every change
-		// the user might make
+		// Overide the match function to toggle the state of the add button
 		match: function() {
-			if (this.data[this.$input.val()]) {
-				this.$submit.removeClass('disabled');
-				this.$submit.prop('disabled', false);
+			Autocomplete.prototype.match.call(this);
+			
+			// Match found
+			if (this.found) {
+				this.$submit.addClass('btn-info').prop('disabled', false);
+				this.$icon.addClass('icon-white');
+				
+			// Match cleared
 			} else {
-				this.$submit.addClass('disabled');
-				this.$submit.prop('disabled', true);
+				this.$submit.removeClass('btn-info').prop('disabled', true);
+				this.$icon.removeClass('icon-white');
 			}
 		},
+		
 		
 		// Set item to approved
 		add: function (e) {
 			e.preventDefault();
-			
-			// Get the id of the row we're adding
-			var label = this.$input.val(),
-				row = this.data[label],
-				id = row.id;
 				
 			// Make the request
-			$.ajax(this.controllerRoute+'/attach/'+id, {
+			$.ajax(this.route+'/attach/'+this.id, {
 				data: {parent_id: this.parent_id},
 				type:'POST',
 				dataType: 'JSON'
@@ -114,15 +57,15 @@ define(function (require) {
 			// Success
 			.done(_.bind(function(data) {
 				
+				// Tell the editable list to add the new entry
+				var payload = { id: this.id, pivot_id: data.pivot_id, label: this.selection.columns.title };
+				this.$el.trigger('insert', payload);
+				
 				// Clear the input to add another
 				this.$input.val('')
 				.focus()
 				.prop('placeholder', 'Add another');
 				this.match();
-				
-				// Tell the editable list to add the new entry
-				var payload = { id: id, pivot_id: data.pivot_id, label: row.columns.title };
-				this.$el.trigger('insert', payload);
 				
 			}, this));
 		}

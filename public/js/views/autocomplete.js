@@ -12,11 +12,13 @@ define(function (require) {
 	// public view module
 	var Autocomplete = Backbone.View.extend({
 		
-		// Initial state
+		// Initial state and inheritable vars
 		found: false,
 		data: {},
 		id: null,
 		title: null,
+		selection: null,  // The whole object (from the JSON server response) that is chosen
+		route: null,
 		
 		// Init
 		initialize: function () {
@@ -25,7 +27,7 @@ define(function (require) {
 			// Get the path to the controller.  If this is not specified via a
 			// data attribtue of "controller-route" then we attempt to infer it from
 			// the current URL.
-			this.route = this.$el.data('route');
+			this.route = this.$el.data('controller-route');
 			if (!this.route) this.route = window.location.pathname;
 			
 			// Cache selectors
@@ -88,13 +90,13 @@ define(function (require) {
 			if (this.data[this.$input.val()]) {
 				this.found = true;
 				this.title = this.$input.val();
-				this.id = this.data[this.title].id;
+				this.selection = this.data[this.title];
+				this.id = this.selection.id;
 				
 			// No exact match
 			} else {
 				this.found = false;
-				this.title = null;
-				this.id = null;
+				this.title = this.selection = this.id = null;
 			}
 		}
 		

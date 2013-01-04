@@ -17,7 +17,7 @@ define(function (require) {
 		initialize: function () {
 			Autocomplete.prototype.initialize.call(this);
 			
-			// Cache common selectors
+			// Cache selectors
 			this.$status = this.$('.add-on');
 			this.$icon = this.$status.find('i');
 			this.$hidden = this.$('input[type="hidden"]');
@@ -31,13 +31,13 @@ define(function (require) {
 			
 			// Match found
 			if (this.found) {
-				this.$status.addClass('match');
-				this.$icon.removeClass().addClass('icon-ok icon-white');
+				this.$status.addClass('btn btn-info').attr('href', this.route+'/'+this.id);
+				this.$icon.removeClass().addClass('icon-pencil icon-white');
 				this.$hidden.val(this.id);
 			
 			// Match cleared
 			} else {
-				this.$status.removeClass('match');
+				this.$status.removeClass('btn btn-info').removeAttr('href');
 				this.$icon.removeClass().addClass('icon-ban-circle');
 				this.$hidden.val('');
 				
