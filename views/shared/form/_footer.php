@@ -29,7 +29,7 @@ It expects:
 			</a>
 		<? endif ?>
 		
-		<a class="btn" href="<?=route('decoy::back')?>">Cancel</a>
+		<a class="btn" href="<?=route('decoy::back')?>">Back</a>
 	</div>
 
 <?= Former::close() ?>

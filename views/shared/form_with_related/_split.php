@@ -29,7 +29,7 @@ the sidebar for related data on forms that have a related data sidebar.
 				</a>
 			<? endif ?>
 			
-			<a class="btn" href="<?=route('decoy::back')?>">Cancel</a>
+			<a class="btn" href="<?=route('decoy::back')?>">Back</a>
 		</div>
 
 	<?= Former::close() ?>
