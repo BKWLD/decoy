@@ -9,8 +9,7 @@ define(function (require) {
 		Backbone = require('backbone');
 	
 	// private static vars
-	var app,
-		dataId = 'data-model-id';
+	var app;
 			
 	// public view module
 	var ManyToManyView = Backbone.View.extend({
@@ -69,8 +68,8 @@ define(function (require) {
 				this.data = {};
 				var labels = [];
 				_.each(data, function(row) {
-					labels.push(row.label);
-					this.data[row.label] = row;
+					labels.push(row.title);
+					this.data[row.title] = row;
 				}, this);
 				
 				// Tell typeahead about the labels

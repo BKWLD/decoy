@@ -8,6 +8,8 @@ define(function (require) {
 	return {
 		'editable-list': require('decoy/views/editable-list'),
 		'moderation': require('decoy/views/moderation'),
+		'autocomplete': require('decoy/views/autocomplete'),
+		'datalist': require('decoy/views/datalist'),
 		'many-to-many': require('decoy/views/many-to-many'),
 		'task-method': require('decoy/views/task-method'),
 		'ajax-progress': require('decoy/views/ajax-progress')

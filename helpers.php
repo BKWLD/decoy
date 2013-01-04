@@ -19,14 +19,16 @@ HTML::macro('title', function() {
 });
 
 
-// Formats the data in the standard list shared partial.
-// - $item - A row of data from a Model query
-// - $column - The field name that we're currently displaying
-// - $conver_dates - A string that matches one of the date_formats
-//
-// I tried very hard to get this code to be an aonoymous function that was passed
-// to the view by the view composer that handles the standard list, but PHP
-// wouldn't let me.
+/**
+ * Formats the data in the standard list shared partial.
+ * - $item - A row of data from a Model query
+ * - $column - The field name that we're currently displaying
+ * - $conver_dates - A string that matches one of the date_formats
+ *
+ * I tried very hard to get this code to be an aonoymous function that was passed
+ * to the view by the view composer that handles the standard list, but PHP
+ * wouldn't let me.
+ */
 HTML::macro('render_list_column', function($item, $column, $convert_dates) {
 	
 	// Date formats
@@ -59,8 +61,10 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
 	
 });
 
-// Make an image upload field.  That is to say, one that displays a sample if an
-// image has already been uploaded
+/**
+ * Make an image upload field.  That is to say, one that displays a sample if an
+ * image has already been uploaded
+ */
 HTML::macro('image_upload', function($image, $id = null, $label = null, $help = null) {
 	
 	// Defaults
@@ -108,5 +112,44 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
 		
 	// Else, on a create / new form, so just show a simple file input field
 	} else return Former::file($id, $label)->accept('image')->blockHelp($block_help);
+	
+});
+
+/**
+ * Render the UI that the JS expecting to render a datalist style autocomplete menu.
+ * A datalist style takes a key value pair from the server and when the user chooses
+ * an option, stores the choice in a hidden input field.  It's simplest form of
+ * autocomplete.
+ * 
+ * - $id - The id/name of the input field
+ * - $route - The GET route that will return data for the autocomplete.
+ *   The response should be an array of key / value pairs where the key is
+ *   what will get submitted and the value is the title that is displayed to users.
+ * - $old - The old value
+ * - $options - An associative array that supports:
+ *     - label - The label for the field.  If undefined, uses the id
+ *     - old_title - The title of the old value.  This would be used if $old is an int like a foreign_id.
+ *     - view - A boolean, if true, allows the user to enter values not in autocomplete
+ */
+HTML::macro('datalist', function($id, $route, $old = null, $options = array()) {
+	
+	// Start data array
+	$data = array(
+		'id' => $id,
+		'route' => $route,
+		'old' => $old,
+	);
+	
+	// Default options
+	if (empty($options['label']))     $options['label'] = ucfirst($id);
+	if (empty($options['old_title'])) $options['old_title'] = $old;
+	if (empty($options['allow_new'])) $options['allow_new'] = false;
+	
+	// Allow New isn't supported yet
+	if ($options['allow_new']) throw new Exception('allow_new is not supported yet');
+	
+	// Render the view
+	$data = array_merge($data, $options);
+	return render('decoy::shared.form.autocomplete._datalist', $data);
 	
 });

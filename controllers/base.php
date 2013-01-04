@@ -126,6 +126,15 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Listing page
 	public function get_index() {
 		
+		// If it's an XRF request, return JSON based on the format parameter
+		if (Request::ajax()) {
+			$format = Input::get('format', 'autocomplete'); // Default to autocomplete
+			switch($format) {
+				case 'autocomplete': return $this->get_index_autocomplete();
+				default: throw new Exception('Index XHR format not supported');
+			}	
+		}
+		
 		// There may be a parent id.  This isn't defined in the function definition
 		// because I don't want all child classes to have to implement it
 		if (is_numeric(URI::segment(3))) {
@@ -194,6 +203,46 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs_from_routes();
+		
+	}
+	
+	// List as JSON for autocomplete widgets
+	private function get_index_autocomplete() {
+		
+		// Do nothing if the query is too short
+		if (strlen(Input::get('query')) <= 1) return Response::json(null);
+		
+		// Get data matching the query
+		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
+		$query = Model::ordered()
+			->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+		
+		// Produce the output in the format the autocomplete expects
+		$output = array();
+		foreach($query->get() as $row) {
+			
+			// Only keep the id and title fields
+			$item = new stdClass;
+			$item->id = $row->id;
+			$item->title = $row->{Model::$TITLE_COLUMN};
+			
+			// Add properties for the columns mentioned in the list view within the
+			// 'columns' property of this row in the response.  Use the same logic
+			// found in HTML::render_list_column();
+			$item->columns = array();
+			foreach($this->COLUMNS as $column) {
+				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
+				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
+				else $item->columns[$column] = null;
+			}
+			
+			// Add the item to the output
+			$output[] = $item;
+		}
+		
+		
+		// Return result
+		return Response::json($output);
 		
 	}
 	
