@@ -174,7 +174,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// we get with new Model is a child of another model.  So we are trying to get back to
 			// our parent, and we do that with CHILD_RELATIONSHIP, which is the reference declared
 			// ON the child.
-			list($pivot_table, $pivot_column) = $this->pivot();
+			list($pivot_table, $pivot_column, $listing_column) = $this->pivot();
 			
 			// Add the join to the pivot table and make the id columns explicit
 			$query = $query->join($pivot_table, $listing_column, '=', $pivot_column)
@@ -836,11 +836,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Lookup the table and column
 		$listing_instance = new Model;
-		$parent_instance = new $this->PARENT_MODEL;
-		$listing_column = $listing_instance->table().'.'.$listing_instance::$key;
+		$parent_foreign_key = $listing_instance->table().'.'.$listing_instance::$key;
 		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
 		$child_foreign_key = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
-		$parent_foreign_key = $pivot_table.'.'.$parent_instance->{$this->PARENT_RELATIONSHIP}()->foreign_key();
 		return array($pivot_table, $child_foreign_key, $parent_foreign_key);
 	}
 }
