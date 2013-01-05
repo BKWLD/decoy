@@ -50,6 +50,10 @@ define(function (require) {
 		// Tell the server to attach the selected item
 		attach: function (e) {
 			e.preventDefault();
+			
+			// Don't execute it no match is found
+			this.match();
+			if (!this.found) return;
 				
 			// Make the request
 			$.ajax(this.route+'/attach/'+this.id, {
