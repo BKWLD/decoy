@@ -73,4 +73,8 @@ View::composer('decoy::shared.list._standard', function($view) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
 	
+	// Set a common variable for both types of lists that get passed to the view
+	if (isset($view->listing->results)) $view->iterator = $view->listing->results;
+	else $view->iterator = $view->listing;
+	
 });

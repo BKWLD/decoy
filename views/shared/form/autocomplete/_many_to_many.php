@@ -1,19 +1,8 @@
-<?// This view is rendered by the HTML::autocomplete() macro ?>
+<?// This view regularly gets pulled into list._standard ?>
 
-<div class="control-group" data-js-view="autocomplete" data-route="<?=$route?>" data-allow-new="<?=$allow_new?1:0?>">
-	<label for="<?=$id?>"><?=$label?></label>
+<form class="many-to-many-form pull-right">
 	<div class="input-append">
-		<input class="span5" type="text" placeholder="Search" id="<?=$id?>" value="<?=$old_title?>"/> <?// Displayed to users?>
-	  <input type="hidden" name="<?=$id?>" value="<?=$old?>"/> <?// Submitted with POST ?>
-	  
-	  <?// If on an edit view with old data, start off in a "good" state?>
-	  <? if ($old): ?>
-	  	<span class="add-on btn-success"><i class="icon-ok icon-white"></i></span>
-	  
-	  <?// Otherwise start in an un-matching state?>
-		<? else: ?>
-			<span class="add-on"><i class="icon-ban-circle"></i></span>
-		<? endif ?>
-	  
+	  <input class="span2" type="text" placeholder="Search">
+	  <button class="btn btn-small" disabled type="submit"><i class="icon-tag"></i> Add</button>
 	</div>
-</div>
+</form>

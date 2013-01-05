@@ -1,4 +1,4 @@
-<?// This view is rendered by the HTML::autocomplete() macro ?>
+<?// This view is rendered by the HTML::datalist() macro ?>
 
 <div class="control-group datalist" data-js-view="datalist" data-controller-route="<?=$route?>">
 	<label for="<?=$id?>"><?=$label?></label>
