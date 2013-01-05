@@ -1,3 +1,0 @@
-[submodule "vendor/faker"]
-	path = vendor/faker
-	url = git@github.com:BKWLD/faker.git
