@@ -35,9 +35,6 @@ define(function (require) {
 				this.controllerRoute = window.location.pathname;
 			}
 			
-			// There may be a parent-id defined for many-to-many remove actions
-			this.parent_id = this.$el.data('parent-id');
-			
 			// cache selectors
 			this.$deleteBtn = this.$('.delete-selected');
 			this.$deleteAlert = this.$('.delete-alert');

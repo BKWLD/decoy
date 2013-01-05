@@ -23,7 +23,7 @@ define(function (require) {
 			this.$icon = this.$submit.find('i');
 			
 			// Add extra events
-			this.events['submit form'] = 'attach';
+			this.events.submit = 'attach';
 		},
 		
 		// Define a new query method so we can pass the parent_id
