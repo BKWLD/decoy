@@ -24,6 +24,7 @@ define(function (require) {
 			
 			// Add extra events
 			this.events['click button'] = 'edit';
+			this.events['blur input[type="text"]'] = 'blur';
 		},
 		
 		// Overide the match function to toggle the state of the match
@@ -43,6 +44,11 @@ define(function (require) {
 				this.$icon.removeClass().addClass('icon-ban-circle');
 				this.$hidden.val('');
 			}
+		},
+		
+		// Clear the field if there is no match on blur
+		blur: function(e) {
+			if (!this.found) this.$input.val('');
 		},
 		
 		// Visit the edit page
