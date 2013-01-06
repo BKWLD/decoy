@@ -18,10 +18,12 @@ define(function (require) {
 			Autocomplete.prototype.initialize.call(this);
 			
 			// Cache selectors
-			this.$status = this.$('.add-on');
+			this.$status = this.$('button');
 			this.$icon = this.$status.find('i');
 			this.$hidden = this.$('input[type="hidden"]');
 			
+			// Add extra events
+			this.events['click button'] = 'edit';
 		},
 		
 		// Overide the match function to toggle the state of the match
@@ -31,17 +33,22 @@ define(function (require) {
 			
 			// Match found
 			if (this.found) {
-				this.$status.addClass('btn btn-info').attr('href', this.route+'/'+this.id);
+				this.$status.addClass('btn-info').prop('disabled', false).attr('href', this.route+'/'+this.id);
 				this.$icon.removeClass().addClass('icon-pencil icon-white');
 				this.$hidden.val(this.id);
 			
 			// Match cleared
 			} else {
-				this.$status.removeClass('btn btn-info').removeAttr('href');
+				this.$status.removeClass('btn-info').prop('disabled', true).removeAttr('href');
 				this.$icon.removeClass().addClass('icon-ban-circle');
 				this.$hidden.val('');
-				
 			}
+		},
+		
+		// Visit the edit page
+		edit: function(e) {
+			e.preventDefault();
+			location.href = this.route+'/'+this.$hidden.val();
 		}
 				
 	});

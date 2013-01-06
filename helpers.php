@@ -125,28 +125,26 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
  * - $route - The GET route that will return data for the autocomplete.
  *   The response should be an array of key / value pairs where the key is
  *   what will get submitted and the value is the title that is displayed to users.
- * - $old - The old value
  * - $options - An associative array that supports:
  *     - label - The label for the field.  If undefined, uses the id
- *     - old_title - The title of the old value.  This would be used if $old is an int like a foreign_id.
- *     - view - A boolean, if true, allows the user to enter values not in autocomplete
+ *     - title - The title of the old value.  This would be used if $old is an int like a foreign_id.
+ *     - create - A boolean, if true, allows the user to enter values not in autocomplete
  */
-HTML::macro('datalist', function($id, $route, $old = null, $options = array()) {
+HTML::macro('datalist', function($id, $route, $options = array()) {
 	
 	// Start data array
 	$data = array(
 		'id' => $id,
 		'route' => $route,
-		'old' => $old,
 	);
 	
 	// Default options
-	if (empty($options['label']))     $options['label'] = ucfirst($id);
-	if (empty($options['old_title'])) $options['old_title'] = $old;
-	if (empty($options['allow_new'])) $options['allow_new'] = false;
+	if (empty($options['label']))   $options['label'] = ucfirst($id);
+	if (empty($options['title']))   $options['title'] = null;
+	if (empty($options['create']))  $options['create'] = false;
 	
 	// Allow New isn't supported yet
-	if ($options['allow_new']) throw new Exception('allow_new is not supported yet');
+	if ($options['create']) throw new Exception('allow_new is not supported yet');
 	
 	// Render the view
 	$data = array_merge($data, $options);
