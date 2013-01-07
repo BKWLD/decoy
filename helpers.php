@@ -117,9 +117,8 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
 
 /**
  * Render the UI that the JS expecting to render a datalist style autocomplete menu.
- * A datalist style takes a key value pair from the server and when the user chooses
- * an option, stores the choice in a hidden input field.  It's simplest form of
- * autocomplete.
+ * A belongs_to takes a key value pair from the server and when the user chooses
+ * an option, stores the choice in a hidden input field.
  * 
  * - $id - The id/name of the input field
  * - $route - The GET route that will return data for the autocomplete.
@@ -130,7 +129,7 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
  *     - title - The title of the old value.  This would be used if $old is an int like a foreign_id.
  *     - create - A boolean, if true, allows the user to enter values not in autocomplete
  */
-HTML::macro('datalist', function($id, $route, $options = array()) {
+HTML::macro('belongs_to', function($id, $route, $options = array()) {
 	
 	// Start data array
 	$data = array(
@@ -148,6 +147,6 @@ HTML::macro('datalist', function($id, $route, $options = array()) {
 	
 	// Render the view
 	$data = array_merge($data, $options);
-	return render('decoy::shared.form.autocomplete._datalist', $data);
+	return render('decoy::shared.form.relationships._belongs_to', $data);
 	
 });

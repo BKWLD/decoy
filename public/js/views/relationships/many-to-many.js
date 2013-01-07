@@ -10,7 +10,7 @@ define(function (require) {
 		Autocomplete = require('decoy/views/autocomplete');
 			
 	// public view module
-	var ManyToManyView = Autocomplete.extend({
+	var ManyToMany = Autocomplete.extend({
 		
 		initialize: function () {
 			Autocomplete.prototype.initialize.call(this);
@@ -23,6 +23,7 @@ define(function (require) {
 			this.$icon = this.$submit.find('i');
 			
 			// Add extra events
+			this.events = _.clone(this.events);
 			this.events.submit = 'attach';
 		},
 		
@@ -80,5 +81,5 @@ define(function (require) {
 		
 	});
 	
-	return ManyToManyView;
+	return ManyToMany;
 });

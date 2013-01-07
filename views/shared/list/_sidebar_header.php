@@ -4,7 +4,7 @@
 	
 	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
 	<? if ($many_to_many): ?>
-		<?=render('decoy::shared.form.autocomplete._many_to_many', $this->data())?>
+		<?=render('decoy::shared.form.relationships._many_to_many', $this->data())?>
 		
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>

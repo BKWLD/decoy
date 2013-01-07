@@ -174,11 +174,12 @@ abstract class Decoy_Base_Controller extends Controller {
 			// we get with new Model is a child of another model.  So we are trying to get back to
 			// our parent, and we do that with CHILD_RELATIONSHIP, which is the reference declared
 			// ON the child.
-			list($pivot_table, $pivot_column, $listing_column) = $this->pivot();
+			$child_key = $this->child_key();
+			list($pivot_table, $pivot_child_foreign) = $this->pivot();
 			
 			// Add the join to the pivot table and make the id columns explicit
-			$query = $query->join($pivot_table, $listing_column, '=', $pivot_column)
-				->select(array('*', $listing_column.' AS id', $pivot_table.'.id AS pivot_id'));
+			$query = $query->join($pivot_table, $child_key, '=', $pivot_child_foreign)
+				->select(array('*', $child_key.' AS id', $pivot_table.'.id AS pivot_id'));
 		}
 
 		// Render the view
@@ -218,12 +219,12 @@ abstract class Decoy_Base_Controller extends Controller {
 			$parent_id = Input::get('parent_id');
 			
 			// Lookup pivot values
-			list($pivot_table, $child_foreign_key, $parent_foreign_key) = $this->pivot();
+			list($pivot_table, $pivot_child_foreign, $pivot_parent_foreign) = $this->pivot();
 			
 			// Add condition to query
 			$parent_id = DB::connection()->pdo->quote($parent_id);
 			$query = $query->where('id', 'NOT IN', DB::raw(
-				"(SELECT {$child_foreign_key} FROM {$pivot_table} WHERE {$parent_foreign_key} = {$parent_id})"
+				"(SELECT {$pivot_child_foreign} FROM {$pivot_table} WHERE {$pivot_parent_foreign} = {$parent_id})"
 			));
 		}
 		
@@ -836,9 +837,17 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Lookup the table and column
 		$listing_instance = new Model;
-		$parent_foreign_key = $listing_instance->table().'.'.$listing_instance::$key;
+		$parent_instance = new $this->PARENT_MODEL;
 		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
-		$child_foreign_key = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
-		return array($pivot_table, $child_foreign_key, $parent_foreign_key);
+		$pivot_child_foreign = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
+		$pivot_parent_foreign = $pivot_table.'.'.$parent_instance->{$this->PARENT_RELATIONSHIP}()->foreign_key();
+		return array($pivot_table, $pivot_child_foreign, $pivot_parent_foreign);
 	}
+	
+	// Get the id column of the model
+	private function child_key() {
+		$listing_instance = new Model;
+		return $listing_instance->table().'.'.$listing_instance::$key;
+	}
+
 }

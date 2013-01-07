@@ -1,6 +1,6 @@
-<?// This view is rendered by the HTML::datalist() macro ?>
+<?// This view is rendered by the HTML::belongs_to() macro ?>
 
-<div class="datalist" data-js-view="datalist" data-controller-route="<?=$route?>">
+<div class="belongs-to" data-js-view="belongs-to" data-controller-route="<?=$route?>">
 	
 	<?// Displayed to users
 	if (Former::getValue($id)) $append = '<button type="button" class="btn btn-info"><i class="icon-pencil icon-white"></i></button>';

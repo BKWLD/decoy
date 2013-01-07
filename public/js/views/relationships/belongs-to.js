@@ -11,7 +11,7 @@ define(function (require) {
 		Autocomplete = require('decoy/views/autocomplete');
 			
 	// Public view module
-	var Datalist = Autocomplete.extend({
+	var BelongsTo = Autocomplete.extend({
 		
 		// Init
 		initialize: function () {
@@ -23,6 +23,7 @@ define(function (require) {
 			this.$hidden = this.$('input[type="hidden"]');
 			
 			// Add extra events
+			this.events = _.clone(this.events);
 			this.events['click button'] = 'edit';
 			this.events['blur input[type="text"]'] = 'blur';
 		},
@@ -59,5 +60,5 @@ define(function (require) {
 				
 	});
 	
-	return Datalist;
+	return BelongsTo;
 });

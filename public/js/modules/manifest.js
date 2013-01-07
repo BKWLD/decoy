@@ -9,8 +9,8 @@ define(function (require) {
 		'standard-list': require('decoy/views/standard-list'),
 		'moderation': require('decoy/views/moderation'),
 		'autocomplete': require('decoy/views/autocomplete'),
-		'datalist': require('decoy/views/datalist'),
-		'many-to-many': require('decoy/views/many-to-many'),
+		'belongs-to': require('decoy/views/relationships/belongs-to'),
+		'many-to-many': require('decoy/views/relationships/many-to-many'),
 		'task-method': require('decoy/views/task-method'),
 		'ajax-progress': require('decoy/views/ajax-progress')
 	};
