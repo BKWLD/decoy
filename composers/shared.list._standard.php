@@ -13,7 +13,7 @@ as part of when the view was created.  As in View::make()->with()
 	- controller : A string depicting the controller.  This is used in
 		generating links.  I.e. 'admin.news'
 		
-	- columns : An array of key value pairs.  The keys are the title of
+	- columns (optional) : An array of key value pairs.  The keys are the title of
 		the column.  The values are the database column or method to call
 		to find the data.  For instance, when creating a news listing, 
 		you might expect columns to look like:
@@ -41,37 +41,46 @@ as part of when the view was created.  As in View::make()->with()
 	  how to create the new link.  If not defined, it is pulled from the last
 	  segment of the current URL
 	  
-	- description (optiona) : A description for the view
+	- description (optional) : A description for the view
 	
 	- many_to_many [false (default), true] : Makes the list view have an
 	  autocomplete in place of the normal "New" link.  This forms a relationship
 	  from the controller hosting this list and the item that is selected in the
 	  pulldown.  Part of this mojo involves a backbone js view
+	  
+	- tags [false (default), true] : Lets the user create new rows from the listing
+	  view.  Tags means the content is very simple, there is only a single field the
+	  user needs to input.
 
 	  
 */
 View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Required fields
-	$required = array('title', 'listing', 'controller', 'columns');
+	$required = array('title', 'listing', 'controller');
 	foreach($required as $field) {
 		if (!isset($view->$field)) throw new Exception('Standard listing field is not set: '.$field);
 	}
 	
 	// Default settings
 	$defaults = array(
+		'columns'       => array('Title' => 'title'),
 		'auto_link'     => 'first',
 		'sortable'      => false,
 		'convert_dates' => 'date',
 		'sidebar'       => false,
 		'parent_id'     => URI::segment(3), // This spot always holds it
 		'many_to_many'  => false,
+		'tags'          => false,
 	);
 
 	// Apply defaults
 	foreach($defaults as $key => $val) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
+	
+	// Currently, only allow tags for many to manys
+	if (!$view->many_to_many && $view->tags) throw new Exception('Currently tags are only allowed for many to many');
 	
 	// Set a common variable for both types of lists that get passed to the view
 	if (isset($view->listing->results)) $view->iterator = $view->listing->results;

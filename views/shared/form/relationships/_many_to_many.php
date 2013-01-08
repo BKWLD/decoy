@@ -1,8 +1,12 @@
 <?// This view regularly gets pulled into list._standard ?>
 
-<form class="many-to-many-form pull-right" data-js-view="many-to-many" data-controller-route="<?=action($controller)?>" data-parent-id="<?=$parent_id?>">
+<form class="many-to-many-form pull-right" data-js-view="many-to-many<?=!empty($tags)?'-tags':null?>" data-controller-route="<?=action($controller)?>" data-parent-id="<?=$parent_id?>">
 	<div class="input-append">
-	  <input class="span2" type="text" placeholder="Search">
-	  <button class="btn btn-small" disabled type="submit"><i class="icon-tag"></i> Add</button>
+	  <input class="span2" type="text" placeholder="Search<?=!empty($tags)?' or create':null?>">
+	  <button class="btn <?=$sidebar?'btn-small':null?>" disabled type="submit">
+	  	<? if (empty($tags)): ?><i class="icon-tag"></i> Add
+		  <? else: ?><i class="icon-plus"></i> New
+		  <?endif?>
+	 	</button>
 	</div>
 </form>

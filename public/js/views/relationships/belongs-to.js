@@ -26,13 +26,14 @@ define(function (require) {
 			this.events = _.clone(this.events);
 			this.events['click button'] = 'edit';
 			this.events['blur input[type="text"]'] = 'blur';
+			this.events['change input[type="text"]'] = 'match'; // Needing cause no submit button
 		},
 		
 		// Overide the match function to toggle the state of the match
 		// icons and to set the hidden input field
 		match: function() {
 			Autocomplete.prototype.match.call(this);
-			
+
 			// Match found
 			if (this.found) {
 				this.$status.addClass('btn-info').prop('disabled', false).attr('href', this.route+'/'+this.id);

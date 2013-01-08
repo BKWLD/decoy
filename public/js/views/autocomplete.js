@@ -19,6 +19,7 @@ define(function (require) {
 		title: null,
 		selection: null,  // The whole object (from the JSON server response) that is chosen
 		route: null,
+		throttle: 200,
 		
 		// Init
 		initialize: function () {
@@ -35,17 +36,23 @@ define(function (require) {
 
 			// Initialize the Bootstrap typahead plugin, which generates the
 			// autocomplete menu
-			this.data = {}; // This is where the response data will get stored
+			var lastQuery = null;
 			this.$input.typeahead({
-				source: _.debounce(this.query, 200) // Throttle rquests
+				source: _.debounce(_.bind(function(query, process) {
+					
+					// Only invoke a query if the text changed
+					if (this.$input.val() == lastQuery) return;
+					lastQuery = this.$input.val();
+					this.query(query, process);
+				
+				}, this), this.throttle) // Throttle rquests
 			});
-			
+				
 		},
 		
 		// Register interaction events
 		events: {
-			'input input[type="text"]': 'match', // I *think* "input" is well supported
-			'change input[type="text"]': 'match'
+			'input input[type="text"]': 'match'
 		},
 		
 		// Query the server for matches.  Defined as it's own method so it can be
@@ -66,7 +73,7 @@ define(function (require) {
 			
 			// Success
 			.done(_.bind(function(data) { this.response(data, process); }, this));
-			
+	
 		},
 		
 		// The response from the server
@@ -77,10 +84,12 @@ define(function (require) {
 			// to get the id back from the label when saving it.
 			this.data = {};
 			var labels = [];
-			_.each(data, function(row) {
-				labels.push(row.title);
-				this.data[row.title] = row;
-			}, this);
+			if (_.isArray(data)) {
+				_.each(data, function(row) {
+					labels.push(row.title);
+					this.data[row.title] = row;
+				}, this);
+			}
 			
 			// Tell typeahead about the labels
 			process(labels);
@@ -94,7 +103,7 @@ define(function (require) {
 		// we want to constantly check if what they've entered is valid rather than
 		// rely on bootstrap to tell us.  Cause their events to fire with every change
 		// the user makes.
-		match: function() {
+		match: function(e) {
 			
 			// Exact match selected
 			if (this.data[this.$input.val()]) {
@@ -108,6 +117,13 @@ define(function (require) {
 				this.found = false;
 				this.title = this.selection = this.id = null;
 			}
+
+		},
+		
+		// Add a new item to the data array.  Title is the key to the collection
+		// dicitonary. Model is an object like: {id, title, columns:{}}
+		add:function(title, model) {
+			this.data[title] = model;
 		}
 		
 	});

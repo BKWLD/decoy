@@ -5,12 +5,7 @@
 	
 	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
 	<? if ($many_to_many): ?>
-		<form class="many-to-many-form pull-right">
-			<div class="input-append">
-			  <input class="span2" type="text" placeholder="Search">
-			  <button class="btn btn-info disabled" disabled type="submit"><i class="icon-plus icon-white"></i> Add</button>
-			</div>
-		</form>
+		<?=render('decoy::shared.form.relationships._many_to_many', $this->data())?>
 	
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>

@@ -3,15 +3,16 @@
 // --------------------------------------------------
 define(function (require) {
 	
-	// dependencies
+	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone'),
 		Autocomplete = require('decoy/views/autocomplete');
 			
-	// public view module
+	// Public view module
 	var ManyToMany = Autocomplete.extend({
 		
+		// Init
 		initialize: function () {
 			Autocomplete.prototype.initialize.call(this);
 
@@ -34,26 +35,37 @@ define(function (require) {
 		
 		// Overide the match function to toggle the state of the add button
 		match: function() {
-			Autocomplete.prototype.match.call(this);
-			
-			// Match found
-			if (this.found) {
-				this.$submit.addClass('btn-info').prop('disabled', false);
-				this.$icon.addClass('icon-white');
-				
-			// Match cleared
-			} else {
-				this.$submit.removeClass('btn-info').prop('disabled', true);
-				this.$icon.removeClass('icon-white');
-			}
+			var changed = Autocomplete.prototype.match.call(this);
+			if (this.found) this.enable();
+			else this.disable();
+		},
+		
+		// Enable the form
+		enable: function() {
+			if (this.$submit.hasClass('btn-info')) return;
+			this.$submit.addClass('btn-info').prop('disabled', false);
+			this.$icon.addClass('icon-white');
+		},
+		
+		// Disable the form
+		disable: function() {
+			if (!this.$submit.hasClass('btn-info')) return;
+			this.$submit.removeClass('btn-info').prop('disabled', true);
+			this.$icon.removeClass('icon-white');
+		},
+		
+		// Determine if the form should be disabled
+		disabled: function() {
+			return this.$submit.prop('disabled');
 		},
 		
 		// Tell the server to attach the selected item
 		attach: function (e) {
-			e.preventDefault();
+			if (e) e.preventDefault();
 			
-			// Don't execute it no match is found
-			this.match();
+			// Don't execute it no match is found.  Call the base match
+			// because we don't want any UI logic now.
+			Autocomplete.prototype.match.call(this);
 			if (!this.found) return;
 				
 			// Make the request

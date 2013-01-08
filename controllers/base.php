@@ -52,7 +52,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			$this->TITLE = str_replace('_', ' ', $controller_name);
 		}
 		
-		// Figure out what the controller path should be.
+		// Figure out what the controller get should be.
 		// i.e. 'Admin_News_Posts_Controller' becomes 'admin.news_posts';
 		if (empty($this->CONTROLLER)) {
 			$this->CONTROLLER = preg_replace('#_#', '.', strtolower(substr(get_class($this), 0, -11)), 1);
@@ -207,8 +207,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Get data matching the query
 		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
-		$query = Model::ordered()
-			->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
 			
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
@@ -217,15 +216,31 @@ abstract class Decoy_Base_Controller extends Controller {
 			// Require parent_id
 			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
 			$parent_id = Input::get('parent_id');
+			$parent = $this->parent_find($parent_id);
 			
-			// Lookup pivot values
-			list($pivot_table, $pivot_child_foreign, $pivot_parent_foreign) = $this->pivot();
+			// See if there is an exact match on what's been entered.  This is useful for many
+			// to manys with tags because we want to know if the reason that autocomplete
+			// returns no results on an exact match that is already attached is because it
+			// already exists.  Otherwise, it would allow the user to create the tag
+			if ($parent->{$this->PARENT_RELATIONSHIP}()
+				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
+				->count()) {
+				return Response::json(array('exists' => true));
+			}
 			
-			// Add condition to query
-			$parent_id = DB::connection()->pdo->quote($parent_id);
-			$query = $query->where('id', 'NOT IN', DB::raw(
-				"(SELECT {$pivot_child_foreign} FROM {$pivot_table} WHERE {$pivot_parent_foreign} = {$parent_id})"
-			));
+			// Get the ids of already attached rows through the relationship function.  There
+			// are ways to do just in SQL but then we lose the ability for the relationship
+			// function to apply conditions, like is done in polymoprhic relationships.
+			// $parent = $this->parent_find($parent_id);
+			$siblings = $parent->{$this->PARENT_RELATIONSHIP}()->get();
+			if (count($siblings)) {
+				$sibling_ids = array();
+				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
+				
+				// Add condition to query
+				$parent_id = DB::connection()->pdo->quote($parent_id);
+				$query = $query->where_not_in('id', $sibling_ids);
+			}
 		}
 		
 		// Produce the output in the format the autocomplete expects
@@ -298,7 +313,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Validate
 		if ($result = $this->validate(Model::$rules)) return $result;
-		
+
 		// Create a new object
 		$item = new Model();
 		$item->fill(Input::get());
@@ -310,7 +325,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		} else $item->save();
 		
 		// Redirect to edit view
-		return Redirect::to_route($this->CONTROLLER.'@edit', array($item->id));
+		if (Request::ajax()) return Response::json(array('id' => $item->id));
+		else return Redirect::to_route($this->CONTROLLER.'@edit', array($item->id));
 	}
 	
 	// Edit form
@@ -454,7 +470,8 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected function validate($rules, $messages = array()) {
 		
 		// Pull the input from the proper place
-		$input = Request::ajax() ? (array) Input::json() : Input::all();
+		$json = Input::json(); // So I can run empty() on it
+		$input = Request::ajax() && !empty($json) ? (array) $json : Input::all();
 		
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter

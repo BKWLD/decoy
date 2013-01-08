@@ -11,6 +11,7 @@ define(function (require) {
 		'autocomplete': require('decoy/views/autocomplete'),
 		'belongs-to': require('decoy/views/relationships/belongs-to'),
 		'many-to-many': require('decoy/views/relationships/many-to-many'),
+		'many-to-many-tags': require('decoy/views/relationships/many-to-many-tags'),
 		'task-method': require('decoy/views/task-method'),
 		'ajax-progress': require('decoy/views/ajax-progress')
 	};
