@@ -7,7 +7,7 @@ as part of when the view was created.  As in View::make()->with()
 
 	- title : The title of this page.
 	
-	- listing : The data that is being iterated over.  This maye or may
+	- listing : The data that is being iterated over.  This may or may
 		not be paginated
 		
 	- controller : A string depicting the controller.  This is used in
@@ -50,7 +50,7 @@ as part of when the view was created.  As in View::make()->with()
 	  
 	- tags [false (default), true] : Lets the user create new rows from the listing
 	  view.  Tags means the content is very simple, there is only a single field the
-	  user needs to input.
+	  user needs to input.  This should typically be allowed to set it itself automatically.
 
 	  
 */
@@ -78,6 +78,11 @@ View::composer('decoy::shared.list._standard', function($view) {
 	foreach($defaults as $key => $val) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
+	
+	// Figure out whether there should be tags by resolving the controller path into an instance of
+	// the controller for this listing and then seeing if it's model inherits from Decoy\Tag
+	$controller = Controller::resolve(DEFAULT_BUNDLE, $view->controller);
+	if (is_subclass_of($controller->model_name(), 'Decoy\Tag')) $view->tags = true;
 	
 	// Currently, only allow tags for many to manys
 	if (!$view->many_to_many && $view->tags) throw new Exception('Currently tags are only allowed for many to many');

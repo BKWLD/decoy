@@ -222,8 +222,10 @@ function track_browse_history() {
 	$history = Session::get('decoy::browse_history', array());
 	
 	// Only update the history on new requests and not if the current url is
-	// the back route
-	if ((count($history) && $history[0] == URI::full()) || Request::route()->is('decoy::back')) return;
+	// the back route and not if the request is AJAX
+	if ((count($history) && $history[0] == URI::full()) 
+		|| Request::route()->is('decoy::back') 
+		|| Request::ajax()) return;
 	array_unshift($history, URI::full());
 	
 	// Only rember the last 5 requests
