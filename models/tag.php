@@ -91,4 +91,37 @@ abstract class Tag extends Base_Model {
 		return strtolower(get_called_class());
 	}
 	
+	//---------------------------------------------------------------------------
+	// Migrations
+	//---------------------------------------------------------------------------
+	
+	// Create the table
+	static public function up() {
+		Schema::create('tagged_content', function($table){
+			$table->increments('id');
+			$table->string('foreign_type');
+			$table->integer('foreign_id')->unsigned();
+			$table->integer('tag_id')->unsigned();
+			$table->timestamps();
+			$table->index(array('foreign_id', 'foreign_type', 'tag_id'));
+			$table->index(array('tag_id', 'foreign_id', 'foreign_type'));
+		});
+		Schema::create('tags', function($table){
+			$table->increments('id');
+			$table->string('type');
+			$table->string('value');
+			$table->string('slug');
+			$table->timestamps();
+			$table->index(array('value', 'type'));
+			$table->index(array('slug', 'type'));
+			$table->index(array('type', 'value'));
+		});
+	}
+	
+	// Remove the table
+	static public function down() {
+		Schema::drop('tagged_content');
+		Schema::drop('tags');
+	}
+	
 }
