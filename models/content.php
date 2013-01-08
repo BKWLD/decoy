@@ -1,26 +1,24 @@
 <?php
 /*
-
-Content is essentially key / value pairs thae canbe organized.
-FYI, I had to go with 'slug' instead of 'key' because that was a
-reserved term in eloquent.
-
-Add new content pairs to the table table using migrations.  For instance:
-
-	public function up() {
-		
-		// Load the bundle
-		Bundle::start('decoy');
-
-		// Create content options
-		Content::add('home.hero_marquee', 'Hero Marquee Vimeo URL', 'Home', 'text');
-		Content::add('our_agency.who_we_are', 'Who We Are', 'Our Agency', 'wysiwyg');
-		Content::add('our_agency.our_offices', 'Our Offices', 'Our Agency');
-		
-	}
-
-*/
-class Content extends Decoy_Base_Model {
+ * Content is essentially key / value pairs thae canbe organized.
+ * FYI, I had to go with 'slug' instead of 'key' because that was a
+ * reserved term in eloquent.
+ * 
+ * Add new content pairs to the table table using migrations.  For instance:
+ * 
+ * 	public function up() {
+ * 		
+ * 		// Load the bundle
+ * 		Bundle::start('decoy');
+ * 
+ * 		// Create content options
+ * 		Content::add('home.hero_marquee', 'Hero Marquee Vimeo URL', 'Home', 'text');
+ * 		Content::add('our_agency.who_we_are', 'Who We Are', 'Our Agency', 'wysiwyg');
+ * 		Content::add('our_agency.our_offices', 'Our Offices', 'Our Agency');
+ * 		
+ * 	}
+ */
+class Content extends Decoy\Base_Model {
 	static public $table = 'content';
 	static public $timestamps = false;
 	

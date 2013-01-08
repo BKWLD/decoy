@@ -20,7 +20,8 @@ if (Bundle::exists('sentry')) Bundle::start('sentry');
 // Load specific interal classes
 Autoloader::map(array(
 	'Decoy_Base_Controller' => Bundle::path('decoy').'controllers/base.php',
-	'Decoy_Base_Model' => Bundle::path('decoy').'models/base.php',
+	'Decoy\Base_Model' => Bundle::path('decoy').'models/base.php',
+	'Decoy\Tag' => Bundle::path('decoy').'models/tag.php',
 	'Decoy\Auth_Interface' => Bundle::path('decoy').'library/auth_interface.php',
 ));
 

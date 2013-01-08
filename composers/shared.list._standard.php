@@ -23,7 +23,7 @@ as part of when the view was created.  As in View::make()->with()
 		Where "create_abstract" would be a method defined on the model that
 		truncates the body of the news article.
 		
-		Also, remember that 'title' may invoke a the Decoy_Base_Model method 
+		Also, remember that 'title' may invoke a the Decoy\Base_Model method 
 		of title().  This in turn looks for columns named using common title names.
 		
 	- auto_link ['first' (default), 'all', false] : Surround columns

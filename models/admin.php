@@ -3,7 +3,7 @@
 // Admin extends Eloquent in part so that the listing view
 // can instantiate Admin models and hydrate them.  Which is
 // done so that title() can be run to decorate the listing
-class Admin extends Decoy_Base_Model {
+class Admin extends Decoy\Base_Model {
 	
 	// Validation rules
 	public static $rules = array(

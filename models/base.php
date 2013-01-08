@@ -1,9 +1,17 @@
-<?php
+<?php namespace Decoy;
 
 // Imports
 use BKWLD\Utils\File;
+use Laravel\Request;
+use Laravel\Database\Eloquent\Model as Eloquent;
+use Laravel\Database as DB;
+use Croppa;
 
-abstract class Decoy_Base_Model extends Eloquent {
+abstract class Base_Model extends Eloquent {
+	
+	//---------------------------------------------------------------------------
+	// Overrideable properties
+	//---------------------------------------------------------------------------
 	
 	// Auto populate timestamps
 	static public $timestamps = true;
@@ -16,6 +24,10 @@ abstract class Decoy_Base_Model extends Eloquent {
 	// should be used as the source for titles.  Used in the title() function
 	// and in autocompletes.
 	static public $TITLE_COLUMN;
+		
+	//---------------------------------------------------------------------------
+	// Overrideable methods
+	//---------------------------------------------------------------------------
 	
 	// Return the title for the row for the purpose of displaying
 	// in admin list views and breadcrumbs.  It looks for columns
@@ -59,6 +71,10 @@ abstract class Decoy_Base_Model extends Eloquent {
 	static public function ordered_and_visible() {
 		return static::ordered()->where('visible', '=', '1');
 	}
+	
+	//---------------------------------------------------------------------------
+	// Utility methods
+	//---------------------------------------------------------------------------
 	
 	// Randomize the results in the DB.  This shouldn't be used for large datasets
 	// cause it's not very performant

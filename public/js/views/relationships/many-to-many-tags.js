@@ -1,6 +1,10 @@
 // --------------------------------------------------
 // Many to Many tags are like Many To Manys but they
 // let the user create new rows.
+//
+// This view ended up more complicated than I'd like and it's mostly because
+// of trying to prevent race conditions while AJAX checks whether a tag already
+// exists.
 // --------------------------------------------------
 define(function (require) {
 	
@@ -67,7 +71,7 @@ define(function (require) {
 			// enable it again after we wait for the server requests to finish.
 			this.disable();
 			if (this.found || this.hasMatches()) this.enable();
-			else this.delayedEnable();
+			else this.delayedEnable(); // Wait till the user has finished inputing characters
 
 			// There is a match on the server, so show the attach UI
 			if (this.found || this.hasMatches()) {
