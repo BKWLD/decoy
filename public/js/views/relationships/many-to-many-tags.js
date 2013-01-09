@@ -26,6 +26,10 @@ define(function (require) {
 			this.events = _.clone(this.events);
 			this.events.submit = 'create';
 			
+			// Disable the change event so another match won't be called if the
+			// user presses "enter" to submit
+			delete this.events['change input[type="text"]'];
+			
 			// Track the total number of active queries
 			this.requests = 0;
 			

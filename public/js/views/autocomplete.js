@@ -52,7 +52,8 @@ define(function (require) {
 		
 		// Register interaction events
 		events: {
-			'input input[type="text"]': 'match'
+			'input input[type="text"]': 'match',
+			'change input[type="text"]': 'match'
 		},
 		
 		// Query the server for matches.  Defined as it's own method so it can be

@@ -26,7 +26,6 @@ define(function (require) {
 			this.events = _.clone(this.events);
 			this.events['click button'] = 'edit';
 			this.events['blur input[type="text"]'] = 'blur';
-			this.events['change input[type="text"]'] = 'match'; // Needing cause no submit button
 		},
 		
 		// Overide the match function to toggle the state of the match
