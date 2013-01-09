@@ -81,7 +81,10 @@ View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Figure out whether there should be tags by resolving the controller path into an instance of
 	// the controller for this listing and then seeing if it's model inherits from Decoy\Tag
-	$controller = Controller::resolve(DEFAULT_BUNDLE, $view->controller);
+	list($bundle_name, $controller_path) = preg_match('#(.+)::(.+)#', $view->controller, $matches) ? 
+		array($matches[1], $matches[2]) : 
+		array(DEFAULT_BUNDLE, $view->controller);
+	$controller = Controller::resolve($bundle_name, $controller_path);
 	if (is_subclass_of($controller->model_name(), 'Decoy\Tag')) $view->tags = true;
 	
 	// Currently, only allow tags for many to manys
