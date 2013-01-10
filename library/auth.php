@@ -65,4 +65,9 @@ class Auth implements Auth_Interface {
 		return action('admin.account');
 	}
 	
+	// Get their id
+	static public function user_id() {
+		return \Sentry::user()->get('id');
+	}
+	
 }
