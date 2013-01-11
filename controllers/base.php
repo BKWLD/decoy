@@ -24,6 +24,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected $DESCRIPTION; // i.e. 'Relevant news about the brand'
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
 	protected $SHOW_VIEW;   // i.e. 'admin.news.show'
+	protected $SEARCH;      // i.e. 'An array describing the fields to search upon'
 	
 	// More of the same, but these are just involved in relationships
 	protected $PARENT_MODEL;
@@ -142,15 +143,20 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Stop if a parent_id was required but wasn't in the URL
 		if ($this->is_child()) return Response::error('404');
 		
+		// Run the query
+		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate(self::PER_PAGE);
+		$count = $results->total;
+		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
-			'count'            => Model::count(),
-			'listing'          => Model::ordered()->paginate(self::PER_PAGE),
+			'count'            => $count,
+			'listing'          => $results,
 			'columns'          => $this->COLUMNS,
+			'search'           => $this->SEARCH,
 		));
 		
 		// Inform the breadcrumbs
@@ -189,16 +195,21 @@ abstract class Decoy_Base_Controller extends Controller {
 				->select(array('*', $child_key.' AS id', $pivot_table.'.id AS pivot_id'));
 		}
 
+		// Run the query
+		$results = Decoy\Search::apply($query, $this->SEARCH)->paginate(self::PER_PAGE);
+		$count = $results->total;
+
 		// Render the view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
-			'count'            => $query->count(),
-			'listing'          => $query->paginate(self::PER_PAGE),
+			'count'            => $count,
+			'listing'          => $results,
 			'columns'          => $this->COLUMNS,
 			'parent_id'        => $parent_id,
 			'many_to_many'     => $this->is_many_to_many,
+			'search'           => $this->SEARCH,
 		));
 		
 		// Inform the breadcrumbs

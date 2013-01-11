@@ -24,7 +24,11 @@ This partial is used to open forms that have a related data sidebar
 
 <h1><?=$title?>
 	<? if(!empty($item)): ?>
-		<a href="<?=route($controller.'@new', !empty($parent_id)?array($parent_id):array())?>" class="btn btn-info pull-right"><i class="icon-plus icon-white"></i> New</a>
+		<div class="btn-toolbar pull-right">
+			<div class="btn-group">
+				<a href="<?=route($controller.'@new', !empty($parent_id)?array($parent_id):array())?>" class="btn btn-info"><i class="icon-plus icon-white"></i> New</a>
+			</div>
+		</div>
 	<? endif ?>
 	<? if (!empty($description)):?>
 		<small><?=$description?></small>

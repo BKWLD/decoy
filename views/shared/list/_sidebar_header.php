@@ -2,12 +2,18 @@
 
 <legend><a href="<?=route($controller.'@child', $parent_id)?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
 	
+	<div class="btn-toolbar pull-right">
+	
 	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
 	<? if ($many_to_many): ?>
 		<?=render('decoy::shared.form.relationships._many_to_many', $this->data())?>
 		
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>
-		<a href="<?=route($controller.'@new', $parent_id)?>" class="btn btn-info btn-small pull-right"><i class="icon-plus icon-white"></i> New</a>
+		<div class="btn-group">
+			<a href="<?=route($controller.'@new', $parent_id)?>" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i> New</a>
+		</div>
 	<? endif ?>
+	
+	</div>
 </legend>

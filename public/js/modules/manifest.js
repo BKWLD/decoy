@@ -13,6 +13,7 @@ define(function (require) {
 		'many-to-many': require('decoy/views/relationships/many-to-many'),
 		'many-to-many-tags': require('decoy/views/relationships/many-to-many-tags'),
 		'task-method': require('decoy/views/task-method'),
-		'ajax-progress': require('decoy/views/ajax-progress')
+		'ajax-progress': require('decoy/views/ajax-progress'),
+		'search': require('decoy/views/search')
 	};
 });
