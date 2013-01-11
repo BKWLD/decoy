@@ -28,9 +28,7 @@ as part of when the view was created.  As in View::make()->with()
 		
 	- auto_link ['first' (default), 'all', false] : Surround columns
 	  in link tags
-	  
-	- sortable [default:false] : Enable drag and drop sorting
-	
+	  	
 	- convert_dates ['date' (default), 'datetime', 'time', false] : Convert
 	  columns that look like dates into readable versions
 	  
@@ -51,6 +49,8 @@ as part of when the view was created.  As in View::make()->with()
 	- tags [false (default), true] : Lets the user create new rows from the listing
 	  view.  Tags means the content is very simple, there is only a single field the
 	  user needs to input.  This should typically be allowed to set it itself automatically.
+	  
+	- search : The $SEARCH array passed through from the controller config
 
 	  
 */
@@ -66,7 +66,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 	$defaults = array(
 		'columns'       => array('Title' => 'title'),
 		'auto_link'     => 'first',
-		'sortable'      => false,
 		'convert_dates' => 'date',
 		'sidebar'       => false,
 		'parent_id'     => URI::segment(3), // This spot always holds it
@@ -79,6 +78,9 @@ View::composer('decoy::shared.list._standard', function($view) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
 	
+	// Massage the shorthand search config options
+	if (isset($view->search)) $view->search = Decoy\Search::longhand($view->search);
+	
 	// Figure out whether there should be tags by resolving the controller path into an instance of
 	// the controller for this listing and then seeing if it's model inherits from Decoy\Tag
 	list($bundle_name, $controller_path) = preg_match('#(.+)::(.+)#', $view->controller, $matches) ? 
@@ -86,9 +88,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 		array(DEFAULT_BUNDLE, $view->controller);
 	$controller = Controller::resolve($bundle_name, $controller_path);
 	if (is_subclass_of($controller->model_name(), 'Decoy\Tag')) $view->tags = true;
-	
-	// Currently, only allow tags for many to manys
-	if (!$view->many_to_many && $view->tags) throw new Exception('Currently tags are only allowed for many to many');
 	
 	// Set a common variable for both types of lists that get passed to the view
 	if (isset($view->listing->results)) $view->iterator = $view->listing->results;

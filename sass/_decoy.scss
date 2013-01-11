@@ -1,6 +1,4 @@
 @import "compass/css3";
-@import "compass/css3/images";
-@import "compass/css3/transform";
 @import "compass/utilities/general/clearfix";
 
 // Bootstrap
@@ -23,6 +21,7 @@ $bootstrap_nav_break: 767px;
 // ---------------------------------------------------------------------
 
 $light-grey: whiteSmoke;
+$grey-border: #ddd;
 $light-opacity: .3;
 $near-black: #333;
 
@@ -117,8 +116,7 @@ h1 {
 	}
 	
 	// Elements in the title area
-	.pull-right {
-		margin-top: 10px;
+	.btn-toolbar {
 		margin-left: 20px;
 		.btn {
 			font-weight: normal;
@@ -218,7 +216,7 @@ h1 {
 
 	// Add border lines to the bottom rather than top of row	
 	td,th {
-		border-bottom: 1px solid #ddd;
+		border-bottom: 1px solid $grey-border;
 		border-top: none;
 	}
 	
@@ -290,7 +288,7 @@ h1 {
 		// This is the unit that gets dragged around
 		.helper {
 			background: rgba(255,255,255,.9);
-			border: 1px dashed #ddd;
+			border: 1px dashed $grey-border;
 			
 			// Compensate for the left and top border on the row being added
 			td { 
@@ -310,7 +308,7 @@ h1 {
 	
 	// Give images a border
 	tr img {
-		border: 1px solid #ddd;
+		border: 1px solid $grey-border;
 	}
 	
 	// Make gravatar images a good size (for the admins view)
@@ -360,6 +358,85 @@ h1 {
 		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
 			display: table-cell;
 		}	
+	}
+}
+
+// The search interface
+.search {
+	$search-bkgd: darken($light-grey, 3%);
+	$search-shadow: darken($search-bkgd, 5%);
+
+	// The container for the form
+	margin: 0;
+	background: $light-grey;
+	@include border-radius(4px 4px 0 0);
+	text-align: center;
+	background: $search-bkgd;
+	// @include background-image(linear-gradient($search-bkgd, $search-bkgd 95%, $search-shadow));
+	@include box-shadow(darken(white, 20) 0px 1px 3px 0 inset);
+	overflow: hidden;
+	color: darken(white, 50);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+	display: none;
+	
+	// Specifying padding an inside container so it doesn't animate
+	.conditions {
+		padding: 2px;
+		display: inline-block;
+		position: relative;
+		text-align: right;
+		margin-right: 88px; // Compensate for the submit button in centering
+		
+		// Center the labels on the left
+		.intro {
+			position: relative;
+			top: 2px;
+		}
+		 
+		// Line spacing
+		.condition { margin: 5px; }
+		
+		// The labels (label tags and selectors are used by bootstrap)
+		@media (max-width: $bootstrap_nav_break) {
+			.intro {
+				display: none;
+			}
+		}
+		
+		// The add/minus buttons
+		.add, .subtract {
+			$radius: 15px;
+			@include border-radius($radius);
+			width: $radius*2;
+			height: $radius*2;
+			padding: 0;
+		}
+		
+		// The search button
+		button[type="submit"] {
+			position: absolute;
+			bottom: 8px;
+			right: -88px; // Harcoded estimation of width ... wish i had a smarter approach
+		}
+		
+		// Make all the inputs the same size
+		$width: 130px;
+		input, select {
+			@include box-sizing(border-box);
+			width: $width;
+			height: 30px;
+		}
+		input.date {width: $width - 27px; }
+		
+		// Space out the inputs, which are butted right up to each other cause of JS
+		.condition > * {
+			margin: 0 2px;
+		}
+	}
+	
+	// The pulldowns
+	select {
+		width: inherit;
 	}
 }
 
@@ -698,9 +775,13 @@ input[type="file"] {
 	margin-right: 10px;
 }
 
-// Buttons and autocompletes within legends need to be pushed down a tad
-legend .btn-small.pull-right, legend .many-to-many-form.pull-right {
-	margin-top: 8px;
+// Button groups need their bottom margin removed
+legend .btn-toolbar {
+	margin-bottom: 0;
+	.many-to-many-form {
+		position: relative;
+		top: -3px;
+	}
 }
 
 // This field doesn't need to be so big

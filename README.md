@@ -229,6 +229,30 @@ The following protected proprties allow you to customize how Decoy works from th
 * `DESCRIPTION` - An optional sentenance or two that is displayed with the title in the header of the page.
 * `COLUMNS` - An array of key value pairs used to describe what table columns to have in the listing view.  The default is: `array('Title' => 'title')`.  The key is the label of the column, shown in the header of the table.  The value is the source for the data for the column.  Decoy first checks if there is a method defined on the model with the value and, if so, executes it to return the value.  If there is no method, it checks to see if the model has a property (or dynamic property) with that name and uses it's value of it does.  Finally, if none of those cases are true, it will use the value literally, rendering it in every row of the table.  Note: the default value, `title`, is the name of a method defined in `Decoy\Base_Model`.
 * `SHOW_VIEW` - The path, in the Laravel format, to the view for the new/edit view.  I.e. 'admin.news.show'.
+* `SEARCH` - A multidimensional associative array that tells Decoy what fields to make available to the search on index views.  It expects data like:
+
+	```
+	array(
+		'title', // 'title' column assumed to be a text type
+		'description' => 'text', // Label auto generated from field name
+		'body' => array( // Most explicit way
+			'type' => 'text',
+			'label' => 'Body',
+		)
+		'type' => array( // Creates a pulldown menu
+			'type' => 'select',
+			'options' => array(
+				'photo' => 'Photo',
+				'video' => 'Video',
+			),
+		),
+		'like_count' => array( // Numeric input field
+			'type' => 'number',
+			'label' => 'Like total',
+		),
+		'created_at' => 'date', // Date input field
+	);
+	```
 
 The following properties are only relevant if a controller is a parent or child of another, as in `has_many()`, `has_many_and_belongs_to()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
 
