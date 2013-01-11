@@ -416,7 +416,7 @@ h1 {
 		button[type="submit"] {
 			position: absolute;
 			bottom: 8px;
-			right: -88px; // Harcoded estimation of width ... wish i had a smarter approach
+			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
 		}
 		
 		// Make all the inputs the same size
@@ -433,10 +433,29 @@ h1 {
 			margin: 0 2px;
 		}
 	}
+}
+
+// Special styles for animating the clear button.  Namespaced here so this could be removed
+// without much trouble
+.animated-clear {
+	.search-toggle {
+		z-index: 2;
+		margin-right: 39px;
+	}
+	.search-clear {
+		z-index: 1;
+		position: absolute;
+		right: 0;
+		top: 2px;
+	}
+	&.closed {
+		.btn { border-radius: 4px; }
+		.search-toggle { margin-right: 0;}
+	}
 	
-	// The pulldowns
-	select {
-		width: inherit;
+	// Only animate after the initial page load
+	&.initialized .search-toggle {
+		@include transition(margin-right 400ms ease-out);
 	}
 }
 

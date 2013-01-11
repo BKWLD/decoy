@@ -31,17 +31,23 @@ define(function (require) {
 			this.title = this.$el.data('title');
 			this.$conditions = this.$('.conditions');
 			this.$submit = this.$conditions.find('button[type="submit"]');
+			this.$search_actions = $('h1 .search-toggle').closest('.btn-group');
 			
 			// Make the add and substract buttons
 			this.$add = $('<button type="button" class="btn add"><i class="icon-plus">');
 			this.$subtract = $('<button type="button" class="btn subtract"><i class="icon-minus">');
 			
 			// Listen for the clicks on the open/close and clear buttons
-			$('h1 .search-toggle').click(this.toggle);
-			$('h1 .search-clear').click(this.clear);
+			this.$search_actions.find('.search-toggle').click(this.toggle);
+			this.$search_actions.find('.search-clear').click(this.clear);
 			
 			// Add an initial row
 			if (this.defrost() === false) this.add();
+			
+			// Defer animation of the clear button
+			_.defer(_.bind(function() {
+				this.$search_actions.addClass('initialized');
+			}, this));
 			
 			// Redirect the page to apply the filter if there is no query in the
 			// url but there is at state.
@@ -65,12 +71,13 @@ define(function (require) {
 		toggle: function(e) {
 			e.preventDefault();
 			
-			// Animate
-			this.$el.slideToggle();
-			
 			// Remember the state
 			this.visible = !this.visible;
 			storage.set('visible', this.visible);
+			
+			// Animate
+			this.$el.slideToggle();
+			this.toggleClear();
 			
 		},
 		
@@ -210,6 +217,7 @@ define(function (require) {
 		// Freeze the state of the form in storage
 		freeze: function() {
 			storage.set(state_key, this.serialize());
+			this.toggleClear();
 		},
 		
 		// Restore the form from a frozen state
@@ -250,6 +258,7 @@ define(function (require) {
 					input = $condition.find('.input-field').val();
 					
 				// Don't add empty items
+				if (input) clearable = true;
 				if (ignore_empty && !input) return;
 				
 				// Add the field choice, comparison chocie, and selected value
@@ -284,6 +293,21 @@ define(function (require) {
 		// Remove the query from the search query
 		stripQuery: function(search) {
 			return search.replace(/&?query=[^&]+/, '');
+		},
+		
+		// Toggle the clear button
+		toggleClear: function() {
+			
+			// Get the conditions from the frozen state
+			var conditions = storage.get(state_key);
+			
+			// Anytime we serialize, check if we should show or hide the clear button.
+			// The form must be visible and have more than one condition or an input
+			// value in the first condition.  This function gets called often but jquery
+			// won't add a class more than once, so it won't be triggered too often.
+			if (this.visible && (conditions.length > 1 || conditions[0][2])) this.$search_actions.removeClass('closed');
+			else this.$search_actions.addClass('closed');
+			
 		},
 		
 		// Clear the form

@@ -7,7 +7,7 @@
 			
 		<?// Button to open the search form ?>
 		<? if (!empty($search)): ?>
-			<div class="btn-group">
+			<div class="btn-group animated-clear closed">
 				<a class="btn search-toggle"><i class="icon-search"></i></a>
 				<a class="btn search-clear js-tooltip" title="Reset search"><i class="icon-ban-circle"></i></a>
 			</div>
