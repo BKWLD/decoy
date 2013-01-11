@@ -22,7 +22,7 @@ Almost all of the behaviors described above are opt-in; everything can be overri
 For now, this Bundle is not available to the artisan bundle installer, it must be installed manually.
 
 1. [Download](http://laravel.com/download) and install Laravel
-2. Download this repo and put it at /bundles/decoy.  I recomment `git init`-ing a new repo at /bundles/decoy and adding this repo as a remote (`git remote add origin git@github.com:BKWLD/decoy.git`.  Then `pull`-ing so you have an easy way to get updates and push up your own fixes and features.
+2. Download this repo and put it at /bundles/decoy.  I recommend `git init`-ing a new repo at /bundles/decoy and adding this repo as a remote (`git remote add origin git@github.com:BKWLD/decoy.git`.  Then `pull`-ing so you have an easy way to get updates and push up your own fixes and features.
 3. [Install](http://laravel.com/docs/bundles#installing-bundles) all the bundle dependencies:
    * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handlin utilities
    * [croppa](http://bundles.laravel.com/bundle/croppa) - Used for thumbnail generation
@@ -30,8 +30,8 @@ For now, this Bundle is not available to the artisan bundle installer, it must b
    * [former](http://bundles.laravel.com/bundle/former) - Used to make generating form elements more terse
    * [messages](http://bundles.laravel.com/bundle/messages) - Used for sending HTML email
 4. Initialize Decoy in the bundles.php file with: `'decoy' => array('auto' => true, 'handles' => 'admin'),`
-5. To customize the default user credentialt, edit the `default_login` and `default_password` fields within the config file (/config/decoy.php)
-6. Run a general migration to create the standard decoy databae tables and generate the default user.
+5. To customize the default user credentials, edit the `default_login` and `default_password` fields within the config file (/config/decoy.php)
+6. Run a general migration to create the standard decoy database tables and generate the default user.
 7. Make all admin controllers and models extend from Decoy_Base_Controller and Decoy\Base_Model.  I generally have an application Base_Controller and Base_Model for the front end, both of which inherit from the Decoy classes.
 8. Configure Compass to look for sass in the decoy bundle by adding the following to the compass config.rb file: `add_import_path "bundles/decoy/sass"`.  Then, within the sass file for your application's admin area, include the decoy sass with a simple: `@import "decoy";`.  Here's [an example](https://gist.github.com/39230d1241590093986e).
 
