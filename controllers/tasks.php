@@ -22,6 +22,9 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 			$task = basename($task_file, '.php');
 			$methods = get_class_methods(self::class_name($task));
 			
+			// Check if the tasks should be ignored
+			if (property_exists(self::class_name($task), 'IGNORE')) continue;
+			
 			// Filter some method names
 			// __construct : This is typically only used for bootstrapping
 			// worker : This is typicaly used by laravel workers (infinitely long running tasks)
