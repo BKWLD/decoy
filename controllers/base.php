@@ -70,11 +70,11 @@ abstract class Decoy_Base_Controller extends Controller {
 			$this->MODEL = Str::singular($controller_name);
 			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
 		}
-		
+
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
 		if ($this->MODEL && !class_exists('Model')) {
-			class_alias($this->MODEL, 'Model');
+			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
 		
 		// Get an array of all the parent controllers to this one.  This is used in
