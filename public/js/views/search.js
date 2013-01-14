@@ -67,6 +67,10 @@ define(function (require) {
 			'submit': 'submit'
 		},
 		
+		//----------------------------------------------------------------
+		// Render the UI
+		//----------------------------------------------------------------
+		
 		// Toggle the search open and close
 		toggle: function(e) {
 			e.preventDefault();
@@ -154,7 +158,7 @@ define(function (require) {
 			}
 		},
 		
-		// Remove any existion comparisons on a condition
+		// Remove any existing comparisons on a condition
 		removeComparisons: function($condition) {
 			$condition.find('.comparisons,.input').remove();
 		},
@@ -214,6 +218,25 @@ define(function (require) {
 			this.freeze();
 		},
 		
+		// Toggle the clear button
+		toggleClear: function() {
+			
+			// Get the conditions from the frozen state
+			var conditions = storage.get(state_key);
+			
+			// Anytime we serialize, check if we should show or hide the clear button.
+			// The form must be visible and have more than one condition or an input
+			// value in the first condition.  This function gets called often but jquery
+			// won't add a class more than once, so it won't be triggered too often.
+			if (this.visible && (conditions.length > 1 || conditions[0][2])) this.$search_actions.removeClass('closed');
+			else this.$search_actions.addClass('closed');
+			
+		},
+		
+		//----------------------------------------------------------------
+		// Store and recall the state of the form
+		//----------------------------------------------------------------
+		
 		// Freeze the state of the form in storage
 		freeze: function() {
 			storage.set(state_key, this.serialize());
@@ -258,10 +281,9 @@ define(function (require) {
 					input = $condition.find('.input-field').val();
 					
 				// Don't add empty items
-				if (input) clearable = true;
 				if (ignore_empty && !input) return;
 				
-				// Add the field choice, comparison chocie, and selected value
+				// Add the field choice, comparison choice, and selected value
 				conditions.push([field, comparison, input]);
 				
 			});
@@ -269,6 +291,10 @@ define(function (require) {
 			// Return object that has the state
 			return conditions;
 		},
+		
+		//----------------------------------------------------------------
+		// Act on the contents of the form
+		//----------------------------------------------------------------
 		
 		// Submit the form by redirecting with the serialized query
 		submit: function(e) {
@@ -287,26 +313,6 @@ define(function (require) {
 			
 			// Redirect the page
 			location.href = location.origin+location.pathname+search;
-			
-		},
-		
-		// Remove the query from the search query
-		stripQuery: function(search) {
-			return search.replace(/&?query=[^&]+/, '');
-		},
-		
-		// Toggle the clear button
-		toggleClear: function() {
-			
-			// Get the conditions from the frozen state
-			var conditions = storage.get(state_key);
-			
-			// Anytime we serialize, check if we should show or hide the clear button.
-			// The form must be visible and have more than one condition or an input
-			// value in the first condition.  This function gets called often but jquery
-			// won't add a class more than once, so it won't be triggered too often.
-			if (this.visible && (conditions.length > 1 || conditions[0][2])) this.$search_actions.removeClass('closed');
-			else this.$search_actions.addClass('closed');
 			
 		},
 		
@@ -335,6 +341,15 @@ define(function (require) {
 			// Otherwise, redirect the page by doing a submit
 			this.submit();
 			
+		},
+		
+		//----------------------------------------------------------------
+		// Utils
+		//----------------------------------------------------------------
+		
+		// Remove the query from the search query
+		stripQuery: function(search) {
+			return search.replace(/&?query=[^&]+/, '');
 		}
 		
 	});
