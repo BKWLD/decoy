@@ -264,12 +264,34 @@ h1 {
 	}
 	
 	// Always make the second column the widest, assuming
-	// that to be the title
+	// that to be the title.  This relies on table-layout fixed where
+	// the first row sets the widths of all subsequent rows
+	& { table-layout: fixed; }
 	td,th {
 		white-space: nowrap;
 	}
-	td:first-child + td {
+	th { // Default width of columns, which gets overriden in special cases below
+		width: 25%;
+	}
+	th:first-child {
+		width: 10px;
+	}
+	th:first-child + th { // The title column, at 100%, will effectively be 4x the width of all extra columns
 		width: 100%;
+	}
+	th:last-child {
+		width: 57px; // Enough width for up to 3 action links
+		padding-right: 10px;
+		text-align: right;
+	}
+	td { // All cells are told to consume the full available width and ellipsis any leftover
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	td:last-child {
+		text-align: right;
+		padding-left: 0;
 	}
 	
 	// Vertically center align all cells, for rows with image thumbnails in there
@@ -346,12 +368,6 @@ h1 {
 		
 		// Icons have a margin top from bootstrap
 		i { margin-top: 0;}
-	}
-	
-	// Center align the actions title
-	th:last-child {
-		text-align: center;
-		padding-right: 10px;
 	}
 }
 
@@ -748,6 +764,13 @@ label {
 	// Reduce the margins (looks better when there are images in there )
 	li > a {
 		padding: 5px;
+	}
+	
+	// Restrict the width so it can't bleed out the right edge of the page
+	max-width: 200px;
+	li > a {
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 }
 
