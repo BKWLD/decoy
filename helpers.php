@@ -65,11 +65,12 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
  * Make an image upload field.  That is to say, one that displays a sample if an
  * image has already been uploaded
  */
-HTML::macro('image_upload', function($image, $id = null, $label = null, $help = null) {
+HTML::macro('image_upload', function($id = null, $label = null, $help = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'image';
 	$block_help = '';
+	$image = Former::getValue($id);
 	
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -114,6 +115,8 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
 	} else return Former::file($id, $label)->accept('image')->blockHelp($block_help);
 	
 });
+
+
 
 /**
  * Render the UI that the JS expecting to render a datalist style autocomplete menu.
