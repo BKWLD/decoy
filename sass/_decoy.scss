@@ -280,9 +280,10 @@ h1 {
 		width: 100%;
 	}
 	th:last-child {
-		width: 57px; // Enough width for up to 3 action links
 		padding-right: 10px;
 		text-align: right;
+		&.actions-2 { width: 41px; } 
+		&.actions-3 { width: 57px; }
 	}
 	td { // All cells are told to consume the full available width and ellipsis any leftover
 		width: 100%;

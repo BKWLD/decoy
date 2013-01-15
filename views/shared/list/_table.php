@@ -1,5 +1,11 @@
 <?// The list of rows in table for for the standard list ?>
 
+<?
+// Determine how many action links there will be so the column can be sized appropriately
+$actions = 2; // Default
+if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
+?>
+
 <table class="table">
 	<thead>
 			<tr>
@@ -10,7 +16,7 @@
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
 				<? endforeach ?>
 				
-				<th>Actions</th>
+				<th class="actions-<?=$actions?>">Actions</th>
 			</tr>
 		</thead>
 	<tbody>
