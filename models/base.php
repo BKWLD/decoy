@@ -5,6 +5,8 @@ use BKWLD\Utils\File;
 use Laravel\Request;
 use Laravel\Database\Eloquent\Model as Eloquent;
 use Laravel\Database as DB;
+use Laravel\Input;
+use Laravel\Config;
 use Croppa;
 
 abstract class Base_Model extends Eloquent {
