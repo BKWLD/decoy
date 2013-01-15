@@ -92,8 +92,12 @@ abstract class Decoy_Base_Controller extends Controller {
 		// relationship, and child relationship
 		if (!empty($this->PARENT_CONTROLLER)) {
 			
-			// Instantiate the controller class
-			$parent_controller_instance = Controller::resolve(DEFAULT_BUNDLE, $this->PARENT_CONTROLLER);
+			// Instantiate the controller class if different from the current one.  They would be the same
+			// in the case of a relationship for related models.  Like if the site required "projects" to have
+			// a list of related projects, there would be a many-to-many back to oneself.  Because we're only
+			// instatiating the class here to get values set in the construtor, we can use ourself.
+			if ($this->PARENT_CONTROLLER == $this->CONTROLLER) $parent_controller_instance = $this;
+			else $parent_controller_instance = Controller::resolve(DEFAULT_BUNDLE, $this->PARENT_CONTROLLER);
 			
 			// Determine it's model, so we can call static methods on that model
 			if (empty($this->PARENT_MODEL)) {
@@ -226,7 +230,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Get data matching the query
 		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
 		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
-			
+		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
 		if ($this->is_many_to_many) {
