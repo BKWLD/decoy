@@ -51,9 +51,8 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 
 ##### RequireJS
 
-1. Make sure that your require-jquery.js file has the jQuery animate library.  The version that is currently included with BukBuilder does not have it.
-2. Make the deployment process run `php artisan bundle:publish decoy` from the CLI.  This could be added to the before_deploy hook if you're using PagodaBox (you'll also need to add /public/bundles to the `shared_writable_dirs`).  This publishes the decoy JS to a web readable directory (/public/bundles/decoy/js).  Locally, this is run automatically on every page request.  I suggest adding public/bundles to the gitignore and your Sublime exlcluded directories.
-3. Add a (relative) path (like in the `paths` property) to the the decoy JS directory in the main.js file.  For example, [this](https://gist.github.com/8dcbe9082994fef6b865):
+1. Make the deployment process run `php artisan bundle:publish decoy` from the CLI.  This could be added to the before_deploy hook if you're using PagodaBox (you'll also need to add /public/bundles to the `shared_writable_dirs`).  This publishes the decoy JS to a web readable directory (/public/bundles/decoy/js).  Locally, this is run automatically on every page request.  I suggest adding public/bundles to the gitignore and your Sublime exlcluded directories.
+2. Add a (relative) path (like in the `paths` property) to the the decoy JS directory in the main.js file.  For example, [this](https://gist.github.com/8dcbe9082994fef6b865):
  
 	```
 	require.config({
@@ -66,8 +65,8 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 	});
 	```
 
-4. Require the Decoy bootstrap module (/public/bundles/decoy/js/decoy.js) from the application's admin bootstrap (i.e. /public/js/admin/app.js).  I like to return the `app` object from Decoy's bootstrap and use it for the admin's main `app` as well.  For example: [this](https://gist.github.com/6a4a57eaf9073e39596a).
-5. Decoy uses some JS plugins that have to use Require.js's shim functionality to load.  These shim definitions must be placed in the application's admin require js config (i.e. /public/js/admin/main.js), they couldn't be made part of Decoy internals.  The required shim definition looks like:
+3. Require the Decoy bootstrap module (/public/bundles/decoy/js/decoy.js) from the application's admin bootstrap (i.e. /public/js/admin/app.js).  I like to return the `app` object from Decoy's bootstrap and use it for the admin's main `app` as well.  For example: [this](https://gist.github.com/6a4a57eaf9073e39596a).
+4. Decoy uses some JS plugins that have to use Require.js's shim functionality to load.  These shim definitions must be placed in the application's admin require js config (i.e. /public/js/admin/main.js), they couldn't be made part of Decoy internals.  The required shim definition looks like:
 
 	```
 	require.config({
