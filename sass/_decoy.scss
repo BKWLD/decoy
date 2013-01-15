@@ -294,6 +294,9 @@ h1 {
 		text-align: right;
 		padding-left: 0;
 	}
+	td:first-child { // When there is only one row, this will supercede the above
+		text-align: left;
+	}
 	
 	// Vertically center align all cells, for rows with image thumbnails in there
 	td {
