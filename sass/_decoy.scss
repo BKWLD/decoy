@@ -815,6 +815,7 @@ input[type="file"] {
 	}
 	.image-delete { 
 		margin-top: 10px;
+		font-size: 14px;
 		color: #D14;
 		a { color: #D14;}
 		i {
@@ -824,6 +825,25 @@ input[type="file"] {
 		code { background: none; }
 	}
 	.image-help { display: block; }
+}
+
+// This the styling for generic file uploads
+.help-block {
+	.download {
+		a, code { color: #1E8AAA; }
+	}
+	.file-delete {
+		&, a { color: #D14; }
+	}
+	.download, .file-delete {
+		margin-top: 10px;
+		font-size: 14px;
+		i {
+			position: relative;
+			top: -1px;
+		}
+		code { background: none; }
+	}
 }
 
 // Fix spacing amongst linline radio fields

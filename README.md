@@ -52,7 +52,7 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 ##### RequireJS
 
 1. Make the deployment process run `php artisan bundle:publish decoy` from the CLI.  This could be added to the before_deploy hook if you're using PagodaBox (you'll also need to add /public/bundles to the `shared_writable_dirs`).  This publishes the decoy JS to a web readable directory (/public/bundles/decoy/js).  Locally, this is run automatically on every page request.  I suggest adding public/bundles to the gitignore and your Sublime exlcluded directories.
-2. Add a (relative) path (like in the `paths` property) to the the decoy JS directory in the main.js file.  For example, [this](https://gist.github.com/8dcbe9082994fef6b865):
+2. Add a (relative) path (like in the `paths` property) to the the decoy JS directory in the **admin's** main.js file.  For example, [this](https://gist.github.com/8dcbe9082994fef6b865):
  
 	```
 	require.config({

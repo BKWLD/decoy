@@ -678,6 +678,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// If someone has uploaded a new file, use it's value as the field and continue.
 			if (Input::has_file(UPLOAD_REPLACE.$column)) {
 				self::move_replace_file_input($column);
+				continue;
 			}
 
 			// The user has not specified to delete and has not uploaded a file (these conditions would be
