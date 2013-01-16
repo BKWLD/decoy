@@ -446,9 +446,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		$items = Model::where_in('id', $ids);
 		if (empty($items)) return Response::error('404');
 		
-		// Delete images if they are defined
+		// Delete images if they are defined.
 		foreach($items->get() as $item) {
-			if (!empty($item->image)) Croppa::delete($item->image);
+			if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
 		}
 		
 		// Delete the row
