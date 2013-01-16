@@ -338,7 +338,7 @@ abstract class Decoy_Base_Controller extends Controller {
 
 		// Create a new object
 		$item = new Model();
-		$item->fill(Input::get());
+		$item->fill(BKWLD\Utils\Collection::null_empties(Input::get()));
 		self::save_files($item);
 		
 		// Save it
@@ -408,7 +408,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Update it
 		$json = Input::json(); // Had to save to var to test for empty
-		$item->fill(!empty($json) ? (array) $json : Input::get());
+		$input = !empty($json) ? (array) $json : Input::get();
+		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
 
 		// Redirect to the edit view
