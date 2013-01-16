@@ -105,6 +105,7 @@ abstract class Tag extends Base_Model {
 			$table->timestamps();
 			$table->index(array('foreign_id', 'foreign_type', 'tag_id'));
 			$table->index(array('tag_id', 'foreign_id', 'foreign_type'));
+			$table->foreign('tag_id')->references('id')->on('tags')->on_delete('cascade')->on_update('cascade');
 		});
 		Schema::create('tags', function($table){
 			$table->increments('id');
