@@ -26,6 +26,9 @@ define(function (require) {
 			this.events = _.clone(this.events);
 			this.events['click button'] = 'edit';
 			this.events['blur input[type="text"]'] = 'blur';
+			
+			// If there is already a value, count that as a match
+			if (this.$hidden.val()) this.found = true;
 		},
 		
 		// Overide the match function to toggle the state of the match
