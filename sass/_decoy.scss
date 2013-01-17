@@ -876,11 +876,21 @@ legend .btn-toolbar {
 }
 
 // Add an optional class to control groups that will position the contents inline
-.inline .control-group {
+.inline .control-group, .control-group.inline {
 	.control-label {
 		float: left;
 		width: 160px;
 		line-height: 30px;
+	}
+	
+	// Let selects be their natural width
+	select {
+		width: inherit;
+	}
+	
+	// Restrict files so they have a better chance of being visible on narrower browsrs
+	input[type="file"] {
+		width: 190px;
 	}
 	
 	// Anything else in there needs to go to the next line
