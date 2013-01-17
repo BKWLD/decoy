@@ -150,3 +150,27 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 	return render('decoy::shared.form.relationships._belongs_to', $data);
 	
 });
+
+HTML::macro('ckeditor', function($name, $options = null) {
+
+	$data = array();
+
+	$data[] = '<div class="control-group">';
+	$data[] = '<label for="'.$name.'" class="control-label">'.ucwords($name).'</label>';
+	$data[] = '<textarea name="'.$name.'">&lt;p&gt;Initial value.&lt;/p&gt;</textarea>';
+	$data[] = '</div>';
+
+	$data[] = "
+	<script>
+	CKEDITOR.replace( '".$name."', {
+    	filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+    	filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?Type=Images',
+   		filebrowserFlashBrowseUrl: '/ckfinder/ckfinder.html?Type=Flash',
+    	filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+    	filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+    	filebrowserFlashUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+	});
+	</script>";
+
+	return implode(PHP_EOL, $data);
+});
