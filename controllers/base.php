@@ -18,19 +18,19 @@ abstract class Decoy_Base_Controller extends Controller {
 	
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
-	protected $MODEL;       // i.e. 'Post'
-	protected $CONTROLLER;  // i.e. 'admin.posts'
-	protected $TITLE;       // i.e. 'News Posts'
-	protected $DESCRIPTION; // i.e. 'Relevant news about the brand'
+	protected $MODEL;       // i.e. Post
+	protected $CONTROLLER;  // i.e. admin.posts
+	protected $TITLE;       // i.e. News Posts
+	protected $DESCRIPTION; // i.e. Relevant news about the brand
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
-	protected $SHOW_VIEW;   // i.e. 'admin.news.show'
-	protected $SEARCH;      // i.e. 'An array describing the fields to search upon'
+	protected $SHOW_VIEW;   // i.e. admin.news.show
+	protected $SEARCH;      // i.e. An array describing the fields to search upon
 	
 	// More of the same, but these are just involved in relationships
-	protected $PARENT_MODEL;
-	protected $PARENT_CONTROLLER;
-	protected $PARENT_RELATIONSHIP; // The relationship function on the parent model
-	protected $CHILD_RELATIONSHIP;  // The relationship function on the child model
+	protected $PARENT_MODEL;      // i.e. Photo
+	protected $PARENT_CONTROLLER; // i.e. admin.photos
+	protected $PARENT_TO_SELF;    // i.e. photos
+	protected $SELF_TO_PARENT;    // i.e. post
 	
 	// Internal properties
 	private $parent_controllers = array();
@@ -78,15 +78,26 @@ abstract class Decoy_Base_Controller extends Controller {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
 		
+		//**************************** BEGIN THE NEW SHIT
+		
 		// Get an array of all the parent controllers to this one.  This is used in
 		// a couple operations
 		$routes = Config::get('decoy::decoy.routes');
 		$this->parent_controllers = $this->find_parent_controllers($routes);
 		
-		// Figure out if there is a parent controller
-		if (empty($this->PARENT_CONTROLLER) && count($this->parent_controllers)) {
-			$this->PARENT_CONTROLLER = end($this->parent_controllers);
+		// If the current route has a parent, discover what it is
+		if (empty($this->PARENT_CONTROLLER) && $this->is_child_route()) {
+			$this->PARENT_CONTROLLER = $this->parent_controller();
+			Log::info('CONTROLLER:'.$this->CONTROLLER);
+			Log::info('PARENT_CONTROLLER:'.$this->PARENT_CONTROLLER);
 		}
+		
+		//**************************** THE OLD SHIT
+		
+		// Figure out if there is a parent controller
+		// if (empty($this->PARENT_CONTROLLER) && count($this->parent_controllers)) {
+		// 	$this->PARENT_CONTROLLER = end($this->parent_controllers);
+		// }
 		
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
@@ -106,18 +117,22 @@ abstract class Decoy_Base_Controller extends Controller {
 			
 			// Figure out what the relationship function to the child (this controller's
 			// model) on the parent model
-			if (empty($this->PARENT_RELATIONSHIP) && $this->PARENT_MODEL) {
-				$this->PARENT_RELATIONSHIP = $this->parent_relationship();
+			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
+				$this->PARENT_TO_SELF = $this->parent_relationship();
 			}
 			
 			// Figure out the child relationship name, which is typically named the same
 			// as the parent model
-			if (empty($this->CHILD_RELATIONSHIP) && $this->PARENT_MODEL) {
-				$this->CHILD_RELATIONSHIP = $this->child_relationship();
+			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
+				$this->SELF_TO_PARENT = $this->child_relationship();
 			}
 			
+			Log::info('PARENT_MODEL:'.$this->PARENT_MODEL);
+			Log::info('PARENT_TO_SELF:'.$this->PARENT_TO_SELF);
+			Log::info('SELF_TO_PARENT:'.$this->SELF_TO_PARENT);
+			
 		}
-						
+		
 		// Continue processing
 		parent::__construct();
 		
@@ -175,9 +190,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			
 		// Form the query by manually making adding the where condition with the 
 		// parent foreign key.  We do this instead of using Laravel's syntax
-		// ($parent->{$this->PARENT_RELATIONSHIP}()) so that we can call the
+		// ($parent->{$this->PARENT_TO_SELF}()) so that we can call the
 		// ordered() static method
-		$foreign_key = $parent->{$this->PARENT_RELATIONSHIP}()->foreign_key();
+		$foreign_key = $parent->{$this->PARENT_TO_SELF}()->foreign_key();
 		$query = Model::ordered()->where($foreign_key, '=', $parent_id);
 
 		// If it's a many to many, we need to join the pivot table because that is
@@ -187,9 +202,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		if ($this->is_many_to_many) {
 			
 			// Get references to the listing and pivot tables so we can get the table name
-			// and key column names from them.  CHILD_RELATIONSHIP is used because the instance
+			// and key column names from them.  SELF_TO_PARENT is used because the instance
 			// we get with new Model is a child of another model.  So we are trying to get back to
-			// our parent, and we do that with CHILD_RELATIONSHIP, which is the reference declared
+			// our parent, and we do that with SELF_TO_PARENT, which is the reference declared
 			// ON the child.
 			$child_key = $this->child_key();
 			list($pivot_table, $pivot_child_foreign) = $this->pivot();
@@ -244,7 +259,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// to manys with tags because we want to know if the reason that autocomplete
 			// returns no results on an exact match that is already attached is because it
 			// already exists.  Otherwise, it would allow the user to create the tag
-			if ($parent->{$this->PARENT_RELATIONSHIP}()
+			if ($parent->{$this->PARENT_TO_SELF}()
 				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
@@ -254,7 +269,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// are ways to do just in SQL but then we lose the ability for the relationship
 			// function to apply conditions, like is done in polymoprhic relationships.
 			// $parent = $this->parent_find($parent_id);
-			$siblings = $parent->{$this->PARENT_RELATIONSHIP}()->get();
+			$siblings = $parent->{$this->PARENT_TO_SELF}()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
@@ -343,7 +358,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Save it
 		if (!empty($parent_id)) {
-			$query = $parent->{$this->PARENT_RELATIONSHIP}()->insert($item);
+			$query = $parent->{$this->PARENT_TO_SELF}()->insert($item);
 		} else $item->save();
 		
 		// Redirect to edit view
@@ -370,8 +385,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Figure out the parent_id
-		if ($this->CHILD_RELATIONSHIP) {
-			$parent_id = $item->{$this->CHILD_RELATIONSHIP}()->foreign_value();
+		if ($this->SELF_TO_PARENT) {
+			$parent_id = $item->{$this->SELF_TO_PARENT}()->foreign_value();
 			$this->layout->content->parent_id = $parent_id;
 		}
 		
@@ -427,7 +442,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
-		$item->{$this->CHILD_RELATIONSHIP}()->attach(Input::get('parent_id'));
+		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
 		return Response::json(array(
 			'pivot_id' => DB::connection('mysql')->pdo->lastInsertId()
 		));
@@ -566,7 +581,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// have an instance to pull a relationship from, so we must start with the
 		// parent
 		if ($action == 'edit') {
-			$parent_item = $item->{$this->CHILD_RELATIONSHIP};
+			$parent_item = $item->{$this->SELF_TO_PARENT};
 		} else {
 			$parent_id = $id = URI::segment(3);
 			$parent_item = self::parent_find($parent_id);
@@ -589,7 +604,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			else {
 				
 				// Setup the parent item for the next iteration
-				$parent_item = $parent_item->{$parent_controller_instance->CHILD_RELATIONSHIP};
+				$parent_item = $parent_item->{$parent_controller_instance->SELF_TO_PARENT};
 				
 				// Create the child listing route
 				$route = route($controller.'@child', array($parent_item->id));
@@ -829,6 +844,57 @@ abstract class Decoy_Base_Controller extends Controller {
 		return array(); // None found (this should never probably be reached)
 	}
 	
+	// Test if the current route is serviced by has many and/or belongs to.  These
+	// are only true if this controller is acting in a child role
+	private function is_child_route() {
+		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
+		return $this->action_is_child()
+			|| $this->action_is_many_to_many_xhr()
+			|| $this->acting_as_related();
+	}
+	
+	// Test if the current route is one of the full page has many listings
+	private function action_is_child() {
+		return Request::route()->is($this->CONTROLLER.'@child');
+	}
+	
+	// Test if the current route is one of the many to many XHR requests
+	private function action_is_many_to_many_xhr() {
+		return Request::route()->is($this->CONTROLLER.'@remove')
+			|| Request::route()->is($this->CONTROLLER.'@attach')
+			|| Request::route()->is($this->CONTROLLER.'@autocomplete');
+	}
+	
+	// Test if the controller must be used in rendering a related list within another
+	private function acting_as_related() {
+		return !empty(Request::route()->controller) // Sometimes this is empty, not sure why
+			&& Request::route()->controller_action == 'edit'
+			&& Request::route()->controller != $this->CONTROLLER;
+	}
+	
+	// Guess at what the parent controller is by examing the route or input varibles
+	private function parent_controller() {
+		
+		// This is usually 'admin'
+		$handles = Bundle::option('decoy', 'handles');
+		
+		// If a child index view, get the controller from the route
+		if ($this->action_is_child()) {
+			Log::info('action_is_child');
+			return URI::segment(1).'.'.URI::segment(2);
+		
+		// If one of the many to many xhr requests, get the parent from Input
+		} elseif ($this->action_is_many_to_many_xhr()) {
+			Log::info('action_is_many_to_many_xhr');
+		
+		// If this controller is a related view of another, the parent is the main request	
+		} else if ($this->acting_as_related()) {
+			Log::info('acting_as_related');
+			return Request::route()->controller;
+		}
+		
+	}
+	
 	// Guess as what the relationship function on the parent model will be
 	// that points back to the model for this controller by using THIS
 	// controller's name.
@@ -872,16 +938,16 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// If the request doesn't know it's child of another class (often because an exeption)
 		// needs to be added to find_parent_controllers() for the route), this won't work
-		if (empty($this->CHILD_RELATIONSHIP) || empty($this->PARENT_RELATIONSHIP)) {
+		if (empty($this->SELF_TO_PARENT) || empty($this->PARENT_TO_SELF)) {
 			throw new Exception('Empty relationships in pivot');
 		}
 		
 		// Lookup the table and column
 		$listing_instance = new Model;
 		$parent_instance = new $this->PARENT_MODEL;
-		$pivot_table = $listing_instance->{$this->CHILD_RELATIONSHIP}()->pivot()->model->table();
-		$pivot_child_foreign = $pivot_table.'.'.$listing_instance->{$this->CHILD_RELATIONSHIP}()->foreign_key();
-		$pivot_parent_foreign = $pivot_table.'.'.$parent_instance->{$this->PARENT_RELATIONSHIP}()->foreign_key();
+		$pivot_table = $listing_instance->{$this->SELF_TO_PARENT}()->pivot()->model->table();
+		$pivot_child_foreign = $pivot_table.'.'.$listing_instance->{$this->SELF_TO_PARENT}()->foreign_key();
+		$pivot_parent_foreign = $pivot_table.'.'.$parent_instance->{$this->PARENT_TO_SELF}()->foreign_key();
 		return array($pivot_table, $pivot_child_foreign, $pivot_parent_foreign);
 	}
 	
