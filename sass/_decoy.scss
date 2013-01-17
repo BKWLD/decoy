@@ -719,7 +719,7 @@ label {
 	margin: -8px;
 	@include border-radius(4px);
 	margin-bottom: 14px;
-	input, textarea {
+	input, textarea, select {
 		margin-bottom: 0;
 	}
 	&:hover {
@@ -869,10 +869,26 @@ legend .btn-toolbar {
 	height: 6em;
 }
 
+// Position the belongs to btn correctly
 .belongs-to .input-append .btn {
 	padding-left: 8px;
 	padding-right: 8px;
 }
+
+// Add an optional class to control groups that will position the contents inline
+.inline .control-group {
+	.control-label {
+		float: left;
+		width: 160px;
+		line-height: 30px;
+	}
+	
+	// Anything else in there needs to go to the next line
+	.help-block {
+		clear: left;
+	}
+}
+
 
 // ---------------------------------------------------------------------
 // Tasks
