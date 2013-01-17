@@ -1,6 +1,9 @@
 <?// Display form wide errors?>
 
+
 <? if (!empty($errors) && !empty($errors->messages)): ?>
+
+<? if(Config::get('error.log') == true) Log::info(print_r($errors, true)); ?>
 	<div class="alert alert-error">
 	  <button type="button" class="close" data-dismiss="alert">×</button>
 	  <strong>Validation Error!</strong>
