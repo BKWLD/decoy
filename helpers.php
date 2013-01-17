@@ -65,11 +65,12 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
  * Make an image upload field.  That is to say, one that displays a sample if an
  * image has already been uploaded
  */
-HTML::macro('image_upload', function($image, $id = null, $label = null, $help = null) {
+HTML::macro('image_upload', function($id = null, $label = null, $help = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'image';
 	$block_help = '';
+	$image = Former::getValue($id);
 	
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -112,6 +113,62 @@ HTML::macro('image_upload', function($image, $id = null, $label = null, $help = 
 		
 	// Else, on a create / new form, so just show a simple file input field
 	} else return Former::file($id, $label)->accept('image')->blockHelp($block_help);
+	
+});
+
+/**
+ * Make a file upload field.  It shows a download link for already uploaded files
+ */
+HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
+	
+	// Defaults
+	if ($id === null) $id = 'file';
+	$block_help = '';
+	$file = Former::getValue($id);
+
+	// Add the passed help text
+	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
+	
+	// If on an edit view, show the old image and a delete button.  Also, store the old filename
+	// in a hidden field with the passed $id
+	if (!empty($file)) {
+		
+		// Figure out if the field should be required
+		$rules = Former::getRules($id);
+		$is_required = !empty($rules) && array_key_exists('required', $rules);
+		
+		// Add delete checkbox
+		if (!$is_required) {
+			$block_help .= '<label for="delete" class="checkbox file-delete">
+				<input id="'.UPLOAD_DELETE.$id.'" type="checkbox" name="delete-'.$id.'" value="1">Delete 
+				<a href="'.$file.'"><code><i class="icon-file"></i>'.basename($file).'</code></a></label>';
+		
+		// Else display a link to download the file
+		} else {
+			$block_help .= '<label class="download">
+				Currently <a href="'.$file.'">
+				<code><i class="icon-file"></i>'.basename($file).'</code></a>
+				</label>';
+		}
+		
+		// Change the id of the form input field and create the hidden field with the original id
+		// and with the value of the image path.  (string) foreces it to render.
+		$hidden = (string) Former::hidden(UPLOAD_OLD.$id)->value($file);
+		if (!$label) $label = ucwords($id);
+		
+		// Check for errors registered to the "real" form element
+		$errors = Former::getErrors($id);
+		
+		// Make the file field.  We're setting a class of required rather than actually setting the field
+		// to required so that Former doesn't tell the DOM to the required attribute.  We don't want the
+		// browser to enforce requirement, we just want the icon to indicate that it is required.
+		$file = Former::file(UPLOAD_REPLACE.$id, $label)->blockHelp($block_help);
+		if ($is_required) $file = $file->class('required');
+		if (!empty($errors)) $file = $file->state('error')->inlineHelp($errors);
+		return $file.$hidden;
+		
+	// Else, on a create / new form, so just show a simple file input field
+	} else return Former::file($id, $label)->blockHelp($block_help);
 	
 });
 

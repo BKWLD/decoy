@@ -338,7 +338,7 @@ abstract class Decoy_Base_Controller extends Controller {
 
 		// Create a new object
 		$item = new Model();
-		$item->fill(Input::get());
+		$item->fill(BKWLD\Utils\Collection::null_empties(Input::get()));
 		self::save_files($item);
 		
 		// Save it
@@ -408,7 +408,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Update it
 		$json = Input::json(); // Had to save to var to test for empty
-		$item->fill(!empty($json) ? (array) $json : Input::get());
+		$input = !empty($json) ? (array) $json : Input::get();
+		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
 
 		// Redirect to the edit view
@@ -445,9 +446,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		$items = Model::where_in('id', $ids);
 		if (empty($items)) return Response::error('404');
 		
-		// Delete images if they are defined
+		// Delete images if they are defined.
 		foreach($items->get() as $item) {
-			if (!empty($item->image)) Croppa::delete($item->image);
+			if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
 		}
 		
 		// Delete the row
@@ -678,6 +679,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// If someone has uploaded a new file, use it's value as the field and continue.
 			if (Input::has_file(UPLOAD_REPLACE.$column)) {
 				self::move_replace_file_input($column);
+				continue;
 			}
 
 			// The user has not specified to delete and has not uploaded a file (these conditions would be

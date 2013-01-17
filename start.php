@@ -64,3 +64,6 @@ if (!class_exists('Decoy_Auth')) {
 
 // Change former's required field HTML
 Former\Config::set('required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
+
+// Tell former to include unchecked checkboxes in the post
+Former\Config::set('push_checkboxes', true);
