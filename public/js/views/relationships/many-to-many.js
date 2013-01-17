@@ -16,8 +16,9 @@ define(function (require) {
 		initialize: function () {
 			Autocomplete.prototype.initialize.call(this);
 
-			// There must be a parent-id defined for the saving to work
+			// There must be a parent_id and parent_controller defined for the saving to work
 			this.parent_id = this.$el.data('parent-id');
+			this.parent_controller = this.$el.data('parent-controller');
 			
 			// Cache selectors
 			this.$submit = this.$('button[type="submit"]');
@@ -30,7 +31,11 @@ define(function (require) {
 		
 		// Define a new query method so we can pass the parent_id
 		query: function(query, process) {
-			this.execute({query:query, parent_id: this.parent_id}, process);
+			this.execute({
+				query:query,
+				parent_id: this.parent_id,
+				parent_controller: this.parent_controller
+				}, process);
 		},
 		
 		// Overide the match function to toggle the state of the add button
@@ -70,7 +75,9 @@ define(function (require) {
 				
 			// Make the request
 			$.ajax(this.route+'/attach/'+this.id, {
-				data: {parent_id: this.parent_id},
+				data: {
+					parent_id: this.parent_id,
+					parent_controller: this.parent_controller},
 				type:'POST',
 				dataType: 'JSON'
 			})

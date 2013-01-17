@@ -41,6 +41,7 @@ define(function (require) {
 			this.$bulkActions = this.$('.bulk-actions');
 			this.$total = this.$('legend .badge, h1 .badge');
 			this.$trs = this.$el.find('[' + dataId + ']');
+			this.parent_controller = this.$el.data('parent-controller');
 			
 			// Create model collection from table rows.  The URL is fetched from
 			// the controller-route data attribute of the container.
@@ -232,6 +233,7 @@ define(function (require) {
 			
 			// Call the remove route
 			$.ajax(this.controllerRoute+'/remove/'+modelId, {
+				data: {parent_controller: this.parent_controller},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})
@@ -343,6 +345,7 @@ define(function (require) {
 			
 			// Call the bulk remove route
 			$.ajax(url, {
+				data: {parent_controller: this.parent_controller},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})

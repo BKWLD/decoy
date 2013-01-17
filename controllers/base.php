@@ -36,6 +36,9 @@ abstract class Decoy_Base_Controller extends Controller {
 	private $parent_controllers = array();
 	private $is_many_to_many = false;
 	
+	// Getters
+	public function parent_controller() { return $this->PARENT_CONTROLLER; }
+	
 	// Special constructor behaviors
 	function __construct() {
 
@@ -77,9 +80,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if ($this->MODEL && !class_exists('Model')) {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
-		
-		//**************************** BEGIN THE NEW SHIT
-		
+				
 		// Get an array of all the parent controllers to this one.  This is used in
 		// a couple operations
 		$routes = Config::get('decoy::decoy.routes');
@@ -87,17 +88,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// If the current route has a parent, discover what it is
 		if (empty($this->PARENT_CONTROLLER) && $this->is_child_route()) {
-			$this->PARENT_CONTROLLER = $this->parent_controller();
-			Log::info('CONTROLLER:'.$this->CONTROLLER);
-			Log::info('PARENT_CONTROLLER:'.$this->PARENT_CONTROLLER);
+			$this->PARENT_CONTROLLER = $this->deduce_parent_controller();
 		}
-		
-		//**************************** THE OLD SHIT
-		
-		// Figure out if there is a parent controller
-		// if (empty($this->PARENT_CONTROLLER) && count($this->parent_controllers)) {
-		// 	$this->PARENT_CONTROLLER = end($this->parent_controllers);
-		// }
 		
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
@@ -118,18 +110,14 @@ abstract class Decoy_Base_Controller extends Controller {
 			// Figure out what the relationship function to the child (this controller's
 			// model) on the parent model
 			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
-				$this->PARENT_TO_SELF = $this->parent_relationship();
+				$this->PARENT_TO_SELF = $this->deduce_parent_relationship();
 			}
 			
 			// Figure out the child relationship name, which is typically named the same
 			// as the parent model
 			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
-				$this->SELF_TO_PARENT = $this->child_relationship();
+				$this->SELF_TO_PARENT = $this->deduce_child_relationship();
 			}
-			
-			Log::info('PARENT_MODEL:'.$this->PARENT_MODEL);
-			Log::info('PARENT_TO_SELF:'.$this->PARENT_TO_SELF);
-			Log::info('SELF_TO_PARENT:'.$this->SELF_TO_PARENT);
 			
 		}
 		
@@ -873,23 +861,21 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// Guess at what the parent controller is by examing the route or input varibles
-	private function parent_controller() {
+	private function deduce_parent_controller() {
 		
 		// This is usually 'admin'
 		$handles = Bundle::option('decoy', 'handles');
 		
 		// If a child index view, get the controller from the route
 		if ($this->action_is_child()) {
-			Log::info('action_is_child');
 			return URI::segment(1).'.'.URI::segment(2);
 		
 		// If one of the many to many xhr requests, get the parent from Input
 		} elseif ($this->action_is_many_to_many_xhr()) {
-			Log::info('action_is_many_to_many_xhr');
+			return Input::get('parent_controller');
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->acting_as_related()) {
-			Log::info('acting_as_related');
 			return Request::route()->controller;
 		}
 		
@@ -899,7 +885,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	// that points back to the model for this controller by using THIS
 	// controller's name.
 	// returns - The string name of the realtonship
-	private function parent_relationship() {
+	private function deduce_parent_relationship() {
 		$handles = Bundle::option('decoy', 'handles');
 		$relationship = substr($this->CONTROLLER, strlen($handles.'.'));
 		if (!method_exists($this->PARENT_MODEL, $relationship)) {
@@ -911,7 +897,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Guess at what the child relationship name is.  This is typically the same
 	// as the parent model.  For instance, Post has many Image.  Image will have
 	// a function named "post" for it's relationship
-	private function child_relationship() {
+	private function deduce_child_relationship() {
 		$relationship = strtolower($this->PARENT_MODEL);
 		if (!method_exists($this->MODEL, $relationship)) {
 			

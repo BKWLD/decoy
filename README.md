@@ -257,8 +257,8 @@ The following properties are only relevant if a controller is a parent or child 
 
 * `PARENT_MODEL` - The model used by the parent controller (i.e. "Project").
 * `PARENT_CONTROLLER` - The parent controller (i.e. "admin.projects").
-* `PARENT_RELATIONSHIP` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
-* `CHILD_RELATIONSHIP` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
+* `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
+* `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
 
 
 ### Protected methods

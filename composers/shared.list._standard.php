@@ -34,10 +34,13 @@ as part of when the view was created.  As in View::make()->with()
 	  
 	- sidebar [false (default), true] : Determines whether to adjust the layout
 	  for the list appearing in a sidebar, as in related data
-	  
+	
 	- parent_id (optional) : When using the sidebar layout, this informs
 	  how to create the new link.  If not defined, it is pulled from the last
 	  segment of the current URL
+	  
+  - parent_controller (optional) - When using the sidebar layout, informs logic needed
+    for many to many forms.  Generally this is calculated automatically
 	  
 	- description (optional) : A description for the view
 	
@@ -62,6 +65,12 @@ View::composer('decoy::shared.list._standard', function($view) {
 		if (!isset($view->$field)) throw new Exception('Standard listing field is not set: '.$field);
 	}
 	
+	// Make an instance of the controller so values that get in the constructor can be inspected
+	list($bundle_name, $controller_path) = preg_match('#(.+)::(.+)#', $view->controller, $matches) ? 
+		array($matches[1], $matches[2]) : 
+		array(DEFAULT_BUNDLE, $view->controller);
+	$controller = Controller::resolve($bundle_name, $controller_path);
+	
 	// Default settings
 	$defaults = array(
 		'columns'       => array('Title' => 'title'),
@@ -69,6 +78,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'convert_dates' => 'date',
 		'sidebar'       => false,
 		'parent_id'     => URI::segment(3), // This spot always holds it
+		'parent_controller' => $controller->parent_controller(),
 		'many_to_many'  => false,
 		'tags'          => false,
 	);
@@ -83,10 +93,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Figure out whether there should be tags by resolving the controller path into an instance of
 	// the controller for this listing and then seeing if it's model inherits from Decoy\Tag
-	list($bundle_name, $controller_path) = preg_match('#(.+)::(.+)#', $view->controller, $matches) ? 
-		array($matches[1], $matches[2]) : 
-		array(DEFAULT_BUNDLE, $view->controller);
-	$controller = Controller::resolve($bundle_name, $controller_path);
 	if (is_subclass_of($controller->model_name(), 'Decoy\Tag')) $view->tags = true;
 	
 	// Set a common variable for both types of lists that get passed to the view
