@@ -1,6 +1,6 @@
 <?// The header above a list that is rendered into a sidebar ?>
 
-<legend><a href="<?=route($controller.'@child', $parent_id)?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
+<legend><a href="<?=$child_route?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
 	
 	<div class="btn-toolbar pull-right">
 	

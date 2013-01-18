@@ -96,4 +96,13 @@ View::composer('decoy::shared.list._standard', function($view) {
 	if (isset($view->listing->results)) $view->iterator = $view->listing->results;
 	else $view->iterator = $view->listing;
 	
+	// Make the link to the child listing, which is dependent on the current URL. I can't
+	// straight up use a route() because those aren't able to distinguish between controllers
+	// that are children to multiple parents
+	if ($view->many_to_many) {
+		$handles = Bundle::option('decoy', 'handles');
+		$controller_name = substr($view->controller, strlen($handles)+1);
+		$view->child_route = route($view->parent_controller).'/'.$view->parent_id.'/'.$controller_name;
+	} else $view->child_route = route($view->controller.'@child', $view->parent_id);
+	
 });
