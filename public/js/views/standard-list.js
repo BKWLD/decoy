@@ -86,10 +86,17 @@ define(function (require) {
 				data.visible = visible_state;
 			}
 			
+			// If there was a parent_controller, add it to the model so sync
+			// requests can make use of it
+			if (this.parent_controller) {
+				data.parent_controller = this.parent_controller;
+			}
+			
 			// Create the model and store a reference
 			var model = new Backbone.Model(data);
 			model.whitelist = ['position']; // Only sync position
 			if ($visibility.length) model.whitelist.push('visible');
+			if (this.parent_controller) model.whitelist.push('parent_controller');
 
 			// Add the model to the collection
 			this.collection.push(model);
