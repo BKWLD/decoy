@@ -673,9 +673,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!isset($input['position'])) return false;
 		
 		// Update the pivot position
-		list($table, $child_foreign) = $this->pivot();
+		list($table) = $this->pivot();
 		DB::table($table)
-			->where($child_foreign, '=', $id)
+			->where('id', '=', $id)
 			->update(array('position' => $input['position']));
 		
 		// Return success
