@@ -111,7 +111,7 @@ function addRoutes($routes, $parent = null) {
 		// List, used for one-to-many relationships
 		if ($parent) Router::register(array('GET'), 
 			"(:bundle)/$parent/(:num)/$controller/(:any?)", 
-			array('uses' => "$controller_path@index", 'as' => "$controller_path@child"));
+			array('uses' => "$controller_path@index_child", 'as' => "$controller_path@child"));
 		
 		// List, used in standard listings and for many-to-manys.  The second variable in the
 		// route may be used to pass variables to views (like in moderation)

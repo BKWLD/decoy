@@ -136,16 +136,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Listing page
 	public function get_index() {
 		
-		// There may be a parent id.  This isn't defined in the function definition
-		// because I don't want all child classes to have to implement it
-		if (is_numeric(URI::segment(3))) {
-			$parent_id = URI::segment(3);
-			return $this->get_index_child($parent_id);
-		}
-		
-		// Stop if a parent_id was required but wasn't in the URL
-		if ($this->is_child()) return Response::error('404');
-		
 		// Run the query
 		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate(self::PER_PAGE);
 		$count = $results->total;
@@ -163,11 +153,11 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs_from_routes();
+		Decoy\Breadcrumbs::generate_from_routes();
 	}	
 	
 	// List page when the view is for a child in a related sense
-	private function get_index_child($parent_id) {
+	public function get_index_child($parent_id) {
 
 		// Make sure the parent is valid
 		if (!($parent = self::parent_find($parent_id))) return Response::error('404');
@@ -215,7 +205,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs_from_routes();
+		Decoy\Breadcrumbs::generate_from_routes();
 		
 	}
 	
@@ -293,7 +283,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	
 	// Create form
 	public function get_new() {
-
+		
 		// There may be a parent id.  This isn't defined in the function definition
 		// because I don't want all child classes to have to implement it
 		if (is_numeric(URI::segment(3))) {
@@ -315,7 +305,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs_from_routes();
+		Decoy\Breadcrumbs::generate_from_routes();
 	}
 	
 	// Create a new one
@@ -374,7 +364,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs_from_routes();
+		Decoy\Breadcrumbs::generate_from_routes();
 
 	}
 	
@@ -528,82 +518,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 	}
 	
-	// Try to set the breadcrumbs automatically by looking at the
-	// $parent_controllers array
-	protected function breadcrumbs_from_routes() {
-		$breadcrumbs = array();
-		
-		// Add the current controller first (we'll be building in reverse order)
-		$action = Request::route()->controller_action;
-		if ($action == 'edit') {
-			$id = URI::segment(3);
-			$item = Model::find($id);
-			$breadcrumbs['/'.URI::current()] = $item->title();
-		} elseif ($action == 'new') {
-			$breadcrumbs['/'.URI::current()] = 'New';
-		}
-		
-		// If were on an index view and that index has a category (in other words
-		// a second argument), add the category as it's own breadcrumb.  The category
-		// is in a different segment depending on whether this controller is being implmented
-		// as a child or not.
-		if ($action == 'index') {
-			if (empty($this->parent_controllers) && URI::segment(3)) {
-				$breadcrumbs['/'.URI::current()] = ucwords(URI::segment(3));
-			} elseif (URI::segment(5))  {
-				$breadcrumbs['/'.URI::current()] = ucwords(URI::segment(5));
-			}
-		}
-		
-		// There are no parent controllers so add the listing and be done with it
-		if (empty($this->parent_controllers)) {
-			$breadcrumbs[route($this->CONTROLLER)] = $this->TITLE;
-			$this->breadcrumbs(array_reverse($breadcrumbs));
-			return;
-		}
-		
-		// Get the parent row.  Unless the current page is an edit view, we don't
-		// have an instance to pull a relationship from, so we must start with the
-		// parent
-		if ($action == 'edit') {
-			$parent_item = $item->{$this->SELF_TO_PARENT};
-		} else {
-			$parent_id = $id = URI::segment(3);
-			$parent_item = self::parent_find($parent_id);
-		}
-				
-		// The current page was a child
-		$breadcrumbs[route($this->CONTROLLER.'@child', $parent_item->id)] = $this->TITLE;
-		
-		// Loop through all the parent controllers and create breadcrumbs
-		foreach(array_reverse($this->parent_controllers) as $i => $controller) {
-			
-			// Add the detail view
-			$breadcrumbs[route($controller.'@edit', $parent_item->id)] = $parent_item->title();
-			
-			// Create an instance of the parent controller for use in getting the title
-			$parent_controller_instance = Controller::resolve(DEFAULT_BUNDLE, $controller);
-			
-			// Determine the route of the listing view
-			if ($i == count($this->parent_controllers)-1) $route = route($controller);
-			else {
-				
-				// Setup the parent item for the next iteration
-				$parent_item = $parent_item->{$parent_controller_instance->SELF_TO_PARENT};
-				
-				// Create the child listing route
-				$route = route($controller.'@child', array($parent_item->id));
-			}
-			
-			// Add the listing breadcrumb
-			$breadcrumbs[$route] = $parent_controller_instance->TITLE;
-			
-		}
-		
-		// Set the breadcrumbs
-		$this->breadcrumbs(array_reverse($breadcrumbs));
-		
-	}
+	
 	
 	// If there is slug mentioned in the validation or mass assignment rules
 	// and an appropriate title-like field, make a slug for it.  Then merge
@@ -860,9 +775,11 @@ abstract class Decoy_Base_Controller extends Controller {
 			|| $this->acting_as_related();
 	}
 	
-	// Test if the current route is one of the full page has many listings
+	// Test if the current route is one of the full page has many listings or a new
+	// page as a child
 	private function action_is_child() {
-		return Request::route()->is($this->CONTROLLER.'@child');
+		return Request::route()->is($this->CONTROLLER.'@child')
+			|| (Request::route()->is($this->CONTROLLER.'@new') && is_numeric(URI::segment(3)));
 	}
 	
 	// Test if the current route is one of the many to many XHR requests
