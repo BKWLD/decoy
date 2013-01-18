@@ -23,7 +23,7 @@
 					echo Former::textarea($pair->slug, $pair->label)->class('span9 wysiwyg')->value($pair->value); 
 					break;
 				case 'image':
-					echo HTML::image_upload($pair->value, $pair->slug, $pair->label);
+					echo HTML::image_upload($pair->slug, $pair->label);
 			}
 		}
 	}

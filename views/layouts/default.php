@@ -10,6 +10,7 @@
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::token()?>"/>
 		<?= render('decoy::layouts.buk_builder._header') ?>
+		<script src="/bundles/decoy/ckeditor/ckeditor.js"></script>
 	</head>
 	<body class="<?=Request::route()->controller?> <?=Request::route()->controller_action?>">
 		

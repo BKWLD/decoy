@@ -28,6 +28,10 @@ abstract class Seed {
 		// Set the upload path
 		self::$UPLOADS = Config::get('decoy::decoy.upload_dir').'/seeded/';
 		if (!is_dir(self::$UPLOADS)) mkdir(self::$UPLOADS, 0700, true);
+		
+		// Set the ckfinder path
+		self::$CKFINDER = Config::get('decoy::decoy.ckfinder_upload_dir');
+		if (!is_dir(self::$CKFINDER)) mkdir(self::$CKFINDER, 0700, true);
 	}
 	
 	// ---------------------------------------------------

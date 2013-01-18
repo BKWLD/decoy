@@ -41,7 +41,7 @@ $config =  array(
 	'upload_dir' => path('public').'uploads',
 	
 	// Directory for saving uploaded images
-	'ckeditor_upload_dir' => path('public').'uploads/ckeditor',
+	'ckfinder_upload_dir' => path('public').'uploads/ckfinder',
 	
 	// Default admin credentials
 	'default_login' => 'redacted',
