@@ -102,7 +102,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			if (empty($this->PARENT_MODEL)) {
 				$this->PARENT_MODEL = $parent_controller_instance->MODEL;
 			}
-			
+
 			// Figure out what the relationship function to the child (this controller's
 			// model) on the parent model
 			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
@@ -404,9 +404,12 @@ abstract class Decoy_Base_Controller extends Controller {
 		self::save_files($item);
 		self::unset_file_edit_inputs();
 		
+		// Remove special key-value pairs that inform logic but won't ever
+		// fill() a db row
+		unset($input['parent_controller']); // Backbone may send this with sort updates
+		
 		// Update it
-		$json = Input::json(); // Had to save to var to test for empty
-		$input = !empty($json) ? (array) $json : Input::get();
+		$input = BKWLD\Laravel\Input::json_or_input();
 		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
 
@@ -491,14 +494,13 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected function validate($rules, $messages = array()) {
 		
 		// Pull the input from the proper place
-		$json = Input::json(); // So I can run empty() on it
-		$input = Request::ajax() && !empty($json) ? (array) $json : Input::all();
+		$input = BKWLD\Laravel\Input::json_or_input();
 		
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
 		// the rules list.
 		if (Request::ajax() && Request::method() == 'PUT') {
-			$rules = array_only($rules, array_keys((array) Input::json()));
+			$rules = array_only($rules, array_keys($input));
 		}
 		
 		// Validate
@@ -659,6 +661,28 @@ abstract class Decoy_Base_Controller extends Controller {
 		$relationship = $model->{$this->SELF_TO_PARENT}();
 		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
 	}
+	
+	// Processing function for handling sorting when the position column is on pivot table.  As
+	// would be the case in all many to manys.
+	protected function update_pivot_position($id) {
+		
+		// If there is not a PUT request with a property of position, return false
+		// to tell the invoker to continue processing
+		if (Request::method() != 'PUT' || !Request::ajax()) return false;
+		$input = BKWLD\Laravel\Input::json_or_input();
+		if (!isset($input['position'])) return false;
+		
+		// Update the pivot position
+		list($table, $child_foreign) = $this->pivot();
+		DB::table($table)
+			->where($child_foreign, '=', $id)
+			->update(array('position' => $input['position']));
+		
+		// Return success
+		return Response::json('null');
+		
+	}
+	
 	
 	//---------------------------------------------------------------------------
 	// File handling uttlity methods
@@ -832,7 +856,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	private function is_child_route() {
 		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
 		return $this->action_is_child()
-			|| $this->action_is_many_to_many_xhr()
+			|| $this->parent_in_input()
 			|| $this->acting_as_related();
 	}
 	
@@ -842,17 +866,26 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// Test if the current route is one of the many to many XHR requests
-	private function action_is_many_to_many_xhr() {
-		return Request::route()->is($this->CONTROLLER.'@remove')
-			|| Request::route()->is($this->CONTROLLER.'@attach')
-			|| Request::route()->is($this->CONTROLLER.'@autocomplete');
+	private function parent_in_input() {
+		
+		// This is check is only allowed if the request is for this controller.  If other
+		// controller instances are instantiated (like via Controller::resolve()), they 
+		// were not designed to be informed by the input.  Using action[uses] rather than like
+		// ->controller because I found that controller isn't always set when I need it.  Maybe
+		// because this is all being invoked from the constructor.
+		if (strpos(Request::route()->action['uses'], $this->CONTROLLER) === false) return false;
+		
+		$input = BKWLD\Laravel\Input::json_or_input();
+		return isset($input['parent_controller']);
 	}
 	
-	// Test if the controller must be used in rendering a related list within another
+	// Test if the controller must be used in rendering a related list within another.  In other
+	// words, the controller is different than the request and you're on an edit page.  Had to
+	// use action[uses] because Request::route()->controller is sometimes empty.  
+	// Request::route()->action['uses'] is like "admin.issues@edit"
 	private function acting_as_related() {
-		return !empty(Request::route()->controller) // Sometimes this is empty, not sure why
-			&& Request::route()->controller_action == 'edit'
-			&& Request::route()->controller != $this->CONTROLLER;
+		return strpos(Request::route()->action['uses'], $this->CONTROLLER) === false
+			&& strpos(Request::route()->action['uses'], '@edit') !== false;
 	}
 	
 	// Guess at what the parent controller is by examing the route or input varibles
@@ -866,8 +899,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			return URI::segment(1).'.'.URI::segment(2);
 		
 		// If one of the many to many xhr requests, get the parent from Input
-		} elseif ($this->action_is_many_to_many_xhr()) {
-			return Input::get('parent_controller');
+		} elseif ($this->parent_in_input()) {
+			$input = BKWLD\Laravel\Input::json_or_input();
+			return $input['parent_controller'];
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->acting_as_related()) {
