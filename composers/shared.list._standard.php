@@ -79,8 +79,8 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'sidebar'       => false,
 		'parent_id'     => URI::segment(3), // This spot always holds it
 		'parent_controller' => $controller->parent_controller(),
-		'many_to_many'  => false,
-		'tags'          => false,
+		'many_to_many'  => $controller->is_child_in_many_to_many(),
+		'tags'          => is_subclass_of($controller->model(), 'Decoy\Tag') ? true : false,
 	);
 
 	// Apply defaults
@@ -90,10 +90,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Massage the shorthand search config options
 	if (isset($view->search)) $view->search = Decoy\Search::longhand($view->search);
-	
-	// Figure out whether there should be tags by resolving the controller path into an instance of
-	// the controller for this listing and then seeing if it's model inherits from Decoy\Tag
-	if (is_subclass_of($controller->model_name(), 'Decoy\Tag')) $view->tags = true;
 	
 	// Set a common variable for both types of lists that get passed to the view
 	if (isset($view->listing->results)) $view->iterator = $view->listing->results;

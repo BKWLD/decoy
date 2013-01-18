@@ -36,9 +36,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	private $parent_controllers = array();
 	private $is_many_to_many = false;
 	
-	// Getters
-	public function parent_controller() { return $this->PARENT_CONTROLLER; }
-	
 	// Special constructor behaviors
 	function __construct() {
 
@@ -118,8 +115,12 @@ abstract class Decoy_Base_Controller extends Controller {
 			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
 				$this->SELF_TO_PARENT = $this->deduce_child_relationship();
 			}
-			
 		}
+		
+		Log::info($this->CONTROLLER);
+		Log::info($this->PARENT_MODEL);
+		Log::info($this->MODEL);
+		Log::info($this->is_many_to_many() ? 'y' : 'n');
 		
 		// Continue processing
 		parent::__construct();
@@ -131,7 +132,8 @@ abstract class Decoy_Base_Controller extends Controller {
 	//---------------------------------------------------------------------------
 	
 	// Get access to protected properties
-	public function model_name() { return $this->MODEL; }
+	public function model() { return $this->MODEL; }
+	public function parent_controller() { return $this->PARENT_CONTROLLER; }
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
@@ -656,6 +658,15 @@ abstract class Decoy_Base_Controller extends Controller {
 		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
 	}
 	
+	// Return a boolean for whether the parent relationship represents a many to many
+	public function is_child_in_many_to_many() {
+		if (empty($this->SELF_TO_PARENT)) return false;
+		$model = new $this->MODEL; // Using the 'Model' class alias didn't work, was the parent
+		if (!method_exists($model, $this->SELF_TO_PARENT)) return false;
+		$relationship = $model->{$this->SELF_TO_PARENT}();
+		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
+	}
+	
 	//---------------------------------------------------------------------------
 	// File handling uttlity methods
 	//---------------------------------------------------------------------------
@@ -809,11 +820,7 @@ abstract class Decoy_Base_Controller extends Controller {
 					// return an empty array, meaning that it has no parents.  This is because
 					// many to many's new/edit/index etc should operate like a parentless controller.
 					// You're not creating rows that belong to a parent; they're independent.
-					if ($is_many_to_many 
-						&& !Request::route()->is($this->CONTROLLER.'@child')
-						&& !Request::route()->is($this->CONTROLLER.'@remove')
-						&& !Request::route()->is($this->CONTROLLER.'@attach')
-						&& !Request::route()->is($this->CONTROLLER.'@autocomplete')) return array();
+					if ($is_many_to_many && !$this->is_child_route()) return array();
 					
 					// The route is a many to many and it IS a child index, so remember at the
 					// instance level.  The get_index_child method will use this to switch the
@@ -878,7 +885,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		} else if ($this->acting_as_related()) {
 			return Request::route()->controller;
 		}
-		
 	}
 	
 	// Guess as what the relationship function on the parent model will be
