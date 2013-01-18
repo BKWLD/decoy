@@ -42,7 +42,12 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 		?>
 			<tr 
 				data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
-				<? if (isset($item->position)):?>data-position="<?=$item->position?>"<? endif ?>
+				
+				<?
+				// Add positoin value from the row or from the pivor table
+				if (isset($item->position)) echo "data-position='{$item->position}'";
+				elseif (isset($item->pivot->position)) echo "data-position='{$item->pivot->position}'";
+				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
 				
