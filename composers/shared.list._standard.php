@@ -47,7 +47,8 @@ as part of when the view was created.  As in View::make()->with()
 	- many_to_many [false (default), true] : Makes the list view have an
 	  autocomplete in place of the normal "New" link.  This forms a relationship
 	  from the controller hosting this list and the item that is selected in the
-	  pulldown.  Part of this mojo involves a backbone js view
+	  pulldown.  Part of this mojo involves a backbone js view.  You can let this
+	  set itself for the most part
 	  
 	- tags [false (default), true] : Lets the user create new rows from the listing
 	  view.  Tags means the content is very simple, there is only a single field the

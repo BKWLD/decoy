@@ -34,7 +34,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	
 	// Internal properties
 	private $parent_controllers = array();
-	private $is_many_to_many = false;
 	
 	// Special constructor behaviors
 	function __construct() {
@@ -117,11 +116,6 @@ abstract class Decoy_Base_Controller extends Controller {
 			}
 		}
 		
-		Log::info($this->CONTROLLER);
-		Log::info($this->PARENT_MODEL);
-		Log::info($this->MODEL);
-		Log::info($this->is_many_to_many() ? 'y' : 'n');
-		
 		// Continue processing
 		parent::__construct();
 		
@@ -189,7 +183,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// what the foreign key is on.  This is done just so we can get the pivot_id
 		// for doing things like delete_remove().  But this is, again, only required
 		// because of trying to support ordered() in the listing
-		if ($this->is_many_to_many) {
+		if ($this->is_child_in_many_to_many()) {
 			
 			// Get references to the listing and pivot tables so we can get the table name
 			// and key column names from them.  SELF_TO_PARENT is used because the instance
@@ -217,7 +211,6 @@ abstract class Decoy_Base_Controller extends Controller {
 			'listing'          => $results,
 			'columns'          => $this->COLUMNS,
 			'parent_id'        => $parent_id,
-			'many_to_many'     => $this->is_many_to_many,
 			'search'           => $this->SEARCH,
 		));
 		
@@ -238,7 +231,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
-		if ($this->is_many_to_many) {
+		if ($this->is_child_in_many_to_many()) {
 			
 			// Require parent_id
 			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
@@ -821,11 +814,6 @@ abstract class Decoy_Base_Controller extends Controller {
 					// many to many's new/edit/index etc should operate like a parentless controller.
 					// You're not creating rows that belong to a parent; they're independent.
 					if ($is_many_to_many && !$this->is_child_route()) return array();
-					
-					// The route is a many to many and it IS a child index, so remember at the
-					// instance level.  The get_index_child method will use this to switch the
-					// "new" button to an autocomplete
-					elseif ($is_many_to_many) $this->is_many_to_many = true;
 					
 					// Because the route has a parent, return that parent route
 					return array($handles.'.'.$parent);
