@@ -32,9 +32,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected $PARENT_TO_SELF;    // i.e. photos
 	protected $SELF_TO_PARENT;    // i.e. post
 	
-	// Internal properties
-	private $parent_controllers = array();
-	
 	// Special constructor behaviors
 	function __construct() {
 
@@ -81,6 +78,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (empty($this->PARENT_CONTROLLER) && $this->is_child_route()) {
 			$this->PARENT_CONTROLLER = $this->deduce_parent_controller();
 		}
+		
+		Log::info('controller:'.$this->CONTROLLER);
+		Log::info('parent:'.$this->PARENT_CONTROLLER);
 		
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
@@ -150,7 +150,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
 	}	
 	
 	// List page when the view is for a child in a related sense
@@ -202,7 +202,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
 		
 	}
 	
@@ -302,7 +302,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
 	}
 	
 	// Create a new one
@@ -333,7 +333,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to_route($this->CONTROLLER.'@edit', array($item->id));
+		else return Redirect::to(str_replace('new', $item->id, URI::current()));
 	}
 	
 	// Edit form
@@ -361,7 +361,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
 
 	}
 	
@@ -391,12 +391,11 @@ abstract class Decoy_Base_Controller extends Controller {
 		self::save_files($item);
 		self::unset_file_edit_inputs();
 		
-		// Remove special key-value pairs that inform logic but won't ever
-		// fill() a db row
+		// Remove special key-value pairs that inform logic but won't ever fill() a db row
+		$input = BKWLD\Laravel\Input::json_or_input();
 		unset($input['parent_controller']); // Backbone may send this with sort updates
 		
 		// Update it
-		$input = BKWLD\Laravel\Input::json_or_input();
 		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
 
@@ -719,18 +718,18 @@ abstract class Decoy_Base_Controller extends Controller {
 	// page as a child
 	private function action_is_child() {
 		return Request::route()->is($this->CONTROLLER.'@child')
-			|| Request::route()->is($this->CONTROLLER.'@new_child');
+			|| Request::route()->is($this->CONTROLLER.'@new_child')
+			|| Request::route()->is($this->CONTROLLER.'@edit_child');
 	}
 	
 	// Test if the current route is one of the many to many XHR requests
 	private function parent_in_input() {
-		
 		// This is check is only allowed if the request is for this controller.  If other
 		// controller instances are instantiated (like via Controller::resolve()), they 
 		// were not designed to be informed by the input.  Using action[uses] rather than like
 		// ->controller because I found that controller isn't always set when I need it.  Maybe
 		// because this is all being invoked from the constructor.
-		if (strpos(Request::route()->action['uses'], $this->CONTROLLER) === false) return false;
+		if (strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false) return false;
 		
 		$input = BKWLD\Laravel\Input::json_or_input();
 		return isset($input['parent_controller']);
@@ -739,17 +738,20 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Test if the controller must be used in rendering a related list within another.  In other
 	// words, the controller is different than the request and you're on an edit page.  Had to
 	// use action[uses] because Request::route()->controller is sometimes empty.  
-	// Request::route()->action['uses'] is like "admin.issues@edit"
+	// Request::route()->action['uses'] is like "admin.issues@edit".  We're also testing that
+	// the controller isn't in the URI.  This would never be the case when something was in the
+	// sidebar.  But without it, deducing the breadcrumbs gets confused because controllers get
+	// instantiated not on their route but aren't the children of the current route.
 	private function acting_as_related() {
-		return strpos(Request::route()->action['uses'], $this->CONTROLLER) === false
+		$handles = Bundle::option('decoy', 'handles');
+		$controller_name = substr($this->CONTROLLER, strlen($handles.'.'));
+		return strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false
+			&& strpos(URI::current(), '/'.$controller_name.'/') === false
 			&& strpos(Request::route()->action['uses'], '@edit') !== false;
 	}
 	
 	// Guess at what the parent controller is by examing the route or input varibles
 	private function deduce_parent_controller() {
-		
-		// This is usually 'admin'
-		$handles = Bundle::option('decoy', 'handles');
 		
 		// If a child index view, get the controller from the route
 		if ($this->action_is_child()) {
