@@ -24,7 +24,7 @@ For now, this Bundle is not available to the artisan bundle installer, it must b
 1. [Download](http://laravel.com/download) and install Laravel
 2. Download this repo and put it at /bundles/decoy.  I recommend `git init`-ing a new repo at /bundles/decoy and adding this repo as a remote (`git remote add origin git@github.com:BKWLD/decoy.git`.  Then `pull`-ing so you have an easy way to get updates and push up your own fixes and features.
 3. [Install](http://laravel.com/docs/bundles#installing-bundles) all the bundle dependencies:
-   * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handlin utilities
+   * [bkwld](http://bundles.laravel.com/bundle/bkwld) - Used for the file handling and other utilities
    * [croppa](http://bundles.laravel.com/bundle/croppa) - Used for thumbnail generation
    * [sentry](http://bundles.laravel.com/bundle/sentry) - Technically optional, but required for Decoy auth and admin management
    * [former](http://bundles.laravel.com/bundle/former) - Used to make generating form elements more terse
