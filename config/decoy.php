@@ -22,7 +22,7 @@ $config =  array(
 	//     'news', 
 	//     'events' => array(
 	//     	  'photos',
-	//        'people' => MANY_TO_MANY,
+	//        'people',
 	//     	) 
 	//   )
 	'routes' => array(),
