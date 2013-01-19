@@ -1,7 +1,6 @@
 <?php
 
 // Some constants
-if (!defined('MANY_TO_MANY'))    define('MANY_TO_MANY', 'MANY_TO_MANY');
 if (!defined('UPLOAD_DELETE'))   define('UPLOAD_DELETE', 'delete-');
 if (!defined('UPLOAD_OLD'))      define('UPLOAD_OLD', 'old-');
 if (!defined('UPLOAD_REPLACE'))  define('UPLOAD_REPLACE', 'replace-');
