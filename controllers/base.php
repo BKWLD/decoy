@@ -79,9 +79,6 @@ abstract class Decoy_Base_Controller extends Controller {
 			$this->PARENT_CONTROLLER = $this->deduce_parent_controller();
 		}
 		
-		Log::info('controller:'.$this->CONTROLLER);
-		Log::info('parent:'.$this->PARENT_CONTROLLER);
-		
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
 		if (!empty($this->PARENT_CONTROLLER)) {
