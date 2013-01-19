@@ -111,7 +111,7 @@ These options should be customized for every deploy of Decoy.
 		'parent_controller' => array(
 			'child_controller' => array(
 				'grandchild_controller',
-				'another_grandchild' => MANY_TO_MANY
+				'another_grandchild',
 			)
 		),
 		'another_simple_one',
@@ -122,8 +122,6 @@ These options should be customized for every deploy of Decoy.
 	
 	Typically, you'd have links in the `nav` array only for the root level controllers in the `routes` array.  Any children controllers would be made accessible in Decoy UI via the related content sidebar on the create and edit forms (you wouldn't link directly to them).
 	
-	However, you'll notice that the `another_grandchild` controller has a value of the constant `MANY_TO_MANY`.  When two controller's models relate to one another using Laravel's `has_many_and_belongs_to()`, one of the controllers needs to be identified as the parent of the other for the purposes of organzing them in Decoy.  In the above example, you'd make links to both `child_controller` and  `another_grandchild` in the `nav` array.  But you would only be able to join instances of `another_grandchild` to instances of `child_controller` through `child_controller`'s edit UI.  The value of `MANY_TO_MANY` must be specified to tell Decoy to create routes and UI elements (like an autocomplete menu) unique to `has_many_and_belongs_to()` parent/children.
-
 * `post_login_redirect` - The URL the admin should be taken to after sign in.
 
 ### Decoy Defaults
