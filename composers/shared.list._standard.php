@@ -67,10 +67,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 	}
 	
 	// Make an instance of the controller so values that get in the constructor can be inspected
-	list($bundle_name, $controller_path) = preg_match('#(.+)::(.+)#', $view->controller, $matches) ? 
-		array($matches[1], $matches[2]) : 
-		array(DEFAULT_BUNDLE, $view->controller);
-	$controller = Controller::resolve($bundle_name, $controller_path);
+	$controller = BKWLD\Laravel\Controller::resolve_with_bundle($view->controller);
 	
 	// Default settings
 	$defaults = array(
@@ -103,6 +100,10 @@ View::composer('decoy::shared.list._standard', function($view) {
 		$handles = Bundle::option('decoy', 'handles');
 		$controller_name = substr($view->controller, strlen($handles)+1);
 		$view->child_route = route($view->parent_controller).'/'.$view->parent_id.'/'.$controller_name;
-	} else $view->child_route = route($view->controller.'@child', $view->parent_id);
+		
+	// Else, this list has a parent, create a link to the child listing
+	} elseif (!$view->many_to_many && $view->parent_id) {
+		$view->child_route = route($view->controller.'@child', $view->parent_id);
+	}
 	
 });

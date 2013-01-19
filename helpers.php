@@ -231,3 +231,38 @@ HTML::macro('ckeditor', function($name, $options = null) {
 
 	return implode(PHP_EOL, $data);
 });
+
+/**
+ * Form an URL to a new page
+ */
+HTML::macro('new_route', function($route, $parent_id = null) {
+	return empty($parent_id) ? route($route.'@new') : route($route.'@new_child', $parent_id);
+});
+
+/**
+ * Form a URL to an edit page, populating route variables by extracting items from URL segments
+ */
+HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
+	$action = '@edit';	
+	
+	// If a many to many, make the route straight to the controller
+	if ($is_many_to_many) return route($route.$action, $id);
+	
+	// Get all the ids from the route
+	$uri = URI::current();
+	$segments = explode('/', $uri);
+	$ids = array();
+	for ($i=2; $i < count($segments); $i += 2) {
+		$ids[] = $segments[$i];
+	}
+	
+	// If there are any ids, found in the URL, then this a link to a child
+	if (count($ids)) $action .= '_child';
+	
+	// If an id was passed, add it to the end
+	if ($id) $ids[] = $id;
+	
+	// Form the route using all the ids
+	return route($route.$action, $ids);
+	
+});

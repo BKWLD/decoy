@@ -2,6 +2,9 @@
 
 // Imports
 use Laravel\URI;
+use Laravel\Request;
+use Laravel\Config;
+use Laravel\Bundle;
 
 // This class has shared methods that assist in the generation of breadcrumbs
 class Breadcrumbs {
@@ -49,13 +52,21 @@ class Breadcrumbs {
 	// $parent_controllers array
 	static public function generate_from_routes() {
 		$breadcrumbs = array();
+		
 		return $breadcrumbs;
 		
-		// Add the current controller first (we'll be building in reverse order)
+		
+		// Basic info about the request
 		$action = Request::route()->controller_action;
+		$controller_route = Request::route()->controller;
+		$controller = \BKWLD\Laravel\Controller::resolve_with_bundle($controller_route);
+		$is_child_route = $controller->is_child_route();
+		
+		// Add the current controller first (we'll be building in reverse order)
 		if ($action == 'edit') {
 			$id = URI::segment(3);
-			$item = Model::find($id);
+			$model = $controller->model();
+			$item = call_user_func($model.'::find', $id);
 			$breadcrumbs['/'.URI::current()] = $item->title();
 		} elseif ($action == 'new') {
 			$breadcrumbs['/'.URI::current()] = 'New';
@@ -66,7 +77,7 @@ class Breadcrumbs {
 		// is in a different segment depending on whether this controller is being implmented
 		// as a child or not.
 		if ($action == 'index') {
-			if (empty($this->parent_controllers) && URI::segment(3)) {
+			if ($is_child_route && URI::segment(3)) {
 				$breadcrumbs['/'.URI::current()] = ucwords(URI::segment(3));
 			} elseif (URI::segment(5))  {
 				$breadcrumbs['/'.URI::current()] = ucwords(URI::segment(5));
@@ -74,22 +85,40 @@ class Breadcrumbs {
 		}
 		
 		// There are no parent controllers so add the listing and be done with it
-		if (empty($this->parent_controllers)) {
-			$breadcrumbs[route($this->CONTROLLER)] = $this->TITLE;
-			$this->breadcrumbs(array_reverse($breadcrumbs));
-			return;
+		if (!$is_child_route) {
+			$breadcrumbs[route($controller->controller())] = $controller->title();
+			return array_reverse($breadcrumbs);
 		}
-		
+						
 		// Get the parent row.  Unless the current page is an edit view, we don't
 		// have an instance to pull a relationship from, so we must start with the
 		// parent
 		if ($action == 'edit') {
-			$parent_item = $item->{$this->SELF_TO_PARENT};
+		// 	$parent_item = $item->{$this->SELF_TO_PARENT};
 		} else {
-			$parent_id = $id = URI::segment(3);
-			$parent_item = self::parent_find($parent_id);
+			$parent_id = URI::segment(3);
+		// 	$parent_item = self::parent_find($parent_id);
 		}
-				
+		
+		// The current controller is a child of another, so add that child listing link 		
+		$breadcrumbs[route($controller_route.'@child', $parent_id)] = $controller->title();
+		
+		// Get info on the parent
+		$parent_controller_route = $controller->parent_controller();
+		$parent_controller = \BKWLD\Laravel\Controller::resolve_with_bundle($parent_controller_route);
+		
+		// Add the parent edit page
+		$breadcrumbs[route($parent_controller_route.'@edit', $parent_item->id)] = $parent_item->title();
+		
+		
+		
+		return array_reverse($breadcrumbs);
+		
+		
+		
+		
+		
+		
 		// The current page was a child
 		$breadcrumbs[route($this->CONTROLLER.'@child', $parent_item->id)] = $this->TITLE;
 		
@@ -119,8 +148,46 @@ class Breadcrumbs {
 		}
 		
 		// Set the breadcrumbs
-		$this->breadcrumbs(array_reverse($breadcrumbs));
+		return array_reverse($breadcrumbs);
 		
+	}
+	
+	// Find the parent controller of a controller
+	static private function find_parent_controllers($controllers, $parent = null) {
+		$handles = Bundle::option('decoy', 'handles');
+		foreach($controllers as $key => $val) {
+
+			// Process items that have an array (that have children)
+			$is_many_to_many = false;
+			if (is_array($val)) {
+				
+				// If one of the children of this route has matched, it will be returning
+				// that parent in an array.  Prepend the next parent to the array and 
+				// pass it along until we're out of the recursive function
+				$parents = self::find_parent_controllers($val, $key);
+				if (!empty($parents)) {
+					if ($parent) array_unshift($parents, $handles.'.'.$parent);
+					return $parents;
+				}
+				
+				// Else, see if the key matches, which is a controller itself
+				else $controller = $key;
+			
+			// This item has no children
+			} else $controller = $val;
+			
+			// Does the path to THIS controller match the route we're looking at from the array?
+			if (Request::route()->controller == $handles.'.'.$controller) {
+				
+				// If it is does and we're looking at a child, then return the parent
+				if ($parent) return array($handles.'.'.$parent);
+				
+				// If there is no parent, it was found in the primary depth, so return
+				// an empty array to signifiy no parents
+				else return array();
+			}
+		}
+		return array(); // None found (this should never probably be reached)
 	}
 	
 }

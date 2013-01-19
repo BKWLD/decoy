@@ -40,6 +40,7 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 		// Loop through the listing data
 		foreach ($iterator as $item):
 		?>
+	
 			<tr 
 				data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
 				
@@ -52,13 +53,14 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 				<td><input type="checkbox" name="select-row"></td>
 				
 				<?// Loop through columns and add columns ?>
+				
 				<? $column_names = array_keys($columns) ?>
 				<? foreach(array_values($columns) as $i => $column): ?>					
 					<td class="<?=strtolower($column_names[$i])?>">
 						
 						<?// Add an automatic link on the first column?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=route($controller.'@edit', $item->id)?>">
+							<a href="<?=HTML::edit_route($controller, $many_to_many, $item->id)?>">
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
@@ -83,7 +85,7 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=route($controller.'@edit', $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
+					<a href="<?=HTML::edit_route($controller, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
 					| 
 					 
 					 <?// Many to many listings have remove icons instead of trash?>

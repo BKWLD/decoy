@@ -20,7 +20,7 @@
 		<?// Else it's a regular one to many, so show a link to create a new item ?>
 		<? else: ?>
 			<div class="btn-group">
-				<a href="<?=route($controller.'@new', !empty($parent_id)?$parent_id:null)?>" class="btn btn-info" ><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=HTML::new_route($controller, @$parent_id)?>" class="btn btn-info" ><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		<? endif ?>
 

@@ -30,7 +30,7 @@ It expects:
 	<? if(!empty($item)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
-				<a href="<?=route($controller.'@new', !empty($parent_id)?array($parent_id):array())?>" class="btn btn-info"><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=HTML::new_route($controller, @$parent_id)?>" class="btn btn-info"><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		</div>
 	<? endif ?>

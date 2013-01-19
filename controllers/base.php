@@ -76,11 +76,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		if ($this->MODEL && !class_exists('Model')) {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
-				
-		// Get an array of all the parent controllers to this one.  This is used in
-		// a couple operations
-		$routes = Config::get('decoy::decoy.routes');
-		$this->parent_controllers = $this->find_parent_controllers($routes);
 		
 		// If the current route has a parent, discover what it is
 		if (empty($this->PARENT_CONTROLLER) && $this->is_child_route()) {
@@ -128,6 +123,8 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Get access to protected properties
 	public function model() { return $this->MODEL; }
 	public function parent_controller() { return $this->PARENT_CONTROLLER; }
+	public function controller() { return $this->CONTROLLER; }
+	public function title() { return $this->TITLE; }
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
@@ -153,7 +150,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		Decoy\Breadcrumbs::generate_from_routes();
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
 	}	
 	
 	// List page when the view is for a child in a related sense
@@ -205,7 +202,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		Decoy\Breadcrumbs::generate_from_routes();
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
 		
 	}
 	
@@ -305,7 +302,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
 		
 		// Inform the breadcrumbs
-		Decoy\Breadcrumbs::generate_from_routes();
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
 	}
 	
 	// Create a new one
@@ -341,7 +338,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	
 	// Edit form
 	public function get_edit($id) {
-		
+
 		// Get the work
 		if (!($item = Model::find($id))) return Response::error('404');
 
@@ -364,7 +361,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 		
 		// Inform the breadcrumbs
-		Decoy\Breadcrumbs::generate_from_routes();
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_routes());
 
 	}
 	
@@ -518,8 +515,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 	}
 	
-	
-	
 	// If there is slug mentioned in the validation or mass assignment rules
 	// and an appropriate title-like field, make a slug for it.  Then merge
 	// that into the inputs, so it can be validated easily
@@ -598,6 +593,14 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
+	// Test if the current route is serviced by has many and/or belongs to.  These
+	// are only true if this controller is acting in a child role
+	public function is_child_route() {
+		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
+		return $this->action_is_child()
+			|| $this->parent_in_input()
+			|| $this->acting_as_related();
+	}
 	
 	//---------------------------------------------------------------------------
 	// File handling uttlity methods
@@ -712,74 +715,11 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Private support methods
 	//---------------------------------------------------------------------------
 	
-	// Find the parent controller of the current controller
-	private function find_parent_controllers($controllers, $parent = null) {
-		$handles = Bundle::option('decoy', 'handles');
-		foreach($controllers as $key => $val) {
-
-			// Process items that have an array (that have children)
-			$is_many_to_many = false;
-			if (is_array($val)) {
-				
-				// If one of the children of this route has matched, it will be returning
-				// that parent in an array.  Prepend the next parent to the array and 
-				// pass it along until we're out of the recursive function
-				$parents = $this->find_parent_controllers($val, $key);
-				if (!empty($parents)) {
-					if ($parent) array_unshift($parents, $handles.'.'.$parent);
-					return $parents;
-				}
-				
-				// Else, see if the key matches, which is a controller itself
-				$controller = $key;
-			
-			// This item represents a many to many relationship. Remember that for later.
-			} elseif ($val == MANY_TO_MANY) {
-				$controller = $key;
-				$is_many_to_many = true;
-			
-			// This item has no children
-			} else $controller = $val;
-			
-			// Does the path to THIS controller match the route we're looking at from the array?
-			if ($this->CONTROLLER == $handles.'.'.$controller) {
-				
-				// If it is does and we're looking at a child, then...
-				if ($parent) {
-					
-					// If this route is for a many-to-many controller AND it's not a child index view, 
-					// OR we're not processing a remove/attach/autocomplete (which needs parent context), then 
-					// return an empty array, meaning that it has no parents.  This is because
-					// many to many's new/edit/index etc should operate like a parentless controller.
-					// You're not creating rows that belong to a parent; they're independent.
-					if ($is_many_to_many && !$this->is_child_route()) return array();
-					
-					// Because the route has a parent, return that parent route
-					return array($handles.'.'.$parent);
-				}
-				
-				// If there is no parent, it was found in the primary depth, so return
-				// an empty array to signifiy no parents
-				return array();
-			}
-		}
-		return array(); // None found (this should never probably be reached)
-	}
-	
-	// Test if the current route is serviced by has many and/or belongs to.  These
-	// are only true if this controller is acting in a child role
-	private function is_child_route() {
-		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
-		return $this->action_is_child()
-			|| $this->parent_in_input()
-			|| $this->acting_as_related();
-	}
-	
 	// Test if the current route is one of the full page has many listings or a new
 	// page as a child
 	private function action_is_child() {
 		return Request::route()->is($this->CONTROLLER.'@child')
-			|| (Request::route()->is($this->CONTROLLER.'@new') && is_numeric(URI::segment(3)));
+			|| Request::route()->is($this->CONTROLLER.'@new_child');
 	}
 	
 	// Test if the current route is one of the many to many XHR requests
@@ -857,18 +797,12 @@ abstract class Decoy_Base_Controller extends Controller {
 		return $relationship;
 	}
 	
-	// Return a boolean that indicates if this controller is a child of another
-	private function is_child() {
-		$parents = $this->find_parent_controllers(Config::get('decoy::decoy.routes'));
-		return !empty($parents);
-	}
-	
 	// Get the pivot table name and the child foreign key (the active Model) is probably
 	// the child, and the parent foreign key column name
 	private function pivot() {
 		
 		// If the request doesn't know it's child of another class (often because an exeption)
-		// needs to be added to find_parent_controllers() for the route), this won't work
+		// this won't work
 		if (empty($this->SELF_TO_PARENT) || empty($this->PARENT_TO_SELF)) {
 			throw new Exception('Empty relationships in pivot');
 		}

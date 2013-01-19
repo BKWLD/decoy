@@ -45,21 +45,12 @@ function addRoutes($routes, $parent = null) {
 	foreach($routes as $key => $val) {
 		
 		// Process children
-		$is_many_to_many = false;
 		if (is_array($val)) {
 			addRoutes($val, $key);
-			$controller = $key;
-			
-		// The item represents a many to many.  This means we DO want to create a
-		// child index view (because you can view how many of this item belong to the
-		// parent) but it should have a non-parented NEW link
-		} elseif ($val == MANY_TO_MANY) {
-			$is_many_to_many = true;
 			$controller = $key;
 		
 		// This is the end of the line
 		} else $controller = $val;
-		
 		
 		// If a core Decoy controller, remove the bundle from the controller name
 		if (Str::is('decoy::*', $controller)) {
@@ -72,14 +63,17 @@ function addRoutes($routes, $parent = null) {
 		}
 		
 		// New / Create
-		if ($parent && !$is_many_to_many) Router::register(array('GET', 'POST'), 
+		Router::register(array('GET', 'POST'), 
 			"(:bundle)/$parent/(:num)/$controller/new", 
-			array('uses' => "$controller_path@new", 'as' => "$controller_path@new"));
-		else Router::register(array('GET', 'POST'), 
+			array('uses' => "$controller_path@new", 'as' => "$controller_path@new_child"));
+		Router::register(array('GET', 'POST'), 
 			"(:bundle)/$controller/new", 
 			array('uses' => "$controller_path@new", 'as' => "$controller_path@new"));
 		
 		// Edit / Update
+		Router::register(array('PUT', 'POST', 'GET'), 
+			"(:bundle)/$parent/(?:[0-9]+)/$controller/(:num)", 
+			array('uses' => "$controller_path@edit", 'as' => "$controller_path@edit_child"));
 		Router::register(array('PUT', 'POST', 'GET'), 
 			"(:bundle)/$controller/(:num)", 
 			array('uses' => "$controller_path@edit", 'as' => "$controller_path@edit"));
@@ -109,7 +103,7 @@ function addRoutes($routes, $parent = null) {
 			array('uses' => "$controller_path@autocomplete", 'as' => "$controller_path@autocomplete"));
 		
 		// List, used for one-to-many relationships
-		if ($parent) Router::register(array('GET'), 
+		Router::register(array('GET'), 
 			"(:bundle)/$parent/(:num)/$controller/(:any?)", 
 			array('uses' => "$controller_path@index_child", 'as' => "$controller_path@child"));
 		
