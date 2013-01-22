@@ -6,18 +6,18 @@ define(function (require) {
 	// dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone');
-	
-	// private static vars
-	var app,
-		dataId = 'data-model-id';
+		Backbone = require('backbone'),
+		Gallery = require('decoy/views/gallery');
 	
 	// public view module
-	var ModerateView = Backbone.View.extend({
+	var ModerateView = Gallery.extend({
 		
+		// Add in the height for the moderation controls
+		vertical_padding: 60,
+		
+		// Initialize the set
 		initialize: function () {
-			_.bindAll(this);
-			app = this.options.app;
+			Gallery.prototype.initialize.call(this);
 
 			// Get the path to the controller.  If this is not specified via a
 			// data attribtue of "controller-route" then we attempt to infer it from
@@ -27,8 +27,7 @@ define(function (require) {
 				this.controllerRoute = window.location.pathname;
 			}
 						
-			// cache selectors
-			this.$items = this.$('['+dataId+']');
+			// Cache selectors
 			this.$pending_count = this.$('.pending-count');
 			this.$approved_count = this.$('.approved-count');
 			this.$denied_count = this.$('.denied-count');
@@ -40,7 +39,7 @@ define(function (require) {
 			this.collection.url = this.controllerRoute;
 			_.each(this.$items, this.initItem);
 			
-			// listen for collection changes and render view
+			// Listen for collection changes and render view
 			this.collection.on('change', this.render, this);
 			
 		},
@@ -53,7 +52,7 @@ define(function (require) {
 			
 			// Create the model
 			var model = new Backbone.Model({
-				id: $item.attr(dataId),
+				id: $item.attr('data-model-id'),
 				status: this.status($item)
 			});
 			this.collection.push(model);
@@ -91,12 +90,12 @@ define(function (require) {
 		
 		// Get them model from an event
 		model: function(e) {
-			return $(e.target).parents('['+dataId+']').data('model');
+			return $(e.target).parents('[data-model-id]').data('model');
 		},
 		
 		// Get the jquery item given a model
 		item: function(model) {
-			return this.$('['+dataId+'='+model.get('id')+']');
+			return this.$('[data-model-id='+model.get('id')+']');
 		},
 		
 		// Save the model
