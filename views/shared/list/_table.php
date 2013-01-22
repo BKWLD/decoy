@@ -33,7 +33,7 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 			
 		<?// Standard bulk actions ?>
 		<? else: ?>
-			<?=render('decoy::shared._list_actions')?>
+			<?=render('decoy::shared.list._bulk_actions')?>
 		<? endif ?>
 		
 		<?
