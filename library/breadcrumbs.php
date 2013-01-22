@@ -61,10 +61,13 @@ class Breadcrumbs {
 		$url = '/'.$segments[0];
 		for($i=1; $i<count($segments); $i+=2) {
 
-			// Add a list view
+			// Find the contorller. Check if it's Decoy bundle if it's not found in the application
 			$url .= '/' . $segments[$i];
-			$controller_route = $segments[0].'.'.$segments[$i];
-			$controller = \BKWLD\Laravel\Controller::resolve_with_bundle($controller_route);
+			$controller = \BKWLD\Laravel\Controller::resolve_with_bundle($segments[0].'.'.$segments[$i]);
+			if (!$controller) $controller = \BKWLD\Laravel\Controller::resolve_with_bundle('decoy::'.$segments[$i]);
+			if (!$controller) continue;
+			
+			// Add controller to breadcrumbs
 			$breadcrumbs[$url] = $controller->title();
 			
 			// Add a detail if it exists
