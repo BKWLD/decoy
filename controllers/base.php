@@ -389,7 +389,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		self::unset_file_edit_inputs();
 		
 		// Remove special key-value pairs that inform logic but won't ever fill() a db row
-		$input = BKWLD\Laravel\Input::json_or_input();
+		$input = BKWLD\Laravel\Input::json_and_input();
 		unset($input['parent_controller']); // Backbone may send this with sort updates
 		
 		// Update it
@@ -477,7 +477,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected function validate($rules, $messages = array()) {
 		
 		// Pull the input from the proper place
-		$input = BKWLD\Laravel\Input::json_or_input();
+		$input = BKWLD\Laravel\Input::json_and_input();
 		
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
@@ -575,7 +575,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// If there is not a PUT request with a property of position, return false
 		// to tell the invoker to continue processing
 		if (Request::method() != 'PUT' || !Request::ajax()) return false;
-		$input = BKWLD\Laravel\Input::json_or_input();
+		$input = BKWLD\Laravel\Input::json_and_input();
 		if (!isset($input['position'])) return false;
 		
 		// Update the pivot position
@@ -728,7 +728,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// because this is all being invoked from the constructor.
 		if (strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false) return false;
 		
-		$input = BKWLD\Laravel\Input::json_or_input();
+		$input = BKWLD\Laravel\Input::json_and_input();
 		return isset($input['parent_controller']);
 	}
 	
@@ -756,7 +756,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// If one of the many to many xhr requests, get the parent from Input
 		} elseif ($this->parent_in_input()) {
-			$input = BKWLD\Laravel\Input::json_or_input();
+			$input = BKWLD\Laravel\Input::json_and_input();
 			return $input['parent_controller'];
 		
 		// If this controller is a related view of another, the parent is the main request	
