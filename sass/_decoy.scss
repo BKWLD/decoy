@@ -271,7 +271,7 @@ h1 {
 		white-space: nowrap;
 	}
 	th { // Default width of columns, which gets overriden in special cases below
-		width: 25%;
+		width: 40%;
 	}
 	th:first-child {
 		width: 10px;
@@ -577,8 +577,9 @@ h1 {
 			bottom: 0px;
 			right: 0px;
 			padding: 10px;
-			background-color: $light-grey; // Give a bkgc color so it looks better if overlapping
-			.btn {
+			background-color: $light-grey; // Give a bkgd color so it looks better if overlapping
+			text-align: center;
+			> .btn {
 				@include box-sizing('border-box');
 				width: 49%;
 			}
