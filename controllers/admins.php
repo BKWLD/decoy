@@ -60,7 +60,7 @@ class Decoy_Admins_Controller extends Decoy_Base_Controller {
 		}
 		
 		// Redirect to edit view
-		return Redirect::to_action('decoy::admins@edit', array($id));
+		return Redirect::to_route('decoy::admins@edit', array($id));
 	}
 
 	// Edit form
