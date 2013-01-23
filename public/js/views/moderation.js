@@ -67,7 +67,9 @@ define(function (require) {
 		events: {
 			'click .actions .approve': 'approve',
 			'click .actions .deny': 'deny',
-			'hide .item': 'hide'
+			'hide .item': 'hide',
+			'approve .item': 'approve',
+			'deny .item': 'deny'
 		},
 		
 		// Set item to approved
@@ -93,7 +95,7 @@ define(function (require) {
 		
 		// Get them model from an event
 		model: function(e) {
-			return $(e.target).parents('[data-model-id]').data('model');
+			return $(e.target).closest('[data-model-id]').data('model');
 		},
 		
 		// Get the jquery item given a model
