@@ -17,6 +17,8 @@ define(function (require) {
 		
 		// Initialize the set
 		initialize: function () {
+			
+			// Parent constructor
 			Gallery.prototype.initialize.call(this);
 
 			// Get the path to the controller.  If this is not specified via a
@@ -52,7 +54,7 @@ define(function (require) {
 			
 			// Create the model
 			var model = new Backbone.Model({
-				id: $item.attr('data-model-id'),
+				id: $item.data('model-id'),
 				status: this.status($item)
 			});
 			this.collection.push(model);
@@ -64,7 +66,8 @@ define(function (require) {
 		// Register interaction events
 		events: {
 			'click .actions .approve': 'approve',
-			'click .actions .deny': 'deny'
+			'click .actions .deny': 'deny',
+			'hide .item': 'hide'
 		},
 		
 		// Set item to approved
@@ -108,7 +111,15 @@ define(function (require) {
 			$el.text(parseInt($el.text(), 10) + change);
 		},
 		
-		// render view from model changes
+		// Swap the border color and fade out the element because it's been moved to
+		// another tab.  This is triggered by an event so other views can trigger it.
+		hide: function(e, status) {
+			var $item = $(e.target);
+			$item.fadeOut(300);
+			if (status && status != 'pending') $item.addClass(status+'-outro');
+		},
+		
+		// Render view from model changes
 		render: function (model) {
 			
 			// We only care to run this logic if there has been an actual change, not
@@ -120,10 +131,8 @@ define(function (require) {
 				$item = this.item(model),
 				old = model.previousAttributes();
 						
-			// Swap the border color and fade out the element because it's been moved to
-			// another tab
-			$item.fadeOut(300);
-			if (status != 'pending') $item.addClass(status+'-outro');
+			// It's been moved to a new tab, so remove it
+			$item.trigger('hide', [status]);
 			
 			// Update the counts on the page
 			if (status == 'approved') {
@@ -141,6 +150,7 @@ define(function (require) {
 				this.$pagination.find('ul').append('<li><a href="'+window.location.href+'">Reload for more moderation options</a></li>');
 			}
 		}
+		
 	});
 	
 	return ModerateView;
