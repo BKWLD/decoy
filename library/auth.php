@@ -62,7 +62,7 @@ class Auth implements Auth_Interface {
 	
 	// Get the URL to their profile
 	static public function user_url() {
-		return action('admin.account');
+		return action('decoy::admins', array(self::user_id()));
 	}
 	
 	// Get their id
