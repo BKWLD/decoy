@@ -12,7 +12,7 @@
 		<?= render('decoy::layouts.buk_builder._header') ?>
 		<script src="/bundles/decoy/ckeditor/ckeditor.js"></script>
 	</head>
-	<body class="<?=Request::route()->controller?> <?=Request::route()->controller_action?>">
+	<body class="<?=str_replace('.', '_', Request::route()->controller)?> <?=Request::route()->controller_action?>">
 		
 		<?// Nav ?>
 		<?= render('decoy::layouts._nav') ?>
