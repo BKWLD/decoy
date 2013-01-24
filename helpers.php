@@ -266,3 +266,19 @@ HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null)
 	return route($route.$action, $ids);
 	
 });
+
+/**
+ * Make a control group that doesn't show an input.  Like where a field might have been rendered as
+ * disabled, we're just showing the value as text.  Only makes sense on edit views, really.
+ * $key - The key that the value is associated with in former
+ */
+HTML::macro('inputless_field', function($key, $label = null, $value = null) {
+	
+	// Get defaults
+	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($key);
+	if (empty($value)) $value = Former::getValue($key);
+	
+	// Render the elemnent
+	return '<div class="control-group inputless"><label for="'.$key.'" class="control-label">'.$label.'</label><div class="controls">'.$value.'</div></div>';
+	
+}); 
