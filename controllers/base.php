@@ -210,7 +210,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
 		// Get data matching the query
-		if (empty(Model::$TITLE_COLUMN)) throw new Exception('A Model::$TITLE_COLUMN must be defined');
+		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->MODEL.'::$TITLE_COLUMN must be defined');
 		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
@@ -247,31 +247,8 @@ abstract class Decoy_Base_Controller extends Controller {
 			}
 		}
 		
-		// Produce the output in the format the autocomplete expects
-		$output = array();
-		foreach($query->get() as $row) {
-			
-			// Only keep the id and title fields
-			$item = new stdClass;
-			$item->id = $row->id;
-			$item->title = $row->{Model::$TITLE_COLUMN};
-			
-			// Add properties for the columns mentioned in the list view within the
-			// 'columns' property of this row in the response.  Use the same logic
-			// found in HTML::render_list_column();
-			$item->columns = array();
-			foreach($this->COLUMNS as $column) {
-				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
-				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
-				else $item->columns[$column] = null;
-			}
-			
-			// Add the item to the output
-			$output[] = $item;
-		}
-		
 		// Return result
-		return Response::json($output);
+		return Response::json($this->format_autocomplete_response($query->get()));
 		
 	}
 	
@@ -597,6 +574,32 @@ abstract class Decoy_Base_Controller extends Controller {
 		return $this->action_is_child()
 			|| $this->parent_in_input()
 			|| $this->acting_as_related();
+	}
+	
+	// Format the results of a query in the format needed for the autocomplete repsonses
+	public function format_autocomplete_response($results) {
+		$output = array();
+		foreach($results as $row) {
+			
+			// Only keep the id and title fields
+			$item = new stdClass;
+			$item->id = $row->id;
+			$item->title = $row->{Model::$TITLE_COLUMN};
+			
+			// Add properties for the columns mentioned in the list view within the
+			// 'columns' property of this row in the response.  Use the same logic
+			// found in HTML::render_list_column();
+			$item->columns = array();
+			foreach($this->COLUMNS as $column) {
+				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
+				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
+				else $item->columns[$column] = null;
+			}
+			
+			// Add the item to the output
+			$output[] = $item;
+		}
+		return $output;
 	}
 	
 	//---------------------------------------------------------------------------
