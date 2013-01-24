@@ -14,6 +14,7 @@ abstract class Seed {
 	
 	// Directory for saving images
 	static protected $UPLOADS;
+	static protected $CKFINDER;
 	
 	// All functions require an instance of Faker
 	protected $faker;
