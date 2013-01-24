@@ -391,7 +391,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Remove special key-value pairs that inform logic but won't ever fill() a db row
 		$input = BKWLD\Laravel\Input::json_and_input();
 		unset($input['parent_controller']); // Backbone may send this with sort updates
-		
+
 		// Update it
 		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
@@ -478,6 +478,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Pull the input from the proper place
 		$input = BKWLD\Laravel\Input::json_and_input();
+		$input = array_merge($input, Input::file()); // Validate files too
 		
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
