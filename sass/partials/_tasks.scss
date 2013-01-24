@@ -1,0 +1,39 @@
+// The list of seed tasks
+#tasks {
+	@include flush-child-spans;
+	
+	// Make the table span the whole block
+	table {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	
+	// These are the execute buttons
+	td:first-child {
+		padding-right: 10px;
+		width:1px;
+	}
+	
+	// These are the method names
+	td:last-child {
+		font-weight: bold;
+		span {
+			font-weight: normal;
+		}
+	}
+	
+	// Increase line spacing over the default
+	td {
+		padding-top: 2px;
+		padding-bottom: 2px;
+	}
+	
+	// Spinner
+	td img {
+		width: 18px;
+		height: 18px;
+		margin-left: 5px;
+		display: none;
+	}
+
+}

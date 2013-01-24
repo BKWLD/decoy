@@ -1,0 +1,265 @@
+.table {
+
+	// Add border lines to the bottom rather than top of row	
+	td,th {
+		border-bottom: 1px solid $grey-border;
+		border-top: none;
+	}
+	
+	thead {
+		background: $light-grey;
+		
+		// Dim the color on the header content and
+		// make the text smaller
+		th {
+			@include opacity($light-opacity);
+			font-size: 12px;
+			padding: 5px;
+			padding-left: 8px;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+			
+			// Bulk action rollover
+			&.select-all:hover {
+				@include opacity(1);
+			}
+		}
+	}
+	
+	// The select all al button
+	.select-all {
+		cursor: pointer;
+	}
+	
+	// Row that contains bulk action interface
+	tr.warning, tr.error {
+		td {
+			text-align: center;
+			vertical-align: center;
+		}
+	}
+	
+	// Always make the second column the widest, assuming
+	// that to be the title.  This relies on table-layout fixed where
+	// the first row sets the widths of all subsequent rows
+	& { table-layout: fixed; }
+	td,th {
+		white-space: nowrap;
+	}
+	th { // Default width of columns, which gets overriden in special cases below
+		width: 40%;
+	}
+	th:first-child {
+		width: 10px;
+	}
+	th:first-child + th { // The title column, at 100%, will effectively be 4x the width of all extra columns
+		width: 100%;
+	}
+	th:last-child {
+		padding-right: 10px;
+		text-align: right;
+		&.actions-2 { width: 41px; } 
+		&.actions-3 { width: 57px; }
+	}
+	td { // All cells are told to consume the full available width and ellipsis any leftover
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	td:last-child {
+		text-align: right;
+		padding-left: 0;
+	}
+	td:first-child { // When there is only one row, this will supercede the above
+		text-align: left;
+	}
+	
+	// Vertically center align all cells, for rows with image thumbnails in there
+	td {
+		vertical-align: middle;
+		input[type="radio"], input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+	
+	// Add a slight rollover so it's easier to track with the eyes
+	tbody tr:hover {
+		background-color: #FCFCFC;
+	}
+
+	// Styles related to drag and drop.
+	// Note: I've noticed that table rows tend have a decremented height after being
+	// interacted with.  Which causes elements that are lower on the page to move slightly.
+	// It's a little irritant that I've found no solution for.
+	.ui-sortable {
+		
+		// This is the drop box
+		.placeholder { 
+			background: $light-grey;
+		}
+		
+		// This is the unit that gets dragged around
+		.helper {
+			background: rgba(255,255,255,.9);
+			border: 1px dashed $grey-border;
+			
+			// Compensate for the left and top border on the row being added
+			td { 
+				border: none;
+				position: relative; 
+				left: -1px; 
+				top: -1px;
+			}
+		}
+		tr {
+			cursor: move;
+		}
+		&.ui-sortable-disabled tr {
+			cursor: auto;
+		}
+	}
+	
+	// Give images a border
+	tr img {
+		border: 1px solid $grey-border;
+	}
+	
+	// Make gravatar images a good size (for the admins view)
+	.gravatar {
+		width: 40px;
+		height: 40px;
+	}
+	
+	// If there are multiple badges in a row, give them a little breathing roomt
+	.label {
+		margin: 0 2px;
+	}
+	
+	// This is the icon that indicates whether a row is visible or not
+	.visibility {
+		width: 14px;
+		height: 14px;
+		padding: 1px;
+		display: inline-block;
+		border: 1px inset #EEE;
+		line-height: 0;
+		position: relative;
+		top: 2px;
+		
+		// Icons have a margin top from bootstrap
+		i { margin-top: 0;}
+	}
+}
+
+// Center the pagination on the page
+.pagination {
+	text-align: center;
+}
+
+// On small browsers, only show the second and last columns in tables
+@media (max-width: $bootstrap_nav_break) {
+	.table {
+		th, td {
+			display: none;
+		}
+		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
+			display: table-cell;
+		}	
+	}
+}
+
+// The search interface
+.search {
+	$search-bkgd: darken($light-grey, 3%);
+	$search-shadow: darken($search-bkgd, 5%);
+
+	// The container for the form
+	margin: 0;
+	background: $light-grey;
+	@include border-radius(4px 4px 0 0);
+	text-align: center;
+	background: $search-bkgd;
+	// @include background-image(linear-gradient($search-bkgd, $search-bkgd 95%, $search-shadow));
+	@include box-shadow(darken(white, 20) 0px 1px 3px 0 inset);
+	overflow: hidden;
+	color: darken(white, 50);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+	display: none;
+	
+	// Specifying padding an inside container so it doesn't animate
+	.conditions {
+		padding: 2px;
+		display: inline-block;
+		position: relative;
+		text-align: right;
+		margin-right: 88px; // Compensate for the submit button in centering
+		
+		// Center the labels on the left
+		.intro {
+			position: relative;
+			top: 2px;
+		}
+		 
+		// Line spacing
+		.condition { margin: 5px; }
+		
+		// The labels (label tags and selectors are used by bootstrap)
+		@media (max-width: $bootstrap_nav_break) {
+			.intro {
+				display: none;
+			}
+		}
+		
+		// The add/minus buttons
+		.add, .subtract {
+			$radius: 15px;
+			@include border-radius($radius);
+			width: $radius*2;
+			height: $radius*2;
+			padding: 0;
+		}
+		
+		// The search button
+		button[type="submit"] {
+			position: absolute;
+			bottom: 8px;
+			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+		}
+		
+		// Make all the inputs the same size
+		$width: 130px;
+		input, select {
+			@include box-sizing(border-box);
+			width: $width;
+			height: 30px;
+		}
+		input.date {width: $width - 27px; }
+		
+		// Space out the inputs, which are butted right up to each other cause of JS
+		.condition > * {
+			margin: 0 2px;
+		}
+	}
+}
+
+// Special styles for animating the clear button.  Namespaced here so this could be removed
+// without much trouble
+.animated-clear {
+	.search-toggle {
+		z-index: 2;
+		margin-right: 39px;
+	}
+	.search-clear {
+		z-index: 1;
+		position: absolute;
+		right: 0;
+	}
+	&.closed {
+		.btn { border-radius: 4px; }
+		.search-toggle { margin-right: 0;}
+	}
+	
+	// Only animate after the initial page load
+	&.initialized .search-toggle {
+		@include transition(margin-right 400ms ease-out);
+	}
+}
