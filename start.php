@@ -42,6 +42,7 @@ if (Request::is_env('local') && !Request::cli()) {
 	ob_start();
 	$publisher = new Laravel\CLI\Tasks\Bundle\Publisher;
 	$publisher->publish('decoy');
+	$publisher->publish('croppa');
 	ob_end_clean(); // Supress the output from the above, which does an echo
 }
 
