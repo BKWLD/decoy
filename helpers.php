@@ -279,6 +279,6 @@ HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 	if (empty($value)) $value = Former::getValue($key);
 	
 	// Render the elemnent
-	return '<div class="control-group inputless"><label for="'.$key.'" class="control-label">'.$label.'</label><div class="controls">'.$value.'</div></div>';
+	return '<div class="control-group inputless '.$key.'"><label for="'.$key.'" class="control-label">'.$label.'</label><div class="controls">'.$value.'</div></div>';
 	
 }); 
