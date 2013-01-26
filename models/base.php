@@ -56,7 +56,7 @@ abstract class Base_Model extends Eloquent {
 	
 	// Save out an image or file given the field name.  They are saved
 	// to the directory specified in the bundle config
-	static public function save_image($input_name = 'image') { self::save_file($input_name); }
+	static public function save_image($input_name = 'image') { return self::save_file($input_name); }
 	static public function save_file($input_name = 'file') {
 		$path = File::organize_uploaded_file(Input::file($input_name), Config::get('decoy::decoy.upload_dir'));
 		$path = File::public_path($path);
