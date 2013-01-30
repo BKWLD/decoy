@@ -299,7 +299,7 @@ define(function (require) {
 		// Submit the form by redirecting with the serialized query
 		submit: function(e) {
 			if (e) e.preventDefault();
-			
+
 			// Remove any existing query from the search
 			var search = this.stripQuery(location.search);
 			
@@ -312,7 +312,7 @@ define(function (require) {
 			}
 			
 			// Redirect the page
-			location.href = location.origin+location.pathname+search;
+			location.href = location.pathname+search;
 			
 		},
 		
@@ -349,7 +349,7 @@ define(function (require) {
 		
 		// Remove the query from the search query
 		stripQuery: function(search) {
-			return search.replace(/&?query=[^&]+/, '');
+			return search.replace(/\??&?query=[^&]+/, '');
 		}
 		
 	});
