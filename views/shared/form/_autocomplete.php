@@ -1,6 +1,6 @@
 <?// This view is rendered by the HTML::autocomplete() macro ?>
 
-<div class="control-group" data-js-view="autocomplete" data-route="<?=$route?>" data-allow-new="<?=$allow_new?1:0?>">
+<div class="control-group autocomplete" data-js-view="autocomplete" data-route="<?=$route?>" data-allow-new="<?=$allow_new?1:0?>">
 	<label for="<?=$id?>"><?=$label?></label>
 	<div class="input-append">
 		<input class="span5" type="text" placeholder="Search" id="<?=$id?>" value="<?=$old_title?>"/> <?// Displayed to users?>

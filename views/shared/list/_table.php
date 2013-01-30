@@ -6,7 +6,7 @@ $actions = 2; // Default
 if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 ?>
 
-<table class="table">
+<table class="table listing">
 	<thead>
 			<tr>
 				<th class="select-all"><i class="icon-check"></i></th>

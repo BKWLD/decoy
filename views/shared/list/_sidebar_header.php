@@ -1,6 +1,6 @@
 <?// The header above a list that is rendered into a sidebar ?>
 
-<legend><a href="<?=$child_route?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
+<legend class="sidebar-header"><a href="<?=$child_route?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
 	
 	<div class="btn-toolbar pull-right">
 	
@@ -11,7 +11,7 @@
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>
 		<div class="btn-group">
-			<a href="<?=route($controller.'@new_child', $parent_id)?>" class="btn btn-info btn-small"><i class="icon-plus icon-white"></i> New</a>
+			<a href="<?=route($controller.'@new_child', $parent_id)?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
 		</div>
 	<? endif ?>
 	

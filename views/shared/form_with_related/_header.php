@@ -22,11 +22,11 @@ This partial is used to open forms that have a related data sidebar
 
 ?>
 
-<h1><?=$title?>
+<h1 class="form-header related-form"><?=$title?>
 	<? if(!empty($item)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
-				<a href="<?=HTML::new_route($controller, @$parent_id)?>" class="btn btn-info"><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=HTML::new_route($controller, @$parent_id)?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		</div>
 	<? endif ?>

@@ -20,16 +20,16 @@ the sidebar for related data on forms that have a related data sidebar.
 			
 		<?// Submit buttons?>
 		<hr/>
-		<div class="controls">
-			<button type="submit" class="btn btn-success"><i class="icon-file icon-white"></i> Save</button>
+		<div class="controls actions">
+			<button type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
 			
 			<? if (!empty($item)): ?>
-				<a class="btn btn-danger" href="<?=route($controller.'@delete', array($item->id))?>">
+				<a class="btn btn-danger delete" href="<?=route($controller.'@delete', array($item->id))?>">
 					<i class="icon-trash icon-white"></i> Delete
 				</a>
 			<? endif ?>
 			
-			<a class="btn" href="<?=route('decoy::back')?>">Back</a>
+			<a class="btn back" href="<?=route('decoy::back')?>">Back</a>
 		</div>
 
 	<?= Former::close() ?>
