@@ -282,3 +282,34 @@ HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 	return '<div class="control-group inputless '.$key.'"><label for="'.$key.'" class="control-label">'.$label.'</label><div class="controls">'.$value.'</div></div>';
 	
 }); 
+
+/**
+ * This renders a date selection box
+ */
+HTML::macro('date', function($id, $label = null) {
+	
+	// Defaults
+	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
+	
+	// Make the element
+	$field = Former::text($id, $label)
+		->class('date span2')
+		->maxlength(10)
+		->placeholder('mm/dd/yyyy')
+		->value(date("m/d/Y"))
+		->append('<i class="icon-calendar"></i>')
+		->id(null); // We don't want to conflict on the id
+		
+	// If there is a value, we assume it's in MYSQL time format, so
+	// make it human and force it
+	if ($value = Former::getValue($id)) {
+		$field = $field->forceValue(date("m/d/Y", strtotime($value)));
+	}
+	
+	// I must render this field before adding a new one
+	$field = (string) $field;
+	
+	// Now, add a hidden field that will contain the value in the MySQL prefered
+	// format and is updated via JS
+	return $field.Former::hidden($id)->id($id); // id not added by default
+});

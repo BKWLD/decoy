@@ -9,16 +9,16 @@ define(function (require) {
 		Backbone = require('backbone'),
 		manifest = require('decoy/modules/manifest');
 	
+	// Plugins
+	require('decoy/plugins/bootstrap-bkwld'); // A fork that adds some patches
+	require('decoy/plugins/wysihtml5-0.3.0'); // For WYSIWYG API
+	require('decoy/plugins/bootstrap-wysihtml5'); // For styling the WYISWYG like bootstrap
+	
 	// Utilities
 	require('decoy/modules/utils/csrf'); // Add CSRF token to AJAX requests
 	require('decoy/modules/utils/console'); // Make console.log not error
 	require('decoy/modules/utils/ajax-error'); // Standard handling of AJAX errors
-	
-	// Plugins
-	require('decoy/plugins/bootstrap-bkwld'); // A fork that adds some patches
-	require('decoy/plugins/bootstrap-datepicker'); // http://cl.ly/1N401g3z3M0E
-	require('decoy/plugins/wysihtml5-0.3.0'); // For WYSIWYG API
-	require('decoy/plugins/bootstrap-wysihtml5'); // For styling the WYISWYG like bootstrap
+	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
@@ -77,9 +77,6 @@ define(function (require) {
 
 		// Initialzie views
 		app.initalizeViews(manifest);
-		
-		// Enable date picker.  The container needs to have a date class
-		$('.input-append:has(.date)').addClass('date').datepicker();
 		
 		// Add "Required" icons to file input fields where we're manually applying
 		// a required class with Former, which puts it on the input rather than the control group.  We
