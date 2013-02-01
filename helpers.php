@@ -307,6 +307,7 @@ HTML::macro('ckeditor', function($id, $label = null) {
 	// I must render this field before adding a new one
 	$field = (string) $field."<script>
 	CKEDITOR.replace( '".$id."', {
+        enterMode : CKEDITOR.ENTER_BR,
     	filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
     	filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?Type=Images',
    		filebrowserFlashBrowseUrl: '/ckfinder/ckfinder.html?Type=Flash',
