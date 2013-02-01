@@ -123,11 +123,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	public function controller() { return $this->CONTROLLER; }
 	public function title() { return $this->TITLE; }
 	
-	// This is set to an instance of whatever model instance is created or fetched
-	// by post_new and *_edit calls.
-	private $item;
-	public function item() { return $this->item; }
-	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
@@ -309,7 +304,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!empty($parent_id)) {
 			$query = $parent->{$this->PARENT_TO_SELF}()->insert($item);
 		} else $item->save();
-		$this->item = $item;
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -321,7 +315,6 @@ abstract class Decoy_Base_Controller extends Controller {
 
 		// Get the work
 		if (!($item = Model::find($id))) return Response::error('404');
-		$this->item = $item;
 
 		// Populate form
 		Former::populate($item);
@@ -379,7 +372,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Update it
 		$item->fill(BKWLD\Utils\Collection::null_empties($input));
 		$item->save();
-		$this->item = $item;
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('null');
