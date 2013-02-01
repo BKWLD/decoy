@@ -54,14 +54,13 @@ abstract class Tag extends Base_Model {
 		if (!$type) $type = self::type();
 		
 		// The tag exists
-		$slug = Str::slug($value);
-		if ($tag = self::where('slug', '=', $slug)->where('type', '=', $type)->first()) return $tag;
+		if ($tag = self::where('value', '=', $value)->where('type', '=', $type)->first()) return $tag;
 		
 		// The tag does not exist
 		return static::create(array(
 			'type' => $type,
 			'value' => $value,
-			'slug' => $slug,
+			'slug' => Str::slug($value),
 		));
 		
 	}
