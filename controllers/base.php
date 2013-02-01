@@ -388,9 +388,17 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
+		$this->fire_event('attaching');
 		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
+		
+		// Get the new pivot row's id
+		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
+		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
+		$this->fire_event('attached', array($pivot));
+		
+		// Return the response
 		return Response::json(array(
-			'pivot_id' => DB::connection('mysql')->pdo->lastInsertId()
+			'pivot_id' => $pivot_id
 		));
 		
 	}
@@ -436,7 +444,14 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Loop through each item and delete the relationship
 		list($pivot_table) = $this->pivot();
 		foreach($pivot_ids as $id) {
+			
+			// Get the pivot row
+			$pivot = DB::table($pivot_table)->find($id);
+			$this->fire_event('removing', array($pivot));
+			
+			// Remove it
 			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
+			$this->fire_event('removed', array($pivot));
 		}
 		
 		// Redirect.  We can use back cause this is never called from a "show"
@@ -709,6 +724,12 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// Replace the Input::get() with the new values
 		Input::replace($input);
+	}
+	
+	// Fire an event
+	protected function fire_event($event, $args = null) {
+		$events = array("decoy.{$event}", "decoy.{$event}: ".$this->MODEL);
+		Event::fire($events, $args);
 	}
 	
 	//---------------------------------------------------------------------------
