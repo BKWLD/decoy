@@ -207,31 +207,6 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 	return render('decoy::shared.form.relationships._belongs_to', $data);
 	
 });
-
-HTML::macro('ckeditor', function($name, $options = null) {
-
-	$data = array();
-
-	$data[] = '<div class="control-group">';
-	$data[] = '<label for="'.$name.'" class="control-label">'.ucwords($name).'</label>';
-	$data[] = '<textarea name="'.$name.'">&lt;p&gt;Initial value.&lt;/p&gt;</textarea>';
-	$data[] = '</div>';
-
-	$data[] = "
-	<script>
-	CKEDITOR.replace( '".$name."', {
-    	filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
-    	filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?Type=Images',
-   		filebrowserFlashBrowseUrl: '/ckfinder/ckfinder.html?Type=Flash',
-    	filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-    	filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-    	filebrowserFlashUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
-	});
-	</script>";
-
-	return implode(PHP_EOL, $data);
-});
-
 /**
  * Form an URL to a new page
  */
@@ -312,4 +287,37 @@ HTML::macro('date', function($id, $label = null) {
 	// Now, add a hidden field that will contain the value in the MySQL prefered
 	// format and is updated via JS
 	return $field.Former::hidden($id)->id($id); // id not added by default
+});
+
+
+/**
+ * This renders a CKEditor Implementation
+ */
+HTML::macro('ckeditor', function($id, $label = null) {
+	
+	// Defaults
+	// if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
+	
+	// Make the element
+	$field = Former::textarea($id, $label)
+		->class('span6')
+		->value(Former::getValue($id))
+		->id(null); // We don't want to conflict on the id
+		
+	// I must render this field before adding a new one
+	$field = (string) $field."<script>
+	CKEDITOR.replace( '".$id."', {
+        enterMode : CKEDITOR.ENTER_BR,
+    	filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
+    	filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?Type=Images',
+   		filebrowserFlashBrowseUrl: '/ckfinder/ckfinder.html?Type=Flash',
+    	filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
+    	filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
+    	filebrowserFlashUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+	});
+	</script>";
+	
+	// Now, add a hidden field that will contain the value in the MySQL prefered
+	// format and is updated via JS
+	return $field; // id not added by default
 });
