@@ -32,17 +32,30 @@ abstract class Base_Model extends Eloquent {
 	//---------------------------------------------------------------------------
 	// Model event callbacks
 	//---------------------------------------------------------------------------
+	// Setup listeners for all of Laravel's built in events that fire our no-op
+	// callbacks.
+	// 
+	// These are defined by overriding the methods that fire them instead of in the
+	// constructor so that ALL of instances of a model don't start listening to these
+	// events.  For instance, if an instance was created to do some operation without
+	// first getting hydrated with data, it doesn't need to handle a save event
 	
-	// Override the constructor to setup callbacks
-	public function __construct($attributes = array(), $exists = false) {
-		parent::__construct($attributes, $exists);
-		
-		// Setup listeners for all of Laravel's built in events that fire our no-op
-		// callbacks
-		$events = array('saving', 'updated', 'created', 'saved', 'deleting', 'deleted');
+	// Override the events that happen on save
+	public function save() {
+		$events = array('saving', 'updated', 'created', 'saved');
 		foreach($events as $event) {
 			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
 		}
+		parent::save();
+	}
+	
+	// Override the events that happen on save
+	public function delete() {
+		$events = array('deleting', 'deleted');
+		foreach($events as $event) {
+			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+		}
+		parent::delete();
 	}
 	
 	// No-op callbacks.  They all get passed a reference to the object that fired
