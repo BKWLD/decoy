@@ -30,7 +30,7 @@ function CheckAuthentication()
 	// user logs in your system. To be able to use session variables don't
 	// forget to add session_start() at the top of this file.
 
-	return false;
+	return true;
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be

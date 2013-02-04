@@ -308,12 +308,8 @@ HTML::macro('ckeditor', function($id, $label = null) {
 	$field = (string) $field."<script>
 	CKEDITOR.replace( '".$id."', {
         enterMode : CKEDITOR.ENTER_BR,
-    	filebrowserBrowseUrl: '/ckfinder/ckfinder.html',
-    	filebrowserImageBrowseUrl: '/ckfinder/ckfinder.html?Type=Images',
-   		filebrowserFlashBrowseUrl: '/ckfinder/ckfinder.html?Type=Flash',
-    	filebrowserUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Files',
-    	filebrowserImageUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-    	filebrowserFlashUploadUrl: '/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Flash'
+    	filebrowserImageBrowseUrl: '/bundles/decoy/ckfinder/ckfinder.html?Type=Images',
+    	filebrowserImageUploadUrl: '/bundles/decoy/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
 	});
 	</script>";
 	
