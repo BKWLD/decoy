@@ -74,14 +74,26 @@ define(function (require) {
 		
 		// Set item to approved
 		approve: function (e) {
-			var model = this.model(e);
+			var model = this.model(e),
+				$item = this.item(model);
+				
+			// Don't allow clicks if already denied
+			if ($item.hasClass('approved')) return;
+			
+			// Update the server
 			model.set('status', 'approved');
 			this.save(model);
 		},
 		
 		// Set item to denied
 		deny: function (e) {
-			var model = this.model(e);
+			var model = this.model(e),
+				$item = this.item(model);
+				
+			// Don't allow clicks if already denied
+			if ($item.hasClass('denied')) return;
+			
+			// Update the server
 			model.set('status', 'denied');
 			this.save(model);
 		},
