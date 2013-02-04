@@ -7,6 +7,8 @@ use Laravel\Database\Eloquent\Model as Eloquent;
 use Laravel\Database as DB;
 use Laravel\Input;
 use Laravel\Config;
+use Laravel\Event;
+use Laravel\Log;
 use Croppa;
 
 abstract class Base_Model extends Eloquent {
@@ -26,6 +28,33 @@ abstract class Base_Model extends Eloquent {
 	// should be used as the source for titles.  Used in the title() function
 	// and in autocompletes.
 	static public $TITLE_COLUMN;
+	
+	//---------------------------------------------------------------------------
+	// Model event callbacks
+	//---------------------------------------------------------------------------
+	
+	// Override the constructor to setup callbacks
+	public function __construct($attributes = array(), $exists = false) {
+		parent::__construct($attributes, $exists);
+		
+		// Setup listeners for all of Laravel's built in events that fire our no-op
+		// callbacks
+		$events = array('saving', 'updated', 'created', 'saved', 'deleting', 'deleted');
+		foreach($events as $event) {
+			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+		}
+	}
+	
+	// No-op callbacks.  They all get passed a reference to the object that fired
+	// the event.  They have to be defined as public because they are invoked externally, 
+	// from Laravel's event system.
+	public function on_saving() {}
+	public function on_updated() {}
+	public function on_created() {}
+	public function on_saved() {}
+	public function on_deleting() {}
+	public function on_deleted() {}
+	
 		
 	//---------------------------------------------------------------------------
 	// Overrideable methods
