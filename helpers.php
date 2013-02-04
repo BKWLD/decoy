@@ -71,6 +71,7 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null) {
 	if ($id === null) $id = 'image';
 	$block_help = '';
 	$image = Former::getValue($id);
+	if (!$label) $label = BKWLD\Utils\String::title_from_key($id);
 	
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -98,7 +99,6 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null) {
 		// Change the id of the form input field and create the hidden field with the original id
 		// and with the value of the image path.  (string) foreces it to render.
 		$hidden = (string) Former::hidden(UPLOAD_OLD.$id)->value($image);
-		if (!$label) $label = ucwords($id);
 		
 		// Check for errors registered to the "real" form element
 		$errors = Former::getErrors($id);
@@ -125,6 +125,7 @@ HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
 	if ($id === null) $id = 'file';
 	$block_help = '';
 	$file = Former::getValue($id);
+	if (!$label) $label = BKWLD\Utils\String::title_from_key($id);
 
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -154,7 +155,6 @@ HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
 		// Change the id of the form input field and create the hidden field with the original id
 		// and with the value of the image path.  (string) foreces it to render.
 		$hidden = (string) Former::hidden(UPLOAD_OLD.$id)->value($file);
-		if (!$label) $label = ucwords($id);
 		
 		// Check for errors registered to the "real" form element
 		$errors = Former::getErrors($id);
