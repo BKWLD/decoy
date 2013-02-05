@@ -46,6 +46,12 @@ abstract class Base_Model extends Eloquent {
 		foreach($events as $event) {
 			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
 		}
+		
+		// Add additional pre-events
+		Event::listen('eloquent.saving: '.get_class($this), function($self) {
+			if ($self->exists) $self->on_updating();
+			else $self->on_creating();
+		});
 		parent::save();
 	}
 	
@@ -62,9 +68,11 @@ abstract class Base_Model extends Eloquent {
 	// the event.  They have to be defined as public because they are invoked externally, 
 	// from Laravel's event system.
 	public function on_saving() {}
-	public function on_updated() {}
-	public function on_created() {}
 	public function on_saved() {}
+	public function on_creating() {}
+	public function on_created() {}
+	public function on_updating() {}
+	public function on_updated() {}
 	public function on_deleting() {}
 	public function on_deleted() {}
 	
