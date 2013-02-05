@@ -108,7 +108,20 @@
 				position: relative; 
 				left: -1px; 
 				top: -1px;
+				
 			}
+			
+			// Fix for long cells not looking right 
+			// https://github.com/BKWLD/decoy/issues/53
+			display: block !important;
+			white-space: nowrap;
+			@include box-sizing(border-box);
+			font-size: 0; // Remove the whitespace between tds
+			td {
+				display: inline-block;
+				font-size: 14px; // Put the font size back
+			}
+			
 		}
 		tr {
 			cursor: move;

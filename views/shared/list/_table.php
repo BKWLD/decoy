@@ -45,9 +45,11 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 				data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
 				
 				<?
-				// Add positoin value from the row or from the pivor table
-				if (isset($item->position)) echo "data-position='{$item->position}'";
-				elseif (isset($item->pivot->position)) echo "data-position='{$item->pivot->position}'";
+				// Add position value from the row or from the pivot table.  Item must be converted to an array
+				// to this because Laravel doesn't test for __isset explicitly: https://github.com/laravel/laravel/pull/1678
+				$test = $item->to_array();
+				if (isset($test['position'])) echo "data-position='{$item->position}'";
+				elseif (isset($test['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>

@@ -62,6 +62,7 @@ define(function (require) {
 			}
 		},
 		
+		// Init an individual row in the list
 		initRow: function (row) {
 			
 			// Find vars
@@ -156,6 +157,9 @@ define(function (require) {
 					$helper.children().each(function(index) {
 						$(this).width($originals.eq(index).width());
 					});
+					
+					// Without this, the size was being inflated by the border
+					$helper.css('width', (tr.width()) + 'px');
 					return $helper;
 				},
 				
