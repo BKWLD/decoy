@@ -308,6 +308,16 @@ HTML::macro('ckeditor', function($id, $label = null) {
 	$field = (string) $field."<script>
 	CKEDITOR.replace( '".$id."', {
         enterMode : CKEDITOR.ENTER_BR,
+		toolbar :
+		[
+		{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
+		{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+			{ name: 'image', items : [ 'Image' ] },
+			{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+
+			{ name: 'source', items : [ 'Source' ] },
+		],
     	filebrowserImageBrowseUrl: '/bundles/decoy/ckfinder/ckfinder.html?Type=Images',
     	filebrowserImageUploadUrl: '/bundles/decoy/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
 	});
