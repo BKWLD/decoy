@@ -40,8 +40,23 @@ abstract class Base_Model extends Eloquent {
 	// events.  For instance, if an instance was created to do some operation without
 	// first getting hydrated with data, it doesn't need to handle a save event
 	
+	// Override events that are happening before saves.  Note these will likely be
+	// triggered more often than you'd like, described above
+	public function __construct($attributes = array(), $exists = false) {
+		parent::__construct($attributes, $exists);
+		
+		// Add Decoy events
+		$events = array('validating', 'validated');
+		foreach($events as $event) {
+			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+		}
+		
+	}
+	
 	// Override the events that happen on save
 	public function save() {
+		
+		// Standard laravel model events
 		$events = array('saving', 'updated', 'created', 'saved');
 		foreach($events as $event) {
 			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
@@ -53,9 +68,15 @@ abstract class Base_Model extends Eloquent {
 			else $self->on_creating();
 		});
 		parent::save();
+		
+		// Add Decoy events
+		$events = array('attaching', 'attached', 'removing', 'removed');
+		foreach($events as $event) {
+			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+		}
 	}
 	
-	// Override the events that happen on save
+	// Override the events that happen on delete
 	public function delete() {
 		$events = array('deleting', 'deleted');
 		foreach($events as $event) {
@@ -69,12 +90,18 @@ abstract class Base_Model extends Eloquent {
 	// from Laravel's event system.
 	public function on_saving() {}
 	public function on_saved() {}
+	public function on_validating($input) {}
+	public function on_validated($input) {}
 	public function on_creating() {}
 	public function on_created() {}
 	public function on_updating() {}
 	public function on_updated() {}
 	public function on_deleting() {}
 	public function on_deleted() {}
+	public function on_attaching() {}
+	public function on_attached() {}
+	public function on_removing() {}
+	public function on_removed() {}
 	
 		
 	//---------------------------------------------------------------------------

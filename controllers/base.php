@@ -479,6 +479,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			$rules = array_only($rules, array_keys($input));
 		}
 		
+		// Fire event
+		$this->fire_event('validating', array($input));
+		
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
 		if ($validation->fails()) {
@@ -490,6 +493,9 @@ abstract class Decoy_Base_Controller extends Controller {
 					->with_input();
 			}
 		}
+		
+		// Fire event
+		$this->fire_event('validated', array($input));
 		
 		// If there were no errors, return false, which means
 		// that we don't need to redirect
