@@ -67,7 +67,7 @@ abstract class Base_Model extends Eloquent {
 			if ($self->exists) $self->on_updating();
 			else $self->on_creating();
 		});
-		parent::save();
+		return parent::save();
 		
 		// Add Decoy events
 		$events = array('attaching', 'attached', 'removing', 'removed');
@@ -82,7 +82,7 @@ abstract class Base_Model extends Eloquent {
 		foreach($events as $event) {
 			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
 		}
-		parent::delete();
+		return parent::delete();
 	}
 	
 	// No-op callbacks.  They all get passed a reference to the object that fired
