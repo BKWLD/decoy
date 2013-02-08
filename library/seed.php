@@ -52,7 +52,7 @@ abstract class Seed {
 	
 	// Optionally return a value
 	protected function optional($val) {
-		if (rand(0,1)) return DB::raw('NULL');
+		if (rand(0,1)) return null;
 		else return $val;
 	}
 	
