@@ -194,10 +194,18 @@ input[type="file"] {
 .help-block {
 	.img-polaroid { 
 		margin-top: 10px; 
+		@include box-sizing(border-box);
 		&.no-help { // There is no help text, so we don't need to push away from it
 			margin-top: 5px;
 		}
 	}
+	
+	// Make the images span the full column when in a related view
+	.span6 & .img-polaroid {
+		width: 100%;
+	}
+	
+	// Style the image delete button
 	.image-delete { 
 		margin-top: 10px;
 		font-size: 14px;
@@ -295,4 +303,108 @@ legend .btn-toolbar {
 	.controls {
 		padding: 5px 0;
 	}
+}
+
+// This container contains multiple instances of images that get turned
+// into jcrop instances.
+.help-block .crops {
+	position: relative;
+	display: block;
+	margin-top: 5px;
+	
+	// Remove the margin that we want when no crops are present
+	.img-polaroid {
+		margin: 0;
+	}
+	
+	// Setup the tabs
+	.tabs {
+		display: block;
+		margin-bottom: -2px;
+		
+		// The tabs
+		> * {
+			padding: 6px;
+			margin-right: 2px;
+			line-height: 1em;
+			display: inline-block;
+			border: solid 1px transparent;
+			@include border-corner-radius(top, left, 4px);
+			@include border-corner-radius(top, right, 4px);
+			
+			// The active tab
+			&.active {
+				border-color: $grey-border;
+				border-bottom: white;
+				background-color: white;
+				position: relative;
+				z-index: 1;
+			}
+			
+			// Rollover
+			&:hover:not(.active) {
+				cursor: pointer;
+				background-color: $grey-border;
+			}
+		}
+	}
+	
+	// Deactivate all but the first image
+	.imgs > * {
+		display: none;
+	}
+	.imgs > :first-child {
+		display: block;
+	}
+	
+	// Remove a little space that jcrop adds
+	.imgs {
+		line-height: 0;
+		display: block;
+	}
+	
+	// The fullscreen button
+	.icon-fullscreen {
+		position: absolute;
+		right: 0;
+		top: 7px;
+		@include opacity(.4);
+		cursor: pointer;
+		.control-group:hover & {
+			@include opacity(.7);
+		}
+		.control-group &:hover {
+			@include opacity(1);
+		}
+	}
+}
+
+// Make an form element take up the whole page
+.fullscreen {
+	position: absolute !important;
+	width: 96%;
+	z-index: 999;
+	left: 2%;
+	right: 2%;
+	background: rgba(255, 255, 255, .9);
+	@include box-shadow(0 3px 20px rgba(0,0,0,.3));
+	border: 1px solid $light-grey;
+	padding: 0px;
+	
+	// This was on the control-group previously
+	.form-vertical & {
+		margin-top: -8px;
+	}
+
+	// Reset the spacing of the control-group
+	.control-group, &.control-group {
+		margin: 0;
+		padding: 5px;
+	}
+	
+	// A non-related view won't have had this set eyt
+	.img-polaroid {
+		width: 100%;
+	}
+	
 }

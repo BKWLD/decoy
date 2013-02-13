@@ -2,6 +2,7 @@
 
 // Imports
 use BKWLD\Utils\File;
+use BKWLD\Utils\Collection;
 use Laravel\Request;
 use Laravel\Database\Eloquent\Model as Eloquent;
 use Laravel\Database as DB;
@@ -28,6 +29,11 @@ abstract class Base_Model extends Eloquent {
 	// should be used as the source for titles.  Used in the title() function
 	// and in autocompletes.
 	static public $TITLE_COLUMN;
+	
+	// This is should be overriden like so to specify crops that the image cropping
+	// widget should make UI for
+	// array('image' => array('marquee' => '4:3', 'feature'))
+	static public $CROPS = array();
 	
 	//---------------------------------------------------------------------------
 	// Model event callbacks
@@ -181,6 +187,55 @@ abstract class Base_Model extends Eloquent {
 		if (!empty($this->pivot->id)) return $this->pivot->id;
 		else if (!empty($this->pivot_id)) return $this->pivot_id;
 		else return null;
+	}
+	
+	// Form a croppa URL, taking advantage of being able to set more columns null.  Also,
+	// provides an easier way to inform the source crops
+	public function croppa($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
+		
+		// Check if the image field has crops
+		if ($crop_style && !array_key_exists($field, static::$CROPS)) {
+			throw new \Exception("A crop style was passed for $field but no crops are defined for that field.");
+		}
+		
+		// Check if the crop style is valid
+		if ($crop_style && !Collection::key_or_val_exists($crop_style, static::$CROPS[$field])) {
+			throw new \Exception("Crop style '$crop_style' is not defined for the field: $field");
+		}
+		
+		// Default crop style is 'default'
+		if (!$crop_style && !empty(static::$CROPS[$field]) && Collection::key_or_val_exists('default', static::$CROPS[$field])) {
+			$crop_style = 'default';
+		}
+		
+		// Get the image src path
+		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
+		else $src = $this->$field;
+		if (empty($src)) return;
+		
+		// If there is a crop value, add it to the options
+		if ($crop_style) {
+			$crops = json_decode($this->{$field.'_crops'});
+			
+			// Check if a crop style was set in the admin for this crop style
+			if (!empty($crops->$crop_style)) {
+				if (!is_array($options)) $options = array();
+				
+				// Add the trim instructions to the croppa options
+				$options = array_merge($options, array(
+					'trim_perc' => array(
+						round($crops->$crop_style->x1,4),
+						round($crops->$crop_style->y1,4),
+						round($crops->$crop_style->x2,4),
+						round($crops->$crop_style->y2,4),
+					),
+				));
+			}
+		}
+		
+		// Return the Croppa URL
+		return Croppa::url($src, $width, $height, $options);
+		
 	}
 	
 }

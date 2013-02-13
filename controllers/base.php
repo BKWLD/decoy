@@ -326,6 +326,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
 			'item'             => $item,
+			'crops'            => (object) Model::$CROPS,
 		));
 		
 		// Figure out the parent_id

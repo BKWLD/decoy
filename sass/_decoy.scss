@@ -1,3 +1,5 @@
+// Settings
+$decoy_img_dir: '/bundles/decoy/img/';
 
 // Compass
 @import "compass/css3";
@@ -6,8 +8,7 @@
 // Bootstrap
 // To tweak the path to images and where the nav switches to
 // the responsive layout, I had to hack it with the following
-// variables.
-$bootstrap_imgs_dir: '/bundles/decoy/img/bootstrap';
+// variables
 $bootstrap_nav_break: 767px;
 @import "plugins/bootstrap";
 @import "plugins/bootstrap-responsive";
@@ -17,6 +18,7 @@ $bootstrap_nav_break: 767px;
 @import "plugins/datepicker";
 @import "plugins/bootstrap-wysihtml5";
 @import "plugins/bootstrap-notify";
+@import "plugins/jquery.Jcrop";
 
 // The partials that form the Decoy style
 @import "partials/_general.scss";

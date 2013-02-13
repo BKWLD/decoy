@@ -18,6 +18,8 @@ define(function (require) {
 	require('decoy/modules/utils/csrf'); // Add CSRF token to AJAX requests
 	require('decoy/modules/utils/console'); // Make console.log not error
 	require('decoy/modules/utils/ajax-error'); // Standard handling of AJAX errors
+	
+	// Modules that add mojo globally
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 
 	// Private static vars

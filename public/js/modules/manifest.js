@@ -14,6 +14,9 @@ define(function (require) {
 		'many-to-many-tags': require('decoy/views/relationships/many-to-many-tags'),
 		'task-method': require('decoy/views/task-method'),
 		'ajax-progress': require('decoy/views/ajax-progress'),
-		'search': require('decoy/views/search')
+		'search': require('decoy/views/search'),
+		'crop': require('decoy/views/image_upload/crop'),
+		'crop-styles': require('decoy/views/image_upload/crop-styles'),
+		'image-fullscreen': require('decoy/views/image_upload/image-fullscreen')
 	};
 });
