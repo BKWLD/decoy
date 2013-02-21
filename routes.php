@@ -171,14 +171,14 @@ require_once('composers/shared.list._standard.php');
 // filter will call out to subsequent functions.  These are filters that
 // affect all bundles
 Route::filter('pattern: '.Bundle::option('decoy', 'handles').'/*', array('name' => 'decoy', function() {
-	if ($result = filter_sentry_acl()) return $result;
+	if ($result = filter_acl()) return $result;
 	filter_clean_input();
 	track_browse_history();
 }));
 
 // Turn on access control for all routes that match the handle (except)
 // ones that relate to sign in)
-function filter_sentry_acl() {
+function filter_acl() {
 	
 	// Whitelist the login screen.  A query string would break this,
 	// but there shouldn't be any.  Returning nothing means don't take action
