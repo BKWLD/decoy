@@ -270,6 +270,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
 			'description'      => $this->DESCRIPTION,
+			
+			// Will never be used in a 'new' view, but will keep errors from being thrown about undfined property
+			'crops'            => (object) Model::$CROPS,
 		));
 		
 		// Pass parent_id
