@@ -39,15 +39,17 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 		<?
 		// Loop through the listing data
 		foreach ($iterator as $item):
+			
+			// Used to test for presence of columns.  Item must be converted to an array
+			// to this because Laravel doesn't test for __isset explicitly: https://github.com/laravel/laravel/pull/1678
+			$test = $item->to_array();
 		?>
 	
 			<tr 
 				data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
 				
 				<?
-				// Add position value from the row or from the pivot table.  Item must be converted to an array
-				// to this because Laravel doesn't test for __isset explicitly: https://github.com/laravel/laravel/pull/1678
-				$test = $item->to_array();
+				// Add position value from the row or from the pivot table.  
 				if (isset($test['position'])) echo "data-position='{$item->position}'";
 				elseif (isset($test['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
 				?>
@@ -77,7 +79,7 @@ if (!$many_to_many && isset($iterator[0]->visible)) $actions++;
 				<td>
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && isset($item->visible)): ?>
+					<? if (!$many_to_many && isset($test['visible'])): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility"><i class="icon-eye-open js-tooltip" data-placement='left' title="Make hidden"></i></a>
 						<? else: ?>
