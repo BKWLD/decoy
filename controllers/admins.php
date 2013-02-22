@@ -15,7 +15,7 @@ class Decoy_Admins_Controller extends Decoy_Base_Controller {
 		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
-		$query = Model::ordered()->paginate(self::PER_PAGE);
+		$query = Model::ordered()->paginate($this->PER_PAGE);
 		foreach($query->results as $i => $result) {
 			$query->results[$i] = new Model((array) $result);
 		}
