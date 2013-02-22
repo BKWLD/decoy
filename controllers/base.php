@@ -13,7 +13,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	public $layout;
 	
 	// Default pagination settings
-	const PER_PAGE = 20;
+	protected $PER_PAGE = 20;
 	const PER_PAGE_SIDEBAR = 6;
 	
 	// Values that get shared by many controller methods.  Default values for these
@@ -131,7 +131,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	public function get_index() {
 		
 		// Run the query
-		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate(self::PER_PAGE);
+		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
 		$count = $results->total;
 		
 		// Render the view.  We can assume that Model has an ordered() function
@@ -183,7 +183,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 
 		// Run the query
-		$results = Decoy\Search::apply($query, $this->SEARCH)->paginate(self::PER_PAGE);
+		$results = Decoy\Search::apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
 		$count = $results->total;
 
 		// Render the view
