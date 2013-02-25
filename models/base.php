@@ -10,6 +10,8 @@ use Laravel\Input;
 use Laravel\Config;
 use Laravel\Event;
 use Laravel\Log;
+use Laravel\Bundle;
+use Laravel\Str;
 use Croppa;
 
 abstract class Base_Model extends Eloquent {
@@ -236,6 +238,11 @@ abstract class Base_Model extends Eloquent {
 		// Return the Croppa URL
 		return Croppa::url($src, $width, $height, $options);
 		
+	}
+	
+	// Get the admin controller name-path
+	static public function admin_controller() {
+		return Bundle::option('decoy', 'handles').'.'.strtolower(Str::plural(get_called_class()));
 	}
 	
 }

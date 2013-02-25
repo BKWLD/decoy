@@ -1,11 +1,27 @@
-<?// The list of rows in table for for the standard list ?>
-
 <?
-// Determine how many action links there will be so the column can be sized appropriately
+/**
+ * Render a table of model rows.  Required variables:
+ * - iterator
+ * - columns
+ * - controller
+ */
+
+// Set defaults for optional values so this partial can more easily be rendered
+// by itself
+if (empty($many_to_many)) $many_to_many = false;
+if (empty($auto_link)) $auto_link = 'first';
+if (empty($convert_dates)) $convert_dates = 'date';
+
+// Test the data for presence of special properties
 $actions = 2; // Default
 if (count($iterator)) {
-	$test = $iterator[0]->to_array();
-	if (!$many_to_many && isset($test['visible'])) $actions++;
+	$test_row = $iterator[0]->to_array();
+	
+	// Has visibilty toggle
+	$has_visible = isset($test_row['visible']);
+	
+	// Increment the actions count
+	if (!$many_to_many && $has_visible) $actions++;
 }
 
 ?>
@@ -43,10 +59,10 @@ if (count($iterator)) {
 		<?
 		// Loop through the listing data
 		foreach ($iterator as $item):
-			
-			// Used to test for presence of columns.  Item must be converted to an array
-			// to this because Laravel doesn't test for __isset explicitly: https://github.com/laravel/laravel/pull/1678
-			$test = $item->to_array();
+
+			// Base the controller name from the model name if it's not defined.  This allows a listing to show
+			// rows from multiple models
+			$controller_name = empty($controller) ? call_user_func(get_class($item).'::admin_controller') : $controller;
 		?>
 	
 			<tr 
@@ -54,21 +70,20 @@ if (count($iterator)) {
 				
 				<?
 				// Add position value from the row or from the pivot table.  
-				if (isset($test['position'])) echo "data-position='{$item->position}'";
-				elseif (isset($test['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
+				if (isset($test_row['position'])) echo "data-position='{$item->position}'";
+				elseif (isset($test_row['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
 				
 				<?// Loop through columns and add columns ?>
-				
 				<? $column_names = array_keys($columns) ?>
 				<? foreach(array_values($columns) as $i => $column): ?>					
 					<td class="<?=strtolower($column_names[$i])?>">
 						
 						<?// Add an automatic link on the first column?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=HTML::edit_route($controller, $many_to_many, $item->id)?>">
+							<a href="<?=HTML::edit_route($controller_name, $many_to_many, $item->id)?>">
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
@@ -83,7 +98,7 @@ if (count($iterator)) {
 				<td>
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && isset($test['visible'])): ?>
+					<? if (!$many_to_many && $has_visible): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility"><i class="icon-eye-open js-tooltip" data-placement='left' title="Make hidden"></i></a>
 						<? else: ?>
@@ -93,16 +108,16 @@ if (count($iterator)) {
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=HTML::edit_route($controller, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
+					<a href="<?=HTML::edit_route($controller_name, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
 					| 
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=route($controller.'@remove', $item->pivot_id())?>" class="remove-now"><i class="icon-remove js-tooltip" data-placement='left' title="Remove relationship"></i></a>
+						<a href="<?=route($controller_name.'@remove', $item->pivot_id())?>" class="remove-now"><i class="icon-remove js-tooltip" data-placement='left' title="Remove relationship"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=route($controller.'@delete', $item->id)?>" class="delete-now"><i class="icon-trash js-tooltip" data-placement='left' title="Permanently delete"></i></a>
+						<a href="<?=route($controller_name.'@delete', $item->id)?>" class="delete-now"><i class="icon-trash js-tooltip" data-placement='left' title="Permanently delete"></i></a>
 					<? endif ?>
 				</td>
 			</tr>
