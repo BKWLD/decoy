@@ -171,6 +171,12 @@ require_once('composers/shared.list._standard.php');
 // filter will call out to subsequent functions.  These are filters that
 // affect all bundles
 Route::filter('pattern: '.Bundle::option('decoy', 'handles').'/*', array('name' => 'decoy', function() {
+	
+	// Allow other code to handle this pattern.  Required, again, because Laravel
+	// only allows one pattern per handler
+	if ($response = Event::until('decoy::before')) return $response;
+	
+	// Native handling of the routes
 	if ($result = filter_acl()) return $result;
 	filter_clean_input();
 	track_browse_history();
