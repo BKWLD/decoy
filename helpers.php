@@ -38,13 +38,16 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
 		'time'     => FORMAT_TIME,
 	);
 	
+	// Convert the item to an array so I can test for values
+	$test_row = $item->to_array();
+	
 	// If the object has a method defined with the column vaue, use it
 	if (method_exists($item, $column)) {
 		return call_user_func(array($item, $column));
 	
 	// Else if the column is a property, echo it
-	} elseif (isset($item->$column)) {
-		
+	} elseif (array_key_exists($column, $test_row)) {
+
 		// Format date if appropriate
 		if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $item->$column)) {
 			return date($date_formats[$convert_dates], strtotime($item->$column));

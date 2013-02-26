@@ -18,7 +18,7 @@ if (count($iterator)) {
 	$test_row = $iterator[0]->to_array();
 	
 	// Has visibilty toggle
-	$has_visible = isset($test_row['visible']);
+	$has_visible = array_key_exists('visible', $test_row);
 	
 	// Increment the actions count
 	if (!$many_to_many && $has_visible) $actions++;
@@ -70,7 +70,7 @@ if (count($iterator)) {
 				
 				<?
 				// Add position value from the row or from the pivot table.  
-				if (isset($test_row['position'])) echo "data-position='{$item->position}'";
+				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
 				elseif (isset($test_row['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
 				?>
 			>
