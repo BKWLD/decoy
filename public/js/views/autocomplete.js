@@ -14,7 +14,7 @@ define(function (require) {
 		
 		// Initial state and inheritable vars
 		found: false,
-		data: {},
+		data: {}, // Stores the key (label) - value (row data) pairs
 		id: null,
 		title: null,
 		selection: null,  // The whole object (from the JSON server response) that is chosen

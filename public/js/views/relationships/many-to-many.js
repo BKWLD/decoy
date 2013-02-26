@@ -86,7 +86,7 @@ define(function (require) {
 			.done(_.bind(function(data) {
 				
 				// Tell the editable list to add the new entry
-				var payload = { id: this.id, pivot_id: data.pivot_id, label: this.selection.columns.title };
+				var payload = { id: this.id, pivot_id: data.pivot_id, columns: this.selection.columns };
 				this.$el.trigger('insert', payload);
 				
 				// Clear the input to add another

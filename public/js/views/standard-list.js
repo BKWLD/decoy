@@ -449,9 +449,23 @@ define(function (require) {
 			var $row = $(row_template({
 				id: data.id,
 				pivot_id: data.pivot_id,
-				label: data.label,
+				label: data.columns.title,
 				controller: this.controllerRoute
 			}));
+			
+			// Add additional columns if that data exists and we're not in a related sidebar
+			if (_.size(data.columns) > 1 && !this.$el.closest('.related').length) {
+				_.each(data.columns, function(html, column) {
+					
+					// Title has already been added
+					if (column == 'title') return;
+					
+					// Add a new cell before the last one (which is the actions cell)
+					if (!html) html = ''; // Handle NULL
+					$row.find('td:last').before('<td>'+html+'</td>');
+					
+				});
+			}
 			
 			// Add the template to the list, above the first row with a model id.  Or
 			// if there are no results, replace the last row, which will be the
