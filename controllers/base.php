@@ -484,8 +484,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		}
 		
 		// Fire event
-		$first_response = $this->fire_event('validating', array($input));
-		if (is_a($first_response, '\Laravel\Response')) return $first_response;
+		$this->fire_event('validating', array($input));
 		
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
@@ -740,7 +739,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Fire an event
 	protected function fire_event($event, $args = null) {
 		$events = array("decoy.{$event}", "decoy.{$event}: ".$this->MODEL);
-		return Event::first($events, $args);
+		Event::fire($events, $args);
 	}
 	
 	//---------------------------------------------------------------------------
