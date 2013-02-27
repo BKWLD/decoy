@@ -483,6 +483,9 @@ abstract class Decoy_Base_Controller extends Controller {
 			$rules = array_only($rules, array_keys($input));
 		}
 		
+		// Add messages from BKWLD bundle
+		$messages = array_merge(BKWLD\Laravel\Validator::messages(), $messages);
+		
 		// Fire event
 		$this->fire_event('validating', array($input));
 		
@@ -524,13 +527,24 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (in_array('slug', array_keys(Model::$rules)) 
 			&& strpos(Model::$rules['slug'], 'unique') !== false
 			&& Request::route()->controller_action == 'edit') {
-			
+			$id = Request::route()->parameters[0];
+		
 			// Add the row exception to the unique clause.  The regexp works because
 			// the \w+ will end at the | that begins the next condition
-			$id = Request::route()->parameters[0];
-			Model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
-				'$1,slug,'.$id, 
-				Model::$rules['slug']);			
+
+			// If we're using the unique_with custom validator from the BKWLD bundle
+			if (strpos(Model::$rules['slug'], 'unique_with')) {
+				Model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
+					'$1,slug,'.$id, 
+					Model::$rules['slug']);
+				
+			// Regular slugs
+			} else {
+				Model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
+					'$1,slug,'.$id, 
+					Model::$rules['slug']);
+			}
+			
 		}
 
 		// If a slug is already defined, do nothing

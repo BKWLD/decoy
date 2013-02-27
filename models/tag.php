@@ -40,7 +40,7 @@ abstract class Tag extends Base_Model {
 	public static $rules = array(
 		'type' => 'required',
 		'value' => 'required',
-		'slug' => 'required|unique:tags',
+		'slug' => 'required|unique_with:tags,type',
 	);
 	
 	// Where to get the title from
