@@ -95,11 +95,24 @@ define(function (require) {
 		
 		// Turn WYSIWYGs on.  This WYSIWYG looks nice but it's not the most stable
 		// usability wise.  Like clicking on stuff doesn't always work like one
-		// would expect.
-		$body.find('textarea.wysiwyg').wysihtml5({
-			'font-styles': false, // These didn't really work and most would use them wrong
-			image: false,
-			"stylesheets": [] // Disabling the loading of the default wysiwyg-color.css file
+		// would expect.  Individual textareas may override the options by defining an
+		// options json box.
+		var options;
+		$body.find('textarea.wysiwyg').each(function(i, $el) {
+			$el = $($el);
+			
+			// Default options
+			options = {
+				'font-styles': false, // These didn't really work and most would use them wrong
+				image: false,
+				"stylesheets": [] // Disabling the loading of the default wysiwyg-color.css file
+			};
+			
+			// Merge options.  Jquery automatically parses the json
+			if ($el.data('options')) options = _.extend(options, $el.data('options'));
+			
+			// Apply options
+			$el.wysihtml5(options);
 		});
 		
 	});
