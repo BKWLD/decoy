@@ -24,7 +24,7 @@ class Content extends Decoy\Base_Model {
 	
 	// Validation
 	public static $rules = array(
-		'type' => 'in:text,textarea,wysiwyg,image',
+		'type' => 'in:text,textarea,wysiwyg,image,file',
 		'label' => 'required',
 	);
 		
