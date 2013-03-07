@@ -21,7 +21,11 @@ the sidebar for related data on forms that have a related data sidebar.
 		<?// Submit buttons?>
 		<hr/>
 		<div class="controls actions">
-			<button type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+			<div class="btn-group">
+				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+				<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+				<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
+			</div>
 			
 			<? if (!empty($item)): ?>
 				<a class="btn btn-danger delete" href="<?=route($controller.'@delete', array($item->id))?>">
@@ -29,7 +33,7 @@ the sidebar for related data on forms that have a related data sidebar.
 				</a>
 			<? endif ?>
 			
-			<a class="btn back" href="<?=route('decoy::back')?>">Back</a>
+			<a class="btn back" href="<?=\Decoy\Breadcrumbs::smart_back(\Decoy\Breadcrumbs::defaults())?>">Back</a>
 		</div>
 
 	<?= Former::close() ?>

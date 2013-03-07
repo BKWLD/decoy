@@ -408,3 +408,9 @@ legend .btn-toolbar {
 	}
 	
 }
+
+// The actions btns should have a bottom margin so they wrap to multiple
+// lines nicer
+.controls.actions .btn {
+	margin-bottom: 5px;
+}

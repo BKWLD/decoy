@@ -98,8 +98,8 @@ define(function (require) {
 		// would expect.  Individual textareas may override the options by defining an
 		// options json box.
 		var options;
-		$body.find('textarea.wysiwyg').each(function(i, $el) {
-			$el = $($el);
+		$body.find('textarea.wysiwyg').each(function() {
+			var $el = $(this);
 			
 			// Default options
 			options = {

@@ -1,5 +1,8 @@
 <?php
 
+// Dependencies
+use \Decoy\Breadcrumbs;
+
 // If Decoy hasn't been officially started yet, do that.  It's neeed, 
 // at the very least, for the Decoy_Auth class alias
 Bundle::start('decoy');
@@ -177,7 +180,8 @@ Route::filter('pattern: '.Bundle::option('decoy', 'handles').'/*', array('name' 
 	if ($response = Event::until('decoy::before')) return $response;
 	
 	// Native handling of the routes
-	if ($result = filter_acl()) return $result;
+	if ($response = filter_acl()) return $response;
+	if ($response = redirect_after_save()) return $response;
 	filter_clean_input();
 	track_browse_history();
 }));
@@ -201,12 +205,45 @@ function filter_acl() {
 	}
 }
 
+// If _save was set (it is the name of the save action buttons), store a proper
+// redirect instruction to the session.  I don't want methods that override
+// the post_new or put_edit methods to have to care about this.  So, on the next
+// page load, the session value will be used.  Finally, the _save input
+// will be stripped by filter_clean_input
+function redirect_after_save() {
+	
+	// Handle a redirect request
+	if (Session::has('save_redirect')) return Redirect::to(Session::get('save_redirect'));
+	
+	// Only act on save values of 'back' or 'new'
+	if (!Input::has('_save') || Input::get('_save') == 'save') return false;
+	
+	// Get the route for decoy, typically 'admin'
+	$handles = Bundle::option('decoy', 'handles');
+	
+	// Go back to the listing
+	if (Input::get('_save') == 'back') {
+		Session::flash('save_redirect', Breadcrumbs::smart_back(Breadcrumbs::defaults()));
+	}
+	
+	// Go to new form
+	if (Input::get('_save') == 'new') {
+		$route = Request::route()->action['as'];
+		$route = preg_replace('#@edit$#', '@new', $route);
+		$url = route($route);
+		Session::flash('save_redirect', $url);
+	}
+	
+	// Done
+	return false;
+}
+
 // Filter some stuff uniformly out from Input so we don't need to defined
 // $accessible on the model to filter it out
 function filter_clean_input() {
 	
 	// Input to alawys remove
-	$blacklist = array('_wysihtml5_mode');
+	$blacklist = array('_wysihtml5_mode', '_save');
 	
 	// The FILES array will be untouched by this, even the replace 
 	$input = Input::get();

@@ -38,6 +38,28 @@ class Breadcrumbs {
 		return $back;
 	}
 	
+	// * If we are on a one level deep detail page, this goes back to the listing.
+	// * If we are on a two level deep listing page, go back to the one level deep detail
+	// * If we are on a two level deep detail pages, go back to the first level detail page
+	// * If we are on a three level deep listing page, go back to the second level detail
+	// * If we are on a three level deep detail page, go back to the second level detail page
+	// Basically, the nuance here is so if you are editing the slides of a news page, when
+	// you go "back", it's back to the news page and not the listing of the news slides
+	static public function smart_back($breadcrumbs) {
+		
+		// If we are on a listing page (an odd length), do the normal stuff
+		// http://stackoverflow.com/a/9153969/59160
+		if (count($breadcrumbs) & 1) return self::back($breadcrumbs);
+		
+		// If we're on the first level detail page, do normal stuff
+		if (count($breadcrumbs) === 2) return self::back($breadcrumbs);
+		
+		// Otherwise, skip the previous (the listing) and go direct to the previous detail
+		$back = array_keys($breadcrumbs);
+		$back = $back[count($back)-3];
+		return $back; 
+	}
+	
 	// Use the top most breadcrumb label as the page title.  If the breadcrumbs
 	// are at least 2 deep, use the one two back as the category for the title.
 	// for instance, this will make a title like "Admins - John Smith | Site Name"
