@@ -226,12 +226,10 @@ function redirect_after_save() {
 		Session::flash('save_redirect', Breadcrumbs::smart_back(Breadcrumbs::defaults()));
 	}
 	
-	// Go to new form
+	// Go to new form by stripping the last segment from the URL
 	if (Input::get('_save') == 'new') {
-		$route = Request::route()->action['as'];
-		$route = preg_replace('#@edit$#', '@new', $route);
-		$url = route($route);
-		Session::flash('save_redirect', $url);
+		preg_match('#^(.+)/(new|\d+)$#i', URL::current(), $matches);
+		Session::flash('save_redirect', $matches[1].'/new');
 	}
 	
 	// Done
