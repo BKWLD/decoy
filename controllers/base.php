@@ -419,14 +419,16 @@ abstract class Decoy_Base_Controller extends Controller {
 		$items = Model::where_in('id', $ids);
 		if (empty($items)) return Response::error('404');
 		
-		// Delete images if they are defined.
+		// Delete
 		foreach($items->get() as $item) {
+			
+			// Delete images
 			if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
+			
+			// Delete row.  These are deleted one at a time so that model events will fire.
+			$item->delete();
 		}
-		
-		// Delete the row
-		$items->delete();
-		
+	
 		// If the referrer contains the controller route, that would mean that we're
 		// redirecting back to the edit page (which no longer exists).  Thus, go to a
 		// listing instead.  Otherwise, go back (accoridng to referrer)
