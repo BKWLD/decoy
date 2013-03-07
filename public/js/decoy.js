@@ -105,7 +105,8 @@ define(function (require) {
 			options = {
 				'font-styles': false, // These didn't really work and most would use them wrong
 				image: false,
-				"stylesheets": [] // Disabling the loading of the default wysiwyg-color.css file
+				"stylesheets": [], // Disabling the loading of the default wysiwyg-color.css file
+				"html": true
 			};
 			
 			// Merge options.  Jquery automatically parses the json
