@@ -33,7 +33,9 @@
 	}
 	?>
 
-<?=render('decoy::shared.form._footer', array(
-	'controller'  => 'decoy::content',
-))?>
+	<hr/>
+	<div class="controls actions">
+		<button type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+	</div>
 
+<?= Former::close() ?>
