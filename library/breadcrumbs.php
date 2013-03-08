@@ -95,12 +95,18 @@ class Breadcrumbs {
 			// Add a detail if it exists
 			if (!isset($segments[$i+1])) break;
 			$id = $segments[$i+1];
-			if (!is_numeric($id)) continue;
-			$url .= '/' . $id;
-			$model = $controller->model();
-			$item = call_user_func($model.'::find', $id);
-			$breadcrumbs[$url] = $item->title();
 			
+			// On a "new" page
+			if ($id == 'new') {
+				$url .= '/' . $id;
+				$breadcrumbs[$url] = 'New';
+				
+			} elseif (!is_numeric($id)) {
+				$url .= '/' . $id;
+				$model = $controller->model();
+				$item = call_user_func($model.'::find', $id);
+				$breadcrumbs[$url] = $item->title();
+			}
 		}
 		
 		// Return the full list
