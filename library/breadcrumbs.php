@@ -101,7 +101,7 @@ class Breadcrumbs {
 				$url .= '/' . $id;
 				$breadcrumbs[$url] = 'New';
 				
-			} elseif (!is_numeric($id)) {
+			} elseif (is_numeric($id)) {
 				$url .= '/' . $id;
 				$model = $controller->model();
 				$item = call_user_func($model.'::find', $id);
