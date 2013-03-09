@@ -71,7 +71,7 @@ Decoy ships with a default layout that you'll most likely use.  The following as
 	```
 	require.config({
 		shim: {
-			'decoy/plugins/bootstrap-wysihtml5' : ['decoy/plugins/wysihtml5-0.3.0', 'decoy/plugins/bootstrap-bkwld']
+			'decoy/plugins/bootstrap-wysihtml5' : ['decoy/plugins/wysihtml5-0.3.0', 'decoy/plugins/bootstrap']
 		},
 	});
 	```
