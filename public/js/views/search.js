@@ -325,7 +325,7 @@ define(function (require) {
 			
 			// Redirect with no query
 			var search = this.stripQuery(location.search);
-			location.href = location.origin+location.pathname+search;
+			location.href = location.pathname+search;
 		},
 		
 		// Redirect the page to apply the filter if there is no query in the
