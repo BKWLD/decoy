@@ -319,8 +319,8 @@ legend .btn-toolbar {
 	
 	// Setup the tabs
 	.tabs {
-		display: block;
-		margin-bottom: -2px;
+		display: inline-block;
+		margin-bottom: -1px;
 		
 		// The tabs
 		> * {
@@ -365,9 +365,7 @@ legend .btn-toolbar {
 	
 	// The fullscreen button
 	.icon-fullscreen {
-		position: absolute;
-		right: 0;
-		top: 7px;
+		margin-left: 5px;
 		@include opacity(.4);
 		cursor: pointer;
 		.control-group:hover & {

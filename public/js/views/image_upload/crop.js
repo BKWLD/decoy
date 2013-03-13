@@ -8,6 +8,7 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone');
 	require('decoy/plugins/jquery.Jcrop');
+	require('decoy/plugins/jquery.imagesloaded');
 	
 	// Define a backbone view for each image
 	var Crop = Backbone.View.extend({
@@ -51,12 +52,8 @@ define(function (require) {
 			$fullscreen.on('expand contract', _.debounce(this.destroy, delay, true));
 			$fullscreen.on('expand contract', _.debounce(this.init, delay, true));
 						
-			// Start jcrop up
-			this.init();
-			
-			//debug
-			this.$el[0].init = this.init;
-			this.$el[0].destroy = this.destroy;
+			// Start jcrop up once the images loaded
+			this.$el.imagesLoaded(this.init);
 			
 		},
 		

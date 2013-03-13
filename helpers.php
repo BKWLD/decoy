@@ -97,9 +97,6 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null, $c
 	if (!empty($crops)) {
 		$block_help .= '<span class="crops">';
 		
-		// ADd fullscreen button
-		$block_help .= '<i class="icon-fullscreen fullscreen-toggle"></i>';
-		
 		// Add the tabs
 		$block_help .= '<span class="tabs" data-js-view="crop-styles">';
 		$active = 'active';
@@ -109,6 +106,9 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null, $c
 			$active = null;
 		}
 		$block_help .= '</span>';
+		
+		// Add fullscreen button
+		$block_help .= '<i class="icon-fullscreen fullscreen-toggle"></i>';
 		
 		// Add the images
 		$block_help .= '<span class="imgs">';
