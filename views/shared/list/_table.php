@@ -26,7 +26,7 @@ if (count($iterator)) {
 
 ?>
 
-<table class="table listing">
+<table class="table listing columns-<?=count($columns)?>">
 	<thead>
 			<tr>
 				<th class="select-all"><i class="icon-check"></i></th>
