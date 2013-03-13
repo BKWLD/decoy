@@ -3,7 +3,7 @@
 // http://stackoverflow.com/a/5967632/59160
 // --------------------------------------------------
 define(function (require) {
-	var fallback_to_alert = true;
+	var fallback_to_alert = false;
 	if (typeof window.console === "undefined" || typeof window.console.log === "undefined") {
 		window.console = {};
 		if (fallback_to_alert) {
