@@ -91,7 +91,8 @@ define(function (require) {
 				onSelect: this.select,
 				onRelease: this.select,
 				aspectRatio: this.ratio,
-				setSelect: selection
+				setSelect: selection,
+				keySupport: false // Stop the page scroll from jumping: http://cl.ly/0e1e1615262h
 				
 			// Store a reference to jcrop and call the ready function
 			}, function() {
