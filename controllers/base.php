@@ -853,9 +853,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// If the request doesn't know it's child of another class (often because an exeption)
 		// this won't work
-		if (empty($this->SELF_TO_PARENT) || empty($this->PARENT_TO_SELF)) {
-			throw new Exception('Empty relationships in pivot');
-		}
+		if (empty($this->SELF_TO_PARENT)) throw new Exception('Empty self to parent relationship in pivot');
+		if (empty($this->PARENT_TO_SELF)) throw new Exception('Empty parent to self relationship in pivot');
 		
 		// Lookup the table and column
 		$listing_instance = new Model;
