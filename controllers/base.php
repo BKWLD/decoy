@@ -41,7 +41,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Get the controller name only, without the namespace (like Admin_) or
 		// suffix (like _Controller).  I..e, Admin_News_Posts_Controller becomes
 		// 'News_Posts'
-		preg_match('#^[^_]+_(.+)_[^_]+$#', get_class($this), $matches);
+		preg_match('#^(?:Admin_)?(.+)_Controller$#', get_class($this), $matches);
 		$controller_name = $matches[1];
 				
 		// Make a default title based on the controller name
