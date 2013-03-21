@@ -295,11 +295,14 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Create default slug
 		$this->merge_default_slug();
 		
+		// Create a new object before validation so that model callbacks on validation
+		// get fired
+		$item = new Model();
+		
 		// Validate
 		if ($result = $this->validate(Model::$rules)) return $result;
 
-		// Create a new object
-		$item = new Model();
+		// Hydrate the model
 		$item->fill(BKWLD\Utils\Collection::null_empties(Input::get()));
 		self::save_files($item);
 		
@@ -489,7 +492,9 @@ abstract class Decoy_Base_Controller extends Controller {
 		$messages = array_merge(BKWLD\Laravel\Validator::messages(), $messages);
 		
 		// Fire event
-		$this->fire_event('validating', array($input));
+		if ($response = $this->fire_event('validating', array($input), true)) {
+			if (is_a($response, '\Laravel\Response')) return $response;
+		}
 		
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
@@ -753,9 +758,10 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// Fire an event
-	protected function fire_event($event, $args = null) {
+	protected function fire_event($event, $args = null, $until = false) {
 		$events = array("decoy.{$event}", "decoy.{$event}: ".$this->MODEL);
-		Event::fire($events, $args);
+		if ($until) return Event::until($events, $args);
+		else Event::fire($events, $args);
 	}
 	
 	//---------------------------------------------------------------------------
