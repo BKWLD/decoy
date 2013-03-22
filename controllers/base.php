@@ -1,5 +1,8 @@
 <?php
 
+// Dependencies
+use \Decoy\Breadcrumbs;
+
 abstract class Decoy_Base_Controller extends Controller {
 	
 	//---------------------------------------------------------------------------
@@ -436,10 +439,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// redirecting back to the edit page (which no longer exists).  Thus, go to a
 		// listing instead.  Otherwise, go back (accoridng to referrer)
 		if (Request::ajax()) return Response::json('null');
-		else {
-			if (strpos(Request::referrer(), route($this->CONTROLLER)) === false) return Redirect::to_route('decoy::back');
-			else return Redirect::to_route('decoy::back', 2);
-		}
+		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(Request::referrer(), PHP_URL_PATH))));
 	}
 	
 	// Remove a relationship.  Very similar to delete, except that we're
