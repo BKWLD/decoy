@@ -170,6 +170,11 @@
 		// Icons have a margin top from bootstrap
 		i { margin-top: 0;}
 	}
+	
+	// Fix placement of actions tooltips
+	td .tooltip.left {
+		margin-left: -10px;
+	}
 }
 
 // Center the pagination on the page

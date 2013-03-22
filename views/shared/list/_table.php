@@ -100,9 +100,9 @@ if (count($iterator)) {
 					<?// Toggle visibility link.  This requires JS to work. ?>
 					<? if (!$many_to_many && $has_visible): ?>
 						<? if ($item->visible): ?>
-							<a href="#" class="visibility"><i class="icon-eye-open js-tooltip" data-placement='left' title="Make hidden"></i></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><i class="icon-eye-open"></i></a>
 						<? else: ?>
-							<a href="#" class="visibility"><i class="icon- js-tooltip" data-placement='left' title="Make visible"></i></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><i class="icon-"></i></a>
 						<? endif ?>
 						|
 					<? endif ?>
@@ -113,11 +113,11 @@ if (count($iterator)) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=route($controller_path.'@remove', $item->pivot_id())?>" class="remove-now"><i class="icon-remove js-tooltip" data-placement='left' title="Remove relationship"></i></a>
+						<a href="<?=route($controller_path.'@remove', $item->pivot_id())?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=route($controller_path.'@delete', $item->id)?>" class="delete-now"><i class="icon-trash js-tooltip" data-placement='left' title="Permanently delete"></i></a>
+						<a href="<?=route($controller_path.'@delete', $item->id)?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
 					<? endif ?>
 				</td>
 			</tr>
