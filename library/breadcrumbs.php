@@ -12,9 +12,15 @@ class Breadcrumbs {
 	
 	// Make some default breadcrumbs that are based
 	// on URL segments
-	static public function defaults() {
+	static public function defaults($uri = null) {
+		
+		// If no URL is defined, use the current
+		if (!$uri) $uri = URI::current();
+		$uri = preg_replace('#^/#', '', $uri); // Strip opening slash
+		
+		// Break apart the url
 		$breadcrumbs = array();
-		$parts = explode('/', URI::current());
+		$parts = explode('/', $uri);
 		$path = '/'.array_shift($parts); // Remove the first item
 		
 		// Loop through all url segements and create breadcrumbs out of them
