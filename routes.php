@@ -223,7 +223,7 @@ function redirect_after_save() {
 	
 	// Go back to the listing
 	if (Input::get('_save') == 'back') {
-		Session::flash('save_redirect', Breadcrumbs::smart_back(Breadcrumbs::defaults()));
+		Session::flash('save_redirect', Breadcrumbs::smart_back());
 	}
 	
 	// Go to new form by stripping the last segment from the URL

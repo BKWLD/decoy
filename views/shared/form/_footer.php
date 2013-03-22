@@ -33,7 +33,7 @@ It expects:
 			</a>
 		<? endif ?>
 		
-		<a class="btn back" href="<?=\Decoy\Breadcrumbs::smart_back(\Decoy\Breadcrumbs::defaults())?>">Back</a>
+		<a class="btn back" href="<?=\Decoy\Breadcrumbs::smart_back()?>">Back</a>
 	</div>
 
 <?= Former::close() ?>

@@ -27,7 +27,10 @@ class Breadcrumbs {
 	
 	// Get the url for a back button given a breadcrumbs array.  Or
 	// return false if there is no where to go back to.
-	static public function back($breadcrumbs) {
+	static public function back($breadcrumbs = null) {
+		
+		// Optional argument
+		if (!$breadcrumbs) $breadcrumbs = self::defaults();
 		
 		// If there aren't enough breadcrumbs for a back URL, report false
 		if (count($breadcrumbs) < 2) return false;
@@ -45,7 +48,10 @@ class Breadcrumbs {
 	// * If we are on a three level deep detail page, go back to the second level detail page
 	// Basically, the nuance here is so if you are editing the slides of a news page, when
 	// you go "back", it's back to the news page and not the listing of the news slides
-	static public function smart_back($breadcrumbs) {
+	static public function smart_back($breadcrumbs = null) {
+		
+		// Optional argument
+		if (!$breadcrumbs) $breadcrumbs = self::defaults();
 		
 		// If we are on a listing page (an odd length), do the normal stuff
 		// http://stackoverflow.com/a/9153969/59160
