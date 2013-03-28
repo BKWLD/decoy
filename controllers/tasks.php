@@ -13,19 +13,12 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 		$tasks = array();
 		
 		// Loop through all tasks
-		$task_files = scandir(path('app').'tasks');
-		foreach($task_files as $task_file) {
-			if (!preg_match('#\w+\.php#', $task_file)) continue;
-			
+		foreach(\Decoy\Task::all() as $task) {
+	
 			// Get a list of all public seeding methods
-			require_once(path('app').'tasks/'.$task_file);
-			$task = basename($task_file, '.php');
-			$class = "{$task}_Task";
-			$instance = new $class();
-			$methods = get_class_methods(self::class_name($task));
-			
-			// Check if the tasks should be ignored
-			if (property_exists(self::class_name($task), 'IGNORE')) continue;
+			require_once($task->file);
+			$instance = new $task->class();
+			$methods = get_class_methods($task->class);
 			
 			// Filter some method names
 			// __construct : This is typically only used for bootstrapping
@@ -40,7 +33,7 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 			// Create the task object
 			$obj = (object) array(
 				'methods' => $methods,
-				'title' => \BKWLD\Utils\String::title_from_key($task),
+				'title' => \BKWLD\Utils\String::title_from_key($task->name),
 				'description' => null,
 			);
 			
@@ -51,7 +44,7 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 			}
 			
 			// Add the methods to the listing
-			$tasks[$task] = $obj;
+			$tasks[$task->name] = $obj;
 		}
 		
 		// Render the view
@@ -83,11 +76,6 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 		// Run the command
 		return Response::json(null);
 		
-	}
-	
-	// Make the class name
-	private static function class_name($task) {
-		return str_replace(' ', '_', ucwords(str_replace('_', ' ', $task))).'_Task';
 	}
 	
 }
