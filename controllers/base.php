@@ -44,7 +44,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Get the controller name only, without the namespace (like Admin_) or
 		// suffix (like _Controller).  I..e, Admin_News_Posts_Controller becomes
 		// 'News_Posts'
-		preg_match('#^(?:Admin_)?(.+)_Controller$#', get_class($this), $matches);
+		preg_match('#^(?:Admin_|Decoy_)?(.+)_Controller$#', get_class($this), $matches);
 		$controller_name = $matches[1];
 				
 		// Make a default title based on the controller name
@@ -70,7 +70,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			$this->MODEL = Str::singular($controller_name);
 			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
 		}
-
+		
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
 		if ($this->MODEL && !class_exists('Model')) {
