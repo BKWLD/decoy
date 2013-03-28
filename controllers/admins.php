@@ -6,7 +6,7 @@ class Decoy_Admins_Controller extends Decoy_Base_Controller {
 	protected $DESCRIPTION = 'Users who have access to this admin area.';
 	protected $COLUMNS = array(
 		'Name'          => 'title',
-		'Status'              => 'statuses',
+		'Status'        => 'statuses',
 		'Email'         => 'email',
 	);
 	
