@@ -13,7 +13,7 @@ use \Exception;
  * Adds some shared functionality to taks as well as informs the Decoy
  * admin interface.
  * 
- * Like the seed abstract class, you'll need to start the Decoy bundle so it
+ * Like the Seed abstract class, you'll need to start the Decoy bundle so it
  * knows where to find this class:
  *   Bundle::start('decoy');
  * 
@@ -26,17 +26,19 @@ abstract class Task {
 	
 	// Constructor susses out default properties
 	public function __construct() {
-		
-		// Get the name only, without the suffix (_Task).
-		preg_match('#^(.+)_Task$#', get_class($this), $matches);
-		$name = $matches[1];
 				
 		// Make a default title based on the controller name
-		if (empty($this->TITLE)) $this->TITLE = str_replace('_', ' ', $name);
+		if (empty($this->TITLE)) $this->TITLE = str_replace('_', ' ', $this->name());
 		
 		// Base the heartbeat cache key off the class name
-		if (empty($this->HEARTBEAT_CACHE_KEY)) $this->HEARTBEAT_CACHE_KEY = 'worker-heartbeat-'.$name;
+		if (empty($this->HEARTBEAT_CACHE_KEY)) $this->HEARTBEAT_CACHE_KEY = 'worker-heartbeat-'.$this->name();
 		
+	}
+	
+	// Get the name of the class
+	private function name() {
+		preg_match('#^(.+)_Task$#', get_class($this), $matches);
+		return $matches[1];
 	}
 	
 	//---------------------------------------------------------------------------
@@ -99,7 +101,9 @@ abstract class Task {
 		// The worker has died
 		if (time() - Cache::get($this->HEARTBEAT_CACHE_KEY) > $this->HEARTBEAT_FAIL_MINS * 60) {
 			
-			// Log an exception
+			// Log an exception.  Using an exception instead of a log so the laravel-plus-codebase
+			// bundle can forward the error to exception.
+			$this->add_worker_logging();
 			if (Bundle::exists('laravel-plus-codebase')) Bundle::start('laravel-plus-codebase');
 			Error::log(new Exception('The '.$this->TITLE.' worker has died'));
 			
@@ -112,8 +116,7 @@ abstract class Task {
 	private function add_worker_logging() {
 		
 		// Base the log file name after the current class
-		preg_match('#^(.+)_Task$#', get_class($this), $matches);
-		$name = strtolower($matches[1]);
+		$name = strtolower($this->name());
 		$filename = $name.'_worker.log';
 		
 		// Listen for log events and write the custom worker log
