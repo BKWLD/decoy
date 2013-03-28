@@ -21,6 +21,8 @@ Autoloader::map(array(
 	'Decoy_Base_Controller' => Bundle::path('decoy').'controllers/base.php',
 	'Decoy\Base_Model' => Bundle::path('decoy').'models/base.php',
 	'Decoy\Tag' => Bundle::path('decoy').'models/tag.php',
+	'Decoy\Task' => Bundle::path('decoy').'models/task.php',
+	'Decoy\Worker' => Bundle::path('decoy').'models/worker.php',
 	'Decoy\Auth_Interface' => Bundle::path('decoy').'library/auth_interface.php',
 ));
 
