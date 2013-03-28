@@ -20,6 +20,8 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 			// Get a list of all public seeding methods
 			require_once(path('app').'tasks/'.$task_file);
 			$task = basename($task_file, '.php');
+			$class = "{$task}_Task";
+			$instance = new $class();
 			$methods = get_class_methods(self::class_name($task));
 			
 			// Check if the tasks should be ignored
@@ -35,8 +37,21 @@ class Decoy_Tasks_Controller extends Decoy_Base_Controller {
 				}
 			}
 			
+			// Create the task object
+			$obj = (object) array(
+				'methods' => $methods,
+				'title' => \BKWLD\Utils\String::title_from_key($task),
+				'description' => null,
+			);
+			
+			// If the task inherits from Decoy\Task, use it's values
+			if (is_a($instance, '\Decoy\Task')) {
+				$obj->title = $instance->title();
+				$obj->description = $instance->description();
+			}
+			
 			// Add the methods to the listing
-			$tasks[$task] = $methods;
+			$tasks[$task] = $obj;
 		}
 		
 		// Render the view
