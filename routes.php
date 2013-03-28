@@ -154,6 +154,9 @@ Route::get('(:bundle)/back/(:num?)', array('as' => 'decoy::back', function($offs
 Route::get('(:bundle)/tasks', array('uses' => 'decoy::tasks@index', 'as' => 'decoy::tasks'));
 Route::post('(:bundle)/tasks/(:any)/(:any)', array('uses' => 'decoy::tasks@execute', 'as' => 'decoy::tasks@execute'));
 
+// View worker status
+Route::get('(:bundle)/workers', array('uses' => 'decoy::workers@index', 'as' => 'decoy::workers'));
+
 /*
 |--------------------------------------------------------------------------
 | View composers

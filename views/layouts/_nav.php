@@ -54,14 +54,25 @@
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
+								
 								<? if (is_a(new Decoy_Auth, 'Decoy\Auth')): ?>
 									<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
 									<li class="divider"></li>
 								<? endif ?>
-								<? if (Decoy_Auth::developer()): ?>
+								
+								<? $divider = false; ?>
+								<? if (Decoy_Auth::developer()): $divider = true; ?>
 									<li><a href="<?=action('decoy::tasks')?>">Tasks</a></li>
+								<? endif ?>
+								
+								<? if (count(\Decoy\Worker::all())): $divider = true; ?>
+									<li><a href="<?=action('decoy::workers')?>">Workers</a></li>
+								<? endif ?>
+								
+								<? if ($divider): ?>
 									<li class="divider"></li>
 								<? endif ?>
+								
 								<li><a href="<?=Decoy_Auth::user_url()?>">Account</a></li>
 								<li><a href="<?=Decoy_Auth::logout_url()?>">Log out</a></li>
 							</ul>
