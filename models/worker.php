@@ -64,7 +64,7 @@ class Worker extends Task {
 	// Similar to worker(), this runs the worker logic and updates the heartbeat but is designed
 	// to be invoked by cron.  Thus, it only runs the work once.
 	public function cron() {
-		work_once();
+		$this->work_once();
 		Cache::forever($this->HEARTBEAT_WORKER_KEY, time());
 	}
 	
