@@ -18,7 +18,7 @@ class Worker extends Task {
 	
 	// Worker settings
 	protected $WORKER_SLEEP_SECS = 60;   // How many seconds to wait before each worker exec
-	protected $HEARTBEAT_FAIL_MINS = 60; // The age in after which the worker is deemed failed
+	protected $HEARTBEAT_FAIL_MINS = 30; // The age in after which the worker is deemed failed
 	protected $HEARTBEAT_WORKER_KEY;     // The key that the worker heartbeat is stored as
 	protected $HEARTBEAT_CRON_KEY;       // The key that the cron heartbeat is stored as
 	
