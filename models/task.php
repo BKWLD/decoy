@@ -27,7 +27,7 @@ class Task {
 	}
 	
 	// Get the name of the class
-	protected function name() {
+	public function name() {
 		preg_match('#^(.+)_Task$#', get_class($this), $matches);
 		return $matches[1];
 	}

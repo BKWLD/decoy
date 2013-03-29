@@ -5,7 +5,7 @@
 <ul id="workers" class="unstyled">
 	
 	<? foreach($workers as $worker): ?>
-		<li>
+		<li data-js-view="worker" data-log-url=<?=route('decoy::workers@tail', strtolower($worker->name()))?>>
 			
 			<div class="pull-right actions">
 				<span class="status <?=$worker->is_running()?'ok':'fail'?>">Rate: <strong><?=$worker->current_interval()?></strong></span>
@@ -23,7 +23,7 @@
 				<li>Currently executing every: <?=$worker->current_interval()?></li>
 			</ul>
 			
-			<div class="logs hide"></div>
+			<div class="log hide"></div>
 		</li>
 	<? endforeach ?>
 	

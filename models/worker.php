@@ -37,7 +37,7 @@ class Worker extends Task {
 	// - Child classes must define a work() method and probably a worker_init()
 	// - For the worker, on Pagoda, the worker instance would have:
 	//   exec: "php artisan <TASK>:worker --env=$LARAVEL_ENV"
-	// - For the heatbeat, on Pagoda, the Boxfile would have for the app:
+	// - For the heatbeat, on Pagoda, the Boxfile would have for the worker instance:
 	//   cron:
 	//      - "* * * * *": "php artisan <TASK>:heartbeat --env=$LARAVEL_ENV"
 	//---------------------------------------------------------------------------
@@ -101,14 +101,18 @@ class Worker extends Task {
 		
 		// Base the log file name after the current class
 		$name = strtolower($this->name());
-		$filename = $name.'_worker.log';
+		$path = self::log_path($name);
 		
 		// Listen for log events and write the custom worker log
-		Event::listen('laravel.log', function($type, $message) use ($filename) {
+		Event::listen('laravel.log', function($type, $message) use ($path) {
 	    $message = date('Y-m-d H:i:s').' '.Str::upper($type)." - {$message}".PHP_EOL;
-			File::append(path('storage').'logs/'.$filename, $message);
+			File::append($path, $message);
 		});
-		
+	}
+	
+	// Make the path to the log file
+	static public function log_path($worker) {
+		return path('storage').'logs/'.$worker.'_worker.log';
 	}
 	
 	//---------------------------------------------------------------------------

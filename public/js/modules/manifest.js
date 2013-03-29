@@ -17,6 +17,7 @@ define(function (require) {
 		'search': require('decoy/views/search'),
 		'crop': require('decoy/views/image_upload/crop'),
 		'crop-styles': require('decoy/views/image_upload/crop-styles'),
-		'image-fullscreen': require('decoy/views/image_upload/image-fullscreen')
+		'image-fullscreen': require('decoy/views/image_upload/image-fullscreen'),
+		'worker': require('decoy/views/worker')
 	};
 });
