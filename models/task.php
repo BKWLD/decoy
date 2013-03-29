@@ -14,6 +14,7 @@ class Task {
 	// Descriptive properties
 	protected $TITLE;       // i.e. Feeds
 	protected $DESCRIPTION; // i.e. Pulls feeds from external services
+	const MAX_EXECUTION_TIME = 600; // How long to allow a task to run for
 	
 	// Constructor susses out default properties
 	public function __construct() {
@@ -67,9 +68,19 @@ class Task {
 	}
 	
 	// Get a specific task
-	// @param $task i.e. "Seed", "Feeds"
+	// @param $task i.e. "Seed", "Feed_Stuff"
 	public static function find($task) {
 		
+		// Load the file
+		$file = path('app').'tasks/'.strtolower($task).'.php';
+		if (!file_exists($file)) throw new Exception('This task could not be found');
+		require_once($file);
+		
+		// Instantiate
+		$class = self::class_name($task);
+		$task = new $class();
+		if (!is_a($task, '\Decoy\Task')) throw new Exception('Task is not a \Decoy\Task.');
+		return $task;
 	}
 	
 	// Make a class name from a task name
@@ -81,32 +92,38 @@ class Task {
 	// Properties
 	//---------------------------------------------------------------------------
 	
-	// Get the name of the class
+	// Get the name of the class.
+	// @returns Case sensetive name: Feed_Stuff, Seed, etc
 	public function name() {
 		preg_match('#^(.+)_Task$#', get_class($this), $matches);
 		return $matches[1];
 	}
 	
-	// Get all the methods of the class
+	// Get all the methods of only this class and not parents
 	public function methods() {
-		
-		// Get all the methods of only this class
 		$methods = get_class_methods($this);
 		$parent_methods = get_class_methods(get_parent_class($this));
-		$methods = array_diff($methods, $parent_methods);
+		return array_diff($methods, $parent_methods);
+	}
+	
+	// Run a method of a task
+	// @param $method - The name of a method to run, like "auto_approve"
+	public function run($method) {
 		
-		// Filter some method names
-		// __construct : This is typically only used for bootstrapping
-		// worker : This is typicaly used by laravel workers (infinitely long running tasks)
-		$methods_to_ignore = array('__construct', 'worker');
-		foreach($methods_to_ignore as $method_name) {
-			if (($key = array_search($method_name, $methods)) !== false) {
-				unset($methods[$key]);
-			}
-		}
+		// Make sure the method is one of the defined ones
+		if (array_search($method, $this->methods()) === false) throw new Exception('Task method does not exist');
 		
-		// Return filtered methods
-		return $methods;
+		// Allow a really long execution time
+		set_time_limit(self::MAX_EXECUTION_TIME);
+		
+		// Run the task and supress output
+		ob_start();
+		\Laravel\CLI\Command::run(array($this->name().':'.$method));
+		ob_end_clean();
+		
+		// Currently we're not outputing the result
+		return null;
+		
 	}
 	
 }
