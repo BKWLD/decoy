@@ -37,18 +37,16 @@ class Worker extends Task {
 	// - Child classes must define a work() method and probably a worker_init()
 	// - For the worker, on Pagoda, the worker instance would have:
 	//   exec: "php artisan <TASK>:worker --env=$LARAVEL_ENV"
+	// - Or, if the host is more traditional, start your work with cron by adding this to
+	//   your crontab:
+	//   * * * * * php artisan <TASK>:cron --env=<LARAVEL_ENV>
 	// - For the heatbeat, on Pagoda, the Boxfile would have for the worker instance:
 	//   cron:
 	//      - "* * * * *": "php artisan <TASK>:heartbeat --env=$LARAVEL_ENV"
 	//---------------------------------------------------------------------------
 	
-	// A no-op where code that is run pre-worker loop gets executed
-	protected function worker_init() {}
-	
-	// A no-op where the application defines the logic that is run by the worker
-	protected function work() {}
-	
-	// The worker loop.  This method never ends
+	// The worker loop.  This method never ends.  This is the task method that would be called
+	// to start a worker
 	public function worker() {
 		
 		// Bootstrap
@@ -63,7 +61,20 @@ class Worker extends Task {
 		}
 	}
 	
-	// A task that runs the worker once, for testing purposes
+	// Similar to worker(), this runs the worker logic and updates the heartbeat but is designed
+	// to be invoked by cron.  Thus, it only runs the work once.
+	public function cron() {
+		work_once();
+		Cache::forever($this->HEARTBEAT_WORKER_KEY, time());
+	}
+	
+	// A no-op where code that is run pre-worker loop gets executed
+	protected function worker_init() {}
+	
+	// A no-op where the application defines the logic that is run by the worker
+	protected function work() {}
+	
+	// A task that runs the worker once
 	public function work_once() {
 		$this->add_worker_logging();
 		$this->worker_init();
