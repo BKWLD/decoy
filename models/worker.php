@@ -133,8 +133,7 @@ class Worker extends Task {
 	// Get all the tasks that have workers
 	public static function all() {
 		return array_filter(parent::all(), function($task) {
-			require_once($task->file);
-			return is_a(new $task->class(), '\Decoy\Worker');
+			return is_a($task, '\Decoy\Worker');
 		});
 		
 	}

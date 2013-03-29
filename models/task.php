@@ -26,12 +26,6 @@ class Task {
 		
 	}
 	
-	// Get the name of the class
-	public function name() {
-		preg_match('#^(.+)_Task$#', get_class($this), $matches);
-		return $matches[1];
-	}
-	
 	//---------------------------------------------------------------------------
 	// Getter/setter
 	//---------------------------------------------------------------------------
@@ -60,15 +54,11 @@ class Task {
 			$name = basename($task_file, '.php');
 			$class = self::class_name($name);
 			
-			// Check if the tasks should be ignored
-			if (property_exists($class, 'IGNORE')) continue;
-			
 			// Return this task
-			$tasks[] = (object) array(
-				'name' => $name,
-				'file' => $file,
-				'class' => $class,
-			);
+			require_once($file);
+			$task = new $class();
+			if (!is_a($task, '\Decoy\Task')) continue; // We only want to deal with classes that extend from this
+			$tasks[] = $task;
 		}
 		
 		// Return matching tasks
@@ -76,9 +66,47 @@ class Task {
 		
 	}
 	
-	// Make the class name from the task name
+	// Get a specific task
+	// @param $task i.e. "Seed", "Feeds"
+	public static function find($task) {
+		
+	}
+	
+	// Make a class name from a task name
 	private static function class_name($name) {
 		return str_replace(' ', '_', ucwords(str_replace('_', ' ', $name))).'_Task';
+	}
+	
+	//---------------------------------------------------------------------------
+	// Properties
+	//---------------------------------------------------------------------------
+	
+	// Get the name of the class
+	public function name() {
+		preg_match('#^(.+)_Task$#', get_class($this), $matches);
+		return $matches[1];
+	}
+	
+	// Get all the methods of the class
+	public function methods() {
+		
+		// Get all the methods of only this class
+		$methods = get_class_methods($this);
+		$parent_methods = get_class_methods(get_parent_class($this));
+		$methods = array_diff($methods, $parent_methods);
+		
+		// Filter some method names
+		// __construct : This is typically only used for bootstrapping
+		// worker : This is typicaly used by laravel workers (infinitely long running tasks)
+		$methods_to_ignore = array('__construct', 'worker');
+		foreach($methods_to_ignore as $method_name) {
+			if (($key = array_search($method_name, $methods)) !== false) {
+				unset($methods[$key]);
+			}
+		}
+		
+		// Return filtered methods
+		return $methods;
 	}
 	
 }

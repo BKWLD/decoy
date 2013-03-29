@@ -3,15 +3,15 @@
 </h1>
 
 <div id="tasks">
-	<? foreach($tasks as $name => $task): ?>
+	<? foreach($tasks as $task): ?>
 		<div class='span6'>
-			<legend><?=$task->title?> <small></small></legend>
-			<? if ($task->description): ?><p class="description"><?=$task->description?></p><? endif ?>
+			<legend><?=$task->title()?></legend>
+			<? if ($task->description()): ?><p class="description"><?=$task->description()?></p><? endif ?>
 			<table>
-				<? foreach($task->methods as $method): ?>
+				<? foreach($task->methods() as $method): ?>
 					<tr data-js-view="task-method">
 						<td>
-							<a href="<?=route('decoy::tasks@execute', array($name, $method))?>" class="btn">Execute</a>
+							<a href="<?=route('decoy::tasks@execute', array($task->name(), $method))?>" class="btn">Execute</a>
 						</td>
 						<td>
 							<?=ucwords(str_replace('_',' ', $method))?>
