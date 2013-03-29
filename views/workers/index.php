@@ -19,7 +19,7 @@
 			
 			<ul>
 				<li>Last worker execution: <?=$worker->last_heartbeat()?></li>
-				<li>Last heartbeat (and execution): <?=$worker->last_heartbeat_check()?></li>
+				<li>Last heartbeat<?if(!$worker->is_running()):?> (and execution)<?endif?>: <?=$worker->last_heartbeat_check()?></li>
 				<li>Currently executing every: <?=$worker->current_interval()?></li>
 			</ul>
 			
