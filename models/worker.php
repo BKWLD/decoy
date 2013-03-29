@@ -159,10 +159,10 @@ class Worker extends Task {
 	}
 	
 	// The current interval that heartbeats are running at
-	public function current_interval() {
+	public function current_interval($format = null) {
 		
 		// Relative time formatting
-		$options = array(
+		$abbreviated = array(
 			'pluraling' => false,
 			'spacing' => false,
 			'labels' => array(
@@ -177,12 +177,19 @@ class Worker extends Task {
 		);
 		
 		// Figure stuff out
-		if ($this->is_running()) return \BKWLD\Utils\String::time_elapsed(time() - $this->WORKER_SLEEP_SECS, $options);
+		if ($this->is_running()) $interval = $this->WORKER_SLEEP_SECS;
 		else {
 			$check = Cache::get($this->HEARTBEAT_CRON_KEY);
-			if (empty($check)) return 'uncertain';
-			else if (is_numeric($check->interval)) return \BKWLD\Utils\String::time_elapsed(time() - $check->interval, $options);
-			else return $check->interval;
+			if (empty($check)) $interval = 'uncertain';
+			else $interval = $check->interval;
+		}
+		
+		// Format it
+		if (!is_numeric($interval)) return $interval;
+		switch($format) {
+			case 'raw': return $interval;
+			case 'abbreviated': return \BKWLD\Utils\String::time_elapsed(time() - $interval, $abbreviated);
+			default: return \BKWLD\Utils\String::time_elapsed(time() - $interval);
 		}
 	}
 	

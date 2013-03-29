@@ -8,9 +8,6 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone');
 
-	// Settings
-	var update_sleep = 5*1000;
-
 	// Define the view
 	return Backbone.View.extend({
 		
@@ -22,8 +19,11 @@ define(function (require) {
 			this.$log = this.$('.log');
 			this.url = this.$el.data('log-url');
 			
-			// Fetch the log
-			this.render();
+			// Base the update rate on the interval that the worker runs
+			this.rate = parseInt(this.$el.data('interval'), 10);
+			if (!this.rate) this.rate = 5;
+			else this.rate = Math.max(5, this.rate);
+			this.rate *= 1000; // Convert to ms from s
 			
 		},
 		
@@ -36,6 +36,10 @@ define(function (require) {
 		log_toggle: function(e) {
 			e.preventDefault();
 			this.$log.toggleClass('hide');
+			
+			// Load new data if the log is visible
+			if (this.$log.hasClass('hide')) clearTimeout(this.timeout);
+			else this.render();
 		},
 		
 		// Tail the log and display it
@@ -52,7 +56,7 @@ define(function (require) {
 				// Update the log every minute with the latest.  Not using
 				// interval so it won't play weird catchup if the user
 				// leaves the tab
-				_.delay(this.render, update_sleep);
+				this.timeout = setTimeout(this.render, this.rate);
 				
 			}, this));			
 			

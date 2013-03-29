@@ -5,10 +5,10 @@
 <ul id="workers" class="unstyled">
 	
 	<? foreach($workers as $worker): ?>
-		<li data-js-view="worker" data-log-url=<?=route('decoy::workers@tail', strtolower($worker->name()))?>>
+		<li data-js-view="worker" data-log-url=<?=route('decoy::workers@tail', strtolower($worker->name()))?> data-interval="<?=$worker->current_interval('raw')?>">
 			
 			<div class="pull-right actions">
-				<span class="status <?=$worker->is_running()?'ok':'fail'?>">Rate: <strong><?=$worker->current_interval()?></strong></span>
+				<span class="status <?=$worker->is_running()?'ok':'fail'?>">Rate: <strong><?=$worker->current_interval('abbreviated')?></strong></span>
 				<a class="btn">Logs</a>
 			</div>
 			
@@ -23,7 +23,7 @@
 				<li>Currently executing every: <?=$worker->current_interval()?></li>
 			</ul>
 			
-			<div class="log hide"></div>
+			<div class="log hide">Loading...</div>
 		</li>
 	<? endforeach ?>
 	
