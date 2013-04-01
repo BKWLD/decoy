@@ -10,6 +10,7 @@ define(function (require) {
 		manifest = require('decoy/modules/manifest');
 	
 	// Plugins
+	require('decoy/plugins/jquery-migrate');
 	require('decoy/plugins/bootstrap');
 	require('decoy/plugins/wysihtml5-0.3.0'); // For WYSIWYG API
 	require('decoy/plugins/bootstrap-wysihtml5'); // For styling the WYISWYG like bootstrap
