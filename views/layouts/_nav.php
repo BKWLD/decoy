@@ -1,6 +1,6 @@
 <? // FYI, this patial is populated from a view composer ?>
 
-<div class="navbar navbar-inverse navbar-fixed-top" data-js-view="navbar">
+<div class="navbar navbar-inverse navbar-fixed-top">
 	<div class="navbar-inner">
 		<div class="container">
 			
