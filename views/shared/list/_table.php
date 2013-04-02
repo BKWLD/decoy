@@ -71,7 +71,7 @@ if (count($iterator)) {
 				<?
 				// Add position value from the row or from the pivot table.  
 				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
-				elseif (isset($test_row['pivot']['position'])) echo "data-position='{$item->pivot->position}'";
+				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
