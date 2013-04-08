@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<package packagerversion="1.8.0" version="2.0" xmlns="http://pear.php.net/dtd/package-2.0" xmlns:tasks="http://pear.php.net/dtd/tasks-1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://pear.php.net/dtd/tasks-1.0
+    http://pear.php.net/dtd/tasks-1.0.xsd
+    http://pear.php.net/dtd/package-2.0
+    http://pear.php.net/dtd/package-2.0.xsd">
+ <name>Faker</name>
+ <channel>maetl.github.com/faker</channel>
+ <summary>A fake text generator</summary>
+ <description>Generates ludicrous randomized text for functional testing, fuzz testing, or lorem ipsum-esque purposes.</description>
+ <lead>
+  <name>Mark Rickerby</name>
+  <user>maetl</user>
+  <email>me@maetl.net</email>
+  <active>yes</active>
+ </lead>
+ <date>2011-10-22</date>
+ <time>15:44:00</time>
+ <version>
+  <release>0.1.0</release>
+  <api>0.1.0</api>
+ </version>
+ <stability>
+  <release>beta</release>
+  <api>beta</api>
+ </stability>
+ <license uri="http://www.opensource.org/licenses/mit-license.php">MIT</license>
+ <notes>-</notes>
+ <contents>
+   <dir name="/">
+     <file name="README.md" role="doc" />
+	 <file name="LICENSE" role="doc" />
+	 <file baseinstalldir="/" name="Main.php" install-as="faker" role="script">
+		<tasks:replace from="{{version}}" to="version" type="package-info" />
+	 </file>
+	 <file name="Fake.php" role="php">
+		<tasks:replace from="{{version}}" to="version" type="package-info" />
+	 </file>
+	 <file name="Faker.php" role="php">
+		<tasks:replace from="{{version}}" to="version" type="package-info" />
+	 </file>
+	 <dir name="Fake">
+		<file name="Address.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<file name="Color.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<file name="Company.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<dir name="Company">
+			<file name="Aerospace.php" role="php">
+				<tasks:replace from="{{version}}" to="version" type="package-info" />
+			</file>
+		</dir>
+		<file name="Internet.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<file name="Person.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<file name="Product.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+	 </dir>
+	 <dir name="Faker">
+		<file name="Invoker.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+		<file name="Locator.php" role="php">
+			<tasks:replace from="{{version}}" to="version" type="package-info" />
+		</file>
+	 </dir>
+   </dir>
+ </contents>
+ <dependencies>
+  <required>
+   <php>
+    <min>5.2.4</min>
+   </php>
+   <pearinstaller>
+    <min>1.4.0</min>
+   </pearinstaller>
+  </required>
+ </dependencies>
+ <phprelease />
+</package>

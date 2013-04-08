@@ -1,0 +1,23 @@
+.navbar {
+	
+	// Add a shadow
+	@include box-shadow(rgba(black,.2) 0 2px 2px);
+	
+	// Gravatar sizing
+	.gravatar {
+		width: 22px;
+		height: 22px;
+	}
+	
+	// Make the dropdown menu active state look better
+	.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+		background-color: $near-black;
+		background-image: none;
+		color: $light-grey;
+	}
+	
+	// Make the account pulldown flush to the right edge
+	.nav.pull-right .dropdown-toggle {
+		padding-right: 0;
+	} 
+}

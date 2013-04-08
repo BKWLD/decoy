@@ -1,0 +1,100 @@
+#workers {
+	$green: #299a0b;
+	$red: #ff1a00;
+	
+	// Each worker
+	> li {
+		margin-bottom: 30px;
+		padding-bottom: 10px;
+		border: 1px solid #e5e5e5;
+		border-radius: 10px;
+		padding: 10px 12px;
+		padding-bottom: 0; // Making room for the logs margins
+		margin: 20px -10px;
+		
+		// The title
+		h3 {
+			margin: 0;
+			margin-top: -5px;
+		}
+		
+		// Labels
+		p {
+			margin-bottom: 5px;
+		}
+		
+		// Stats
+		> ul {
+			color: #999;
+		}
+		
+		// The right justifed actions
+		.actions {
+			
+			// The status display
+			.status {
+				display: inline-block;
+				padding: 4px 12px;
+				margin-bottom: 0;
+				font-size: 14px;
+				line-height: 20px;
+				color: white;
+				text-align: center;
+				border: 1px solid;
+				@include border-radius(4px);
+				@include text-shadow(0 1px 1px rgba(black, 0.25));
+				@include box-shadow(inset 0 0px 2px rgba(black, 0.25));
+				min-width: 60px;
+				
+				// Some trick of the eye requires this
+				position: relative;
+				top: 1px;
+				
+				// Success
+				&.ok {
+					background: $green;
+					border-color: darken($green, 2%);
+					@include background-image(radial-gradient(center, lighten($green, 5%) 0, $green 50px));
+				}
+				
+				// Fail
+				&.fail {
+					$color: #ff1a00;
+					background: $red;
+					border-color: darken($red, 5%);
+					@include background-image(radial-gradient(center, lighten($red, 20%) 0, $red 50px));
+				}
+			}
+			
+		}
+		
+		// The log interface
+		.log {
+			word-break: break-all;
+			word-wrap: break-word;
+			white-space: pre;
+			white-space: pre-wrap;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+			background: #1d1f21;
+			color: lighten($green, 10%);
+			padding: 8px;
+			@include border-radius(4px);
+			font-size: 12px;
+			overflow: hidden;
+			height: 400px;
+			margin-top: 10px;
+			margin-bottom: 10px;
+			@include transition(all 300ms);
+			overflow: scroll;
+			
+			&.hide {
+				display: block; // Override bootstrap
+				padding-top: 0;
+				padding-bottom: 0;
+				margin-bottom: 0;
+				height: 0;
+			}
+		}
+		
+	}
+}

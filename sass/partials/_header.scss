@@ -1,0 +1,115 @@
+// Title
+h1 {
+	margin-bottom: 30px;
+	
+	// Count of posts
+	.badge {
+		position: relative;
+		top: -5px;
+	}
+	
+	// Elements in the title area
+	.btn-toolbar {
+		margin-left: 20px;
+		line-height: 30px;
+		.btn {
+			font-weight: normal;
+		}
+		
+		// Many to many forms need some adjusting
+		form {
+			margin: 0;
+			display: inline-block;
+			vertical-align: middle;
+			margin-left: 5px; // In case there is a search on the left
+			position: relative;
+			top: 1px;
+		}
+	}	
+}
+
+// The page breadcrumbs
+.breadcrumbs {
+	background: whiteSmoke;
+	padding: 5px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+	
+	// Make the font size a little smaller
+	font-size: 12px;
+	i {
+		margin-top: 0;
+	}
+	a i {
+		margin-top: -2px;
+	}
+	
+	// Container gives the breadcrumbs the proper bounds, matching the page
+	.container {
+		
+		// Center the contents better
+		margin-top: 3px;
+		margin-bottom: -2px;
+		
+		// Make the links and icons softer
+		a {
+			color: black;
+		}
+		& > * {
+			@include opacity($light-opacity);
+		}
+		a:hover {
+			@include opacity(1);
+		}
+		
+		// Some breadcrumb titles make include thumbnails
+		img {
+			height: 13px;
+		}
+		
+		// The back button
+		.back {
+			float: right;
+		}
+	}
+}
+
+// Make the breadcrumbs flush with the bottom of the nav
+@media (min-width: $bootstrap_nav_break + 1px) {
+ body {
+		margin-top:40px;
+	}
+}
+@media (max-width: $bootstrap_nav_break) {
+	.navbar {
+		position: relative; // Ajax Progress needed this
+	}
+	.navbar-fixed-top {
+		margin-bottom:0px;
+	}
+	.breadcrumbs {
+		margin-right: -20px;
+		margin-left: -20px;
+		.container {
+			margin-left: 5px;
+		}
+	}
+}
+
+// The progress bar (and makes a nice shadow when not animating)
+#ajax-progress {
+	
+	// Remove the rounding so it's flush with edges and reduce the height
+	@include border-radius(0);
+	height: 3px;
+	margin: 0;
+	
+	// Make the background invisible
+	background: none;
+	@include box-shadow(none);
+	
+	// Pin it to the bottom of the nav var
+	position: absolute;
+	bottom: -3px;
+	width: 100%;
+	
+}
