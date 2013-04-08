@@ -21,8 +21,7 @@
 	},
 	"require-dev": {
 		"phpunit/phpunit": "3.7.x",
-		"mockery/mockery": "0.8.x",
-		"illuminate/routing": "4.0.x"
+		"mockery/mockery": "0.8.x"
 	},
 	"repositories": [
 		{
