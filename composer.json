@@ -1,0 +1,23 @@
+{
+    "name": "bkwld/decoy",
+    "description": "",
+    "authors": [
+        {
+            "name": "Robert Reinhard",
+            "email": ""
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x"
+    },
+    "autoload": {
+        "classmap": [
+            "src/migrations"
+        ],
+        "psr-0": {
+            "Bkwld\\Decoy": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
