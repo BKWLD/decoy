@@ -1,7 +1,4 @@
-<?php
-
-// The configuration array
-$config =  array(
+<?php return array(
 	
 	// -----------------------------------------------------
 	// Application specfific
@@ -38,10 +35,10 @@ $config =  array(
 	'layout' => 'decoy::layouts.default',
 	
 	// Directory for saving uploaded images
-	'upload_dir' => path('public').'uploads',
+	'upload_dir' => public_path().'/uploads',
 	
 	// Directory for saving uploaded images
-	'ckfinder_upload_dir' => path('public').'uploads/ckfinder',
+	'ckfinder_upload_dir' => public_path().'/uploads/ckfinder',
 	
 	// Default admin credentials
 	'default_login' => 'redacted',
@@ -52,13 +49,10 @@ $config =  array(
 	
 	// Mail FROM info
 	'mail_from_name' => 'The CMS',
-	'mail_from_address' => 'postmaster@'.parse_url(URL::base(), PHP_URL_HOST),
+	'mail_from_address' => 'postmaster@'.parse_url(app()->make('request')->root(), PHP_URL_HOST),
 	
 	// The auth class that should be used.  The default Decoy\Auth class
 	// relies on Sentry.  The class must implement Decoy\iAuth
 	'auth_class' => 'Decoy\Auth',
 	
 );
-
-// Load a 'decoy' config file from the application directory and use it's values
-return array_merge($config, (array) Config::get('decoy'));
