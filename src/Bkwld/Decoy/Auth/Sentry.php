@@ -1,5 +1,8 @@
 <?php namespace Bkwld\Decoy\Auth;
 
+// Dependencies
+use \Html;
+
 /**
  * This class abstracts the Sentry methods that are used globally
  * in Decoy, like for checking if a user is logged in and an admin.
@@ -8,24 +11,42 @@
  */
 class Sentry implements AuthInterface {
 	
+	// Get the logged in user
+	static public function user() {
+		if (!\Sentry::check()) return false; // Are they logged in
+		try {
+			return \Sentry::getUser(); // Return the user
+		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+			return false; // The logged in user couldn't be found in DB
+		}
+	}
+	
 	// ---------------------------------------------------------------
 	// Methods for inspecting properties of the user
 	// ---------------------------------------------------------------
 	
 	// Boolean for whether the user is logged in and an admin
 	static public function check() {
-		return false;
-		// return \Sentry::check() && \Sentry::user()->in_group('admins');
+		
+		// Get the logged in user
+		if (!($user = self::user())) return false;
+		
+		// Make sure they have admin privledges.  This may be granted even if
+		// they aren't in the "admins" group, though it is the most common way
+		return $user->hasAccess('admin');
 	}
 	
 	// The logged in user's permissions role
 	static public function role() {
-		return \Sentry::user()->groups();
+		if (!($user = self::user())) return null;
+		return $user->getGroups();
 	}
 
 	// Boolean as to whether the user has developer entitlements
 	static public function developer() {
-		return strpos(\Sentry::user()->get('email'), '@bkwld.com') !== false;
+		if (!($user = self::user())) return false; // They must be logged in
+		if ($user->hasAccess('developer')) return true; // They must be a developer
+		return strpos($user->email, '@bkwld.com') !== false; // ... or have bkwld in their email
 	}
 	
 	// ---------------------------------------------------------------
@@ -39,12 +60,12 @@ class Sentry implements AuthInterface {
 	
 	// URL to go to that will process their logout
 	static public function logout_url() {
-		return action('admin.account@logout');
+		return action('Bkwld\Decoy\Controllers\Account@getLogout');
 	}
 	
 	// The URL to if they don't have access
 	static public function denied_url() {
-		return action('decoy::account@login');
+		return action(self::login_action());
 	}
 	
 	// ---------------------------------------------------------------
@@ -53,22 +74,25 @@ class Sentry implements AuthInterface {
 	
 	// Get their photo
 	static public function user_photo() {
-		return \Laravel\HTML::gravatar(\Sentry::user()->get('email'));
+		if (!($user = self::user())) return null;
+		return Html::gravatar($user->email);
 	}
 	
 	// Get their name
 	static public function user_name() {
-		return \Sentry::user()->get('metadata.first_name');
+		if (!($user = self::user())) return null;
+		return $user->first_name;
 	}
 	
 	// Get the URL to their profile
 	static public function user_url() {
-		return action('decoy::admins', array(self::user_id()));
+		return action('Bkwld\Decoy\Controllers\Admins@getShow', self::user_id());
 	}
 	
 	// Get their id
 	static public function user_id() {
-		return \Sentry::user()->get('id');
+		if (!($user = self::user())) return null;
+		return $user->id;
 	}
 	
 }
