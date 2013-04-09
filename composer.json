@@ -14,14 +14,15 @@
 	],
 	"require": {
 		"php": ">=5.3.0",
-		"illuminate/support": "4.0.x",
+		"illuminate/support": "4.0.*",
 		"anahkiasen/former": "~2.6",
+		"cartalyst/sentry": "2.0.*",
 		"bkwld/croppa": "dev-composer",
 		"bkwld/library": "dev-composer"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "3.7.x",
-		"mockery/mockery": "0.8.x"
+		"phpunit/phpunit": "3.7.*",
+		"mockery/mockery": "0.8.*"
 	},
 	"repositories": [
 		{

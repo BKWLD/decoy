@@ -1,9 +1,11 @@
 <?php
 
-class Decoy_General_Content {
+use Illuminate\Database\Migrations\Migration;
+
+class Content extends Migration {
 
 	/**
-	 * Make changes to the database.
+	 * Run the migrations.
 	 *
 	 * @return void
 	 */
@@ -20,7 +22,7 @@ class Decoy_General_Content {
 	}
 
 	/**
-	 * Revert the changes to the database.
+	 * Reverse the migrations.
 	 *
 	 * @return void
 	 */
