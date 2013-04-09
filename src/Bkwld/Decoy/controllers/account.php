@@ -1,7 +1,7 @@
-<?php 
+<?php namespace Bkwld\Decoy\Controllers;
 
 // The account controller deals with auth
-class Decoy_Account_Controller extends Decoy_Base_Controller {
+class Account extends Base {
 	
 	// Validation rules for resetting password
 	static private $reset_rules = array(
@@ -20,7 +20,11 @@ class Decoy_Account_Controller extends Decoy_Base_Controller {
 	}
 
 	// Login Functionality.  Users can get bounced here by a filter in routes.php.
-	public function get_login() {
+	public function getLogin() {
+
+		// TESTING RENDERING PAGE
+	 	$this->layout->content = \View::make('decoy::account.login');
+	 	return;
 
 		// Remember where they attempted to go to if they were dropped here from a
 		// ACL deny.  This keeps the value around for another request

@@ -1,14 +1,14 @@
 <?php
 
 // Imports
-use Decoy\Breadcrumbs;
+use Bkwld\Decoy\Breadcrumbs;
 
 // HTML::title() -- Format title based on section content
-HTML::macro('title', function() {
+Html::macro('title', function() {
 	
 	// If no title has been set, try to figure it out based on
 	// default breadcrumbs
-	$title = Section::yield('title');
+	$title = View::yieldContent('title');
 	if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
 	
 	// Get the site name
@@ -29,7 +29,7 @@ HTML::macro('title', function() {
  * to the view by the view composer that handles the standard list, but PHP
  * wouldn't let me.
  */
-HTML::macro('render_list_column', function($item, $column, $convert_dates) {
+Html::macro('render_list_column', function($item, $column, $convert_dates) {
 	
 	// Date formats
 	$date_formats = array(
@@ -68,7 +68,7 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
  * Make an image upload field.  That is to say, one that displays a sample if an
  * image has already been uploaded
  */
-HTML::macro('image_upload', function($id = null, $label = null, $help = null, $crops = null) {
+Html::macro('image_upload', function($id = null, $label = null, $help = null, $crops = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'image';
@@ -170,7 +170,7 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null, $c
 /**
  * Make a file upload field.  It shows a download link for already uploaded files
  */
-HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
+Html::macro('file_upload', function($id = null, $label = null, $help = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'file';
@@ -238,7 +238,7 @@ HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
  *     - title - The title of the old value.  This would be used if $old is an int like a foreign_id.
  *     - create - A boolean, if true, allows the user to enter values not in autocomplete
  */
-HTML::macro('belongs_to', function($id, $route, $options = array()) {
+Html::macro('belongs_to', function($id, $route, $options = array()) {
 	
 	// Start data array
 	$data = array(
@@ -262,14 +262,14 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 /**
  * Form an URL to a new page
  */
-HTML::macro('new_route', function($route, $parent_id = null) {
+Html::macro('new_route', function($route, $parent_id = null) {
 	return empty($parent_id) ? route($route.'@new') : route($route.'@new_child', $parent_id);
 });
 
 /**
  * Form a URL to an edit page, populating route variables by extracting items from URL segments
  */
-HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
+Html::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
 	$action = '@edit';	
 	
 	// If a many to many, make the route straight to the controller
@@ -299,7 +299,7 @@ HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null)
  * disabled, we're just showing the value as text.  Only makes sense on edit views, really.
  * $key - The key that the value is associated with in former
  */
-HTML::macro('inputless_field', function($key, $label = null, $value = null) {
+Html::macro('inputless_field', function($key, $label = null, $value = null) {
 	
 	// Get defaults
 	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($key);
@@ -313,7 +313,7 @@ HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 /**
  * This renders a date selection box
  */
-HTML::macro('date', function($id, $label = null) {
+Html::macro('date', function($id, $label = null) {
 	
 	// Defaults
 	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
@@ -348,7 +348,7 @@ HTML::macro('date', function($id, $label = null) {
 /**
  * This renders a CKEditor Implementation
  */
-HTML::macro('ckeditor', function($id, $label = null) {
+Html::macro('ckeditor', function($id, $label = null) {
 	
 	// Defaults
 	// if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);

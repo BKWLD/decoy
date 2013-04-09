@@ -8,7 +8,7 @@
 
 			<legend>Login</legend>
 			
-			<?= render('decoy::account._error') ?>
+			<?= View::make('decoy::account._error') ?>
 			
 			<?=Former::text('email')->class('span3') ?>
 			<?=Former::password('password')->class('span3') ?>

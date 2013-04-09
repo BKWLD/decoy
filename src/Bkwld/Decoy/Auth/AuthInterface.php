@@ -1,9 +1,9 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Auth;
 
 /**
  * Defines methods necessary to validate a user
  */
-interface Auth_Interface {
+interface AuthInterface {
 	
 	// Methods for inspecting properties of the user
 	static public function check();        // Boolean for whether the user is logged in and an admin

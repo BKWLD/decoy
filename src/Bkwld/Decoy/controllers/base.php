@@ -1,4 +1,31 @@
-<?php
+<?php namespace Bkwld\Decoy\Controllers;
+
+abstract class Base extends \Controller {
+	
+	//---------------------------------------------------------------------------
+	// Default settings
+	//---------------------------------------------------------------------------
+	
+	// Everything should be restful
+	public $restful = true;
+	
+	// Shared layout for admin view, set in the constructor
+	public $layout;
+	protected function setupLayout() {
+		if (!is_null($this->layout)) $this->layout = \View::make($this->layout);
+	}
+	
+	// Special constructor behaviors
+	function __construct() {
+
+		// Set the layout from the Config file
+		$this->layout = \App::make('config')->get('decoy::layout');
+		
+	}
+	
+}
+
+/*
 
 // Dependencies
 use \Decoy\Breadcrumbs;
@@ -878,3 +905,4 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 
 }
+*/

@@ -1,4 +1,4 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Auth;
 
 /**
  * This class abstracts the Sentry methods that are used globally
@@ -6,7 +6,7 @@
  * It also allows developers to use a different authentication system
  * by setting their own Auth handler class in the Decoy config
  */
-class Auth implements Auth_Interface {
+class Sentry implements AuthInterface {
 	
 	// ---------------------------------------------------------------
 	// Methods for inspecting properties of the user
@@ -14,7 +14,8 @@ class Auth implements Auth_Interface {
 	
 	// Boolean for whether the user is logged in and an admin
 	static public function check() {
-		return \Sentry::check() && \Sentry::user()->in_group('admins');
+		return false;
+		// return \Sentry::check() && \Sentry::user()->in_group('admins');
 	}
 	
 	// The logged in user's permissions role
@@ -33,7 +34,7 @@ class Auth implements Auth_Interface {
 	
 	// Controller action that renders the login form
 	static public function login_action() {
-		return 'decoy::account@login';
+		return 'Bkwld\Decoy\Controllers\Account@getLogin';
 	}
 	
 	// URL to go to that will process their logout

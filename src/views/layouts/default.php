@@ -6,19 +6,19 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-		<?= HTML::title() ?>
+		<?= Html::title() ?>
 		<meta name="viewport" content="width=device-width"/>
-		<meta name="csrf" content="<?=Session::token()?>"/>
-		<?= render('decoy::layouts.buk_builder._header') ?>
+		<meta name="csrf" content="<?=Session::getToken()?>"/>
+		<?= View::make('decoy::layouts.buk_builder._header') ?>
 		<script src="/bundles/decoy/ckeditor/ckeditor.js"></script>
 	</head>
-	<body class="<?=str_replace('.', '_', Request::route()->controller)?> <?=Request::route()->controller_action?>">
+	<body class="<?//=str_replace('.', '_', Request::route()->controller)?> <?//=Request::route()->controller_action?>">
 		
 		<?// Nav ?>
-		<?= render('decoy::layouts._nav') ?>
+		<?= View::make('decoy::layouts._nav') ?>
 		
 		<?// If breadcrumbs haven't been nested, manually render now  ?>
-		<?= empty($breadcrumbs) ? render('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
+		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
 	
 		<?// Container for notifications ?>
 		<div class='notifications top-right'></div>
@@ -28,6 +28,6 @@
 			<?= $content?>
 		</div>
 		
-		<?= render('decoy::layouts.buk_builder._footer') ?>
+		<?= View::make('decoy::layouts.buk_builder._footer') ?>
 </body>
 </html>

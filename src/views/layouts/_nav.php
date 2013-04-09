@@ -11,7 +11,7 @@
 				<span class="icon-bar"></span>
 			</a>
 			
-			<a class="brand" href="<?=action('decoy::')?>"><?=Config::get('decoy::decoy.site_name')?></a>
+			<a class="brand" href="<?=action('decoy::')?>"><?=Config::get('decoy::site_name')?></a>
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
@@ -84,5 +84,5 @@
 	</div>
 	
 	<?// The progress indicator for ajax requests?>
-	<?= render('decoy::layouts._ajax_progress') ?>
+	<?= View::make('decoy::layouts._ajax_progress') ?>
 </div>

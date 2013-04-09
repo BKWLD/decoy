@@ -1,11 +1,11 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy;
 
 // Imports
-use Laravel\URI;
-use Laravel\Request;
-use Laravel\Config;
-use Laravel\Bundle;
-use Laravel\Log;
+use \URL;
+use \Request;
+use \Config;
+use \Bundle;
+use \Log;
 
 // This class has shared methods that assist in the generation of breadcrumbs
 class Breadcrumbs {
@@ -15,7 +15,7 @@ class Breadcrumbs {
 	static public function defaults($uri = null) {
 		
 		// If no URL is defined, use the current
-		if (!$uri) $uri = URI::current();
+		if (!$uri) $uri = URL::current();
 		$uri = preg_replace('#^/#', '', $uri); // Strip opening slash
 		
 		// Break apart the url
@@ -88,7 +88,7 @@ class Breadcrumbs {
 		$breadcrumbs = array();
 
 		// Get the segments
-		$uri = URI::current();
+		$uri = URL::current();
 		$segments = explode('/', $uri);
 		
 		// Loop through them in blocks of 2: [list, detail]

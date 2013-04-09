@@ -31,6 +31,9 @@
 	// Decoy Defaults
 	// -----------------------------------------------------
 	
+	// The directory for the admin
+	'dir' => 'admin',
+	
 	// The layout to use
 	'layout' => 'decoy::layouts.default',
 	
@@ -51,8 +54,7 @@
 	'mail_from_name' => 'The CMS',
 	'mail_from_address' => 'postmaster@'.parse_url(app()->make('request')->root(), PHP_URL_HOST),
 	
-	// The auth class that should be used.  The default Decoy\Auth class
-	// relies on Sentry.  The class must implement Decoy\iAuth
-	'auth_class' => 'Decoy\Auth',
+	// The auth class that should be used.  The default relies on Sentry
+	'auth_class' => '\Bkwld\Decoy\Auth\Sentry',
 	
 );
