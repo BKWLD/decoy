@@ -40,7 +40,7 @@ class Account extends Base {
 		Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (Decoy_Auth::check()) return Redirect::to(action(Config::get('decoy::post_login_redirect')));
+		if (Decoy_Auth::check()) return Redirect::action(Config::get('decoy::post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(
@@ -86,7 +86,14 @@ class Account extends Base {
 	// Logout Functionality
 	public function logout() {
 		Sentry::logout();
-		return Redirect::back();
+		
+		// I've gotten errors when going directly to this route
+		try { 
+			return Redirect::back();
+		} catch(Exception $e) {
+			return Redirect::to('/'.Config::get('decoy::dir'));
+		}
+		
 	}
 	
 	// Show forgot password page
@@ -163,7 +170,7 @@ class Account extends Base {
 				Sentry::force_login((int) $id);
 				
 				// Redirect to the specified route
-				return Redirect::to(action(Config::get('decoy::post_login_redirect')));
+				return Redirect::action(Config::get('decoy::post_login_redirect'));
 				
 			// There was an error
 			} catch (Sentry\SentryException $e) {
