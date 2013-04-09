@@ -24,8 +24,9 @@
 	//   )
 	'routes' => array(),
 	
-	// Where should the post sign in redirect go to
-	'post_login_redirect' => action('admin.news'),
+	// After a succesfull login, this is the controller action that should
+	// be redirected to
+	'post_login_redirect' => 'Admin\NewsController@index',
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

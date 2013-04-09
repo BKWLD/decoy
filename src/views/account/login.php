@@ -16,7 +16,7 @@
 
 			<div class="controls">
 				<button type="submit" class="btn btn-primary">Login</button>
-				<a href="<?=action('decoy::account@forgot')?>" class="btn">Forgot Password</a>
+				<a href="<?=action('Bkwld\Decoy\Controllers\Account@forgot')?>" class="btn">Forgot Password</a>
 			</div>
 			
 		<?=Former::close()?>

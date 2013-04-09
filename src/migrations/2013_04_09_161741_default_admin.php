@@ -49,6 +49,7 @@ class DefaultAdmin extends Migration {
 			'password' => Config::get('decoy::default_password'),
 			'first_name' => 'Default',
 			'last_name'  => 'Admin',
+			'activated' => true,
 		));
 		
 		// Assign to a group called admins

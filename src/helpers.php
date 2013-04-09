@@ -12,7 +12,7 @@ Html::macro('title', function() {
 	if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
 	
 	// Get the site name
-	$site = Config::get('decoy::decoy.site_name');
+	$site = Config::get('decoy::site_name');
 
 	// Set the title
 	return '<title>' . ($title ? "$title | $site" : $site) . '</title>';

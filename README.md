@@ -122,7 +122,7 @@ These options should be customized for every deploy of Decoy.
 	
 	Typically, you'd have links in the `nav` array only for the root level controllers in the `routes` array.  Any children controllers would be made accessible in Decoy UI via the related content sidebar on the create and edit forms (you wouldn't link directly to them).
 	
-* `post_login_redirect` - The URL the admin should be taken to after sign in.
+* `post_login_redirect` - After a succesfull login, this is the controller action that should be redirected to
 
 ### Decoy Defaults
 
