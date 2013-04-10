@@ -14,7 +14,7 @@
 
 	<div class="controls">
 		<button type="submit" class="btn btn-primary">Submit</button>
-		<a href="<?=action('decoy::')?>" class="btn">Cancel</a>
+		<a href="<?=route('decoy')?>" class="btn">Cancel</a>
 	</div>
 	
 <?=Former::close()?>
