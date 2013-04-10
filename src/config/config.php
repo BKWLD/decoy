@@ -5,7 +5,7 @@
 	// -----------------------------------------------------
 	
 	// Branding for the admin area
-	'site_name' => 'CMS',
+	'site_name' => 'Decoy',
 	
 	// Generate the admin nav from a passed array of urls and/or key value pairs.
 	// In the key/value scenario, the key is the label, the value
@@ -50,9 +50,6 @@
 	// Default admin credentials
 	'default_login' => 'redacted',
 	'default_password' => 'redacted',
-	
-	// Messages Mail Sending transport
-	'messages_default_transport' => 'mail',
 	
 	// Mail FROM info
 	'mail_from_name' => 'The CMS',

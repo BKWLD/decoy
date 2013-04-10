@@ -6,6 +6,7 @@ use \Decoy_Auth;
 use \Exception;
 use \Former;
 use \Input;
+use \Mail;
 use \Redirect;
 use \Section;
 use \Sentry;
@@ -20,10 +21,6 @@ class Account extends Base {
 	static private $reset_rules = array(
 		'rules' => array(
 			'email' => 'required|email',
-			'password' => 'required',
-			'password_repeat' => 'required|same:password'
-		), 'messages' => array(
-			'same' => 'The passwords do not match'
 		)
 	);
 	
@@ -93,7 +90,6 @@ class Account extends Base {
 		} catch(Exception $e) {
 			return Redirect::to('/'.Config::get('decoy::dir'));
 		}
-		
 	}
 	
 	// Show forgot password page
@@ -103,51 +99,44 @@ class Account extends Base {
 		Former::withRules(self::$reset_rules['rules']);
 
 		// Show the page
-		Section::inject('title', 'Forgot Password');
+		View::inject('title', 'Forgot Password');
 		$this->layout->nest('content', 'decoy::account.forgot');
 		
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
-			action('decoy::') => 'Login',
+			'/'.Config::get('decoy::dir') => 'Login',
 			URL::current() => 'Forgot Password',
 		));
 		
 	}
 	
 	// Email the link to recover their password.
-	public function forget() {
+	public function email() {
 		
 		// Validate
-		if ($result = $this->validate(self::$reset_rules['rules'], self::$reset_rules['messages'])) return $result;
+		if ($result = $this->validate(self::$reset_rules['rules'])) return $result;
 
-		// Generate the email link
+		// Find the user using the user email address
 		try {
-			if (!($reset = Sentry::reset_password(Input::get('email'), Input::get('password')))) {
-				return $this->loginError('There was an error');
-			}
-			
-			// Form the link
-			$url = action('decoy::account@reset', array($reset['link']));
-			
-			// Send an email to the user with the reset token
-			$mail = Message::to(Input::get('email'))
-			->from(Config::get('decoy::decoy.mail_from_address'), Config::get('decoy::decoy.mail_from_name'))
-			->subject('Recover access to the '.Config::get('decoy::decoy.site_name').' CMS')
-			->body('Follow this link to activate the new password you set for yourself: <a href="'.$url.'">'.$url.'</a>.  If you did not recently try to reset your password, then ignore this email.')
-			->html(true)
-			->send();
-			
-			// Handle sending errors
-			if (!$mail->was_sent()) return loginError('The mail could not be sent');
-			
-			// Redirect back to login page
-			return Redirect::to_action('decoy::account@forgot')
-				->with('login_notice', 'An email with a link to reset your password has been sent.');
-			
-		// User could not be found	
-		} catch (Sentry\SentryException $e) {
-			return $this->loginError($e->getMessage());
+			$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
+			$code = $user->getResetPasswordCode();
+		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+			return $this->loginError('That email could not be found.');
 		}
+
+		// Form the link
+		$url = route('decoy\reset', $code);
+
+		// Send an email to the user with the reset token
+		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
+			$m->to(Input::get('email'));
+			$m->subject('Recover access to the '.Config::get('decoy::site_name').' CMS');
+			$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+		});
+		
+		// Redirect back to login page
+		return Redirect::route('decoy\forgot')
+			->with('login_notice', 'An email with a link to reset your password has been sent.');
 		
 	}
 	
