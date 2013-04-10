@@ -1,9 +1,10 @@
 <?php namespace Bkwld\Decoy;
 
+use \Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
-use \Config;
+use \Former;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -30,7 +31,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		// $services->load($this->app, array(
 		// 	'Former\FormerServiceProvider',
 		// ));
-		
+
 		// Define constants that Decoy uses
 		if (!defined('UPLOAD_DELETE'))   define('UPLOAD_DELETE', 'delete-');
 		if (!defined('UPLOAD_OLD'))      define('UPLOAD_OLD', 'old-');
@@ -58,6 +59,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._standard.php');
+		
+		// Change former's required field HTML
+		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
+
+		// Tell former to include unchecked checkboxes in the post
+		Config::set('former::push_checkboxes', true);
 	}
 
 	/**
