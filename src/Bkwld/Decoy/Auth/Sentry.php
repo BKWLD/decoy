@@ -60,7 +60,7 @@ class Sentry implements AuthInterface {
 	
 	// URL to go to that will process their logout
 	static public function logoutUrl() {
-		return route('decoy\logout');
+		return route('decoy\account@logout');
 	}
 	
 	// The URL to if they don't have access

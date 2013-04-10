@@ -15,7 +15,7 @@
 
 	<div class="controls">
 		<button type="submit" class="btn btn-primary">Submit</button>
-		<a href="<?=route('decoy\forgot')?>" class="btn">Cancel</a>
+		<a href="<?=route('decoy\account@forgot')?>" class="btn">Cancel</a>
 	</div>
 	
 <?=Former::close()?>
