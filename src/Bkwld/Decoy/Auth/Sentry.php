@@ -79,18 +79,18 @@ class Sentry implements AuthInterface {
 	}
 	
 	// Get their name
-	static public function user_name() {
+	static public function userName() {
 		if (!($user = self::user())) return null;
 		return $user->first_name;
 	}
 	
 	// Get the URL to their profile
 	static public function userUrl() {
-		return action('Bkwld\Decoy\Controllers\Admins@edit', self::user_id());
+		return action('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
 	}
 	
 	// Get their id
-	static public function user_id() {
+	static public function userId() {
 		if (!($user = self::user())) return null;
 		return $user->id;
 	}
