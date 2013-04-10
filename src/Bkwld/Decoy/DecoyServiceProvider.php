@@ -45,6 +45,11 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Register the routes
 		require_once(__DIR__.'/../../routes.php');
+		
+		// Load all the composers
+		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
+		require_once(__DIR__.'/../../composers/layouts._nav.php');
+		require_once(__DIR__.'/../../composers/shared.list._standard.php');
 	}
 
 	/**
