@@ -8,14 +8,6 @@ if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
-// Bring in bundle dependencies
-Bundle::start('former');
-Autoloader::alias('Former\Former', 'Former');
-Bundle::start('bkwld');
-Bundle::start('messages');
-Bundle::start('croppa');
-if (Bundle::exists('sentry')) Bundle::start('sentry');
-
 // Load specific interal classes
 Autoloader::map(array(
 	'Decoy_Base_Controller' => Bundle::path('decoy').'controllers/base.php',
@@ -50,10 +42,6 @@ if (Request::is_env('local') && !Request::cli()) {
 
 // Load Decoy specific helpers
 require_once('helpers.php');
-
-// Tell the Messages bundle to use the transport defined in the
-// Decoy config file
-Config::set('messages::config.default', Config::get('decoy::decoy.messages_default_transport'));
 
 // Change former's required field HTML
 Former\Config::set('required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
