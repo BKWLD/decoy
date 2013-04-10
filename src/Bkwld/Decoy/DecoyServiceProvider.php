@@ -1,5 +1,6 @@
 <?php namespace Bkwld\Decoy;
 
+use \App;
 use \Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\ProviderRepository;
@@ -20,17 +21,8 @@ class DecoyServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function boot()
-	{
+	public function boot() {
 		$this->package('bkwld/decoy');
-		
-		// Load the other packages that we depend on.  Doing it here so the developer
-		// doesn't need to add them to the app config
-		// THIS DIDN'T WORK, SEE https://github.com/BKWLD/decoy/issues/67
-		// $services = new ProviderRepository(new Filesystem, Config::get('app.manifest'));
-		// $services->load($this->app, array(
-		// 	'Former\FormerServiceProvider',
-		// ));
 
 		// Define constants that Decoy uses
 		if (!defined('UPLOAD_DELETE'))   define('UPLOAD_DELETE', 'delete-');
@@ -65,6 +57,19 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Tell former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
+		
+		// Auto-publish the assets when developing locally
+		if (App::environment() == 'local' && !App::runningInConsole()) {
+			$workbench = realpath(base_path().'/workbench');
+			$publisher = App::make('asset.publisher');
+			if (strpos(__FILE__, $workbench) === false) {
+				$publisher->publishPackage('bkwld/decoy');
+				$publisher->publishPackage('bkwld/croppa');
+			} else {
+				$publisher->publishPackage('bkwld/decoy', $workbench);
+				$publisher->publishPackage('bkwld/croppa', $workbench.'/bkwld/decoy/vendor');
+			}
+		}
 	}
 
 	/**
