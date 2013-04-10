@@ -10,17 +10,19 @@ use \Log;
 // This class has shared methods that assist in the generation of breadcrumbs
 class Breadcrumbs {
 	
-	// Make some default breadcrumbs that are based
-	// on URL segments
-	static public function defaults($uri = null) {
+	/**
+	 * Make some default breadcrumbs that are based on URL segments
+	 * @param $string path The path part of a URL
+	 */
+	static public function defaults($path = null) {
 		
 		// If no URL is defined, use the current
-		if (!$uri) $uri = URL::current();
-		$uri = preg_replace('#^/#', '', $uri); // Strip opening slash
+		if (!$path) $path = Request::path();
+		$path = preg_replace('#^/#', '', $path); // Strip opening slash
 		
 		// Break apart the url
 		$breadcrumbs = array();
-		$parts = explode('/', $uri);
+		$parts = explode('/', $path);
 		$path = '/'.array_shift($parts); // Remove the first item
 		
 		// Loop through all url segements and create breadcrumbs out of them
@@ -88,8 +90,8 @@ class Breadcrumbs {
 		$breadcrumbs = array();
 
 		// Get the segments
-		$uri = URL::current();
-		$segments = explode('/', $uri);
+		$path = Request::path();
+		$segments = explode('/', $path);
 		
 		// Loop through them in blocks of 2: [list, detail]
 		$url = '/'.$segments[0];
