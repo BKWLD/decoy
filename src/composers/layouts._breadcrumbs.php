@@ -1,7 +1,7 @@
 <?php
 
 // Imports
-use Decoy\Breadcrumbs;
+use Bkwld\Decoy\Breadcrumbs;
 
 // Take breadcrumbs data passed to the view and massage it.  Or
 // make defaults if none exists
@@ -17,6 +17,6 @@ View::composer('decoy::layouts._breadcrumbs', function($view) {
 	$view->breadcrumb_count = count($view->breadcrumbs);
 
 	// Set the page title
-	Section::inject('title', Breadcrumbs::title($view->breadcrumbs));
+	View::inject('title', Breadcrumbs::title($view->breadcrumbs));
 	
 });

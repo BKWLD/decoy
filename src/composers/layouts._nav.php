@@ -5,7 +5,7 @@
 View::composer('decoy::layouts._nav', function($view) {
 
 	// Get the navigation pages from the config
-	$pages = Config::get('decoy::decoy.nav');
+	$pages = Config::get('decoy::nav');
 	
 	// Make a "page" object
 	$make_page = function($key, $val) {
