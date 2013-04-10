@@ -4,7 +4,7 @@
 $dir = Config::get('decoy::dir');
 
 // Add all the account stuff.  Which is the login and the ACL gate stuff
-Route::get($dir, array('as' => 'decoy', 'uses' => DecoyAuth::login_action()));
+Route::get($dir, array('as' => 'decoy', 'uses' => DecoyAuth::loginAction()));
 Route::post($dir, 'Bkwld\Decoy\Controllers\Account@post');
 Route::get($dir.'/account', array('as' => 'decoy\account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index'));
 Route::get($dir.'/logout', array('as' => 'decoy\logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout'));

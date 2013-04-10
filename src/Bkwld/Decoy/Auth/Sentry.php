@@ -54,18 +54,18 @@ class Sentry implements AuthInterface {
 	// ---------------------------------------------------------------
 	
 	// Controller action that renders the login form
-	static public function login_action() {
+	static public function loginAction() {
 		return 'Bkwld\Decoy\Controllers\Account@login';
 	}
 	
 	// URL to go to that will process their logout
-	static public function logout_url() {
+	static public function logoutUrl() {
 		return route('decoy\logout');
 	}
 	
 	// The URL to if they don't have access
-	static public function denied_url() {
-		return action(self::login_action());
+	static public function deniedUrl() {
+		return action(self::loginAction());
 	}
 	
 	// ---------------------------------------------------------------
@@ -73,7 +73,7 @@ class Sentry implements AuthInterface {
 	// ---------------------------------------------------------------
 	
 	// Get their photo
-	static public function user_photo() {
+	static public function userPhoto() {
 		if (!($user = self::user())) return null;
 		return Html::gravatar($user->email);
 	}
@@ -85,7 +85,7 @@ class Sentry implements AuthInterface {
 	}
 	
 	// Get the URL to their profile
-	static public function user_url() {
+	static public function userUrl() {
 		return action('Bkwld\Decoy\Controllers\Admins@edit', self::user_id());
 	}
 	

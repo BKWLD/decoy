@@ -132,7 +132,7 @@ Router::register(array('GET', 'POST'),
 
 // Add routing for the login screen
 Route::any('(:bundle)', array(
-	'uses' => DecoyAuth::login_action(),
+	'uses' => DecoyAuth::loginAction(),
 ));
 
 // Take the user back to the page they were on before they were on the
@@ -203,7 +203,7 @@ function filter_acl() {
 	// Everything else in admin requires a logged in user.  So redirect
 	// to login and pass along the current url so we can take the user there.
 	if (!DecoyAuth::check()) {
-		return Redirect::to(DecoyAuth::denied_url())
+		return Redirect::to(DecoyAuth::deniedUrl())
 			->with('login_error', 'You must login first.')
 			->with('login_redirect', URL::current());
 	}

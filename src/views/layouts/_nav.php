@@ -50,7 +50,7 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 								<span>Hi, <?=DecoyAuth::user_name()?>!</span>
-								<img src="<?=DecoyAuth::user_photo()?>" class="gravatar"/>
+								<img src="<?=DecoyAuth::userPhoto()?>" class="gravatar"/>
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
@@ -73,8 +73,8 @@
 									<li class="divider"></li>
 								<? endif ?>
 								
-								<li><a href="<?=DecoyAuth::user_url()?>">Account</a></li>
-								<li><a href="<?=DecoyAuth::logout_url()?>">Log out</a></li>
+								<li><a href="<?=DecoyAuth::userUrl()?>">Account</a></li>
+								<li><a href="<?=DecoyAuth::logoutUrl()?>">Log out</a></li>
 							</ul>
 						</ul>
 					

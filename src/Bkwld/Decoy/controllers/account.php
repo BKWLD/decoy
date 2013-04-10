@@ -26,7 +26,7 @@ class Account extends Base {
 	 * Redirect to a page where the user can manager their account
 	 */
 	public function index() {
-		return Redirect::to(DecoyAuth::user_url());
+		return Redirect::to(DecoyAuth::userUrl());
 	}
 
 	/**
