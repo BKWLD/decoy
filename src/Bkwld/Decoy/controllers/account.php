@@ -2,7 +2,7 @@
 
 // Dependencies
 use \Config;
-use \Decoy_Auth;
+use \DecoyAuth;
 use \Exception;
 use \Former;
 use \Input;
@@ -26,7 +26,7 @@ class Account extends Base {
 	 * Redirect to a page where the user can manager their account
 	 */
 	public function index() {
-		return Redirect::to(Decoy_Auth::user_url());
+		return Redirect::to(DecoyAuth::user_url());
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Account extends Base {
 		Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (Decoy_Auth::check()) return Redirect::action(Config::get('decoy::post_login_redirect'));
+		if (DecoyAuth::check()) return Redirect::action(Config::get('decoy::post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(

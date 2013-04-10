@@ -15,7 +15,7 @@
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
-				<? if (Decoy_Auth::check()): ?>
+				<? if (DecoyAuth::check()): ?>
 					
 					<?// The menu ?>
 					<ul class="nav">
@@ -49,19 +49,19 @@
 					<ul class="nav pull-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span>Hi, <?=Decoy_Auth::user_name()?>!</span>
-								<img src="<?=Decoy_Auth::user_photo()?>" class="gravatar"/>
+								<span>Hi, <?=DecoyAuth::user_name()?>!</span>
+								<img src="<?=DecoyAuth::user_photo()?>" class="gravatar"/>
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
 								
-								<? if (is_a(new Decoy_Auth, 'Decoy\Auth')): ?>
+								<? if (is_a(new DecoyAuth, 'Decoy\Auth')): ?>
 									<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
 									<li class="divider"></li>
 								<? endif ?>
 								
 								<? $divider = false; ?>
-								<? if (Decoy_Auth::developer()): $divider = true; ?>
+								<? if (DecoyAuth::developer()): $divider = true; ?>
 									<li><a href="<?=action('decoy::tasks')?>">Tasks</a></li>
 								<? endif ?>
 								
@@ -73,8 +73,8 @@
 									<li class="divider"></li>
 								<? endif ?>
 								
-								<li><a href="<?=Decoy_Auth::user_url()?>">Account</a></li>
-								<li><a href="<?=Decoy_Auth::logout_url()?>">Log out</a></li>
+								<li><a href="<?=DecoyAuth::user_url()?>">Account</a></li>
+								<li><a href="<?=DecoyAuth::logout_url()?>">Log out</a></li>
 							</ul>
 						</ul>
 					

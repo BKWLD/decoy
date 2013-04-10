@@ -32,12 +32,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		// ));
 		
 		// Alias the auth class that is defined in the config for easier referencing.
-		// Call it "Decoy_Auth"
-		if (!class_exists('Decoy_Auth')) {
+		// Call it "DecoyAuth"
+		if (!class_exists('DecoyAuth')) {
 			$auth_class = Config::get('decoy::auth_class');
 			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
-			class_alias($auth_class, 'Decoy_Auth', true);
-			if (!is_a(new \Decoy_Auth, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
+			class_alias($auth_class, 'DecoyAuth', true);
+			if (!is_a(new \DecoyAuth, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
 		}
 		
 		// Load HTML helpers
