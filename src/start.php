@@ -8,26 +8,6 @@ if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
-// Load specific interal classes
-Autoloader::map(array(
-	'Decoy_Base_Controller' => Bundle::path('decoy').'controllers/base.php',
-	'Decoy\Base_Model' => Bundle::path('decoy').'models/base.php',
-	'Decoy\Tag' => Bundle::path('decoy').'models/tag.php',
-	'Decoy\Task' => Bundle::path('decoy').'models/task.php',
-	'Decoy\Worker' => Bundle::path('decoy').'models/worker.php',
-	'Decoy\Auth_Interface' => Bundle::path('decoy').'library/auth_interface.php',
-));
-
-// Load all models
-Autoloader::directories(array(
-	Bundle::path('decoy').'models',
-));
-
-// Decoy namespaced classes are all in the library
-Autoloader::namespaces(array(
-  'Decoy' => Bundle::path('decoy').'library',
-));
-
 // Auto-publish the assets when developing locally
 if (Request::is_env('local') && !Request::cli()) {
 	
