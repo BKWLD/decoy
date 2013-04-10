@@ -1,46 +1,25 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
+// Dependencies
+use \App;
+use \Bkwld\Decoy\Breadcrumbs;
+use \Bkwld\Library;
+use \Event;
+use \Input;
+use \Redirect;
+use \Request;
+use \Response;
+use \URL;
+use \Validator;
+
+/**
+ * The base controller is gives Decoy most of the magic/for-free mojo
+ */
 abstract class Base extends \Controller {
 	
 	//---------------------------------------------------------------------------
 	// Default settings
 	//---------------------------------------------------------------------------
-	
-	// Everything should be restful
-	public $restful = true;
-	
-	// Shared layout for admin view, set in the constructor
-	public $layout;
-	protected function setupLayout() {
-		if (!is_null($this->layout)) $this->layout = \View::make($this->layout);
-	}
-	
-	// Special constructor behaviors
-	function __construct() {
-
-		// Set the layout from the Config file
-		$this->layout = \App::make('config')->get('decoy::layout');
-		
-	}
-	
-}
-
-/*
-
-// Dependencies
-use \Decoy\Breadcrumbs;
-
-abstract class Decoy_Base_Controller extends Controller {
-	
-	//---------------------------------------------------------------------------
-	// Default settings
-	//---------------------------------------------------------------------------
-	
-	// Everything should be restful
-	public $restful = true;
-	
-	// Shared layout for admin view, set in the constructor
-	public $layout;
 	
 	// Default pagination settings
 	protected $PER_PAGE = 20;
@@ -62,11 +41,120 @@ abstract class Decoy_Base_Controller extends Controller {
 	protected $PARENT_TO_SELF;    // i.e. photos
 	protected $SELF_TO_PARENT;    // i.e. post
 	
-	// Special constructor behaviors
+	// Shared layout for admin view, set in the constructor
+	public $layout;
+	protected function setupLayout() {
+		if (!is_null($this->layout)) $this->layout = \View::make($this->layout);
+	}
+	
+	/**
+	 * For the most part, this populates the protected properties
+	 */
 	function __construct() {
 
 		// Set the layout from the Config file
-		$this->layout = Config::get('decoy::decoy.layout');
+		$this->layout = App::make('config')->get('decoy::layout');
+		
+	}
+	
+	//---------------------------------------------------------------------------
+	// Utility methods
+	//---------------------------------------------------------------------------
+	
+	// All actions validate in basically the same way.  This is
+	// shared logic for that
+	/**
+	 * Shared validation helper
+	 * @param $array rules    A typical rules array
+	 * @param $array messages Special error messages
+	 */
+	protected function validate($rules, $messages = array()) {
+		
+		// Pull the input from the proper place
+		$input = Input::all();
+		
+		// If an AJAX update, don't require all fields to be present. Pass
+		// just the keys of the input to the array_only function to filter
+		// the rules list.
+		if (Request::ajax() && Request::method() == 'PUT') {
+			$rules = array_only($rules, array_keys($input));
+		}
+		
+		// Add messages from BKWLD bundle
+		$messages = array_merge(\Bkwld\Library\Laravel\Validator::messages(), $messages);
+
+		// Fire event
+		if ($response = $this->fireEvent('validating', array($input), true)) {
+			if (is_a($response, '\Response')) return $response;
+		}
+		
+		// Validate
+		$validation = Validator::make($input, $rules, $messages);
+		if ($validation->fails()) {
+			if (Request::ajax()) {
+				return Response::json($validation->errors, 400);
+			} else {
+				return Redirect::to(URL::current())
+					->withErrors($validation)
+					->withInput();
+			}
+		}
+		
+		// Fire event
+		$this->fireEvent('validated', array($input));
+		
+		// If there were no errors, return false, which means
+		// that we don't need to redirect
+		return false;
+	}
+	
+	/**
+	 * Take an array of key / value (url/label) pairs and pass it where
+	 * it needs to go to make the breadcrumbs
+	 * @param $array links
+	 */
+	protected function breadcrumbs($links) {
+		$this->layout->nest('breadcrumbs', 'decoy::layouts._breadcrumbs', array(
+			'breadcrumbs' => $links
+		));
+	}
+	
+	/**
+	 * Fire an event.  Actually, two are fired, one for the event and one that mentions
+	 * the model for this controller
+	 * @param $string  event The name of this event
+	 * @param $array   args  An array of params that will be passed to the handler
+	 * @param $boolean until Whether to fire an "until" event or not
+	 */
+	protected function fireEvent($event, $args = null, $until = false) {
+		
+		// Setup both events
+		$events = array("decoy.{$event}");
+		if (!empty($this->MODEL)) $events[] = "decoy.{$event}: ".$this->MODEL;
+		
+		// Fire them
+		foreach($events as $event) {
+			if ($until) return Event::until($event, $args);
+			else Event::fire($event, $args);
+		}
+	}
+	
+}
+
+/*
+
+
+abstract class Decoy_Base_Controller extends Controller {
+	
+	//---------------------------------------------------------------------------
+	// Default settings
+	//---------------------------------------------------------------------------
+
+	
+	
+	// Special constructor behaviors
+	function __construct() {
+
 		
 		// Get the controller name only, without the namespace (like Admin_) or
 		// suffix (like _Controller).  I..e, Admin_News_Posts_Controller becomes
@@ -425,13 +513,13 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
-		$this->fire_event('attaching');
+		$this->fireEvent('attaching');
 		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
 		
 		// Get the new pivot row's id
 		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
 		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
-		$this->fire_event('attached', array($pivot));
+		$this->fireEvent('attached', array($pivot));
 		
 		// Return the response
 		return Response::json(array(
@@ -483,11 +571,11 @@ abstract class Decoy_Base_Controller extends Controller {
 			
 			// Get the pivot row
 			$pivot = DB::table($pivot_table)->find($id);
-			$this->fire_event('removing', array($pivot));
+			$this->fireEvent('removing', array($pivot));
 			
 			// Remove it
 			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
-			$this->fire_event('removed', array($pivot));
+			$this->fireEvent('removed', array($pivot));
 		}
 		
 		// Redirect.  We can use back cause this is never called from a "show"
@@ -499,58 +587,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
-	
-	// All actions validate in basically the same way.  This is
-	// shared logic for that
-	protected function validate($rules, $messages = array()) {
-		
-		// Pull the input from the proper place
-		$input = BKWLD\Laravel\Input::json_and_input();
-		$input = array_merge($input, Input::file()); // Validate files too
-		
-		// If an AJAX update, don't require all fields to be present. Pass
-		// just the keys of the input to the array_only function to filter
-		// the rules list.
-		if (Request::ajax() && Request::method() == 'PUT') {
-			$rules = array_only($rules, array_keys($input));
-		}
-		
-		// Add messages from BKWLD bundle
-		$messages = array_merge(BKWLD\Laravel\Validator::messages(), $messages);
-		
-		// Fire event
-		if ($response = $this->fire_event('validating', array($input), true)) {
-			if (is_a($response, '\Laravel\Response')) return $response;
-		}
-		
-		// Validate
-		$validation = Validator::make($input, $rules, $messages);
-		if ($validation->fails()) {
-			if (Request::ajax()) {
-				return Response::json($validation->errors, 400);
-			} else {
-				return Redirect::to(URL::current())
-					->with_errors($validation)
-					->with_input();
-			}
-		}
-		
-		// Fire event
-		$this->fire_event('validated', array($input));
-		
-		// If there were no errors, return false, which means
-		// that we don't need to redirect
-		return false;
-	}
-	
-	// Take an array of key / value (url/label) pairs and pass it where
-	// it needs to go to make the breadcrumbs
-	protected function breadcrumbs($links) {
-		$this->layout->nest('breadcrumbs', 'decoy::layouts._breadcrumbs', array(
-			'breadcrumbs' => $links
-		));
-	}
-	
+
 	// If there is slug mentioned in the validation or mass assignment rules
 	// and an appropriate title-like field, make a slug for it.  Then merge
 	// that into the inputs, so it can be validated easily
@@ -785,7 +822,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// Fire an event
-	protected function fire_event($event, $args = null, $until = false) {
+	protected function fireEvent($event, $args = null, $until = false) {
 		$events = array("decoy.{$event}", "decoy.{$event}: ".$this->MODEL);
 		if ($until) return Event::until($events, $args);
 		else Event::fire($events, $args);
