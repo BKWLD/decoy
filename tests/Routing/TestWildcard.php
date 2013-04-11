@@ -98,4 +98,31 @@ class TestWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), 4);
 	}
 	
+	public function testAttach() {
+		
+		$router = new Wildcard('admin', 'POST','admin/articles/2/attach');
+		$this->assertEquals($router->detectController(), 'Admin\ArticlesController');
+		$this->assertEquals($router->detectAction(), 'attach');
+		$this->assertEquals($router->detectId(), 2);
+
+	}
+	
+	public function testRemove() {
+		
+		$router = new Wildcard('admin', 'DELETE','admin/articles/2/remove');
+		$this->assertEquals($router->detectController(), 'Admin\ArticlesController');
+		$this->assertEquals($router->detectAction(), 'remove');
+		$this->assertEquals($router->detectId(), 2);
+
+	}
+	
+	public function testAutocomplete() {
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/autocomplete');
+		$this->assertEquals($router->detectController(), 'Admin\ArticlesController');
+		$this->assertEquals($router->detectAction(), 'autocomplete');
+		$this->assertEquals($router->detectId(), false);
+
+	}
+	
 }

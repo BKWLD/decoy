@@ -13,11 +13,13 @@ use Illuminate\Support\Str;
  */
 class Wildcard {
 	
-	// Properties
+	// DI Properties
 	private $dir;
 	private $verb;
 	private $path;
-	private $actions = array('edit', 'create'); // These are action suffixes on paths
+	
+	// These are action suffixes on paths
+	private $actions = array('edit', 'create', 'attach', 'remove', 'autocomplete');
 	
 	/**
 	 * Constructor
