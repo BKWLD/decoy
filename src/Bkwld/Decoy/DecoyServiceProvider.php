@@ -48,6 +48,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		$router = new Routing\Router(Config::get('decoy::dir'), App::make('request'));
 		$router->registerAll();
 		
+		// Use our own UrlGenerator
+		$this->app['url'] = $this->app->share(function($app) {
+			$routes = $app['router']->getRoutes();
+			return new Routing\UrlGenerator($routes, $app['request']);
+		});
+		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
