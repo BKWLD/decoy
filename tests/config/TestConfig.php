@@ -19,7 +19,7 @@ class TestConfig extends PHPUnit_Framework_TestCase {
 	
 	public function testAll() {
 		$config = require(__DIR__.'/../../src/config/config.php');
-		$this->assertEquals($config['site_name'], 'CMS');
+		$this->assertEquals($config['site_name'], 'Decoy');
 		$this->assertEquals($config['upload_dir'], '/public/uploads');
 		$this->assertEquals($config['mail_from_address'], 'postmaster@test.dev');
 	}

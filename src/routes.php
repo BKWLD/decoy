@@ -13,5 +13,21 @@ Route::post($dir.'/forgot', 'Bkwld\Decoy\Controllers\Account@postForgot');
 Route::get($dir.'/reset/{code}', array('as' => 'decoy\account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset'));
 Route::post($dir.'/reset/{code}', 'Bkwld\Decoy\Controllers\Account@postReset');
 
+// Wildcarded resourceful routing
+// Route::get($dir.'/{controller}', 'Bkwld\Decoy\Router@index');
+Route::get($dir.'/(.*)', function() {
+	die('butt tiimss');
+});
+
+// Wildcarded routing for admin controllers.  This listens to all 404s
+// and checks if the route looks like a controller route.  Then it finds
+// the controller portion of the route and detects if it exists.  Then it
+// checks for the 
+App::missing(function($exception) use ($dir) {
+	$router = new Bkwld\Decoy\Router($dir, Request::getMethod(), Request::path());
+	$response = $router->detectAndExecute();
+	if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+});
+
 // Testing
-Route::get('/admin/news', 'Admin\NewsController@index');
+// Route::get('/admin/news', 'Admin\NewsController@index');
