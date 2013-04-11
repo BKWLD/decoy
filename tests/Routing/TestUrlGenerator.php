@@ -1,13 +1,11 @@
 <?php
 
 use Bkwld\Decoy\Routing\UrlGenerator;
-use Illuminate\Http\Request;
 
 class TestUrlGenerator extends PHPUnit_Framework_TestCase {
 	
 	private function path($path) {
-		$domain = 'http://test.dev/';
-		return new UrlGenerator(Request::create($domain.$path));
+		return new UrlGenerator($path);
 	}
 	
 	public function testParentIndex() {

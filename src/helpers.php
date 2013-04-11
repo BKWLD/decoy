@@ -386,5 +386,5 @@ Html::macro('ckeditor', function($id, $label = null) {
 /**
  * Register the relaviteRoute macro
  */
-$url_generator = new Bkwld\Decoy\Routing\UrlGenerator(App::make('request'));
+$url_generator = new Bkwld\Decoy\Routing\UrlGenerator(Request::path());
 Html::macro('relative', array($url_generator, 'relative'));

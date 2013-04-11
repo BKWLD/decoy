@@ -13,17 +13,17 @@ use Illuminate\Http\Request;
 class UrlGenerator {
 	
 	// DI properties
-	private $request;
+	private $path;
 	
 	// Possible actions in path that would process a view that would be generating URLs
 	private $actions = array('edit', 'create');
 	
 	/**
 	 * Inject dependencies
-	 * @param Illuminate\Http\Request $request
+	 * @param string $path A Request::path()
 	 */
-	public function __construct(Request $request) {
-		$this->request = $request;
+	public function __construct($path) {
+		$this->path = $path;
 	}
 	
 	/**
@@ -36,7 +36,7 @@ class UrlGenerator {
 	public function relative($action = 'index', $id = null, $child = null) {
 		
 		// Get the current path
-		$path = $this->request->path();
+		$path = $this->path;
 		
 		// Get the URL up to and including the last controller, but without id or action,
 		// by stripping those extra stuffs from the end.  Any trailing slashes are removed
