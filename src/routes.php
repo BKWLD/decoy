@@ -6,11 +6,6 @@
 |--------------------------------------------------------------------------
 */
 
-// Add routing for admin management
-addRoutes(array('decoy::admins'));
-Route::get('(:bundle)/admins/disable/(:num)', 'decoy::admins@disable');
-Route::get('(:bundle)/admins/enable/(:num)', 'decoy::admins@enable');
-
 // Generic site content
 Router::register(array('GET', 'POST'), 
 	"(:bundle)/content", 

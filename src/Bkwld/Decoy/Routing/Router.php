@@ -32,6 +32,7 @@ class Router {
 	public function registerAll() {
 		$this->registerAccounts();
 		$this->registerWildcard();
+		$this->registerAdmins();
 	}
 	
 	/**
@@ -63,6 +64,14 @@ class Router {
 			$response = $router->detectAndExecute();
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 		});
+	}
+	
+	/**
+	 * Addition admin routes
+	 */
+	public function registerAdmins() {
+		Route::get($this->dir.'/admins/{id}/disable', array('as' => 'decoy\admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable'));
+		Route::get($this->dir.'/admins/{id}/enable', array('as' => 'decoy\admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable'));
 	}
 	
 }
