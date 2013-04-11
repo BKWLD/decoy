@@ -1,17 +1,17 @@
-<?php namespace Bkwld\Decoy;
+<?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
 use \App;
 use Illuminate\Support\Str;
 
 /**
- * The router is what allows us to wildcard the admin routes so that the
+ * The wildcard router is what allows us to wildcard the admin routes so that the
  * developer doesn't need to hard code those.  One thing to know is that decoy
  * uses routes that are very literal with how the content is organized.  This
  * informs the breadcrumbs.  So, if you are looking at the edit view of a photo
  * that belongsTo() an article, the path would be admin/article/2/photo/4/edit
  */
-class Router {
+class Wildcard {
 	
 	// Properties
 	private $dir;
