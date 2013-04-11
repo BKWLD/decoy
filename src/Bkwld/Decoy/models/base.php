@@ -1,4 +1,4 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Models;
 
 // Imports
 use BKWLD\Utils\File;
@@ -14,7 +14,7 @@ use Laravel\Bundle;
 use Laravel\Str;
 use Croppa;
 
-abstract class Base_Model extends Eloquent {
+abstract class Base extends Eloquent {
 	
 	//---------------------------------------------------------------------------
 	// Overrideable properties

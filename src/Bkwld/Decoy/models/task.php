@@ -1,4 +1,4 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Models;
 
 /**
  * Adds some shared functionality to taks as well as informs the Decoy

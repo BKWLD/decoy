@@ -1,4 +1,4 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
 use Laravel\Str;
@@ -31,7 +31,7 @@ use Laravel\Database as DB;
  * class.  The UI lets you generate new tags in the same many to many
  * interface you use to attach records.
  */
-abstract class Tag extends Base_Model {
+abstract class Tag extends Base {
 	
 	// Because different tag types extend this, this tells Laravel what the actual table name is
 	public static $table = 'tags';

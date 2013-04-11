@@ -1,4 +1,4 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy\Models;
 
 // Imports
 use \Laravel\Error;

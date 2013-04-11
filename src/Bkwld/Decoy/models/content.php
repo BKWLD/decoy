@@ -1,4 +1,4 @@
-<?php
+<?php namespace Bkwld\Decoy\Models;
 /*
  * Content is essentially key / value pairs thae canbe organized.
  * FYI, I had to go with 'slug' instead of 'key' because that was a
@@ -18,7 +18,7 @@
  * 		
  * 	}
  */
-class Content extends Decoy\Base_Model {
+class Content extends Base {
 	static public $table = 'content';
 	static public $timestamps = false;
 	
