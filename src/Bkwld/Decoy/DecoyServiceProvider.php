@@ -45,7 +45,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../helpers.php');
 		
 		// Register the routes
-		require_once(__DIR__.'/../../routes.php');
+		$router = new Routing\Router(Config::get('decoy::dir'), App::make('request'));
+		$router->registerAll();
 		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
