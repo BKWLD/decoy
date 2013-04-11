@@ -1,127 +1,13 @@
 <?php
 
-// Dependencies
-use \Decoy\Breadcrumbs;
-
-// If Decoy hasn't been officially started yet, do that.  It's neeed, 
-// at the very least, for the DecoyAuth class alias
-Bundle::start('decoy');
-
 /*
 |--------------------------------------------------------------------------
 | Application Routes
 |--------------------------------------------------------------------------
 */
 
-/*
- * 
- * Loop through the routes that were setup in the config and create routes.  Decoy
- * uses routes that look like:
- * 
- *   /admin/clients
- *   /admin/clients/new
- *   /admin/clients/20
- *   /admin/clients/20/delete
- *   /admin/clients/1-23-21/delete
- *   /admin/clients/20/projects
- *   /admin/clients/20/projects/new
- *   /admin/projects/4
- *   /admin/submissions/denied -- A moderation queue of denied submissions
- * 
- * This function expects an array from the config like:
- * array like:
- * array(
- *   'news', 
- *   'events' => array(
- *   	  'photos'
- *   	) 
- * )
- * 
- */
-addRoutes(Config::get('decoy::decoy.routes'));
-function addRoutes($routes, $parent = null) {
-	
-	// Get the route for decoy, typically 'admin'
-	$handles = Bundle::option('decoy', 'handles');
-	
-	// Loop through all the routes
-	foreach($routes as $key => $val) {
-		
-		// Process children
-		if (is_array($val)) {
-			addRoutes($val, $key);
-			$controller = $key;
-		
-		// This is the end of the line
-		} else $controller = $val;
-		
-		// If a core Decoy controller, remove the bundle from the controller name
-		if (Str::is('decoy::*', $controller)) {
-			$controller_path = $controller;
-			$controller = str_replace('decoy::', '', $controller); // This is used in the paths
-		
-		// If not a core Decoy controller, append the handle to the "uses" and "as"
-		} else {
-			$controller_path = "$handles.$controller";
-		}
-		
-		// New / Create
-		Router::register(array('GET', 'POST'), 
-			"(:bundle)/$parent/(:num)/$controller/new", 
-			array('uses' => "$controller_path@new", 'as' => "$controller_path@new_child"));
-		Router::register(array('GET', 'POST'), 
-			"(:bundle)/$controller/new", 
-			array('uses' => "$controller_path@new", 'as' => "$controller_path@new"));
-		
-		// Edit / Update
-		Router::register(array('PUT', 'POST', 'GET'), 
-			"(:bundle)/$parent/(?:[0-9]+)/$controller/(:num)", 
-			array('uses' => "$controller_path@edit", 'as' => "$controller_path@edit_child"));
-		Router::register(array('PUT', 'POST', 'GET'), 
-			"(:bundle)/$controller/(:num)", 
-			array('uses' => "$controller_path@edit", 'as' => "$controller_path@edit"));
-		
-		// Attach, as in add a many to many relationship
-		Router::register(array('POST'), 
-			"(:bundle)/$controller/attach/(:num)", 
-			array('uses' => "$controller_path@attach", 'as' => "$controller_path@attach"));
-		
-		// Delete
-		Router::register(array('DELETE'), 
-			"(:bundle)/$controller/(:any)", 
-			array('uses' => "$controller_path@delete"));
-		Router::register(array('POST', 'GET'), 
-			"(:bundle)/$controller/(:any)/delete", 
-			array('uses' => "$controller_path@delete", 'as' => "$controller_path@delete"));
-		
-		// Remove, as in removing a many to many relationship.  The id in this case is the
-		// pivot id
-		Router::register(array('DELETE', 'POST', 'GET'), 
-			"(:bundle)/$controller/remove/(:any)", 
-			array('uses' => "$controller_path@remove", 'as' => "$controller_path@remove"));
-		
-		// Autocomplete, run a search query for an autocomplete
-		Router::register(array('GET'), 
-			"(:bundle)/$controller/autocomplete", 
-			array('uses' => "$controller_path@autocomplete", 'as' => "$controller_path@autocomplete"));
-		
-		// List, used for one-to-many relationships
-		Router::register(array('GET'), 
-			"(:bundle)/$parent/(:num)/$controller/(:any?)", 
-			array('uses' => "$controller_path@index_child", 'as' => "$controller_path@child"));
-		
-		// List, used in standard listings and for many-to-manys.  The second variable in the
-		// route may be used to pass variables to views (like in moderation)
-		Router::register(array('GET'), 
-			"(:bundle)/$controller/(:any?)", 
-			array('uses' => "$controller_path@index", 'as' => $controller_path));
-
-	}
-}
-
 // Add routing for admin management
 addRoutes(array('decoy::admins'));
-Route::controller('decoy::account');
 Route::get('(:bundle)/admins/disable/(:num)', 'decoy::admins@disable');
 Route::get('(:bundle)/admins/enable/(:num)', 'decoy::admins@enable');
 
@@ -130,10 +16,6 @@ Router::register(array('GET', 'POST'),
 	"(:bundle)/content", 
 	array('uses' => 'decoy::content@index', 'as' => 'decoy::content'));
 
-// Add routing for the login screen
-Route::any('(:bundle)', array(
-	'uses' => DecoyAuth::loginAction(),
-));
 
 // Take the user back to the page they were on before they were on the
 // referring page.  A route filter, defined below, keeps the browse_history
@@ -158,15 +40,6 @@ Route::post('(:bundle)/tasks/(:any)/(:any)', array('uses' => 'decoy::tasks@execu
 Route::get('(:bundle)/workers', array('uses' => 'decoy::workers@index', 'as' => 'decoy::workers'));
 Route::get('(:bundle)/workers/tail/(:any).txt', array('uses' => 'decoy::workers@tail', 'as' => 'decoy::workers@tail'));
 
-/*
-|--------------------------------------------------------------------------
-| View composers
-|--------------------------------------------------------------------------
-*/
-
-require_once('composers/layouts._nav.php');
-require_once('composers/layouts._breadcrumbs.php');
-require_once('composers/shared.list._standard.php');
 
 /*
 |--------------------------------------------------------------------------
