@@ -1,6 +1,6 @@
-<?php
+<?php namespace Bkwld\Decoy\Controllers;
 
-class Decoy_Admins_Controller extends Decoy_Base_Controller {
+class Admins extends Base {
 	
 	// Shared settings
 	protected $DESCRIPTION = 'Users who have access to this admin area.';
@@ -11,7 +11,7 @@ class Decoy_Admins_Controller extends Decoy_Base_Controller {
 	);
 	
 	//Listing view
-	public function get_index() {
+	public function index() {
 		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name

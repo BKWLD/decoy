@@ -1,7 +1,7 @@
-<?php 
+<?php namespace Bkwld\Decoy\Controllers;
 
 // Run tasks from the admin
-class Decoy_Tasks_Controller extends Decoy_Base_Controller {
+class Tasks extends Base {
 	
 	/**
 	 * List all the tasks in the admin

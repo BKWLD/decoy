@@ -1,9 +1,9 @@
-<?php 
+<?php namespace Bkwld\Decoy\Controllers;
 
 /**
  * Check the status of workers from the admin
  */
-class Decoy_Workers_Controller extends Decoy_Base_Controller {
+class Workers extends Base {
 	
 	// Display all the workers
 	public function get_index() {

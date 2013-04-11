@@ -1,8 +1,8 @@
-<?php
+<?php namespace Bkwld\Decoy\Controllers;
 
 // This controller deals with blocks of contents that can be used anywhere.
 // It's like a categorized key/value store
-class Decoy_Content_Controller extends Decoy_Base_Controller {
+class Content extends Base {
 
 	// Display all the content fields
 	public function get_index() {
