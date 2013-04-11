@@ -69,12 +69,20 @@ class Wildcard {
 		if (!preg_match('#^'.$this->dir.'#i', $this->path, $matches)) return false;
 		
 		// Find the controller from the end of the path
-		$pattern = '#/([a-z-]+)(/\d)?(/('.implode('|', $this->actions).'))?/?$#i';
-		if (!preg_match($pattern, $this->path, $matches)) return false;
-		$name = $matches[1];
+		$name = $this->detectControllerName();
 		
 		// Form the namespaced controller
 		return Str::studly($this->dir).'\\'.Str::studly($name).'Controller';
+	}
+	
+	/**
+	 * Get just the controller's short name from the path
+	 * @return mixed false if not found, otherwise a string like "news" or "slides"
+	 */
+	public function detectControllerName() {
+		$pattern = '#/([a-z-]+)(/\d)?(/('.implode('|', $this->actions).'))?/?$#i';
+		if (!preg_match($pattern, $this->path, $matches)) return false;
+		return $matches[1];
 	}
 	
 	/**

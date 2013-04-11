@@ -85,7 +85,7 @@ class TestWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), 4);
 	}
 	
-	public function testDelete() {
+	public function testDestroy() {
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2');
 		$this->assertEquals($router->detectController(), 'Admin\ArticlesController');
