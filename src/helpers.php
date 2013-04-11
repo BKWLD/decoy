@@ -3,7 +3,7 @@
 // Imports
 use Bkwld\Decoy\Breadcrumbs;
 
-// HTML::title() -- Format title based on section content
+// Html::title() -- Format title based on section content
 Html::macro('title', function() {
 	
 	// If no title has been set, try to figure it out based on

@@ -83,11 +83,11 @@ if (count($iterator)) {
 						
 						<?// Add an automatic link on the first column?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=HTML::edit_route($controller_path, $many_to_many, $item->id)?>">
+							<a href="<?=Html::edit_route($controller_path, $many_to_many, $item->id)?>">
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
-						<?=HTML::render_list_column($item, $column, $convert_dates)?>	
+						<?=Html::render_list_column($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>
@@ -108,7 +108,7 @@ if (count($iterator)) {
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=HTML::edit_route($controller_path, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
+					<a href="<?=Html::edit_route($controller_path, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
 					| 
 					 
 					 <?// Many to many listings have remove icons instead of trash?>

@@ -1,8 +1,13 @@
 <?php namespace Bkwld\Decoy\Models;
 
-// Admin extends Eloquent in part so that the listing view
-// can instantiate Admin models and hydrate them.  Which is
-// done so that title() can be run to decorate the listing
+// Dependencies
+use Html;
+
+/**
+ * Admin extends Eloquent in part so that the listing view
+ * can instantiate Admin models and hydrate them.  Which is
+ * done so that title() can be run to decorate the listing
+ */
 class Admin extends Base {
 	
 	// Validation rules
@@ -33,7 +38,7 @@ class Admin extends Base {
 	
 	// Produce the title for the list view
 	public function title() {
-		return '<img src="'.HTML::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
+		return '<img src="'.Html::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
 	}
 	
 	// Show a badge if the user is the currently logged in

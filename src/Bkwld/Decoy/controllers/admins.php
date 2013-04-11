@@ -1,5 +1,13 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
+// Dependencies
+use \Input;
+use \Model;
+use \Sentry;
+
+/**
+ * Admin management interface
+ */
 class Admins extends Base {
 	
 	// Shared settings
@@ -51,7 +59,7 @@ class Admins extends Base {
 		
 		// Send email
 		if (Input::get('send_email')) {
-			if (!Admin::send('new')) {
+			if (!Model::send('new')) {
 				$errors = new Laravel\Messages();
 				$errors->add('email', 'There was an error sending the email to this admin.');
 				return Redirect::to_action('decoy::admins@edit', array($id))
