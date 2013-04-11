@@ -92,7 +92,8 @@ class Wildcard {
 		// If the path ends in a number, the verb defines what it is
 		if (preg_match('#\d+$#', $this->path)) {
 			switch($this->verb) {
-				case 'PUT': return 'update';
+				case 'PUT':
+				case 'POST': return 'update';
 				case 'DELETE': return 'destroy';
 			}
 		}

@@ -69,7 +69,17 @@ class TestWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectAction(), 'update');
 		$this->assertEquals($router->detectId(), 2);
 		
+		$router = new Wildcard('admin', 'POST','admin/articles/2');
+		$this->assertEquals($router->detectController(), 'Admin\ArticlesController');
+		$this->assertEquals($router->detectAction(), 'update');
+		$this->assertEquals($router->detectId(), 2);
+		
 		$router = new Wildcard('admin', 'PUT','admin/articles/2/users/4');
+		$this->assertEquals($router->detectController(), 'Admin\UsersController');
+		$this->assertEquals($router->detectAction(), 'update');
+		$this->assertEquals($router->detectId(), 4);
+		
+		$router = new Wildcard('admin', 'POST','admin/articles/2/users/4');
 		$this->assertEquals($router->detectController(), 'Admin\UsersController');
 		$this->assertEquals($router->detectAction(), 'update');
 		$this->assertEquals($router->detectId(), 4);
