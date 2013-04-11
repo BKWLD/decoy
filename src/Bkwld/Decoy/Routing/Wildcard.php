@@ -40,9 +40,7 @@ class Wildcard {
 	public function detectAndExecute() {
 		
 		// Get the controller
-		$controller = $this->detectController();
-		if (!$controller || !class_exists($controller, true)) return false;
-		
+		if (!($controller = $this->detectController())) return false;
 		
 		// Get the action
 		$action = $this->detectAction();
@@ -59,11 +57,28 @@ class Wildcard {
 	}
 	
 	/**
-	 * Detect the controller for a path.  Which is the last non-action
-	 * string in the path
-	 * @return string The controller name, i.e. Admin\ArticlesController
+	 * Get the full namespaced controller
+	 * @return string i.e. Admin\ArticlesController or Bkwld\Decoy\Controllers\Admins
 	 */
 	public function detectController() {
+		
+		// Setup the two schemes
+		$name = $this->detectControllerClass();
+		$app = Str::studly($this->dir).'\\'.$name.'Controller';
+		$decoy = 'Bkwld\Decoy\Controllers\\'.$name;
+		
+		// Find the right one
+		if (class_exists($app)) return $app;
+		else if (class_exists($decoy)) return $decoy;
+		else return false;
+	}
+	
+	/**
+	 * Detect the controller for a path.  Which is the last non-action
+	 * string in the path
+	 * @return string The controller class, i.e. ArticlesController
+	 */
+	public function detectControllerClass() {
 		
 		// The controller must begin with the config dir
 		if (!preg_match('#^'.$this->dir.'#i', $this->path, $matches)) return false;
@@ -72,7 +87,7 @@ class Wildcard {
 		$name = $this->detectControllerName();
 		
 		// Form the namespaced controller
-		return Str::studly($this->dir).'\\'.Str::studly($name).'Controller';
+		return Str::studly($name);
 	}
 	
 	/**
