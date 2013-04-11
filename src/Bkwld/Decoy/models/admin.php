@@ -1,7 +1,10 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use DB;
 use Html;
+use Input;
+use Sentry;
 
 /**
  * Admin extends Eloquent in part so that the listing view
@@ -18,21 +21,25 @@ class Admin extends Base {
 		'last_name' => 'required',
 	);
 	
+	// Allow all properties to be mass assigned.  This assignment happens in the listing
+	// view.  This model doesn't actually correspond with a real table so there is no risk
+	// that this setting would allow a malicious person to set one of the actual DB values
+	protected $guarded = array();
+	
 	// Get a list of admins ordered by last name
 	static public function ordered() {
-		$group_id = Sentry::group('admins')->get('id');
 		return DB::table('users')
 			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->join('users_metadata', 'users_metadata.user_id', '=', 'users.id')
-			->where('users_groups.group_id', '=', $group_id)
-			->order_by('last_name', 'asc')
+			->join('throttle', 'throttle.user_id', '=', 'users.id')
+			->where('users_groups.group_id', '=', self::adminGroupId())
+			->orderBy('last_name', 'asc')
 			->select(array('users.id',
 					'users.email', 
-					'users_metadata.first_name', 
-					'users_metadata.last_name',
+					'users.first_name', 
+					'users.last_name',
 					'users.created_at',
-					'users.last_login',
-					'users.status',
+					'throttle.banned',
+					'throttle.suspended',
 				));
 	}
 	
@@ -113,7 +120,7 @@ class Admin extends Base {
 	
 	// Override the Eloquent find.  This is required to make admins function with Decoy,
 	// which expects Eloquent models in it's generic breadcrumbs, listing, etc
-	static public function find($id) {
+	static public function find($id, $columns = array('*')) {
 		
 		// Get the item from Sentry and then get an array of the user data from it
 		$admin = self::get($id)->get();
@@ -127,11 +134,17 @@ class Admin extends Base {
 	
 	// Count the total admins
 	static public function count() {
-		$group_id = Sentry::group('admins')->get('id');
 		return DB::table('users')
 			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->where('users_groups.group_id', '=', $group_id)
+			->where('users_groups.group_id', '=', self::adminGroupId())
 			->count();
+	}
+	
+	/**
+	 * Get the admin group id
+	 */
+	static public function adminGroupId() {
+		return Sentry::getGroupProvider()->findByName('admins')->id;
 	}
 	
 }

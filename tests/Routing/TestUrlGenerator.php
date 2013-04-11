@@ -2,7 +2,7 @@
 
 use Bkwld\Decoy\Routing\UrlGenerator;
 
-class TestUrlGenerator extends PHPUnit_Framework_TestCase {
+class TestRoutingUrlGenerator extends PHPUnit_Framework_TestCase {
 	
 	private function path($path) {
 		return new UrlGenerator($path);

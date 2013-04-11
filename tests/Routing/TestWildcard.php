@@ -2,7 +2,7 @@
 
 use Bkwld\Decoy\Routing\Wildcard;
 
-class TestWildcard extends PHPUnit_Framework_TestCase {
+class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 	
 	
 	public function testIndex() {

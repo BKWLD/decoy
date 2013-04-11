@@ -24,8 +24,8 @@ class Admins extends Base {
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
 		$query = Model::ordered()->paginate($this->PER_PAGE);
-		foreach($query->results as $i => $result) {
-			$query->results[$i] = new Model((array) $result);
+		foreach($query as &$item) {
+			$item = new Model((array) $item);
 		}
 	
 		// Bind to view

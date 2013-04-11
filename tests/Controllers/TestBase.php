@@ -6,7 +6,7 @@ use \Mockery as m;
 /**
  * Using mock on the whole class since it's abstract
  */
-class TestBase extends PHPUnit_Framework_TestCase {
+class TestControllersBase extends PHPUnit_Framework_TestCase {
 	
 	public function testControllerName() {
 		$base = m::mock('Bkwld\Decoy\Controllers\Base[]');

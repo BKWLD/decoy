@@ -3,25 +3,22 @@
 // Imports
 use BKWLD\Utils\File;
 use BKWLD\Utils\Collection;
-use Laravel\Request;
-use Laravel\Database\Eloquent\Model as Eloquent;
-use Laravel\Database as DB;
-use Laravel\Input;
-use Laravel\Config;
-use Laravel\Event;
-use Laravel\Log;
-use Laravel\Bundle;
-use Laravel\Str;
+use Config;
 use Croppa;
+use DB;
+use Event;
+use Illuminate\Database\Eloquent\Model as Eloquent;
+use Input;
+use Log;
+use Request;
+use Str;
+
 
 abstract class Base extends Eloquent {
 	
 	//---------------------------------------------------------------------------
 	// Overrideable properties
 	//---------------------------------------------------------------------------
-	
-	// Auto populate timestamps
-	static public $timestamps = true;
 	
 	// This should be overridden by Models to store the array of their 
 	// Laravel validation rules
@@ -50,8 +47,8 @@ abstract class Base extends Eloquent {
 	
 	// Override events that are happening before saves.  Note these will likely be
 	// triggered more often than you'd like, described above
-	public function __construct($attributes = array(), $exists = false) {
-		parent::__construct($attributes, $exists);
+	public function __construct(array $attributes = array()) {
+		parent::__construct($attributes);
 		
 		// Add Decoy events
 		$events = array('validating', 'validated');
@@ -62,7 +59,7 @@ abstract class Base extends Eloquent {
 	}
 	
 	// Override the events that happen on save
-	public function save() {
+	public function save(array $options = array()) {
 		
 		// Standard laravel model events
 		$events = array('saving', 'updated', 'created', 'saved');
@@ -75,7 +72,9 @@ abstract class Base extends Eloquent {
 			if ($self->exists) $self->on_updating();
 			else $self->on_creating();
 		});
-		return parent::save();
+		
+		// Now, do the save
+		return parent::save($options);
 		
 		// Add Decoy events
 		$events = array('attaching', 'attached', 'removing', 'removed');
