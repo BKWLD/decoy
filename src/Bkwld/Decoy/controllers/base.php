@@ -1,21 +1,23 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
-use \App;
-use \Bkwld\Decoy\Breadcrumbs;
-use \Bkwld\Library;
-use \Event;
-use \Input;
-use \Redirect;
-use \Request;
-use \Response;
-use \URL;
-use \Validator;
+use App;
+use Bkwld\Decoy\Breadcrumbs;
+use Bkwld\Library;
+use Event;
+use Illuminate\Routing\Controllers\Controller;
+use Illuminate\Support\Str;
+use Input;
+use Redirect;
+use Request;
+use Response;
+use URL;
+use Validator;
 
 /**
  * The base controller is gives Decoy most of the magic/for-free mojo
  */
-abstract class Base extends \Controller {
+abstract class Base extends Controller {
 	
 	//---------------------------------------------------------------------------
 	// Default settings
@@ -28,7 +30,7 @@ abstract class Base extends \Controller {
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
 	protected $MODEL;       // i.e. Post
-	protected $CONTROLLER;  // i.e. admin.posts
+	protected $CONTROLLER;  // i.e. Admin\posts
 	protected $TITLE;       // i.e. News Posts
 	protected $DESCRIPTION; // i.e. Relevant news about the brand
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
@@ -50,11 +52,109 @@ abstract class Base extends \Controller {
 	/**
 	 * For the most part, this populates the protected properties
 	 */
-	function __construct() {
+	public function __construct() {
 
 		// Set the layout from the Config file
 		$this->layout = App::make('config')->get('decoy::layout');
 		
+		// Store the controller class for routing
+		if (empty($this->CONTROLLER)) $this->CONTROLLER = get_class($this);
+		
+		// Get the controller name
+		$controller_name = $this->controllerName($this->CONTROLLER);
+		
+		// Make a default title based on the controller name
+		if (empty($this->TITLE)) $this->TITLE = $this->title($controller_name);
+		
+		// Figure out what the show view should be.  This is the path to the show view file.  Such
+		// as 'admin.news.edit'
+		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->detailPath($this->CONTROLLER);
+		
+		// Try to suss out the model by singularizing the controller
+		if (empty($this->MODEL)) {
+			$this->MODEL = $this->model($this->CONTROLLER);
+			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
+		}
+		
+		// This allows us to refer to the default model for a controller using the
+		// generic term of "Model"
+		if ($this->MODEL && !class_exists('Model')) {
+			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
+		}
+		
+	}
+	
+	/**
+	 * Get the controller name only, without the namespace (like Admin\) or
+	 * suffix (like Controller).
+	 * @param string $class ex: Admin\NewsController
+	 * @return string ex: News
+	 */
+	public function controllerName($class = null) {
+		$name = $class ? $class : get_class($this);
+		$name = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $name);
+		$name = preg_replace('#Controller$#', '', $name);
+		return $name;
+	}
+	
+	/**
+	 * Get the title for the controller based on the controller name.  Basically, it's
+	 * a de-studdly-er
+	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
+	 * @return string ex: 'Admins' or 'Car Lovers'
+	 */
+	public function title($controller_name = null) {
+		if (!$controller_name) return $this->TITLE; // For when this is invoked as a getter for $this->TITLE
+		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
+		return implode(" ", $matches[0]);
+	}
+	
+	/**
+	 * Get the directory for the detail views.  It's based off the controller name.
+	 * This is basically a conversion to snake case from studyly case
+	 * @param string $class ex: 'Admin\NewsController'
+	 * @return string ex: admins.edit or car_lovers.edit
+	 */
+	public function detailPath($class) {
+		
+		// Remove Decoy from the class
+		$path = str_replace('Bkwld\Decoy\Controllers\\', '', $class, $is_decoy);
+		
+		// Remove the Controller suffix app classes may have
+		$path = preg_replace('#Controller$#', '', $path);
+		
+		// Break up all the remainder of the class and de-study them (which is what
+		// title() does)
+		$parts = explode('\\', $path);
+		foreach ($parts as &$part) $part = str_replace(' ', '_', strtolower($this->title($part)));
+		$path = implode('.', $parts);
+		
+		// If the controller is part of Decoy, add it to the path
+		if ($is_decoy) $path = 'decoy::'.$path;
+	
+		// Done
+		return $path.'.edit';	
+	}
+	
+	/**
+	 * Figure out the model for a class
+	 * @param string $class ex: 'Admin\NewsController'
+	 */
+	public function model($class) {
+		if ($this->MODEL) return $this->MODEL; // for getters
+		
+		// Swap out the namespace if decoy
+		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
+		
+		// Remove the Controller suffix app classes may have
+		$model = preg_replace('#Controller$#', '', $model);
+		
+		// Assume that non-decoy models want the first namespace (aka Admin) removed
+		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
+		
+		// Make it singular
+		$model = Str::singular($model);
+		return $model;
 	}
 	
 	//---------------------------------------------------------------------------
@@ -155,42 +255,8 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Special constructor behaviors
 	function __construct() {
 
-		
-		// Get the controller name only, without the namespace (like Admin_) or
-		// suffix (like _Controller).  I..e, Admin_News_Posts_Controller becomes
-		// 'News_Posts'
-		preg_match('#^(?:Admin_|Decoy_)?(.+)_Controller$#', get_class($this), $matches);
-		$controller_name = $matches[1];
-				
-		// Make a default title based on the controller name
-		if (empty($this->TITLE)) {
-			$this->TITLE = str_replace('_', ' ', $controller_name);
-		}
-		
-		// Figure out what the controller get should be.
-		// i.e. 'Admin_News_Posts_Controller' becomes 'admin.news_posts';
-		if (empty($this->CONTROLLER)) {
-			$this->CONTROLLER = preg_replace('#_#', '.', strtolower(substr(get_class($this), 0, -11)), 1);
-			
-			// If it begins with decoy, it should be like decoy::admin instead of decoy.admin
-			if (Str::is('decoy*', $this->CONTROLLER)) $this->CONTROLLER = str_replace('decoy.', 'decoy::', $this->CONTROLLER);
-		}
-		
-		// Figure out what the show view should be.  This is the path to the show view file.  Such
-		// as 'admin.news.show'
-		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->CONTROLLER.'.show';
-		
-		// Try to suss out the model by singularizing the controller
-		if (empty($this->MODEL)) {
-			$this->MODEL = Str::singular($controller_name);
-			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
-		}
-		
-		// This allows us to refer to the default model for a controller using the
-		// generic term of "Model"
-		if ($this->MODEL && !class_exists('Model')) {
-			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
-		}
+	
+
 		
 		// If the current route has a parent, discover what it is
 		if (empty($this->PARENT_CONTROLLER) && $this->is_child_route()) {
