@@ -14,12 +14,12 @@ class TestWildcard extends PHPUnit_Framework_TestCase {
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/user-dudes');
 		$this->assertEquals($router->detectController(), 'Admin\UserDudesController');
-		$this->assertEquals($router->detectAction(), 'index');
+		$this->assertEquals($router->detectAction(), 'indexChild');
 		$this->assertEquals($router->detectId(), false);
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/users/4/roles');
 		$this->assertEquals($router->detectController(), 'Admin\RolesController');
-		$this->assertEquals($router->detectAction(), 'index');
+		$this->assertEquals($router->detectAction(), 'indexChild');
 		$this->assertEquals($router->detectId(), false);
 	}
 	

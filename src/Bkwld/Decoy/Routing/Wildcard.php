@@ -80,6 +80,10 @@ class Wildcard {
 	 */
 	public function detectAction() {
 		
+		// Get whether the request acts as a child.  This modifies some of the
+		// actions that would be called
+		$is_child = $this->detectIfChild();
+		
 		// If the path ends in one of the special actions, use that as the action
 		if (preg_match('#[a-z-]+$#i', $this->path, $matches)) {
 			if (in_array($matches[0], $this->actions)) return $matches[0];
@@ -96,7 +100,7 @@ class Wildcard {
 		// Else, it must end with the controller name
 		switch($this->verb) {
 			case 'POST': return 'store';
-			case 'GET': return 'index';
+			case 'GET': return $is_child ? 'indexChild' : 'index';
 		}
 		
 		// Must have been an erorr if we got here
@@ -117,6 +121,18 @@ class Wildcard {
 		
 		// There's no id
 		return false;
+		
+	}
+	
+	/**
+	 * Detect if the request is for a child of another controller
+	 */
+	private function detectIfChild() {
+		
+		// A child is a controller preceeded by an id and another controller
+		// though there may be an action on the end
+		$pattern = '#[a-z-]+/\d+/[a-z-]+(/'.implode('|', $this->actions).')?$#i';
+		return preg_match($pattern, $this->path);
 		
 	}
 	
