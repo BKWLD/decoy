@@ -157,9 +157,16 @@ class Wildcard {
 		
 		// A child is a controller preceeded by an id and another controller
 		// though there may be an action on the end
-		$pattern = '#[a-z-]+/\d+/[a-z-]+(/'.implode('|', $this->actions).')?$#i';
-		return preg_match($pattern, $this->path);
+		$pattern = '#[a-z-]+/\d+/(?!$|'.implode('$|', $this->actions).'$)#i';
+		return preg_match($pattern, $this->path) === 1;
 		
+	}
+	
+	/**
+	 * Return the path that the wildcard instance is operatin on
+	 */
+	public function path() {
+		return $this->path();
 	}
 	
 }

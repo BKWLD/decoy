@@ -81,7 +81,11 @@ class Base extends Controller {
 		// Set dependencies automatically
 		if (class_exists('App')) {
 			$this->config = App::make('config');
-			$this->ancestry = new Ancestry($this);
+			$this->ancestry = new Ancestry($this, new Wildcard(
+				Config::get('decoy::dir'),
+				App::make('request')->getMethod(), 
+				App::make('request')->path()
+				));
 			return true;
 		}
 		

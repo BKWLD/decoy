@@ -7,22 +7,21 @@ use Illuminate\Routing\Router;
 
 /**
  * This class tries to figure out if the injected controller has parents
- * and who they are.
+ * and who they are.  There is an assumption with this logic that ancestry
+ * only matters to controllers that were resolved through Wildcard
  */
 class Ancestry {
 	
 	/**
 	 * Inject dependencies
 	 * @param Bkwld\Decoy\Controllers\Base $controller
-	 * @param Illuminate\Routing\Router $router
 	 * @param Bkwld\Decoy\Routing\Wildcard $wildcard
 	 */
 	private $controller;
 	private $router;
 	private $wildcard;
-	public function __construct(Base $controller, Router $router, Wildcard $wildcard) {
+	public function __construct(Base $controller, Wildcard $wildcard) {
 		$this->controller = $controller;
-		$this->router = $router;
 		$this->wildcard = $wildcard;
 	}
 	
@@ -33,7 +32,7 @@ class Ancestry {
 	 */
 	public function isChildRoute() {
 		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
-		return $this->actionIsChild()
+		return $this->requestIsChild()
 			|| $this->parentIsInInput()
 			|| $this->isActingAsRelated();
 	}
@@ -48,44 +47,23 @@ class Ancestry {
 	}
 	
 	/**
-	 * Figure out the action of the current request
-	 */
-	public function getAction() {
-		
-		// If the current request is being fielded by Laravel, ask the route what the action is
-		$action = $this->router->currentRouteAction();
-		if ($action) return substr($action, strpos($action, '@')+1);
-
-		// Else, the route must be handled by Decoy Wildcard, so ask it about the route
-		return $this->wildcard->detectAction();
-		
-	}
-	
-	/**
 	 * Test if the current URL is for a controller acting in a child capacity.  We're only
 	 * checking wilcarded routes (not any that were explictly registered), because I think
 	 * it unlikely that we'd ever explicitly register routes to be children of another.
 	 */
-	public function actionIsChild() {
-		
-		// Some actions imply that the request's controller is acting as a child
-		if (in_array($this->getAction(), array('indexChild'))) return true;
-		
+	public function requestIsChild() {
+		return $this->wildcard->detectIfChild();
 	}
 
-
-
-	/*
 	// Test if the current route is one of the many to many XHR requests
 	public function parentIsInInput() {
 		// This is check is only allowed if the request is for this controller.  If other
-		// controller instances are instantiated (like via Controller::resolve()), they 
-		// were not designed to be informed by the input.  Using action[uses] rather than like
-		// ->controller because I found that controller isn't always set when I need it.  Maybe
-		// because this is all being invoked from the constructor.
+		// controller instances are instantiated, they were not designed to be informed by the input.
 		if (strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false) return false;		
 		return isset(Input::get('parent_controller');
 	}
+	
+	/*
 	
 	// Test if the controller must be used in rendering a related list within another.  In other
 	// words, the controller is different than the request and you're on an edit page.  Had to
@@ -106,7 +84,7 @@ class Ancestry {
 	public function deduceParentController() {
 		
 		// If a child index view, get the controller from the route
-		if ($this->actionIsChild()) {
+		if ($this->requestIsChild()) {
 			return Request::segment(1).'.'.Request::segment(2);
 		
 		// If one of the many to many xhr requests, get the parent from Input
