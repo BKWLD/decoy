@@ -8,8 +8,7 @@ use \Mockery as m;
 
 class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	
-	// Build an ancestry instance
-	private function build($path, $verb = 'GET', $explicit = false) {
+	private function buildController($path, $verb = 'GET') {
 		
 		// Build config dependency
 		$config = m::mock('Config');
@@ -24,11 +23,28 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		));
 		$controller->simulate($path);
 		
+		return $controller;
+		
+	}	
+
+	private function build($path, $verb = 'GET', $options = array()) {
+		
+		// Build controller
+		$controller = $this->buildController($path, $verb);
+		
 		// Build wildcard dependency
 		$wildcard = new Wildcard('admin', $verb, $path);
+	
+		// Mock input
+		$input = m::mock('Symfony\Component\HttpFoundation\Request');
+		if (empty($options['parent_controller'])) {
+			$input->shouldReceive('has')->with('parent_controller')->andReturn(false);
+		} else {
+			$input->shouldReceive('has')->with('parent_controller')->andReturn(true);
+		}
 		
 		// Return ancestery instance
-		return new Ancestry($controller, $wildcard);
+		return new Ancestry($controller, $wildcard, $input);
 	}
 
 	public function testActionIsChild() {
@@ -42,6 +58,13 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->build('admin/news/2/photos/4/edit')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos/autocomplete')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos', 'POST')->requestIsChild());
+	}
+	
+	// Though this path would never be used ('base'), this allows the test to pass because of the class_exists() requirement
+	public function testParentIsInInput() {
+		$this->assertFalse($this->build('admin/base')->parentIsInInput());
+		$this->assertFalse($this->build('admin/busters', 'GET', array('parent_controller' => true))->parentIsInInput());
+		$this->assertTrue($this->build('admin/base', 'GET', array('parent_controller' => true))->parentIsInInput());
 	}
 	
 }

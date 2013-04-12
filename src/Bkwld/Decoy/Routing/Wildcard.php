@@ -80,7 +80,7 @@ class Wildcard {
 	 */
 	public function detectControllerClass() {
 		
-		// The controller must begin with the config dir
+		// The path must begin with the config dir
 		if (!preg_match('#^'.$this->dir.'#i', $this->path, $matches)) return false;
 		
 		// Find the controller from the end of the path

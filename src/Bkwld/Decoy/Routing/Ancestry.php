@@ -4,6 +4,7 @@
 use Bkwld\Decoy\Controllers\Base;
 use Bkwld\Decoy\Routing\Wildcard;
 use Illuminate\Routing\Router;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * This class tries to figure out if the injected controller has parents
@@ -16,13 +17,15 @@ class Ancestry {
 	 * Inject dependencies
 	 * @param Bkwld\Decoy\Controllers\Base $controller
 	 * @param Bkwld\Decoy\Routing\Wildcard $wildcard
+	 * @param Symfony\Component\HttpFoundation\Request $input
 	 */
 	private $controller;
 	private $router;
 	private $wildcard;
-	public function __construct(Base $controller, Wildcard $wildcard) {
+	public function __construct(Base $controller, Wildcard $wildcard, Request $input) {
 		$this->controller = $controller;
 		$this->wildcard = $wildcard;
+		$this->input = $input;
 	}
 	
 	/**
@@ -57,10 +60,11 @@ class Ancestry {
 
 	// Test if the current route is one of the many to many XHR requests
 	public function parentIsInInput() {
+
 		// This is check is only allowed if the request is for this controller.  If other
 		// controller instances are instantiated, they were not designed to be informed by the input.
-		if (strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false) return false;		
-		return isset(Input::get('parent_controller');
+		if ($this->wildcard->detectController() != get_class($this->controller)) return false;
+		return $this->input->has('parent_controller');
 	}
 	
 	/*
