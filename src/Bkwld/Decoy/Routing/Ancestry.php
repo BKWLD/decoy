@@ -10,7 +10,7 @@ use Bkwld\Decoy\Controllers\Base;
 class Ancestry {
 	
 	// DI
-	$this->controller;
+	private $controller;
 	
 	/**
 	 * Inject dependencies
@@ -41,14 +41,38 @@ class Ancestry {
 		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
 	}
 	
-	// Test if the current route is one of the full page has many listings or a new
-	// page as a child
+	/**
+	 * Figure out the action of the current request
+	 */
+	public function getAction() {
+		
+		// If the current request is being fielded by Laravel, ask the route what the action is
+		$action = $this->router->currentRouteAction();
+		if ($action) return $action;
+		
+		// Else, the route must be handled by Decoy Wildcard, so ask it about the route
+		return $this->wildcard->getAction();
+		
+	}
+	
+	/**
+	 * Test if the current route is acting in child capacity
+	 */
 	public function actionIsChild() {
+		
+		// Check if the router was able to match the current request to a route and what the
+		// action is of the route
+		
+		
+		// If it was not able to match, but this is being executed, it means the Decoy
+		// Wildcard router found a controller, so find the the action that would match this
+		// controller.
+		
 		return Request::route()->is($this->CONTROLLER.'@child')
 			|| Request::route()->is($this->CONTROLLER.'@new_child')
 			|| Request::route()->is($this->CONTROLLER.'@edit_child');
 	}
-	
+	/*
 	// Test if the current route is one of the many to many XHR requests
 	public function parentIsInInput() {
 		// This is check is only allowed if the request is for this controller.  If other
@@ -123,5 +147,6 @@ class Ancestry {
 		}
 		return $relationship;
 	}
+	*/
 	
 }

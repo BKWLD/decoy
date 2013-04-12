@@ -5,6 +5,7 @@ use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Ancestry;
+use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
@@ -19,7 +20,7 @@ use Validator;
 /**
  * The base controller is gives Decoy most of the magic/for-free mojo
  */
-abstract class Base extends Controller {
+class Base extends Controller {
 	
 	//---------------------------------------------------------------------------
 	// Default settings
@@ -52,15 +53,51 @@ abstract class Base extends Controller {
 	}
 	
 	/**
-	 * For the most part, this populates the protected properties
+	 * For the most part, this populates the protected properties.  Constructor
+	 * arguments are intentionally avoided so every controller that extends this
+	 * doesn't have to include params in constructor definitions.
 	 */
 	public function __construct() {
-
+		if ($this->injectDependencies()) $this->init();
+	}
+	
+	/**
+	 * Inject dependencies.  When used in normal execution, these are pulled automatically
+	 * from the facaded App.  When this is not available, say when being run by unit tests,
+	 * this method takes the dependencies in this array:
+	 * @param Config $config An instance of the Laravel config class
+	 */
+	private $config;
+	public function injectDependencies($dependencies = null) {
+		
+		// Set manually passed dependencies
+		if ($dependencies) {
+			$this->config = $dependencies['config'];
+			return true;
+		}
+		
+		// Set dependencies automatically
+		if (class_exists('App')) {
+			$this->config = App::make('config');
+			return true;
+		}
+		
+		// No dependencies found
+		return false;
+	}
+	
+	/**
+	 * Populate the controller's protected properties
+	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
+	 */
+	private function init($class = null) {
+		
 		// Set the layout from the Config file
-		$this->layout = App::make('config')->get('decoy::layout');
+		$this->layout = $this->config->get('decoy::layout');
 		
 		// Store the controller class for routing
-		if (empty($this->CONTROLLER)) $this->CONTROLLER = get_class($this);
+		if ($class) $this->CONTROLLER = $class;
+		elseif (empty($this->CONTROLLER)) $this->CONTROLLER = get_class($this);
 		
 		// Get the controller name
 		$controller_name = $this->controllerName($this->CONTROLLER);
@@ -88,9 +125,17 @@ abstract class Base extends Controller {
 		// others in the request path
 		$ancestry = new Ancestry($this);
 		
-		// Continue processing
-		parent::__construct();
-		
+	}
+	
+	/**
+	 * Make a new instance of the base class for the purposes of testing
+	 * @param string $path A request path, i.e. 'admin/news/create'
+	 * @param string $verb i.e. GET,POST
+	 */
+	public function simulate($path, $verb = 'GET') {
+		$wildcard = new Wildcard($this->config->get('decoy::dir'), $verb, $path);
+		$class = $wildcard->detectController();
+		$this->init($class);
 	}
 	
 	/**
