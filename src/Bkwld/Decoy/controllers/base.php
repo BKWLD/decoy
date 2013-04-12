@@ -65,7 +65,8 @@ class Base extends Controller {
 	 * Inject dependencies.  When used in normal execution, these are pulled automatically
 	 * from the facaded App.  When this is not available, say when being run by unit tests,
 	 * this method takes the dependencies in this array:
-	 * @param Config $config An instance of the Laravel config class
+	 * @param Config $config
+	 * @param Ancestry $ancestry
 	 */
 	private $config;
 	public function injectDependencies($dependencies = null) {
@@ -73,12 +74,14 @@ class Base extends Controller {
 		// Set manually passed dependencies
 		if ($dependencies) {
 			$this->config = $dependencies['config'];
+			$this->ancestry = $dependencies['ancestry'];
 			return true;
 		}
 		
 		// Set dependencies automatically
 		if (class_exists('App')) {
 			$this->config = App::make('config');
+			$this->ancestry = new Ancestry($this);
 			return true;
 		}
 		
@@ -120,10 +123,6 @@ class Base extends Controller {
 		if ($this->MODEL && !class_exists('Model')) {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
-		
-		// Use Ancestry class to help figure out where this controller stands in relation to
-		// others in the request path
-		$ancestry = new Ancestry($this);
 		
 	}
 	

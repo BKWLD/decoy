@@ -153,7 +153,7 @@ class Wildcard {
 	/**
 	 * Detect if the request is for a child of another controller
 	 */
-	private function detectIfChild() {
+	public function detectIfChild() {
 		
 		// A child is a controller preceeded by an id and another controller
 		// though there may be an action on the end

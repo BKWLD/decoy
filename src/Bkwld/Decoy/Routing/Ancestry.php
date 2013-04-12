@@ -2,6 +2,8 @@
 
 // Dependencies
 use Bkwld\Decoy\Controllers\Base;
+use Bkwld\Decoy\Routing\Wildcard;
+use Illuminate\Routing\Router;
 
 /**
  * This class tries to figure out if the injected controller has parents
@@ -9,15 +11,19 @@ use Bkwld\Decoy\Controllers\Base;
  */
 class Ancestry {
 	
-	// DI
-	private $controller;
-	
 	/**
 	 * Inject dependencies
 	 * @param Bkwld\Decoy\Controllers\Base $controller
+	 * @param Illuminate\Routing\Router $router
+	 * @param Bkwld\Decoy\Routing\Wildcard $wildcard
 	 */
-	public function __construct(Base $controller) {
+	private $controller;
+	private $router;
+	private $wildcard;
+	public function __construct(Base $controller, Router $router, Wildcard $wildcard) {
 		$this->controller = $controller;
+		$this->router = $router;
+		$this->wildcard = $wildcard;
 	}
 	
 	/**
@@ -48,30 +54,27 @@ class Ancestry {
 		
 		// If the current request is being fielded by Laravel, ask the route what the action is
 		$action = $this->router->currentRouteAction();
-		if ($action) return $action;
-		
+		if ($action) return substr($action, strpos($action, '@')+1);
+
 		// Else, the route must be handled by Decoy Wildcard, so ask it about the route
-		return $this->wildcard->getAction();
+		return $this->wildcard->detectAction();
 		
 	}
 	
 	/**
-	 * Test if the current route is acting in child capacity
+	 * Test if the current URL is for a controller acting in a child capacity.  We're only
+	 * checking wilcarded routes (not any that were explictly registered), because I think
+	 * it unlikely that we'd ever explicitly register routes to be children of another.
 	 */
 	public function actionIsChild() {
 		
-		// Check if the router was able to match the current request to a route and what the
-		// action is of the route
+		// Some actions imply that the request's controller is acting as a child
+		if (in_array($this->getAction(), array('indexChild'))) return true;
 		
-		
-		// If it was not able to match, but this is being executed, it means the Decoy
-		// Wildcard router found a controller, so find the the action that would match this
-		// controller.
-		
-		return Request::route()->is($this->CONTROLLER.'@child')
-			|| Request::route()->is($this->CONTROLLER.'@new_child')
-			|| Request::route()->is($this->CONTROLLER.'@edit_child');
 	}
+
+
+
 	/*
 	// Test if the current route is one of the many to many XHR requests
 	public function parentIsInInput() {

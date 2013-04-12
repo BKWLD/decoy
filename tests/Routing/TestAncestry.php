@@ -2,13 +2,16 @@
 
 use Bkwld\Decoy\Controllers\Base;
 use Bkwld\Decoy\Routing\Ancestry;
+use Bkwld\Decoy\Routing\Wildcard;
+use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
+use Illuminate\Routing\Router;
 use \Mockery as m;
-
 
 class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	
 	// Build an ancestry instance
-	private function build($path) {
+	private function build($path, $verb = 'GET', $explicit = false) {
 		
 		// Build config dependency
 		$config = m::mock('Config');
@@ -19,14 +22,32 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$controller = new Base;
 		$controller->injectDependencies(array(
 			'config' => $config,
+			'ancestry' => m::mock('Ancestry'),
 		));
 		$controller->simulate($path);
-		return new Ancestry($controller);
+		
+		// Build router dependency using the real router
+		$route = new Route($path);
+		$route->setMethods(array($verb));
+		if ($explicit) $route->setOption('_uses', 'Fake\Controller@explicit');
+		$router = new Router();
+		if ($explicit) $router->match($verb, $path, 'Fake\Controller@explicit');
+		$router->setCurrentRoute($route);
+		
+		// Build wildcard dependency
+		$wildcard = new Wildcard('admin', $verb, $path);
+		
+		// Return ancestery instance
+		return new Ancestry($controller, $router, $wildcard);
 	}
 	
 	public function testGetAction() {
-		// $this->assertEquals($this->build('admin/news'));
+		$this->assertEquals('index', $this->build('admin/news')->getAction());
+		$this->assertEquals('create', $this->build('admin/news/create')->getAction());
+		$this->assertEquals('store', $this->build('admin/news', 'POST')->getAction());
+		$this->assertEquals('explicit', $this->build('admin/admins', 'GET', true)->getAction());
 	}
+	/*
 	
 	public function testActionIsChild() {
 		$this->assertFalse($this->build('admin/news')->actionIsChild());
@@ -38,5 +59,6 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->build('admin/news/2/photos/4/edit')->actionIsChild());
 		$this->assertFalse($this->build('admin/news/2/photos/autocomplete')->actionIsChild());
 	}
+	*/
 	
 }
