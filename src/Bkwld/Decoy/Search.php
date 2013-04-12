@@ -1,8 +1,8 @@
-<?php namespace Decoy;
+<?php namespace Bkwld\Decoy;
 
 // Dependencies
-use Laravel\Input;
-use Laravel\Log;
+use Input;
+use Log;
 
 /**
  * This class contains logic related to searching from controller

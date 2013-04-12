@@ -3,6 +3,7 @@
 // Dependencies
 use App;
 use Bkwld\Decoy\Breadcrumbs;
+use Bkwld\Decoy\Exception;
 use Bkwld\Library;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
@@ -81,6 +82,9 @@ abstract class Base extends Controller {
 		if ($this->MODEL && !class_exists('Model')) {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
+		
+		// Continue processing
+		parent::__construct();
 		
 	}
 	
@@ -239,6 +243,12 @@ abstract class Base extends Controller {
 		}
 	}
 	
+	//---------------------------------------------------------------------------
+	// Private support methods
+	//---------------------------------------------------------------------------
+	
+
+	
 }
 
 /*
@@ -291,9 +301,6 @@ abstract class Decoy_Base_Controller extends Controller {
 				$this->SELF_TO_PARENT = $this->deduce_child_relationship();
 			}
 		}
-		
-		// Continue processing
-		parent::__construct();
 		
 	}
 	
@@ -441,8 +448,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// There may be a parent id.  This isn't defined in the function definition
 		// because I don't want all child classes to have to implement it
-		if (is_numeric(URI::segment(3))) {
-			$parent_id = URI::segment(3);
+		if (is_numeric(Request::segment(3))) {
+			$parent_id = Request::segment(3);
 			if (!($parent = self::parent_find($parent_id))) return Response::error('404');
 		}
 
@@ -471,8 +478,8 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// There may be a parent id.  This isn't defined in the function definition
 		// because I don't want all child classes to have to implement it
-		if (is_numeric(URI::segment(3))) {
-			$parent_id = URI::segment(3);
+		if (is_numeric(Request::segment(3))) {
+			$parent_id = Request::segment(3);
 			if (!($parent = self::parent_find($parent_id))) return Response::error('404');
 		}
 		
@@ -743,15 +750,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
-	// Test if the current route is serviced by has many and/or belongs to.  These
-	// are only true if this controller is acting in a child role
-	public function is_child_route() {
-		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
-		return $this->action_is_child()
-			|| $this->parent_in_input()
-			|| $this->acting_as_related();
-	}
-	
 	// Format the results of a query in the format needed for the autocomplete repsonses
 	public function format_autocomplete_response($results) {
 		$output = array();
@@ -898,48 +896,12 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Private support methods
 	//---------------------------------------------------------------------------
 	
-	// Test if the current route is one of the full page has many listings or a new
-	// page as a child
-	private function action_is_child() {
-		return Request::route()->is($this->CONTROLLER.'@child')
-			|| Request::route()->is($this->CONTROLLER.'@new_child')
-			|| Request::route()->is($this->CONTROLLER.'@edit_child');
-	}
-	
-	// Test if the current route is one of the many to many XHR requests
-	private function parent_in_input() {
-		// This is check is only allowed if the request is for this controller.  If other
-		// controller instances are instantiated (like via Controller::resolve()), they 
-		// were not designed to be informed by the input.  Using action[uses] rather than like
-		// ->controller because I found that controller isn't always set when I need it.  Maybe
-		// because this is all being invoked from the constructor.
-		if (strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false) return false;
-		
-		$input = BKWLD\Laravel\Input::json_and_input();
-		return isset($input['parent_controller']);
-	}
-	
-	// Test if the controller must be used in rendering a related list within another.  In other
-	// words, the controller is different than the request and you're on an edit page.  Had to
-	// use action[uses] because Request::route()->controller is sometimes empty.  
-	// Request::route()->action['uses'] is like "admin.issues@edit".  We're also testing that
-	// the controller isn't in the URI.  This would never be the case when something was in the
-	// sidebar.  But without it, deducing the breadcrumbs gets confused because controllers get
-	// instantiated not on their route but aren't the children of the current route.
-	private function acting_as_related() {
-		$handles = Bundle::option('decoy', 'handles');
-		$controller_name = substr($this->CONTROLLER, strlen($handles.'.'));
-		return strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false
-			&& strpos(URI::current(), '/'.$controller_name.'/') === false
-			&& strpos(Request::route()->action['uses'], '@edit') !== false;
-	}
-	
 	// Guess at what the parent controller is by examing the route or input varibles
 	private function deduce_parent_controller() {
 		
 		// If a child index view, get the controller from the route
 		if ($this->action_is_child()) {
-			return URI::segment(1).'.'.URI::segment(2);
+			return Request::segment(1).'.'.Request::segment(2);
 		
 		// If one of the many to many xhr requests, get the parent from Input
 		} elseif ($this->parent_in_input()) {

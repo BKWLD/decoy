@@ -67,7 +67,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 	}
 	
 	// Make an instance of the controller so values that get in the constructor can be inspected
-	$controller = BKWLD\Laravel\Controller::resolve_with_bundle($view->controller);
+	$controller = new $view->controller;
 	
 	// Default settings
 	$defaults = array(
@@ -75,19 +75,19 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'auto_link'     => 'first',
 		'convert_dates' => 'date',
 		'sidebar'       => false,
-		'parent_id'     => URI::segment(3), // This spot always holds it
+		'parent_id'     => Request::segment(3), // This spot always holds it
 		'parent_controller' => $controller->parent_controller(),
 		'many_to_many'  => $controller->is_child_in_many_to_many(),
-		'tags'          => is_subclass_of($controller->model(), 'Decoy\Tag') ? true : false,
+		'tags'          => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 	);
-
+	
 	// Apply defaults
 	foreach($defaults as $key => $val) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
 	
 	// Massage the shorthand search config options
-	if (isset($view->search)) $view->search = Decoy\Search::longhand($view->search);
+	if (isset($view->search)) $view->search = Bkwld\Decoy\Search::longhand($view->search);
 	
 	// Set a common variable for both types of lists that get passed to the view
 	if (isset($view->listing->results)) $view->iterator = $view->listing->results;
@@ -97,7 +97,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 	// straight up use a route() because those aren't able to distinguish between controllers
 	// that are children to multiple parents
 	if ($view->many_to_many) {
-		$handles = Bundle::option('decoy', 'handles');
+		$handles = Config::get('decoy::dir');
 		$controller_name = substr($view->controller, strlen($handles)+1);
 		$view->child_route = route($view->parent_controller).'/'.$view->parent_id.'/'.$controller_name;
 		
