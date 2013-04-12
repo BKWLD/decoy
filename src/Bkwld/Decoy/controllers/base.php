@@ -884,66 +884,11 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Replace the Input::get() with the new values
 		Input::replace($input);
 	}
-	
-	// Fire an event
-	protected function fireEvent($event, $args = null, $until = false) {
-		$events = array("decoy.{$event}", "decoy.{$event}: ".$this->MODEL);
-		if ($until) return Event::until($events, $args);
-		else Event::fire($events, $args);
-	}
-	
+
 	//---------------------------------------------------------------------------
 	// Private support methods
 	//---------------------------------------------------------------------------
 	
-	// Guess at what the parent controller is by examing the route or input varibles
-	private function deduce_parent_controller() {
-		
-		// If a child index view, get the controller from the route
-		if ($this->action_is_child()) {
-			return Request::segment(1).'.'.Request::segment(2);
-		
-		// If one of the many to many xhr requests, get the parent from Input
-		} elseif ($this->parent_in_input()) {
-			$input = BKWLD\Laravel\Input::json_and_input();
-			return $input['parent_controller'];
-		
-		// If this controller is a related view of another, the parent is the main request	
-		} else if ($this->acting_as_related()) {
-			return Request::route()->controller;
-		}
-	}
-	
-	// Guess as what the relationship function on the parent model will be
-	// that points back to the model for this controller by using THIS
-	// controller's name.
-	// returns - The string name of the realtonship
-	private function deduce_parent_relationship() {
-		$handles = Bundle::option('decoy', 'handles');
-		$relationship = substr($this->CONTROLLER, strlen($handles.'.'));
-		if (!method_exists($this->PARENT_MODEL, $relationship)) {
-			throw new Exception('Parent relationship missing, looking for: '.$relationship);
-		}
-		return $relationship;
-	}
-	
-	// Guess at what the child relationship name is.  This is typically the same
-	// as the parent model.  For instance, Post has many Image.  Image will have
-	// a function named "post" for it's relationship
-	private function deduce_child_relationship() {
-		$relationship = strtolower($this->PARENT_MODEL);
-		if (!method_exists($this->MODEL, $relationship)) {
-			
-			// Try controller name instead, in other words the plural version.  It might be
-			// named this if it's a many-to-many relationship
-			$handles = Bundle::option('decoy', 'handles');
-			$relationship = strtolower(substr($this->PARENT_CONTROLLER, strlen($handles.'.')));
-			if (!method_exists($this->MODEL, $relationship)) {
-				throw new Exception('Child relationship missing on '.$this->MODEL);
-			}
-		}
-		return $relationship;
-	}
 	
 	// Get the pivot table name and the child foreign key (the active Model) is probably
 	// the child, and the parent foreign key column name
