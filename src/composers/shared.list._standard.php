@@ -77,7 +77,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'sidebar'       => false,
 		'parent_id'     => Request::segment(3), // This spot always holds it
 		'parent_controller' => $controller->parent_controller(),
-		'many_to_many'  => $controller->is_child_in_many_to_many(),
+		'many_to_many'  => $controller->isChildInManyToMany(),
 		'tags'          => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 	);
 	
