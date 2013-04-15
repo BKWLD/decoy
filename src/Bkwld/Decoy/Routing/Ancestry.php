@@ -159,7 +159,7 @@ class Ancestry {
 		
 		// If it doesn't exist, try the plural version, which would be correct
 		// for a many to many relationship
-		if (!method_exists($this->controller->model(), $relationship)) {}
+		if (!method_exists($this->controller->model(), $relationship)) {
 			$relationship = Str::plural($relationship);
 			if (!method_exists($this->controller->model(), $relationship)) {
 				throw new Exception('Child relationship missing, looking for '.$relationship);
