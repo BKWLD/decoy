@@ -40,15 +40,6 @@ class Ancestry {
 			|| $this->isActingAsRelated();
 	}
 	
-	// Return a boolean for whether the parent relationship represents a many to many
-	public function isChildInManyToMany() {
-		if (empty($this->SELF_TO_PARENT)) return false;
-		$model = new $this->MODEL; // Using the 'Model' class alias didn't work, was the parent
-		if (!method_exists($model, $this->SELF_TO_PARENT)) return false;
-		$relationship = $model->{$this->SELF_TO_PARENT}();
-		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
-	}
-	
 	/**
 	 * Test if the current URL is for a controller acting in a child capacity.  We're only
 	 * checking wilcarded routes (not any that were explictly registered), because I think
@@ -94,14 +85,25 @@ class Ancestry {
 		return $this->wildcard->detectController() === get_class($this->controller);
 	}
 	
-	/*
+	/**
+	 * Return a boolean for whether the parent relationship represents a many to many.  This is
+	 * different from isChildRoute() because it also checks what kind of relationship the child
+	 * is in.
+	 */
+	public function isChildInManyToMany() {
+		if (empty($this->SELF_TO_PARENT)) return false;
+		$model = new $this->MODEL; // Using the 'Model' class alias didn't work, was the parent
+		if (!method_exists($model, $this->SELF_TO_PARENT)) return false;
+		$relationship = $model->{$this->SELF_TO_PARENT}();
+		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
+	}
 	
 	// Guess at what the parent controller is by examing the route or input varibles
 	public function deduceParentController() {
 		
 		// If a child index view, get the controller from the route
 		if ($this->requestIsChild()) {
-			return Request::segment(1).'.'.Request::segment(2);
+			return $this->wildcard->getParentController();
 		
 		// If one of the many to many xhr requests, get the parent from Input
 		} elseif ($this->parentIsInInput()) {
@@ -113,6 +115,8 @@ class Ancestry {
 			return Request::route()->controller;
 		}
 	}
+	
+	/*
 	
 	// Guess as what the relationship function on the parent model will be
 	// that points back to the model for this controller by using THIS

@@ -127,6 +127,11 @@ class Base extends Controller {
 		if ($this->MODEL && !class_exists('Model')) {
 			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
 		}
+				
+		// If the current route has a parent, discover what it is
+		// if (empty($this->PARENT_CONTROLLER) && $this->isChildRoute()) {
+		// 	$this->PARENT_CONTROLLER = $this->deduceParentController();
+		// }
 		
 	}
 	
@@ -317,14 +322,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	
 	// Special constructor behaviors
 	function __construct() {
-
-	
-
-		
-		// If the current route has a parent, discover what it is
-		if (empty($this->PARENT_CONTROLLER) && $this->isChildRoute()) {
-			$this->PARENT_CONTROLLER = $this->deduceParentController();
-		}
 		
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship

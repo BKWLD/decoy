@@ -60,12 +60,12 @@ class Wildcard {
 	 * Get the full namespaced controller
 	 * @return string i.e. Admin\ArticlesController or Bkwld\Decoy\Controllers\Admins
 	 */
-	public function detectController() {
-		
+	public function detectController($class_name = null) {
+
 		// Setup the two schemes
-		$name = $this->detectControllerClass();
-		$app = Str::studly($this->dir).'\\'.$name.'Controller';
-		$decoy = 'Bkwld\Decoy\Controllers\\'.$name;
+		if (!$class_name) $class_name = $this->detectControllerClass();
+		$app = Str::studly($this->dir).'\\'.$class_name.'Controller';
+		$decoy = 'Bkwld\Decoy\Controllers\\'.$class_name;
 		
 		// Find the right one
 		if (class_exists($app)) return $app;
@@ -76,15 +76,15 @@ class Wildcard {
 	/**
 	 * Detect the controller for a path.  Which is the last non-action
 	 * string in the path
-	 * @return string The controller class, i.e. ArticlesController
+	 * @return string The controller class, i.e. Articles
 	 */
-	public function detectControllerClass() {
+	public function detectControllerClass($name = null) {
 		
 		// The path must begin with the config dir
 		if (!preg_match('#^'.$this->dir.'#i', $this->path, $matches)) return false;
 		
 		// Find the controller from the end of the path
-		$name = $this->detectControllerName();
+		if (!$name) $name = $this->detectControllerName();
 		
 		// Form the namespaced controller
 		return Str::studly($name);
@@ -95,13 +95,22 @@ class Wildcard {
 	 * @return mixed false if not found, otherwise a string like "news" or "slides"
 	 */
 	public function detectControllerName() {
-		$pattern = '#/([a-z-]+)(/\d)?(/('.implode('|', $this->actions).'))?/?$#i';
+		$pattern = '#/'.$this->controllerNameRegex().'#i';
 		if (!preg_match($pattern, $this->path, $matches)) return false;
 		return $matches[1];
 	}
 	
 	/**
+	 * Make the regex pattern to find the controller
+	 * @return regexp
+	 */
+	private function controllerNameRegex() {
+		return '([a-z-]+)(/\d)?(/('.implode('|', $this->actions).'))?/?$';
+	}
+	
+	/**
 	 * Detect the action for a path
+	 * @return string 'create', 'update', 'edit', ....
 	 */
 	public function detectAction() {
 		
@@ -135,6 +144,7 @@ class Wildcard {
 	
 	/**
 	 * Detect the id for the path
+	 * @return integer An id number for a DB record
 	 */
 	public function detectId() {
 		
@@ -152,18 +162,38 @@ class Wildcard {
 	
 	/**
 	 * Detect if the request is for a child of another controller
+	 * @return boolean
 	 */
 	public function detectIfChild() {
 		
 		// A child is a controller preceeded by an id and another controller
-		// though there may be an action on the end
+		// though there may be an action on the end (which should be ignored)
 		$pattern = '#[a-z-]+/\d+/(?!$|'.implode('$|', $this->actions).'$)#i';
 		return preg_match($pattern, $this->path) === 1;
 		
 	}
 	
 	/**
-	 * Return the path that the wildcard instance is operatin on
+	 * Figure out the parent controller of the path
+	 * @return string For admin/base/2/slides/4/edit, returns "base"
+	 */
+	public function getParentController() {
+		
+		// Find the name of the parent controller, which is string followed by
+		// a number followed by the controller's regexp.  Making sure not to confuse
+		// the action on a parent controller with the child action.
+		$pattern = '#/([a-z-]+)/\d/(?!('.implode('|', $this->actions).')$)'.$this->controllerNameRegex().'#i';
+		if (!preg_match($pattern, $this->path, $matches)) return false;
+		$name = $matches[1];
+		
+		// Convert it to a class
+		return $this->detectController($this->detectControllerClass($name));
+		
+	}
+	
+	/**
+	 * Return the path that the wildcard instance is operating on
+	 * @return string ex: admin/news/2/edit
 	 */
 	public function path() {
 		return $this->path();
