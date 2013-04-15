@@ -33,7 +33,11 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$controller = $this->buildController($path, $verb);
 		
 		// Build wildcard dependency
-		$wildcard = new Wildcard('admin', $verb, $path);
+		if (empty($options['path'])) {
+			$wildcard = new Wildcard('admin', $verb, $path);
+		} else {
+			$wildcard = new Wildcard('admin', $verb, $options['path']);
+		}
 	
 		// Mock input
 		$input = m::mock('Symfony\Component\HttpFoundation\Request');
@@ -60,11 +64,28 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$this->assertTrue($this->build('admin/news/2/photos', 'POST')->requestIsChild());
 	}
 	
-	// Though this path would never be used ('base'), this allows the test to pass because of the class_exists() requirement
+	// Though this path ('admin/base') would never be used, this allows the test to pass because of the 
+	// class_exists() requirement within isRouteController() (since decoy has a controller called 'base')
+	
+	public function testIsRouteController() {
+		$this->assertFalse($this->build('admin/base', 'GET', array('path' => 'admin/news'))->isRouteController());
+		$this->assertFalse($this->build('admin/base/2/edit', 'GET', array('path' => 'admin/news'))->isRouteController());
+		$this->assertTrue($this->build('admin/base')->isRouteController());
+		$this->assertTrue($this->build('admin/base/2/edit')->isRouteController());
+	}
+
 	public function testParentIsInInput() {
 		$this->assertFalse($this->build('admin/base')->parentIsInInput());
 		$this->assertFalse($this->build('admin/busters', 'GET', array('parent_controller' => true))->parentIsInInput());
 		$this->assertTrue($this->build('admin/base', 'GET', array('parent_controller' => true))->parentIsInInput());
+	}
+	
+	public function testIsActingAsRelated() {
+		$this->assertFalse($this->build('admin/base')->isActingAsRelated());
+		$this->assertFalse($this->build('admin/base/2/edit')->isActingAsRelated());
+		$this->assertTrue($this->build('admin/base', 'GET', array('path' => 'admin/news/2/edit'))->isActingAsRelated());
+		$this->assertFalse($this->build('admin/base', 'GET', array('path' => 'admin/news'))->isActingAsRelated());
+		$this->assertTrue($this->build('admin/base/2/edit', 'GET', array('path' => 'admin/news/2/edit'))->isActingAsRelated());
 	}
 	
 }

@@ -58,31 +58,43 @@ class Ancestry {
 		return $this->wildcard->detectIfChild();
 	}
 
-	// Test if the current route is one of the many to many XHR requests
+	/**
+	 * Test if the current route is one of the many to many XHR requests
+	 */
 	public function parentIsInInput() {
 
 		// This is check is only allowed if the request is for this controller.  If other
 		// controller instances are instantiated, they were not designed to be informed by the input.
-		if ($this->wildcard->detectController() != get_class($this->controller)) return false;
+		if (!$this->isRouteController()) return false;
+		
+		// Check for a property in the AJAX input of 'parent_controller'
 		return $this->input->has('parent_controller');
 	}
 	
-	/*
-	
-	// Test if the controller must be used in rendering a related list within another.  In other
-	// words, the controller is different than the request and you're on an edit page.  Had to
-	// use action[uses] because Request::route()->controller is sometimes empty.  
-	// Request::route()->action['uses'] is like "admin.issues@edit".  We're also testing that
-	// the controller isn't in the URI.  This would never be the case when something was in the
-	// sidebar.  But without it, deducing the breadcrumbs gets confused because controllers get
-	// instantiated not on their route but aren't the children of the current route.
+	/**
+	 * Test if the controller may be being used in rendering a related list within another.  In other
+	 * words, the controller is different than the request and you're on an edit page.
+	 */
 	public function isActingAsRelated() {
-		$handles = Bundle::option('decoy', 'handles');
-		$controller_name = substr($this->CONTROLLER, strlen($handles.'.'));
-		return strpos(Request::route()->action['uses'], $this->CONTROLLER.'@') === false
-			&& strpos(URI::current(), '/'.$controller_name.'/') === false
-			&& strpos(Request::route()->action['uses'], '@edit') !== false;
+		
+		// We're also testing that the controller isn't in the URI.  This would never be the case when 
+		// something was in the sidebar.  But without it, deducing the breadcrumbs gets confused because 
+		// controllers get instantiated not on their route but aren't the children of the current route.
+		if ($this->isRouteController()) return false;
+		
+		// Check that we're on an edit page
+		return $this->wildcard->detectAction() === 'edit';
+
 	}
+	
+	/**
+	 * Test if the request is for a controller
+	 */
+	public function isRouteController() {
+		return $this->wildcard->detectController() === get_class($this->controller);
+	}
+	
+	/*
 	
 	// Guess at what the parent controller is by examing the route or input varibles
 	public function deduceParentController() {
