@@ -132,34 +132,50 @@ class Ancestry {
 	public function deduceParentRelationship() {
 		
 		// The relationship is generally a plural form of the model name.
-		// For instance, if Article has-many Slide, then there will be a "slides"
+		// For instance, if Article has-many SuperSlide, then there will be a "superSlides"
 		// relationship on Article.
-		preg_match('#[a-z-]+$#i', strtolower($this->controller->model()), $matches); // Remove namespaces
-		$relationship = Str::plural($matches[0]);
+		 // Remove namespaces
+		$model = $this->getClassName($this->controller->model());
+		$relationship = Str::plural(lcfirst($model));
 		
 		// Verify that it exists
-		if (!is_callable($this->controller->parentModel(), $relationship)) {
+		if (!method_exists($this->controller->parentModel(), $relationship)) {
 			throw new Exception('Parent relationship missing, looking for: '.$relationship);
 		}
 		return $relationship;
 	}
 	
-	// Guess at what the child relationship name is.  This is typically the same
-	// as the parent model.  For instance, Post has many Image.  Image will have
-	// a function named "post" for it's relationship
+	/**
+	 * Guess at what the child relationship name is, which is on the active controller,
+	 * pointing back to the parent.  This is typically the same
+	 * as the parent model.  For instance, Post has many Image.  Image will have
+	 * a function named "post" for it's relationship
+	 */
 	public function deduceChildRelationship() {
-		$relationship = strtolower($this->PARENT_MODEL);
-		if (!method_exists($this->MODEL, $relationship)) {
-			
-			// Try controller name instead, in other words the plural version.  It might be
-			// named this if it's a many-to-many relationship
-			$handles = Bundle::option('decoy', 'handles');
-			$relationship = strtolower(substr($this->PARENT_CONTROLLER, strlen($handles.'.')));
-			if (!method_exists($this->MODEL, $relationship)) {
-				throw new Exception('Child relationship missing on '.$this->MODEL);
+		
+		// If one to many, it will be singular
+		$parent_model = $this->getClassName($this->controller->parentModel());
+		$relationship = lcfirst($parent_model);
+		
+		// If it doesn't exist, try the plural version, which would be correct
+		// for a many to many relationship
+		if (!method_exists($this->controller->model(), $relationship)) {}
+			$relationship = Str::plural($relationship);
+			if (!method_exists($this->controller->model(), $relationship)) {
+				throw new Exception('Child relationship missing, looking for '.$relationship);
 			}
 		}
 		return $relationship;
+	}
+	
+	/**
+	 * Take a model fullly namespaced class name and get just the class
+	 * @param string $class ex: Bkwld\Decoy\Models\Admin
+	 * @return string ex: Admin
+	 */
+	private function getClassName($class) {
+		if (preg_match('#[a-z-]+$#i', $class, $matches)) return $matches[0];
+		throw new Exception('Class name could not be found: '. $class);
 	}
 	
 }

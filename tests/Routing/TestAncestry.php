@@ -35,6 +35,13 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		));
 		$controller->simulate($path);
 		
+		// Mock the model
+		if (!empty($options['model']) || !empty($options['parent_model'])) {
+			$controller = m::mock($controller);
+			if (!empty($options['model'])) $controller->shouldReceive('model')->andReturn($options['model']);
+			if (!empty($options['parent_model'])) $controller->shouldReceive('parentModel')->andReturn($options['parent_model']);
+		}
+		
 		return $controller;
 		
 	}	
@@ -126,18 +133,49 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	public function testDeduceParentRelationship() {
 		
 		$relationship = 'bases';
-		$parent_model = m::mock('alias:DeduceParentRelationshipParentTests');
+		$parent_model = m::mock('alias:DeduceParentRelationshipTest');
 		$parent_model->shouldReceive($relationship);
 		
 		// Have to use Base again because I don't have a good solve for givin the controller for this test
 		// a mocked class that inherits from base
-		$ancestry = $this->build('admin/deduce-parent-relationship-parent-tests/4/base', 'GET', array(
-			'parent_controller' => 'Admin\DeduceParentRelationshipParents',
-			'controller' => 'Admin\DeduceParentRelationshipTests'
+		$ancestry = $this->build('admin/deduce-parent-relationship-tests/4/base', 'GET', array(
+			'parent_controller' => 'Admin\DeduceParentRelationshipTests',
 		));
 		
 		$this->assertEquals($relationship, $ancestry->deduceParentRelationship());
 		
+		
+	}
+	
+	public function testDeduceChildRelationship() {
+		
+		$relationship = 'parentDeduceChildRelationshipTest';
+		$model = m::mock('alias:BaseDeduceChildRelationshipTest');
+		$model->shouldReceive($relationship);
+		
+		// Have to use Base again because I don't have a good solve for givin the controller for this test
+		// a mocked class that inherits from base
+		$ancestry = $this->build('admin/deduce-child-relationship-tests/4/base', 'GET', array(
+			'parent_model' => 'ParentDeduceChildRelationshipTest',
+			'model' => 'BaseDeduceChildRelationshipTest',
+		));
+		
+		$this->assertEquals($relationship, $ancestry->deduceChildRelationship());
+		
+		//----
+		
+		$relationship = 'parentDeduceChildRelationshipTwoTests';
+		$model = m::mock('alias:BaseDeduceChildRelationshipTwoTest');
+		$model->shouldReceive($relationship);
+		
+		// Have to use Base again because I don't have a good solve for givin the controller for this test
+		// a mocked class that inherits from base
+		$ancestry = $this->build('admin/deduce-child-relationship-two-tests/4/base', 'GET', array(
+			'parent_model' => 'ParentDeduceChildRelationshipTwoTest',
+			'model' => 'BaseDeduceChildRelationshipTwoTest',
+		));
+		
+		$this->assertEquals($relationship, $ancestry->deduceChildRelationship());
 		
 	}
 	
