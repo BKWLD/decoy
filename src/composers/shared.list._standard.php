@@ -89,10 +89,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 	// Massage the shorthand search config options
 	if (isset($view->search)) $view->search = Bkwld\Decoy\Search::longhand($view->search);
 	
-	// Set a common variable for both types of lists that get passed to the view
-	if (isset($view->listing->results)) $view->iterator = $view->listing->results;
-	else $view->iterator = $view->listing;
-	
 	// Make the link to the child listing, which is dependent on the current URL. I can't
 	// straight up use a route() because those aren't able to distinguish between controllers
 	// that are children to multiple parents
