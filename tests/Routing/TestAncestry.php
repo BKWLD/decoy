@@ -8,7 +8,7 @@ use \Mockery as m;
 
 class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	
-	private function buildController($path, $verb = 'GET') {
+	private function buildController($path, $verb = 'GET', $options = array()) {
 		
 		// Build config dependency
 		$config = m::mock('Config');
@@ -18,7 +18,14 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		// Build mock ancestery for controller.  This seems weird and recursive
 		// to be doing this from the class i'm testing...
 		$ancestry = m::mock('Ancestry');
-		$ancestry->shouldReceive('isChildRoute')->andReturn(false);
+		if (empty($options['parent_controller'])) {
+			$ancestry->shouldReceive('isChildRoute')->andReturn(false);
+		} else {
+			$ancestry->shouldReceive('isChildRoute')->andReturn(true);
+			$ancestry->shouldReceive('deduceParentController')->andReturn($options['parent_controller']);
+			$ancestry->shouldReceive('deduceParentRelationship');
+			$ancestry->shouldReceive('deduceChildRelationship');
+		}
 		
 		// Build controller
 		$controller = new Base;
@@ -35,7 +42,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	private function build($path, $verb = 'GET', $options = array()) {
 		
 		// Build controller
-		$controller = $this->buildController($path, $verb);
+		$controller = $this->buildController($path, $verb, $options);
 		
 		// Build wildcard dependency
 		if (empty($options['path'])) {
@@ -51,7 +58,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 			$input->shouldReceive('get')->with('parent_controller')->andReturn(false);
 		} else {
 			$input->shouldReceive('has')->with('parent_controller')->andReturn(true);
-			$input->shouldReceive('get')->with('parent_controller')->andReturn('Admin\OtherController');
+			$input->shouldReceive('get')->with('parent_controller')->andReturn($options['parent_controller']);
 		}
 		
 		// Return ancestery instance
@@ -83,8 +90,8 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 
 	public function testParentIsInInput() {
 		$this->assertFalse($this->build('admin/base')->parentIsInInput());
-		$this->assertFalse($this->build('admin/busters', 'GET', array('parent_controller' => true))->parentIsInInput());
-		$this->assertTrue($this->build('admin/base', 'GET', array('parent_controller' => true))->parentIsInInput());
+		$this->assertFalse($this->build('admin/busters', 'GET', array('parent_controller' => 'Admin\ParentIsInInputTest'))->parentIsInInput());
+		$this->assertTrue($this->build('admin/base', 'GET', array('parent_controller' => 'Admin\ParentIsInInputTest'))->parentIsInInput());
 	}
 	
 	public function testIsActingAsRelated() {
@@ -104,8 +111,8 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testDeduceParentControllerInput() {
-		$this->assertEquals(false, $this->build('admin/busters', 'GET', array('parent_controller' => true))->deduceParentController());
-		$this->assertEquals('Admin\OtherController', $this->build('admin/base', 'GET', array('parent_controller' => true))->deduceParentController());
+		$this->assertEquals(false, $this->build('admin/busters', 'GET', array('parent_controller' => 'Admin\DeduceParentControllerInputTest'))->deduceParentController());
+		$this->assertEquals('Admin\DeduceParentControllerInputTest', $this->build('admin/base', 'GET', array('parent_controller' => 'Admin\DeduceParentControllerInputTest'))->deduceParentController());
 	}
 	
 	// As in a related list of base on an admin edit page
@@ -114,6 +121,24 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(false, $this->build('admin/news', 'GET', array('path' => 'admin/base'))->deduceParentController());
 		$this->assertEquals('Bkwld\Decoy\Controllers\Admins', $this->build('admin/base', 'GET', array('path' => 'admin/admins/2/edit'))->deduceParentController());
 		$this->assertEquals('Bkwld\Decoy\Controllers\Admins', $this->build('admin/base/autocomplete', 'GET', array('path' => 'admin/admins/2/edit'))->deduceParentController());
+	}
+	
+	public function testDeduceParentRelationship() {
+		
+		$relationship = 'bases';
+		$parent_model = m::mock('alias:DeduceParentRelationshipParentTests');
+		$parent_model->shouldReceive($relationship);
+		
+		// Have to use Base again because I don't have a good solve for givin the controller for this test
+		// a mocked class that inherits from base
+		$ancestry = $this->build('admin/deduce-parent-relationship-parent-tests/4/base', 'GET', array(
+			'parent_controller' => 'Admin\DeduceParentRelationshipParents',
+			'controller' => 'Admin\DeduceParentRelationshipTests'
+		));
+		
+		$this->assertEquals($relationship, $ancestry->deduceParentRelationship());
+		
+		
 	}
 	
 }

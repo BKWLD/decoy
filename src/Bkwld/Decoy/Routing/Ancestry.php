@@ -5,6 +5,7 @@ use Bkwld\Decoy\Controllers\Base;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Wildcard;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -99,7 +100,10 @@ class Ancestry {
 		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
 	}
 	
-	// Guess at what the parent controller is by examing the route or input varibles
+	/**
+	 * Guess at what the parent controller is by examing the route or input varibles
+	 * @return string ex: Admin\NewsController
+	 */
 	public function deduceParentController() {
 		
 		// If a child index view, get the controller from the route
@@ -118,16 +122,23 @@ class Ancestry {
 		} else return false;
 	}
 	
-	/*
-	
-	// Guess as what the relationship function on the parent model will be
-	// that points back to the model for this controller by using THIS
-	// controller's name.
-	// returns - The string name of the realtonship
+
+	/**
+	 * Guess as what the relationship function on the parent model will be
+	 * that points back to the model for this controller by using THIS
+	 * controller's name.
+	 * @return string ex: "slides" if this the slides controller
+	 */
 	public function deduceParentRelationship() {
-		$handles = Bundle::option('decoy', 'handles');
-		$relationship = substr($this->CONTROLLER, strlen($handles.'.'));
-		if (!method_exists($this->PARENT_MODEL, $relationship)) {
+		
+		// The relationship is generally a plural form of the model name.
+		// For instance, if Article has-many Slide, then there will be a "slides"
+		// relationship on Article.
+		preg_match('#[a-z-]+$#i', strtolower($this->controller->model()), $matches); // Remove namespaces
+		$relationship = Str::plural($matches[0]);
+		
+		// Verify that it exists
+		if (!is_callable($this->controller->parentModel(), $relationship)) {
 			throw new Exception('Parent relationship missing, looking for: '.$relationship);
 		}
 		return $relationship;
@@ -150,6 +161,5 @@ class Ancestry {
 		}
 		return $relationship;
 	}
-	*/
 	
 }

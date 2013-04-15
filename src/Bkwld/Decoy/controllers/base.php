@@ -69,6 +69,7 @@ class Base extends Controller {
 	 * @param Ancestry $ancestry
 	 */
 	private $config;
+	private $ancestry;
 	public function injectDependencies($dependencies = null) {
 		
 		// Set manually passed dependencies
@@ -133,6 +134,27 @@ class Base extends Controller {
 			$this->PARENT_CONTROLLER = $this->ancestry->deduceParentController();
 		}
 		
+		// If a parent controller was found, proceed to find the parent model, parent
+		// relationship, and child relationship
+		if (!empty($this->PARENT_CONTROLLER)) {
+			
+			// Determine it's model, so we can call static methods on that model
+			if (empty($this->PARENT_MODEL)) {
+				$this->PARENT_MODEL = $this->model($this->PARENT_CONTROLLER);
+			}
+
+			// Figure out what the relationship function to the child (this controller's
+			// model) on the parent model
+			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
+				$this->PARENT_TO_SELF = $this->ancestry->deduceParentRelationship();
+			}
+			
+			// Figure out the child relationship name, which is typically named the same
+			// as the parent model
+			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
+				$this->SELF_TO_PARENT = $this->ancestry->deduceChildRelationship();
+			}
+		}
 	}
 	
 	/**
@@ -200,10 +222,11 @@ class Base extends Controller {
 	
 	/**
 	 * Figure out the model for a class
-	 * @param string $class ex: 'Admin\NewsController'
+	 * @param string $class ex: "Admin\SlidesController"
+	 * @return string ex: "Slide"
 	 */
-	public function model($class) {
-		if ($this->MODEL) return $this->MODEL; // for getters
+	public function model($class = null) {
+		if (!$class) return $this->MODEL; // for getters
 		
 		// Swap out the namespace if decoy
 		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
@@ -218,6 +241,12 @@ class Base extends Controller {
 		$model = Str::singular($model);
 		return $model;
 	}
+	
+	/**
+	 * Return parent model
+	 * @return string ex: "Article"
+	 */
+	public function parentModel() { return $this->PARENT_MODEL; }
 	
 	//---------------------------------------------------------------------------
 	// Utility methods
@@ -305,7 +334,7 @@ class Base extends Controller {
 	// Private support methods
 	//---------------------------------------------------------------------------
 	
-
+	
 	
 }
 
@@ -314,55 +343,14 @@ class Base extends Controller {
 
 abstract class Decoy_Base_Controller extends Controller {
 	
-	//---------------------------------------------------------------------------
-	// Default settings
-	//---------------------------------------------------------------------------
-
-	
-	
-	// Special constructor behaviors
-	function __construct() {
-		
-		// If a parent controller was found, proceed to find the parent model, parent
-		// relationship, and child relationship
-		if (!empty($this->PARENT_CONTROLLER)) {
-			
-			// Instantiate the controller class if different from the current one.  They would be the same
-			// in the case of a relationship for related models.  Like if the site required "projects" to have
-			// a list of related projects, there would be a many-to-many back to oneself.  Because we're only
-			// instatiating the class here to get values set in the construtor, we can use ourself.
-			if ($this->PARENT_CONTROLLER == $this->CONTROLLER) $parent_controller_instance = $this;
-			else $parent_controller_instance = Controller::resolve(DEFAULT_BUNDLE, $this->PARENT_CONTROLLER);
-			
-			// Determine it's model, so we can call static methods on that model
-			if (empty($this->PARENT_MODEL)) {
-				$this->PARENT_MODEL = $parent_controller_instance->MODEL;
-			}
-
-			// Figure out what the relationship function to the child (this controller's
-			// model) on the parent model
-			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
-				$this->PARENT_TO_SELF = $this->deduceParentRelationship();
-			}
-			
-			// Figure out the child relationship name, which is typically named the same
-			// as the parent model
-			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
-				$this->SELF_TO_PARENT = $this->deduceChildRelationship();
-			}
-		}
-		
-	}
 	
 	//---------------------------------------------------------------------------
 	// Getter/setter
 	//---------------------------------------------------------------------------
 	
 	// Get access to protected properties
-	public function model() { return $this->MODEL; }
 	public function parent_controller() { return $this->PARENT_CONTROLLER; }
 	public function controller() { return $this->CONTROLLER; }
-	public function title() { return $this->TITLE; }
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
