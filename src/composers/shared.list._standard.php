@@ -68,7 +68,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Make an instance of the controller so values that get in the constructor can be inspected
 	$controller = new $view->controller;
-	
+
 	// Default settings
 	$defaults = array(
 		'columns'       => array('Title' => 'title'),
@@ -76,11 +76,11 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'convert_dates' => 'date',
 		'sidebar'       => false,
 		'parent_id'     => Request::segment(3), // This spot always holds it
-		'parent_controller' => $controller->parent_controller(),
+		'parent_controller' => $controller->parentController(),
 		'many_to_many'  => $controller->isChildInManyToMany(),
 		'tags'          => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 	);
-	
+
 	// Apply defaults
 	foreach($defaults as $key => $val) {
 		if (!isset($view->$key)) $view->$key = $val;

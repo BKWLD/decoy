@@ -4,7 +4,6 @@
 use Bkwld\Decoy\Controllers\Base;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Wildcard;
-use Illuminate\Routing\Router;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -36,7 +35,6 @@ class Ancestry {
 	 * 
 	 */
 	public function isChildRoute() {
-		if (empty($this->CONTROLLER)) throw new Exception('$this->CONTROLLER not set');
 		return $this->requestIsChild()
 			|| $this->parentIsInInput()
 			|| $this->isActingAsRelated();
@@ -93,11 +91,11 @@ class Ancestry {
 	 * is in.
 	 */
 	public function isChildInManyToMany() {
-		if (empty($this->SELF_TO_PARENT)) return false;
-		$model = new $this->MODEL; // Using the 'Model' class alias didn't work, was the parent
-		if (!method_exists($model, $this->SELF_TO_PARENT)) return false;
-		$relationship = $model->{$this->SELF_TO_PARENT}();
-		return is_a($relationship, 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
+		$relationship = $this->controller->selfToParent();
+		if (!$relationship) return false;
+		$model = new $this->controller->model();
+		if (!method_exists($model, $relationship)) return false;
+		return is_a($model->{$relationship}(), 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
 	}
 	
 	/**

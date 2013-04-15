@@ -7,6 +7,7 @@ use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
+use Config;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -82,11 +83,12 @@ class Base extends Controller {
 		// Set dependencies automatically
 		if (class_exists('App')) {
 			$this->config = App::make('config');
+			$request = App::make('request');
 			$this->ancestry = new Ancestry($this, new Wildcard(
-				Config::get('decoy::dir'),
-				App::make('request')->getMethod(), 
-				App::make('request')->path()
-				));
+					Config::get('decoy::dir'),
+					$request->getMethod(), 
+					$request->path()
+				), $request);
 			return true;
 		}
 		
@@ -168,6 +170,10 @@ class Base extends Controller {
 		$this->init($class);
 	}
 	
+	//---------------------------------------------------------------------------
+	// Getter/setter
+	//---------------------------------------------------------------------------
+	
 	/**
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
@@ -247,6 +253,63 @@ class Base extends Controller {
 	 * @return string ex: "Article"
 	 */
 	public function parentModel() { return $this->PARENT_MODEL; }
+	
+	/**
+	 * Return controller
+	 * @return string ex: Admin\SlidesController
+	 */
+	public function controller() { return $this->CONTROLLER; }
+	
+	/**
+	 * Get parent controller
+	 * @return string ex: Admin\ArticlesController
+	 */
+	public function parentController() { return $this->PARENT_CONTROLLER; }
+	
+	/**
+	 * Get $SELF_TO_PARENT relationship name
+	 * @return string ex: article
+	 */
+	public function selfToParent() {
+		return $this->SELF_TO_PARENT;
+	}
+	
+	/**
+	 * Pass along this request on ancestry, so we can keep that private for now
+	 * @return boolean
+	 */
+	public function isChildInManyToMany() {
+		return $this->ancestry->isChildInManyToMany();
+	}
+	
+	//---------------------------------------------------------------------------
+	// Basic CRUD methods
+	//---------------------------------------------------------------------------
+	
+	/*
+	// Listing page
+	public function index() {
+		
+		// Run the query
+		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
+		$count = $results->total;
+		
+		// Render the view.  We can assume that Model has an ordered() function
+		// because it's defined on Decoy's Base_Model
+		$this->layout->nest('content', 'decoy::shared.list._standard', array(
+			'title'            => $this->TITLE,
+			'controller'       => $this->CONTROLLER,
+			'description'      => $this->DESCRIPTION,
+			'count'            => $count,
+			'listing'          => $results,
+			'columns'          => $this->COLUMNS,
+			'search'           => $this->SEARCH,
+		));
+		
+		// Inform the breadcrumbs
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+	}	
+	*/
 	
 	//---------------------------------------------------------------------------
 	// Utility methods
@@ -342,42 +405,12 @@ class Base extends Controller {
 
 
 abstract class Decoy_Base_Controller extends Controller {
-	
-	
-	//---------------------------------------------------------------------------
-	// Getter/setter
-	//---------------------------------------------------------------------------
-	
-	// Get access to protected properties
-	public function parent_controller() { return $this->PARENT_CONTROLLER; }
-	public function controller() { return $this->CONTROLLER; }
+
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
-	
-	// Listing page
-	public function get_index() {
-		
-		// Run the query
-		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
-		$count = $results->total;
-		
-		// Render the view.  We can assume that Model has an ordered() function
-		// because it's defined on Decoy's Base_Model
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
-			'search'           => $this->SEARCH,
-		));
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
-	}	
+
 	
 	// List page when the view is for a child in a related sense
 	public function get_index_child($parent_id) {

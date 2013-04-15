@@ -66,7 +66,7 @@ class Wildcard {
 		if (!$class_name) $class_name = $this->detectControllerClass();
 		$app = Str::studly($this->dir).'\\'.$class_name.'Controller';
 		$decoy = 'Bkwld\Decoy\Controllers\\'.$class_name;
-		
+
 		// Find the right one
 		if (class_exists($app)) return $app;
 		else if (class_exists($decoy)) return $decoy;

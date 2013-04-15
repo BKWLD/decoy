@@ -21,21 +21,22 @@ class Admins extends Base {
 	//Listing view
 	public function index() {
 		
+		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
-		$query = Model::ordered()->paginate($this->PER_PAGE);
-		foreach($query as &$item) {
+		$results = Model::ordered()->paginate($this->PER_PAGE)->getIterator();
+		foreach($results as &$item) {
 			$item = new Model((array) $item);
 		}
-	
+
 		// Bind to view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
-			'count'            => Model::count(),
-			'listing'          => $query,
-			'columns'          => $this->COLUMNS,
+			// 'description'      => $this->DESCRIPTION,
+			// 'count'            => Model::count(),
+			'listing'          => $results,
+			// 'columns'          => $this->COLUMNS,
 		));
 	}
 	

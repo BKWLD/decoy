@@ -67,7 +67,7 @@ class Router {
 	}
 	
 	/**
-	 * Addition admin routes
+	 * Additional admin routes
 	 */
 	public function registerAdmins() {
 		Route::get($this->dir.'/admins/{id}/disable', array('as' => 'decoy\admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable'));
