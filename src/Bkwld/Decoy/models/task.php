@@ -46,19 +46,19 @@ class Task {
 		$tasks = array();
 		
 		// Loop through PHP files
-		$task_files = scandir(path('app').'tasks');
+		$task_files = scandir(app_path().'tasks');
 		foreach($task_files as $task_file) {
 			if (!preg_match('#\w+\.php#', $task_file)) continue;
 			
 			// Get properties of the task
-			$file = path('app').'tasks/'.$task_file;
+			$file = app_path().'tasks/'.$task_file;
 			$name = basename($task_file, '.php');
 			$class = self::class_name($name);
 			
 			// Return this task
 			require_once($file);
 			$task = new $class();
-			if (!is_a($task, '\Decoy\Task')) continue; // We only want to deal with classes that extend from this
+			if (!is_a($task, 'Bkwld\Decoy\Models\Task')) continue; // We only want to deal with classes that extend from this
 			$tasks[] = $task;
 		}
 		
@@ -72,14 +72,14 @@ class Task {
 	public static function find($task) {
 		
 		// Load the file
-		$file = path('app').'tasks/'.strtolower($task).'.php';
+		$file = app_path().'tasks/'.strtolower($task).'.php';
 		if (!file_exists($file)) throw new Exception('This task could not be found');
 		require_once($file);
 		
 		// Instantiate
 		$class = self::class_name($task);
 		$task = new $class();
-		if (!is_a($task, '\Decoy\Task')) throw new Exception('Task is not a \Decoy\Task.');
+		if (!is_a($task, 'Bkwld\Decoy\Models\Task')) throw new Exception('Task is not a Bkwld\Decoy\Models\Task.');
 		return $task;
 	}
 	

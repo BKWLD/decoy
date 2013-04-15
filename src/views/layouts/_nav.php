@@ -11,7 +11,7 @@
 				<span class="icon-bar"></span>
 			</a>
 			
-			<a class="brand" href="<?=action('decoy::')?>"><?=Config::get('decoy::site_name')?></a>
+			<a class="brand" href="<?=route('decoy')?>"><?=Config::get('decoy::site_name')?></a>
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
@@ -49,29 +49,32 @@
 					<ul class="nav pull-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span>Hi, <?=DecoyAuth::user_name()?>!</span>
+								<span>Hi, <?=DecoyAuth::userName()?>!</span>
 								<img src="<?=DecoyAuth::userPhoto()?>" class="gravatar"/>
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
 								
-								<? if (is_a(new DecoyAuth, 'Decoy\Auth')): ?>
-									<li><a href="<?=action('decoy::admins')?>">Admins</a></li>
+								<? if (is_a(new DecoyAuth, 'Bkwld\Decoy\Auth\Sentry')): ?>
+									<li><a href="<?=action('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
 									<li class="divider"></li>
 								<? endif ?>
 								
+								<?/* Disabling until this can be re-written for commands
 								<? $divider = false; ?>
 								<? if (DecoyAuth::developer()): $divider = true; ?>
-									<li><a href="<?=action('decoy::tasks')?>">Tasks</a></li>
+									<li><a href="<?=action('Bkwld\Decoy\Controllers\Tasks@index')?>">Tasks</a></li>
 								<? endif ?>
 								
-								<? if (count(\Decoy\Worker::all())): $divider = true; ?>
-									<li><a href="<?=action('decoy::workers')?>">Workers</a></li>
+								<? if (count(Bkwld\Decoy\Models\Worker::all())): $divider = true; ?>
+									<li><a href="<?=action('Bkwld\Decoy\Controllers\Workers@index')?>">Workers</a></li>
 								<? endif ?>
 								
 								<? if ($divider): ?>
 									<li class="divider"></li>
 								<? endif ?>
+								
+								*/?>
 								
 								<li><a href="<?=DecoyAuth::userUrl()?>">Account</a></li>
 								<li><a href="<?=DecoyAuth::logoutUrl()?>">Log out</a></li>

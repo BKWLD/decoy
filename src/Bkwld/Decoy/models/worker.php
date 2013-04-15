@@ -133,7 +133,7 @@ class Worker extends Task {
 	// Get all the tasks that have workers
 	public static function all() {
 		return array_filter(parent::all(), function($task) {
-			return is_a($task, '\Decoy\Worker');
+			return is_a($task, 'Bkwld\Decoy\Models\Worker');
 		});
 		
 	}
