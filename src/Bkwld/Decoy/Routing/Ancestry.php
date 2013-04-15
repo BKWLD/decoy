@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Controllers\Base;
+use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Wildcard;
 use Illuminate\Routing\Router;
 use Symfony\Component\HttpFoundation\Request;
@@ -107,13 +108,14 @@ class Ancestry {
 		
 		// If one of the many to many xhr requests, get the parent from Input
 		} elseif ($this->parentIsInInput()) {
-			$input = BKWLD\Laravel\Input::json_and_input();
-			return $input['parent_controller'];
+			return $this->input->get('parent_controller');
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->isActingAsRelated()) {
-			return Request::route()->controller;
-		}
+			return $this->wildcard->detectController();
+		
+		// No parent found
+		} else return false;
 	}
 	
 	/*

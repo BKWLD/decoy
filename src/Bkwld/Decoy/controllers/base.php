@@ -129,9 +129,9 @@ class Base extends Controller {
 		}
 				
 		// If the current route has a parent, discover what it is
-		// if (empty($this->PARENT_CONTROLLER) && $this->isChildRoute()) {
-		// 	$this->PARENT_CONTROLLER = $this->deduceParentController();
-		// }
+		if (empty($this->PARENT_CONTROLLER) && $this->ancestry->isChildRoute()) {
+			$this->PARENT_CONTROLLER = $this->ancestry->deduceParentController();
+		}
 		
 	}
 	
