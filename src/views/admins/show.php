@@ -1,4 +1,4 @@
-<?=render('decoy::shared.form._header', array(
+<?=View::make('decoy::shared.form._header', array(
 	'title'       => $title,
 	'controller'  => $controller,
 	'item'        => @$item,

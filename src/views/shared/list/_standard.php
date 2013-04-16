@@ -8,17 +8,17 @@
 	
 	<?
 	// Create the page title for the sidebar layout
-	// if ($sidebar) echo render('decoy::shared.list._sidebar_header', $this->data());
+	if ($sidebar) echo View::make('decoy::shared.list._sidebar_header', $__data);
 	
 	// Create the page title for a full page layout
-	// else echo render('decoy::shared.list._full_header', $this->data());
+	else echo View::make('decoy::shared.list._full_header', $__data);
 
 	// Render the full table.  This could be broken up into smaller chunks but leaving
 	// it as is until the need arises
-	// echo render('decoy::shared.list._table', $this->data());
+	// echo View::make('decoy::shared.list._table', $__data);
 	
 	// Render pagination
-	// echo render('decoy::shared.list._pagination', $this->data());
+	// echo View::make('decoy::shared.list._pagination', $__data);
 	?>
 
 </div>

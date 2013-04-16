@@ -53,7 +53,7 @@ if (count($iterator)) {
 			
 		<?// Standard bulk actions ?>
 		<? else: ?>
-			<?=render('decoy::shared.list._bulk_actions')?>
+			<?=View::make('decoy::shared.list._bulk_actions')?>
 		<? endif ?>
 		
 		<?

@@ -5,6 +5,6 @@
  */
 ?>
 
-<?=render('decoy::shared.form.display._legend', $this->data())?>
-<?=render('decoy::shared.form.display._slug', $this->data())?>
-<?=render('decoy::shared.form.display._visible', $this->data())?>
+<?=View::make('decoy::shared.form.display._legend', $__data)?>
+<?=View::make('decoy::shared.form.display._slug', $__data)?>
+<?=View::make('decoy::shared.form.display._visible', $__data)?>

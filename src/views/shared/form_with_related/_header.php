@@ -36,7 +36,7 @@ This partial is used to open forms that have a related data sidebar
 </h1>
 
 <?// Show validation errors?>
-<?=render('decoy::shared.form._errors')?>
+<?=View::make('decoy::shared.form._errors')?>
 
 <div class="row">
 	<div class="span6">

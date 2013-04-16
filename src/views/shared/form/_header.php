@@ -30,7 +30,7 @@ It expects:
 	<? if(!empty($item)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
-				<a href="<?=Html::new_route($controller, @$parent_id)?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=Html::relative($controller, @$parent_id)?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		</div>
 	<? endif ?>
@@ -40,7 +40,7 @@ It expects:
 </h1>
 
 <?// Show validation errors?>
-<?=render('decoy::shared.form._errors')?>
+<?=View::make('decoy::shared.form._errors')?>
 
 <?// The action that is currently being handled ?>
 <? if (empty($no_legend)): ?>

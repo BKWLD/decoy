@@ -21,7 +21,7 @@ with a related data sidebar.  It expects:
 
 ?>
 
-		<?=render('decoy::shared.form_with_related._split', $this->data())?>
+		<?=View::make('decoy::shared.form_with_related._split', $__data)?>
 
 		<?
 		// If there is related data, loop through each list of related data

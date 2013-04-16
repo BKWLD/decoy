@@ -15,7 +15,7 @@
 		
 		<?// If we've declared this relationship a many to many one, show the autocomplete ?>
 		<? if ($many_to_many): ?>
-			<?=render('decoy::shared.form.relationships._many_to_many', $this->data())?>
+			<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
 		
 		<?// Else it's a regular one to many, so show a link to create a new item ?>
 		<? else: ?>
@@ -33,4 +33,4 @@
 </h1>
 
 <?// Search form?>
-<?=render('decoy::shared.list._search', $this->data())?>
+<?=View::make('decoy::shared.list._search', $__data)?>

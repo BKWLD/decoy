@@ -1,4 +1,4 @@
-<?=render('decoy::shared.form._header', array(
+<?=View::make('decoy::shared.form._header', array(
 	'title'       => 'General Content',
 	'controller'  => 'decoy::content',
 	'description' => 'This page contains simple fields for content that appears throughout the site.',
