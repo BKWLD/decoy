@@ -39,7 +39,7 @@ Html::macro('render_list_column', function($item, $column, $convert_dates) {
 	);
 	
 	// Convert the item to an array so I can test for values
-	$test_row = $item->to_array();
+	$test_row = $item->toArray();
 	
 	// If the object has a method defined with the column vaue, use it
 	if (method_exists($item, $column)) {

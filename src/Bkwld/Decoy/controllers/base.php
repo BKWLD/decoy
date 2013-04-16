@@ -781,8 +781,8 @@ abstract class Decoy_Base_Controller extends Controller {
 	}
 	
 	// Convert an eloquent result set into an array
-	static protected function eloquent_to_array($query) {
-		return array_map(function($m) { return $m->to_array(); }, $query);
+	static protected function eloquentToArray($query) {
+		return array_map(function($m) { return $m->toArray(); }, $query);
 	}
 	
 	// Run the find method on the parent model

@@ -63,7 +63,7 @@ class Content extends Base {
 		$organized = array();
 		foreach($pairs as $pair) {
 			$category = empty($pair->category) ? 'General' : $pair->category;
-			$organized[$category][] = (object) $pair->to_array();
+			$organized[$category][] = (object) $pair->toArray();
 		}	
 		return $organized;
 	}
