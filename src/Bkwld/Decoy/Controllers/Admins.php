@@ -1,9 +1,8 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
-use \Input;
-use \Model;
-use \Sentry;
+use Input;
+use Sentry;
 
 /**
  * Admin management interface

@@ -128,8 +128,8 @@ class Base extends Controller {
 		
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
-		if ($this->MODEL && !class_exists('Model')) {
-			if (!class_alias($this->MODEL, 'Model')) throw new Exception('Class alias failed');
+		if ($this->MODEL && !class_exists('Bkwld\Decoy\Controllers\Model')) {
+			if (!class_alias($this->MODEL, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
 				
 		// If the current route has a parent, discover what it is
@@ -323,7 +323,7 @@ class Base extends Controller {
 		}
 
 		// Pass validation through
-		Former::withRules(\Model::$rules);
+		Former::withRules(Model::$rules);
 		
 		// Return view
 		$this->layout->nest('content', $this->SHOW_VIEW, array(
@@ -333,7 +333,7 @@ class Base extends Controller {
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
-			'crops'            => (object) \Model::$CROPS,
+			'crops'            => (object) Model::$CROPS,
 		));
 		
 		// Pass parent_id
@@ -341,6 +341,38 @@ class Base extends Controller {
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::generate_from_url());
+	}
+	
+	/**
+	 * Edit form
+	 */
+	public function get_edit($id) {
+
+		// Get the work
+		if (!($item = Model::find($id))) return Response::error('404');
+
+		// Populate form
+		Former::populate($item);
+		Former::withRules(Model::$rules);
+		
+		// Render the view
+		$this->layout->nest('content', $this->SHOW_VIEW, array(
+			'title'            => $this->TITLE,
+			'controller'       => $this->CONTROLLER,
+			'description'      => $this->DESCRIPTION,
+			'item'             => $item,
+			'crops'            => (object) Model::$CROPS,
+		));
+		
+		// Figure out the parent_id
+		if ($this->SELF_TO_PARENT) {
+			$parent_id = $item->{$this->SELF_TO_PARENT}()->foreign_value();
+			$this->layout->content->parent_id = $parent_id;
+		}
+		
+		// Inform the breadcrumbs
+		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+
 	}
 	
 	//---------------------------------------------------------------------------
@@ -584,36 +616,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
 		else return Redirect::to(str_replace('new', $item->id, URI::current()));
-	}
-	
-	// Edit form
-	public function get_edit($id) {
-
-		// Get the work
-		if (!($item = Model::find($id))) return Response::error('404');
-
-		// Populate form
-		Former::populate($item);
-		Former::withRules(Model::$rules);
-		
-		// Render the view
-		$this->layout->nest('content', $this->SHOW_VIEW, array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
-			'item'             => $item,
-			'crops'            => (object) Model::$CROPS,
-		));
-		
-		// Figure out the parent_id
-		if ($this->SELF_TO_PARENT) {
-			$parent_id = $item->{$this->SELF_TO_PARENT}()->foreign_value();
-			$this->layout->content->parent_id = $parent_id;
-		}
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
-
 	}
 	
 	// Update an item
