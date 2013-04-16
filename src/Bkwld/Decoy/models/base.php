@@ -180,11 +180,14 @@ abstract class Base extends Eloquent {
 		return $model->table();
 	}
 	
-	// The pivot_id may be accessible at $this->pivot->id if the result was fetched
-	// through a relationship OR it may be named pivot_id out of convention (something
-	// currently done in Decoy_Base_Controller->get_index_child()).  This function
-	// checks for either
-	public function pivot_id() {
+	/**
+	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched
+	 * through a relationship OR it may be named pivot_id out of convention (something
+	 * currently done in Decoy_Base_Controller->get_index_child()).  This function
+	 * checks for either
+	 * @return integer 
+	 */
+	public function pivotId() {
 		if (!empty($this->pivot->id)) return $this->pivot->id;
 		else if (!empty($this->pivot_id)) return $this->pivot_id;
 		else return null;
@@ -239,9 +242,13 @@ abstract class Base extends Eloquent {
 		
 	}
 	
-	// Get the admin controller name-path
-	static public function admin_controller() {
-		return Bundle::option('decoy', 'handles').'.'.strtolower(Str::plural(get_called_class()));
+	/**
+	 * Get the admin controller class for this model.  It's assumed to NOT be a decoy controller.
+	 * In other words, it's in app/controllers/admin/.
+	 * @return string ex: Admin\ArticlesController
+	 */
+	static public function adminControllerClass() {
+		return ucfirst(Config::get('decoy::dir')).'\\'.Str::plural(get_called_class()).'Controller';
 	}
 	
 }

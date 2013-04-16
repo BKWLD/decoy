@@ -19,7 +19,7 @@ if (count($listing)) {
 	
 	// Has visibilty toggle
 	$has_visible = array_key_exists('visible', $test_row);
-	
+		
 	// Increment the actions count
 	if (!$many_to_many && $has_visible) $actions++;
 }
@@ -60,18 +60,22 @@ if (count($listing)) {
 		// Loop through the listing data
 		foreach ($listing as $item):
 
-			// Base the controller name from the model name if it's not defined.  This allows a listing to show
+			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
 			// rows from multiple models
-			$controller_path = empty($controller) ? call_user_func(get_class($item).'::admin_controller') : $controller;
+			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
+		
 		?>
 	
 			<tr 
-				data-model-id="<?=$many_to_many?$item->pivot_id(): $item->id?>"
+				data-model-id="<?=$many_to_many ? $item->pivotId(): $item->id?>"
 				
 				<?
 				// Add position value from the row or from the pivot table.  
 				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
 				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
+				
+				// Figure out the edit link
+				if ($many_to_many) $edit_url = 
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
@@ -87,6 +91,7 @@ if (count($listing)) {
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
+						<? return ?>
 						<?=Html::render_list_column($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
@@ -113,7 +118,7 @@ if (count($listing)) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=route($controller_path.'@remove', $item->pivot_id())?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+						<a href="<?=route($controller_path.'@remove', $item->pivotId())?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
