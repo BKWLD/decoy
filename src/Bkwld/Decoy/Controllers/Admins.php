@@ -41,7 +41,7 @@ class Admins extends Base {
 	}
 	
 	// Create a new one
-	public function post_new() {
+	public function post() {
 		
 		// Validate
 		if ($result = $this->validate(Admin::$rules)) return $result;
@@ -73,7 +73,7 @@ class Admins extends Base {
 	}
 
 	// Edit form
-	public function get_edit($id) {
+	public function edit($id) {
 		
 		// Make password optional
 		unset(Model::$rules['password']);
@@ -83,7 +83,7 @@ class Admins extends Base {
 	}
 	
 	// Handle updates.
-	public function post_edit($id) {
+	public function update($id) {
 		
 		// Lookup admin
 		if (!($admin = Admin::get($id))) return Response::error('404');
@@ -118,7 +118,7 @@ class Admins extends Base {
 	}
 	
 	// Delete the admin
-	public function delete_delete($ids) {
+	public function destroy($ids) {
 		$ids = explode('-',$ids);
 		foreach($ids as $id) {
 			if (!($admin = Admin::get($id))) return Response::error('404');
@@ -129,14 +129,14 @@ class Admins extends Base {
 	}
 	
 	// Disable the admin
-	public function get_disable($id) {
+	public function disable($id) {
 		if (!($admin = Admin::get($id))) return Response::error('404');
 		$admin->disable();
 		return Redirect::back();
 	}
 	
 	// Enable the admin
-	public function get_enable($id) {
+	public function enable($id) {
 		if (!($admin = Admin::get($id))) return Response::error('404');
 		$admin->enable();
 		return Redirect::back();
