@@ -92,7 +92,6 @@ if (count($listing)) {
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
-						<? return ?>
 						<?=Html::render_list_column($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
@@ -119,11 +118,11 @@ if (count($listing)) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=route($controller_path.'@remove', $item->pivotId())?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+						<a href="<?=URL::to(Html::relative('remove', $item->pivotId(), $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=route($controller_path.'@delete', $item->id)?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<a href="<?=URL::to(Html::relative('delete', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
 					<? endif ?>
 				</td>
 			</tr>

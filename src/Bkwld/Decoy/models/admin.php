@@ -51,6 +51,7 @@ class Admin extends Base {
 	// Show a badge if the user is the currently logged in
 	public function statuses() {
 		$html ='';
+		return '';
 		
 		// If row is you
 		if ($this->id == Sentry::user()->get('id')) {
