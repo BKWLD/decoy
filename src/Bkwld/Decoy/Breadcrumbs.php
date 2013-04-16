@@ -1,11 +1,13 @@
 <?php namespace Bkwld\Decoy;
 
 // Imports
-use \URL;
-use \Request;
-use \Config;
-use \Bundle;
-use \Log;
+use Bkwld\Decoy\Routing\Wildcard;
+use Bundle;
+use Config;
+use Request;
+use Log;
+use URL;
+
 
 // This class has shared methods that assist in the generation of breadcrumbs
 class Breadcrumbs {
@@ -28,7 +30,7 @@ class Breadcrumbs {
 		// Loop through all url segements and create breadcrumbs out of them
 		foreach($parts as $part) {
 			$path .= '/'.$part;
-			$breadcrumbs[$path] = ucwords(str_replace('_', ' ', $part));
+			$breadcrumbs[$path] = ucwords(str_replace('-', ' ', $part));
 		}
 		return $breadcrumbs;
 	}
@@ -94,32 +96,32 @@ class Breadcrumbs {
 		$segments = explode('/', $path);
 		
 		// Loop through them in blocks of 2: [list, detail]
-		$url = '/'.$segments[0];
+		$url = $segments[0];
 		for($i=1; $i<count($segments); $i+=2) {
 
-			// Find the contorller. Check if it's Decoy bundle if it's not found in the application
+			// Figure out the controller given the url partial
 			$url .= '/' . $segments[$i];
-			$controller = \BKWLD\Laravel\Controller::resolve_with_bundle($segments[0].'.'.$segments[$i]);
-			if (!$controller) $controller = \BKWLD\Laravel\Controller::resolve_with_bundle('decoy::'.$segments[$i]);
-			if (!$controller) continue;
+			$router = new Wildcard($segments[0], 'GET', $url);
+			if (!($controller = $router->detectController())) continue;
+			$controller = new $controller;
 			
 			// Add controller to breadcrumbs
-			$breadcrumbs[$url] = $controller->title();
+			$breadcrumbs[URL::to($url)] = $controller->title();
 			
 			// Add a detail if it exists
 			if (!isset($segments[$i+1])) break;
 			$id = $segments[$i+1];
 			
 			// On a "new" page
-			if ($id == 'new') {
+			if ($id == 'create') {
 				$url .= '/' . $id;
-				$breadcrumbs[$url] = 'New';
+				$breadcrumbs[URL::to($url)] = 'New';
 				
 			} elseif (is_numeric($id)) {
 				$url .= '/' . $id;
 				$model = $controller->model();
 				$item = call_user_func($model.'::find', $id);
-				$breadcrumbs[$url] = $item->title();
+				$breadcrumbs[URL::to($url)] = $item->title();
 			}
 		}
 		

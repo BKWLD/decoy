@@ -340,7 +340,7 @@ class Base extends Controller {
 		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
 		
 		// Inform the breadcrumbs
-		// $this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::generate_from_url());
 	}
 	
 	//---------------------------------------------------------------------------
