@@ -1,6 +1,10 @@
 <?// This partial is populated through the help of a view composer as well as a special helper ?>
 
-<div class="standard-list" data-js-view="standard-list" data-controller-route="<?=action($controller)?>" data-parent-controller="<?=$parent_controller?>">
+<div class="standard-list" 
+	data-js-view="standard-list" 
+	data-controller-route="<?=URL::to(Html::controller($controller))?>" 
+	<? if ($parent_controller):?> data-parent-controller="<?=URL::to(Html::controller($parent_controller))?><?endif?>
+	">
 	
 	<?
 	// Create the page title for the sidebar layout

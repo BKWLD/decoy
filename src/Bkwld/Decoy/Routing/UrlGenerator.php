@@ -57,5 +57,49 @@ class UrlGenerator {
 		
 	}
 	
+	/**
+	 * Make a URL given a fully namespaced controller.  This only generates routes
+	 * as if the controller is in the root level; as if it has no parents.
+	 * @param string $controller ex: Bkwld\Decoy\Controllers\Admins@create
+	 * @return string ex: http://admin/admins/create
+	 */
+	public function controller($controller = null, $id = null) {
+		
+		// Assume that the current, first path segment is the directory decoy is
+		// running in
+		preg_match('#[a-z-]+#i', $this->path, $matches);
+		$decoy = $matches[0];
+		
+		// Strip the action from the controller
+		$action = '';
+		if (preg_match('#@\w+$#', $controller, $matches)) {
+			$action = substr($matches[0], 1);
+			$controller = substr($controller, 0, -strlen($matches[0]));
+		}
+		
+		
+		// Get the controller name
+		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $controller);
+		$controller = preg_replace('#Controller$#', '', $controller);
+		
+		// Convert study caps to dashes
+		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller, $matches);
+		$controller = implode("-", $matches[0]);
+		$controller = strtolower($controller);
+		
+		// Begin the url
+		$path = $decoy.'/'.$controller;
+		
+		// If there is an id, add it now
+		if ($id) $path .= '/'.$id;
+		
+		// Now, add actions (except for index, which is implied by the lack of an action)
+		if ($action && $action != 'index') $path .= '/'.$action;
+		
+		// Done, return it
+		return $path;
+		
+	}
+	
 	
 }

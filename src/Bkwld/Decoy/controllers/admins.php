@@ -33,10 +33,10 @@ class Admins extends Base {
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
 			'controller'       => $this->CONTROLLER,
-			// 'description'      => $this->DESCRIPTION,
-			// 'count'            => Model::count(),
+			'description'      => $this->DESCRIPTION,
+			'count'            => Model::count(),
 			'listing'          => $results,
-			// 'columns'          => $this->COLUMNS,
+			'columns'          => $this->COLUMNS,
 		));
 	}
 	
