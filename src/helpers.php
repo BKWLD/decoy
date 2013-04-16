@@ -259,12 +259,6 @@ Html::macro('belongs_to', function($id, $route, $options = array()) {
 	return render('decoy::shared.form.relationships._belongs_to', $data);
 	
 });
-/**
- * Form an URL to a new page
- */
-Html::macro('new_route', function($route, $parent_id = null) {
-	return empty($parent_id) ? route($route.'@new') : route($route.'@new_child', $parent_id);
-});
 
 /**
  * Form a URL to an edit page, populating route variables by extracting items from URL segments

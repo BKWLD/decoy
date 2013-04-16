@@ -11,7 +11,7 @@
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>
 		<div class="btn-group">
-			<a href="<?=route($controller.'@new_child', $parent_id)?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
+			<a href="<?=URL::to(Html::relative('create'))?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
 		</div>
 	<? endif ?>
 	

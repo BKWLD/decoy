@@ -8,11 +8,6 @@ the sidebar for related data on forms that have a related data sidebar.
 		generating links.  I.e. 'admin.news'
 		
 	- item (optional) : The data that is being edited
-	
-	- parent_id (optional) : The id of the parent row of the model
-    that is the parent of what is being edited.  If news has mas 
-    many photos and this form is for photos, it is the id of the
-    associated news article
 
 */
 

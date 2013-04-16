@@ -11,11 +11,6 @@ with a related data sidebar.  It expects:
 
 	- related (optional) : An array of data needed to generate the sidebar
 	  list view
-	  
- 	- parent_id (optional) : The id of the parent row of the model
-    that is the parent of what is being edited.  If news has mas 
-    many photos and this form is for photos, it is the id of the
-    associated news article
 
 */
 
