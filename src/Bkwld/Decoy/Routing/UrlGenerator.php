@@ -31,7 +31,8 @@ class UrlGenerator {
 	 * as the function arguments
 	 * @param string $action The action we're linking to: index/edit/etc
 	 * @param integer $id Optional id that we're linking to.  Required for actions like edit
-	 * @param string $child The name of a child controller of the current path: 'slides'
+	 * @param string $child The name (or full class) of a child controller 
+	 *                      of the current path: 'slides', 'Admin\SlidesController'
 	 */
 	public function relative($action = 'index', $id = null, $child = null) {
 		
@@ -47,7 +48,19 @@ class UrlGenerator {
 		if ($id) $path .= '/'.$id;
 		
 		// If there is a child controller, add that now
-		if ($child) $path .= '/'.$child;
+		if ($child) {
+			
+			// If the child has a backslash, it's a namespaced class name, so convert to just name
+			if (strpos($child, '\\') !== false) $child = $this->controllerForUrl($child);
+			
+			// If the child is the same as the current controller in the path, then don't add the
+			// child.  For instance, if you are on an articles controller and the child is for
+			// articles, don't form a child link.  This logic exists so we can execute relative()
+			// from listing views and pass it the controller of a list item and not worrk about
+			// whether we're already on that page or whether the list is for related data.
+			if (!preg_match('#'.$child.'(/\d)?$#i', $path)) $path .= '/'.$child;
+			
+		}
 		
 		// Now, add actions (except for index, which is implied by the lack of an action)
 		if ($action && $action != 'index') $path .= '/'.$action;
@@ -77,15 +90,8 @@ class UrlGenerator {
 			$controller = substr($controller, 0, -strlen($matches[0]));
 		}
 		
-		
-		// Get the controller name
-		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $controller);
-		$controller = preg_replace('#Controller$#', '', $controller);
-		
-		// Convert study caps to dashes
-		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller, $matches);
-		$controller = implode("-", $matches[0]);
-		$controller = strtolower($controller);
+		// Convert controller for URL
+		$controller = $this->controllerForUrl($controller);
 		
 		// Begin the url
 		$path = $decoy.'/'.$controller;
@@ -98,6 +104,27 @@ class UrlGenerator {
 		
 		// Done, return it
 		return $path;
+		
+	}
+	
+	/**
+	 * Convert a controller to how it is referenced in a url
+	 * @param string $controller ex: Admin\ArticlesAreCoolController
+	 * @return string ex: articles-are-cool
+	 */
+	private function controllerForUrl($controller) {
+		
+		// Get the controller name
+		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $controller);
+		$controller = preg_replace('#Controller$#', '', $controller);
+		
+		// Convert study caps to dashes
+		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller, $matches);
+		$controller = implode("-", $matches[0]);
+		$controller = strtolower($controller);
+		
+		// Done
+		return $controller;
 		
 	}
 	

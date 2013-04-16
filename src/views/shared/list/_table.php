@@ -75,7 +75,8 @@ if (count($listing)) {
 				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
 				
 				// Figure out the edit link
-				if ($many_to_many) $edit_url = 
+				if ($many_to_many) $edit = URL::to(Html::controller($controller));
+				else $edit = URL::to(Html::relative('edit', $item->id, $controller));
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
@@ -87,7 +88,7 @@ if (count($listing)) {
 						
 						<?// Add an automatic link on the first column?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=Html::edit_route($controller_path, $many_to_many, $item->id)?>">
+							<a href="<?=$edit?>">
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
@@ -113,7 +114,7 @@ if (count($listing)) {
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=Html::edit_route($controller_path, $many_to_many, $item->id)?>"><i class="icon-pencil" title="Edit"></i></a>
+					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
 					| 
 					 
 					 <?// Many to many listings have remove icons instead of trash?>

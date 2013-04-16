@@ -27,9 +27,12 @@ class TestRoutingUrlGenerator extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('admin/news', $generator->relative('index'));
 		$this->assertEquals('admin/news/create', $generator->relative('create'));
 		$this->assertEquals('admin/news/2/edit', $generator->relative('edit', 2));
+		$this->assertEquals('admin/news/2/edit', $generator->relative('edit', 2, 'Admin\NewsController'));
 		$this->assertEquals('admin/news/2/destroy', $generator->relative('destroy', 2));
 		$this->assertEquals('admin/news/2/photos', $generator->relative('index', 2, 'photos'));
 		$this->assertEquals('admin/news/2/photos/create', $generator->relative('create', 2, 'photos'));
+		$this->assertEquals('admin/news/2/photos', $generator->relative('index', 2, 'Admin\PhotosController'));
+		$this->assertEquals('admin/news/2/photo-parties/create', $generator->relative('create', 2, 'Admin\PhotoPartiesController'));
 	}
 	
 	public function testChildIndex() {
@@ -53,6 +56,8 @@ class TestRoutingUrlGenerator extends PHPUnit_Framework_TestCase {
 		$this->assertEquals('admin/news/2/photos/4/destroy', $generator->relative('destroy', 4));
 		$this->assertEquals('admin/news/2/photos/4/users', $generator->relative('index', 4, 'users'));
 		$this->assertEquals('admin/news/2/photos/4/users/create', $generator->relative('create', 4, 'users'));
+		$this->assertEquals('admin/news/2/photos/4/users', $generator->relative('index', 4, 'Admin\UsersController'));
+		$this->assertEquals('admin/news/2/photos/4/user-dudes/create', $generator->relative('create', 4, 'Admin\UserDudesController'));
 	}
 	
 	public function testController() {
