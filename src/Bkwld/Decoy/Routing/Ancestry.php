@@ -167,6 +167,15 @@ class Ancestry {
 	}
 	
 	/**
+	 * Get the parent controller's id from the route or return false
+	 * @return mixed An id or false
+	 */
+	public function parentId() {
+		if (!$this->requestIsChild()) return false;
+		return $this->wildcard->detectParentId();
+	}
+	
+	/**
 	 * Take a model fullly namespaced class name and get just the class
 	 * @param string $class ex: Bkwld\Decoy\Models\Admin
 	 * @return string ex: Admin

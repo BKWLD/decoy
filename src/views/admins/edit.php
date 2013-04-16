@@ -30,22 +30,22 @@
 		<? if (!empty($item)): ?>
 			
 			<? if ($item->status): ?>
-				<a class="btn btn-warning js-tooltip" href="<?=action('decoy::admins@disable', array($item->id))?>" title="Remove ability to login">
+				<a class="btn btn-warning js-tooltip" href="<?=URL::to(Html::relative('disable', $item->id))?>" title="Remove ability to login">
 					<i class="icon-ban-circle icon-white"></i> Disable
 				</a>
 				
 			<? else: ?>
-				<a class="btn btn-warning js-tooltip" href="<?=action('decoy::admins@enable', array($item->id))?>" title="Allow admin to login again">
+				<a class="btn btn-warning js-tooltip" href="<?=URL::to(Html::relative('enable', $item->id))?>" title="Allow admin to login again">
 					<i class="icon-ok-circle icon-white"></i> Enable
 				</a>
 			<? endif ?>
 			
-			<a class="btn btn-danger" href="<?=route('decoy::admins@delete', array($item->id))?>">
+			<a class="btn btn-danger" href="<?=URL::to(Html::relative('destroy', $item->id))?>">
 				<i class="icon-trash icon-white"></i> Delete
 			</a>
 		<? endif ?>
 		
-		<a class="btn" href="<?=route('decoy::admins')?>">Cancel</a>
+		<a class="btn" href="<?=URL::to(Html::relative())?>">Cancel</a>
 	</div>
 		
 <?= Former::close() ?>

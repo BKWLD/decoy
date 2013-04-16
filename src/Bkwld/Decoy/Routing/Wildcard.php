@@ -161,6 +161,19 @@ class Wildcard {
 	}
 	
 	/**
+	 * Detect the parent id of the path
+	 * @return mixed An id number or false
+	 */
+	public function detectParentId() {
+		
+		// Look for a string, then a number (the parent id), followed by a non-action
+		// string, then possiby a number and/or an action string and then the end
+		$pattern = '#[a-z-]+/(\d+)/(?!'.implode('|', $this->actions).')[a-z-]+(/\d+)?(/('.implode('|', $this->actions).'))?$#i';
+		if (preg_match($pattern, $this->path, $matches)) return $matches[1];
+		return false;		
+	}
+	
+	/**
 	 * Detect if the request is for a child of another controller
 	 * @return boolean
 	 */

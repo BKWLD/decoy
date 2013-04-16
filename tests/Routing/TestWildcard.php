@@ -161,4 +161,23 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals(false, $router->getParentController());
 	}
 	
+	public function testDetectParentId() {
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/2/slides/4/edit');
+		$this->assertEquals(2, $router->detectParentId());
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/2/slides/create');
+		$this->assertEquals(2, $router->detectParentId());
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/2/slides');
+		$this->assertEquals(2, $router->detectParentId());
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/create');
+		$this->assertEquals(false, $router->detectParentId());
+		
+		$router = new Wildcard('admin', 'GET','admin/articles/2/edit');
+		$this->assertEquals(false, $router->detectParentId());
+		
+	}
+	
 }

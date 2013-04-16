@@ -11,6 +11,7 @@ use Config;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Str;
+use Former;
 use Input;
 use Redirect;
 use Request;
@@ -311,6 +312,37 @@ class Base extends Controller {
 	}	
 	*/
 	
+	/**
+	 * Create form
+	 */
+	public function create() {
+		
+		// If there is a parent, make sure it's id is valid
+		if ($parent_id = $this->ancestry->parentId()) {
+			if (!($parent = self::parentFind($parent_id))) return Response::error('404');
+		}
+
+		// Pass validation through
+		Former::withRules(\Model::$rules);
+		
+		// Return view
+		$this->layout->nest('content', $this->SHOW_VIEW, array(
+			'title'            => $this->TITLE,
+			'controller'       => $this->CONTROLLER,
+			'description'      => $this->DESCRIPTION,
+			
+			// Will never be used in a "new" view, but will keep errors from being thrown 
+			// about "undefined property"
+			'crops'            => (object) \Model::$CROPS,
+		));
+		
+		// Pass parent_id
+		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
+		
+		// Inform the breadcrumbs
+		// $this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+	}
+	
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
@@ -393,6 +425,12 @@ class Base extends Controller {
 		}
 	}
 	
+	// Run the find method on the parent model
+	protected function parentFind($parent_id) {
+		if (empty($this->PARENT_MODEL)) return false;
+		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
+	}
+	
 	//---------------------------------------------------------------------------
 	// Private support methods
 	//---------------------------------------------------------------------------
@@ -416,7 +454,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	public function get_index_child($parent_id) {
 
 		// Make sure the parent is valid
-		if (!($parent = self::parent_find($parent_id))) return Response::error('404');
+		if (!($parent = self::parentFind($parent_id))) return Response::error('404');
 			
 		// Form the query by manually making adding the where condition with the 
 		// parent foreign key.  We do this instead of using Laravel's syntax
@@ -482,7 +520,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// Require parent_id
 			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
 			$parent_id = Input::get('parent_id');
-			$parent = $this->parent_find($parent_id);
+			$parent = $this->parentFind($parent_id);
 			
 			// See if there is an exact match on what's been entered.  This is useful for many
 			// to manys with tags because we want to know if the reason that autocomplete
@@ -497,7 +535,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			// Get the ids of already attached rows through the relationship function.  There
 			// are ways to do just in SQL but then we lose the ability for the relationship
 			// function to apply conditions, like is done in polymoprhic relationships.
-			// $parent = $this->parent_find($parent_id);
+			// $parent = $this->parentFind($parent_id);
 			$siblings = $parent->{$this->PARENT_TO_SELF}()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
@@ -514,36 +552,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
-	// Create form
-	public function get_new() {
-		
-		// There may be a parent id.  This isn't defined in the function definition
-		// because I don't want all child classes to have to implement it
-		if (is_numeric(Request::segment(3))) {
-			$parent_id = Request::segment(3);
-			if (!($parent = self::parent_find($parent_id))) return Response::error('404');
-		}
-
-		// Pass validation through
-		Former::withRules(Model::$rules);
-		
-		// Return view
-		$this->layout->nest('content', $this->SHOW_VIEW, array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
-			
-			// Will never be used in a 'new' view, but will keep errors from being thrown about undfined property
-			'crops'            => (object) Model::$CROPS,
-		));
-		
-		// Pass parent_id
-		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
-	}
-	
 	// Create a new one
 	public function post_new() {
 		
@@ -551,7 +559,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// because I don't want all child classes to have to implement it
 		if (is_numeric(Request::segment(3))) {
 			$parent_id = Request::segment(3);
-			if (!($parent = self::parent_find($parent_id))) return Response::error('404');
+			if (!($parent = self::parentFind($parent_id))) return Response::error('404');
 		}
 		
 		// Create default slug
@@ -783,12 +791,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Convert an eloquent result set into an array
 	static protected function eloquentToArray($query) {
 		return array_map(function($m) { return $m->toArray(); }, $query);
-	}
-	
-	// Run the find method on the parent model
-	protected function parent_find($parent_id) {
-		if (empty($this->PARENT_MODEL)) return false;
-		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
 	}
 	
 	// Processing function for handling sorting when the position column is on pivot table.  As
