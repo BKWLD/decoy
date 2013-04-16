@@ -109,28 +109,11 @@ class Admin extends Base {
 		return true;
 	}
 	
-	// Convenince method for looking up admins in sentry cause catching
-	// exceptions takes a lot of lines
-	static public function get($id) {
-		try {
-			return Sentry::user((int) $id);
-		} catch(Exception $e) {
-			return false;
-		}
-	}
-	
 	// Override the Eloquent find.  This is required to make admins function with Decoy,
 	// which expects Eloquent models in it's generic breadcrumbs, listing, etc
 	static public function find($id, $columns = array('*')) {
-		
-		// Get the item from Sentry and then get an array of the user data from it
-		$admin = self::get($id)->get();
-		
-		// Populate an admin isntance with it's values, for the purposes of populating
-		// the edit form.
-		$admin = (array) array_merge($admin, $admin['metadata']);
-		return new Admin($admin);
-		
+		if ($admin = DB::table('users')->find($id)) return new Admin((array) $admin);
+		return false;
 	}
 	
 	// Count the total admins

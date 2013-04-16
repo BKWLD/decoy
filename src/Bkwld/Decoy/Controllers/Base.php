@@ -308,7 +308,7 @@ class Base extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::generate_from_url());
 	}	
 	*/
 	
@@ -371,7 +371,7 @@ class Base extends Controller {
 		}
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::generate_from_url());
 
 	}
 	
@@ -531,7 +531,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Decoy\Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::generate_from_url());
 		
 	}
 	

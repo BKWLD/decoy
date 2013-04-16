@@ -99,6 +99,9 @@ class Breadcrumbs {
 		$url = $segments[0];
 		for($i=1; $i<count($segments); $i+=2) {
 
+			// If an action URL, you're at the end of the URL
+			if (in_array($segments[$i], array('edit'))) break;
+
 			// Figure out the controller given the url partial
 			$url .= '/' . $segments[$i];
 			$router = new Wildcard($segments[0], 'GET', $url);

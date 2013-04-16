@@ -85,7 +85,7 @@ class Admins extends Base {
 	public function update($id) {
 		
 		// Lookup admin
-		if (!($admin = Admin::get($id))) return Response::error('404');
+		if (!($admin = Admin::find($id))) return Response::error('404');
 		
 		// Preserve the old admin data for the email
 		$admin_data = $admin->get();
@@ -120,7 +120,7 @@ class Admins extends Base {
 	public function destroy($ids) {
 		$ids = explode('-',$ids);
 		foreach($ids as $id) {
-			if (!($admin = Admin::get($id))) return Response::error('404');
+			if (!($admin = Admin::find($id))) return Response::error('404');
 			$admin->delete();
 		}
 		if (Request::ajax()) return Response::json('null');
@@ -129,14 +129,14 @@ class Admins extends Base {
 	
 	// Disable the admin
 	public function disable($id) {
-		if (!($admin = Admin::get($id))) return Response::error('404');
+		if (!($admin = Admin::find($id))) return Response::error('404');
 		$admin->disable();
 		return Redirect::back();
 	}
 	
 	// Enable the admin
 	public function enable($id) {
-		if (!($admin = Admin::get($id))) return Response::error('404');
+		if (!($admin = Admin::find($id))) return Response::error('404');
 		$admin->enable();
 		return Redirect::back();
 	}
