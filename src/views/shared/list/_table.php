@@ -14,7 +14,7 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 
 // Test the data for presence of special properties
 $actions = 2; // Default
-if (count($iterator)) {
+if (count($listing)) {
 	$test_row = $listing[0]->toArray();
 	
 	// Has visibilty toggle
@@ -58,7 +58,7 @@ if (count($iterator)) {
 		
 		<?
 		// Loop through the listing data
-		foreach ($iterator as $item):
+		foreach ($listing as $item):
 
 			// Base the controller name from the model name if it's not defined.  This allows a listing to show
 			// rows from multiple models
@@ -124,7 +124,7 @@ if (count($iterator)) {
 		<? endforeach ?>
 		
 		<?// Maybe there were no results found ?>
-		<? if (empty($iterator)): ?>
+		<? if (empty($listing)): ?>
 			<tr>
 				<td colspan="999">No results found</td>
 			</tr>
