@@ -18,10 +18,10 @@
 	</div>
 
 	<?= Former::checkbox('send_email', false)
+		->value(1)
 		->text(empty($item)?
 			'Send welcome email, including password':
-			'Email '.$item->first_name.' with changes')
-		->check(empty($item)?null:false) ?>
+			'Email '.$item->first_name.' with changes') ?>
 		
 	<hr/>
 	<div class="controls">

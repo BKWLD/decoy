@@ -1,6 +1,5 @@
 <?// Display form wide errors?>
-
-<? if (!empty($errors)): 
+<? if ($errors->any()): 
 	if(Config::get('error.log') == true) Log::info(print_r($errors, true));
 	?>
 
@@ -14,7 +13,7 @@
 	  	
 	  <?// Generic error message?>
 	  <? else: ?>
-	  	<? if (count($errors->all()) > 1): ?>
+	  	<? if ($errors->count() > 1): ?>
 	  		The fields in conflict are highlighted below.
 		  <? else: ?>
 	  		The field in conflict is highlighted below.
