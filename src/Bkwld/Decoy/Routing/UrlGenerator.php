@@ -41,7 +41,7 @@ class UrlGenerator {
 		
 		// Get the URL up to and including the last controller, but without id or action,
 		// by stripping those extra stuffs from the end.  Any trailing slashes are removed
-		$pattern = '#(/\d)?(/('.implode('|', $this->actions).'))?/?$#i';
+		$pattern = '#(/\d+)?(/('.implode('|', $this->actions).'))?/?$#i';
 		$path = preg_replace($pattern, '', $path);	
 	
 		// If there is an id, add it now
@@ -58,7 +58,7 @@ class UrlGenerator {
 			// articles, don't form a child link.  This logic exists so we can execute relative()
 			// from listing views and pass it the controller of a list item and not worrk about
 			// whether we're already on that page or whether the list is for related data.
-			if (!preg_match('#'.$child.'(/\d)?$#i', $path)) $path .= '/'.$child;
+			if (!preg_match('#'.$child.'(/\d+)?$#i', $path)) $path .= '/'.$child;
 			
 		}
 		

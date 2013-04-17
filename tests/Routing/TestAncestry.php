@@ -73,7 +73,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$this->assertFalse($this->build('admin/news', 'POST')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos/create')->requestIsChild());
-		$this->assertTrue($this->build('admin/news/2/photos/4/edit')->requestIsChild());
+		$this->assertTrue($this->build('admin/news/2/photos/40/edit')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos/autocomplete')->requestIsChild());
 		$this->assertTrue($this->build('admin/news/2/photos', 'POST')->requestIsChild());
 	}
@@ -105,7 +105,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	
 	public function testDeduceParentControllerRequest() {
 		$this->assertEquals(false, $this->build('admin/base')->deduceParentController());
-		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $this->build('admin/base/2/slides/4/edit')->deduceParentController());
+		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $this->build('admin/base/2/slides/40/edit')->deduceParentController());
 		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $this->build('admin/base/2/slides')->deduceParentController());
 		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $this->build('admin/base/2/slides/create')->deduceParentController());
 	}

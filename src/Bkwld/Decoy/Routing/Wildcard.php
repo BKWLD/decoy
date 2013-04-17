@@ -105,7 +105,7 @@ class Wildcard {
 	 * @return regexp
 	 */
 	private function controllerNameRegex() {
-		return '([a-z-]+)(/\d)?(/('.implode('|', $this->actions).'))?/?$';
+		return '([a-z-]+)(/\d+)?(/('.implode('|', $this->actions).'))?/?$';
 	}
 	
 	/**
@@ -204,7 +204,7 @@ class Wildcard {
 		// Find the name of the parent controller, which is string followed by
 		// a number followed by the controller's regexp.  Making sure not to confuse
 		// the action on a parent controller with the child action.
-		$pattern = '#/([a-z-]+)/\d/(?!('.implode('|', $this->actions).')$)'.$this->controllerNameRegex().'#i';
+		$pattern = '#/([a-z-]+)/\d+/(?!('.implode('|', $this->actions).')$)'.$this->controllerNameRegex().'#i';
 		if (!preg_match($pattern, $this->path, $matches)) return false;
 		$name = $matches[1];
 		

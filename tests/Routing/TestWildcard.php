@@ -19,7 +19,7 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), false);
 		$this->assertTrue($router->detectIfChild());
 		
-		$router = new Wildcard('admin', 'GET','admin/articles/2/users/4/roles');
+		$router = new Wildcard('admin', 'GET','admin/articles/2/users/40/roles');
 		$this->assertEquals($router->detectControllerClass(), 'Roles');
 		$this->assertEquals($router->detectAction(), 'indexChild');
 		$this->assertEquals($router->detectId(), false);
@@ -76,10 +76,10 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), 2);
 		$this->assertFalse($router->detectIfChild());
 		
-		$router = new Wildcard('admin', 'GET','admin/articles/2/users/4/edit');
+		$router = new Wildcard('admin', 'GET','admin/articles/2/users/40/edit');
 		$this->assertEquals($router->detectControllerClass(), 'Users');
 		$this->assertEquals($router->detectAction(), 'edit');
-		$this->assertEquals($router->detectId(), 4);
+		$this->assertEquals($router->detectId(), 40);
 		$this->assertTrue($router->detectIfChild());
 	}
 	
@@ -97,16 +97,16 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), 2);
 		$this->assertFalse($router->detectIfChild());
 		
-		$router = new Wildcard('admin', 'PUT','admin/articles/2/users/4');
+		$router = new Wildcard('admin', 'PUT','admin/articles/2/users/40');
 		$this->assertEquals($router->detectControllerClass(), 'Users');
 		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 4);
+		$this->assertEquals($router->detectId(), 40);
 		$this->assertTrue($router->detectIfChild());
 		
-		$router = new Wildcard('admin', 'POST','admin/articles/2/users/4');
+		$router = new Wildcard('admin', 'POST','admin/articles/2/users/40');
 		$this->assertEquals($router->detectControllerClass(), 'Users');
 		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 4);
+		$this->assertEquals($router->detectId(), 40);
 		$this->assertTrue($router->detectIfChild());
 	}
 	
@@ -118,10 +118,10 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), 2);
 		$this->assertFalse($router->detectIfChild());
 		
-		$router = new Wildcard('admin', 'DELETE','admin/articles/2/users/4');
+		$router = new Wildcard('admin', 'DELETE','admin/articles/2/users/40');
 		$this->assertEquals($router->detectControllerClass(), 'Users');
 		$this->assertEquals($router->detectAction(), 'destroy');
-		$this->assertEquals($router->detectId(), 4);
+		$this->assertEquals($router->detectId(), 40);
 		$this->assertTrue($router->detectIfChild());
 	}
 	
@@ -157,25 +157,25 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 	
 	public function testGetParentController() {
 		
-		$router = new Wildcard('admin', 'GET','admin/base/4/slides/4/edit');
+		$router = new Wildcard('admin', 'GET','admin/base/40/slides/40/edit');
 		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $router->getParentController());
 			
-		$router = new Wildcard('admin', 'GET','admin/base/4/slides');
+		$router = new Wildcard('admin', 'GET','admin/base/40/slides');
 		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $router->getParentController());
 			
-		$router = new Wildcard('admin', 'GET','admin/base/4/slides/create');
+		$router = new Wildcard('admin', 'GET','admin/base/40/slides/create');
 		$this->assertEquals('Bkwld\Decoy\Controllers\Base', $router->getParentController());
 			
 		$router = new Wildcard('admin', 'GET','admin/base');
 		$this->assertEquals(false, $router->getParentController());
 		
-		$router = new Wildcard('admin', 'GET','admin/base/4/edit');
+		$router = new Wildcard('admin', 'GET','admin/base/40/edit');
 		$this->assertEquals(false, $router->getParentController());
 	}
 	
 	public function testDetectParentId() {
 		
-		$router = new Wildcard('admin', 'GET','admin/articles/2/slides/4/edit');
+		$router = new Wildcard('admin', 'GET','admin/articles/2/slides/40/edit');
 		$this->assertEquals(2, $router->detectParentId());
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/slides/create');

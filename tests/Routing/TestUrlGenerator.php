@@ -45,19 +45,19 @@ class TestRoutingUrlGenerator extends PHPUnit_Framework_TestCase {
 	}
 	
 	public function testChildEdit() {
-		$this->doChildRoutes($this->path('admin/news/2/photos/4/edit'));
+		$this->doChildRoutes($this->path('admin/news/2/photos/40/edit'));
 	}
 	
 	private function doChildRoutes($generator) {
 		$this->assertEquals('admin/news/2/photos', $generator->relative());
 		$this->assertEquals('admin/news/2/photos', $generator->relative('index'));
 		$this->assertEquals('admin/news/2/photos/create', $generator->relative('create'));
-		$this->assertEquals('admin/news/2/photos/4/edit', $generator->relative('edit', 4));
-		$this->assertEquals('admin/news/2/photos/4/destroy', $generator->relative('destroy', 4));
-		$this->assertEquals('admin/news/2/photos/4/users', $generator->relative('index', 4, 'users'));
-		$this->assertEquals('admin/news/2/photos/4/users/create', $generator->relative('create', 4, 'users'));
-		$this->assertEquals('admin/news/2/photos/4/users', $generator->relative('index', 4, 'Admin\UsersController'));
-		$this->assertEquals('admin/news/2/photos/4/user-dudes/create', $generator->relative('create', 4, 'Admin\UserDudesController'));
+		$this->assertEquals('admin/news/2/photos/40/edit', $generator->relative('edit', 40));
+		$this->assertEquals('admin/news/2/photos/40/destroy', $generator->relative('destroy', 40));
+		$this->assertEquals('admin/news/2/photos/40/users', $generator->relative('index', 40, 'users'));
+		$this->assertEquals('admin/news/2/photos/40/users/create', $generator->relative('create', 40, 'users'));
+		$this->assertEquals('admin/news/2/photos/40/users', $generator->relative('index', 40, 'Admin\UsersController'));
+		$this->assertEquals('admin/news/2/photos/40/user-dudes/create', $generator->relative('create', 40, 'Admin\UserDudesController'));
 	}
 	
 	public function testController() {

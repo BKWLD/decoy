@@ -175,7 +175,7 @@ class Admin extends Base {
 				'root' => Request::root(),
 				'password' => $input->password,
 			);
-				
+
 			// Send the email
 			Mail::send('decoy::emails.create', $email, function($m) use ($input) {
 				$m->to($input->email, $input->first_name.' '.$input->last_name);
