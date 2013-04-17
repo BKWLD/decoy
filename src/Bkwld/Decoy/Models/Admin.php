@@ -1,8 +1,9 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
-use DB;
 use Bkwld\Decoy\Auth\Sentry as AuthSentry;
+use Config;
+use DB;
 use Html;
 use Input;
 use Mail;
@@ -36,7 +37,7 @@ class Admin extends Base {
 	static public function ordered() {
 		return DB::table('users')
 			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->join('throttle', 'throttle.user_id', '=', 'users.id')
+			->leftJoin('throttle', 'throttle.user_id', '=', 'users.id')
 			->where('users_groups.group_id', '=', self::adminGroupId())
 			->orderBy('last_name', 'asc')
 			->select(array('users.id',
