@@ -1,8 +1,10 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
+use Html;
 use Input;
 use Sentry;
+use Redirect;
 
 /**
  * Admin management interface
@@ -19,7 +21,6 @@ class Admins extends Base {
 	
 	//Listing view
 	public function index() {
-		
 		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
@@ -40,35 +41,16 @@ class Admins extends Base {
 	}
 	
 	// Create a new one
-	public function post() {
-		
+	public function store() {
+
 		// Validate
-		if ($result = $this->validate(Admin::$rules)) return $result;
+		if ($result = $this->validate(Model::$rules)) return $result;
 		
-		// Create the user
-		$id = Sentry::user()->create(array(
-			'email'    => Input::get('email'),
-			'password' => Input::get('password'),
-			'metadata' => array(
-				'first_name' => Input::get('first_name'),
-				'last_name'  => Input::get('last_name'),
-		)));
-		
-		// Assign the user to admins
-		Sentry::user($id)->add_to_group('admins');
-		
-		// Send email
-		if (Input::get('send_email')) {
-			if (!Model::send('new')) {
-				$errors = new Laravel\Messages();
-				$errors->add('email', 'There was an error sending the email to this admin.');
-				return Redirect::to_action('decoy::admins@edit', array($id))
-					->with_errors($errors);
-			}
-		}
+		// Create
+		$id = Model::create(Input::get());
 		
 		// Redirect to edit view
-		return Redirect::to_route('decoy::admins@edit', array($id));
+		return Redirect::to(Html::relative('edit', $id));
 	}
 
 	// Edit form
@@ -78,14 +60,14 @@ class Admins extends Base {
 		unset(Model::$rules['password']);
 		
 		// Rest of logic is the default
-		parent::get_edit($id);
+		parent::edit($id);
 	}
 	
 	// Handle updates.
 	public function update($id) {
 		
 		// Lookup admin
-		if (!($admin = Admin::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return Response::error('404');
 		
 		// Preserve the old admin data for the email
 		$admin_data = $admin->get();
@@ -94,9 +76,9 @@ class Admins extends Base {
 		// Validate.  Password isn't required when editing.  And if the inputted 
 		// email is the same as what we had for the admin, remove validation so that
 		// it doesn't throw uniqueness errors.
-		unset(Admin::$rules['password']);
-		if (Input::get('email') == $admin->get('email')) unset(Admin::$rules['email']);
-		if ($result = $this->validate(Admin::$rules)) return $result;
+		unset(Model::$rules['password']);
+		if (Input::get('email') == $admin->get('email')) unset(Model::$rules['email']);
+		if ($result = $this->validate(Model::$rules)) return $result;
 		
 		// Save data
 		$input = array(
@@ -109,7 +91,7 @@ class Admins extends Base {
 		$admin->update($input);
 		
 		// Send email
-		if (Input::get('send_email')) Admin::send('edit', $admin_data);
+		if (Input::get('send_email')) Model::send('edit', $admin_data);
 		
 		// Redirect to the edit view
 		return Redirect::to(URL::current());
@@ -120,7 +102,7 @@ class Admins extends Base {
 	public function destroy($ids) {
 		$ids = explode('-',$ids);
 		foreach($ids as $id) {
-			if (!($admin = Admin::find($id))) return Response::error('404');
+			if (!($admin = Model::find($id))) return Response::error('404');
 			$admin->delete();
 		}
 		if (Request::ajax()) return Response::json('null');
@@ -129,14 +111,14 @@ class Admins extends Base {
 	
 	// Disable the admin
 	public function disable($id) {
-		if (!($admin = Admin::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return Response::error('404');
 		$admin->disable();
 		return Redirect::back();
 	}
 	
 	// Enable the admin
 	public function enable($id) {
-		if (!($admin = Admin::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return Response::error('404');
 		$admin->enable();
 		return Redirect::back();
 	}

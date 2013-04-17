@@ -49,7 +49,19 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 		$this->assertEquals($router->detectId(), false);
 		$this->assertFalse($router->detectIfChild());
 		
+		$router = new Wildcard('admin', 'POST','admin/articles/create');
+		$this->assertEquals($router->detectControllerClass(), 'Articles');
+		$this->assertEquals($router->detectAction(), 'store');
+		$this->assertEquals($router->detectId(), false);
+		$this->assertFalse($router->detectIfChild());
+		
 		$router = new Wildcard('admin', 'POST','admin/articles/2/users');
+		$this->assertEquals($router->detectControllerClass(), 'Users');
+		$this->assertEquals($router->detectAction(), 'store');
+		$this->assertEquals($router->detectId(), false);
+		$this->assertTrue($router->detectIfChild());
+		
+		$router = new Wildcard('admin', 'POST','admin/articles/2/users/create');
 		$this->assertEquals($router->detectControllerClass(), 'Users');
 		$this->assertEquals($router->detectAction(), 'store');
 		$this->assertEquals($router->detectId(), false);

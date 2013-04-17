@@ -119,8 +119,17 @@ class Wildcard {
 		$is_child = $this->detectIfChild();
 		
 		// If the path ends in one of the special actions, use that as the action
+		// as long as the verb is a GET
 		if (preg_match('#[a-z-]+$#i', $this->path, $matches)) {
-			if (in_array($matches[0], $this->actions)) return $matches[0];
+			$action = $matches[0];
+			
+			// If posting to the create route, treat as a 'post' route rather than
+			// a 'create' one.  This is a shorthand so the create forms can
+			// post to themselves
+			if ($action == 'create' && $this->verb == 'POST') return 'store';
+			
+			// ... otherwise, use the route explicitly
+			if (in_array($action, $this->actions)) return $action;
 		}
 		
 		// If the path ends in a number, the verb defines what it is

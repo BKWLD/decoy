@@ -57,6 +57,14 @@ class DefaultAdmin extends Migration {
 			'name'        => 'admins',
 			'permissions' => array(
 				'admin' => 1,
+			),
+		));
+		$user->addGroup($group);
+		
+		// Assign to a group called developers
+		$group = Sentry::getGroupProvider()->create(array(
+			'name'        => 'developers',
+			'permissions' => array(
 				'developer' => 1,
 			),
 		));

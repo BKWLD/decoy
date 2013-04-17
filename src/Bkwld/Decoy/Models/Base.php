@@ -142,7 +142,7 @@ abstract class Base extends Eloquent {
 	// to the directory specified in the bundle config
 	static public function save_image($input_name = 'image') { return self::save_file($input_name); }
 	static public function save_file($input_name = 'file') {
-		$path = File::organize_uploaded_file(Input::file($input_name), Config::get('decoy::decoy.upload_dir'));
+		$path = File::organize_uploaded_file(Input::file($input_name), Config::get('decoy::upload_dir'));
 		$path = File::public_path($path);
 		return $path;
 	}

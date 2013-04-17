@@ -2,8 +2,12 @@
 
 // Dependencies
 use DB;
+use Bkwld\Decoy\Auth\Sentry as AuthSentry;
 use Html;
 use Input;
+use Mail;
+use Redirect;
+use Request;
 use Sentry;
 
 /**
@@ -21,9 +25,11 @@ class Admin extends Base {
 		'last_name' => 'required',
 	);
 	
-	// Allow all properties to be mass assigned.  This assignment happens in the listing
-	// view.  This model doesn't actually correspond with a real table so there is no risk
-	// that this setting would allow a malicious person to set one of the actual DB values
+	/**
+	 * Allow all properties to be mass assigned.  This model doesn't actually correspond 
+	 * with a real table so there is no risk that this setting would allow a malicious 
+	 * person to set one of the actual DB values
+	 */
 	protected $guarded = array();
 	
 	// Get a list of admins ordered by last name
@@ -75,17 +81,12 @@ class Admin extends Base {
 		// Support different types of emails
 		switch($type) {
 			
-			// Creation of admin
-			case 'new':
-				$subject = 'Welcome to the '.Config::get('decoy::decoy.site_name').' CMS';
-				$body = Input::get('first_name').' '.Input::get('last_name'). ' has created an admin account for you for on '.URL::base().'.  You can login at <a href="'.action('decoy::').'">'.action('decoy::').'</a>. Your password is <strong>'.Input::get('password').'</strong>, though you should change it after you first log in.  Welcome!';
-			break;
-			
+
 			// Update of admin info
 			case 'edit':
 				$old = $data;
 				$to[$old->email] = $old->first_name.' '.$old->last_name;
-				$subject = 'Your '.Config::get('decoy::decoy.site_name').' CMS account info has been updated';
+				$subject = 'Your '.Config::get('decoy::site_name').' CMS account info has been updated';
 				$body = Sentry::user()->get('metadata.first_name').' '.Sentry::user()->get('metadata.last_name'). ' has updated your account info on '.URL::base().'.  Your current account info is:<br/><br/>';
 				$body .= '<strong>Name:</strong> '.Input::get('first_name').' '.Input::get('last_name').'<br>';
 				$body .= '<strong>Email:</strong> '.Input::get('email').'<br>';
@@ -96,7 +97,7 @@ class Admin extends Base {
 		
 		// Send welcome email
 		$mail = Message::to($to)
-			->from(Config::get('decoy::decoy.mail_from_address'), Config::get('decoy::decoy.mail_from_name'))
+			->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'))
 			->subject($subject)
 			->body($body)
 			->html(true)
@@ -129,6 +130,53 @@ class Admin extends Base {
 	 */
 	static public function adminGroupId() {
 		return Sentry::getGroupProvider()->findByName('admins')->id;
+	}
+	
+	/**
+	 * Create a new admin, reading from Input directly
+	 */
+	static public function create(array $input) {
+		
+		// Cast to object
+		$input = (object) $input;
+		
+		// Create the login user
+		$user = Sentry::getUserProvider()->create(array(
+			'email'    => $input->email,
+			'password' => $input->password,
+			'first_name' => $input->first_name,
+			'last_name'  => $input->last_name,
+			'activated' => true,
+		));
+		
+		// Add to admins
+    $group = Sentry::getGroupProvider()->findByName('admins');
+    $user->addGroup($group);
+		
+		// Send email
+		if (!empty($input->send_email)) {
+			
+			// Prepare data for mail
+			$admin = AuthSentry::user();
+			$email = array(
+				'first_name' => $admin->first_name,
+				'last_name' => $admin->last_name,
+				'url' => Request::root().'/'.Config::get('dir'),
+				'root' => Request::root(),
+				'password' => $input->password,
+			);
+				
+			// Send the email
+			Mail::send('decoy::emails.create', $email, function($m) use ($input) {
+				$m->to($input->email, $input->first_name.' '.$input->last_name);
+				$m->subject('Welcome to the '.Config::get('decoy::site_name').' CMS');
+				$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+			});
+		}
+		
+		// Return the id
+		return $user->id;
+		
 	}
 	
 }

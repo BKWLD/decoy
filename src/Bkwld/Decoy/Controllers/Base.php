@@ -39,7 +39,7 @@ class Base extends Controller {
 	protected $TITLE;       // i.e. News Posts
 	protected $DESCRIPTION; // i.e. Relevant news about the brand
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
-	protected $SHOW_VIEW;   // i.e. admin.news.show
+	protected $SHOW_VIEW;   // i.e. admin.news.edit
 	protected $SEARCH;      // i.e. An array describing the fields to search upon
 	
 	// More of the same, but these are just involved in relationships
@@ -346,7 +346,7 @@ class Base extends Controller {
 	/**
 	 * Edit form
 	 */
-	public function get_edit($id) {
+	public function edit($id) {
 
 		// Get the work
 		if (!($item = Model::find($id))) return Response::error('404');
@@ -412,9 +412,9 @@ class Base extends Controller {
 			if (Request::ajax()) {
 				return Response::json($validation->errors, 400);
 			} else {
-				return Redirect::to(URL::current())
-					->withErrors($validation)
-					->withInput();
+				return Redirect::to(Request::path())
+					->withInput()
+					->withErrors($validation);
 			}
 		}
 		
