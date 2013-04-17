@@ -376,7 +376,7 @@ class Base extends Controller {
 	}
 	
 	// Delete a record
-	public function destroy($ids) {
+	public function destroy($id) {
 		
 		// Find the item
 		if (!($item = Model::find($id))) return App::abort(404);
