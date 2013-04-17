@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
+use App;
 use Html;
 use Input;
 use Sentry;
@@ -67,7 +68,7 @@ class Admins extends Base {
 	public function update($id) {
 		
 		// Lookup admin
-		if (!($admin = Model::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return App::abort(404);
 		
 		// Preserve the old admin data for the email
 		$admin_data = $admin->get();
@@ -98,27 +99,16 @@ class Admins extends Base {
 	
 	}
 	
-	// Delete the admin
-	public function destroy($ids) {
-		$ids = explode('-',$ids);
-		foreach($ids as $id) {
-			if (!($admin = Model::find($id))) return Response::error('404');
-			$admin->delete();
-		}
-		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to_action('decoy::admins');
-	}
-	
 	// Disable the admin
 	public function disable($id) {
-		if (!($admin = Model::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return App::abort(404);
 		$admin->disable();
 		return Redirect::back();
 	}
 	
 	// Enable the admin
 	public function enable($id) {
-		if (!($admin = Model::find($id))) return Response::error('404');
+		if (!($admin = Model::find($id))) return App::abort(404);
 		$admin->enable();
 		return Redirect::back();
 	}

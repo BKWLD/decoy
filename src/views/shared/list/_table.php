@@ -122,7 +122,7 @@ if (count($listing)) {
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=URL::to(Html::relative('delete', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<a href="<?=URL::to(Html::relative('destroy', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
 					<? endif ?>
 				</td>
 			</tr>

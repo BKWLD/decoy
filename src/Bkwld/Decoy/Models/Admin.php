@@ -50,6 +50,14 @@ class Admin extends Base {
 				));
 	}
 	
+	// Count the total admins
+	static public function count() {
+		return DB::table('users')
+			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
+			->where('users_groups.group_id', '=', self::adminGroupId())
+			->count();
+	}
+	
 	// Produce the title for the list view
 	public function title() {
 		return '<img src="'.Html::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
@@ -118,16 +126,17 @@ class Admin extends Base {
 		return false;
 	}
 	
-	// Count the total admins
-	static public function count() {
-		return DB::table('users')
-			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->where('users_groups.group_id', '=', self::adminGroupId())
-			->count();
+	/**
+	 * Get a sentry user object from an admin object
+	 * @return integer
+	 */
+	public function sentryUser() {
+		return Sentry::getUserProvider()->findById($this->id);
 	}
 	
 	/**
 	 * Get the admin group id
+	 * @return integer
 	 */
 	static public function adminGroupId() {
 		return Sentry::getGroupProvider()->findByName('admins')->id;
@@ -178,6 +187,27 @@ class Admin extends Base {
 		// Return the id
 		return $user->id;
 		
+	}
+	
+	/**
+	 * Delete this admin
+	 */
+	public function delete() {
+		$this->sentryUser()->delete();
+	}
+	
+	/**
+	 * Disable an admin
+	 */
+	public function disable() {
+		Sentry::getThrottleProvider()->findByUserId($this->id)->ban();
+	}
+	
+	/**
+	 * Enable an admin
+	 */
+	public function enable() {
+		Sentry::getThrottleProvider()->findByUserId($this->id)->unBan();
 	}
 	
 }

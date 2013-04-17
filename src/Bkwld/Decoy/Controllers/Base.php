@@ -319,7 +319,7 @@ class Base extends Controller {
 		
 		// If there is a parent, make sure it's id is valid
 		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return Response::error('404');
+			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 		}
 
 		// Pass validation through
@@ -349,7 +349,7 @@ class Base extends Controller {
 	public function edit($id) {
 
 		// Get the work
-		if (!($item = Model::find($id))) return Response::error('404');
+		if (!($item = Model::find($id))) return App::abort(404);
 
 		// Populate form
 		Former::populate($item);
@@ -373,6 +373,25 @@ class Base extends Controller {
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::generate_from_url());
 
+	}
+	
+	// Delete a record
+	public function destroy($ids) {
+		
+		// Find the item
+		if (!($item = Model::find($id))) return App::abort(404);
+
+		// Delete images
+		if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
+		
+		// Delete row.
+		$item->delete();
+	
+		// If the referrer contains the controller route, that would mean that we're
+		// redirecting back to the edit page (which no longer exists).  Thus, go to a
+		// listing instead.  Otherwise, go back (accoridng to referrer)
+		if (Request::ajax()) return Response::json('null');
+		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(Request::referrer(), PHP_URL_PATH))));
 	}
 	
 	//---------------------------------------------------------------------------
@@ -486,7 +505,7 @@ abstract class Decoy_Base_Controller extends Controller {
 	public function get_index_child($parent_id) {
 
 		// Make sure the parent is valid
-		if (!($parent = self::parentFind($parent_id))) return Response::error('404');
+		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 			
 		// Form the query by manually making adding the where condition with the 
 		// parent foreign key.  We do this instead of using Laravel's syntax
@@ -591,7 +610,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// because I don't want all child classes to have to implement it
 		if (is_numeric(Request::segment(3))) {
 			$parent_id = Request::segment(3);
-			if (!($parent = self::parentFind($parent_id))) return Response::error('404');
+			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 		}
 		
 		// Create default slug
@@ -625,7 +644,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Load the entry
 		if (!($item = Model::find($id))) {
 			if (Request::ajax()) return Response::json(null, 404);
-			else return Response::error('404');
+			else return App::abort(404);
 		}
 		
 		// Files in an edit state have a number of supplentary fields.  This
@@ -680,35 +699,6 @@ abstract class Decoy_Base_Controller extends Controller {
 			'pivot_id' => $pivot_id
 		));
 		
-	}
-	
-	// Delete one or multiple.  This accepts a dash
-	// delimited list of ids.  Commas don't appear to be allowed
-	// using simple Laravel routing.
-	public function get_delete($ids) { return $this->delete_delete($ids); }
-	public function post_delete($ids) { return $this->delete_delete($ids); }
-	public function delete_delete($ids) {
-
-		// Look for the mentioned rows
-		$ids = explode('-',$ids);
-		$items = Model::where_in('id', $ids);
-		if (empty($items)) return Response::error('404');
-		
-		// Delete
-		foreach($items->get() as $item) {
-			
-			// Delete images
-			if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
-			
-			// Delete row.  These are deleted one at a time so that model events will fire.
-			$item->delete();
-		}
-	
-		// If the referrer contains the controller route, that would mean that we're
-		// redirecting back to the edit page (which no longer exists).  Thus, go to a
-		// listing instead.  Otherwise, go back (accoridng to referrer)
-		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(Request::referrer(), PHP_URL_PATH))));
 	}
 	
 	// Remove a relationship.  Very similar to delete, except that we're
