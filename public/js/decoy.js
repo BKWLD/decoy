@@ -78,7 +78,7 @@ define(function (require) {
 	// DOM ready
 	app.on('ready', function () {
 
-		// Initialzie views
+		// Initalize views
 		app.initalizeViews(manifest);
 		
 		// Add "Required" icons to file input fields where we're manually applying
@@ -94,15 +94,12 @@ define(function (require) {
 		// Enable bootstrap tooltips
 		$body.find('.js-tooltip').tooltip({ animation: false });
 		
-		// Turn WYSIWYGs on.  This WYSIWYG looks nice but it's not the most stable
-		// usability wise.  Like clicking on stuff doesn't always work like one
-		// would expect.  Individual textareas may override the options by defining an
-		// options json box.
-
+		// Turn WYSIWYGs on.
+		var CKEDITOR = window.CKEDITOR;
 		$body.find('textarea.wysiwyg').each(function() {			
 			CKEDITOR.replace(this, {
 				resize_enabled: false,
-		        enterMode : CKEDITOR.ENTER_BR,
+				enterMode : CKEDITOR.ENTER_BR,
 				toolbar :
 				[
 					{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
