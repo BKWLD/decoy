@@ -9,7 +9,7 @@
 	<?= Former::text('email')->class('span9') ?>
 	<?= Former::text('password')
 		->class('span9')
-		->value(empty($item)?Str::random(16):null)
+		->forceValue(empty($item)?Str::random(16):null)
 		->placeholder(empty($item)?null:'Leave blank to prevent change') ?>
 
 	<div class="row">
