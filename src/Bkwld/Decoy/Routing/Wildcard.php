@@ -123,13 +123,14 @@ class Wildcard {
 		if (preg_match('#[a-z-]+$#i', $this->path, $matches)) {
 			$action = $matches[0];
 			
-			// If posting to the create route, treat as a 'post' route rather than
-			// a 'create' one.  This is a shorthand so the create forms can
+			// If posting to the create/edit route, treat as a 'post' route rather than
+			// a 'create/edit' one.  This is a shorthand so the create forms can
 			// post to themselves
 			if ($action == 'create' && $this->verb == 'POST') return 'store';
+			else if ($action == 'edit' && $this->verb == 'POST') return 'update';
 			
 			// ... otherwise, use the route explicitly
-			if (in_array($action, $this->actions)) return $action;
+			else if (in_array($action, $this->actions)) return $action;
 		}
 		
 		// If the path ends in a number, the verb defines what it is

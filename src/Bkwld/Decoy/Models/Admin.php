@@ -81,44 +81,6 @@ class Admin extends Base {
 		return $html;
 	}
 	
-	// Send welcome and update emails
-	static public function send($type, $data = null) {
-
-		// Shared vars
-		$to = array(Input::get('email') => $name = Input::get('first_name').' '.Input::get('last_name'));
-		
-		// Support different types of emails
-		switch($type) {
-			
-
-			// Update of admin info
-			case 'edit':
-				$old = $data;
-				$to[$old->email] = $old->first_name.' '.$old->last_name;
-				$subject = 'Your '.Config::get('decoy::site_name').' CMS account info has been updated';
-				$body = Sentry::user()->get('metadata.first_name').' '.Sentry::user()->get('metadata.last_name'). ' has updated your account info on '.URL::base().'.  Your current account info is:<br/><br/>';
-				$body .= '<strong>Name:</strong> '.Input::get('first_name').' '.Input::get('last_name').'<br>';
-				$body .= '<strong>Email:</strong> '.Input::get('email').'<br>';
-				if (Input::has('password')) $body .= '<strong>Password:</strong> '.Input::get('password').' (you should change this ASAP)';
-				else $body.= '<strong>Password:</strong> Unchanged (and cannot be displayed because it is one-way encrypted)';
-			break;
-		}
-		
-		// Send welcome email
-		$mail = Message::to($to)
-			->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'))
-			->subject($subject)
-			->body($body)
-			->html(true)
-			->send();
-			
-		// There was an error sending the mail
-		if (!$mail->was_sent()) return false;
-		
-		// Success
-		return true;
-	}
-	
 	// Override the Eloquent find.  This is required to make admins function with Decoy,
 	// which expects Eloquent models in it's generic breadcrumbs, listing, etc
 	static public function find($id, $columns = array('*')) {
@@ -195,16 +157,39 @@ class Admin extends Base {
 	public function update(array $attributes = array()) {
 		
 		// Cast to object
-		$input = (object) $input;
+		$input = (object) $attributes;
 		
 		// Update user
 		$user = $this->sentryUser();
 		$user->email = $input->email;
-		if (!empty($input->password)) $user->email = $input->password;
+		if (!empty($input->password)) $user->password = $input->password;
 		$user->first_name = $input->first_name;
 		$user->last_name = $input->last_name;
 		$user->save();
 		
+		// Send email
+		if (!empty($input->send_email)) {
+			
+			// Prepare data for mail
+			$admin = AuthSentry::user();
+			$email = array(
+				'editor_first_name' => $admin->first_name,
+				'editor_last_name' => $admin->last_name,
+				'first_name' => $input->first_name,
+				'last_name' => $input->last_name,
+				'email' => $input->email,
+				'password' => $input->password,
+				'url' => Request::root().'/'.Config::get('decoy::dir'),
+				'root' => Request::root(),
+			);
+		
+			// Send the email
+			Mail::send('decoy::emails.update', $email, function($m) use ($input) {
+				$m->to($input->email, $input->first_name.' '.$input->last_name);
+				$m->subject('Your '.Config::get('decoy::site_name').' CMS account info has been updated');
+				$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+			});
+		}
 	}
 	
 	/**

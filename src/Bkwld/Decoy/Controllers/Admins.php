@@ -6,6 +6,7 @@ use Html;
 use Input;
 use Sentry;
 use Redirect;
+use URL;
 
 /**
  * Admin management interface
