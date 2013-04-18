@@ -26,7 +26,7 @@
 	
 	// After a succesfull login, this is the controller action that should
 	// be redirected to
-	'post_login_redirect' => 'Admin\NewsController@index',
+	'post_login_redirect' => 'Bkwld\Decoy\Controllers\Admins@index',
 	
 	// -----------------------------------------------------
 	// Decoy Defaults
