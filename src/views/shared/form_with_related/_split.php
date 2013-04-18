@@ -28,7 +28,7 @@ the sidebar for related data on forms that have a related data sidebar.
 				</a>
 			<? endif ?>
 			
-			<a class="btn back" href="<?=\Decoy\Breadcrumbs::smart_back()?>">Back</a>
+			<a class="btn back" href="<?=\Decoy\Breadcrumbs::smartBack()?>">Back</a>
 		</div>
 
 	<?= Former::close() ?>
