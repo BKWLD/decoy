@@ -171,11 +171,11 @@ class Admin extends Base {
 			$email = array(
 				'first_name' => $admin->first_name,
 				'last_name' => $admin->last_name,
-				'url' => Request::root().'/'.Config::get('dir'),
+				'url' => Request::root().'/'.Config::get('decoy::dir'),
 				'root' => Request::root(),
 				'password' => $input->password,
 			);
-
+		
 			// Send the email
 			Mail::send('decoy::emails.create', $email, function($m) use ($input) {
 				$m->to($input->email, $input->first_name.' '.$input->last_name);
