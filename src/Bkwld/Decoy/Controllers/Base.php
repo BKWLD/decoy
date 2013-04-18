@@ -387,11 +387,9 @@ class Base extends Controller {
 		// Delete row.
 		$item->delete();
 	
-		// If the referrer contains the controller route, that would mean that we're
-		// redirecting back to the edit page (which no longer exists).  Thus, go to a
-		// listing instead.  Otherwise, go back (accoridng to referrer)
+		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(Request::referrer(), PHP_URL_PATH))));
+		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(URL::previous(), PHP_URL_PATH))));
 	}
 	
 	//---------------------------------------------------------------------------

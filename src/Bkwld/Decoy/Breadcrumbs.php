@@ -15,6 +15,7 @@ class Breadcrumbs {
 	/**
 	 * Make some default breadcrumbs that are based on URL segments
 	 * @param $string path The path part of a URL
+	 * @return array Key/value pairs of url/title
 	 */
 	static public function defaults($path = null) {
 		
@@ -27,10 +28,24 @@ class Breadcrumbs {
 		$parts = explode('/', $path);
 		$path = '/'.array_shift($parts); // Remove the first item
 		
+		// If the last item is "edit", strip it
+		if ($parts[count($parts)-1] == 'edit') array_pop($parts);
+		
 		// Loop through all url segements and create breadcrumbs out of them
 		foreach($parts as $part) {
+			
+			// Update the path
 			$path .= '/'.$part;
-			$breadcrumbs[$path] = ucwords(str_replace('-', ' ', $part));
+			
+			// If the part is an id, make it an "Edit" link
+			if (is_numeric($part)) {
+				$part = 'Edit';
+				$breadcrumbs[$path.'/edit'] = 'Edit';
+				
+			// Otherwise, it's a controller or a create link
+			} else {
+				$breadcrumbs[$path] = ucwords(str_replace('-', ' ', $part));
+			}			
 		}
 		return $breadcrumbs;
 	}
@@ -59,7 +74,7 @@ class Breadcrumbs {
 	// Basically, the nuance here is so if you are editing the slides of a news page, when
 	// you go "back", it's back to the news page and not the listing of the news slides
 	static public function smart_back($breadcrumbs = null) {
-		
+
 		// Optional argument
 		if (!$breadcrumbs) $breadcrumbs = self::defaults();
 		

@@ -61,7 +61,7 @@ class Admins extends Base {
 		unset(Model::$rules['password']);
 		
 		// Rest of logic is the default
-		parent::edit($id);
+		return parent::edit($id);
 	}
 	
 	// Handle updates.

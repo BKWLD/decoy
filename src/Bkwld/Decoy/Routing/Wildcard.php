@@ -19,7 +19,7 @@ class Wildcard {
 	private $path;
 	
 	// These are action suffixes on paths
-	private $actions = array('edit', 'create', 'attach', 'remove', 'autocomplete');
+	private $actions = array('create', 'edit', 'destroy', 'attach', 'remove', 'autocomplete');
 	
 	/**
 	 * Constructor
@@ -138,6 +138,7 @@ class Wildcard {
 				case 'PUT':
 				case 'POST': return 'update';
 				case 'DELETE': return 'destroy';
+				default: return false;
 			}
 		}
 		
