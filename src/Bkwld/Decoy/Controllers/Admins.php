@@ -69,30 +69,15 @@ class Admins extends Base {
 		
 		// Lookup admin
 		if (!($admin = Model::find($id))) return App::abort(404);
-		
-		// Preserve the old admin data for the email
-		$admin_data = $admin->get();
-		$admin_data = (object) array_merge($admin_data, $admin_data['metadata']);
 
-		// Validate.  Password isn't required when editing.  And if the inputted 
-		// email is the same as what we had for the admin, remove validation so that
-		// it doesn't throw uniqueness errors.
+		// Validate.  Password isn't required when editing.  And make sure this row
+		// is excluded from uniqueness check
 		unset(Model::$rules['password']);
-		if (Input::get('email') == $admin->get('email')) unset(Model::$rules['email']);
+		Model::$rules['email'] = Model::$rules['email'].','.$id;
 		if ($result = $this->validate(Model::$rules)) return $result;
 		
-		// Save data
-		$input = array(
-			'email' => Input::get('email'),
-			'metadata' => array(
-				'first_name' => Input::get('first_name'),
-				'last_name'  => Input::get('last_name'),
-		));
-		if (Input::has('password')) $input['password'] = Input::get('password');
-		$admin->update($input);
-		
-		// Send email
-		if (Input::get('send_email')) Model::send('edit', $admin_data);
+		// Update
+		$admin->update(Input::get());
 		
 		// Redirect to the edit view
 		return Redirect::to(URL::current());

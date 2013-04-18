@@ -20,7 +20,7 @@ class Admin extends Base {
 	
 	// Validation rules
 	public static $rules = array(
-		'email' => 'required|unique:users|email',
+		'email' => 'required|email|unique:users,email',
 		'password' => 'required',
 		'first_name' => 'required',
 		'last_name' => 'required',
@@ -186,6 +186,24 @@ class Admin extends Base {
 		
 		// Return the id
 		return $user->id;
+		
+	}
+	
+	/**
+	 * Update admin values
+	 */
+	public function update(array $attributes = array()) {
+		
+		// Cast to object
+		$input = (object) $input;
+		
+		// Update user
+		$user = $this->sentryUser();
+		$user->email = $input->email;
+		if (!empty($input->password)) $user->email = $input->password;
+		$user->first_name = $input->first_name;
+		$user->last_name = $input->last_name;
+		$user->save();
 		
 	}
 	
