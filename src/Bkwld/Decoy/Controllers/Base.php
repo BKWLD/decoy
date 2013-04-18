@@ -13,6 +13,7 @@ use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Str;
 use Former;
 use Input;
+use Log;
 use Redirect;
 use Request;
 use Response;
@@ -426,8 +427,13 @@ class Base extends Controller {
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
 		if ($validation->fails()) {
+			
+			// Log validation errors
+			if (Config::get('app.debug')) Log::info(print_r($validation->messages(), true));
+			
+			// Respond
 			if (Request::ajax()) {
-				return Response::json($validation->errors, 400);
+				return Response::json($validation->messages(), 400);
 			} else {
 				return Redirect::to(Request::path())
 					->withInput()

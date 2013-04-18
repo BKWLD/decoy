@@ -1,7 +1,5 @@
 <?// Display form wide errors?>
-<? if ($errors->any()): 
-	if(Config::get('error.log') == true) Log::info(print_r($errors, true));
-	?>
+<? if ($errors->any()): ?>
 
 	<div class="alert alert-error">
 	  <button type="button" class="close" data-dismiss="alert">×</button>
