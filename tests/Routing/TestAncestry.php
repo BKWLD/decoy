@@ -32,6 +32,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 		$controller->injectDependencies(array(
 			'config' => $config,
 			'ancestry' => $ancestry,
+			'route' => m::mock("Router")->shouldReceive('currentRouteAction')->andReturn(null)->getMock(),
 		));
 		$controller->simulate($path);
 

@@ -74,12 +74,14 @@ class Base extends Controller {
 	 */
 	private $config;
 	private $ancestry;
+	private $route;
 	public function injectDependencies($dependencies = null) {
 		
 		// Set manually passed dependencies
 		if ($dependencies) {
 			$this->config = $dependencies['config'];
 			$this->ancestry = $dependencies['ancestry'];
+			$this->route = $dependencies['route'];
 			return true;
 		}
 		
@@ -92,6 +94,7 @@ class Base extends Controller {
 					$request->getMethod(), 
 					$request->path()
 				), $request);
+			$this->route = App::make('router');
 			return true;
 		}
 		
@@ -137,7 +140,7 @@ class Base extends Controller {
 		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
 		// explicitly in the router, we assume there is no ancestry at play.  The ancestry class
 		// assumes that the route was resolved using the Decoy wildcard router
-		if (Route::currentRouteAction()) return;
+		if ($this->route->currentRouteAction()) return;
 		
 		// If the current route has a parent, discover what it is
 		if (empty($this->PARENT_CONTROLLER) && $this->ancestry->isChildRoute()) {
