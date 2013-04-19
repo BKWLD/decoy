@@ -11,21 +11,6 @@ Router::register(array('GET', 'POST'),
 	"(:bundle)/content", 
 	array('uses' => 'decoy::content@index', 'as' => 'decoy::content'));
 
-
-// Take the user back to the page they were on before they were on the
-// referring page.  A route filter, defined below, keeps the browse_history
-// up to date.  The offset variable is used by routes like delete that don't
-// want to redirect back to an edit page which no longer exists
-Route::get('(:bundle)/back/(:num?)', array('as' => 'decoy::back', function($offset = 1) {
-	
-	// Get the history.  It should contain the following
-	// [0] = The previous page, the referrer
-	// [1] = Where the user was before going to the previous page
-	$history = Session::get('decoy::browse_history', array());
-	if (count($history) - 1 >= $offset) return Redirect::to($history[$offset]);
-	else return Redirect::back();
-}));
-
 // Show all the task methods.  This option isn't typically isn't made
 // available in the nav.
 Route::get('(:bundle)/tasks', array('uses' => 'decoy::tasks@index', 'as' => 'decoy::tasks'));
@@ -55,7 +40,6 @@ Route::filter('pattern: '.Bundle::option('decoy', 'handles').'/*', array('name' 
 	if ($response = filter_acl()) return $response;
 	if ($response = redirect_after_save()) return $response;
 	filter_clean_input();
-	track_browse_history();
 }));
 
 // Turn on access control for all routes that match the handle (except)
@@ -122,22 +106,4 @@ function filter_clean_input() {
 	}
 	Input::replace($input);
 		
-}
-
-// Track the user's history, for the purpose of informing the back button
-function track_browse_history() {
-	$history = Session::get('decoy::browse_history', array());
-	
-	// Only update the history on new requests and not if the current url is
-	// the back route and not if the request is AJAX
-	if ((count($history) && $history[0] == URI::full()) 
-		|| Request::route()->is('decoy::back') 
-		|| Request::ajax()) return;
-	array_unshift($history, URI::full());
-	
-	// Only rember the last 5 requests
-	$history = array_slice($history, 0, 5);
-	
-	// Replace the history
-	Session::put('decoy::browse_history', $history);
 }
