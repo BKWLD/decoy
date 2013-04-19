@@ -4,6 +4,11 @@ use Bkwld\Decoy\Breadcrumbs;
 
 class TestBreadcrumbs extends PHPUnit_Framework_TestCase {
 	
+	public function testLogin() {
+		$crumbs = array();
+		$this->assertEquals($crumbs, Breadcrumbs::defaults('admin'));
+	}
+	
 	public function testIndex() {
 		$crumbs = array(
 			'/admin/articles' => 'Articles',

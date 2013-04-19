@@ -18,7 +18,7 @@ class Breadcrumbs {
 	 * @return array Key/value pairs of url/title
 	 */
 	static public function defaults($path = null) {
-		
+
 		// If no URL is defined, use the current
 		if (!$path) $path = Request::path();
 		$path = preg_replace('#^/#', '', $path); // Strip opening slash
@@ -29,7 +29,7 @@ class Breadcrumbs {
 		$path = '/'.array_shift($parts); // Remove the first item
 		
 		// If the last item is "edit", strip it
-		if ($parts[count($parts)-1] == 'edit') array_pop($parts);
+		if (count($parts) && $parts[count($parts)-1] == 'edit') array_pop($parts);
 		
 		// Loop through all url segements and create breadcrumbs out of them
 		foreach($parts as $part) {
