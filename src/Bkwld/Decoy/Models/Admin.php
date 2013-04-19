@@ -41,6 +41,7 @@ class Admin extends Base {
 			->leftJoin('throttle', 'throttle.user_id', '=', 'users.id')
 			->where('users_groups.group_id', '=', self::adminGroupId())
 			->orderBy('last_name', 'asc')
+			->groupBy('users.id')
 			->select(array('users.id',
 					'users.email', 
 					'users.first_name', 
