@@ -21,7 +21,9 @@ class Admins extends Base {
 		'Email'         => 'email',
 	);
 	
-	//Listing view
+	/**
+	 * Listing view
+	 */
 	public function index() {
 		
 		// Take the listing results and replace them with model instances
@@ -42,7 +44,9 @@ class Admins extends Base {
 		));
 	}
 	
-	// Create a new one
+	/**
+	 * Create a new one
+	 */
 	public function store() {
 
 		// Validate
@@ -55,7 +59,9 @@ class Admins extends Base {
 		return Redirect::to(Html::relative('edit', $id));
 	}
 
-	// Edit form
+	/**
+	 * Edit form
+	 */
 	public function edit($id) {
 		
 		// Make password optional
@@ -65,7 +71,9 @@ class Admins extends Base {
 		return parent::edit($id);
 	}
 	
-	// Handle updates.
+	/**
+	 * Handle updates
+	 */
 	public function update($id) {
 		
 		// Lookup admin
@@ -85,14 +93,18 @@ class Admins extends Base {
 	
 	}
 	
-	// Disable the admin
+	/**
+	 * Disable the admin
+	 */
 	public function disable($id) {
 		if (!($admin = Model::find($id))) return App::abort(404);
 		$admin->disable();
 		return Redirect::back();
 	}
 	
-	// Enable the admin
+	/**
+	 * Enable the admin
+	 */
 	public function enable($id) {
 		if (!($admin = Model::find($id))) return App::abort(404);
 		$admin->enable();

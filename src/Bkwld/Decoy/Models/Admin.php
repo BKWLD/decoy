@@ -10,6 +10,7 @@ use Mail;
 use Redirect;
 use Request;
 use Sentry;
+use URL;
 
 /**
  * Admin extends Eloquent in part so that the listing view
@@ -66,16 +67,15 @@ class Admin extends Base {
 	// Show a badge if the user is the currently logged in
 	public function statuses() {
 		$html ='';
-		return ''; // Temporary hack
 		
 		// If row is you
-		if ($this->id == Sentry::user()->get('id')) {
+		if ($this->id == AuthSentry::userId()) {
 			$html .= '<span class="label label-info">You</span>';
 		}
 		
 		// If row is disabled
-		if (!$this->status) {
-			$html .= '<a href="'.action('decoy::admins@enable', array($this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
+		if ($this->disabled()) {
+			$html .= '<a href="'.URL::to(Html::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
 		}
 		
 		return $html;
@@ -211,6 +211,14 @@ class Admin extends Base {
 	 */
 	public function enable() {
 		Sentry::getThrottleProvider()->findByUserId($this->id)->unBan();
+	}
+
+	/**
+	 * Check if admin is banned
+	 * @return boolean true if banned
+	 */
+	public function disabled() {
+		return Sentry::getThrottleProvider()->findByUserId($this->id)->isBanned();
 	}
 	
 }

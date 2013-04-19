@@ -29,7 +29,7 @@
 		
 		<? if (!empty($item)): ?>
 			
-			<? if ($item->status): ?>
+			<? if (!$item->disabled()): ?>
 				<a class="btn btn-warning js-tooltip" href="<?=URL::to(Html::relative('disable', $item->id))?>" title="Remove ability to login">
 					<i class="icon-ban-circle icon-white"></i> Disable
 				</a>

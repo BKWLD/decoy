@@ -17,6 +17,7 @@ use Log;
 use Redirect;
 use Request;
 use Response;
+use Route;
 use URL;
 use Validator;
 
@@ -132,12 +133,17 @@ class Base extends Controller {
 		if ($this->MODEL && !class_exists('Bkwld\Decoy\Controllers\Model')) {
 			if (!class_alias($this->MODEL, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
-				
+		
+		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
+		// explicitly in the router, we assume there is no ancestry at play.  The ancestry class
+		// assumes that the route was resolved using the Decoy wildcard router
+		if (Route::currentRouteAction()) return;
+		
 		// If the current route has a parent, discover what it is
 		if (empty($this->PARENT_CONTROLLER) && $this->ancestry->isChildRoute()) {
 			$this->PARENT_CONTROLLER = $this->ancestry->deduceParentController();
 		}
-		
+
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
 		if (!empty($this->PARENT_CONTROLLER)) {
