@@ -36,16 +36,8 @@ define(function (require) {
 
 			// Initialize the Bootstrap typahead plugin, which generates the
 			// autocomplete menu
-			var lastQuery = null;
 			this.$input.typeahead({
-				source: _.debounce(_.bind(function(query, process) {
-					
-					// Only invoke a query if the text changed
-					if (this.$input.val() == lastQuery) return;
-					lastQuery = this.$input.val();
-					this.query(query, process);
-				
-				}, this), this.throttle) // Throttle rquests
+				source: _.debounce(this.query, this.throttle) // Throttle rquests
 			});
 				
 		},
