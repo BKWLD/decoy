@@ -98,23 +98,21 @@ define(function (require) {
 		// usability wise.  Like clicking on stuff doesn't always work like one
 		// would expect.  Individual textareas may override the options by defining an
 		// options json box.
-		var options;
-		$body.find('textarea.wysiwyg').each(function() {
-			var $el = $(this);
-			
-			// Default options
-			options = {
-				'font-styles': false, // These didn't really work and most would use them wrong
-				image: false,
-				"stylesheets": [], // Disabling the loading of the default wysiwyg-color.css file
-				"html": true
-			};
-			
-			// Merge options.  Jquery automatically parses the json
-			if ($el.data('options')) options = _.extend(options, $el.data('options'));
-			
-			// Apply options
-			$el.wysihtml5(options);
+
+		$body.find('textarea.wysiwyg').each(function() {			
+			CKEDITOR.replace(this, {
+				resize_enabled: false,
+		        enterMode : CKEDITOR.ENTER_BR,
+				toolbar :
+				[
+					{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
+					{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
+					{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+					{ name: 'image', items : [ 'Image' ] },
+					{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+					{ name: 'source', items : [ 'Source' ] }
+				]
+			});
 		});
 		
 	});
