@@ -137,6 +137,11 @@ label {
 // Tweaks to the typehead menu
 .typeahead {
 	
+	// Make the dropdown span at least the full width of the widget
+	.pull-right & {
+		min-width: 100%;
+	}
+	
 	// Make the rollover state look better
 	.active a {
 		color: white;
@@ -153,13 +158,6 @@ label {
 	// Reduce the margins (looks better when there are images in there )
 	li > a {
 		padding: 5px;
-	}
-	
-	// Restrict the width so it can't bleed out the right edge of the page
-	max-width: 200px;
-	li > a {
-		overflow: hidden;
-		text-overflow: ellipsis;
 	}
 }
 

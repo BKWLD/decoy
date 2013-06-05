@@ -47,3 +47,15 @@ body > .container {
 	background-repeat: repeat;
 	@include background-size(unquote("#{$size} #{$size}"));
 }
+
+// Make pulldown menus that are being floated right, also be
+// justified right.  I grabbed this from: 
+// https://github.com/twitter/bootstrap/issues/2045
+.pull-right .dropdown-menu {
+	right: 0;
+	
+	// The JS for typeahead sets a left so we need to do
+	// important to override
+	left: auto !important;
+	
+}
