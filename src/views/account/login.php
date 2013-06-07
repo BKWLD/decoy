@@ -3,7 +3,7 @@
 <?// Login ?>
 <div class="row">
 	<div class="span6">	
-		<?=Former::horizontal_open(action('decoy::account@login'))?>
+		<?=Former::horizontal_open(action('Bkwld\Decoy\Controllers\Account@login'))?>
 			<?=Former::token()?>
 
 			<legend>Login</legend>
@@ -24,7 +24,7 @@
 	
 	<?// Register ?>
 	<div class="span5 offset1">	
-		<?=Former::horizontal_open(action('decoy::account@register'))?>
+		<?=Former::horizontal_open(action('Bkwld\Decoy\Controllers\Account@register'))?>
 			<?=Former::token()?>
 
 			<legend>Register</legend>

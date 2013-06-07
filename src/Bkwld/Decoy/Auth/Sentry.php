@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Auth;
 
 // Dependencies
-use \Html;
+use Html;
 
 /**
  * This class abstracts the Sentry methods that are used globally
