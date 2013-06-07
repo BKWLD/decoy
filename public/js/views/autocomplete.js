@@ -37,7 +37,7 @@ define(function (require) {
 			// Initialize the Bootstrap typahead plugin, which generates the
 			// autocomplete menu
 			this.$input.typeahead({
-				source: _.debounce(this.query, this.throttle) // Throttle rquests
+				source: _.debounce(this.query, this.throttle) // Throttle requests
 			});
 				
 		},
