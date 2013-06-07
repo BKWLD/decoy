@@ -6,6 +6,7 @@ use Laravel\Request;
 use Laravel\Config;
 use Laravel\Bundle;
 use Laravel\Log;
+use Laravel\Session;
 
 // This class has shared methods that assist in the generation of breadcrumbs
 class Breadcrumbs {
@@ -63,13 +64,12 @@ class Breadcrumbs {
 		// http://stackoverflow.com/a/9153969/59160
 		if (count($breadcrumbs) & 1) return self::back($breadcrumbs);
 		
-		// If we're on the first level detail page, do normal stuff
-		if (count($breadcrumbs) === 2) return self::back($breadcrumbs);
-		
-		// Otherwise, skip the previous (the listing) and go direct to the previous detail
-		$back = array_keys($breadcrumbs);
-		$back = $back[count($back)-3];
-		return $back; 
+		// If we're on a detail page, go back to the page we were on previous to
+		// this one.
+		$offset = 1;
+		$history = Session::get('decoy::browse_history', array());
+		if (count($history) - 1 >= $offset) return $history[$offset];
+		else return self::back($breadcrumbs);
 	}
 	
 	// Use the top most breadcrumb label as the page title.  If the breadcrumbs
