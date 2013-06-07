@@ -2,8 +2,8 @@
 
 <div class="standard-list" 
 	data-js-view="standard-list" 
-	data-controller-route="<?=URL::to(Html::controller($controller))?>" 
-	<? if ($parent_controller):?> data-parent-controller="<?=URL::to(Html::controller($parent_controller))?><?endif?>
+	data-controller-route="<?=URL::to(HTML::controller($controller))?>" 
+	<? if ($parent_controller):?> data-parent-controller="<?=URL::to(HTML::controller($parent_controller))?><?endif?>
 	">
 	
 	<?

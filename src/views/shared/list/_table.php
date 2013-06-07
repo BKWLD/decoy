@@ -75,8 +75,8 @@ if (count($listing)) {
 				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
 				
 				// Figure out the edit link
-				if ($many_to_many) $edit = URL::to(Html::controller($controller));
-				else $edit = URL::to(Html::relative('edit', $item->id, $controller));
+				if ($many_to_many) $edit = URL::to(HTML::controller($controller));
+				else $edit = URL::to(HTML::relative('edit', $item->id, $controller));
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
@@ -92,7 +92,7 @@ if (count($listing)) {
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
-						<?=Html::render_list_column($item, $column, $convert_dates)?>	
+						<?=HTML::render_list_column($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>
@@ -118,11 +118,11 @@ if (count($listing)) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=URL::to(Html::relative('remove', $item->pivotId(), $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+						<a href="<?=URL::to(HTML::relative('remove', $item->pivotId(), $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=URL::to(Html::relative('destroy', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<a href="<?=URL::to(HTML::relative('destroy', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
 					<? endif ?>
 				</td>
 			</tr>

@@ -1,4 +1,4 @@
-<?// This view is rendered by the Html::autocomplete() macro ?>
+<?// This view is rendered by the HTML::autocomplete() macro ?>
 
 <div class="control-group autocomplete" data-js-view="autocomplete" data-route="<?=$route?>" data-allow-new="<?=$allow_new?1:0?>">
 	<label for="<?=$id?>"><?=$label?></label>

@@ -62,7 +62,7 @@ class Admin extends Base {
 	
 	// Produce the title for the list view
 	public function title() {
-		return '<img src="'.Html::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
+		return '<img src="'.HTML::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
 	}
 	
 	// Show a badge if the user is the currently logged in
@@ -76,7 +76,7 @@ class Admin extends Base {
 		
 		// If row is disabled
 		if ($this->disabled()) {
-			$html .= '<a href="'.URL::to(Html::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
+			$html .= '<a href="'.URL::to(HTML::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
 		}
 		
 		return $html;

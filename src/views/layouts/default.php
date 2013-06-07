@@ -6,7 +6,7 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-		<?= Html::title() ?>
+		<?= HTML::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
 		<?= View::make('decoy::layouts.buk_builder._header') ?>

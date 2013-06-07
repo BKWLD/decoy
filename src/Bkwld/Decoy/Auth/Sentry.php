@@ -75,7 +75,7 @@ class Sentry implements AuthInterface {
 	// Get their photo
 	static public function userPhoto() {
 		if (!($user = self::user())) return null;
-		return Html::gravatar($user->email);
+		return HTML::gravatar($user->email);
 	}
 	
 	// Get their name

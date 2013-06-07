@@ -20,7 +20,7 @@
 		<?// Else it's a regular one to many, so show a link to create a new item ?>
 		<? else: ?>
 			<div class="btn-group">
-				<a href="<?=URL::to(Html::relative('create'))?>" class="btn btn-info new" ><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=URL::to(HTML::relative('create'))?>" class="btn btn-info new" ><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		<? endif ?>
 

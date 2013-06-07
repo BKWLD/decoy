@@ -3,8 +3,8 @@
 // Imports
 use Bkwld\Decoy\Breadcrumbs;
 
-// Html::title() -- Format title based on section content
-Html::macro('title', function() {
+// HTML::title() -- Format title based on section content
+HTML::macro('title', function() {
 	
 	// If no title has been set, try to figure it out based on
 	// default breadcrumbs
@@ -29,7 +29,7 @@ Html::macro('title', function() {
  * to the view by the view composer that handles the standard list, but PHP
  * wouldn't let me.
  */
-Html::macro('render_list_column', function($item, $column, $convert_dates) {
+HTML::macro('render_list_column', function($item, $column, $convert_dates) {
 	
 	// Date formats
 	$date_formats = array(
@@ -68,7 +68,7 @@ Html::macro('render_list_column', function($item, $column, $convert_dates) {
  * Make an image upload field.  That is to say, one that displays a sample if an
  * image has already been uploaded
  */
-Html::macro('image_upload', function($id = null, $label = null, $help = null, $crops = null) {
+HTML::macro('image_upload', function($id = null, $label = null, $help = null, $crops = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'image';
@@ -170,7 +170,7 @@ Html::macro('image_upload', function($id = null, $label = null, $help = null, $c
 /**
  * Make a file upload field.  It shows a download link for already uploaded files
  */
-Html::macro('file_upload', function($id = null, $label = null, $help = null) {
+HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'file';
@@ -238,7 +238,7 @@ Html::macro('file_upload', function($id = null, $label = null, $help = null) {
  *     - title - The title of the old value.  This would be used if $old is an int like a foreign_id.
  *     - create - A boolean, if true, allows the user to enter values not in autocomplete
  */
-Html::macro('belongs_to', function($id, $route, $options = array()) {
+HTML::macro('belongs_to', function($id, $route, $options = array()) {
 	
 	// Start data array
 	$data = array(
@@ -263,7 +263,7 @@ Html::macro('belongs_to', function($id, $route, $options = array()) {
 /**
  * Form a URL to an edit page, populating route variables by extracting items from URL segments
  */
-Html::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
+HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
 	$action = '@edit';	
 	
 	// If a many to many, make the route straight to the controller
@@ -293,7 +293,7 @@ Html::macro('edit_route', function($route, $is_many_to_many = false, $id = null)
  * disabled, we're just showing the value as text.  Only makes sense on edit views, really.
  * $key - The key that the value is associated with in former
  */
-Html::macro('inputless_field', function($key, $label = null, $value = null) {
+HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 	
 	// Get defaults
 	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($key);
@@ -307,7 +307,7 @@ Html::macro('inputless_field', function($key, $label = null, $value = null) {
 /**
  * This renders a date selection box
  */
-Html::macro('date', function($id, $label = null) {
+HTML::macro('date', function($id, $label = null) {
 	
 	// Defaults
 	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
@@ -342,7 +342,7 @@ Html::macro('date', function($id, $label = null) {
 /**
  * This renders a CKEditor Implementation
  */
-Html::macro('ckeditor', function($id, $label = null) {
+HTML::macro('ckeditor', function($id, $label = null) {
 	
 	// Defaults
 	// if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
@@ -381,5 +381,5 @@ Html::macro('ckeditor', function($id, $label = null) {
  * Register URL generator routes
  */
 $url_generator = new Bkwld\Decoy\Routing\UrlGenerator(Request::path());
-Html::macro('relative', array($url_generator, 'relative'));
-Html::macro('controller', array($url_generator, 'controller'));
+HTML::macro('relative', array($url_generator, 'relative'));
+HTML::macro('controller', array($url_generator, 'controller'));
