@@ -16,10 +16,9 @@
 		"php": ">=5.3.0",
 		"illuminate/support": "4.0.*",
 		"anahkiasen/former": "dev-agnostic",
-		"patchwork/utf8": "dev-patch-2 as 1.0.x-dev",
 		"cartalyst/sentry": "2.0.*",
-		"bkwld/croppa": "dev-composer",
-		"bkwld/library": "dev-composer"
+		"bkwld/croppa": "~2.0",
+		"bkwld/library": "~2.0"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "3.7.*",
@@ -28,20 +27,6 @@
 		"illuminate/routing": "4.0.*",
 		"illuminate/database": "4.0.*"
 	},
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/BKWLD/croppa"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/BKWLD/php-library"
-		},
-		{
-			"type": "vcs",
-			"url": "https://github.com/weotch/Patchwork-UTF8"
-		}
-	],
 	"autoload": {
 		"classmap": [
 			"src/migrations"
