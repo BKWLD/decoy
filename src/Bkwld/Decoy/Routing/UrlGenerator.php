@@ -36,8 +36,8 @@ class UrlGenerator {
 	 */
 	public function relative($action = 'index', $id = null, $child = null) {
 		
-		// Get the current path
-		$path = $this->path;
+		// Get the current path, adding a leading slash that should be missing
+		$path = '/'.$this->path;
 		
 		// Get the URL up to and including the last controller, but without id or action,
 		// by stripping those extra stuffs from the end.  Any trailing slashes are removed
