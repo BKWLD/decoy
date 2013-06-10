@@ -31,7 +31,7 @@ with a related data sidebar.  It expects:
 					$list['sidebar'] = true;
 					
 					// Display it
-					echo render('decoy::shared.list._standard', $list);
+					echo View::make('decoy::shared.list._standard', $list);
 				
 				// Otherwise, treat $list as straight HTML that should be echoed
 				} else echo $list;
