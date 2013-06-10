@@ -2,6 +2,10 @@
 
 The Decoy 2.x docs are very incomplete.  The old docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md
 
+## Tests
+
+Decoy 2.x adds some unit tests.  To run them, `cd` to the Decoy directory and then run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
+
 ## Routing
 
 Decoy uses custom routing logic to translate it's heirachially path structure into an admin namespaced controller.  Here are some examples of the types of requests that are supported.
