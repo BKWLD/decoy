@@ -5,6 +5,7 @@ use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Ancestry;
+use Bkwld\Decoy\Routing\UrlGenerator;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Config;
@@ -68,13 +69,19 @@ class Base extends Controller {
 	/**
 	 * Inject dependencies.  When used in normal execution, these are pulled automatically
 	 * from the facaded App.  When this is not available, say when being run by unit tests,
-	 * this method takes the dependencies in this array:
+	 * this method takes the dependencies in this array.
+	 * 
+	 * Note, not all dependencies are currently injected
+	 * 
 	 * @param Config $config
 	 * @param Ancestry $ancestry
+	 * @param Illuminate\Routing\Router $route
+	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
 	 */
 	private $config;
 	private $ancestry;
 	private $route;
+	private $url;
 	public function injectDependencies($dependencies = null) {
 		
 		// Set manually passed dependencies
@@ -82,6 +89,7 @@ class Base extends Controller {
 			$this->config = $dependencies['config'];
 			$this->ancestry = $dependencies['ancestry'];
 			$this->route = $dependencies['route'];
+			$this->url = $dependencies['url'];
 			return true;
 		}
 		
@@ -95,6 +103,7 @@ class Base extends Controller {
 					$request->path()
 				), $request);
 			$this->route = App::make('router');
+			$this->url = new UrlGenerator($request->path());
 			return true;
 		}
 		
@@ -354,6 +363,39 @@ class Base extends Controller {
 	}
 	
 	/**
+	 * Store a new submission
+	 */
+	public function store() {
+		
+		// If there is a parent, make sure it's id is valid
+		if ($parent_id = $this->ancestry->parentId()) {
+			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
+		}
+		
+		// Create default slug
+		$this->mergeDefaultSlug();
+		
+		// Create a new object before validation so that model callbacks on validation
+		// get fired
+		$item = new Model();
+		
+		// Validate
+		if ($result = $this->validate(Model::$rules)) return $result;
+
+		// Hydrate the model
+		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+		// self::save_files($item);
+		
+		// Save it
+		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
+		else $item->save();
+		
+		// Redirect to edit view
+		if (Request::ajax()) return Response::json(array('id' => $item->id));
+		else return Redirect::to($this->url->relative('edit', $item->id));
+	}
+	
+	/**
 	 * Edit form
 	 */
 	public function edit($id) {
@@ -495,6 +537,51 @@ class Base extends Controller {
 		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
 	}
 	
+	// If there is slug mentioned in the validation or mass assignment rules
+	// and an appropriate title-like field, make a slug for it.  Then merge
+	// that into the inputs, so it can be validated easily
+	protected function mergeDefaultSlug($id = null) {
+		
+		// If we're on an edit view, update the unique condition on the rule
+		// (if it exists) to be unique but not for the current row
+		if ($id && in_array('slug', array_keys(Model::$rules)) 
+			&& strpos(Model::$rules['slug'], 'unique') !== false) {
+		
+			// Add the row exception to the unique clause.  The regexp works because
+			// the \w+ will end at the | that begins the next condition
+
+			// If we're using the unique_with custom validator from the BKWLD bundle
+			if (strpos(Model::$rules['slug'], 'unique_with')) {
+				Model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
+					'$1,slug,'.$id, 
+					Model::$rules['slug']);
+				
+			// Regular slugs
+			} else {
+				Model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
+					'$1,slug,'.$id, 
+					Model::$rules['slug']);
+			}
+		}
+		
+		// If a slug is already defined, do nothing
+		if (Input::has('slug')) return;
+		
+		// Model must have rules and they must have a slug
+		if (empty(Model::$rules) || !in_array('slug', array_keys(Model::$rules))) return;
+		
+		// If a Model::$TITLE_COLUMN is set, use that input for the slug
+		if (!empty(Model::$TITLE_COLUMN) && Input::has(Model::$TITLE_COLUMN)) {
+			Input::merge(array('slug' => Str::slug(Input::get(Model::$TITLE_COLUMN))));
+		
+		// Else it looks like the model has a slug, so try and set it
+		} else if (Input::has('name')) {
+			Input::merge(array('slug' => Str::slug(Input::get('name'))));
+		} elseif (Input::has('title')) {
+			Input::merge(array('slug' => Str::slug(Input::get('title'))));
+		}
+	}
+	
 	//---------------------------------------------------------------------------
 	// Private support methods
 	//---------------------------------------------------------------------------
@@ -616,40 +703,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
-	// Create a new one
-	public function post_new() {
-		
-		// There may be a parent id.  This isn't defined in the function definition
-		// because I don't want all child classes to have to implement it
-		if (is_numeric(Request::segment(3))) {
-			$parent_id = Request::segment(3);
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-		}
-		
-		// Create default slug
-		$this->merge_default_slug();
-		
-		// Create a new object before validation so that model callbacks on validation
-		// get fired
-		$item = new Model();
-		
-		// Validate
-		if ($result = $this->validate(Model::$rules)) return $result;
-
-		// Hydrate the model
-		$item->fill(BKWLD\Utils\Collection::null_empties(Input::get()));
-		self::save_files($item);
-		
-		// Save it
-		if (!empty($parent_id)) {
-			$query = $parent->{$this->PARENT_TO_SELF}()->insert($item);
-		} else $item->save();
-		
-		// Redirect to edit view
-		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to(str_replace('new', $item->id, URI::current()));
-	}
-	
 	// Update an item
 	public function post_edit($id) { return $this->put_edit($id); }
 	public function put_edit($id) {
@@ -665,7 +718,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		self::pre_validate_files();
 		
 		// Create default slug
-		$this->merge_default_slug();
+		$this->mergeDefaultSlug($id);
 
 		// Validate data
 		if ($result = $this->validate(Model::$rules)) return $result;
@@ -681,7 +734,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		unset($input['parent_controller']); // Backbone may send this with sort updates
 
 		// Update it
-		$item->fill(BKWLD\Utils\Collection::null_empties($input));
+		$item->fill(BKWLD\Utils\Collection::nullEmpties($input));
 		$item->save();
 
 		// Redirect to the edit view
@@ -745,53 +798,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Utility methods
 	//---------------------------------------------------------------------------
 
-	// If there is slug mentioned in the validation or mass assignment rules
-	// and an appropriate title-like field, make a slug for it.  Then merge
-	// that into the inputs, so it can be validated easily
-	protected function merge_default_slug() {
-		
-		// If we're on an edit view, update the unique condition on the rule
-		// (if it exists) to be unique but not for the current row
-		if (in_array('slug', array_keys(Model::$rules)) 
-			&& strpos(Model::$rules['slug'], 'unique') !== false
-			&& Request::route()->controller_action == 'edit') {
-			$id = Request::route()->parameters[0];
-		
-			// Add the row exception to the unique clause.  The regexp works because
-			// the \w+ will end at the | that begins the next condition
-
-			// If we're using the unique_with custom validator from the BKWLD bundle
-			if (strpos(Model::$rules['slug'], 'unique_with')) {
-				Model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
-					'$1,slug,'.$id, 
-					Model::$rules['slug']);
-				
-			// Regular slugs
-			} else {
-				Model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
-					'$1,slug,'.$id, 
-					Model::$rules['slug']);
-			}
-			
-		}
-
-		// If a slug is already defined, do nothing
-		if (Input::has('slug')) return;
-		
-		// Model must have rules and they must have a slug
-		if (empty(Model::$rules) || !in_array('slug', array_keys(Model::$rules))) return;
-		
-		// If a Model::$TITLE_COLUMN is set, use that input for the slug
-		if (!empty(Model::$TITLE_COLUMN) && Input::has(Model::$TITLE_COLUMN)) {
-			Input::merge(array('slug' => Str::slug(Input::get(Model::$TITLE_COLUMN))));
-		
-		// Else it looks like the model has a slug, so try and set it
-		} else if (Input::has('name')) {
-			Input::merge(array('slug' => Str::slug(Input::get('name'))));
-		} elseif (Input::has('title')) {
-			Input::merge(array('slug' => Str::slug(Input::get('title'))));
-		}
-	}
 	
 	// Convert an eloquent result set into an array
 	static protected function eloquentToArray($query) {
