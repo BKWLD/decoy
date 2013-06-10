@@ -475,8 +475,8 @@ class Base extends Controller {
 		$item->delete();
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
-		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to(Breadcrumbs::smartBack(Breadcrumbs::defaults(parse_url(URL::previous(), PHP_URL_PATH))));
+		if (Request::ajax()) return Response::json(null);
+		else return Redirect::to($this->url->relative('index'));
 	}
 	
 	//---------------------------------------------------------------------------

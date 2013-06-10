@@ -16,7 +16,7 @@ class UrlGenerator {
 	private $path;
 	
 	// Possible actions in path that would process a view that would be generating URLs
-	private $actions = array('edit', 'create');
+	private $actions = array('edit', 'create', 'destroy');
 	
 	/**
 	 * Inject dependencies
@@ -33,6 +33,7 @@ class UrlGenerator {
 	 * @param integer $id Optional id that we're linking to.  Required for actions like edit
 	 * @param string $child The name (or full class) of a child controller 
 	 *                      of the current path: 'slides', 'Admin\SlidesController'
+	 * @return string '/admin/articles'
 	 */
 	public function relative($action = 'index', $id = null, $child = null) {
 		
