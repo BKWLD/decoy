@@ -28,7 +28,7 @@ It expects:
 			</a>
 		<? endif ?>
 		
-		<a class="btn back" href="<?=\Decoy\Breadcrumbs::smartBack()?>">Back</a>
+		<a class="btn back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
 	</div>
 
 <?= Former::close() ?>
