@@ -91,19 +91,3 @@ function redirect_after_save() {
 	// Done
 	return false;
 }
-
-// Filter some stuff uniformly out from Input so we don't need to defined
-// $accessible on the model to filter it out
-function filter_clean_input() {
-	
-	// Input to alawys remove
-	$blacklist = array('_wysihtml5_mode', '_save');
-	
-	// The FILES array will be untouched by this, even the replace 
-	$input = Input::get();
-	foreach($blacklist as $field) {
-		if (isset($input[$field])) unset($input[$field]);
-	}
-	Input::replace($input);
-		
-}

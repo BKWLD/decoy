@@ -56,6 +56,12 @@ abstract class Base extends Eloquent {
 			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
 		}
 		
+		// Blacklist special columns that aren't intended for the DB
+		$this->guarded = array_merge($this->guarded, array(
+			'_token', '_wysihtml5_mode', '_save',
+		));
+		
+		
 	}
 	
 	// Override the events that happen on save
@@ -203,12 +209,12 @@ abstract class Base extends Eloquent {
 		}
 		
 		// Check if the crop style is valid
-		if ($crop_style && !Collection::key_or_val_exists($crop_style, static::$CROPS[$field])) {
+		if ($crop_style && !Collection::keyOrValueExists($crop_style, static::$CROPS[$field])) {
 			throw new \Exception("Crop style '$crop_style' is not defined for the field: $field");
 		}
 		
 		// Default crop style is 'default'
-		if (!$crop_style && !empty(static::$CROPS[$field]) && Collection::key_or_val_exists('default', static::$CROPS[$field])) {
+		if (!$crop_style && !empty(static::$CROPS[$field]) && Collection::keyOrValueExists('default', static::$CROPS[$field])) {
 			$crop_style = 'default';
 		}
 		
