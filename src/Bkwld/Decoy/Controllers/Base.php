@@ -427,6 +427,41 @@ class Base extends Controller {
 
 	}
 	
+	// Update an item
+	public function update($id) {
+
+		// Load the entry
+		if (!($item = Model::find($id))) {
+			if (Request::ajax()) return Response::json(null, 404);
+			else return App::abort(404);
+		}
+		
+		// Files in an edit state have a number of supplentary fields.  This
+		// prepares the file for validation.
+		// self::pre_validate_files();
+		
+		// Create default slug
+		$this->mergeDefaultSlug($id);
+
+		// Validate data
+		if ($result = $this->validate(Model::$rules)) return $result;
+		
+		// Save out files and remove special file related inputs that don't
+		// exist as columns in the db (like 'old-image")
+		// self::delete_files($item);
+		// self::save_files($item);
+		// self::unset_file_edit_inputs();
+		
+		// Update it
+		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+		$item->save();
+
+		// Redirect to the edit view
+		if (Request::ajax()) return Response::json(null);
+		else return Redirect::to(URL::current());
+		
+	}
+	
 	// Delete a record
 	public function destroy($id) {
 		
@@ -703,46 +738,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 	}
 	
-	// Update an item
-	public function post_edit($id) { return $this->put_edit($id); }
-	public function put_edit($id) {
-
-		// Load the entry
-		if (!($item = Model::find($id))) {
-			if (Request::ajax()) return Response::json(null, 404);
-			else return App::abort(404);
-		}
-		
-		// Files in an edit state have a number of supplentary fields.  This
-		// prepares the file for validation.
-		self::pre_validate_files();
-		
-		// Create default slug
-		$this->mergeDefaultSlug($id);
-
-		// Validate data
-		if ($result = $this->validate(Model::$rules)) return $result;
-		
-		// Save out files and remove special file related inputs that don't
-		// exist as columns in the db (like 'old-image")
-		self::delete_files($item);
-		self::save_files($item);
-		self::unset_file_edit_inputs();
-		
-		// Remove special key-value pairs that inform logic but won't ever fill() a db row
-		$input = BKWLD\Laravel\Input::json_and_input();
-		unset($input['parent_controller']); // Backbone may send this with sort updates
-
-		// Update it
-		$item->fill(BKWLD\Utils\Collection::nullEmpties($input));
-		$item->save();
-
-		// Redirect to the edit view
-		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to(URL::current());
-		
-	}
-	
 	// Attach a model to a parent_id, like with a many to many style
 	// autocomplete widget
 	public function post_attach($id) {
@@ -811,7 +806,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// If there is not a PUT request with a property of position, return false
 		// to tell the invoker to continue processing
 		if (Request::method() != 'PUT' || !Request::ajax()) return false;
-		$input = BKWLD\Laravel\Input::json_and_input();
+		$input = Input::get();
 		if (!isset($input['position'])) return false;
 		
 		// Update the pivot position
