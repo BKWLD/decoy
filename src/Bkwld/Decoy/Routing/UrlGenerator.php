@@ -94,7 +94,7 @@ class UrlGenerator {
 		$controller = $this->controllerForUrl($controller);
 		
 		// Begin the url
-		$path = $decoy.'/'.$controller;
+		$path = '/'.$decoy.'/'.$controller;
 		
 		// If there is an id, add it now
 		if ($id) $path .= '/'.$id;
