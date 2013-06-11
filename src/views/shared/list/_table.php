@@ -92,7 +92,7 @@ if (count($listing)) {
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
-						<?=HTML::render_list_column($item, $column, $convert_dates)?>	
+						<?=HTML::renderListColumn($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>

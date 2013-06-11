@@ -836,7 +836,7 @@ abstract class Decoy_Base_Controller extends Controller {
 			
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic
-			// found in HTML::render_list_column();
+			// found in HTML::renderListColumn();
 			$item->columns = array();
 			foreach($this->COLUMNS as $column) {
 				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));

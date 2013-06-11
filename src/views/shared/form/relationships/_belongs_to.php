@@ -1,4 +1,4 @@
-<?// This view is rendered by the HTML::belongs_to() macro ?>
+<?// This view is rendered by the HTML::belongsTo() macro ?>
 
 <div class="belongs-to" data-js-view="belongs-to" data-controller-route="<?=$route?>">
 	
