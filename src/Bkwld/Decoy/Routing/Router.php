@@ -31,9 +31,15 @@ class Router {
 	 * Register all routes
 	 */
 	public function registerAll() {
+		
+		// Setup filters
+		$filters = new Filters($this->dir);
+		$filters->registerAll();
+		
+		// Register routes
 		$this->registerAccounts();
-		$this->registerWildcard();
 		$this->registerAdmins();
+		$this->registerWildcard();
 	}
 	
 	/**
@@ -60,9 +66,9 @@ class Router {
 		$request = $this->request;
 		$self = $this;
 		
-		// Listen for 404s and use a response from detected controller
-		App::missing(function($exception) use ($dir, $request, $self) {
-			
+		// Setup a wildcarded catch all route
+		Route::get($this->dir.'/{path}', function($path) use ($dir, $request, $self) {
+
 			// Remember the detected route
 			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
 				$self->action($controller.'@'.$action);
@@ -72,7 +78,9 @@ class Router {
 			$router = new Wildcard($dir, $request->getMethod(), $request->path());
 			$response = $router->detectAndExecute();
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
-		});
+			
+		})->where('path', '.*');
+
 	}
 	
 	/**
