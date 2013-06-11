@@ -12,7 +12,7 @@
 		<?= View::make('decoy::layouts.buk_builder._header') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 	</head>
-	<body class="<?//=str_replace('.', '_', Request::route()->controller)?> <?//=Request::route()->controller_action?>">
+	<body class="<?=HTML::bodyClass()?>">
 		
 		<?// Nav ?>
 		<?= View::make('decoy::layouts._nav') ?>

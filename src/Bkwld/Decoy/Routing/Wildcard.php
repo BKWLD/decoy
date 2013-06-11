@@ -1,7 +1,8 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
-use \App;
+use App;
+use Event;
 use Illuminate\Support\Str;
 
 /**
@@ -48,6 +49,11 @@ class Wildcard {
 
 		// Get the id
 		$id = $this->detectId();
+		
+		// Tell other classes what was found
+		$event = Event::fire('wildcard.detection', array(
+			$controller, $action, $id
+		));
 		
 		// Invoke the controller
 		$controller = new $controller();

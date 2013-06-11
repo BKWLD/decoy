@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Imports
+use App;
 use Bkwld\Library\Utils\File;
 use Bkwld\Library\Utils\Collection;
 use Config;
@@ -137,7 +138,7 @@ abstract class Base extends Eloquent {
 		if (!empty(static::$TITLE_COLUMN)) $title .=  $row[static::$TITLE_COLUMN];
 		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
 		else if (isset($row['title'])) $title .= $row['title'];
-		else if (Request::route()->controller_action == 'edit')  $title .= 'Edit';
+		else if (App::make('decoy_router')->action() == 'edit')  $title .= 'Edit';
 		
 		// Return the finished title
 		return $title;

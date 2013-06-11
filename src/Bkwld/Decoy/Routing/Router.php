@@ -1,10 +1,11 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
-use \App;
-use \Config;
-use \DecoyAuth;
-use \Route;
+use App;
+use Config;
+use DecoyAuth;
+use Event;
+use Route;
 
 /**
  * This class acts as a bootstrap for setting up
@@ -57,9 +58,17 @@ class Router {
 		// Localize vars for closure
 		$dir = $this->dir;
 		$request = $this->request;
+		$self = $this;
 		
 		// Listen for 404s and use a response from detected controller
-		App::missing(function($exception) use ($dir, $request) {
+		App::missing(function($exception) use ($dir, $request, $self) {
+			
+			// Remember the detected route
+			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
+				$self->action($controller.'@'.$action);
+			});
+			
+			// Do the detection
 			$router = new Wildcard($dir, $request->getMethod(), $request->path());
 			$response = $router->detectAndExecute();
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
@@ -74,4 +83,14 @@ class Router {
 		Route::get($this->dir.'/admins/{id}/enable', array('as' => 'decoy\admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable'));
 	}
 	
+	/**
+	 * Set and get the action for this request
+	 * @return string 'Bkwld\Decoy\Controllers\Account@forgot'
+	 */
+	private $_action;
+	public function action($name = null) {
+		if ($name) $this->_action = $name;
+		if ($this->_action) return $this->_action; // Wildcard
+		else return Route::currentRouteAction();
+	}
 }

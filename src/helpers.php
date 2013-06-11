@@ -1,10 +1,13 @@
 <?php
 
 // Imports
+use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Library;
 
-// HTML::title() -- Format title based on section content
+/**
+ * Generate title tags based on section content
+ */
 HTML::macro('title', function() {
 	
 	// If no title has been set, try to figure it out based on
@@ -19,6 +22,13 @@ HTML::macro('title', function() {
 	return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
 });
 
+HTML::macro('bodyClass', function() {
+	$action = App::make('decoy_router')->action();
+	$parts = explode('@', $action);
+	$controller = strtolower(str_replace(array('Bkwld\Decoy\Controllers\\', 'Admin\\'), '', $parts[0]));
+	$action = $parts[1];
+	return $controller.' '.$action;
+});
 
 /**
  * Formats the data in the standard list shared partial.
