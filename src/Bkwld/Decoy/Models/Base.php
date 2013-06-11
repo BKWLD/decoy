@@ -34,23 +34,11 @@ abstract class Base extends Eloquent {
 	// array('image' => array('marquee' => '4:3', 'feature'))
 	static public $CROPS = array();
 	
-	//---------------------------------------------------------------------------
-	// Model event callbacks
-	//---------------------------------------------------------------------------
-	// Setup listeners for all of Laravel's built in events that fire our no-op
-	// callbacks.
-	// 
-	// These are defined by overriding the methods that fire them instead of in the
-	// constructor so that ALL of instances of a model don't start listening to these
-	// events.  For instance, if an instance was created to do some operation without
-	// first getting hydrated with data, it doesn't need to handle a save event
-	
-	// Override events that are happening before saves.  Note these will likely be
-	// triggered more often than you'd like, described above
 	public function __construct(array $attributes = array()) {
 		parent::__construct($attributes);
 		
-		// Add Decoy events
+		// Override events that are happening before saves.  Note these will likely be
+		// triggered more often than you'd like, described below
 		$events = array('validating', 'validated');
 		foreach($events as $event) {
 			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
@@ -63,8 +51,18 @@ abstract class Base extends Eloquent {
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 		));
-				
 	}
+	
+	//---------------------------------------------------------------------------
+	// Model event callbacks
+	//---------------------------------------------------------------------------
+	// Setup listeners for all of Laravel's built in events that fire our no-op
+	// callbacks.
+	// 
+	// These are defined by overriding the methods that fire them instead of in the
+	// constructor so that ALL of instances of a model don't start listening to these
+	// events.  For instance, if an instance was created to do some operation without
+	// first getting hydrated with data, it doesn't need to handle a save event	
 	
 	// Override the events that happen on save
 	public function save(array $options = array()) {
@@ -257,6 +255,13 @@ abstract class Base extends Eloquent {
 	 */
 	static public function adminControllerClass() {
 		return ucfirst(Config::get('decoy::dir')).'\\'.Str::plural(get_called_class()).'Controller';
+	}
+	
+	/**
+	 * Add a field to the blacklist
+	 */
+	public function blacklist($field) {
+		$this->guarded[] = $field;
 	}
 	
 }

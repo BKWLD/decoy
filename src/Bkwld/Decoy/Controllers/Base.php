@@ -454,7 +454,7 @@ class Base extends Controller {
 		// exist as columns in the db (like 'old-image")
 		$files->deleteFiles($item);
 		$files->saveFiles($item);
-		$files->unsetFileEditInputs();
+		$files->unsetFileEditInputs($item);
 		
 		// Update it
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));

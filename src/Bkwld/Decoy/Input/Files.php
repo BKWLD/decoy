@@ -106,9 +106,8 @@ class Files {
 	/**
 	 * On edit pages with file inputs, there are some extra fields that should be
 	 * stripped out of the input so that they don't confuse mass assignment
-	 * 
 	 */
-	public function unsetFileEditInputs() {
+	public function unsetFileEditInputs($item) {
 		$input = Input::get();
 		foreach($input as $field => $value) {
 			
@@ -117,13 +116,11 @@ class Files {
 			$column = substr($field, 4);
 			
 			// Remove the columns that don't exist in the db
-			unset($input[UPLOAD_OLD.$column]);
-			unset($input[UPLOAD_DELETE.$column]);
-			unset($input[UPLOAD_REPLACE.$column]);
+			if (array_key_exists(UPLOAD_OLD.$column, $input)) $item->blacklist(UPLOAD_OLD.$column);
+			if (array_key_exists(UPLOAD_DELETE.$column, $input)) $item->blacklist(UPLOAD_DELETE.$column);
+			if (array_key_exists(UPLOAD_REPLACE.$column, $input)) $item->blacklist(UPLOAD_REPLACE.$column);
+
 		}	
-		
-		// Replace the Input::get() with the new values
-		Input::replace($input);
 	}
 	
 }
