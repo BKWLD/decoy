@@ -261,34 +261,6 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 });
 
 /**
- * Form a URL to an edit page, populating route variables by extracting items from URL segments
- */
-HTML::macro('edit_route', function($route, $is_many_to_many = false, $id = null) {
-	$action = '@edit';	
-	
-	// If a many to many, make the route straight to the controller
-	if ($is_many_to_many) return route($route.$action, $id);
-	
-	// Get all the ids from the route
-	$uri = URI::current();
-	$segments = explode('/', $uri);
-	$ids = array();
-	for ($i=2; $i < count($segments); $i += 2) {
-		$ids[] = $segments[$i];
-	}
-	
-	// If there are any ids, found in the URL, then this a link to a child
-	if (count($ids)) $action .= '_child';
-	
-	// If an id was passed, add it to the end
-	if ($id) $ids[] = $id;
-	
-	// Form the route using all the ids
-	return route($route.$action, $ids);
-	
-});
-
-/**
  * Make a control group that doesn't show an input.  Like where a field might have been rendered as
  * disabled, we're just showing the value as text.  Only makes sense on edit views, really.
  * $key - The key that the value is associated with in former
