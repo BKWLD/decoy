@@ -11,7 +11,7 @@
 				<span class="icon-bar"></span>
 			</a>
 			
-			<a class="brand" href="<?=route('decoy')?>"><?=Config::get('decoy::site_name')?></a>
+			<a class="brand" href="<?=route('decoy')?>"><?=Config::get('site.name') ? Config::get('site.name') : Config::get('decoy::site_name')?></a>
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
