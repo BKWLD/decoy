@@ -67,7 +67,7 @@ class Router {
 		$self = $this;
 		
 		// Setup a wildcarded catch all route
-		Route::get($this->dir.'/{path}', function($path) use ($dir, $request, $self) {
+		Route::any($this->dir.'/{path}', function($path) use ($dir, $request, $self) {
 
 			// Remember the detected route
 			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
