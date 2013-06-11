@@ -2,6 +2,7 @@
 
 // Imports
 use Bkwld\Decoy\Breadcrumbs;
+use Bkwld\Library;
 
 // HTML::title() -- Format title based on section content
 HTML::macro('title', function() {
@@ -29,7 +30,7 @@ HTML::macro('title', function() {
  * to the view by the view composer that handles the standard list, but PHP
  * wouldn't let me.
  */
-HTML::macro('render_list_column', function($item, $column, $convert_dates) {
+HTML::macro('renderListColumn', function($item, $column, $convert_dates) {
 	
 	// Date formats
 	$date_formats = array(
@@ -68,13 +69,13 @@ HTML::macro('render_list_column', function($item, $column, $convert_dates) {
  * Make an image upload field.  That is to say, one that displays a sample if an
  * image has already been uploaded
  */
-HTML::macro('image_upload', function($id = null, $label = null, $help = null, $crops = null) {
+HTML::macro('imageUpload', function($id = null, $label = null, $help = null, $crops = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'image';
 	$block_help = '';
 	$image = Former::getValue($id);
-	if (!$label) $label = BKWLD\Utils\String::title_from_key($id);
+	if (!$label) $label = Library\Utils\String::titleFromKey($id);
 	
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -102,7 +103,7 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null, $c
 		$active = 'active';
 		foreach($crops as $key => $val) {
 			$crop = is_numeric($key) ? $val : $key;
-			$block_help .= '<span class="'.$active.'">'.BKWLD\Utils\String::title_from_key($crop).'</span>';
+			$block_help .= '<span class="'.$active.'">'.Library\Utils\String::titleFromKey($crop).'</span>';
 			$active = null;
 		}
 		$block_help .= '</span>';
@@ -170,13 +171,13 @@ HTML::macro('image_upload', function($id = null, $label = null, $help = null, $c
 /**
  * Make a file upload field.  It shows a download link for already uploaded files
  */
-HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
+HTML::macro('fileUpload', function($id = null, $label = null, $help = null) {
 	
 	// Defaults
 	if ($id === null) $id = 'file';
 	$block_help = '';
 	$file = Former::getValue($id);
-	if (!$label) $label = BKWLD\Utils\String::title_from_key($id);
+	if (!$label) $label = Library\Utils\String::titleFromKey($id);
 
 	// Add the passed help text
 	if ($help) $block_help .= '<span class="image-help">'.$help.'</span>';
@@ -238,7 +239,7 @@ HTML::macro('file_upload', function($id = null, $label = null, $help = null) {
  *     - title - The title of the old value.  This would be used if $old is an int like a foreign_id.
  *     - create - A boolean, if true, allows the user to enter values not in autocomplete
  */
-HTML::macro('belongs_to', function($id, $route, $options = array()) {
+HTML::macro('belongsTo', function($id, $route, $options = array()) {
 	
 	// Start data array
 	$data = array(
@@ -256,7 +257,7 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 	
 	// Render the view
 	$data = array_merge($data, $options);
-	return render('decoy::shared.form.relationships._belongs_to', $data);
+	return View::make('decoy::shared.form.relationships._belongs_to', $data);
 	
 });
 
@@ -268,7 +269,7 @@ HTML::macro('belongs_to', function($id, $route, $options = array()) {
 HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 	
 	// Get defaults
-	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($key);
+	if (empty($label)) $label = Library\Utils\String::titleFromKey($key);
 	if (empty($value)) $value = Former::getValue($key);
 	
 	// Render the elemnent
@@ -282,7 +283,7 @@ HTML::macro('inputless_field', function($key, $label = null, $value = null) {
 HTML::macro('date', function($id, $label = null) {
 	
 	// Defaults
-	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
+	if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 	$value = date("m/d/Y");
 	
 	// Make the element
@@ -317,7 +318,7 @@ HTML::macro('date', function($id, $label = null) {
 HTML::macro('ckeditor', function($id, $label = null) {
 	
 	// Defaults
-	// if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
+	// if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 	
 	// Make the element
 	$field = Former::textarea($id, $label)
