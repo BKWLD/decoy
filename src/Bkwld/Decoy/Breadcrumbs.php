@@ -104,7 +104,7 @@ class Breadcrumbs {
 	}
 	
 	// Apply smarts to analyzing the URL
-	static public function generate_from_url() {
+	static public function fromUrl() {
 		$breadcrumbs = array();
 
 		// Get the segments

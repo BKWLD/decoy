@@ -4,7 +4,7 @@ The Decoy 2.x docs are very incomplete.  The old docs can be found here: https:/
 
 ## Tests
 
-Decoy 2.x adds some unit tests.  To run them, `cd` to the Decoy directory and then run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
+Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
 
 ## Routing
 

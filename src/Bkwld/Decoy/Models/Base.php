@@ -158,7 +158,7 @@ abstract class Base extends Eloquent {
 	// Many models will override this to create custom methods for getting
 	// a list of rows
 	static public function ordered() {
-		return static::order_by(self::table_name().'.created_at', 'desc');
+		return static::orderBy(self::table_name().'.created_at', 'desc');
 	}
 	
 	// Get an ordered list of only rows that are marked as visible
@@ -173,7 +173,7 @@ abstract class Base extends Eloquent {
 	// Randomize the results in the DB.  This shouldn't be used for large datasets
 	// cause it's not very performant
 	static public function randomize() {
-		return static::order_by(DB::raw('RAND()'));
+		return static::orderBy(DB::raw('RAND()'));
 	}
 	
 	// Find by the slug.  Like "find()" but use the slug column instead
@@ -185,7 +185,7 @@ abstract class Base extends Eloquent {
 	static protected function table_name() {
 		$model = get_called_class();
 		$model = new $model;
-		return $model->table();
+		return $model->getTable();
 	}
 	
 	/**

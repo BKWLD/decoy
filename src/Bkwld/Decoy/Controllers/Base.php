@@ -306,13 +306,13 @@ class Base extends Controller {
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
 	
-	/*
 	// Listing page
 	public function index() {
 		
 		// Run the query
-		$results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
-		$count = $results->total;
+		// $results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = Model::ordered()->paginate($this->PER_PAGE);
+		$count = $results->getTotal();
 		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
@@ -327,9 +327,8 @@ class Base extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::fromUrl());
 	}	
-	*/
 	
 	/**
 	 * Create form
@@ -359,7 +358,7 @@ class Base extends Controller {
 		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::fromUrl());
 	}
 	
 	/**
@@ -423,7 +422,7 @@ class Base extends Controller {
 		}
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
 	}
 	
@@ -685,7 +684,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		));
 		
 		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::generate_from_url());
+		$this->breadcrumbs(Breadcrumbs::fromUrl());
 		
 	}
 	

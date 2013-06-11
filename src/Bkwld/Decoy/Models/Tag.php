@@ -72,12 +72,12 @@ abstract class Tag extends Base {
 	
 	// Override the ordered function to add a filter by type
 	public static function ordered() {
-		return self::typed()->order_by('value', 'asc');
+		return self::typed()->orderBy('value', 'asc');
 	}
 	
 	// Get a random tag
 	public static function randomize() {
-		return self::typed()->order_by(DB::raw('RAND()'));
+		return self::typed()->orderBy(DB::raw('RAND()'));
 	}
 	
 	// Get all tags of the type calcualted by the model's name
