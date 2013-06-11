@@ -606,13 +606,13 @@ class Base extends Controller {
 		
 		// If a Model::$TITLE_COLUMN is set, use that input for the slug
 		if (!empty(Model::$TITLE_COLUMN) && Input::has(Model::$TITLE_COLUMN)) {
-			Input::merge(array('slug' => Str::slug(Input::get(Model::$TITLE_COLUMN))));
+			Input::merge(array('slug' => Str::slug(strip_tags(Input::get(Model::$TITLE_COLUMN)))));
 		
 		// Else it looks like the model has a slug, so try and set it
 		} else if (Input::has('name')) {
-			Input::merge(array('slug' => Str::slug(Input::get('name'))));
+			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('name')))));
 		} elseif (Input::has('title')) {
-			Input::merge(array('slug' => Str::slug(Input::get('title'))));
+			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('title')))));
 		}
 	}
 	
