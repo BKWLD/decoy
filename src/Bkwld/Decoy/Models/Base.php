@@ -1,8 +1,8 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Imports
-use BKWLD\Utils\File;
-use BKWLD\Utils\Collection;
+use Bkwld\Library\Utils\File;
+use Bkwld\Library\Utils\Collection;
 use Config;
 use Croppa;
 use DB;
@@ -148,10 +148,10 @@ abstract class Base extends Eloquent {
 	
 	// Save out an image or file given the field name.  They are saved
 	// to the directory specified in the bundle config
-	static public function save_image($input_name = 'image') { return self::save_file($input_name); }
-	static public function save_file($input_name = 'file') {
-		$path = File::organize_uploaded_file(Input::file($input_name), Config::get('decoy::upload_dir'));
-		$path = File::public_path($path);
+	public function saveImage($input_name = 'image') { return $this->saveFile($input_name); }
+	public function saveFile($input_name = 'file') {
+		$path = File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir'));
+		$path = File::publicPath($path);
 		return $path;
 	}
 	

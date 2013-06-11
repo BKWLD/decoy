@@ -89,7 +89,7 @@ class Content extends Base {
 			// Delete the old file and save the new
 			if (Input::has_file($slug)) {
 				if ($pair->value) Croppa::delete($pair->value);
-				$value = self::save_file($slug);
+				$value = $pair->saveFile($slug);
 				
 			// Or there is no new file, so use the old value
 			} else $value = $pair->value;

@@ -7,6 +7,7 @@ use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\UrlGenerator;
 use Bkwld\Decoy\Routing\Wildcard;
+use Bkwld\Decoy\Input\Files;
 use Bkwld\Library;
 use Config;
 use Event;
@@ -383,7 +384,10 @@ class Base extends Controller {
 
 		// Hydrate the model
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		// self::save_files($item);
+		
+		// Save files
+		$files = new Files();
+		$files->saveFiles($item);
 		
 		// Save it
 		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
@@ -437,7 +441,8 @@ class Base extends Controller {
 		
 		// Files in an edit state have a number of supplentary fields.  This
 		// prepares the file for validation.
-		// self::pre_validate_files();
+		$files = new Files();
+		$files->preValidateFiles(Model::$rules);
 		
 		// Create default slug
 		$this->mergeDefaultSlug($id);
@@ -447,9 +452,9 @@ class Base extends Controller {
 		
 		// Save out files and remove special file related inputs that don't
 		// exist as columns in the db (like 'old-image")
-		// self::delete_files($item);
-		// self::save_files($item);
-		// self::unset_file_edit_inputs();
+		$files->deleteFiles($item);
+		$files->saveFiles($item);
+		$files->unsetFileEditInputs();
 		
 		// Update it
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));

@@ -31,7 +31,7 @@ class Content extends Base {
 			if (Str::is(UPLOAD_OLD.'*', $slug)) $slug = substr($slug, 4);
 			
 			// Move replace-* named files to their expected location
-			self::move_replace_file_input($slug);
+			self::moveReplaceFileInput($slug);
 			
 			// Update the content pair
 			Content::update($slug, $value);
