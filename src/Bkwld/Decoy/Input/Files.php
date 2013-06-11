@@ -1,5 +1,6 @@
 <?php namespace Bkwld\Decoy\Input;
 
+use Croppa;
 use Input;
 use Request;
 use Str;
@@ -11,13 +12,11 @@ class Files {
 	
 	/**
 	 * Files in an edit state have a number of supplentary fields.  This
-	 * prepares the file for validation.
+	 * prepares the file for validation.  This should only be called during
+	 * the handling of an @update request
 	 * @param array $rules
 	 */
 	public function preValidateFiles($rules) {
-		
-		// Only callable during an edit
-		if (Request::route()->controller_action != 'edit') return;
 		
 		// Loop through the input and and look for certain input fields by checking for other inputs
 		// with specific suffices.
@@ -32,7 +31,7 @@ class Files {
 			if (Input::has(UPLOAD_DELETE.$column)) continue;
 			
 			// If someone has uploaded a new file, use it's value as the field and continue.
-			if (Input::has_file(UPLOAD_REPLACE.$column)) {
+			if (Input::hasFile(UPLOAD_REPLACE.$column)) {
 				$this->moveReplaceFileInput($column);
 				continue;
 			}
