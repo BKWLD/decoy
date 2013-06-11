@@ -1,8 +1,13 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
+use Bkwld\Decoy\Breadcrumbs;
+use HTML;
+use Input;
+use Redirect;
 use Route;
-use Log;
+use Session;
+use URL;
 
 /**
  * Route filters for Decoy
@@ -23,18 +28,9 @@ class Filters {
 	/**
 	 * Register all filters
 	 */
-	public function registerAll() {
-		
-		Route::filter('one', function() {
-			//
-			Log::info('one');
-		});
-		
-		Route::filter('two', array($this, 'saveRedirect'));
-
-		
-		Route::when('admin/*', 'one');
-		Route::when('admin/*', 'two');
+	public function registerAll() {		
+		Route::filter('decoy.saveRedirect', array($this, 'saveRedirect'));
+		Route::when('admin/*', 'decoy.saveRedirect');
 	}
 	
 	/**
@@ -42,7 +38,22 @@ class Filters {
 	 * button the user interacte with
 	 */
 	public function saveRedirect() {
-		Log::info('two');
+		
+		// Handle a redirect request
+		if (Session::has('save_redirect')) return Redirect::to(Session::get('save_redirect'));
+		
+		// Only act on save values of 'back' or 'new'
+		if (!Input::has('_save') || Input::get('_save') == 'save') return;
+		
+		// Go back to the listing
+		if (Input::get('_save') == 'back') {
+			Session::flash('save_redirect', Breadcrumbs::smartBack());
+		}
+		
+		// Go to new form by stripping the last segment from the URL
+		if (Input::get('_save') == 'new') {
+			Session::flash('save_redirect', HTML::relative('create'));
+		}		
 	}
 	
 }
