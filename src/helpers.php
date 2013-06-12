@@ -22,18 +22,15 @@ HTML::macro('title', function() {
 });
 
 /**
- * Add the controller an action as CSS classes on the body tag
+ * Add the controller and action as CSS classes on the body tag
  */
 HTML::macro('bodyClass', function() {
+	$path = Request::path();
 	
-	// Oddly enough, adding `use App` to the dependencies caused an error in the artisan
-	// CLI client, so doing the absolute path here.
-	$action = \App::make('decoy_router')->action();
-	
-	// Split the action into a seperate class for the controller and the sub-action
-	$parts = explode('@', $action);
-	$controller = strtolower(str_replace(array('Bkwld\Decoy\Controllers\\', 'Admin\\'), '', $parts[0]));
-	$action = $parts[1];
+	// Get the controller and action from the URL
+	preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
+	$controller = $matches[1];
+	$action = empty($matches[2]) ? 'index' : $matches[2];
 	return $controller.' '.$action;
 });
 
