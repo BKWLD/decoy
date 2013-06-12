@@ -14,7 +14,6 @@ use Log;
 use Request;
 use Str;
 
-
 abstract class Base extends Eloquent {
 	
 	//---------------------------------------------------------------------------
@@ -42,7 +41,7 @@ abstract class Base extends Eloquent {
 		// triggered more often than you'd like, described below
 		$events = array('validating', 'validated');
 		foreach($events as $event) {
-			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
 		}
 		
 		// Blacklist special columns that aren't intended for the DB
@@ -71,7 +70,7 @@ abstract class Base extends Eloquent {
 		// Standard laravel model events
 		$events = array('saving', 'updated', 'created', 'saved');
 		foreach($events as $event) {
-			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
 		}
 		
 		// Add additional pre-events
@@ -86,7 +85,7 @@ abstract class Base extends Eloquent {
 		// Add Decoy events
 		$events = array('attaching', 'attached', 'removing', 'removed');
 		foreach($events as $event) {
-			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
 		}
 	}
 	
@@ -94,7 +93,7 @@ abstract class Base extends Eloquent {
 	public function delete() {
 		$events = array('deleting', 'deleted');
 		foreach($events as $event) {
-			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on_'.$event));
+			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
 		}
 		return parent::delete();
 	}
@@ -102,20 +101,20 @@ abstract class Base extends Eloquent {
 	// No-op callbacks.  They all get passed a reference to the object that fired
 	// the event.  They have to be defined as public because they are invoked externally, 
 	// from Laravel's event system.
-	public function on_saving() {}
-	public function on_saved() {}
-	public function on_validating($input) {}
-	public function on_validated($input) {}
-	public function on_creating() {}
-	public function on_created() {}
-	public function on_updating() {}
-	public function on_updated() {}
-	public function on_deleting() {}
-	public function on_deleted() {}
-	public function on_attaching() {}
-	public function on_attached() {}
-	public function on_removing() {}
-	public function on_removed() {}
+	public function onSaving() {}
+	public function onSaved() {}
+	public function onValidating($input) {}
+	public function onValidated($input) {}
+	public function onCreating() {}
+	public function onCreated() {}
+	public function onUpdating() {}
+	public function onUpdated() {}
+	public function onDeleting() {}
+	public function onDeleted() {}
+	public function onAttaching() {}
+	public function onAttached() {}
+	public function onRemoving() {}
+	public function onRemoved() {}
 	
 		
 	//---------------------------------------------------------------------------
