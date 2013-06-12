@@ -565,7 +565,7 @@ class Base extends Controller {
 		
 		// Fire them
 		foreach($events as $event) {
-			if ($until) return Event::until($event, $args);
+			if ($until) Event::until($event, $args);
 			else Event::fire($event, $args);
 		}
 	}
