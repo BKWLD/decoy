@@ -507,7 +507,7 @@ class Base extends Controller {
 		}
 		
 		// Add messages from BKWLD bundle
-		$messages = array_merge(\Bkwld\Library\Laravel\Validator::messages(), $messages);
+		$messages = array_merge(Library\Laravel\Validator::messages(), $messages);
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($input), true)) {
