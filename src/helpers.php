@@ -280,7 +280,7 @@ HTML::macro('belongsTo', function($id, $route, $options = array()) {
  * disabled, we're just showing the value as text.  Only makes sense on edit views, really.
  * $key - The key that the value is associated with in former
  */
-HTML::macro('inputless_field', function($key, $label = null, $value = null) {
+HTML::macro('inputlessField', function($key, $label = null, $value = null) {
 	
 	// Get defaults
 	if (empty($label)) $label = Library\Utils\String::titleFromKey($key);
