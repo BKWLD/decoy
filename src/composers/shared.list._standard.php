@@ -99,7 +99,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 		
 	// Else, this list has a parent, create a link to the child listing
 	} elseif (!$view->many_to_many && $view->parent_id) {
-		$view->child_route = route($view->controller.'@child', $view->parent_id);
+		$view->child_route = HTML::relative('index', $view->parent_id, $view->controller);
 	}
 	
 });

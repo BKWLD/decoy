@@ -39,7 +39,7 @@ class Base extends Controller {
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
 	protected $MODEL;       // i.e. Post
-	protected $CONTROLLER;  // i.e. Admin\posts
+	protected $CONTROLLER;  // i.e. Admin\PostsController
 	protected $TITLE;       // i.e. News Posts
 	protected $DESCRIPTION; // i.e. Relevant news about the brand
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings

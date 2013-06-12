@@ -1,7 +1,6 @@
 <?php
 
-// Imports
-use App;
+// Dependencies
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Library;
 
@@ -22,8 +21,16 @@ HTML::macro('title', function() {
 	return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
 });
 
+/**
+ * Add the controller an action as CSS classes on the body tag
+ */
 HTML::macro('bodyClass', function() {
-	$action = App::make('decoy_router')->action();
+	
+	// Oddly enough, adding `use App` to the dependencies caused an error in the artisan
+	// CLI client, so doing the absolute path here.
+	$action = \App::make('decoy_router')->action();
+	
+	// Split the action into a seperate class for the controller and the sub-action
 	$parts = explode('@', $action);
 	$controller = strtolower(str_replace(array('Bkwld\Decoy\Controllers\\', 'Admin\\'), '', $parts[0]));
 	$action = $parts[1];

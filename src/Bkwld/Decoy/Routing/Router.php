@@ -78,6 +78,7 @@ class Router {
 			$router = new Wildcard($dir, $request->getMethod(), $request->path());
 			$response = $router->detectAndExecute();
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+			else App::abort(404);
 			
 		})->where('path', '.*');
 
