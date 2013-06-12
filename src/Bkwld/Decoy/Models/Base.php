@@ -75,8 +75,8 @@ abstract class Base extends Eloquent {
 		
 		// Add additional pre-events
 		Event::listen('eloquent.saving: '.get_class($this), function($self) {
-			if ($self->exists) $self->on_updating();
-			else $self->on_creating();
+			if ($self->exists) $self->onUpdating();
+			else $self->onCreating();
 		});
 		
 		// Now, do the save
