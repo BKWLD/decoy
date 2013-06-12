@@ -51,7 +51,7 @@ class Ancestry {
 		return $this->wildcard->detectIfChild()
 		
 			// ... and make sure the passed controller is the child that was detected
-			&& get_class($this->controller) == $this->wildcard->detectController();
+			&& $this->isRouteController();
 	}
 
 	/**
@@ -73,10 +73,13 @@ class Ancestry {
 	 */
 	public function isActingAsRelated() {
 		
-		// We're also testing that the controller isn't in the URI.  This would never be the case when 
+		// We're also testing that this controller isn't in the URI.  This would never be the case when 
 		// something was in the sidebar.  But without it, deducing the breadcrumbs gets confused because 
 		// controllers get instantiated not on their route but aren't the children of the current route.
-		if ($this->isRouteController()) return false;
+		// So I convert the controller to it's URL representation and then make sure it is not present
+		// in the current URL.
+		$test = \HTML::controller($this->controller->controller()); // ex: /admin/articles
+		if (strpos($this->input->url(), $test) !== false) return false;
 		
 		// Check that we're on an edit page
 		return $this->wildcard->detectAction() === 'edit';

@@ -421,8 +421,8 @@ class Base extends Controller {
 		
 		// Figure out the parent_id
 		if ($this->SELF_TO_PARENT) {
-			$parent_id = $item->{$this->SELF_TO_PARENT}()->foreign_value();
-			$this->layout->content->parent_id = $parent_id;
+			$foreign_key = $item->{$this->SELF_TO_PARENT}()->getForeignKey();
+			$this->layout->content->parent_id = $item->{$foreign_key};
 		}
 		
 		// Inform the breadcrumbs
