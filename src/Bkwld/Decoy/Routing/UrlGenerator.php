@@ -30,7 +30,9 @@ class UrlGenerator {
 	 * Construct a route that takes into account the current url path as well
 	 * as the function arguments
 	 * @param string $action The action we're linking to: index/edit/etc
-	 * @param integer $id Optional id that we're linking to.  Required for actions like edit
+	 * @param integer $id Optional id that we're linking to.  Required for actions like edit.
+	 *                    When specifying a child parameter, this would be the id of the parent
+	 *                    row that the child hangs from.
 	 * @param string $child The name (or full class) of a child controller 
 	 *                      of the current path: 'slides', 'Admin\SlidesController'
 	 * @return string '/admin/articles'
