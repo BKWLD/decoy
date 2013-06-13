@@ -79,6 +79,7 @@ class UrlGenerator {
 	 * Make a URL given a fully namespaced controller.  This only generates routes
 	 * as if the controller is in the root level; as if it has no parents.
 	 * @param string $controller ex: Bkwld\Decoy\Controllers\Admins@create
+	 * @param integer $id
 	 * @return string ex: http://admin/admins/create
 	 */
 	public function controller($controller = null, $id = null) {

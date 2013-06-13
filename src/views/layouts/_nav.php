@@ -56,7 +56,7 @@
 							<ul class="dropdown-menu">
 								
 								<? if (is_a(new DecoyAuth, 'Bkwld\Decoy\Auth\Sentry')): ?>
-									<li><a href="<?=action('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
+									<li><a href="<?=HTML::controller('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
 									<li class="divider"></li>
 								<? endif ?>
 								

@@ -86,7 +86,7 @@ class Sentry implements AuthInterface {
 	
 	// Get the URL to their profile
 	static public function userUrl() {
-		return action('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
+		return HTML::controller('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
 	}
 	
 	// Get their id
