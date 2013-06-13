@@ -1,11 +1,11 @@
 <?php namespace Bkwld\Decoy;
 
-use \App;
-use \Config;
+use App;
+use Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
-use \Former;
+use Former;
 
 class DecoyServiceProvider extends ServiceProvider {
 
