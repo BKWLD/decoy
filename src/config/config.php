@@ -24,9 +24,9 @@
 	//   )
 	'routes' => array(),
 	
-	// After a succesfull login, this is the controller action that should
-	// be redirected to
-	'post_login_redirect' => 'Bkwld\Decoy\Controllers\Admins@index',
+	// After a succesfull login, this is the absolute path or url that should be
+	// redirected to
+	'post_login_redirect' => '/admin/admins',
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

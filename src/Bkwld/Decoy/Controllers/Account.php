@@ -23,7 +23,7 @@ class Account extends Base {
 	private $reset_msgs = array('same' => 'The passwords do not match');
 	
 	/**
-	 * Redirect to a page where the user can manager their account
+	 * Redirect to a page where the user can manage their account
 	 */
 	public function index() {
 		return Redirect::to(DecoyAuth::userUrl());
@@ -39,7 +39,7 @@ class Account extends Base {
 		Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (DecoyAuth::check()) return Redirect::action(Config::get('decoy::post_login_redirect'));
+		if (DecoyAuth::check()) return Redirect::to(Config::get('decoy::post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(
