@@ -80,7 +80,12 @@ abstract class Base extends Eloquent {
 		// Decoy events
 		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
 		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model) use ($event) {
+			Event::listen('decoy.'.$event.': '.$class, function($model = null) use ($event) {
+				
+				// It's possible a model wasn't defined
+				if (!$model) return;
+				
+				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
 				$callback = 'on'.ucfirst($event);
 				return call_user_func_array(array($model, $callback), $args);

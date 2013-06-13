@@ -552,7 +552,7 @@ class Base extends Controller {
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $model, $messages = array()) {
+	protected function validate($rules, $model = null, $messages = array()) {
 		
 		// Pull the input from the proper place
 		$input = Input::all();
