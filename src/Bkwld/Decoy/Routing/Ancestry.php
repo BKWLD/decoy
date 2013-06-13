@@ -4,6 +4,7 @@
 use Bkwld\Decoy\Controllers\Base;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Wildcard;
+use Bkwld\Decoy\Routing\UrlGenerator;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -78,8 +79,9 @@ class Ancestry {
 		// controllers get instantiated not on their route but aren't the children of the current route.
 		// So I convert the controller to it's URL representation and then make sure it is not present
 		// in the current URL.
-		$test = \HTML::controller($this->controller->controller()); // ex: /admin/articles
-		if (strpos($this->input->url(), $test) !== false) return false;
+		$generator = new UrlGenerator($this->input->path());
+		$test = $generator->controller($this->controller->controller()); // ex: /admin/articles
+		if (strpos('/'.$this->input->path(), $test) !== false) return false;
 		
 		// Check that we're on an edit page
 		return $this->wildcard->detectAction() === 'edit';

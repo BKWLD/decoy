@@ -55,6 +55,7 @@ class TestRoutingAncestry extends PHPUnit_Framework_TestCase {
 	
 		// Mock input
 		$input = m::mock('Symfony\Component\HttpFoundation\Request');
+		$input->shouldReceive('path')->andReturn($path);
 		if (empty($options['parent_controller'])) {
 			$input->shouldReceive('has')->with('parent_controller')->andReturn(false);
 			$input->shouldReceive('get')->with('parent_controller')->andReturn(false);
