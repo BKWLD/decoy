@@ -12,18 +12,6 @@
 	// is the url.  Also, the link to manage admins is automatically appended.
 	'nav' => array(),
 	
-	// Multidimensional array that is used to create routes.  It is also used to
-	// produce breadcrumbs and some other elements of the magic in the base
-	// controller.  Expects an array of controller slugs like:
-	//   array(
-	//     'news', 
-	//     'events' => array(
-	//     	  'photos',
-	//        'people',
-	//     	) 
-	//   )
-	'routes' => array(),
-	
 	// After a succesfull login, this is the absolute path or url that should be
 	// redirected to
 	'post_login_redirect' => '/admin/admins',

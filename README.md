@@ -6,6 +6,7 @@ The Decoy 2.x docs are very incomplete.  The old docs can be found here: https:/
 
 1. Run `php artisan migrate --package=cartalyst/sentry`
 2. Run `php artisan migrate --package=bkwld/decoy`
+3. Run `php artisan config:publish bkwld/decoy`
 
 ## Tests
 
