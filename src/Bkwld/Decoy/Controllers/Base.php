@@ -558,7 +558,7 @@ abstract class Base extends Controller {
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
 		// the rules list.
-		if (Request::ajax() && Request::method() == 'PUT') {
+		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
 		
@@ -812,7 +812,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		
 		// If there is not a PUT request with a property of position, return false
 		// to tell the invoker to continue processing
-		if (Request::method() != 'PUT' || !Request::ajax()) return false;
+		if (Request::getMethod() != 'PUT' || !Request::ajax()) return false;
 		$input = Input::get();
 		if (!isset($input['position'])) return false;
 		
