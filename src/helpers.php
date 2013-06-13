@@ -325,45 +325,6 @@ HTML::macro('date', function($id, $label = null) {
 	return $field.(Former::hidden($id)->id($id)->value($value)); // id not added by default
 });
 
-
-/**
- * This renders a CKEditor Implementation
- */
-HTML::macro('ckeditor', function($id, $label = null) {
-	
-	// Defaults
-	// if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
-	
-	// Make the element
-	$field = Former::textarea($id, $label)
-		->class('span6')
-		->value(Former::getValue($id))
-		->id(null); // We don't want to conflict on the id
-		
-	// I must render this field before adding a new one
-	$field = (string) $field."<script>
-	CKEDITOR.replace( '".$id."', {
-        enterMode : CKEDITOR.ENTER_BR,
-		toolbar :
-		[
-		{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
-			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
-		{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
-			{ name: 'image', items : [ 'Image' ] },
-			{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-
-			{ name: 'source', items : [ 'Source' ] },
-		],
-    	filebrowserImageBrowseUrl: '/bundles/decoy/ckfinder/ckfinder.html?Type=Images',
-    	filebrowserImageUploadUrl: '/bundles/decoy/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images',
-	});
-	</script>";
-	
-	// Now, add a hidden field that will contain the value in the MySQL prefered
-	// format and is updated via JS
-	return $field; // id not added by default
-});
-
 /**
  * Register URL generator routes
  */
