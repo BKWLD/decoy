@@ -801,12 +801,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Utility methods
 	//---------------------------------------------------------------------------
 
-	
-	// Convert an eloquent result set into an array
-	static protected function eloquentToArray($query) {
-		return array_map(function($m) { return $m->toArray(); }, $query);
-	}
-	
 	// Processing function for handling sorting when the position column is on pivot table.  As
 	// would be the case in all many to manys.
 	protected function update_pivot_position($id) {
