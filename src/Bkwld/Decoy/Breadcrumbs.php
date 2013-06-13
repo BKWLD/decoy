@@ -135,12 +135,13 @@ class Breadcrumbs {
 			if ($id == 'create') {
 				$url .= '/' . $id;
 				$breadcrumbs[URL::to($url)] = 'New';
-				
-			} elseif (is_numeric($id)) {
+			
+			// On an edit page
+			} else if (is_numeric($id)) {
 				$url .= '/' . $id;
 				$model = $controller->model();
 				$item = call_user_func($model.'::find', $id);
-				$breadcrumbs[URL::to($url)] = $item->title();
+				$breadcrumbs[URL::to($url.'/edit')] = $item->title();
 			}
 		}
 		
