@@ -2,6 +2,11 @@
 
 The Decoy 2.x docs are very incomplete.  The old docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md
 
+## Installation
+
+1. Run `php artisan migrate --package=cartalyst/sentry`
+2. Run `php artisan migrate --package=bkwld/decoy`
+
 ## Tests
 
 Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
