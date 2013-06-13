@@ -31,8 +31,6 @@ class UrlGenerator {
 	 * as the function arguments
 	 * @param string $action The action we're linking to: index/edit/etc
 	 * @param integer $id Optional id that we're linking to.  Required for actions like edit.
-	 *                    When specifying a child parameter, this would be the id of the parent
-	 *                    row that the child hangs from.
 	 * @param string $child The name (or full class) of a child controller 
 	 *                      of the current path: 'slides', 'Admin\SlidesController'
 	 * @return string '/admin/articles'
@@ -42,13 +40,14 @@ class UrlGenerator {
 		// Get the current path, adding a leading slash that should be missing
 		$path = '/'.$this->path;
 		
-		// Get the URL up to and including the last controller, but without id or action,
-		// by stripping those extra stuffs from the end.  Any trailing slashes are removed
-		$pattern = '#(/\d+)?(/('.implode('|', $this->actions).'))?/?$#i';
+		// Get the URL up to and including the last controller.  If we're not linking
+		// to a child, also remove the id, which may be replaced by a passed id
+		if ($child) $pattern = '#(/('.implode('|', $this->actions).'))?/?$#i';
+		else $pattern = '#(/\d+)?(/('.implode('|', $this->actions).'))?/?$#i';
 		$path = preg_replace($pattern, '', $path);	
 	
-		// If there is an id, add it now
-		if ($id) $path .= '/'.$id;
+		// If there is an id and we're not linking to a child, add that id
+		if (!$child && $id) $path .= '/'.$id;
 		
 		// If there is a child controller, add that now
 		if ($child) {
@@ -62,6 +61,9 @@ class UrlGenerator {
 			// from listing views and pass it the controller of a list item and not worrk about
 			// whether we're already on that page or whether the list is for related data.
 			if (!preg_match('#'.$child.'(/\d+)?$#i', $path)) $path .= '/'.$child;
+			
+			// If the action was not index and there was an id, add it
+			if ($action != 'index' && $id) $path .= '/'.$id;
 			
 		}
 		
