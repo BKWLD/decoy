@@ -41,6 +41,11 @@ class Filters {
 		// Save redirect
 		Route::filter('decoy.saveRedirect', array($this, 'saveRedirect'));
 		Route::when($this->dir.'/*', 'decoy.saveRedirect');
+		
+		// Redirect old edit links.  Route::when() does not support true regular
+		// expressions, thus had to catch all
+		Route::filter('decoy.editRedirect', array($this, 'editRedirect'));
+		Route::when($this->dir.'/*', 'decoy.editRedirect', array('get'));
 	}
 	
 	/**
@@ -83,7 +88,15 @@ class Filters {
 		// Go to new form by stripping the last segment from the URL
 		if (Input::get('_save') == 'new') {
 			Session::flash('save_redirect', HTML::relative('create'));
-		}		
+		}
+	}
+	
+	/**
+	 * Redirect old style edit links to the new /edit route
+	 */
+	public function editRedirect() {
+		$url = Request::url();
+		if (preg_match('#/\d+$#', $url)) return Redirect::to($url.'/edit');
 	}
 	
 }
