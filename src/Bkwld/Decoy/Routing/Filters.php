@@ -2,11 +2,15 @@
 
 // Dependencies
 use Bkwld\Decoy\Breadcrumbs;
+use Config;
+use DecoyAuth;
 use HTML;
 use Input;
 use Redirect;
+use Request;
 use Route;
 use Session;
+use Str;
 use URL;
 
 /**
@@ -28,9 +32,35 @@ class Filters {
 	/**
 	 * Register all filters
 	 */
-	public function registerAll() {		
+	public function registerAll() {
+		
+		// Access control
+		Route::filter('decoy.acl', array($this, 'acl'));
+		Route::when($this->dir.'/*', 'decoy.acl');
+		
+		// Save redirect
 		Route::filter('decoy.saveRedirect', array($this, 'saveRedirect'));
-		Route::when('admin/*', 'decoy.saveRedirect');
+		Route::when($this->dir.'/*', 'decoy.saveRedirect');
+	}
+	
+	/**
+	 * Force users to login to the admin
+	 */
+	public function acl() {
+		
+		// Do nothing if the current path contains any of the whitelisted urls
+		$path = '/'.Request::path();
+		if ($path === parse_url(route('decoy'), PHP_URL_PATH)                  // Login
+			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
+			|| Str::startsWith($path, $this->dir.'/reset//')) return;            // Reset
+		
+		// Everything else in admin requires a logged in user.  So redirect
+		// to login and pass along the current url so we can take the user there.
+		if (!DecoyAuth::check()) {
+			return Redirect::to(DecoyAuth::deniedUrl())
+				->with('login_error', 'You must login first.')
+				->with('login_redirect', Request::fullUrl());
+		}		
 	}
 	
 	/**

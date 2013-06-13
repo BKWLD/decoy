@@ -32,14 +32,14 @@ class Router {
 	 */
 	public function registerAll() {
 		
-		// Setup filters
-		$filters = new Filters($this->dir);
-		$filters->registerAll();
-		
 		// Register routes
 		$this->registerAccounts();
 		$this->registerAdmins();
 		$this->registerWildcard();
+		
+		// Setup filters
+		$filters = new Filters($this->dir);
+		$filters->registerAll();
 	}
 	
 	/**
@@ -85,7 +85,7 @@ class Router {
 	}
 	
 	/**
-	 * Additional admin routes
+	 * Non-wildcard admin routes
 	 */
 	public function registerAdmins() {
 		Route::get($this->dir.'/admins/{id}/disable', array('as' => 'decoy\admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable'));
