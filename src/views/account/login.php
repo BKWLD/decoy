@@ -24,13 +24,7 @@
 	
 	<?// Register ?>
 	<div class="span5 offset1">	
-		<?=Former::horizontal_open(action('Bkwld\Decoy\Controllers\Account@register'))?>
-			<?=Former::token()?>
-
-			<legend>Register</legend>
-			
-			<p><i class="icon-info-sign"></i> You must be granted access to this CMS by a current Admin.  You probably know who I'm talking about.</p>
-			
-		<?=Former::close()?>
+		<legend>Register</legend>
+		<p><i class="icon-info-sign"></i> You must be granted access to this CMS by a current Admin.  You probably know who I'm talking about.</p>
 	</div>
 </div>

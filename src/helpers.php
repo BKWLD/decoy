@@ -29,7 +29,7 @@ HTML::macro('bodyClass', function() {
 	
 	// Get the controller and action from the URL
 	preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
-	$controller = $matches[1];
+	$controller = empty($matches[1]) ? 'login' : $matches[1];
 	$action = empty($matches[2]) ? 'index' : $matches[2];
 	return $controller.' '.$action;
 });
