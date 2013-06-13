@@ -10,6 +10,7 @@ use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Library;
 use Config;
+use Croppa;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Str;
