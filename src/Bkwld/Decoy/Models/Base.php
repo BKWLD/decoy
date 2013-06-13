@@ -37,12 +37,8 @@ abstract class Base extends Eloquent {
 	public function __construct(array $attributes = array()) {
 		parent::__construct($attributes);
 		
-		// Override events that are happening before saves.  Note these will likely be
-		// triggered more often than you'd like, described below
-		$events = array('validating', 'validated');
-		foreach($events as $event) {
-			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
-		}
+		// Register Laravel model events
+		static::registerModelEvents();
 		
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
@@ -57,50 +53,44 @@ abstract class Base extends Eloquent {
 	// Model event callbacks
 	//---------------------------------------------------------------------------
 	// Setup listeners for all of Laravel's built in events that fire our no-op
-	// callbacks.
-	// 
-	// These are defined by overriding the methods that fire them instead of in the
-	// constructor so that ALL of instances of a model don't start listening to these
-	// events.  For instance, if an instance was created to do some operation without
-	// first getting hydrated with data, it doesn't need to handle a save event	
+	// callbacks. These listeners are created when the first instance of a model
+	// is created.
 	
-	// Override the events that happen on save
-	public function save(array $options = array()) {
+	// Listen for model events and execute no-op callbacks on the model instance
+	static private $models_registered_for_events = array();
+	static private function registerModelEvents() {
 		
-		// Standard laravel model events
-		$events = array('saving', 'updated', 'created', 'saved');
-		foreach($events as $event) {
-			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
+		// Only run once per class.  Having to store in an array like this because
+		// setting a boolean on the class kept setting it to true for all models that
+		// inherit from Base.  I couldn't seem to set the boolean on the child only.
+		$class = get_called_class();
+		if (in_array($class, self::$models_registered_for_events)) return;
+		self::$models_registered_for_events[] = $class;
+		
+		// Built in Laravel model events
+		self::creating (function($model){ return $model->onCreating(); });
+		self::created  (function($model){ return $model->onCreated(); });
+		self::updating (function($model){ return $model->onUpdating(); });
+		self::updated  (function($model){ return $model->onUpdated(); });
+		self::saving   (function($model){ return $model->onSaving(); });
+		self::saved    (function($model){ return $model->onSaved(); });
+		self::deleting (function($model){ return $model->onDeleting(); });
+		self::deleted  (function($model){ return $model->onDeleted(); });
+		
+		// Decoy events
+		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
+		foreach ($events as $event) {
+			Event::listen('decoy.'.$event.': '.$class, function($model) use ($event) {
+				$args = array_slice(func_get_args(), 1);
+				$callback = 'on'.ucfirst($event);
+				return call_user_func_array(array($model, $callback), $args);
+			});
 		}
 		
-		// Add additional pre-events
-		Event::listen('eloquent.saving: '.get_class($this), function($self) {
-			if ($self->exists) $self->onUpdating();
-			else $self->onCreating();
-		});
-		
-		// Now, do the save
-		return parent::save($options);
-		
-		// Add Decoy events
-		$events = array('attaching', 'attached', 'removing', 'removed');
-		foreach($events as $event) {
-			Event::listen('decoy.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
-		}
 	}
 	
-	// Override the events that happen on delete
-	public function delete() {
-		$events = array('deleting', 'deleted');
-		foreach($events as $event) {
-			Event::listen('eloquent.'.$event.': '.get_class($this), array($this, 'on'.ucfirst($event)));
-		}
-		return parent::delete();
-	}
-	
-	// No-op callbacks.  They all get passed a reference to the object that fired
-	// the event.  They have to be defined as public because they are invoked externally, 
-	// from Laravel's event system.
+	// The no-op callbacks.  They have to be defined as public because they are invoked 
+	// from anonymous functions.
 	public function onSaving() {}
 	public function onSaved() {}
 	public function onValidating($input) {}
@@ -112,9 +102,9 @@ abstract class Base extends Eloquent {
 	public function onDeleting() {}
 	public function onDeleted() {}
 	public function onAttaching() {}
-	public function onAttached() {}
-	public function onRemoving() {}
-	public function onRemoved() {}
+	public function onAttached($pivot) {}
+	public function onRemoving($pivot) {}
+	public function onRemoved($pivot) {}
 	
 		
 	//---------------------------------------------------------------------------

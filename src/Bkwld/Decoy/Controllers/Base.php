@@ -437,7 +437,7 @@ class Base extends Controller {
 		$item = new Model();
 		
 		// Validate
-		if ($result = $this->validate(Model::$rules)) return $result;
+		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
 		// Hydrate the model
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
@@ -505,7 +505,7 @@ class Base extends Controller {
 		$this->mergeDefaultSlug($id);
 
 		// Validate data
-		if ($result = $this->validate(Model::$rules)) return $result;
+		if ($result = $this->validate(Model::$rules, $item)) return $result;
 		
 		// Save out files and remove special file related inputs that don't
 		// exist as columns in the db (like 'old-image")
@@ -548,10 +548,11 @@ class Base extends Controller {
 	// shared logic for that
 	/**
 	 * Shared validation helper
-	 * @param $array rules    A typical rules array
-	 * @param $array messages Special error messages
+	 * @param array $rules    A typical rules array
+	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $messages = array()) {
+	protected function validate($rules, $model, $messages = array()) {
 		
 		// Pull the input from the proper place
 		$input = Input::all();
@@ -567,7 +568,7 @@ class Base extends Controller {
 		$messages = array_merge(Library\Laravel\Validator::messages(), $messages);
 
 		// Fire event
-		if ($response = $this->fireEvent('validating', array($input), true)) {
+		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
 			if (is_a($response, '\Response')) return $response;
 		}
 		
@@ -589,7 +590,7 @@ class Base extends Controller {
 		}
 		
 		// Fire event
-		$this->fireEvent('validated', array($input));
+		$this->fireEvent('validated', array($model, $input));
 		
 		// If there were no errors, return false, which means
 		// that we don't need to redirect
@@ -755,13 +756,13 @@ abstract class Decoy_Base_Controller extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
-		$this->fireEvent('attaching');
+		$this->fireEvent('attaching', array($item));
 		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
 		
 		// Get the new pivot row's id
 		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
 		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
-		$this->fireEvent('attached', array($pivot));
+		$this->fireEvent('attached', array($item, $pivot));
 		
 		// Return the response
 		return Response::json(array(
@@ -778,17 +779,19 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Look for the mentioned rows
 		$pivot_ids = explode('-', $pivot_ids);
 		
+		// NEED TO LOOKUP ITEM FOR THE FIREVENT
+		
 		// Loop through each item and delete the relationship
 		list($pivot_table) = $this->pivot();
 		foreach($pivot_ids as $id) {
 			
 			// Get the pivot row
 			$pivot = DB::table($pivot_table)->find($id);
-			$this->fireEvent('removing', array($pivot));
+			$this->fireEvent('removing', array($item, $pivot));
 			
 			// Remove it
 			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
-			$this->fireEvent('removed', array($pivot));
+			$this->fireEvent('removed', array($item, $pivot));
 		}
 		
 		// Redirect.  We can use back cause this is never called from a "show"
