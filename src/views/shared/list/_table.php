@@ -14,7 +14,7 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 
 // Test the data for presence of special properties
 $actions = 2; // Default
-if (count($listing)) {
+if (!$listing->isEmpty()) {
 	$test_row = $listing[0]->toArray();
 	
 	// Has visibilty toggle
@@ -129,7 +129,7 @@ if (count($listing)) {
 		<? endforeach ?>
 		
 		<?// Maybe there were no results found ?>
-		<? if (empty($listing)): ?>
+		<? if ($listing->isEmpty()): ?>
 			<tr>
 				<td colspan="999">No results found</td>
 			</tr>

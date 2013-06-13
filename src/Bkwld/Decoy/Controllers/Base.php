@@ -8,6 +8,7 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\UrlGenerator;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
+use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
 use Croppa;
@@ -313,8 +314,8 @@ class Base extends Controller {
 	public function index() {
 		
 		// Run the query
-		// $results = Decoy\Search::apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
-		$results = Model::ordered()->paginate($this->PER_PAGE);
+		$search = new Search();
+		$results = $search->apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
 		$count = $results->getTotal();
 		
 		// Render the view.  We can assume that Model has an ordered() function
@@ -367,8 +368,8 @@ class Base extends Controller {
 		}
 
 		// Run the query
-		// $results = Decoy\Search::apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
-		$results = $query->paginate($this->PER_PAGE);
+		$search = new Search();
+		$results = $search->apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
 		$count = $results->getTotal();
 
 		// Render the view

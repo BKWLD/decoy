@@ -1,4 +1,4 @@
-<?php namespace Bkwld\Decoy;
+<?php namespace Bkwld\Decoy\Input;
 
 // Dependencies
 use Input;
@@ -13,7 +13,7 @@ class Search {
 
 	
 	// Apply the effect of a search (which is communicated view Input::get('query'))
-	static public function apply($query, $config) {
+	public function apply($query, $config) {
 		
 		// Do nothing if no query in the input
 		if (!Input::has('query')) return $query;
@@ -32,7 +32,7 @@ class Search {
 			// Apply the condition to the query
 			$comparison = $condition[1];
 			$input = $condition[2];
-			$query = self::condition($query, $field, $comparison, $input);
+			$query = $this->condition($query, $field, $comparison, $input);
 			
 		}
 		
@@ -42,7 +42,7 @@ class Search {
 	}
 	
 	// Make the shorthand options of the search config explicit
-	static public function longhand($config) {
+	public function longhand($config) {
 		$search = array();
 		foreach($config as $key => $val) {
 			
@@ -65,7 +65,7 @@ class Search {
 	}
 	
 	// Add a condition to a query
-	static private function condition($query, $field, $comparison, $input) {
+	private function condition($query, $field, $comparison, $input) {
 		switch ($comparison) {
 			
 			// Not Like
