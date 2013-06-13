@@ -26,7 +26,7 @@ use Validator;
 /**
  * The base controller is gives Decoy most of the magic/for-free mojo
  */
-class Base extends Controller {
+abstract class Base extends Controller {
 	
 	//---------------------------------------------------------------------------
 	// Default settings
@@ -329,7 +329,62 @@ class Base extends Controller {
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
-	}	
+	}
+	
+	// List page when the view is for a child in a related sense
+	public function indexChild() {
+
+		// Make sure the parent is valid
+		$parent_id = $this->ancestry->parentId();
+		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
+			
+		// Form the query by manually making adding the where condition with the 
+		// parent foreign key.  We do this instead of using Laravel's syntax
+		// ($parent->{$this->PARENT_TO_SELF}()) so that we can call the
+		// ordered() static method
+		$foreign_key = $parent->{$this->PARENT_TO_SELF}()->getForeignKey();
+		$query = Model::ordered()->where($foreign_key, '=', $parent_id);
+
+		// If it's a many to many, we need to join the pivot table because that is
+		// what the foreign key is on.  This is done just so we can get the pivot_id
+		// for doing things like delete_remove().  But this is, again, only required
+		// because of trying to support ordered() in the listing
+		if ($this->isChildInManyToMany()) {
+			
+			// Get references to the listing and pivot tables so we can get the table name
+			// and key column names from them.  SELF_TO_PARENT is used because the instance
+			// we get with new Model is a child of another model.  So we are trying to get back to
+			// our parent, and we do that with SELF_TO_PARENT, which is the reference declared
+			// ON the child.
+			$child_key = $this->child_key();
+			list($pivot_table, $pivot_child_foreign) = $this->pivot();
+			
+			// Add the join to the pivot table and make the id columns explicit
+			$query = $query->join($pivot_table, $child_key, '=', $pivot_child_foreign)
+				->select(array('*', $child_key.' AS id', $pivot_table.'.id AS pivot_id'));
+		}
+
+		// Run the query
+		// $results = Decoy\Search::apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = $query->paginate($this->PER_PAGE);
+		$count = $results->getTotal();
+
+		// Render the view
+		$this->layout->nest('content', 'decoy::shared.list._standard', array(
+			'title'            => $this->TITLE,
+			'controller'       => $this->CONTROLLER,
+			'description'      => $this->DESCRIPTION,
+			'count'            => $count,
+			'listing'          => $results,
+			'columns'          => $this->COLUMNS,
+			'parent_id'        => $parent_id,
+			'search'           => $this->SEARCH,
+		));
+		
+		// Inform the breadcrumbs
+		$this->breadcrumbs(Breadcrumbs::fromUrl());
+		
+	}
 	
 	/**
 	 * Create form
@@ -639,59 +694,6 @@ abstract class Decoy_Base_Controller extends Controller {
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
 
-	
-	// List page when the view is for a child in a related sense
-	public function get_index_child($parent_id) {
-
-		// Make sure the parent is valid
-		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-			
-		// Form the query by manually making adding the where condition with the 
-		// parent foreign key.  We do this instead of using Laravel's syntax
-		// ($parent->{$this->PARENT_TO_SELF}()) so that we can call the
-		// ordered() static method
-		$foreign_key = $parent->{$this->PARENT_TO_SELF}()->foreign_key();
-		$query = Model::ordered()->where($foreign_key, '=', $parent_id);
-
-		// If it's a many to many, we need to join the pivot table because that is
-		// what the foreign key is on.  This is done just so we can get the pivot_id
-		// for doing things like delete_remove().  But this is, again, only required
-		// because of trying to support ordered() in the listing
-		if ($this->isChildInManyToMany()) {
-			
-			// Get references to the listing and pivot tables so we can get the table name
-			// and key column names from them.  SELF_TO_PARENT is used because the instance
-			// we get with new Model is a child of another model.  So we are trying to get back to
-			// our parent, and we do that with SELF_TO_PARENT, which is the reference declared
-			// ON the child.
-			$child_key = $this->child_key();
-			list($pivot_table, $pivot_child_foreign) = $this->pivot();
-			
-			// Add the join to the pivot table and make the id columns explicit
-			$query = $query->join($pivot_table, $child_key, '=', $pivot_child_foreign)
-				->select(array('*', $child_key.' AS id', $pivot_table.'.id AS pivot_id'));
-		}
-
-		// Run the query
-		$results = Decoy\Search::apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
-		$count = $results->total;
-
-		// Render the view
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
-			'parent_id'        => $parent_id,
-			'search'           => $this->SEARCH,
-		));
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
-		
-	}
 	
 	// List as JSON for autocomplete widgets
 	public function get_autocomplete() {
