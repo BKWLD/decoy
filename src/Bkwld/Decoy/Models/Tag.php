@@ -1,5 +1,17 @@
 <?php namespace Bkwld\Decoy\Models;
 
+/**
+ * 
+ * 
+ * 
+ * 
+ * This is not currently L4 ready
+ * 
+ * 
+ * 
+ * 
+ */
+
 // Dependencies
 use DB;
 use Schema;
