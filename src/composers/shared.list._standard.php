@@ -69,16 +69,20 @@ View::composer('decoy::shared.list._standard', function($view) {
 	// Make an instance of the controller so values that get in the constructor can be inspected
 	$controller = new $view->controller;
 
+	// Figure out the parent_id, which will be the last numeric segment in the url
+	preg_match('#/(\d+)/[a-z-]*$#i', Request::path(), $matches);
+	$parent_id = isset($matches[1]) ? $matches[1] : null;
+
 	// Default settings
 	$defaults = array(
-		'columns'       => array('Title' => 'title'),
-		'auto_link'     => 'first',
-		'convert_dates' => 'date',
-		'sidebar'       => false,
-		'parent_id'     => Request::segment(3), // This spot always holds it
+		'columns'           => array('Title' => 'title'),
+		'auto_link'         => 'first',
+		'convert_dates'     => 'date',
+		'sidebar'           => false,
+		'parent_id'         => $parent_id,
 		'parent_controller' => $controller->parentController(),
-		'many_to_many'  => $controller->isChildInManyToMany(),
-		'tags'          => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
+		'many_to_many'      => $controller->isChildInManyToMany(),
+		'tags'              => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 	);
 
 	// Apply defaults
