@@ -88,18 +88,6 @@ View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Massage the shorthand search config options
 	if (isset($view->search)) $view->search = Bkwld\Decoy\Search::longhand($view->search);
-	
-	// Make the link to the child listing, which is dependent on the current URL. I can't
-	// straight up use a route() because those aren't able to distinguish between controllers
-	// that are children to multiple parents
-	if ($view->many_to_many) {
-		$handles = Config::get('decoy::dir');
-		$controller_name = substr($view->controller, strlen($handles)+1);
-		$view->child_route = route($view->parent_controller).'/'.$view->parent_id.'/'.$controller_name;
-		
-	// Else, this list has a parent, create a link to the child listing
-	} elseif (!$view->many_to_many && $view->parent_id) {
-		$view->child_route = HTML::relative('index', $view->parent_id, $view->controller);
-	}
+
 	
 });
