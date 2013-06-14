@@ -99,7 +99,7 @@ abstract class Tag extends Base {
 	static public function up() {
 		Schema::create('tags', function($table){
 			$table->increments('id');
-			$table->string('type');
+			$table->string('type')->nullable();
 			$table->string('value');
 			$table->string('slug');
 			$table->timestamps();
@@ -109,12 +109,13 @@ abstract class Tag extends Base {
 		});
 		Schema::create('tagged', function($table){
 			$table->increments('id');
-			$table->string('foreign_type');
-			$table->integer('foreign_id')->unsigned();
+			$table->string('taggable_type');
+			$table->integer('taggable_id')->unsigned();
 			$table->integer('tag_id')->unsigned();
 			$table->timestamps();
-			$table->index(array('foreign_id', 'foreign_type', 'tag_id'));
-			$table->index(array('tag_id', 'foreign_id', 'foreign_type'));
+			$table->index(array('taggable_id', 'taggable_type', 'tag_id'));
+			$table->index(array('taggable_type', 'taggable_id', 'tag_id'));
+			$table->index(array('tag_id', 'taggable_id', 'taggable_type'));
 			$table->foreign('tag_id')->references('id')->on('tags')->on_delete('cascade')->on_update('cascade');
 		});
 	}
