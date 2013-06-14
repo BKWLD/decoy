@@ -18,7 +18,7 @@
 	echo View::make('decoy::shared.list._table', $__data);
 	
 	// Render pagination
-	// echo View::make('decoy::shared.list._pagination', $__data);
+	echo View::make('decoy::shared.list._pagination', $__data);
 	?>
 
 </div>
