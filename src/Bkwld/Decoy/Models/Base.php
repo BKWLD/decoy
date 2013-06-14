@@ -151,11 +151,11 @@ abstract class Base extends Eloquent {
 	// Many models will override this to create custom methods for getting
 	// a list of rows
 	static public function ordered() {
-		return static::orderBy(self::table_name().'.created_at', 'desc');
+		return static::orderBy(self::tableName().'.created_at', 'desc');
 	}
 	
 	// Get an ordered list of only rows that are marked as visible
-	static public function ordered_and_visible() {
+	static public function orderedAndVisible() {
 		return static::ordered()->where('visible', '=', '1');
 	}
 	
@@ -170,12 +170,12 @@ abstract class Base extends Eloquent {
 	}
 	
 	// Find by the slug.  Like "find()" but use the slug column instead
-	static public function find_slug($slug) {
-		return static::where(self::table_name().'.slug', '=', $slug)->first();
+	static public function findBySlug($slug) {
+		return static::where(self::tableName().'.slug', '=', $slug)->first();
 	}
 	
 	// Figure out the current table name but allow it to be called statically
-	static protected function table_name() {
+	static protected function tableName() {
 		$model = get_called_class();
 		$model = new $model;
 		return $model->getTable();
