@@ -5,7 +5,7 @@
 	// -----------------------------------------------------
 	
 	// Branding for the admin area
-	'site_name' => 'Decoy',
+	'site_name' => Config::get('site.name') ? Config::get('site.name') : 'Admin',
 	
 	// Generate the admin nav from a passed array of urls and/or key value pairs.
 	// In the key/value scenario, the key is the label, the value

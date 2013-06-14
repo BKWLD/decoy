@@ -140,7 +140,7 @@ class Account extends Base {
 		// Send an email to the user with the reset token
 		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
 			$m->to(Input::get('email'));
-			$m->subject('Recover access to the '.Config::get('decoy::site_name').' CMS');
+			$m->subject('Recover access to the '.Config::get('decoy::site_name'));
 			$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
 		});
 		
