@@ -58,12 +58,15 @@ class Account extends Base {
 	public function post() {
 		try {
 			
+			// Tell Sentry to check throttling (which includes banning)
+			Sentry::getThrottleProvider()->enable();
+			
 			// Attempt to login
 			Sentry::authenticate(array(
 				'email' => Input::get('email'),
 				'password' => Input::get('password'),
 			), Input::get('is_remember') == 1);
-			
+
 			// Login must have succeeded
 			return Redirect::to(Session::get('login_redirect', URL::current()));
 
