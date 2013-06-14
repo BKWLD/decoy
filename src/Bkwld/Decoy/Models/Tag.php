@@ -1,8 +1,9 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
-use Laravel\Str;
-use Laravel\Database as DB;
+use DB;
+use Schema;
+use Str;
 
 /**
  * A tag-like class is one that has a single field that the user edits.
@@ -34,7 +35,7 @@ use Laravel\Database as DB;
 abstract class Tag extends Base {
 	
 	// Because different tag types extend this, this tells Laravel what the actual table name is
-	public static $table = 'tags';
+	protected $table = 'tags';
 	
 	// Validation rules
 	public static $rules = array(
@@ -96,16 +97,6 @@ abstract class Tag extends Base {
 	
 	// Create the table
 	static public function up() {
-		Schema::create('tagged_content', function($table){
-			$table->increments('id');
-			$table->string('foreign_type');
-			$table->integer('foreign_id')->unsigned();
-			$table->integer('tag_id')->unsigned();
-			$table->timestamps();
-			$table->index(array('foreign_id', 'foreign_type', 'tag_id'));
-			$table->index(array('tag_id', 'foreign_id', 'foreign_type'));
-			$table->foreign('tag_id')->references('id')->on('tags')->on_delete('cascade')->on_update('cascade');
-		});
 		Schema::create('tags', function($table){
 			$table->increments('id');
 			$table->string('type');
@@ -116,11 +107,21 @@ abstract class Tag extends Base {
 			$table->index(array('slug', 'type'));
 			$table->index(array('type', 'value'));
 		});
+		Schema::create('tagged', function($table){
+			$table->increments('id');
+			$table->string('foreign_type');
+			$table->integer('foreign_id')->unsigned();
+			$table->integer('tag_id')->unsigned();
+			$table->timestamps();
+			$table->index(array('foreign_id', 'foreign_type', 'tag_id'));
+			$table->index(array('tag_id', 'foreign_id', 'foreign_type'));
+			$table->foreign('tag_id')->references('id')->on('tags')->on_delete('cascade')->on_update('cascade');
+		});
 	}
 	
 	// Remove the table
 	static public function down() {
-		Schema::drop('tagged_content');
+		Schema::drop('tagged');
 		Schema::drop('tags');
 	}
 	
