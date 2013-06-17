@@ -243,7 +243,7 @@ define(function (require) {
 			$row.animate({opacity:0.2}, 100);
 			
 			// Call the remove route
-			$.ajax(this.controllerRoute+'/remove/'+modelId, {
+			$.ajax(this.controllerRoute+'/'+modelId+'/remove', {
 				data: {parent_controller: this.parent_controller},
 				type: 'DELETE',
 				dataType: 'JSON'
@@ -289,9 +289,7 @@ define(function (require) {
 			this.render();
 		},
 		
-		// Delete rows using ajax.  Using a dash
-		// as the delimiter because other options, like a comma, didn't
-		// work with laravel.
+		// Delete rows using ajax.
 		deleteConfirm: function () {
 			
 			// Vars
@@ -345,7 +343,7 @@ define(function (require) {
 			// the data-model-id attribute
 			var ids = _.pluck(this.collection.where({ selected: true }), 'id'),
 				$rows = this.findRows(ids),
-				url = this.controllerRoute+'/remove/'+ids.join('-');
+				url = this.controllerRoute+'/'+ids.join('-')+'/remove';
 			
 			// Hide while waiting
 			_.each($rows, function($row) {

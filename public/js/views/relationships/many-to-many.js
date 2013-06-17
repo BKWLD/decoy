@@ -74,7 +74,7 @@ define(function (require) {
 			if (!this.found) return;
 				
 			// Make the request
-			$.ajax(this.route+'/attach/'+this.id, {
+			$.ajax(this.route+'/'+this.id+'/attach', {
 				data: {
 					parent_id: this.parent_id,
 					parent_controller: this.parent_controller},

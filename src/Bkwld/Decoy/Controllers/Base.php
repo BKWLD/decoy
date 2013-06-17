@@ -12,6 +12,7 @@ use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
 use Croppa;
+use DB;
 use Event;
 use Illuminate\Routing\Controllers\Controller;
 use Illuminate\Support\Str;
@@ -584,7 +585,7 @@ class Base extends Controller {
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
 				
 				// Add condition to query
-				$query = $query->where_not_in('id', $sibling_ids);
+				$query = $query->whereNotIn('id', $sibling_ids);
 			}
 		}
 		
@@ -606,9 +607,8 @@ class Base extends Controller {
 		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
 		
 		// Get the new pivot row's id
-		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
-		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
-		$this->fireEvent('attached', array($item, $pivot));
+		$pivot_id = DB::connection('mysql')->getPdo()->lastInsertId();
+		$this->fireEvent('attached', array($item));
 		
 		// Return the response
 		return Response::json(array(
