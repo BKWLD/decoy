@@ -22,6 +22,7 @@ use Redirect;
 use Request;
 use Response;
 use Route;
+use stdClass;
 use URL;
 use Validator;
 
@@ -542,6 +543,109 @@ class Base extends Controller {
 	}
 	
 	//---------------------------------------------------------------------------
+	// Many To Many CRUD
+	//---------------------------------------------------------------------------
+	
+	// List as JSON for autocomplete widgets
+	public function autocomplete() {
+		
+		// Do nothing if the query is too short
+		if (strlen(Input::get('query')) < 1) return Response::json(null);
+		
+		// Get data matching the query
+		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->MODEL.'::$TITLE_COLUMN must be defined');
+		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+		
+		// Don't return any rows already attached to the parent.  So make sure the id is not already
+		// in the pivot table for the parent
+		if ($this->isChildInManyToMany()) {
+			
+			// Require parent_id
+			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
+			$parent_id = Input::get('parent_id');
+			$parent = $this->parentFind($parent_id);
+			
+			// See if there is an exact match on what's been entered.  This is useful for many
+			// to manys with tags because we want to know if the reason that autocomplete
+			// returns no results on an exact match that is already attached is because it
+			// already exists.  Otherwise, it would allow the user to create the tag
+			if ($parent->{$this->PARENT_TO_SELF}()
+				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
+				->count()) {
+				return Response::json(array('exists' => true));
+			}
+			
+			// Get the ids of already attached rows through the relationship function.  There
+			// are ways to do just in SQL but then we lose the ability for the relationship
+			// function to apply conditions, like is done in polymoprhic relationships.
+			$siblings = $parent->{$this->PARENT_TO_SELF}()->get();
+			if (count($siblings)) {
+				$sibling_ids = array();
+				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
+				
+				// Add condition to query
+				$query = $query->where_not_in('id', $sibling_ids);
+			}
+		}
+		
+		// Return result
+		return Response::json($this->formatAutocompleteResponse($query->get()));
+		
+	}
+	
+	// Attach a model to a parent_id, like with a many to many style
+	// autocomplete widget
+	public function attach($id) {
+		
+		// Require there to be a parent id and a valid id for the resource
+		if (!Input::has('parent_id')) return Response::json(null, 404);
+		if (!($item = Model::find($id))) return Response::json(null, 404);
+		
+		// Do the attach
+		$this->fireEvent('attaching', array($item));
+		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
+		
+		// Get the new pivot row's id
+		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
+		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
+		$this->fireEvent('attached', array($item, $pivot));
+		
+		// Return the response
+		return Response::json(array(
+			'pivot_id' => $pivot_id
+		));
+		
+	}
+	
+	// Remove a relationship.  Very similar to delete, except that we're
+	// not actually deleting from the database
+	public function remove($pivot_ids) {
+
+		// Look for the mentioned rows
+		$pivot_ids = explode('-', $pivot_ids);
+		
+		// NEED TO LOOKUP ITEM FOR THE FIREVENT
+		
+		// Loop through each item and delete the relationship
+		list($pivot_table) = $this->pivot();
+		foreach($pivot_ids as $id) {
+			
+			// Get the pivot row
+			$pivot = DB::table($pivot_table)->find($id);
+			$this->fireEvent('removing', array($item, $pivot));
+			
+			// Remove it
+			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
+			$this->fireEvent('removed', array($item, $pivot));
+		}
+		
+		// Redirect.  We can use back cause this is never called from a "show"
+		// page like get_delete is.
+		if (Request::ajax()) return Response::json('null');
+		else return Redirect::back();
+	}
+	
+	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
 	
@@ -680,6 +784,32 @@ class Base extends Controller {
 		}
 	}
 	
+	// Format the results of a query in the format needed for the autocomplete repsonses
+	public function formatAutocompleteResponse($results) {
+		$output = array();
+		foreach($results as $row) {
+			
+			// Only keep the id and title fields
+			$item = new stdClass;
+			$item->id = $row->id;
+			$item->title = $row->{Model::$TITLE_COLUMN};
+			
+			// Add properties for the columns mentioned in the list view within the
+			// 'columns' property of this row in the response.  Use the same logic
+			// found in HTML::renderListColumn();
+			$item->columns = array();
+			foreach($this->COLUMNS as $column) {
+				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
+				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
+				else $item->columns[$column] = null;
+			}
+			
+			// Add the item to the output
+			$output[] = $item;
+		}
+		return $output;
+	}
+	
 	//---------------------------------------------------------------------------
 	// Private support methods
 	//---------------------------------------------------------------------------
@@ -692,114 +822,8 @@ class Base extends Controller {
 
 
 abstract class Decoy_Base_Controller extends Controller {
-
 	
-	//---------------------------------------------------------------------------
-	// Basic CRUD methods
-	//---------------------------------------------------------------------------
-
 	
-	// List as JSON for autocomplete widgets
-	public function get_autocomplete() {
-		
-		// Do nothing if the query is too short
-		if (strlen(Input::get('query')) < 1) return Response::json(null);
-		
-		// Get data matching the query
-		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->MODEL.'::$TITLE_COLUMN must be defined');
-		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
-		
-		// Don't return any rows already attached to the parent.  So make sure the id is not already
-		// in the pivot table for the parent
-		if ($this->isChildInManyToMany()) {
-			
-			// Require parent_id
-			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
-			$parent_id = Input::get('parent_id');
-			$parent = $this->parentFind($parent_id);
-			
-			// See if there is an exact match on what's been entered.  This is useful for many
-			// to manys with tags because we want to know if the reason that autocomplete
-			// returns no results on an exact match that is already attached is because it
-			// already exists.  Otherwise, it would allow the user to create the tag
-			if ($parent->{$this->PARENT_TO_SELF}()
-				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
-				->count()) {
-				return Response::json(array('exists' => true));
-			}
-			
-			// Get the ids of already attached rows through the relationship function.  There
-			// are ways to do just in SQL but then we lose the ability for the relationship
-			// function to apply conditions, like is done in polymoprhic relationships.
-			// $parent = $this->parentFind($parent_id);
-			$siblings = $parent->{$this->PARENT_TO_SELF}()->get();
-			if (count($siblings)) {
-				$sibling_ids = array();
-				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
-				
-				// Add condition to query
-				$parent_id = DB::connection()->pdo->quote($parent_id);
-				$query = $query->where_not_in('id', $sibling_ids);
-			}
-		}
-		
-		// Return result
-		return Response::json($this->format_autocomplete_response($query->get()));
-		
-	}
-	
-	// Attach a model to a parent_id, like with a many to many style
-	// autocomplete widget
-	public function post_attach($id) {
-		
-		// Require there to be a parent id and a valid id for the resource
-		if (!Input::has('parent_id')) return Response::json(null, 404);
-		if (!($item = Model::find($id))) return Response::json(null, 404);
-		
-		// Do the attach
-		$this->fireEvent('attaching', array($item));
-		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
-		
-		// Get the new pivot row's id
-		$pivot_id = DB::connection('mysql')->pdo->lastInsertId();
-		$pivot = $item->{$this->SELF_TO_PARENT}()->pivot()->where('id', '=', $pivot_id)->first();
-		$this->fireEvent('attached', array($item, $pivot));
-		
-		// Return the response
-		return Response::json(array(
-			'pivot_id' => $pivot_id
-		));
-		
-	}
-	
-	// Remove a relationship.  Very similar to delete, except that we're
-	// not actually deleting from the database
-	public function get_remove($pivot_ids) { return $this->delete_remove($pivot_ids); }
-	public function delete_remove($pivot_ids) {
-
-		// Look for the mentioned rows
-		$pivot_ids = explode('-', $pivot_ids);
-		
-		// NEED TO LOOKUP ITEM FOR THE FIREVENT
-		
-		// Loop through each item and delete the relationship
-		list($pivot_table) = $this->pivot();
-		foreach($pivot_ids as $id) {
-			
-			// Get the pivot row
-			$pivot = DB::table($pivot_table)->find($id);
-			$this->fireEvent('removing', array($item, $pivot));
-			
-			// Remove it
-			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
-			$this->fireEvent('removed', array($item, $pivot));
-		}
-		
-		// Redirect.  We can use back cause this is never called from a "show"
-		// page like get_delete is.
-		if (Request::ajax()) return Response::json('null');
-		else return Redirect::back();
-	}
 	
 	//---------------------------------------------------------------------------
 	// Utility methods
@@ -824,32 +848,6 @@ abstract class Decoy_Base_Controller extends Controller {
 		// Return success
 		return Response::json('null');
 		
-	}
-	
-	// Format the results of a query in the format needed for the autocomplete repsonses
-	public function format_autocomplete_response($results) {
-		$output = array();
-		foreach($results as $row) {
-			
-			// Only keep the id and title fields
-			$item = new stdClass;
-			$item->id = $row->id;
-			$item->title = $row->{Model::$TITLE_COLUMN};
-			
-			// Add properties for the columns mentioned in the list view within the
-			// 'columns' property of this row in the response.  Use the same logic
-			// found in HTML::renderListColumn();
-			$item->columns = array();
-			foreach($this->COLUMNS as $column) {
-				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
-				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
-				else $item->columns[$column] = null;
-			}
-			
-			// Add the item to the output
-			$output[] = $item;
-		}
-		return $output;
 	}
 
 
