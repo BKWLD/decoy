@@ -104,9 +104,9 @@ class Ancestry {
 		$relationship = $this->controller->selfToParent();
 		if (!$relationship) return false;
 		$model = $this->controller->model();
-		$model = new $model; // Needed to be a simple string to work
 		if (!method_exists($model, $relationship)) return false;
-		return is_a($model->{$relationship}(), 'Laravel\Database\Eloquent\Relationships\Has_Many_And_Belongs_To');
+		$model = new $model; // Needed to be a simple string to work
+		return is_a($model->{$relationship}(), 'Illuminate\Database\Eloquent\Relations\BelongsToMany');
 	}
 	
 	/**
