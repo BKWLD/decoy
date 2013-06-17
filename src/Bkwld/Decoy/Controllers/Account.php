@@ -36,7 +36,7 @@ class Account extends Base {
 
 		// Remember where they attempted to go to if they were dropped here from a
 		// ACL deny.  This keeps the value around for another request
-		Session::keep('login_redirect');
+		if (Session::has('login_redirect')) Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
 		if (DecoyAuth::check()) return Redirect::to(Config::get('decoy::post_login_redirect'));
