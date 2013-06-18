@@ -35,6 +35,14 @@ For more info, check out the tests/Routing/TestWildcard.php unit tests.
 
 Decoy uses the same models as your app uses.  Thus, put them as per normal in /app/models.  However, instead of extending Eloquent, they should sextend Bkwld\Decoy\Models\Base.
 
+### Many to Many relationships
+
+Both the `withTimestamps` and `withPivot` methods should be called on relationships.  For instance:
+
+```
+public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('id'); }
+```
+
 ## Controllers
 
 A lot of Decoy's "magic" comes by having your admin controllers extend the `Bkwld\Decoy\Controllers\Base`.  I typically have the admin controllers extend an application specific base controller (i.e. `Admin\BaseController`) which then extends the `Bkwld\Decoy\Controllers\Base`.
