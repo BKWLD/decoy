@@ -63,11 +63,10 @@ if ($listing->count()) {
 			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
 			// rows from multiple models
 			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
-		
-		?>
+			?>
 	
 			<tr 
-				data-model-id="<?=$many_to_many ? $item->pivotId(): $item->id?>"
+				data-model-id="<?=$many_to_many ? $item->pivot->id: $item->id?>"
 				
 				<?
 				// Add position value from the row or from the pivot table.  
@@ -118,7 +117,7 @@ if ($listing->count()) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=URL::to(HTML::relative('remove', $item->pivotId(), $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+						<a href="<?=URL::to(HTML::relative('remove', $item->pivot->id, $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
