@@ -439,7 +439,7 @@ abstract class Decoy_Base_Controller extends Controller {
 		// redirecting back to the edit page (which no longer exists).  Thus, go to a
 		// listing instead.  Otherwise, go back (accoridng to referrer)
 		if (Request::ajax()) return Response::json('null');
-		else return Redirect::to(Breadcrumbs::smart_back(Breadcrumbs::defaults(parse_url(Request::referrer(), PHP_URL_PATH))));
+		else return Redirect::to(preg_replace('#/\d+/delete#', '', URI::current()));
 	}
 	
 	// Remove a relationship.  Very similar to delete, except that we're

@@ -273,6 +273,12 @@ legend > .btn-small {
 	padding-right: 8px;
 }
 
+// This was adding unnecessary spacing as far as I could tell.  These get
+// used in the date/time pickers
+.input-append, .input-prepend {
+	margin-bottom: 0;
+}
+
 // Add an optional class to control groups that will position the contents inline
 .inline .control-group, .control-group.inline {
 	.control-label {

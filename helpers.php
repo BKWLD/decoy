@@ -331,8 +331,8 @@ HTML::macro('date', function($id, $label = null) {
 	// If there is a value, we assume it's in MYSQL time format, so
 	// make it human and force it
 	if ($former_value = Former::getValue($id)) {
-		$value = strtotime($former_value);
-		$field = $field->forceValue(date("m/d/Y", $value));
+		$value = $former_value;
+		$field = $field->forceValue(date("m/d/Y", strtotime($value)));
 	}
 	
 	// I must render this field before adding a new one
@@ -341,9 +341,68 @@ HTML::macro('date', function($id, $label = null) {
 	// Now, add a hidden field that will contain the value in the MySQL prefered
 	// format and is updated via JS
 	$value = date(BKWLD\Utils\Constants::MYSQL_DATE, strtotime($value));
-	return $field.(Former::hidden($id)->id($id)->value($value)); // id not added by default
+	return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('date')); // id not added by default
 });
 
+/**
+ * This renders a time selection box
+ */
+HTML::macro('time', function($id, $label = null) {
+	
+	// Defaults
+	if (empty($label)) $label = BKWLD\Utils\String::title_from_key($id);
+	$value = date('h:i A');
+	
+	// Make the time element.
+	$field = Former::text($id, $label)
+		->class('time span2')
+		->maxlength(8)
+		->placeholder('hh:mm')
+		->value($value)
+		->append('<i class="icon-time"></i>')
+		->blockHelp('Time is in '.date('T'))
+		->id(null); // We don't want to conflict on the id
+
+	// If there is a value, we assume it's in MYSQL time format, so
+	// make it human and force it
+	if ($former_value = Former::getValue($id)) {
+		$value = $former_value;
+		$field = $field->forceValue(date('h:i A', strtotime($value)));
+	}
+
+	// I must render this field before adding a new one
+	$field = (string) $field;
+	
+	// Now, add a hidden field that will contain the value in the MySQL prefered
+	// format and is updated via JS
+	$value = date(BKWLD\Utils\Constants::MYSQL_TIME, strtotime($value));
+	return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('time')); // id not added by default
+});
+
+/**
+ * This renders a date time component.  This works by creating a date AND time one
+ * consecutively, then adding a final hidden field after for the concatenated
+ * date and time value.  JS will combine these tool fields into one element and will
+ * also make sure that datetime input field gets populated on value change.
+ */
+HTML::macro('datetime', function($id, $label = null) {
+	
+	// Get the initial value
+	$value = time();
+	if ($former_value = Former::getValue($id)) {
+		$value = strtotime($former_value);
+	}
+	
+	// Convert to mysql time
+	$value = date(BKWLD\Utils\Constants::MYSQL_DATETIME, $value);
+	
+	// Add UI elements plus the hidden field that will contain the mysql formatted value
+	return '<div class="datetime">'
+		.HTML::date($id, $label)
+		.HTML::time($id, $label)
+		.(Former::hidden($id)->id($id)->forceValue($value)->class('datetime'))
+		.'</div>';
+});
 
 /**
  * This renders a CKEditor Implementation

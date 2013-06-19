@@ -22,6 +22,8 @@ define(function (require) {
 	
 	// Modules that add mojo globally
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
+	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
+	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
