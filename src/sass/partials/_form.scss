@@ -300,6 +300,11 @@ legend > .btn-small {
 	.controls > label.checkbox { 
 		float: left;
 	}
+	
+	// This margin as adding too much, as in the date selector
+	.input-append, .input-prepend {
+		margin-bottom: 0;
+	}
 }
 
 // The inputless control-group is created with a helper and is for fields
