@@ -60,6 +60,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Tell former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
 		
+		// Tell Laravel where to find the views that were pushed out with the config files
+		App::make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
+		
 		// Auto-publish the assets when developing locally
 		if (App::environment() == 'local' && !App::runningInConsole()) {
 			$workbench = realpath(base_path().'/workbench');

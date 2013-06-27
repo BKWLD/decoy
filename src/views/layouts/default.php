@@ -9,7 +9,7 @@
 		<?= HTML::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<?= View::make('decoy::layouts.buk_builder._header') ?>
+		<?= View::make('decoy_published::layout.buk_builder._header') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 	</head>
 	<body class="<?=HTML::bodyClass()?>">
@@ -28,6 +28,6 @@
 			<?= $content?>
 		</div>
 		
-		<?= View::make('decoy::layouts.buk_builder._footer') ?>
+	<?= View::make('decoy_published::layout.buk_builder._footer') ?>
 </body>
 </html>
