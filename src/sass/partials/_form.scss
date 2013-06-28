@@ -8,6 +8,7 @@
 	
 	// This is the title unit
 	legend {
+		margin-bottom: 0;
 		
 		// The count needs shifting up a tad
 		.badge {
@@ -43,11 +44,6 @@
 		margin-top: -22px;
 	}
 
-}
-
-// The default margin looks too big
-legend {
-	margin-bottom: 0;
 }
 
 // Parapraphs inside of the form are for larger description blocks.  Given
