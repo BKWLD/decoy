@@ -159,6 +159,9 @@ abstract class Base extends Eloquent {
 		return static::ordered()->where('visible', '=', '1');
 	}
 	
+	// Generate a route to an instance
+	public function deepLink() {}
+	
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
