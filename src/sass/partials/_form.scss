@@ -46,6 +46,11 @@
 
 }
 
+// Remove the effect of legend + control group, it's adding too much spacing
+legend + .control-group {
+	margin-top: 0;
+}
+
 // Parapraphs inside of the form are for larger description blocks.  Given
 // them more padding
 form > p {
