@@ -3,4 +3,6 @@
 <?= Former::radios('visible', 'Availability')->inline()->radios(array(
 	'Visible' => array('value' => 1, 'checked' => true),
 	'Hidden' => array('value' => 0),
-))->blockHelp('If hidden, this content will be accessible via '.$url_link.' but not in lists') ?>
+))->blockHelp(($url = $item->deepLink()) ? 
+	'If hidden, this content will be accessible via <a href="'.$url.'">deep link</a> but not in lists' : 
+	'If hidden, this content will be completely inaccessible') ?>
