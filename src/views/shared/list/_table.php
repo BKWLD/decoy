@@ -108,12 +108,12 @@ if ($listing->count()) {
 						<? else: ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><i class="icon-"></i></a>
 						<? endif ?>
-						|
+						<span class="visible-edit-seperator">|</span>
 					<? endif ?>
 					
 					<?// Edit link?>
 					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
-					| 
+					<span class="edit-delete-seperator">|</span>
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
