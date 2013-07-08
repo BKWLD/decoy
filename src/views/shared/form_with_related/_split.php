@@ -18,8 +18,8 @@ the sidebar for related data on forms that have a related data sidebar.
 		<div class="controls actions">
 			<div class="btn-group">
 				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
-				<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
 				<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
+				<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
 			</div>
 			
 			<? if (!empty($item)): ?>
