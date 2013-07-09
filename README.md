@@ -1,6 +1,6 @@
 # Decoy
 
-The Decoy 2.x docs are very incomplete.  The old docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md
+The Decoy 2.x docs are very incomplete.  The old docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md 
 
 ## Installation
 
