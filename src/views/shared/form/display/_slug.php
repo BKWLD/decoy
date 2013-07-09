@@ -5,7 +5,7 @@ $url_link = 'deep link';
 if (!empty($item->slug)) {
 	$prepend = '/';
 	$span = empty($related) ? 'span7' : 'span4'; // If related is set, this is on a 2 columned form
-	if (!empty($url)) {
+	if ($url = $item->deepLink()) {
 		$url_link = '<a href="'.$url.'">deep link</a>';
 		$prepend = preg_replace('#/[\w-]+$#', '/', parse_url($url, PHP_URL_PATH));
 	}
