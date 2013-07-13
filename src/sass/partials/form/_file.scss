@@ -1,0 +1,59 @@
+// Chrome currently is screwing up the display of the label
+// when line height is set: http://cl.ly/image/1o2W1V2y0d21
+input[type="file"] {
+	line-height: inherit;
+	position: relative;
+	top: 4px;
+	height: inherit;
+	margin-bottom: 5px;
+}
+
+// These are the image upload control groups.  The 10px margins here just seemd to
+// look better than the 5px that is generally the spacing on the help block.
+.help-block {
+	.img-polaroid { 
+		margin-top: 10px; 
+		@include box-sizing(border-box);
+		&.no-help { // There is no help text, so we don't need to push away from it
+			margin-top: 5px;
+		}
+	}
+	
+	// Make the images span the full column when in a related view
+	.span6 & .img-polaroid {
+		width: 100%;
+	}
+	
+	// Style the image delete button
+	.image-delete { 
+		margin-top: 10px;
+		font-size: 14px;
+		color: #D14;
+		a { color: #D14;}
+		i {
+			position: relative;
+			top: -1px;
+		}
+		code { background: none; }
+	}
+	.image-help { display: block; }
+}
+
+// This the styling for generic file uploads
+.help-block {
+	.download {
+		a, code { color: #1E8AAA; }
+	}
+	.file-delete {
+		&, a { color: #D14; }
+	}
+	.download, .file-delete {
+		margin-top: 10px;
+		font-size: 14px;
+		i {
+			position: relative;
+			top: -1px;
+		}
+		code { background: none; }
+	}
+}

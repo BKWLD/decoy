@@ -1,0 +1,170 @@
+// Remove the effect of legend + control group, it's adding too much spacing
+legend + .control-group {
+	margin-top: 0;
+}
+
+// Parapraphs inside of the form are for larger description blocks.  Given
+// them more padding
+form > p {
+	margin-bottom: 20px;
+}
+
+// Toning down the required icons
+i.required {
+	@include opacity($light-opacity);
+	&:hover {
+		@include opacity(1);
+	}
+}
+
+// Doning down the help signs
+.help-block .icon-question-sign {
+	@include opacity($light-opacity);
+	.control-group:hover & {
+		@include opacity(1);
+	}
+}
+
+// Making the counts in moderation tabs match the colors of the text
+.nav-tabs {
+	a { color: #999; }
+	.badge { background-color: #999; }
+	.active {
+		a { color: $near-black; }
+		.badge { background-color: $near-black; }
+	}
+}
+
+// Distinguish between labels and help blocks
+label {
+	color: black;
+	font-size: 14.5px;
+}
+.help-block {
+	color: #999;
+	
+	// Don't make the help block text red.  The actual error message will be in an
+	// inline help block
+	.control-group.error & { 
+		color: #999;
+	}
+	
+	// Darken the text on rollover
+	.control-group:hover & {
+		color: $near-black;
+	}
+}
+
+// Highlight each control group on rollover
+.control-group {
+	padding: 8px;
+	margin: -8px;
+	@include border-radius(4px);
+	margin-bottom: 14px;
+	input, textarea, select {
+		margin-bottom: 0;
+	}
+	&:hover {
+		background-color: $light-grey;
+		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	}
+	&.error:hover {
+		background-color: #F2DEDE; // This is the Boostrap error bkgd red color
+	}
+}
+
+// Show validation error messages (which show up in inline blocks)
+// on their own line.  It looks better
+.control-group.error {
+	.help-inline {
+		display: block;
+		padding: 0;
+		margin-top: 5px;
+		font-weight: bold;
+	}
+}
+
+// Don't change the color of inputs on validation errors
+.control-group.error {
+	input, textarea, select {
+		color: inherit;
+	}
+}
+
+// Shift icons that are in labels down a smidge
+label i {
+	position: relative;
+	top: 1px;
+}
+
+// Change the margins on the help block.  The specificity here is because Bootstrap
+// has it's own styles for horizontal forms
+.help-block,
+.form-horizontal input + .help-block, 
+.form-horizontal select + .help-block, 
+.form-horizontal textarea + .help-block {
+	margin-top: 5px;
+	margin-bottom: 0;
+}
+
+// Fix spacing amongst linline radio fields
+.radio.inline, .checkbox.inline {
+	margin-right: 10px;
+}
+
+// Button groups need their bottom margin removed
+legend .btn-toolbar {
+	margin: 0;
+	.many-to-many-form {
+		position: relative;
+		top: 7px;
+	}
+	.btn-group {
+		line-height: 0;
+		top: 3px;
+	}
+}
+
+// This is specifically for the "view" button that is part of
+// the display module header
+legend > .btn-small {
+	top: 3px;
+	position: relative;
+}
+
+// This field doesn't need to be so big
+#seo_description {
+	height: 6em;
+}
+
+// Position the belongs to btn correctly
+.belongs-to .input-append .btn {
+	padding-left: 8px;
+	padding-right: 8px;
+}
+
+// This margin was adding unnecessary space, as in the date selector
+.input-append, .input-prepend {
+	margin-bottom: 0;
+}
+
+// The inputless control-group is created with a helper and is for fields
+// that don't have an input .. derr
+.control-group.inputless {
+	.controls {
+		padding: 5px 0;
+	}
+}
+
+
+
+// The actions btns should have a bottom margin so they wrap to multiple
+// lines nicer
+.controls.actions .btn {
+	margin-bottom: 5px;
+}
+
+// Special settings for when listings are added to control groups
+.list-control-group {
+	
+}

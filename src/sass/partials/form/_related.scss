@@ -1,0 +1,47 @@
+// Related content sidebar
+.related {
+	
+	// Increase spacing between related modules
+	& > div {
+		margin-bottom: 35px;
+	}
+	
+	// This is the title unit
+	legend {
+		margin-bottom: 0;
+		
+		// The count needs shifting up a tad
+		.badge {
+			position: relative;
+			top: -2px;
+		}
+		
+		// Make the link in the title less obstrusive
+		& a {
+			color: $near-black;
+			&.btn-info {
+				color: white;
+			}
+		}
+		
+		// Autocomplete form
+		form {
+			margin: 0;
+			line-height: 0;
+			
+			// Make the input form match the small add button
+			input {
+				font-size: 11.9px;
+				@include box-sizing(border-box); // This was needed for mobile
+				height: 26px;
+				min-height: 26px;
+			}
+		}
+	}
+	
+	// Move the "see full list" link up to overlap the bottom line of th elist
+	.full-list {
+		margin-top: -22px;
+	}
+
+}

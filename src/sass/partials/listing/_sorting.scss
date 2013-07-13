@@ -1,0 +1,44 @@
+// Styles related to drag and drop.
+// Note: I've noticed that table rows tend have a decremented height after being
+// interacted with.  Which causes elements that are lower on the page to move slightly.
+// It's a little irritant that I've found no solution for.
+.ui-sortable {
+	
+	// This is the drop box
+	.placeholder { 
+		background: $light-grey;
+	}
+	
+	// This is the unit that gets dragged around
+	.helper {
+		background: rgba(255,255,255,.9);
+		border: 1px dashed $grey-border;
+		
+		// Compensate for the left and top border on the row being added
+		td { 
+			border: none;
+			position: relative; 
+			left: -1px; 
+			top: -1px;
+			
+		}
+		
+		// Fix for long cells not looking right 
+		// https://github.com/BKWLD/decoy/issues/53
+		display: block !important;
+		white-space: nowrap;
+		@include box-sizing(border-box);
+		font-size: 0; // Remove the whitespace between tds
+		td {
+			display: inline-block;
+			font-size: 14px; // Put the font size back
+		}
+		
+	}
+	tr {
+		cursor: move;
+	}
+	&.ui-sortable-disabled tr {
+		cursor: auto;
+	}
+}

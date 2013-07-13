@@ -1,0 +1,159 @@
+.table {
+
+	// If the table is in a control group, don't add bottom margin
+	.control-group & {
+		margin-bottom: 0;
+	}
+
+	// Add border lines to the bottom rather than top of row	
+	td,th {
+		border-bottom: 1px solid $grey-border;
+		border-top: none;
+	}
+	
+	thead {
+		background: $light-grey;
+		
+		// Dim the color on the header content and
+		// make the text smaller
+		th {
+			@include opacity($light-opacity);
+			font-size: 12px;
+			padding: 5px;
+			padding-left: 8px;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+			
+			// Bulk action rollover
+			&.select-all:hover {
+				@include opacity(1);
+			}
+		}
+	}
+	
+	// The select all al button
+	.select-all {
+		cursor: pointer;
+	}
+	
+	// Row that contains bulk action interface
+	tr.warning, tr.error {
+		td {
+			text-align: center;
+			vertical-align: center;
+		}
+	}
+	
+	// Always make the second column the widest, assuming
+	// that to be the title.  This relies on table-layout fixed where
+	// the first row sets the widths of all subsequent rows
+	& { table-layout: fixed; }
+	td,th {
+		white-space: nowrap;
+	}
+	
+	// Size the columns by the number of columns, always making the first column the biggest
+	$weighting: 1.3;
+	@for $i from 1 through 6 {
+		&.columns-#{$i} {
+						
+			// Default width of columns
+			th {  width: 100%/$i/$weighting; }
+			
+			// The title column
+			th:first-child + th { width: 100% - 100%/$i/$weighting*($i - 1); }
+		}
+	}
+	
+	// Column defaults
+	th:first-child {
+		width: 10px;
+	}
+	th:last-child {
+		padding-right: 10px;
+		text-align: right;
+		&.actions-2 { width: 41px; } 
+		&.actions-3 { width: 57px; }
+	}
+	td { // All cells are told to consume the full available width and ellipsis any leftover
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	td:last-child {
+		text-align: right;
+		padding-left: 0;
+	}
+	td:first-child { // When there is only one row, this will supercede the above
+		text-align: left;
+	}
+	
+	// Vertically center align all cells, for rows with image thumbnails in there
+	td {
+		vertical-align: middle;
+		input[type="radio"], input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+	
+	// Add a slight rollover so it's easier to track with the eyes
+	tbody tr:hover {
+		background-color: #FCFCFC;
+	}
+	
+	// Give images a border
+	tr img {
+		border: 1px solid $grey-border;
+	}
+	
+	// Make gravatar images a good size (for the admins view)
+	.gravatar {
+		width: 40px;
+		height: 40px;
+	}
+	
+	// If there are multiple badges in a row, give them a little breathing roomt
+	.label {
+		margin: 0 2px;
+	}
+	
+	// This is the icon that indicates whether a row is visible or not
+	.visibility {
+		width: 14px;
+		height: 14px;
+		padding: 1px;
+		display: inline-block;
+		border: 1px inset #EEE;
+		line-height: 0;
+		position: relative;
+		top: 2px;
+		
+		// Icons have a margin top from bootstrap
+		i { margin-top: 0;}
+	}
+	
+	// Fix placement of actions tooltips
+	td .tooltip.left {
+		margin-left: -10px;
+	}
+	
+	// Add sorting rules
+	@import "_sorting";
+}
+
+// Center the pagination on the page
+.pagination {
+	text-align: center;
+}
+
+// On small browsers, only show the second and last columns in tables
+@media (max-width: $bootstrap_nav_break) {
+	.table {
+		th, td {
+			display: none;
+		}
+		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
+			display: table-cell;
+		}	
+	}
+}
+

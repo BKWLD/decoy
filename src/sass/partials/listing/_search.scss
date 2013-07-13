@@ -1,0 +1,96 @@
+// The search interface
+.search {
+	$search-bkgd: darken($light-grey, 3%);
+	$search-shadow: darken($search-bkgd, 5%);
+
+	// The container for the form
+	margin: 0;
+	background: $light-grey;
+	@include border-radius(4px 4px 0 0);
+	text-align: center;
+	background: $search-bkgd;
+	// @include background-image(linear-gradient($search-bkgd, $search-bkgd 95%, $search-shadow));
+	@include box-shadow(darken(white, 20) 0px 1px 3px 0 inset);
+	overflow: hidden;
+	color: darken(white, 50);
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+	display: none;
+	
+	// Specifying padding an inside container so it doesn't animate
+	.conditions {
+		padding: 2px;
+		display: inline-block;
+		position: relative;
+		text-align: right;
+		margin-right: 88px; // Compensate for the submit button in centering
+		
+		// Center the labels on the left
+		.intro {
+			position: relative;
+			top: 2px;
+		}
+		 
+		// Line spacing
+		.condition { margin: 5px; }
+		
+		// The labels (label tags and selectors are used by bootstrap)
+		@media (max-width: $bootstrap_nav_break) {
+			.intro {
+				display: none;
+			}
+		}
+		
+		// The add/minus buttons
+		.add, .subtract {
+			$radius: 15px;
+			@include border-radius($radius);
+			width: $radius*2;
+			height: $radius*2;
+			padding: 0;
+		}
+		
+		// The search button
+		button[type="submit"] {
+			position: absolute;
+			bottom: 8px;
+			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+		}
+		
+		// Make all the inputs the same size
+		$width: 130px;
+		input, select {
+			@include box-sizing(border-box);
+			width: $width;
+			height: 30px;
+		}
+		input.date {width: $width - 27px; }
+		
+		// Space out the inputs, which are butted right up to each other cause of JS
+		.condition > * {
+			margin: 0 2px;
+		}
+	}
+}
+
+// Special styles for animating the clear button.  Namespaced here so this could be removed
+// without much trouble
+.animated-clear {
+	.search-toggle {
+		z-index: 2;
+		margin-right: 39px;
+	}
+	.search-clear {
+		z-index: 1;
+		position: absolute;
+		right: 0;
+	}
+	&.closed {
+		.btn { border-radius: 4px; }
+		.search-toggle { margin-right: 0;}
+	}
+	
+	// Only animate after the initial page load
+	&.initialized .search-toggle {
+		@include transition(margin-right 400ms ease-out);
+	}
+}
