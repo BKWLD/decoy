@@ -8,10 +8,10 @@
 	
 	<?
 	// Create the page title for the sidebar layout
-	if ($sidebar) echo View::make('decoy::shared.list._sidebar_header', $__data);
+	if ($layout == 'sidebar') echo View::make('decoy::shared.list._sidebar_header', $__data);
 	
 	// Create the page title for a full page layout
-	else echo View::make('decoy::shared.list._full_header', $__data);
+	else if ($layout == 'full') echo View::make('decoy::shared.list._full_header', $__data);
 
 	// Render the full table.  This could be broken up into smaller chunks but leaving
 	// it as is until the need arises

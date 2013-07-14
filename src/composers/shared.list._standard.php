@@ -32,14 +32,13 @@ as part of when the view was created.  As in View::make()->with()
 	- convert_dates ['date' (default), 'datetime', 'time', false] : Convert
 	  columns that look like dates into readable versions
 	  
-	- sidebar [false (default), true] : Determines whether to adjust the layout
-	  for the list appearing in a sidebar, as in related data
+	- layout ['full' (default), 'sidebar', 'control group'] : How to render the listing
 	
-	- parent_id (optional) : When using the sidebar layout, this informs
+	- parent_id (optional) : When using the non-full layout, this informs
 	  how to create the new link.  If not defined, it is pulled from the last
 	  segment of the current URL
 	  
-  - parent_controller (optional) - When using the sidebar layout, informs logic needed
+  - parent_controller (optional) - When using the non-full layout, informs logic needed
     for many to many forms.  Generally this is calculated automatically
 	  
 	- description (optional) : A description for the view
@@ -78,7 +77,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'columns'           => array('Title' => 'title'),
 		'auto_link'         => 'first',
 		'convert_dates'     => 'date',
-		'sidebar'           => false,
+		'layout'            => 'full',
 		'parent_id'         => $parent_id,
 		'parent_controller' => $controller->parentController(),
 		'many_to_many'      => $controller->isChildInManyToMany(),

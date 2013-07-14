@@ -28,7 +28,7 @@ with a related data sidebar.  It expects:
 				if (is_array($list)) {
 				
 					// Automatically set the list to sidebar mode
-					$list['sidebar'] = true;
+					$list['layout'] = 'sidebar';
 					
 					// Display it
 					echo View::make('decoy::shared.list._standard', $list);

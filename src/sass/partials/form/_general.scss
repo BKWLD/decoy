@@ -166,5 +166,8 @@ legend > .btn-small {
 
 // Special settings for when listings are added to control groups
 .list-control-group {
-	
+	label .btn-group {
+		display: block;
+		margin-top: 5px;
+	}
 }
