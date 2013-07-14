@@ -15,9 +15,11 @@ $__data['layout'] = 'control group';
 		
 	</label>
 	<div class="controls">
-		<?=View::make('decoy::shared.list._standard', $__data);?>
-		<? if (!empty($description)):?>
-			<p class="help-block"><?=$description?></p>
-		<? endif ?>
+		<div class="<?=empty($related)?'span9':'span6'?>">
+			<?=View::make('decoy::shared.list._standard', $__data);?>
+			<? if (!empty($description)):?>
+				<p class="help-block"><?=$description?></p>
+			<? endif ?>
+		</div>
 	</div>
 </div>

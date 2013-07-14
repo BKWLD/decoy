@@ -21,20 +21,24 @@ $bootstrap_nav_break: 767px;
 @import "plugins/bootstrap-notify";
 @import "plugins/jquery.Jcrop";
 
+// Utilities
+@import "utils/respond-to";
+
 // The partials that form the Decoy style
-@import "partials/_general.scss";
-@import "partials/_nav";
-@import "partials/_header";
-@import "partials/listing/_search";
-@import "partials/listing/_sorting";
-@import "partials/listing/_table";
-@import "partials/_moderation";
-@import "partials/form/_crop";
-@import "partials/form/_file";
-@import "partials/form/_general";
-@import "partials/form/_inline";
-@import "partials/form/_related";
-@import "partials/form/_typeahead";
-@import "partials/_tasks";
-@import "partials/_workers";
-@import "partials/_admins";
+@import "partials/general.scss";
+@import "partials/nav";
+@import "partials/header";
+@import "partials/listing/control_group";
+@import "partials/listing/search";
+@import "partials/listing/sorting";
+@import "partials/listing/table";
+@import "partials/moderation";
+@import "partials/form/crop";
+@import "partials/form/file";
+@import "partials/form/general";
+@import "partials/form/inline";
+@import "partials/form/related";
+@import "partials/form/typeahead";
+@import "partials/tasks";
+@import "partials/workers";
+@import "partials/admins";

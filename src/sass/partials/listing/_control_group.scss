@@ -1,0 +1,25 @@
+// Special settings for when listings are added to control groups
+.list-control-group {
+	
+	// Position new button under the label
+	label {
+		position: relative;
+		.btn-group {
+			display: block;
+			margin-top: 5px;
+		
+			// If mobile layout, make it flush to right side
+			@include respond-to('phone') {
+				position: absolute;
+				margin: 0;
+				right: 0;
+				bottom: 0;
+			}
+		}
+	}
+	
+	// Make the listing flush
+	.span9, .span6 {
+		margin-left: 0;
+	}
+}
