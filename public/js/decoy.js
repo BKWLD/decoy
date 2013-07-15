@@ -98,7 +98,13 @@ define(function (require) {
 		
 		// Turn WYSIWYGs on.
 		var CKEDITOR = window.CKEDITOR;
-		$body.find('textarea.wysiwyg').each(function() {			
+		$body.find('textarea.wysiwyg').each(function() {		
+		
+			// Make the WYSIWYGs the same dimension as the textareas by wrapping it in the same span
+			var span = $(this).closest('.span9').length ? 'span9' : 'span6';
+			$(this).wrap('<div class="'+span+'" style="margin-left:0">');
+		
+			// Init CK editor	
 			CKEDITOR.replace(this, {
 				resize_enabled: false,
 				enterMode : CKEDITOR.ENTER_BR,
