@@ -682,7 +682,7 @@ class Base extends Controller {
 		if ($validation->fails()) {
 			
 			// Log validation errors
-			if (Config::get('app.debug')) Log::info(print_r($validation->messages(), true));
+			if (Config::get('app.debug')) Log::debug(print_r($validation->messages(), true));
 			
 			// Respond
 			if (Request::ajax()) {
