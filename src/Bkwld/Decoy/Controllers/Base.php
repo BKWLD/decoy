@@ -442,14 +442,8 @@ class Base extends Controller {
 		// Validate
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
-		// Hydrate the model
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		
-		// Save files
-		$files = new Files();
-		$files->saveFiles($item);
-		
 		// Save it
+		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
 		else $item->save();
 		
@@ -499,22 +493,11 @@ class Base extends Controller {
 			else return App::abort(404);
 		}
 		
-		// Files in an edit state have a number of supplentary fields.  This
-		// prepares the file for validation.
-		$files = new Files();
-		$files->preValidateFiles(Model::$rules);
-		
 		// Create default slug
 		$this->mergeDefaultSlug($id);
 
 		// Validate data
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
-		
-		// Save out files and remove special file related inputs that don't
-		// exist as columns in the db (like 'old-image")
-		$files->deleteFiles($item);
-		$files->saveFiles($item);
-		$files->unsetFileEditInputs($item);
 		
 		// Update it
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
@@ -531,11 +514,8 @@ class Base extends Controller {
 		
 		// Find the item
 		if (!($item = Model::find($id))) return App::abort(404);
-
-		// Delete images
-		if (!method_exists($item, 'image') && !empty($item->image)) Croppa::delete($item->image);
 		
-		// Delete row.
+		// Delete row (this should trigger file attachment deletes as well)
 		$item->delete();
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
@@ -670,7 +650,7 @@ class Base extends Controller {
 		}
 		
 		// Add messages from BKWLD bundle
-		$messages = array_merge(Library\Laravel\Validator::messages(), $messages);
+		// $messages = array_merge(Library\Laravel\Validator::messages(), $messages);
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {

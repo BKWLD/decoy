@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Library\Utils\File;
 use Bkwld\Library\Utils\Collection;
+use Bkwld\Decoy\Input\Files;
 use Config;
 use Croppa;
 use DB;
@@ -67,12 +68,16 @@ abstract class Base extends Eloquent {
 		if (in_array($class, self::$models_registered_for_events)) return;
 		self::$models_registered_for_events[] = $class;
 		
-		// Built in Laravel model events
+		// Setup a files instance for auto handling of file input
+		$files = new Files();
+		
+		// Built in Laravel model events.  Note the special file handling that happens
+		// on save.  This is fired on deletes as well as create/update
 		self::creating (function($model){ return $model->onCreating(); });
 		self::created  (function($model){ return $model->onCreated(); });
 		self::updating (function($model){ return $model->onUpdating(); });
 		self::updated  (function($model){ return $model->onUpdated(); });
-		self::saving   (function($model){ return $model->onSaving(); });
+		self::saving   (function($model) use ($files){ $files->delete($model); $files->save($model); return $model->onSaving(); });
 		self::saved    (function($model){ return $model->onSaved(); });
 		self::deleting (function($model){ return $model->onDeleting(); });
 		self::deleted  (function($model){ return $model->onDeleted(); });
@@ -80,10 +85,13 @@ abstract class Base extends Eloquent {
 		// Decoy events
 		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
 		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model = null) use ($event) {
+			Event::listen('decoy.'.$event.': '.$class, function($model = null) use ($event, $files) {
 				
 				// It's possible a model wasn't defined
 				if (!$model) return;
+				
+				// Special files behavior
+				if ($event == 'validating') $files->preValidate($model);
 				
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
@@ -141,9 +149,9 @@ abstract class Base extends Eloquent {
 	
 	// Save out an image or file given the field name.  They are saved
 	// to the directory specified in the bundle config
-	public function saveImage($input_name = 'image') { return $this->saveFile($input_name); }
-	public function saveFile($input_name = 'file') {
-		$path = File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir'));
+	public function saveImage($field = 'image') { return $this->saveFile($field); }
+	public function saveFile($field = 'file') {
+		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::upload_dir'));
 		$path = File::publicPath($path);
 		return $path;
 	}

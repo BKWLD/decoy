@@ -157,20 +157,20 @@ HTML::macro('imageUpload', function($id = null, $label = null, $help = null, $cr
 	
 	// Add delete checkbox
 	if (!$is_required) {
-		$block_help .= '<label for="delete" class="checkbox image-delete">
-			<input id="'.UPLOAD_DELETE.$id.'" type="checkbox" name="delete-'.$id.'" value="1">Delete 
+		$block_help .= '<label for="'.$id.'-delete" class="checkbox image-delete">
+			<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 			<a href="'.$image.'"><code><i class="icon-file"></i>'.basename($image).'</code></a></label>';
 	}
 	
 	// Change the id of the form input field and create the hidden field with the original id
-	// and with the value of the image path.  (string) foreces it to render.
-	$hidden = (string) Former::hidden(UPLOAD_OLD.$id)->value($image);
+	// and with the value of the image path.  (string) forces it to render.
+	$hidden = (string) Former::hidden($id)->value($image);
 	
 	// Make the file field.  We're setting a class of required rather than actually setting the field
 	// to required so that Former doesn't tell the DOM to the required attribute.  We don't want the
 	// browser to enforce requirement, we just want the icon to indicate that it is required.
-	$file = Former::file(UPLOAD_REPLACE.$id, $label)->accept('image')->blockHelp($block_help);
-	if ($is_required) $file = $file->class('required');
+	$file = Former::file($id, $label)->accept('image')->blockHelp($block_help);
+	if ($is_required) $file = $file->class('required')->setAttribute('required', null);
 	
 	// Check for errors registered to the "real" form element
 	$errors = Former::getErrors($id);
@@ -178,7 +178,7 @@ HTML::macro('imageUpload', function($id = null, $label = null, $help = null, $cr
 	
 	// Assemble all the elements
 	$file = (string) $file;
-	return '<div class="image-upload" data-js-view="image-fullscreen">'.$file.$hidden.$crop_field.'</div>';
+	return '<div class="image-upload" data-js-view="image-fullscreen">'.$hidden.$file.$crop_field.'</div>';
 	
 });
 
@@ -210,8 +210,8 @@ HTML::macro('fileUpload', function($id = null, $label = null, $help = null) {
 	
 	// Add delete checkbox
 	if (!$is_required) {
-		$block_help .= '<label for="delete" class="checkbox file-delete">
-			<input id="'.UPLOAD_DELETE.$id.'" type="checkbox" name="delete-'.$id.'" value="1">Delete 
+		$block_help .= '<label for="'.$id.'-delete" class="checkbox file-delete">
+			<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 			<a href="'.$file.'"><code><i class="icon-file"></i>'.basename($file).'</code></a></label>';
 	
 	// Else display a link to download the file
@@ -224,7 +224,7 @@ HTML::macro('fileUpload', function($id = null, $label = null, $help = null) {
 	
 	// Change the id of the form input field and create the hidden field with the original id
 	// and with the value of the image path.  (string) foreces it to render.
-	$hidden = (string) Former::hidden(UPLOAD_OLD.$id)->value($file);
+	$hidden = (string) Former::hidden($id)->value($file);
 	
 	// Check for errors registered to the "real" form element
 	$errors = Former::getErrors($id);
@@ -232,8 +232,8 @@ HTML::macro('fileUpload', function($id = null, $label = null, $help = null) {
 	// Make the file field.  We're setting a class of required rather than actually setting the field
 	// to required so that Former doesn't tell the DOM to the required attribute.  We don't want the
 	// browser to enforce requirement, we just want the icon to indicate that it is required.
-	$file = Former::file(UPLOAD_REPLACE.$id, $label)->blockHelp($block_help);
-	if ($is_required) $file = $file->class('required');
+	$file = Former::file($id, $label)->blockHelp($block_help);
+	if ($is_required) $file = $file->class('required')->setAttribute('required', null);
 	if (!empty($errors)) $file = $file->state('error')->inlineHelp($errors);
 	return '<div class="file-upload">'.$file.$hidden.'</div>';
 	
