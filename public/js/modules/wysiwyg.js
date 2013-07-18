@@ -3,8 +3,9 @@ define(function(require) {
 	
 	// Dependencies
 	var $ = require('jquery'),
-		_ = require('underscore');
-	var CKEDITOR = window.CKEDITOR; // CK isn't currently loaded via requirejs
+		_ = require('underscore'),
+		CKEDITOR = window.CKEDITOR, // CK isn't currently loaded via requirejs
+		CKFINDER = window.CKFINTER; // CK isn't currently loaded via requirejs
 	
 	// Default config
 	var config = {
@@ -19,6 +20,12 @@ define(function(require) {
 			{ name: 'source', items : [ 'Source' ] }
 		]
 	};
+	
+	// Enable CKFinder
+	var allow_uploads = false;
+	function allowUploads() {
+		allow_uploads = true;
+	}
 	
 	// Return the config
 	function getConfig() { return config; }
@@ -38,8 +45,9 @@ define(function(require) {
 			var span = $el.closest('.span9').length ? 'span9' : 'span6';
 			$el.wrap('<div class="'+span+'" style="margin-left:0">');
 		
-			// Init CK editor	
-			CKEDITOR.replace(this, config);
+			// Init CK Editor	and CK Finder
+			var editor = CKEDITOR.replace(this, config);
+			if (allow_uploads) CKFinder.setupCKEditor(editor, '/ckfinder/');
 			
 		});
 	}
@@ -49,7 +57,8 @@ define(function(require) {
 		config: {
 			get: getConfig,
 			merge: mergeConfig,
-			replace: replaceConfig
+			replace: replaceConfig,
+			allowUploads: allowUploads
 		},
 		replace: replace
 	};

@@ -11,6 +11,7 @@
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
 		<?= View::make('decoy_published::layout.buk_builder._header') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
+		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
 	<body class="<?=HTML::bodyClass()?>">
 		
