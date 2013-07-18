@@ -47,7 +47,7 @@ define(function(require) {
 		
 			// Init CK Editor	and CK Finder
 			var editor = CKEDITOR.replace(this, config);
-			if (allow_uploads) CKFinder.setupCKEditor(editor, '/ckfinder/');
+			if (allow_uploads) CKFINDER.setupCKEditor(editor, '/ckfinder/');
 			
 		});
 	}
