@@ -10,8 +10,7 @@ define(function(require) {
 	var config = {
 		customConfig: '', // Don't load external config js file
 		enterMode : CKEDITOR.ENTER_BR,
-		toolbar :
-		[
+		toolbar : [
 			{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
 			{ name: 'links', items : [ 'Link','Unlink'] },
@@ -33,13 +32,15 @@ define(function(require) {
 	// Apply CKeditor to the selector
 	function replace(selector) {
 		$(selector).each(function() {
+			var $el = $(this);
 		
 			// Make the WYSIWYGs the same dimension as the textareas by wrapping it in the same span
-			var span = $(this).closest('.span9').length ? 'span9' : 'span6';
-			$(this).wrap('<div class="'+span+'" style="margin-left:0">');
+			var span = $el.closest('.span9').length ? 'span9' : 'span6';
+			$el.wrap('<div class="'+span+'" style="margin-left:0">');
 		
 			// Init CK editor	
 			CKEDITOR.replace(this, config);
+			
 		});
 	}
 	
