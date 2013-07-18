@@ -12,8 +12,6 @@ define(function (require) {
 	// Plugins
 	require('decoy/plugins/jquery-migrate'); // To ease migration to jQuery 1.9.x
 	require('decoy/plugins/bootstrap');
-	require('decoy/plugins/wysihtml5-0.3.0'); // For WYSIWYG API
-	require('decoy/plugins/bootstrap-wysihtml5'); // For styling the WYISWYG like bootstrap
 	
 	// Utilities
 	require('decoy/modules/utils/csrf'); // Add CSRF token to AJAX requests
@@ -24,6 +22,7 @@ define(function (require) {
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
+	var wysiwyg = require('decoy/modules/wysiwyg'); // CKeditor
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
@@ -97,29 +96,7 @@ define(function (require) {
 		$body.find('.js-tooltip').tooltip({ animation: false });
 		
 		// Turn WYSIWYGs on.
-		var CKEDITOR = window.CKEDITOR;
-		$body.find('textarea.wysiwyg').each(function() {		
-		
-			// Make the WYSIWYGs the same dimension as the textareas by wrapping it in the same span
-			var span = $(this).closest('.span9').length ? 'span9' : 'span6';
-			$(this).wrap('<div class="'+span+'" style="margin-left:0">');
-		
-			// Init CK editor	
-			CKEDITOR.replace(this, {
-				customConfig: '', // Don't load external config js file
-				resize_enabled: false,
-				enterMode : CKEDITOR.ENTER_BR,
-				toolbar :
-				[
-					{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
-					{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
-					{ name: 'links', items : [ 'Link','Unlink'] },
-					{ name: 'image', items : [ 'Image' ] },
-					{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-					{ name: 'source', items : [ 'Source' ] }
-				]
-			});
-		});
+		wysiwyg.replace('textarea.wysiwyg');
 		
 	});
 	
