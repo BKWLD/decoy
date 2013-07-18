@@ -106,13 +106,14 @@ define(function (require) {
 		
 			// Init CK editor	
 			CKEDITOR.replace(this, {
+				customConfig: '', // Don't load external config js file
 				resize_enabled: false,
 				enterMode : CKEDITOR.ENTER_BR,
 				toolbar :
 				[
 					{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 					{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
-					{ name: 'links', items : [ 'Link','Unlink','Anchor' ] },
+					{ name: 'links', items : [ 'Link','Unlink'] },
 					{ name: 'image', items : [ 'Image' ] },
 					{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
 					{ name: 'source', items : [ 'Source' ] }
