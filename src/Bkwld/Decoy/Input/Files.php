@@ -41,12 +41,15 @@ class Files {
 	/**
 	 * Loop through all file fields and delete any files that are present in the old
 	 * item instance and are being replaced by a new file or who have been deleted by
-	 * checkbox (setting their value to empty)
+	 * checkbox (setting their value to empty).
 	 */
 	public function delete($item) {
+		$all = Input::all();
 		foreach($this->fields($item) as $field) {
 			$old = $item->getOriginal($field);
-			if (!empty($old) && (Input::hasFile($field) || !Input::has($field))) {
+			if (empty($old)) continue; // Nothing to delete found
+			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
+			if (Input::hasFile($field) || !Input::has($field)) {
 
 				// Try and delete the image with Croppa.  If Croppa won't delete, then
 				// do a regular delete.  The croppa route is preferred because it will delete
