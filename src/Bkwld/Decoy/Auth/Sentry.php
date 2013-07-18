@@ -12,10 +12,13 @@ use Html;
 class Sentry implements AuthInterface {
 	
 	// Get the logged in user
+	static private $user; // Cache an instance to reduce DB queries looking up a user
 	static public function user() {
-		if (!\Sentry::check()) return false; // Are they logged in
+		if (!empty(self::$user)) return self::$user; // Use cached user
 		try {
-			return \Sentry::getUser(); // Return the user
+			if (!\Sentry::check()) return false; // Are they logged in
+			self::$user = \Sentry::getUser(); 
+			return self::$user;
 		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
 			return false; // The logged in user couldn't be found in DB
 		}
