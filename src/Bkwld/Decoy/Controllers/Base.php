@@ -648,9 +648,6 @@ class Base extends Controller {
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
-		
-		// Add messages from BKWLD bundle
-		// $messages = array_merge(Library\Laravel\Validator::messages(), $messages);
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
