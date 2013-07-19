@@ -5,7 +5,7 @@ define(function(require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		CKEDITOR = window.CKEDITOR, // CK isn't currently loaded via requirejs
-		CKFINDER = window.CKFINTER; // CK isn't currently loaded via requirejs
+		CKFINDER = window.CKFinder; // CK isn't currently loaded via requirejs
 	
 	// Default config
 	var config = {
@@ -47,7 +47,7 @@ define(function(require) {
 		
 			// Init CK Editor	and CK Finder
 			var editor = CKEDITOR.replace(this, config);
-			if (allow_uploads) CKFINDER.setupCKEditor(editor, '/ckfinder/');
+			if (allow_uploads) CKFINDER.setupCKEditor(editor, '/packages/bkwld/decoy/ckfinder/');
 			
 		});
 	}
