@@ -29,9 +29,6 @@
 	// Directory for saving uploaded images
 	'upload_dir' => public_path().'/uploads',
 	
-	// Directory for saving uploaded images
-	'ckfinder_upload_dir' => public_path().'/uploads/ckfinder',
-	
 	// The auth class that should be used.  The default relies on Sentry
 	'auth_class' => '\Bkwld\Decoy\Auth\Sentry',
 	

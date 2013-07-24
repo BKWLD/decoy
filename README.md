@@ -95,3 +95,16 @@ The following properties are only relevant if a controller is a parent or child 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
 TODO Describe changing the layout and index
+
+## Features
+
+### Enabling CKFinder for file uploads
+
+By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
+
+1. Enter the `license_name` and `license_key` in your /app/config/packages/bkwld/decoy/wysiwyg.php config file
+2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/main.js like so:
+
+		define('main', function (require) {
+			require('decoy/modules/wysiwyg').config.allowUploads();
+		});

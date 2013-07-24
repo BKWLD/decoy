@@ -12,6 +12,12 @@
  * advanced features of CKFinder.
  */
 
+// Bootstrap the app.  This assumes this is being run from the packages directory
+// within public.
+$app_dir = (__DIR__.'/../../../../../');
+require_once($app_dir.'bootstrap/autoload.php');
+$app = require_once($app_dir.'bootstrap/start.php');
+
 /**
  * This function must check the user session to be sure that he/she is
  * authorized to upload and access files in the File Browser.
@@ -19,12 +25,6 @@
  * @return boolean
  */
 function CheckAuthentication() {
-	
-	// Bootstrap the app.  This assumes this is being run from the packages directory
-	// within public
-	$app = (__DIR__.'/../../../../../');
-	require_once($app.'bootstrap/autoload.php');
-	$app = require_once($app.'bootstrap/start.php');
 
 	// Ask Sentry for permission
 	return Sentry::check();
@@ -32,8 +32,8 @@ function CheckAuthentication() {
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be
 // fully functional, in demo mode.
-$config['LicenseName'] = '';
-$config['LicenseKey'] = '';
+$config['LicenseName'] = Config::get('decoy::wysiwyg.license_name');
+$config['LicenseKey'] = Config::get('decoy::wysiwyg.license_key');
 
 /*
  Uncomment lines below to enable PHP error reporting and displaying PHP errors.

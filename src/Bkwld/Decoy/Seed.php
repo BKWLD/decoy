@@ -31,7 +31,7 @@ abstract class Seed {
 		if (!is_dir(self::$UPLOADS)) mkdir(self::$UPLOADS, 0700, true);
 		
 		// Set the ckfinder path
-		self::$CKFINDER = Config::get('decoy::ckfinder_upload_dir');
+		self::$CKFINDER = Config::get('decoy::wysiwyg.upload_dir');
 		if (!is_dir(self::$CKFINDER)) mkdir(self::$CKFINDER, 0700, true);
 	}
 	
