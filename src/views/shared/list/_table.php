@@ -74,7 +74,7 @@ if ($listing->count()) {
 				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
 				
 				// Figure out the edit link
-				if ($many_to_many) $edit = URL::to(HTML::controller($controller));
+				if ($many_to_many) $edit = URL::to(HTML::controller($controller, $item->id));
 				else $edit = URL::to(HTML::relative('edit', $item->id, $controller));
 				?>
 			>
