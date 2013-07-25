@@ -117,11 +117,11 @@ if ($listing->count()) {
 					 
 					 <?// Many to many listings have remove icons instead of trash?>
 					<? if ($many_to_many): ?>
-						<a href="<?=URL::to(HTML::relative('remove', $item->pivot->id, $controller))?>" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+						<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
 						
 					<?// Regular listings actually delete rows ?>
 					<? else: ?> 
-						<a href="<?=URL::to(HTML::relative('destroy', $item->id, $controller))?>" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
 					<? endif ?>
 				</td>
 			</tr>
