@@ -47,6 +47,7 @@ abstract class Base extends Eloquent {
 			'_wysihtml5_mode',
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
+			'parent_id', // Backbone.js may also send this with sort
 		));
 	}
 	
