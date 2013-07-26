@@ -8,6 +8,7 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\UrlGenerator;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
+use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -165,7 +166,6 @@ class Base extends Controller {
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
 		if (!empty($this->PARENT_CONTROLLER)) {
-			
 			// Determine it's model, so we can call static methods on that model
 			if (empty($this->PARENT_MODEL)) {
 				$this->PARENT_MODEL = $this->model($this->PARENT_CONTROLLER);
@@ -477,8 +477,12 @@ class Base extends Controller {
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 		
 		// Update it
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		$item->save();
+		$position = new Position($item, $this->SELF_TO_PARENT);
+		if ($position->has()) $position->update(); // Handle drag-and-drop sorting
+		else {
+			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+			$item->save();
+		}
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
