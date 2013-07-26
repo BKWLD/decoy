@@ -156,42 +156,55 @@ abstract class Base extends Eloquent {
 		return $path;
 	}
 	
-	// Many models will override this to create custom methods for getting
-	// a list of rows
-	static public function ordered() {
-		return static::orderBy(self::tableName().'.created_at', 'desc');
+	//---------------------------------------------------------------------------
+	// Scopes
+	//---------------------------------------------------------------------------
+	
+	/**
+	 * Default ordering by descending time, designed to be overridden
+	 */
+	public function scopeOrdered($query) {
+		return $query->orderBy($this->getTable().'.created_at', 'desc');
 	}
 	
-	// Get an ordered list of only rows that are marked as visible
-	static public function orderedAndVisible() {
-		return static::ordered()->where('visible', '=', '1');
+	/**
+	 * Get visible items
+	 */
+	public function scopeVisible($query) {
+		return $query->where($this->getTable().'visible', '=', '1');
 	}
 	
-	// Generate a route to an instance
-	public function deepLink() {}
+	/**
+	 * Get all visible items by the default order
+	 */
+	public function scopeOrderedAndVisible($query) {
+		return $query->ordered()->visible();
+	}
+	
+	/**
+	 * Randomize the results in the DB.  This shouldn't be used for large datasets
+	 * cause it's not very performant
+	 */
+	public function scopeRandomize($query) {
+		return $query->orderBy(DB::raw('RAND()'));
+	}
+	
+	/**
+	 * Find by the slug.  Like "find()" but use the slug column instead
+	 */
+	static public function findBySlug($slug) {
+		return static::where('slug', '=', $slug)->first();
+	}
 	
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
 	
-	// Randomize the results in the DB.  This shouldn't be used for large datasets
-	// cause it's not very performant
-	static public function randomize() {
-		return static::orderBy(DB::raw('RAND()'));
-	}
-	
-	// Find by the slug.  Like "find()" but use the slug column instead
-	static public function findBySlug($slug) {
-		return static::where(self::tableName().'.slug', '=', $slug)->first();
-	}
-	
-	// Figure out the current table name but allow it to be called statically
-	static protected function tableName() {
-		$model = get_called_class();
-		$model = new $model;
-		return $model->getTable();
-	}
-	
+	/**
+	 * A no-op that should return the deep link to this content
+	 */
+	public function deepLink() {}
+
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched
 	 * through a relationship OR it may be named pivot_id out of convention (something
@@ -205,8 +218,10 @@ abstract class Base extends Eloquent {
 		else return null;
 	}
 	
-	// Form a croppa URL, taking advantage of being able to set more columns null.  Also,
-	// provides an easier way to inform the source crops
+	/**
+	 * Form a croppa URL, taking advantage of being able to set more columns null.  Also,
+	 * provides an easier way to inform the source crops
+	 */
 	public function croppa($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
 		
 		// Check if the image field has crops
