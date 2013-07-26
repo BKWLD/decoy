@@ -115,13 +115,15 @@ class Ancestry {
 	 */
 	public function deduceParentController() {
 		
-		// If a child index view, get the controller from the route
-		if ($this->requestIsChild()) {
-			return $this->wildcard->getParentController();
-		
 		// If one of the many to many xhr requests, get the parent from Input
-		} elseif ($this->parentIsInInput()) {
-			return $this->input->get('parent_controller');
+		if ($this->parentIsInInput()) {
+			
+			 // Can't use ->get() because it has a different meaning in Request
+			return $this->input->input('parent_controller');
+		
+		// If a child index view, get the controller from the route
+		} else if ($this->requestIsChild()) {
+			return $this->wildcard->getParentController();
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->isActingAsRelated()) {
