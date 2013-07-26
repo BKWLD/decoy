@@ -343,31 +343,8 @@ class Base extends Controller {
 		$parent_id = $this->ancestry->parentId();
 		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 			
-		// Form the query by manually making adding the where condition with the 
-		// parent foreign key.  We do this instead of using Laravel's syntax
-		// ($parent->{$this->PARENT_TO_SELF}()) so that we can call the
-		// ordered() static method
-		$foreign_key = $parent->{$this->PARENT_TO_SELF}()->getForeignKey();
-		$query = Model::ordered()->where($foreign_key, '=', $parent_id);
-
-		// If it's a many to many, we need to join the pivot table because that is
-		// what the foreign key is on.  This is done just so we can get the pivot_id
-		// for doing things like delete_remove().  But this is, again, only required
-		// because of trying to support ordered() in the listing
-		if ($this->isChildInManyToMany()) {
-			
-			// Get references to the listing and pivot tables so we can get the table name
-			// and key column names from them.  SELF_TO_PARENT is used because the instance
-			// we get with new Model is a child of another model.  So we are trying to get back to
-			// our parent, and we do that with SELF_TO_PARENT, which is the reference declared
-			// ON the child.
-			$child_key = $this->child_key();
-			list($pivot_table, $pivot_child_foreign) = $this->pivot();
-			
-			// Add the join to the pivot table and make the id columns explicit
-			$query = $query->join($pivot_table, $child_key, '=', $pivot_child_foreign)
-				->select(array('*', $child_key.' AS id', $pivot_table.'.id AS pivot_id'));
-		}
+		// Get the list of rows
+		$query = $parent->{$this->PARENT_TO_SELF}()->ordered();
 
 		// Run the query
 		$search = new Search();
