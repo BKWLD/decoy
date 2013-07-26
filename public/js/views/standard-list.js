@@ -237,7 +237,7 @@ define(function (require) {
 			// Find the model
 			var $a = $(e.target).closest('a'),
 				$row = $a.closest('tr'),
-				modelId = $row.attr(dataId),
+				model_id = $row.attr(dataId),
 				parent_id = $row.data('parent-id');
 				
 			// Hide while waiting
@@ -246,8 +246,10 @@ define(function (require) {
 			$row.animate({opacity:0.2}, 100);
 			
 			// Call the remove route
-			$.ajax(this.controllerRoute+'/'+modelId+'/remove', {
-				data: {parent_controller: this.parent_controller, parent_id: parent_id},
+			$.ajax(this.controllerRoute+'/'+model_id+'/remove', {
+				data: {
+					parent_controller: this.parent_controller, 
+					parent_id: parent_id},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})
@@ -345,7 +347,8 @@ define(function (require) {
 			// Vars
 			var ids = _.pluck(this.collection.where({ selected: true }), 'id'),
 				$rows = this.findRows(ids),
-				url = this.controllerRoute+'/'+ids.join('-')+'/remove';
+				url = this.controllerRoute+'/'+ids[0]+'/remove',
+				parent_id = $rows[0].data('parent-id');
 			
 			// Hide while waiting
 			_.each($rows, function($row) {
@@ -356,7 +359,11 @@ define(function (require) {
 			
 			// Call the bulk remove route
 			$.ajax(url, {
-				data: {parent_controller: this.parent_controller},
+				data: {
+						parent_controller: this.parent_controller, 
+						parent_id: parent_id, 
+						ids: ids.join(',')
+				},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})

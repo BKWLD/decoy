@@ -594,26 +594,19 @@ class Base extends Controller {
 	
 	// Remove a relationship.  Very similar to delete, except that we're
 	// not actually deleting from the database
-	public function remove($pivot_ids) {
+	public function remove($id) {
 
-		// Look for the mentioned rows
-		$pivot_ids = explode('-', $pivot_ids);
+		// Support removing many ids at once
+		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 		
-		// NEED TO LOOKUP ITEM FOR THE FIREVENT
-		/*
-		// Loop through each item and delete the relationship
-		list($pivot_table) = $this->pivot();
-		foreach($pivot_ids as $id) {
-			
-			// Get the pivot row
-			$pivot = DB::table($pivot_table)->find($id);
-			$this->fireEvent('removing', array($item, $pivot));
-			
-			// Remove it
-			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
-			$this->fireEvent('removed', array($item, $pivot));
-		}
-		*/
+		// Get the parent id
+		$parent_id = Input::get('parent_id');
+		
+		// Lookup up the parent model so we can bulk remove multiple of THIS model
+		$item = $this->parentFind($parent_id);
+		$this->fireEvent('removing', array($item, $ids));
+		$item->{$this->PARENT_TO_SELF}()->detach($ids);
+		$this->fireEvent('removed', array($item, $ids));
 		
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
