@@ -37,10 +37,10 @@ Decoy uses the same models as your app uses.  Thus, put them as per normal in /a
 
 ### Many to Many relationships
 
-Both the `withTimestamps` and `withPivot` methods should be called on relationships.  For instance:
+Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like:
 
 ```
-public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('id'); }
+public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('position')->orderBy('prospect_user.position', 'asc'); }
 ```
 
 ## Controllers
