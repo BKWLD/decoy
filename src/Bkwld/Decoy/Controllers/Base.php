@@ -504,7 +504,7 @@ class Base extends Controller {
 		$item->save();
 
 		// Redirect to the edit view
-		if (Request::ajax()) return Response::json(null);
+		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::to(URL::current());
 		
 	}
@@ -519,7 +519,7 @@ class Base extends Controller {
 		$item->delete();
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
-		if (Request::ajax()) return Response::json(null);
+		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::to($this->url->relative('index'));
 	}
 	
@@ -585,15 +585,10 @@ class Base extends Controller {
 		// Do the attach
 		$this->fireEvent('attaching', array($item));
 		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
-		
-		// Get the new pivot row's id
-		$pivot_id = DB::connection('mysql')->getPdo()->lastInsertId();
 		$this->fireEvent('attached', array($item));
 		
 		// Return the response
-		return Response::json(array(
-			'pivot_id' => $pivot_id
-		));
+		return Response::json('ok');
 		
 	}
 	
@@ -605,7 +600,7 @@ class Base extends Controller {
 		$pivot_ids = explode('-', $pivot_ids);
 		
 		// NEED TO LOOKUP ITEM FOR THE FIREVENT
-		
+		/*
 		// Loop through each item and delete the relationship
 		list($pivot_table) = $this->pivot();
 		foreach($pivot_ids as $id) {
@@ -618,10 +613,11 @@ class Base extends Controller {
 			DB::query("DELETE FROM {$pivot_table} WHERE id = ?", $id);
 			$this->fireEvent('removed', array($item, $pivot));
 		}
+		*/
 		
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
-		if (Request::ajax()) return Response::json('null');
+		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::back();
 	}
 	

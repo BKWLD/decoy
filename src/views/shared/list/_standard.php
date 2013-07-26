@@ -3,8 +3,8 @@
 <div class="standard-list" 
 	data-js-view="standard-list" 
 	data-controller-route="<?=URL::to(HTML::controller($controller))?>" 
-	<? if ($parent_controller):?> data-parent-controller="<?=URL::to(HTML::controller($parent_controller))?><?endif?>
-	">
+	<? if ($parent_controller):?> data-parent-controller="<?=$parent_controller?><?endif?>"
+	>
 	
 	<?
 	// Create the page title for the sidebar layout

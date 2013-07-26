@@ -54,7 +54,7 @@ class Wildcard {
 		$event = Event::fire('wildcard.detection', array(
 			$controller, $action, $id
 		));
-		
+				
 		// Invoke the controller
 		$controller = new $controller();
 		$params = $id ? array($id) : array();

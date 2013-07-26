@@ -72,14 +72,16 @@ define(function (require) {
 				featured = $inputs.filter('[name=set-featured]').prop('checked'),
 				$visibility = $row.find('.visibility'),
 				visible_state = $visibility.find('.'+visibleIconClass).length > 0,
-				position = $row.data('position');
+				position = $row.data('position'),
+				parent_id = $row.data('parent-id');
 			
 			// Define the model data
 			var data = {
 				id: modelId,
 				selected: false,
 				featured: featured,
-				position: position
+				position: position,
+				parent_id: parent_id
 			};
 			
 			// If this item supports visibility, add it to the model
@@ -98,6 +100,7 @@ define(function (require) {
 			model.whitelist = ['position']; // Only sync position
 			if ($visibility.length) model.whitelist.push('visible');
 			if (this.parent_controller) model.whitelist.push('parent_controller');
+			if (parent_id) model.whitelist.push('parent_id');
 
 			// Add the model to the collection
 			this.collection.push(model);
@@ -230,12 +233,12 @@ define(function (require) {
 		// Remove the pivot row via JS
 		removeNow: function(e) {
 			e.preventDefault();
-		
+
 			// Find the model
 			var $a = $(e.target).closest('a'),
-				href = $a.attr('href'),
 				$row = $a.closest('tr'),
-				modelId = $row.attr(dataId);
+				modelId = $row.attr(dataId),
+				parent_id = $row.data('parent-id');
 				
 			// Hide while waiting
 			if ($row.data('removing')) return;
@@ -244,7 +247,7 @@ define(function (require) {
 			
 			// Call the remove route
 			$.ajax(this.controllerRoute+'/'+modelId+'/remove', {
-				data: {parent_controller: this.parent_controller},
+				data: {parent_controller: this.parent_controller, parent_id: parent_id},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})
@@ -339,8 +342,7 @@ define(function (require) {
 		// statuses on the model and it's handling the presentation.
 		removeConfirm: function() {
 			
-			// ID in this case is actually the pivot_id, which has been put into
-			// the data-model-id attribute
+			// Vars
 			var ids = _.pluck(this.collection.where({ selected: true }), 'id'),
 				$rows = this.findRows(ids),
 				url = this.controllerRoute+'/'+ids.join('-')+'/remove';
@@ -446,7 +448,7 @@ define(function (require) {
 			// actions won't work
 			var $row = $(row_template({
 				id: data.id,
-				pivot_id: data.pivot_id,
+				parent_id: data.parent_id,
 				label: data.columns.title,
 				controller: this.controllerRoute
 			}));

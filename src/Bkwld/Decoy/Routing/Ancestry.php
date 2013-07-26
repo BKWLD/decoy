@@ -143,7 +143,6 @@ class Ancestry {
 		// The relationship is generally a plural form of the model name.
 		// For instance, if Article has-many SuperSlide, then there will be a "superSlides"
 		// relationship on Article.
-		 // Remove namespaces
 		$model = $this->getClassName($this->controller->model());
 		$relationship = Str::plural(lcfirst($model));
 		

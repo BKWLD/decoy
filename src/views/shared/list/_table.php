@@ -66,8 +66,8 @@ if ($listing->count()) {
 			?>
 	
 			<tr 
-				data-model-id="<?=$many_to_many ? $item->pivot->id: $item->id?>"
-				
+				data-model-id="<?=$item->id?>"
+				<? if (!empty($parent_id)): ?> data-parent-id="<?=$parent_id?>"<? endif ?>
 				<?
 				// Add position value from the row or from the pivot table.  
 				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
