@@ -15,7 +15,7 @@
 	"require": {
 		"php": ">=5.3.0",
 		"illuminate/support": "4.0.*",
-		"anahkiasen/former": "dev-agnostic",
+		"anahkiasen/former": "dev-master",
 		"cartalyst/sentry": "2.0.*",
 		"bkwld/croppa": "~2.0",
 		"bkwld/library": "~2.0"
