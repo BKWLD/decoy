@@ -18,7 +18,7 @@ if (empty($breadcrumbs)) return;
 		<? endforeach ?>
 		
 		<?// Back button ?>
-		<? if (!empty($back)): ?>
+		<? if (!empty($back) && !Str::is('decoy\account*', Route::currentRouteName())): ?>
 			<a href="<?=$back?>" class="back">
 				<i class="icon-arrow-left"></i>
 				Back to listing
