@@ -1,0 +1,15 @@
+/**
+ * Use this to hide all the create and delete pages for a Decoy controller
+ * Decoy.  You would include this from a selector on the body class.  For
+ * example: 
+ * 
+ * body.pages { 
+ *   @include edit-only;
+ * }
+ * 
+ */
+@mixin edit-only {
+  .btn.new, .btn.save_new, .btn.delete, .delete-now, .edit-delete-seperator {
+	  display: none;
+	}
+}
