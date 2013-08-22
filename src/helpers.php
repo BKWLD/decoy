@@ -262,7 +262,7 @@ HTML::macro('belongsTo', function($id, $route, $options = array()) {
 	);
 	
 	// Default options
-	if (empty($options['label']))   $options['label'] = ucfirst($id);
+	if (empty($options['label']))   $options['label'] = ucfirst(str_replace('_id', '', $id));
 	if (empty($options['title']))   $options['title'] = null;
 	if (empty($options['create']))  $options['create'] = false;
 	

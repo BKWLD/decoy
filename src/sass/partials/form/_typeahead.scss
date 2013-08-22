@@ -23,4 +23,9 @@
 	li > a {
 		padding: 5px;
 	}
+	
+	// Get rid of the text shadow that control-groups get
+	.control-group:hover & {
+		text-shadow: none;
+	}
 }
