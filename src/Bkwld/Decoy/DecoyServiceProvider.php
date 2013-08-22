@@ -3,6 +3,7 @@
 use App;
 use Config;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
 use Former;
@@ -20,7 +21,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
-		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
+		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 		
 		// Alias the auth class that is defined in the config for easier referencing.
 		// Call it "DecoyAuth"
@@ -72,9 +73,15 @@ class DecoyServiceProvider extends ServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function register()
-	{
-		//
+	public function register() {
+		
+		// Former
+		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
+		$this->app->register('Former\FormerServiceProvider');
+		
+		// Sentry
+		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
+		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 	}
 
 }
