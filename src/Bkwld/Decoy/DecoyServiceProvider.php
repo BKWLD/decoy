@@ -10,13 +10,6 @@ use Former;
 class DecoyServiceProvider extends ServiceProvider {
 
 	/**
-	 * Indicates if loading of the provider is deferred.
-	 *
-	 * @var bool
-	 */
-	protected $defer = false;
-
-	/**
 	 * Bootstrap the application events.
 	 *
 	 * @return void
@@ -82,16 +75,6 @@ class DecoyServiceProvider extends ServiceProvider {
 	public function register()
 	{
 		//
-	}
-
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array();
 	}
 
 }
