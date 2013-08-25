@@ -1,5 +1,5 @@
 // The list of seed tasks
-#tasks {
+#commands {
 	@include flush-child-spans;
 	
 	// Make the table span the whole block
@@ -17,15 +17,22 @@
 	// These are the method names
 	td:last-child {
 		font-weight: bold;
-		span {
+		
+		// No spacing between name and description
+		p {
+			margin: 0;
+		}
+		
+		// Command description
+		small {
 			font-weight: normal;
 		}
 	}
 	
 	// Increase line spacing over the default
 	td {
-		padding-top: 2px;
-		padding-bottom: 2px;
+		padding-top: 3px;
+		padding-bottom: 3px;
 	}
 	
 	// Spinner

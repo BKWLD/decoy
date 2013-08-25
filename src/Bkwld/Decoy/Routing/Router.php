@@ -35,6 +35,7 @@ class Router {
 		// Register routes
 		$this->registerAccounts();
 		$this->registerAdmins();
+		$this->registerCommands();
 		$this->registerWildcard();
 		
 		// Setup filters
@@ -90,6 +91,14 @@ class Router {
 	public function registerAdmins() {
 		Route::get($this->dir.'/admins/{id}/disable', array('as' => 'decoy\admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable'));
 		Route::get($this->dir.'/admins/{id}/enable', array('as' => 'decoy\admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable'));
+	}
+	
+	/**
+	 * Commands / Tasks
+	 */
+	public function registerCommands() {
+		Route::get($this->dir.'/commands', array('uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy\commands'));
+		Route::post($this->dir.'/commands/{command}', array('uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy\commands@execute'));
 	}
 	
 	/**

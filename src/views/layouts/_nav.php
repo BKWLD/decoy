@@ -60,22 +60,21 @@
 									<li class="divider"></li>
 								<? endif ?>
 								
-								<?/* Disabling until this can be re-written for commands
 								<? $divider = false; ?>
 								<? if (DecoyAuth::developer()): $divider = true; ?>
-									<li><a href="<?=action('Bkwld\Decoy\Controllers\Tasks@index')?>">Tasks</a></li>
+									<li><a href="<?=route('decoy\commands')?>">Commands</a></li>
 								<? endif ?>
 								
+								<?/*
 								<? if (count(Bkwld\Decoy\Models\Worker::all())): $divider = true; ?>
 									<li><a href="<?=action('Bkwld\Decoy\Controllers\Workers@index')?>">Workers</a></li>
 								<? endif ?>
+								*/?>
 								
 								<? if ($divider): ?>
 									<li class="divider"></li>
 								<? endif ?>
-								
-								*/?>
-								
+																
 								<li><a href="<?=DecoyAuth::userUrl()?>">Account</a></li>
 								<li><a href="<?=DecoyAuth::logoutUrl()?>">Log out</a></li>
 							</ul>
