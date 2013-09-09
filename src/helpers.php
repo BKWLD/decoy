@@ -297,7 +297,7 @@ HTML::macro('inputlessField', function($key, $label = null, $value = null) {
 HTML::macro('date', function($id, $label = null) {
 	
 	// Defaults
-	if (empty($label)) $label = Library\Utils\String::title_from_key($id);
+	if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 	$value = date("m/d/Y");
 	
 	// Make the element
@@ -331,7 +331,7 @@ HTML::macro('date', function($id, $label = null) {
 HTML::macro('time', function($id, $label = null) {
 	
 	// Defaults
-	if (empty($label)) $label = Library\Utils\String::title_from_key($id);
+	if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 	$value = date('h:i A');
 	
 	// Make the time element.
