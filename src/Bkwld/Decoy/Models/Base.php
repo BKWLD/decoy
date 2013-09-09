@@ -172,7 +172,7 @@ abstract class Base extends Eloquent {
 	 * Get visible items
 	 */
 	public function scopeVisible($query) {
-		return $query->where($this->getTable().'visible', '=', '1');
+		return $query->where($this->getTable().'.visible', '=', '1');
 	}
 	
 	/**
