@@ -41,6 +41,10 @@ class DecoyServiceProvider extends ServiceProvider {
 		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
 		
+		// Register HTML view helpers as "Decoy".  So they get invoked like: `Decoy::title()`
+		$this->app->singleton('decoy', function($app) {
+			return new Helpers;
+		});
 		
 		// Register URL Generators as "DecoyURL".
 		$this->app->singleton('decoy.url', function($app) use ($request) {

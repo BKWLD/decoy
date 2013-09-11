@@ -3,6 +3,11 @@
 // Dependencies
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Library;
+use Config;
+use Croppa;
+use Former;
+use Request;
+use View;
 
 /**
  * These function like the Laravel `Html` view helpers.  This class is bound
@@ -26,7 +31,7 @@ class Helpers {
 
 		// Set the title
 		return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
-	});
+	}
 
 	/**
 	 * Add the controller and action as CSS classes on the body tag
@@ -39,7 +44,7 @@ class Helpers {
 		$controller = empty($matches[1]) ? 'login' : $matches[1];
 		$action = empty($matches[2]) ? 'index' : $matches[2];
 		return $controller.' '.$action;
-	});
+	}
 
 	/**
 	 * Formats the data in the standard list shared partial.
@@ -84,7 +89,7 @@ class Helpers {
 			return $column;
 		}
 		
-	});
+	}
 
 	/**
 	 * Make an image upload field.  That is to say, one that displays a sample if an
@@ -187,7 +192,7 @@ class Helpers {
 		$file = (string) $file;
 		return '<div class="image-upload" data-js-view="image-fullscreen">'.$hidden.$file.$crop_field.'</div>';
 		
-	});
+	}
 
 	/**
 	 * Make a file upload field.  It shows a download link for already uploaded files
@@ -244,7 +249,7 @@ class Helpers {
 		if (!empty($errors)) $file = $file->state('error')->inlineHelp($errors);
 		return '<div class="file-upload">'.$file.$hidden.'</div>';
 		
-	});
+	}
 
 	/**
 	 * Render the UI that the JS expecting to render a datalist style autocomplete menu.
@@ -280,7 +285,7 @@ class Helpers {
 		$data = array_merge($data, $options);
 		return View::make('decoy::shared.form.relationships._belongs_to', $data);
 		
-	});
+	}
 
 	/**
 	 * Make a control group that doesn't show an input.  Like where a field might have been rendered as
@@ -296,7 +301,7 @@ class Helpers {
 		// Render the elemnent
 		return '<div class="control-group inputless '.$key.'"><label for="'.$key.'" class="control-label">'.$label.'</label><div class="controls">'.$value.'</div></div>';
 		
-	}); 
+	}
 
 	/**
 	 * This renders a date selection box
@@ -330,7 +335,7 @@ class Helpers {
 		// format and is updated via JS
 		$value = date(Library\Utils\Constants::MYSQL_DATE, strtotime($value));
 		return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('date')); // id not added by default
-	});
+	}
 
 	/**
 	 * This renders a time selection box
@@ -365,7 +370,7 @@ class Helpers {
 		// format and is updated via JS
 		$value = date(Library\Utils\Constants::MYSQL_TIME, strtotime($value));
 		return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('time')); // id not added by default
-	});
+	}
 
 	/**
 	 * This renders a date time component.  This works by creating a date AND time one
@@ -386,10 +391,10 @@ class Helpers {
 		
 		// Add UI elements plus the hidden field that will contain the mysql formatted value
 		return '<div class="datetime">'
-			.HTML::date($id, $label)
-			.HTML::time($id, $label)
+			.$this->date($id, $label)
+			.$this->time($id, $label)
 			.(Former::hidden($id)->id($id)->forceValue($value)->class('datetime'))
 			.'</div>';
-	});
+	}
 	
 }

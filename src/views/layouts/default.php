@@ -6,14 +6,14 @@
 	<head>
 		<meta charset="utf-8"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-		<?= HTML::title() ?>
+		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
 		<?= View::make('decoy_published::layout.buk_builder._header') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
-	<body class="<?=HTML::bodyClass()?>">
+	<body class="<?=Decoy::bodyClass()?>">
 		
 		<?// Nav ?>
 		<?= View::make('decoy::layouts._nav') ?>

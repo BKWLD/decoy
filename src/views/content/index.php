@@ -23,10 +23,10 @@
 					echo Former::textarea($pair->slug, $pair->label)->class('span9 wysiwyg')->value($pair->value);
 					break;
 				case 'image':
-					echo HTML::imageUpload($pair->slug, $pair->label.'<br /><h6>'.basename($pair->value).'</h6>');
+					echo Decoy::imageUpload($pair->slug, $pair->label.'<br /><h6>'.basename($pair->value).'</h6>');
 					break;
 				case 'file':
-					echo HTML::fileUpload($pair->slug, $pair->label.'<br /><h6>'.basename($pair->value).'</h6>');
+					echo Decoy::fileUpload($pair->slug, $pair->label.'<br /><h6>'.basename($pair->value).'</h6>');
 					break;
 			}
 		}

@@ -91,7 +91,7 @@ if ($listing->count()) {
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
-						<?=HTML::renderListColumn($item, $column, $convert_dates)?>	
+						<?=Decoy::renderListColumn($item, $column, $convert_dates)?>	
 						
 						<?// End the automatic first link?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>
