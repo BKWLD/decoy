@@ -17,7 +17,7 @@
 		"illuminate/support": "4.0.*",
 		"anahkiasen/former": "dev-master",
 		"cartalyst/sentry": "2.0.*",
-		"bkwld/croppa": "~2.0",
+		"bkwld/croppa": "~3.0",
 		"bkwld/library": "~2.0"
 	},
 	"require-dev": {
