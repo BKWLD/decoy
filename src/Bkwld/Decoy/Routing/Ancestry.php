@@ -20,14 +20,17 @@ class Ancestry {
 	 * @param Bkwld\Decoy\Controllers\Base $controller
 	 * @param Bkwld\Decoy\Routing\Wildcard $wildcard
 	 * @param Symfony\Component\HttpFoundation\Request $input
+	 * @param Bkwld\Decoy\Routing\UrlGenerator $url_generator
 	 */
 	private $controller;
 	private $router;
 	private $wildcard;
-	public function __construct(Base $controller, Wildcard $wildcard, Request $input) {
+	private $url_generator;
+	public function __construct(Base $controller, Wildcard $wildcard, Request $input, UrlGenerator $url_generator) {
 		$this->controller = $controller;
 		$this->wildcard = $wildcard;
 		$this->input = $input;
+		$this->url_generator = $url_generator;
 	}
 	
 	/**
@@ -79,8 +82,7 @@ class Ancestry {
 		// controllers get instantiated not on their route but aren't the children of the current route.
 		// So I convert the controller to it's URL representation and then make sure it is not present
 		// in the current URL.
-		$generator = new UrlGenerator($this->input->path());
-		$test = $generator->controller($this->controller->controller()); // ex: /admin/articles
+		$test = $this->url_generator->action($this->controller->controller()); // ex: /admin/articles
 		if (strpos('/'.$this->input->path(), $test) !== false) return false;
 		
 		// Check that we're on an edit page

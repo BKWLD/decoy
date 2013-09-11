@@ -23,7 +23,7 @@ It expects:
 		</div>
 		
 		<? if (!empty($item)): ?>
-			<a class="btn btn-danger delete" href="<?=HTML::relative('destroy', $item->id)?>">
+			<a class="btn btn-danger delete" href="<?=DecoyURL::relative('destroy', $item->id)?>">
 				<i class="icon-trash icon-white"></i> Delete
 			</a>
 		<? endif ?>

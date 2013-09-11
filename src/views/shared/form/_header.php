@@ -25,7 +25,7 @@ It expects:
 	<? if(!empty($item)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
-				<a href="<?=URL::to(HTML::relative('create'))?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
 			</div>
 		</div>
 	<? endif ?>

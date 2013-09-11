@@ -87,7 +87,7 @@ class Filters {
 		
 		// Go to new form by stripping the last segment from the URL
 		if (Input::get('_save') == 'new') {
-			Session::flash('save_redirect', HTML::relative('create'));
+			Session::flash('save_redirect', DecoyURL::relative('create'));
 		}
 	}
 	

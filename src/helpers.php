@@ -390,4 +390,4 @@ HTML::macro('datetime', function($id, $label = null) {
  */
 $url_generator = new Bkwld\Decoy\Routing\UrlGenerator(Request::path());
 HTML::macro('relative', array($url_generator, 'relative'));
-HTML::macro('controller', array($url_generator, 'controller'));
+HTML::macro('controller', array($url_generator, 'action'));

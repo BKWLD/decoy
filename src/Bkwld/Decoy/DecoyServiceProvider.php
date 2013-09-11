@@ -36,9 +36,16 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../helpers.php');
 		
 		// Register the routes
-		$router = new Routing\Router(Config::get('decoy::dir'), App::make('request'));
+		$request = $this->app->make('request');
+		$router = new Routing\Router(Config::get('decoy::dir'), $request);
 		$router->registerAll();
-		App::instance('decoy_router', $router);
+		$this->app->instance('decoy.router', $router);
+		
+		
+		// Register URL Generators as "DecoyURL".
+		$this->app->singleton('decoy.url', function($app) use ($request) {
+			return new Routing\UrlGenerator($request->path());
+		});
 		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
@@ -82,6 +89,15 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Sentry
 		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
+	}
+	
+	/**
+	 * Get the services provided by the provider.
+	 *
+	 * @return array
+	 */
+	public function provides() {
+		return array('decoy', 'decoy.url', 'decoy.router');
 	}
 
 }

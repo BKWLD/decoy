@@ -2,7 +2,7 @@
 
 <div class="standard-list" 
 	data-js-view="standard-list" 
-	data-controller-route="<?=URL::to(HTML::controller($controller))?>" 
+	data-controller-route="<?=URL::to(DecoyURL::action($controller))?>" 
 	<? if ($parent_controller):?> data-parent-controller="<?=$parent_controller?><?endif?>"
 	>
 	

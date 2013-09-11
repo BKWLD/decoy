@@ -76,7 +76,7 @@ class Admin extends Base {
 		
 		// If row is disabled
 		if ($this->disabled()) {
-			$html .= '<a href="'.URL::to(HTML::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
+			$html .= '<a href="'.URL::to(DecoyURL::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
 		}
 		
 		return $html;

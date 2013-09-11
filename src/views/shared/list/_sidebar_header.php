@@ -1,6 +1,6 @@
 <?// The header above a list that is rendered into a sidebar ?>
 
-<legend class="sidebar-header"><a href="<?=HTML::relative('index', $parent_id, $controller)?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
+<legend class="sidebar-header"><a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>"><?=$title?></a> <span class="badge badge-inverse"><?=$count?></span> 
 	
 	<div class="btn-toolbar pull-right">
 	
@@ -11,7 +11,7 @@
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? else: ?>
 		<div class="btn-group">
-			<a href="<?=URL::to(HTML::relative('create', null, $controller))?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
+			<a href="<?=URL::to(DecoyURL::relative('create', null, $controller))?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
 		</div>
 	<? endif ?>
 	

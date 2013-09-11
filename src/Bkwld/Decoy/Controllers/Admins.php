@@ -56,7 +56,7 @@ class Admins extends Base {
 		$id = Model::create(Input::get());
 		
 		// Redirect to edit view
-		return Redirect::to(HTML::relative('edit', $id));
+		return Redirect::to(DecoyURL::relative('edit', $id));
 	}
 
 	/**

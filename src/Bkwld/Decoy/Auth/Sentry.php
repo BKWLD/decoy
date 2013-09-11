@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Auth;
 
 // Dependencies
+use DecoyURL;
 use Html;
 
 /**
@@ -89,7 +90,7 @@ class Sentry implements AuthInterface {
 	
 	// Get the URL to their profile
 	static public function userUrl() {
-		return HTML::controller('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
+		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
 	}
 	
 	// Get their id

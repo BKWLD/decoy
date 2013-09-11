@@ -5,7 +5,6 @@ use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Routing\Ancestry;
-use Bkwld\Decoy\Routing\UrlGenerator;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
@@ -103,14 +102,14 @@ class Base extends Controller {
 		// Set dependencies automatically
 		if (class_exists('App')) {
 			$this->config = App::make('config');
+			$this->url = App::make('decoy.url');
 			$request = App::make('request');
 			$this->ancestry = new Ancestry($this, new Wildcard(
 					Config::get('decoy::dir'),
 					$request->getMethod(), 
 					$request->path()
-				), $request);
+				), $request, $this->url);
 			$this->route = App::make('router');
-			$this->url = new UrlGenerator($request->path());
 			return true;
 		}
 		

@@ -62,13 +62,13 @@ class TestRoutingUrlGenerator extends PHPUnit_Framework_TestCase {
 	
 	public function testController() {
 		$generator = $this->path('admin/admins');
-	$this->assertEquals('/admin/admins', $generator->controller('Bkwld\Decoy\Controllers\Admins'));
-	$this->assertEquals('/admin/admins', $generator->controller('Bkwld\Decoy\Controllers\Admins@index'));
-	$this->assertEquals('/admin/admins/create', $generator->controller('Bkwld\Decoy\Controllers\Admins@create'));
-	$this->assertEquals('/admin/admins/2/edit', $generator->controller('Bkwld\Decoy\Controllers\Admins@edit', 2));
-	$this->assertEquals('/admin/articles', $generator->controller('Admin\ArticlesController'));
-	$this->assertEquals('/admin/articles/create', $generator->controller('Admin\ArticlesController@create'));
-	$this->assertEquals('/admin/articles-and-more/2/edit', $generator->controller('Admin\ArticlesAndMoreController@edit', 2));
+	$this->assertEquals('/admin/admins', $generator->action('Bkwld\Decoy\Controllers\Admins'));
+	$this->assertEquals('/admin/admins', $generator->action('Bkwld\Decoy\Controllers\Admins@index'));
+	$this->assertEquals('/admin/admins/create', $generator->action('Bkwld\Decoy\Controllers\Admins@create'));
+	$this->assertEquals('/admin/admins/2/edit', $generator->action('Bkwld\Decoy\Controllers\Admins@edit', 2));
+	$this->assertEquals('/admin/articles', $generator->action('Admin\ArticlesController'));
+	$this->assertEquals('/admin/articles/create', $generator->action('Admin\ArticlesController@create'));
+	$this->assertEquals('/admin/articles-and-more/2/edit', $generator->action('Admin\ArticlesAndMoreController@edit', 2));
 	}
 	
 }

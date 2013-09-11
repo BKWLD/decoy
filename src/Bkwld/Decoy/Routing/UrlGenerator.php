@@ -82,8 +82,8 @@ class UrlGenerator {
 	 * @param integer $id
 	 * @return string ex: http://admin/admins/create
 	 */
-	public function controller($controller = null, $id = null) {
-		
+	public function action($controller = null, $id = null) {
+
 		// Assume that the current, first path segment is the directory decoy is
 		// running in
 		preg_match('#[a-z-]+#i', $this->path, $matches);
