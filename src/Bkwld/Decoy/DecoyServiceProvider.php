@@ -32,7 +32,7 @@ class DecoyServiceProvider extends ServiceProvider {
 			if (!is_a(new \DecoyAuth, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
 		}
 		
-		// Load HTML helpers
+		// Load HTML helpers ** Deprecated **
 		require_once(__DIR__.'/../../helpers.php');
 		
 		// Register the routes
@@ -93,6 +93,13 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Sentry
 		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
+		
+		// Croppa
+		AliasLoader::getInstance()->alias('Cropa', 'Bkwld\Croppa\Facade');
+		$this->app->register('Bkwld\Croppa\ServiceProvider');
+		
+		// BKWLD PHP Library
+		$this->app->register('Bkwld\Library\LibraryServiceProvider');
 	}
 	
 	/**
