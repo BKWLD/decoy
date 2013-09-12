@@ -11,6 +11,7 @@ define(function(require) {
 	var config = {
 		customConfig: '', // Don't load external config js file
 		enterMode : CKEDITOR.ENTER_BR,
+		allowedContent: true, // Allow all HTML tags
 		toolbar : [
 			{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
