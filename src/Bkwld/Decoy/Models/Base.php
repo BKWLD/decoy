@@ -36,10 +36,6 @@ abstract class Base extends Eloquent {
 	static public $CROPS = array();
 	
 	public function __construct(array $attributes = array()) {
-		parent::__construct($attributes);
-		
-		// Register Laravel model events
-		static::registerModelEvents();
 		
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
@@ -49,6 +45,12 @@ abstract class Base extends Eloquent {
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
 		));
+		
+		// Continue Laravel construction
+		parent::__construct($attributes);
+		
+		// Register Laravel model events
+		static::registerModelEvents();
 	}
 	
 	//---------------------------------------------------------------------------

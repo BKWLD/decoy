@@ -72,7 +72,7 @@ class Files {
 			
 			// Require there to be an entry in the rules array for all files.  This will matter
 			// when deleting later
-			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to '.$field.' but this was not added in the model $rules array as a file with an "image", "mimes", or "file" rule.  Decoy requires all files to have an entry in the $rules array.');
+			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", or "file" rule.  Decoy requires all files to have an entry in the $rules array.');
 			
 			// Double check there is data and not just a key
 			if (!Input::hasFile($field)) continue; 

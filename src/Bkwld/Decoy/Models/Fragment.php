@@ -3,7 +3,9 @@
 // Dependencies
 use Bkwld\Library;
 use Exception;
+use Input;
 use Lang;
+use Str;
 
 class Fragment extends Base {
 	
@@ -32,7 +34,9 @@ class Fragment extends Base {
 			
 			// Break the keys for all the pairs up by section
 			foreach(Lang::get($title) as $key => $val) {
-				$full_key = $title_key.'.'.$key;
+				
+				// Make the key that will be used as the id and name in the form.  
+				$full_key = self::inputName($title_key.'.'.$key);
 				
 				// Figure out the field type
 				$parts = explode(',', $key);
@@ -73,7 +77,7 @@ class Fragment extends Base {
 				$key = $title.'.'.$key; // Append file name
 				
 				// Call the regular lookup function
-				$output[$key] = self::value($key);
+				$output[self::inputName($key)] = self::value($key);
 					
 			}
 		}
@@ -96,7 +100,7 @@ class Fragment extends Base {
 		}
 		
 		// Check if the key is in the db
-		if (self::$pairs->contains($key)) return self::$pairs->find($key)->pluck('value');
+		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
 		
 		// Else return the value from the config file
 		else if (Lang::has($key)) return Lang::get($key);
@@ -104,6 +108,50 @@ class Fragment extends Base {
 		// Else it's a bad key
 		else throw new Exception('This fragment key has not been added to a language file: '.$key);
 		
+	}
+	
+	/**
+	 * Check if a field in the input is unchanged from what is in the language file
+	 */
+	public static function unchanged($input_name, $val) {
+		if (Input::hasFile($input_name)) return false; // If a file was uploaded, it's new
+		return Lang::get(self::confkey($input_name)) === $val;
+	}
+	
+	/**
+	 * Do CRUD operations on a fragment
+	 */
+	public static function store($input_name, $value) {
+		
+		// Add all image and file fields to the rules array to the Decoy auto
+		// file saving works.  This should only be done once even if store is
+		// called a number of times.
+		if (empty(self::$rules)) {
+			foreach(self::titles() as $title) {
+				foreach(Lang::get($title) as $key => $val) {
+					$key = $title.'.'.$key;
+					if (!Str::endsWith($key, array(',file', ',image'))) continue;
+					self::$rules[self::inputName($key)] = 'file';
+				}
+			}
+		}
+		
+		// Clean input
+		$key = self::confKey($input_name);
+				
+		// See if a row already exists
+		if ($row = self::find($key)) {
+			
+			// Update the row
+			if ($value) return $row->update(array('value' => $value));
+				
+			// Delete the row
+			else return $row->delete();
+		
+		// The row didn't exist, so create it
+		} else if ($value) {
+			return self::create(array('key' => $key, 'value' => $value));
+		}
 	}
 	
 	/**
@@ -117,6 +165,23 @@ class Fragment extends Base {
 			$output[] = $title;
 		}
 		return $output;
+	}
+	
+	/**
+	 * Convert a key to an input friendly name. Periods are converted
+	 * to | because the period isn't allowed in input names in PHP.
+	 * See: http://stackoverflow.com/a/68742/59160
+	 */
+	private static function inputName($key) {
+		return str_replace('.', '|', $key);
+	}
+	
+	/**
+	 * Convert an input name back into a dot delimited format used by
+	 * the language files
+	 */
+	private static function confKey($input_name) {
+		return str_replace('|', '.', trim($input_name));
 	}
 	
 }

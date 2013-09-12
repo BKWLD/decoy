@@ -7,6 +7,7 @@ use Config;
 use Croppa;
 use Former;
 use Request;
+use Str;
 use View;
 
 /**
@@ -118,10 +119,16 @@ class Helpers {
 		$img_class = 'img-polaroid';
 		if (!$help) $img_class .= ' no-help'; // This style adjusts margins
 		
+		// Check if the image is in the uploads directory.  If it isn't, you shouldn't use Croppa.  The
+		// use case for this arose with the Fragments system where the default images would usually be
+		// in the img directory
+		$upload_dir = Library\Utils\File::publicPath(Config::get('decoy::upload_dir'));
+		$is_uploaded = Str::is($upload_dir.'*', $image);
+		
 		// For each crop, make add a new image instance so we have a unique cropper instance.  Note: 
 		// all of the markup is spans because I'm rendering this all inside the .help-block, which is
 		// a p tag
-		if (!empty($crops)) {
+		if (!empty($crops) && $is_uploaded) {
 			$block_help .= '<span class="crops">';
 			
 			// Add the tabs
@@ -157,7 +164,13 @@ class Helpers {
 			$block_help .= '</span></span>';
 		
 		// There were no crops defined, so add a single image
-		} else $block_help .= '<a href="'.$image.'"><img src="'.Croppa::url($image, 570).'" class="'.$img_class.' fullscreen-toggle"></a>';
+		} else if ($is_uploaded) {
+			$block_help .= '<a href="'.$image.'"><img src="'.Croppa::url($image, 570).'" class="'.$img_class.' fullscreen-toggle"></a>';
+		
+		// Else the image file is NOT in the uploaded directory so don't crop it
+		} else {
+			$block_help .= '<a href="'.$image.'"><img src="'.$image.'" class="'.$img_class.' fullscreen-toggle"></a>';
+		}
 		
 		// Create a hidden field for the crops if they were defined.  Former requires this happens
 		// before the file element is created
