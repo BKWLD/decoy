@@ -98,6 +98,10 @@ define(function (require) {
 		// Turn WYSIWYGs on.
 		wysiwyg.replace('textarea.wysiwyg');
 		
+		// Apply Masonry where classed as such
+		$('.masonry').each(function() { new window.Masonry(this); });
+		
+		
 	});
 	
 	// Return public module
