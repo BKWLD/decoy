@@ -129,16 +129,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	 */
 	public static function unchanged($input_name, $val) {
 		if (Input::hasFile($input_name)) return false; // If a file was uploaded, it's new
-		
-		// CKeditor will strip tabs, insert extra line breaks, removes double spaces.  So compare 
-		// without that stuff.
-		$lang_val = Lang::get(self::confkey($input_name));
-		if (Str::endsWith($input_name, ',wysiwyg')) {
-			return self::clean($lang_val) === self::clean($val);
-		}
-		
-		// Check other strings
-		return $lang_val === $val;
+		return self::clean(Lang::get(self::confkey($input_name))) === self::clean($val);
 	}
 	
 	/**
@@ -208,7 +199,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		$string = trim($string);
 		$string = preg_replace('~>\s+<~', '><', $string); // http://stackoverflow.com/a/5362207/59160
 		$string = preg_replace('#  #', ' ', $string);
-		\Log::info($string);
+		$string = html_entity_decode($string); // Former will decode entities before output forms
 		return $string;
 	}
 	
