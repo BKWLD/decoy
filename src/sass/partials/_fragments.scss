@@ -1,0 +1,25 @@
+body.fragments {
+	
+	// This was creating scrollbars
+	.tab-content {
+		overflow: visible;
+	}
+	
+	// Make it flush
+	.tab-pane {
+		@include flush-child-spans;
+	}
+	
+	// Make the pills grey scale
+	.nav-pills a {
+		color: #333;
+		&:hover {
+			color: #000;
+		}
+	}
+	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+		color: white;
+		background: #333;
+	}
+	
+}

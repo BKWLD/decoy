@@ -108,3 +108,26 @@ By default, CKFinder is turned off because a new license must be purchased for e
 		define('main', function (require) {
 			require('decoy/modules/wysiwyg').config.allowUploads();
 		});
+		
+### Fragments
+
+One off strings, images, and files can be managed in Decoy through the Fragments feature.  Fragments work by reading language files and producing a tabbed form from their key value pairs.  The values from the language file are treated as the default for the key; admins can override that default with Decoy.  The frontend developer pulls the fragment value through the `Decoy::frag($key)` helper.
+
+Start by creating new language files in /app/lang/en.  There are some conventions to follow; an example should be suffient to explain:
+
+*/app/lang/en/home.php*
+	
+	<?php return array(
+		'marquee_title' => 'Welcome to the site',
+		'intro.title' => 'This is some great stuff',
+		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
+		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
+		'deep_dive.headshot,image' => '/path/to/heashot',
+		'deep_dive.pdf,file' => '/path/to/file',
+	);
+	
+Thus:
+
+- Different translation files are treated as virtual pages in the admin.
+- Keys can have a bullet that delimits sections and will be used to break up the page into sections in the admin.  This is optional.
+- The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
