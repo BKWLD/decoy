@@ -8,6 +8,18 @@ body.fragments {
 	// Make it flush
 	.tab-pane {
 		@include flush-child-spans;
+		
+		> div {
+			margin-bottom: 20px;
+		}
+	}
+	
+	// Surround the titles with a well
+	.well {
+		margin-bottom: 25px;
+		.nav {
+			margin: 0;
+		}
 	}
 	
 	// Make the pills grey scale

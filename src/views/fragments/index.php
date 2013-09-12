@@ -11,13 +11,15 @@
 	<?= Form::token() ?>
 
 	<?// Create navigation ?>
-	<ul class="nav nav-pills">
-		<? foreach(array_keys($fragments) as $i => $title): ?>
-			<li class="<?=$i===0?'active':null?>"><a href="#<?=Str::slug($title)?>" data-toggle="tab">
-				<?=$title?></a>
-			</li>
-		<? endforeach ?>
-	</ul>
+	<div class="well">
+		<ul class="nav nav-pills">
+			<? foreach(array_keys($fragments) as $i => $title): ?>
+				<li class="<?=$i===0?'active':null?>"><a href="#<?=Str::slug($title)?>" data-toggle="tab">
+					<?=$title?></a>
+				</li>
+			<? endforeach ?>
+		</ul>
+	</div>
 	
 	<?// Create pages ?>
 	<div class="tab-content">
