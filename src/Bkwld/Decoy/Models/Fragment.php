@@ -129,7 +129,16 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	 */
 	public static function unchanged($input_name, $val) {
 		if (Input::hasFile($input_name)) return false; // If a file was uploaded, it's new
-		return Lang::get(self::confkey($input_name)) === $val;
+		
+		// CKeditor will strip tabs, insert extra line breaks, removes double spaces.  So compare 
+		// without that stuff.
+		$lang_val = Lang::get(self::confkey($input_name));
+		if (Str::endsWith($input_name, ',wysiwyg')) {
+			return self::clean($lang_val) === self::clean($val);
+		}
+		
+		// Check other strings
+		return $lang_val === $val;
 	}
 	
 	/**
@@ -189,6 +198,18 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	 */
 	private static function confKey($input_name) {
 		return str_replace('|', '.', trim($input_name));
+	}
+	
+	/**
+	 * Remove unnecessary whitespace for comparing CKeditor formatted stuff to what
+	 * may be in language files
+	 */
+	private static function clean($string) {
+		$string = trim($string);
+		$string = preg_replace('~>\s+<~', '><', $string); // http://stackoverflow.com/a/5362207/59160
+		$string = preg_replace('#  #', ' ', $string);
+		\Log::info($string);
+		return $string;
 	}
 	
 }
