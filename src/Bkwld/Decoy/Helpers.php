@@ -415,4 +415,13 @@ class Helpers {
 			.'</div>';
 	}
 	
+	/**
+	 * Get the value of a Fragment given it's key
+	 * @param string $key 
+	 * @return string The value
+	 */
+	public function frag($key) {
+		return \Bkwld\Decoy\Models\Fragment::value($key);
+	}
+	
 }
