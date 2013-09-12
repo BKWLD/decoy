@@ -12,6 +12,13 @@ define(function(require) {
 		customConfig: '', // Don't load external config js file
 		enterMode : CKEDITOR.ENTER_BR,
 		allowedContent: true, // Allow all HTML tags
+		
+		// Don't add entities, trust the input.  This was added so that entities in the
+		// language conf file for fragments doesn't return `changed()` because CKEditor
+		// modified it.
+		entities: false, 
+		htmlEncodeOutput: false,
+		
 		toolbar : [
 			{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
