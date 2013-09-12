@@ -64,7 +64,7 @@ class Files {
 	}
 	
 	/**
-	 * Loop through all the files in the input and save out the files
+	 * Loop through all the files in the input and save out the files.
 	 */
 	public function save($item) {
 		$fields = $this->fields($item);

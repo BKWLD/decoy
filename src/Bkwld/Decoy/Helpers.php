@@ -181,7 +181,7 @@ class Helpers {
 		$is_required = !empty($rules) && array_key_exists('required', $rules);
 		
 		// Add delete checkbox
-		if (!$is_required) {
+		if (!$is_required && $is_uploaded) {
 			$block_help .= '<label for="'.$id.'-delete" class="checkbox image-delete">
 				<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 				<a href="'.$image.'"><code><i class="icon-file"></i>'.basename($image).'</code></a></label>';
@@ -229,12 +229,17 @@ class Helpers {
 		// If on an edit view, show the old image and a delete button.  Also, store the old filename
 		// in a hidden field with the passed $id
 		
+		// Check if the file is in the uploads directory. The use case for this arose with the Fragments 
+		// system where the default images would usually be in the img directory
+		$upload_dir = Library\Utils\File::publicPath(Config::get('decoy::upload_dir'));
+		$is_uploaded = Str::is($upload_dir.'*', $file);
+		
 		// Figure out if the field should be required
 		$rules = Former::getRules($id);
 		$is_required = !empty($rules) && array_key_exists('required', $rules);
 		
 		// Add delete checkbox
-		if (!$is_required) {
+		if (!$is_required && $is_uploaded) {
 			$block_help .= '<label for="'.$id.'-delete" class="checkbox file-delete">
 				<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 				<a href="'.$file.'"><code><i class="icon-file"></i>'.basename($file).'</code></a></label>';
@@ -260,7 +265,7 @@ class Helpers {
 		$file = Former::file($id, $label)->blockHelp($block_help);
 		if ($is_required) $file = $file->class('required')->setAttribute('required', null);
 		if (!empty($errors)) $file = $file->state('error')->inlineHelp($errors);
-		return '<div class="file-upload">'.$file.$hidden.'</div>';
+		return '<div class="file-upload">'.$hidden.$file.'</div>';
 		
 	}
 

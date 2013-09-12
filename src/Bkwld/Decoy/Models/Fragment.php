@@ -2,12 +2,14 @@
 
 // Dependencies
 use Bkwld\Library;
+use Bkwld\Library\Utils\File;
+use Config;
 use Exception;
 use Input;
 use Lang;
 use Str;
 
-class Fragment extends Base {
+class Fragment extends \Illuminate\Database\Eloquent\Model {
 	
 	// Fragments don't need timestamps
 	public $timestamps = false;
@@ -17,6 +19,9 @@ class Fragment extends Base {
 	
 	// Use the key as the primary key
 	public $primaryKey = 'key';
+	
+	// Allow mass assignment
+	protected $fillable = array('key', 'value');
 	
 	/**
 	 * Organize all the key value pairs from all language files
@@ -123,21 +128,13 @@ class Fragment extends Base {
 	 */
 	public static function store($input_name, $value) {
 		
-		// Add all image and file fields to the rules array to the Decoy auto
-		// file saving works.  This should only be done once even if store is
-		// called a number of times.
-		if (empty(self::$rules)) {
-			foreach(self::titles() as $title) {
-				foreach(Lang::get($title) as $key => $val) {
-					$key = $title.'.'.$key;
-					if (!Str::endsWith($key, array(',file', ',image'))) continue;
-					self::$rules[self::inputName($key)] = 'file';
-				}
-			}
-		}
-		
 		// Clean input
 		$key = self::confKey($input_name);
+		
+		// Save out a file if there was one
+		if (Input::hasFile($input_name)) {
+			$value = File::publicPath(File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir')));
+		}
 				
 		// See if a row already exists
 		if ($row = self::find($key)) {
