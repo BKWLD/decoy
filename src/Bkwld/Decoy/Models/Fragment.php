@@ -38,7 +38,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			$output[$title] = array();
 			
 			// Break the keys for all the pairs up by section
-			foreach(Lang::get($title) as $key => $val) {
+			foreach(Lang::get($title_key) as $key => $val) {
 				
 				// Make the key that will be used as the id and name in the form.  
 				$full_key = self::inputName($title_key.'.'.$key);
@@ -105,13 +105,22 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		}
 		
 		// Check if the key is in the db
+		$key_without_type = preg_replace('#,.*$#', '', $key);
 		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
 		
 		// Else return the value from the config file
 		else if (Lang::has($key)) return Lang::get($key);
 		
-		// Else it's a bad key
-		else throw new Exception('This fragment key has not been added to a language file: '.$key);
+		// Check for types.  This just exists to make the Decoy::frag() helper
+		// easier to use.  It does have a performance impact, though.
+		else {
+			foreach(array('texarea', 'wysiwyg', 'image', 'file') as $type) {
+				if (Lang::has($key.','.$type)) return Lang::get($key.','.$type);
+			}
+			
+			// It couldn't be found
+			throw new Exception('This fragment key has not been added to a language file: '.$key);
+		}
 		
 	}
 	
@@ -159,6 +168,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		foreach(glob(app_path().'/lang/en/*.php') as $file) {
 			$title = basename($file, '.php');
 			if (in_array($title, self::$ignore)) continue;
+			if (!Lang::has($title)) continue;
 			$output[] = $title;
 		}
 		return $output;
