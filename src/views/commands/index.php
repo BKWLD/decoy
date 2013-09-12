@@ -2,7 +2,7 @@
 	<small>Trigger any command for this site.  Note: these may take awhile to execute.</small>
 </h1>
 
-<div id="commands">
+<div id="commands" js-view="mason">
 	<? foreach($commands as $namespace => $subcommands): ?>
 		<div class='span6'>
 			<legend><?=$namespace?></legend>

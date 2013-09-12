@@ -18,6 +18,7 @@ define(function (require) {
 		'crop': require('decoy/views/image_upload/crop'),
 		'crop-styles': require('decoy/views/image_upload/crop-styles'),
 		'image-fullscreen': require('decoy/views/image_upload/image-fullscreen'),
-		'worker': require('decoy/views/worker')
+		'worker': require('decoy/views/worker'),
+		'mason': require('decoy/views/mason'),
 	};
 });

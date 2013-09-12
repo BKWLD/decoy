@@ -96,11 +96,7 @@ define(function (require) {
 		$body.find('.js-tooltip').tooltip({ animation: false });
 		
 		// Turn WYSIWYGs on.
-		wysiwyg.replace('textarea.wysiwyg');
-		
-		// Apply Masonry where classed as such
-		$('.masonry').each(function() { new window.Masonry(this); });
-		
+		wysiwyg.replace('textarea.wysiwyg');	
 		
 	});
 	

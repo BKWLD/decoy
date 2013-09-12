@@ -12,7 +12,6 @@
 		<?= View::make('decoy_published::layout.buk_builder._header') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
-		<script src="/packages/bkwld/decoy/js/plugins/masonry.min.js"></script>
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		

@@ -22,7 +22,7 @@
 	<?// Create pages ?>
 	<div class="tab-content">
 		<? foreach($fragments as $title => $sections): ?>
-			<div class="tab-pane masonry <?=$title==current(array_keys($fragments))?'active':null?>" id="<?=Str::slug($title)?>">
+			<div class="tab-pane <?=$title==current(array_keys($fragments))?'active':null?>" id="<?=Str::slug($title)?>">
 				
 				<?// Create sections ?>
 				<? foreach($sections as $title => $pairs): ?>
