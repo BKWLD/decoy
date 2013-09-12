@@ -24,14 +24,16 @@ body.fragments {
 	
 	// Make the pills grey scale
 	.nav-pills a {
-		color: #333;
+		color: $near-black;
+		background: $light-grey;
 		&:hover {
-			color: #000;
+			color: black;
+			background: #eee;
 		}
 	}
 	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
 		color: white;
-		background: #333;
+		background: $near-black;
 	}
 	
 }
