@@ -1,6 +1,6 @@
 <?// Page title ?>
 <h1 class="form-header">Fragments
-	<small>Text, images, and files that don't make sense in a standard content managed list.</small>
+	<small>Special case text, images, and files.</small>
 </h1>
 
 <?// Show validation errors?>
