@@ -98,6 +98,12 @@ define(function (require) {
 		// Turn WYSIWYGs on.
 		wysiwyg.replace('textarea.wysiwyg');	
 		
+		// Enable affix globally
+		$('.affixable').each(function() {
+			var $el = $(this);
+			$el.affix({ offset: $el.offset().top - 65 }); // 65 is the top value in general.scss
+		});
+		
 	});
 	
 	// Return public module

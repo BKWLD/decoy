@@ -9,16 +9,9 @@ body.fragments {
 	.tab-pane {
 		@include flush-child-spans;
 		
+		// Space sections
 		> div {
 			margin-bottom: 20px;
-		}
-	}
-	
-	// Surround the titles with a well
-	.well {
-		margin-bottom: 25px;
-		.nav {
-			margin: 0;
 		}
 	}
 	
