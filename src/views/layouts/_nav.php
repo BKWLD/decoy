@@ -57,6 +57,7 @@
 								
 								<? if (is_a(new DecoyAuth, 'Bkwld\Decoy\Auth\Sentry')): ?>
 									<li><a href="<?=DecoyURL::action('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
+									<li><a href="<?=DecoyAuth::userUrl()?>">Your account</a></li>
 									<li class="divider"></li>
 								<? endif ?>
 								
@@ -75,7 +76,7 @@
 									<li class="divider"></li>
 								<? endif ?>
 																
-								<li><a href="<?=DecoyAuth::userUrl()?>">Account</a></li>
+								<li><a href="/">Public site</a></li>
 								<li><a href="<?=DecoyAuth::logoutUrl()?>">Log out</a></li>
 							</ul>
 						</ul>
