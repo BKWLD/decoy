@@ -4,6 +4,7 @@
 use Bkwld\Decoy\Breadcrumbs;
 use Config;
 use DecoyAuth;
+use DecoyURL;
 use HTML;
 use Input;
 use Redirect;
