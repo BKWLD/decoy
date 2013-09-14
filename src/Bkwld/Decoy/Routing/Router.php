@@ -38,6 +38,7 @@ class Router {
 		$this->registerCommands();
 		$this->registerFragments();
 		$this->registerWildcard();
+		$this->registerWorkers();
 		
 		// Setup filters
 		$filters = new Filters($this->dir);
@@ -108,6 +109,14 @@ class Router {
 	public function registerFragments() {
 		Route::get($this->dir.'/fragments', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@index', 'as' => 'decoy\fragments'));
 		Route::post($this->dir.'/fragments', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@store', 'as' => 'decoy\fragments@store'));
+	}
+	
+	/**
+	 * Workers
+	 */
+	public function registerWorkers() {
+		Route::get($this->dir.'/workers', array('uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy\workers'));
+		Route::get($this->dir.'/workers/tail/{worker}', array('uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy\workers@tail'));
 	}
 	
 	/**

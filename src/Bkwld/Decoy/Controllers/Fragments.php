@@ -8,6 +8,9 @@ use Redirect;
 use Str;
 use URL;
 
+/**
+ * Render a form that allows admins to override language files
+ */
 class Fragments extends Base {
 	
 	/**

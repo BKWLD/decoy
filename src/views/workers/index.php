@@ -4,6 +4,7 @@
 
 <ul id="workers" class="unstyled">
 	
+	<?/*
 	<? foreach($workers as $worker): ?>
 		<li data-js-view="worker" data-log-url=<?=route('decoy::workers@tail', strtolower($worker->name()))?> data-interval="<?=$worker->current_interval('raw')?>">
 			
@@ -26,5 +27,6 @@
 			<div class="log hide">Loading...</div>
 		</li>
 	<? endforeach ?>
+	*/?>
 	
 </ul>
