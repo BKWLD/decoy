@@ -131,3 +131,26 @@ Thus:
 - Different translation files are treated as virtual pages in the admin.
 - Keys can have a bullet that delimits sections and will be used to break up the page into sections in the admin.  This is optional.
 - The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
+
+### Workers
+
+If you make a Laravel command extend from `Bkwld\Decoy\Models\Worker`, the command is embued with some extra functionality.  The following options get added:
+
+- `--worker` - Run command as a worker.  As in not letting the process die.
+- `--cron` - Run command as cron.  As in only a single fire per execution.
+- `--heartbeat` - Check that the worker is running.  This is designed to be run from cron.
+
+In a standard PagodaBox config, you would put these in your Boxile:
+
+	web1:
+		name: app
+		cron:
+			- "* * * * *": "php artisan COMMAND --heartbeat --env=$LARAVEL_ENV"
+	
+	worker1:
+		name: worker
+		exec: "php artisan COMMAND --worker --env=$LARAVEL_ENV"
+
+In this example, COMMAND is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will be run every minute.
+
+In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.
