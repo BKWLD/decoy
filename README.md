@@ -145,12 +145,12 @@ In a standard PagodaBox config, you would put these in your Boxile:
 	web1:
 		name: app
 		cron:
-			- "* * * * *": "php artisan COMMAND --heartbeat --env=$LARAVEL_ENV"
+			- "* * * * *": "php artisan <COMMAND> --heartbeat --env=$LARAVEL_ENV"
 	
 	worker1:
 		name: worker
-		exec: "php artisan COMMAND --worker --env=$LARAVEL_ENV"
+		exec: "php artisan <COMMAND> --worker --env=$LARAVEL_ENV"
 
-In this example, COMMAND is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will be run every minute.
+In this example, "<COMMAND>" is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will run every minute on PB.  And if the worker fails, the heartbeat will continue running it, at a rate of every 15 min (because of PB rate limiting).
 
 In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.

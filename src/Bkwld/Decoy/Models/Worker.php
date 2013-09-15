@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Console\Command;
 use Log;
 use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
 use Monolog\Handler\StreamHandler;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
@@ -118,13 +119,9 @@ class Worker extends Command {
 		// The worker has died
 		if (!$this->isRunning()) {
 			
-			// Log an exception.  Using an exception instead of a log so the laravel-plus-codebase
-			// bundle can forward the error to exception.
+			// Log an error that the worker stopped
 			$this->addLogging();
 			$this->error('The '.$this->name.' worker has stopped');
-			
-			// if (Bundle::exists('laravel-plus-codebase')) Bundle::start('laravel-plus-codebase');
-			// Error::log(new Exception('The '.$this->TITLE.' worker has died'));
 			
 			// Do work (since the worker has stopped)
 			$this->fire();
@@ -135,30 +132,59 @@ class Worker extends Command {
 		}
 	}
 	
+	//---------------------------------------------------------------------------
+	// Logging
+	//---------------------------------------------------------------------------
+	
 	/**
 	 * Log messages to special worker log file
 	 */
+	private $logger;
 	private function addLogging() {
 		
+		// Simply the formatting of the log
+		$output = "%datetime% [%level_name%] %message%\n";
+		$formatter = new LineFormatter($output);
+		
 		// Create a new log file for this command
-		$logger = new Logger($this->name);
+		$this->logger = new Logger($this->name);
 		$stream = new StreamHandler(self::logPath($this->name), Logger::DEBUG);
-		$logger->pushHandler($stream);
+		$stream->setFormatter($formatter);
+		$this->logger->pushHandler($stream);
 		
-		// Listen for log events and write the custom worker log
-		Log::listen(function($level, $message, $context) use ($logger) {
-			$method = 'add'.ucfirst($level);
-			$logger->$method($message, $context);
-		});
+		// Listen for log events and write to custom worker log.  This code
+		// mimics what `Log::listen()` does but allows us to use a callback
+		// rather than a closure.
+		Log::getEventDispatcher()->listen('illuminate.log', array($this, 'log'));
 		
+	}
+	
+	/**
+	 * Write Command input types to the log
+	 */
+	public function log($level, $message, $context = array()) {
+		if (empty($this->logger)) throw new Exception('Worker logger not created');
+		$method = 'add'.ucfirst($level);
+		$this->logger->$method($message, $context);
 	}
 	
 	/**
 	 * Make the path to the log file
 	 */
 	static public function logPath($name) {
-		return storage_path().'logs/'.str_replace(':','-',$name).'.log';
+		return storage_path().'/logs/'.str_replace(':','-',$name).'.log';
 	}
+	
+	/**
+	 * Override the Command output functions so that output also gets put
+	 * in the log file
+	 */
+	public function line($str) {     $this->log('info', $str);   parent::line($str); }
+	public function info($str) {     $this->log('info', $str);   parent::info($str); }
+	public function comment($str) {  $this->log('debug', $str);  parent::comment($str); }
+	public function question($str) { $this->log('notice', $str); parent::question($str); }
+	public function error($str) {    $this->log('error', $str);  parent::error($str); }
+	
 	
 	//---------------------------------------------------------------------------
 	// Queries
