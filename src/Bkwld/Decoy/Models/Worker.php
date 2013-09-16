@@ -160,10 +160,15 @@ class Worker extends \Illuminate\Console\Command {
 	}
 	
 	/**
-	 * Write Command input types to the log
+	 * Write Command output types to the log
 	 */
 	public function log($level, $message, $context = array()) {
-		if (empty($this->logger)) throw new Exception('Worker logger not created');
+		
+		// This will be empty when output messages are triggered by the command
+		// when it's NOT called by a worker option
+		if (empty($this->logger)) return;
+		
+		// Call the logger's level specific methods
 		$method = 'add'.ucfirst($level);
 		$this->logger->$method($message, $context);
 	}
