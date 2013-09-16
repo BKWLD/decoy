@@ -35,7 +35,7 @@ class Command {
 	}
 	
 	// Scan commands directory for custom commands
-	private static function allCustom() {
+	public static function allCustom() {
 		
 		// Response array
 		$commands = array();
@@ -57,7 +57,7 @@ class Command {
 			
 			// Get namespace
 			$name = $command->getName();
-			if (strpos($name, ':')) list($namespace, $name) = explode(':'. $name);
+			if (strpos($name, ':')) list($namespace, $name) = explode(':', $name);
 			else $namespace = 'misc';
 			
 			// Group commands by namespace

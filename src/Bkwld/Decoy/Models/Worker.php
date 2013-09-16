@@ -1,20 +1,24 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Imports
-use \Laravel\Error;
-use \Laravel\Bundle;
-use \Laravel\Cache;
-use \Laravel\Event;
-use \Laravel\File;
-use \Laravel\Str;
-use \Exception;
+use Bkwld\Library;
+use Cache;
+use Exception;
+use Log;
+use Monolog\Logger;
+use Monolog\Formatter\LineFormatter;
+use Monolog\Handler\StreamHandler;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Workers are tasks that define logic designed to be run as a never
- * ending worker routine.  Tasks can and should extend this class.  A task
- * will need to start the decoy bundle first so the autoloader can find this file
+ * ending worker routine.  Commands can and should extend this class.
+ * The command's fire() method will be executed on every tick of the
+ * worker.
  */
-class Worker extends Task {
+class Worker extends \Illuminate\Console\Command {
 	
 	// Worker settings
 	protected $WORKER_SLEEP_SECS = 60;   // How many seconds to wait before each worker exec
@@ -22,67 +26,86 @@ class Worker extends Task {
 	protected $HEARTBEAT_WORKER_KEY;     // The key that the worker heartbeat is stored as
 	protected $HEARTBEAT_CRON_KEY;       // The key that the cron heartbeat is stored as
 	
-	// Constructor susses out default properties
+	/**
+	 * Constructor susses out default properties.  The commands that subclass this would also use the
+	 * constructor to pass dependencies and to do any one time bootstrapping.
+	 */
 	public function __construct() {
 		parent::__construct();
 		
 		// Base the cache keys off the class name
-		if (empty($this->HEARTBEAT_WORKER_KEY)) $this->HEARTBEAT_WORKER_KEY = 'worker-heartbeat-'.$this->name();
-		if (empty($this->HEARTBEAT_CRON_KEY)) $this->HEARTBEAT_CRON_KEY = 'cron-heartbeat-'.$this->name();
+		if (empty($this->HEARTBEAT_WORKER_KEY)) $this->HEARTBEAT_WORKER_KEY = 'worker-heartbeat-'.$this->name;
+		if (empty($this->HEARTBEAT_CRON_KEY)) $this->HEARTBEAT_CRON_KEY = 'cron-heartbeat-'.$this->name;
 		
 	}
 	
+	/**
+	 * Add special worker options
+	 */
+	protected function getOptions() {
+		return array(
+			array('worker', null, InputOption::VALUE_NONE, 'Run command as a worker.'),
+			array('cron', null, InputOption::VALUE_NONE, 'Run command as cron.'),
+			array('heartbeat', null, InputOption::VALUE_NONE, 'Check that the worker is running.'),
+		);
+	}
+	
+	/**
+	 * Tap into the Laravel method that invokes the fire command to check for and
+	 * act on options
+	 */
+	protected function execute(InputInterface $input, OutputInterface $output) {
+		if ($this->option('worker')) return $this->worker();
+		if ($this->option('cron')) return $this->cron();
+		if ($this->option('heartbeat')) return $this->heartbeat();
+		return parent::execute($input, $output);
+	}
+	
+	
 	//---------------------------------------------------------------------------
-	// Methods for tasks
-	// - Child classes must define a work() method and probably a worker_init()
+	// Options for tasks
+	// - Child classes must define a work() method and maybe an init()
 	// - For the worker, on Pagoda, the worker instance would have:
-	//   exec: "php artisan <TASK>:worker --env=$LARAVEL_ENV"
+	//   exec: "php artisan <COMMAND> --worker --env=$LARAVEL_ENV"
 	// - Or, if the host is more traditional, start your work with cron by adding this to
 	//   your crontab:
-	//   * * * * * php artisan <TASK>:cron --env=<LARAVEL_ENV>
+	//   * * * * * php artisan <COMMAND> --cron --env=<LARAVEL_ENV>
 	// - For the heatbeat, on Pagoda, the Boxfile would have for the worker instance:
 	//   cron:
-	//      - "* * * * *": "php artisan <TASK>:heartbeat --env=$LARAVEL_ENV"
+	//      - "* * * * *": "php artisan <COMMAND> --heartbeat --env=$LARAVEL_ENV"
 	//---------------------------------------------------------------------------
 	
-	// The worker loop.  This method never ends.  This is the task method that would be called
-	// to start a worker
-	public function worker() {
+	/**
+	 * The worker loop.  This method never ends.  This is the task method that would be called
+	 * to start a worker when the --worker option is passed
+	 */
+	protected function worker() {
 		
 		// Bootstrap
-		$this->add_worker_logging();
-		$this->worker_init();
+		$this->addLogging();
 		
 		// Run this stuff as long as the worker is running
 		while(true) {
-			$this->work();
+			$this->fire();
 			Cache::forever($this->HEARTBEAT_WORKER_KEY, time());
 			sleep($this->WORKER_SLEEP_SECS);
 		}
 	}
 	
-	// Similar to worker(), this runs the worker logic and updates the heartbeat but is designed
-	// to be invoked by cron.  Thus, it only runs the work once.
-	public function cron() {
-		$this->work_once();
+	/**
+	 * Similar to worker(), this runs the worker logic and updates the heartbeat but is designed
+	 * to be invoked by cron.  Thus, it only runs the work once.
+	 */
+	protected function cron() {
+		$this->addLogging();
+		$this->fire();
 		Cache::forever($this->HEARTBEAT_WORKER_KEY, time());
 	}
 	
-	// A no-op where code that is run pre-worker loop gets executed
-	protected function worker_init() {}
-	
-	// A no-op where the application defines the logic that is run by the worker
-	protected function work() {}
-	
-	// A task that runs the worker once
-	public function work_once() {
-		$this->add_worker_logging();
-		$this->worker_init();
-		$this->work();
-	}
-	
-	// This heartbeat function is called by cron to verify that the worker is still running
-	public function heartbeat() {
+	/**
+	 * This heartbeat function is called by cron to verify that the worker is still running
+	 */
+	protected function heartbeat() {
 		
 		// Update the heartbeat
 		$last = Cache::get($this->HEARTBEAT_CRON_KEY);
@@ -94,71 +117,122 @@ class Worker extends Task {
 		));
 		
 		// The worker has died
-		if (!$this->is_running()) {
+		if (!$this->isRunning()) {
 			
-			// Log an exception.  Using an exception instead of a log so the laravel-plus-codebase
-			// bundle can forward the error to exception.
-			$this->add_worker_logging();
-			if (Bundle::exists('laravel-plus-codebase')) Bundle::start('laravel-plus-codebase');
-			Error::log(new Exception('The '.$this->TITLE.' worker has died'));
+			// Log an error that the worker stopped
+			$this->addLogging();
+			$this->error('The '.$this->name.' worker has stopped');
 			
-			// Do work
-			$this->work_once();
+			// Do work (since the worker has stopped)
+			$this->fire();
+		
+		// The worker appears to be fine
+		} else {
+			$this->info('The '.$this->name.' worker is running');
 		}
 	}
 	
-	// Log messages to special worker log file
-	private function add_worker_logging() {
+	//---------------------------------------------------------------------------
+	// Logging
+	//---------------------------------------------------------------------------
+	
+	/**
+	 * Log messages to special worker log file
+	 */
+	private $logger;
+	private function addLogging() {
 		
-		// Base the log file name after the current class
-		$name = strtolower($this->name());
-		$path = self::log_path($name);
+		// Simply the formatting of the log
+		$output = "%datetime% [%level_name%] %message%\n";
+		$formatter = new LineFormatter($output);
 		
-		// Listen for log events and write the custom worker log
-		Event::listen('laravel.log', function($type, $message) use ($path) {
-	    $message = date('Y-m-d H:i:s').' '.Str::upper($type)." - {$message}".PHP_EOL;
-			File::append($path, $message);
-		});
+		// Create a new log file for this command
+		$this->logger = new Logger($this->name);
+		$stream = new StreamHandler(self::logPath($this->name), Logger::DEBUG);
+		$stream->setFormatter($formatter);
+		$this->logger->pushHandler($stream);
+		
+		// Listen for log events and write to custom worker log.  This code
+		// mimics what `Log::listen()` does but allows us to use a callback
+		// rather than a closure.
+		Log::getEventDispatcher()->listen('illuminate.log', array($this, 'log'));
+		
 	}
 	
-	// Make the path to the log file
-	static public function log_path($worker) {
-		return path('storage').'logs/'.$worker.'_worker.log';
+	/**
+	 * Write Command input types to the log
+	 */
+	public function log($level, $message, $context = array()) {
+		if (empty($this->logger)) throw new Exception('Worker logger not created');
+		$method = 'add'.ucfirst($level);
+		$this->logger->$method($message, $context);
 	}
+	
+	/**
+	 * Make the path to the log file
+	 */
+	static public function logPath($name) {
+		return storage_path().'/logs/'.str_replace(':','-',$name).'.log';
+	}
+	
+	/**
+	 * Override the Command output functions so that output also gets put
+	 * in the log file
+	 */
+	public function line($str) {     $this->log('info', $str);   parent::line($str); }
+	public function info($str) {     $this->log('info', $str);   parent::info($str); }
+	public function comment($str) {  $this->log('debug', $str);  parent::comment($str); }
+	public function question($str) { $this->log('notice', $str); parent::question($str); }
+	public function error($str) {    $this->log('error', $str);  parent::error($str); }
+	
 	
 	//---------------------------------------------------------------------------
 	// Queries
 	//---------------------------------------------------------------------------
 	
-	// Get all the tasks that have workers
+	/**
+	 * Get all the tasks that have workers
+	 */
 	public static function all() {
-		return array_filter(parent::all(), function($task) {
-			return is_a($task, 'Bkwld\Decoy\Models\Worker');
-		});
-		
+		$output = array();
+		$namespaced = Command::allCustom();
+		foreach($namespaced as $namespace => $commands) {
+			foreach($commands as $title => $command) {
+				if (is_a($command, 'Bkwld\Decoy\Models\Worker')) $output[] = $command;
+			}
+		}
+		return $output;
 	}
 	
-	// Check if we're currently failing or not
-	public function is_running() {
+	/**
+	 * Check if we're currently failing or not
+	 */
+	public function isRunning() {
 		return time() - Cache::get($this->HEARTBEAT_WORKER_KEY) < $this->HEARTBEAT_FAIL_MINS * 60;
 	}
 	
-	// Last time the heartbeat was checked
-	public function last_heartbeat_check() { 
+	/**
+	 * Last time the heartbeat was checked
+	 */
+	public function lastHeartbeatCheck() { 
 		$check = Cache::get($this->HEARTBEAT_CRON_KEY);
 		if (empty($check)) return 'never';
-		else return date(\BKWLD\Utils\Constants::COMMON_DATETIME.' T', $check->time);
+		else return date(Library\Utils\Constants::COMMON_DATETIME.' T', $check->time);
 	}
 	
-	// The last time the worker ran
-	public function last_heartbeat() {
+	/**
+	 * The last time the worker ran
+	 */
+	public function lastHeartbeat() {
 		$check = Cache::get($this->HEARTBEAT_WORKER_KEY);
 		if (empty($check)) return 'never';
-		else return date(\BKWLD\Utils\Constants::COMMON_DATETIME.' T', $check);
+		else return date(Library\Utils\Constants::COMMON_DATETIME.' T', $check);
 	}
 	
-	// The current interval that heartbeats are running at
-	public function current_interval($format = null) {
+	/**
+	 * The current interval that heartbeats are running at
+	 */
+	public function currentInterval($format = null) {
 		
 		// Relative time formatting
 		$abbreviated = array(
@@ -176,7 +250,7 @@ class Worker extends Task {
 		);
 		
 		// Figure stuff out
-		if ($this->is_running()) $interval = $this->WORKER_SLEEP_SECS;
+		if ($this->isRunning()) $interval = $this->WORKER_SLEEP_SECS;
 		else {
 			$check = Cache::get($this->HEARTBEAT_CRON_KEY);
 			if (empty($check)) $interval = 'uncertain';
@@ -187,10 +261,8 @@ class Worker extends Task {
 		if (!is_numeric($interval)) return $interval;
 		switch($format) {
 			case 'raw': return $interval;
-			case 'abbreviated': return \BKWLD\Utils\String::time_elapsed(time() - $interval, $abbreviated);
-			default: return \BKWLD\Utils\String::time_elapsed(time() - $interval);
+			case 'abbreviated': return Library\Utils\String::timeElapsed(time() - $interval, $abbreviated);
+			default: return Library\Utils\String::timeElapsed(time() - $interval);
 		}
 	}
-	
-	
 }
