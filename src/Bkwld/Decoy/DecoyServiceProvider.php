@@ -32,24 +32,30 @@ class DecoyServiceProvider extends ServiceProvider {
 			if (!is_a(new \DecoyAuth, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
 		}
 		
-		// Load HTML helpers ** Deprecated **
-		require_once(__DIR__.'/../../helpers.php');
-		
 		// Register the routes
+		$dir = Config::get('decoy::dir');
 		$request = $this->app->make('request');
-		$router = new Routing\Router(Config::get('decoy::dir'), $request);
+		$router = new Routing\Router($dir, $request);
 		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
-		
-		// Register HTML view helpers as "Decoy".  So they get invoked like: `Decoy::title()`
-		$this->app->singleton('decoy', function($app) {
-			return new Helpers;
-		});
 		
 		// Register URL Generators as "DecoyURL".
 		$this->app->singleton('decoy.url', function($app) use ($request) {
 			return new Routing\UrlGenerator($request->path());
 		});
+		
+		// Do bootstrapping that only matters if user has requested an admin URL
+		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
+		
+	}
+	
+	/**
+	 * Things that happen only if the request is for the admin
+	 */
+	public function usingAdmin() {
+		
+		// Load HTML helpers ** Deprecated **
+		require_once(__DIR__.'/../../helpers.php');
 		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
@@ -77,6 +83,7 @@ class DecoyServiceProvider extends ServiceProvider {
 				$publisher->publishPackage('bkwld/croppa', $workbench.'/bkwld/decoy/vendor');
 			}
 		}
+		
 	}
 
 	/**
@@ -100,6 +107,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// BKWLD PHP Library
 		$this->app->register('Bkwld\Library\LibraryServiceProvider');
+		
+		// Register HTML view helpers as "Decoy".  So they get invoked like: `Decoy::title()`
+		$this->app->singleton('decoy', function($app) {
+			return new Helpers;
+		});
+
 	}
 	
 	/**
