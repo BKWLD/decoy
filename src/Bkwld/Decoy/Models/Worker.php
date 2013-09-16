@@ -1,9 +1,9 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Imports
+use Bkwld\Library;
 use Cache;
 use Exception;
-use Illuminate\Console\Command;
 use Log;
 use Monolog\Logger;
 use Monolog\Formatter\LineFormatter;
@@ -18,7 +18,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  * The command's fire() method will be executed on every tick of the
  * worker.
  */
-class Worker extends Command {
+class Worker extends \Illuminate\Console\Command {
 	
 	// Worker settings
 	protected $WORKER_SLEEP_SECS = 60;   // How many seconds to wait before each worker exec
@@ -194,10 +194,14 @@ class Worker extends Command {
 	 * Get all the tasks that have workers
 	 */
 	public static function all() {
-		return array_filter(parent::all(), function($task) {
-			return is_a($task, 'Bkwld\Decoy\Models\Worker');
-		});
-		
+		$output = array();
+		$namespaced = Command::allCustom();
+		foreach($namespaced as $namespace => $commands) {
+			foreach($commands as $title => $command) {
+				if (is_a($command, 'Bkwld\Decoy\Models\Worker')) $output[] = $command;
+			}
+		}
+		return $output;
 	}
 	
 	/**
@@ -210,25 +214,25 @@ class Worker extends Command {
 	/**
 	 * Last time the heartbeat was checked
 	 */
-	public function last_heartbeat_check() { 
+	public function lastHeartbeatCheck() { 
 		$check = Cache::get($this->HEARTBEAT_CRON_KEY);
 		if (empty($check)) return 'never';
-		else return date(\BKWLD\Utils\Constants::COMMON_DATETIME.' T', $check->time);
+		else return date(Library\Utils\Constants::COMMON_DATETIME.' T', $check->time);
 	}
 	
 	/**
 	 * The last time the worker ran
 	 */
-	public function last_heartbeat() {
+	public function lastHeartbeat() {
 		$check = Cache::get($this->HEARTBEAT_WORKER_KEY);
 		if (empty($check)) return 'never';
-		else return date(\BKWLD\Utils\Constants::COMMON_DATETIME.' T', $check);
+		else return date(Library\Utils\Constants::COMMON_DATETIME.' T', $check);
 	}
 	
 	/**
 	 * The current interval that heartbeats are running at
 	 */
-	public function current_interval($format = null) {
+	public function currentInterval($format = null) {
 		
 		// Relative time formatting
 		$abbreviated = array(
@@ -246,7 +250,7 @@ class Worker extends Command {
 		);
 		
 		// Figure stuff out
-		if ($this->is_running()) $interval = $this->WORKER_SLEEP_SECS;
+		if ($this->isRunning()) $interval = $this->WORKER_SLEEP_SECS;
 		else {
 			$check = Cache::get($this->HEARTBEAT_CRON_KEY);
 			if (empty($check)) $interval = 'uncertain';
@@ -257,8 +261,8 @@ class Worker extends Command {
 		if (!is_numeric($interval)) return $interval;
 		switch($format) {
 			case 'raw': return $interval;
-			case 'abbreviated': return \BKWLD\Utils\String::time_elapsed(time() - $interval, $abbreviated);
-			default: return \BKWLD\Utils\String::time_elapsed(time() - $interval);
+			case 'abbreviated': return Library\Utils\String::timeElapsed(time() - $interval, $abbreviated);
+			default: return Library\Utils\String::timeElapsed(time() - $interval);
 		}
 	}
 }

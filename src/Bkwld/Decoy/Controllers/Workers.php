@@ -8,7 +8,7 @@ class Workers extends Base {
 	// Display all the workers
 	public function index() {
 		$this->layout->nest('content', 'decoy::workers.index', array(
-			// 'workers' => \Decoy\Worker::all(),
+			'workers' => Model::all(),
 		));
 	}
 	

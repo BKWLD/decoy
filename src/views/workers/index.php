@@ -4,29 +4,25 @@
 
 <ul id="workers" class="unstyled">
 	
-	<?/*
 	<? foreach($workers as $worker): ?>
-		<li data-js-view="worker" data-log-url=<?=route('decoy::workers@tail', strtolower($worker->name()))?> data-interval="<?=$worker->current_interval('raw')?>">
+		<li data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower($worker->getName()))?> data-interval="<?=$worker->currentInterval('raw')?>">
 			
 			<div class="pull-right actions">
-				<span class="status <?=$worker->is_running()?'ok':'fail'?>">Rate: <strong><?=$worker->current_interval('abbreviated')?></strong></span>
+				<span class="status <?=$worker->isRunning()?'ok':'fail'?>">Rate: <strong><?=$worker->currentInterval('abbreviated')?></strong></span>
 				<a class="btn">Logs</a>
 			</div>
 			
-			<h3><?=$worker->title()?></h3>
-			<? if ($worker->description()): ?>
-				<p><?=$worker->description()?></p>
-			<? endif ?>
+			<h3><?=$worker->getName()?></h3>
+			<?=HTML::tag($worker->getDescription())?>
 			
 			<ul>
-				<li>Last worker execution: <?=$worker->last_heartbeat()?></li>
-				<li>Last heartbeat<?if(!$worker->is_running()):?> (and execution)<?endif?>: <?=$worker->last_heartbeat_check()?></li>
-				<li>Currently executing every: <?=$worker->current_interval()?></li>
+				<li>Last worker execution: <?=$worker->lastHeartbeat()?></li>
+				<li>Last heartbeat<?if(!$worker->isRunning()):?> (and execution)<?endif?>: <?=$worker->lastHeartbeatCheck()?></li>
+				<li>Currently executing every: <?=$worker->currentInterval()?></li>
 			</ul>
 			
 			<div class="log hide">Loading...</div>
 		</li>
 	<? endforeach ?>
-	*/?>
 	
 </ul>
