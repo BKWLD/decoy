@@ -37,8 +37,8 @@ class Router {
 		$this->registerAdmins();
 		$this->registerCommands();
 		$this->registerFragments();
-		$this->registerWildcard();
 		$this->registerWorkers();
+		$this->registerWildcard();
 		
 		// Setup filters
 		$filters = new Filters($this->dir);

@@ -5,14 +5,14 @@
 <ul id="workers" class="unstyled">
 	
 	<? foreach($workers as $worker): ?>
-		<li data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower($worker->getName()))?> data-interval="<?=$worker->currentInterval('raw')?>">
+		<li data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower(urlencode($worker->getName())))?> data-interval="<?=$worker->currentInterval('raw')?>">
 			
 			<div class="pull-right actions">
 				<span class="status <?=$worker->isRunning()?'ok':'fail'?>">Rate: <strong><?=$worker->currentInterval('abbreviated')?></strong></span>
 				<a class="btn">Logs</a>
 			</div>
 			
-			<h3><?=$worker->getName()?></h3>
+			<h3><?=ucwords(str_replace(':', ' : ', $worker->getName()))?></h3>
 			<?=HTML::tag($worker->getDescription())?>
 			
 			<ul>

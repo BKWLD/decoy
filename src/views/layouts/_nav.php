@@ -66,9 +66,9 @@
 									<li><a href="<?=route('decoy\commands')?>">Commands</a></li>
 								<? endif ?>
 								
-								<?// if (count(Bkwld\Decoy\Models\Worker::all())): $divider = true; ?>
+								<? if (count(Bkwld\Decoy\Models\Worker::all())): $divider = true; ?>
 									<li><a href="<?=route('decoy\workers')?>">Workers</a></li>
-								<?// endif ?>
+								<? endif ?>
 								
 								<? if ($divider): ?>
 									<li class="divider"></li>

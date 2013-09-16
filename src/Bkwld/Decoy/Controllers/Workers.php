@@ -14,9 +14,10 @@ class Workers extends Base {
 	
 	// Ajax service that tails the log file for the selected worker
 	public function tail($worker) {
-		
+
 		// Form the path to the file
-		$file = Model::log_path($worker);
+		$file = Model::logPath(urldecode($worker));
+		if (!file_exists($file)) throw new Exception('Log file not found');
 		$size = 1024*100; // in bytes to get
 
 		// Read from the end of the file
