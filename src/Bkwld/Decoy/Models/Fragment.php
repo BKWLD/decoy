@@ -102,10 +102,19 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (!self::$db_checked) {
 			self::$pairs = self::all();
 			self::$db_checked = true;
+			
+			// Add untyped versions of pairs to the array so that items can be looked
+			// up even if their type isn't included.  This is another peformance hit.
+			foreach(self::$pairs as $pair) {
+				if (Str::contains($pair->key,',')) {
+					$clone = $pair->replicate();
+					$clone->key = preg_replace('#,.*$#', '', $pair->key);
+					self::$pairs->add($clone);
+				}
+			}			
 		}
 		
 		// Check if the key is in the db
-		$key_without_type = preg_replace('#,.*$#', '', $key);
 		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
 		
 		// Else return the value from the config file
