@@ -2,7 +2,7 @@
 
 // Dependencies
 use App;
-use Html;
+use DecoyURL;
 use Input;
 use Sentry;
 use Redirect;
