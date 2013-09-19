@@ -148,7 +148,8 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (!Str::is('/img/*', $value)) return $value;
 		
 		// Check if the image already exists in the uploads directory
-		$dst = str_replace('/img/', '/uploads/fragments/', $value);
+		$uploads = File::publicPath(Config::get('decoy::upload_dir'));
+		$dst = str_replace('/img/', $uploads.'/fragments/', $value);
 		$dst_full_path = public_path().$dst;
 		if (file_exists($dst_full_path)) return $dst;
 		

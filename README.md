@@ -122,8 +122,8 @@ Start by creating new language files in /app/lang/en.  There are some convention
 		'intro.title' => 'This is some great stuff',
 		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
 		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
-		'deep_dive.headshot,image' => '/path/to/heashot',
-		'deep_dive.pdf,file' => '/path/to/file',
+		'deep_dive.headshot,image' => '/img/path/to/heashot',
+		'deep_dive.pdf,file' => '/files/path/to/file',
 	);
 	
 Thus:
@@ -131,6 +131,7 @@ Thus:
 - Different translation files are treated as virtual pages in the admin.
 - Keys can have a bullet that delimits sections and will be used to break up the page into sections in the admin.  This is optional.
 - The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
+- Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::frag() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
 
 ### Workers
 
