@@ -118,14 +118,14 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
 		
 		// Else return the value from the config file
-		else if (Lang::has($key)) return self::copyImages(Lang::get($key));
+		else if (Lang::has($key)) return self::massageLangValue(Lang::get($key));
 		
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
 			foreach(array('textarea', 'wysiwyg', 'image', 'file') as $type) {
 				if (Lang::has($key.','.$type)) {
-					if ($type == 'image') return self::copyImages(Lang::get($key.','.$type));
+					if ($type == 'image') return self::massageLangValue(Lang::get($key.','.$type));
 					return Lang::get($key.','.$type);
 				}
 			}
@@ -134,6 +134,21 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			throw new Exception('This fragment key has not been added to a language file: '.$key);
 		}
 		
+	}
+	
+	/**
+	 * Massage fragment values
+	 */
+	private static function massageLangValue($value) {
+		
+		// Copy images
+		$value = self::copyImages($value);
+		
+		// Get rid of all tabs
+		$value = str_replace("\t", "", $value);
+		
+		// Done
+		return $value;
 	}
 	
 	/**
