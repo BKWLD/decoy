@@ -118,19 +118,45 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
 		
 		// Else return the value from the config file
-		else if (Lang::has($key)) return Lang::get($key);
+		else if (Lang::has($key)) return self::copyImages(Lang::get($key));
 		
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
 			foreach(array('textarea', 'wysiwyg', 'image', 'file') as $type) {
-				if (Lang::has($key.','.$type)) return Lang::get($key.','.$type);
+				if (Lang::has($key.','.$type)) {
+					if ($type == 'image') return self::copyImages(Lang::get($key.','.$type));
+					return Lang::get($key.','.$type);
+				}
 			}
 			
 			// It couldn't be found
 			throw new Exception('This fragment key has not been added to a language file: '.$key);
 		}
 		
+	}
+	
+	/**
+	 * Check if the value looks like an image.  If it does, copy it to the uploads dir
+	 * so Croppa can work on it and return the modified path
+	 */
+	private static function copyImages($value) {
+		
+		// All images must live in the /img (relative) directory.  I'm not throwing an exception
+		// here because Laravel's view exception handler doesn't display the message.
+		if (Str::is('/uploads/*', $value)) $value = 'All fragment images must be stored in the img directory';
+		if (!Str::is('/img/*', $value)) return $value;
+		
+		// Check if the image already exists in the uploads directory
+		$dst = str_replace('/img/', '/uploads/fragments/', $value);
+		$dst_full_path = public_path().$dst;
+		if (file_exists($dst_full_path)) return $dst;
+		
+		// Copy it to the uploads dir
+		$dir = dirname($dst_full_path);
+		if (!file_exists($dir)) mkdir($dir, 0775, true);
+		copy(public_path().$value, $dst_full_path);
+		return $dst;
 	}
 	
 	/**
