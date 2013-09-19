@@ -29,4 +29,17 @@ body.fragments {
 		background: $near-black;
 	}
 	
+	// Fix positioning at all breakpoints.  Bootstrap span rules tweak this.
+	.nav-pills {
+		margin-left: 0;
+	}
+	
+	// Make the pills float on mobile
+	@include respond-to($bootstrap_nav_break, down) {
+		.nav-pills li {
+			float:left;
+			margin-right: 4px;
+		}
+	}
+	
 }
