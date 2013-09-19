@@ -164,7 +164,14 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	 * Check if a field in the input is unchanged from what is in the language file
 	 */
 	public static function unchanged($input_name, $val) {
-		if (Input::hasFile($input_name)) return false; // If a file was uploaded, it's new
+		
+		// If a file was uploaded, it's new
+		if (Input::hasFile($input_name)) return false;
+		
+		// If no file was posted but we're getting a value, then it must be unchanged
+		if (Str::endsWith($input_name, ',image')) return true;
+		
+		// Do a string comparison after simplifying all whitespace
 		return self::clean(Lang::get(self::confkey($input_name))) === self::clean($val);
 	}
 	
@@ -233,8 +240,8 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	 */
 	private static function clean($string) {
 		$string = trim($string);
-		$string = preg_replace('~>\s+<~', '><', $string); // http://stackoverflow.com/a/5362207/59160
-		$string = preg_replace('#  #', ' ', $string);
+		$string = preg_replace('#>\s+<#', '><', $string); // http://stackoverflow.com/a/5362207/59160
+		$string = preg_replace('#\s{2,}#', ' ', $string);
 		$string = html_entity_decode($string); // Former will decode entities before output forms
 		return $string;
 	}
