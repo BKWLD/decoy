@@ -98,6 +98,10 @@ TODO Describe changing the layout and index
 
 ## Features
 
+### Authentication
+
+[Sentry](http://docs.cartalyst.com/sentry-2), the pacakge that currently powers authentication, automatically logs out any users who may be logged in when someone logs in using the same creds from another computer.  This can be annoying, so admins should switch to using user specific accounts instead of the default redacted account.
+
 ### Enabling CKFinder for file uploads
 
 By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
