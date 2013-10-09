@@ -31,7 +31,6 @@ class Fragments extends Base {
 		// Loop through the input and check if the field is different from the language
 		// file version
 		foreach(Input::all() as $key => $val) {
-			if (Model::unchanged($key, $val)) continue;
 			
 			// Ignore any fields that lead with an underscore, like _token
 			if (Str::is('_*', $key)) continue;

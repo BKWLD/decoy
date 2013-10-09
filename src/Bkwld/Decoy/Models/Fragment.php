@@ -206,14 +206,16 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		// See if a row already exists
 		if ($row = self::find($key)) {
 			
-			// Update the row
-			if ($value) return $row->update(array('value' => $value));
+			// Update the row if there is a value that is different
+			// than one in a config file
+			if ($value && !self::unchanged($input_name, $value)) {
+				return $row->update(array('value' => $value));
 				
 			// Delete the row
-			else return $row->delete();
+			} else return $row->delete();
 		
 		// The row didn't exist, so create it
-		} else if ($value) {
+		} else if ($value && !self::unchanged($input_name, $value)) {
 			return self::create(array('key' => $key, 'value' => $value));
 		}
 	}
