@@ -69,6 +69,26 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	}
 	
 	/**
+	 * Set form rules
+	 */
+	public static function rules() {
+		$rules = array();
+		foreach(self::titles() as $title) {
+			foreach(Lang::get($title) as $key => $val) {
+				$input_name = self::inputName($title.'.'.$key);
+				
+				// Make all files that are unchanged required so that there is no
+				// delete checkbox shown in the form
+				if (self::unchangedImage($input_name, self::value($title.'.'.$key))) {
+					$rules[$input_name] = 'required';
+				}
+				
+			}
+		}
+		return $rules;
+	}
+	
+	/**
 	 * Get all language fields and then merge any overrides from the DB in. 
 	 */
 	public static function values() {
@@ -184,10 +204,18 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (Input::hasFile($input_name)) return false;
 		
 		// If no file was posted but we're getting a value, then it must be unchanged
-		if (Str::endsWith($input_name, ',image')) return true;
+		if (self::unchangedImage($input_name, $val)) return true;
 		
 		// Do a string comparison after simplifying all whitespace
 		return self::clean(Lang::get(self::confkey($input_name))) === self::clean($val);
+	}
+	
+	/**
+	 * Test if an field is for an image and if it's unchanged
+	 */
+	public static function unchangedImage($input_name, $val) {
+		return Str::endsWith($input_name, array(',image', ',file')) 
+			&& Str::is('/uploads/fragments/*', $val);
 	}
 	
 	/**

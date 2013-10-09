@@ -17,6 +17,7 @@ class Fragments extends Base {
 	 * All fragments view
 	 */
 	public function index() {
+		Former::withRules(Model::rules());
 		Former::populate(Model::values());
 		$this->layout->nest('content', 'decoy::fragments.index', array(
 			'fragments' => Model::organized(),
