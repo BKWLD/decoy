@@ -324,17 +324,17 @@ class Helpers {
 	/**
 	 * This renders a date selection box
 	 */
-	public function date($id, $label = null) {
+	public function date($id, $label = null, $value = 'now') {
 		
 		// Defaults
 		if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
-		$value = date("m/d/Y");
+		if ($value == 'now') $value = date("m/d/Y");
 		
 		// Make the element
 		$field = Former::text($id, $label)
 			->class('date span2')
 			->maxlength(10)
-			->placeholder('mm/dd/yyyy')
+			->placeholder('MM/DD/YY')
 			->value($value)
 			->append('<i class="icon-calendar"></i>')
 			->id(null); // We don't want to conflict on the id
@@ -351,24 +351,24 @@ class Helpers {
 		
 		// Now, add a hidden field that will contain the value in the MySQL prefered
 		// format and is updated via JS
-		$value = date(Library\Utils\Constants::MYSQL_DATE, strtotime($value));
+		if ($value) $value = date(Library\Utils\Constants::MYSQL_DATE, strtotime($value));
 		return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('date')); // id not added by default
 	}
 
 	/**
 	 * This renders a time selection box
 	 */
-	public function time($id, $label = null) {
+	public function time($id, $label = null, $value = 'now') {
 		
 		// Defaults
 		if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
-		$value = date('h:i A');
+		if ($value == 'now') $value = date('h:i A');
 		
 		// Make the time element.
 		$field = Former::text($id, $label)
 			->class('time span2')
 			->maxlength(8)
-			->placeholder('hh:mm')
+			->placeholder('HH:MM')
 			->value($value)
 			->append('<i class="icon-time"></i>')
 			->blockHelp('Time is in '.date('T'))
@@ -386,7 +386,7 @@ class Helpers {
 		
 		// Now, add a hidden field that will contain the value in the MySQL prefered
 		// format and is updated via JS
-		$value = date(Library\Utils\Constants::MYSQL_TIME, strtotime($value));
+		if ($value) $value = date(Library\Utils\Constants::MYSQL_TIME, strtotime($value));
 		return $field.(Former::hidden($id)->id($id)->forceValue($value)->class('time')); // id not added by default
 	}
 
@@ -396,21 +396,21 @@ class Helpers {
 	 * date and time value.  JS will combine these tool fields into one element and will
 	 * also make sure that datetime input field gets populated on value change.
 	 */
-	public function datetime($id, $label = null) {
+	public function datetime($id, $label = null, $value = 'now') {
 		
 		// Get the initial value
-		$value = time();
+		if ($value == 'now') $value = time();
 		if ($former_value = Former::getValue($id)) {
 			$value = strtotime($former_value);
 		}
 		
 		// Convert to mysql time
-		$value = date(Library\Utils\Constants::MYSQL_DATETIME, $value);
+		if ($value) $value = date(Library\Utils\Constants::MYSQL_DATETIME, $value);
 		
 		// Add UI elements plus the hidden field that will contain the mysql formatted value
 		return '<div class="datetime">'
-			.$this->date($id, $label)
-			.$this->time($id, $label)
+			.$this->date($id, $label, $value)
+			.$this->time($id, $label, $value)
 			.(Former::hidden($id)->id($id)->forceValue($value)->class('datetime'))
 			.'</div>';
 	}

@@ -47,6 +47,9 @@ define(function (require) {
 		// Update hidden field when value changes
 		update: function() {
 			
+			// Allow the field to be empty
+			if (!this.$input.val()) return this.$hidden.val(null);
+			
 			// Make sure the date is valid
 			var parts = this.$input.val().match(/^(\d{1,2}):(\d{1,2}) (am|pm)$/i);
 			if (!parts) return;

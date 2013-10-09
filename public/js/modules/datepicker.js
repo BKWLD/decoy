@@ -36,6 +36,9 @@ define(function (require) {
 		// with the date in the mysql format
 		update: function() {
 
+			// Allow the field to be empty
+			if (!this.$input.val()) return this.$hidden.val(null);
+
 			// Make sure the date is valid
 			var parts = this.$input.val().match(/^(\d{1,2})\/(\d{1,2})\/(\d{1,2}|\d{4})$/);
 			if (!parts) return;
