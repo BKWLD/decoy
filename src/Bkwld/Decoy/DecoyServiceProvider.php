@@ -71,19 +71,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Tell Laravel where to find the views that were pushed out with the config files
 		App::make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
 		
-		// Auto-publish the assets when developing locally
-		if (App::environment() == 'local' && !App::runningInConsole()) {
-			$workbench = realpath(base_path().'/workbench');
-			$publisher = App::make('asset.publisher');
-			if (strpos(__FILE__, $workbench) === false) {
-				$publisher->publishPackage('bkwld/decoy');
-				$publisher->publishPackage('bkwld/croppa');
-			} else {
-				$publisher->publishPackage('bkwld/decoy', $workbench);
-				$publisher->publishPackage('bkwld/croppa', $workbench.'/bkwld/decoy/vendor');
-			}
-		}
-		
 	}
 
 	/**
