@@ -43,6 +43,11 @@ class Position {
 
 		// Write position value to the item
 		if (isset($this->item->position)) {
+			
+			// Visiblity may be set at the same time and would be ignored otherwise
+			if (Input::has('visible')) $this->item->visible = Input::get('visible');
+			
+			// Do position
 			$this->item->position = Input::get('position');
 			$this->item->save();
 		
