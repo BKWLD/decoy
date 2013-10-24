@@ -99,6 +99,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->singleton('decoy', function($app) {
 			return new Helpers;
 		});
+		
+		// Simple singletons
+		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
 
 	}
 	
@@ -108,7 +111,7 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 'decoy.url', 'decoy.router');
+		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug');
 	}
 
 }

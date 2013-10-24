@@ -35,9 +35,9 @@ abstract class Base extends Eloquent {
 	// array('image' => array('marquee' => '4:3', 'feature'))
 	static public $CROPS = array();
 	
-	// Set the slug automatically
-	protected $AUTO_SLUG = true;
-	
+	/**
+	 * Constructor registers events and configures mass assignment
+	 */
 	public function __construct(array $attributes = array()) {
 		
 		// Blacklist special columns that aren't intended for the DB
@@ -171,54 +171,6 @@ abstract class Base extends Eloquent {
 		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::upload_dir'));
 		$path = File::publicPath($path);
 		return $path;
-	}
-	
-	/**
-	 * Determine and set the slug automatically.  Note, this adds the slug to the Input so that
-	 * validators that check for the slug will pass.  It's kinda weird for a model method
-	 * to be touching Input, yes, but I prefer this logic to be here just the same.
-	 */
-	public function autoSlug() {
-		if (!$this->AUTO_SLUG) return;
-		
-		// If we're on an edit view, update the unique condition on the rule
-		// (if it exists) to be unique but not for the current row
-		if ($this->id && in_array('slug', array_keys(static::$rules)) 
-			&& strpos(static::$rules['slug'], 'unique') !== false) {
-		
-			// Add the row exception to the unique clause.  The regexp works because
-			// the \w+ will end at the | that begins the next condition
-
-			// If we're using the unique_with custom validator from the BKWLD bundle
-			if (strpos(static::$rules['slug'], 'unique_with')) {
-				static::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
-					'$1,slug,'.$this->id, 
-					static::$rules['slug']);
-				
-			// Regular slugs
-			} else {
-				static::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
-					'$1,slug,'.$this->id, 
-					static::$rules['slug']);
-			}
-		}
-		
-		// If a slug is already defined, do nothing
-		if (Input::has('slug')) return;
-		
-		// Model must have rules and they must have a slug
-		if (empty(static::$rules) || !in_array('slug', array_keys(static::$rules))) return;
-		
-		// If a Model::$TITLE_COLUMN is set, use that input for the slug
-		if (!empty(static::$TITLE_COLUMN) && Input::has(static::$TITLE_COLUMN)) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get(Model::$TITLE_COLUMN)))));
-		
-		// Else it looks like the model has a slug, so try and set it
-		} else if (Input::has('name')) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('name')))));
-		} elseif (Input::has('title')) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('title')))));
-		}
 	}
 	
 	//---------------------------------------------------------------------------

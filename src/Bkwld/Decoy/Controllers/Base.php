@@ -412,7 +412,7 @@ class Base extends Controller {
 		$item = new Model();
 		
 		// Validate
-		$item->autoSlug();
+		App::make('decoy.slug')->merge($this->MODEL);
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
 		// Save it
@@ -467,7 +467,7 @@ class Base extends Controller {
 		}
 
 		// Validate data
-		$item->autoSlug();
+		App::make('decoy.slug')->merge($this->MODEL, $id);
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 		
 		// Update it
