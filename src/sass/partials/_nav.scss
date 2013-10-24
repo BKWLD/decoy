@@ -5,8 +5,8 @@
 	
 	// Gravatar sizing
 	.gravatar {
-		width: 22px;
-		height: 22px;
+		width: auto;
+		height: 24px;
 	}
 	
 	// Make the dropdown menu active state look better
@@ -20,4 +20,17 @@
 	.nav.pull-right .dropdown-toggle {
 		padding-right: 0;
 	} 
+	
+	// Switch to using line height instead of padding so that that the gravatar
+	// can be bigger without pushing the page down
+	.nav > li > a {
+		padding-top: 0;
+		padding-bottom: 0;
+		line-height: 40px;
+		.gravatar { margin-top: -2px; }
+	}
+	.nav .dropdown-toggle .caret {
+		vertical-align: middle;
+			margin-top: -2px;
+	}
 }
