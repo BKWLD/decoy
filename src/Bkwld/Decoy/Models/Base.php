@@ -80,9 +80,16 @@ abstract class Base extends Eloquent {
 		self::created  (function($model){ return $model->onCreated(); });
 		self::updating (function($model){ return $model->onUpdating(); });
 		self::updated  (function($model){ return $model->onUpdated(); });
-		self::saving   (function($model) use ($files){ $files->delete($model); $files->save($model); return $model->onSaving(); });
+		self::saving   (function($model) use ($files){ 
+			$files->delete($model); 
+			$files->save($model); 
+			return $model->onSaving(); 
+		});
 		self::saved    (function($model){ return $model->onSaved(); });
-		self::deleting (function($model) use ($files){ $files->delete($model); return $model->onDeleting(); });
+		self::deleting (function($model) use ($files){ 
+			$files->delete($model); 
+			return $model->onDeleting(); 
+		});
 		self::deleted  (function($model){ return $model->onDeleted(); });
 		
 		// Decoy events
