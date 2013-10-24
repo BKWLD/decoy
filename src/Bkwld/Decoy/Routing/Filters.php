@@ -58,7 +58,7 @@ class Filters {
 		$path = '/'.Request::path();
 		if ($path === parse_url(route('decoy'), PHP_URL_PATH)                  // Login
 			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
-			|| Str::startsWith($path, '/'.$this->dir.'/reset/')) return;            // Reset
+			|| Str::startsWith($path, '/'.$this->dir.'/reset/')) return;         // Reset
 		
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
