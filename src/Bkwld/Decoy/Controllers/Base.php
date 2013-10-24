@@ -408,14 +408,11 @@ class Base extends Controller {
 			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 		}
 		
-		// Create default slug
-		$this->mergeDefaultSlug();
-		
 		// Create a new object before validation so that model callbacks on validation
-		// get fired
 		$item = new Model();
 		
 		// Validate
+		$item->autoSlug();
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
 		// Save it
@@ -468,11 +465,9 @@ class Base extends Controller {
 			if (Request::ajax()) return Response::json(null, 404);
 			else return App::abort(404);
 		}
-		
-		// Create default slug
-		$this->mergeDefaultSlug($id);
 
 		// Validate data
+		$item->autoSlug();
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 		
 		// Update it
@@ -683,51 +678,6 @@ class Base extends Controller {
 	protected function parentFind($parent_id) {
 		if (empty($this->PARENT_MODEL)) return false;
 		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
-	}
-	
-	// If there is slug mentioned in the validation or mass assignment rules
-	// and an appropriate title-like field, make a slug for it.  Then merge
-	// that into the inputs, so it can be validated easily
-	protected function mergeDefaultSlug($id = null) {
-		
-		// If we're on an edit view, update the unique condition on the rule
-		// (if it exists) to be unique but not for the current row
-		if ($id && in_array('slug', array_keys(Model::$rules)) 
-			&& strpos(Model::$rules['slug'], 'unique') !== false) {
-		
-			// Add the row exception to the unique clause.  The regexp works because
-			// the \w+ will end at the | that begins the next condition
-
-			// If we're using the unique_with custom validator from the BKWLD bundle
-			if (strpos(Model::$rules['slug'], 'unique_with')) {
-				Model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
-					'$1,slug,'.$id, 
-					Model::$rules['slug']);
-				
-			// Regular slugs
-			} else {
-				Model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
-					'$1,slug,'.$id, 
-					Model::$rules['slug']);
-			}
-		}
-		
-		// If a slug is already defined, do nothing
-		if (Input::has('slug')) return;
-		
-		// Model must have rules and they must have a slug
-		if (empty(Model::$rules) || !in_array('slug', array_keys(Model::$rules))) return;
-		
-		// If a Model::$TITLE_COLUMN is set, use that input for the slug
-		if (!empty(Model::$TITLE_COLUMN) && Input::has(Model::$TITLE_COLUMN)) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get(Model::$TITLE_COLUMN)))));
-		
-		// Else it looks like the model has a slug, so try and set it
-		} else if (Input::has('name')) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('name')))));
-		} elseif (Input::has('title')) {
-			Input::merge(array('slug' => Str::slug(strip_tags(Input::get('title')))));
-		}
 	}
 	
 	// Format the results of a query in the format needed for the autocomplete repsonses
