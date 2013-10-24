@@ -2,10 +2,11 @@
 define(function(require) {
 	
 	// Dependencies
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		CKEDITOR = window.CKEDITOR, // CK isn't currently loaded via requirejs
-		CKFINDER = window.CKFinder; // CK isn't currently loaded via requirejs
+	var $ = require('jquery')
+		, _ = require('underscore')
+		, CKEDITOR = window.CKEDITOR // CK isn't currently loaded via requirejs
+		, CKFINDER = window.CKFinder // CK isn't currently loaded via requirejs
+	;
 	
 	// Default config
 	var config = {
