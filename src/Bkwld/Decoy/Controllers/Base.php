@@ -412,8 +412,7 @@ class Base extends Controller {
 		$item = new Model();
 		
 		// Validate
-		App::make('decoy.slug')->merge($this->MODEL);
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 
 		// Save it
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
@@ -467,8 +466,7 @@ class Base extends Controller {
 		}
 
 		// Validate data
-		App::make('decoy.slug')->merge($this->MODEL, $id);
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 		
 		// Update it
 		$position = new Position($item, $this->SELF_TO_PARENT);
@@ -597,14 +595,20 @@ class Base extends Controller {
 	// shared logic for that
 	/**
 	 * Shared validation helper
-	 * @param array $rules    A typical rules array
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $model = null, $messages = array()) {
+	protected function validate($model = null, $messages = array()) {
+
+		// Fire event
+		if ($response = $this->fireEvent('validating', array($model, Input::all()), true)) {
+			if (is_a($response, '\Response')) return $response;
+		}
 		
-		// Pull the input from the proper place
+		// Localize input and rules after the event fired.  They may have been modified
+		// (like by the Input/Slug class)
 		$input = Input::all();
+		$rules = Model::$rules;
 		
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
@@ -612,13 +616,8 @@ class Base extends Controller {
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
-
-		// Fire event
-		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
-			if (is_a($response, '\Response')) return $response;
-		}
 		
-		// Validate
+		// Validate.  Get the input afresh in case it changed because of the validating event.
 		$validation = Validator::make($input, $rules, $messages);
 		if ($validation->fails()) {
 			

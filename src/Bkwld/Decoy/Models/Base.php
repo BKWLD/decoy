@@ -35,6 +35,9 @@ abstract class Base extends Eloquent {
 	// array('image' => array('marquee' => '4:3', 'feature'))
 	static public $CROPS = array();
 	
+	// Set the slug automatically
+	protected $AUTO_SLUG = true;
+	
 	/**
 	 * Constructor registers events and configures mass assignment
 	 */
@@ -103,8 +106,11 @@ abstract class Base extends Eloquent {
 				// It's possible a model wasn't defined
 				if (!$model) return;
 				
-				// Special files behavior
-				if ($event == 'validating') $files->preValidate($model);
+				// Special validating behavior
+				if ($event == 'validating') {
+					$files->preValidate($model);
+					$model->autoSlug();
+				}
 				
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
@@ -171,6 +177,13 @@ abstract class Base extends Eloquent {
 		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::upload_dir'));
 		$path = File::publicPath($path);
 		return $path;
+	}
+	
+	/**
+	 * Make a slug and add it to the input automatically
+	 */
+	public function autoSlug() {
+		if ($this->AUTO_SLUG) App::make('decoy.slug')->merge(get_class($this), $this->id);
 	}
 	
 	//---------------------------------------------------------------------------
