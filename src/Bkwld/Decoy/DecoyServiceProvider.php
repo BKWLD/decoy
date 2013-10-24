@@ -34,14 +34,13 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Register the routes
 		$dir = Config::get('decoy::dir');
-		$request = $this->app->make('request');
-		$router = new Routing\Router($dir, $request);
+		$router = new Routing\Router($dir);
 		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
 		
 		// Register URL Generators as "DecoyURL".
-		$this->app->singleton('decoy.url', function($app) use ($request) {
-			return new Routing\UrlGenerator($request->path());
+		$this->app->singleton('decoy.url', function($app) {
+			return new Routing\UrlGenerator($app->make('request')->path());
 		});
 		
 		// Do bootstrapping that only matters if user has requested an admin URL
@@ -100,6 +99,16 @@ class DecoyServiceProvider extends ServiceProvider {
 			return new Helpers;
 		});
 		
+		// Wildcard router
+		$this->app->singleton('decoy.wildcard', function($app) {
+			$request = $app->make('request');
+			return new Routing\Wildcard(
+				Config::get('decoy::dir'),
+				$request->getMethod(), 
+				$request->path()
+			);
+		});
+		
 		// Simple singletons
 		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
 
@@ -111,7 +120,7 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug');
+		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug', 'decoy.wildcard');
 	}
 
 }

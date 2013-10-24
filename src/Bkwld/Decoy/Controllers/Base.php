@@ -104,11 +104,7 @@ class Base extends Controller {
 			$this->config = App::make('config');
 			$this->url = App::make('decoy.url');
 			$request = App::make('request');
-			$this->ancestry = new Ancestry($this, new Wildcard(
-					Config::get('decoy::dir'),
-					$request->getMethod(), 
-					$request->path()
-				), $request, $this->url);
+			$this->ancestry = new Ancestry($this, App::make('decoy.wildcard'), $request, $this->url);
 			$this->route = App::make('router');
 			return true;
 		}

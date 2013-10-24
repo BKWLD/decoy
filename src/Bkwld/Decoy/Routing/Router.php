@@ -13,18 +13,13 @@ use Route;
  */
 class Router {
 	
-	// Properties
-	private $dir; // The path "directory" of the admin.  I.e. "admin"
-	private $request;
-	
 	/**
 	 * Constructor
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
 	 * @param Illuminate\Http\Request
 	 */
-	public function __construct($dir, $request) {
+	public function __construct($dir) {
 		$this->dir = $dir;
-		$this->request = $request;
 	}
 	
 	/**
@@ -66,11 +61,10 @@ class Router {
 		
 		// Localize vars for closure
 		$dir = $this->dir;
-		$request = $this->request;
 		$self = $this;
 		
 		// Setup a wildcarded catch all route
-		Route::any($this->dir.'/{path}', function($path) use ($dir, $request, $self) {
+		Route::any($this->dir.'/{path}', function($path) use ($dir, $self) {
 
 			// Remember the detected route
 			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
@@ -78,7 +72,7 @@ class Router {
 			});
 			
 			// Do the detection
-			$router = new Wildcard($dir, $request->getMethod(), $request->path());
+			$router = App::make('decoy.wildcard');
 			$response = $router->detectAndExecute();
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 			else App::abort(404);
