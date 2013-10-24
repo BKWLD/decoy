@@ -1,0 +1,63 @@
+/**
+ * Apply a color treatment to the navbar (mostly)
+ */
+@mixin theme($color, $text:white) {
+	
+	.navbar-inner {
+		background: $color;
+		@include background(linear-gradient(top, $color, darken($color, 5%)));
+		
+		// Open dropdown
+		.nav li.dropdown.open > .dropdown-toggle,
+		.nav li.dropdown.open.active > .dropdown-toggle {
+		  color: $text;
+		  background: darken($color, 10%);
+			@include background(linear-gradient(top, darken($color, 10%), $color));
+		}
+		
+		// Active section
+		.nav > .active > a,
+		.nav > .active > a:hover,
+		.nav > .active > a:focus,
+		.nav li.dropdown.active > .dropdown-toggle {
+			color: $text;
+			background: darken($color, 10%);
+		}
+		
+		// Fix text shadows
+		.brand, .nav > li > a {
+			color: rgba($text, .8);
+			@include text-shadow(0 1px 0 darken($color, 25%));
+			&:hover {
+				color: $text;
+			}
+		}
+		
+		// Carret color
+		.nav li.dropdown > .dropdown-toggle .caret,
+		.nav li.dropdown.active > .dropdown-toggle .caret,
+		.nav li.dropdown.open.active > .dropdown-toggle .caret {
+			border-top-color: $text;
+			border-bottom-color: $text;
+		}
+		
+		// Dropdown over
+		.dropdown-menu > li > a:hover,
+		.dropdown-menu > li > a:focus,
+		.dropdown-submenu:hover > a,
+		.dropdown-submenu:focus > a {
+			background: $color;
+		}
+		
+		// Active page in dropdown
+		.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+			color: $text;
+			background: darken($color, 10%);
+		}
+		
+		.gravatar {
+			@include box-shadow(0 1px 1px 0 darken($color, 10%));
+		}
+	}
+	
+}
