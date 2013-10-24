@@ -207,7 +207,7 @@ class Account extends Base {
 		Sentry::login($user, false);
 		
 		// Redirect
-		return Redirect::action(Config::get('decoy::post_login_redirect'));
+		return Redirect::to(Config::get('decoy::post_login_redirect'));
 	
 	}
 
