@@ -15,7 +15,7 @@
 			<div class="nav-collapse collapse">
 				
 				<?// Login state ?>
-				<? if (DecoyAuth::check()): ?>
+				<? if (App::make('decoy.auth')->check()): ?>
 					
 					<?// The menu ?>
 					<ul class="nav">
@@ -46,23 +46,24 @@
 						<? endforeach ?>
 					</ul>
 					
+					<? $auth = App::make('decoy.auth'); ?>
 					<ul class="nav pull-right">
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-								<span>Hi, <?=DecoyAuth::userName()?>!</span>
-								<img src="<?=DecoyAuth::userPhoto()?>" class="gravatar"/>
+								<span>Hi, <?=$auth->userName()?>!</span>
+								<img src="<?=$auth->userPhoto()?>" class="gravatar"/>
 								<b class="caret"></b>
 							</a>
 							<ul class="dropdown-menu">
 								
-								<? if (is_a(new DecoyAuth, 'Bkwld\Decoy\Auth\Sentry')): ?>
+								<? if (is_a($auth, 'Bkwld\Decoy\Auth\Sentry')): ?>
 									<li><a href="<?=DecoyURL::action('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
-									<li><a href="<?=DecoyAuth::userUrl()?>">Your account</a></li>
+									<li><a href="<?=$auth->userUrl()?>">Your account</a></li>
 									<li class="divider"></li>
 								<? endif ?>
 								
 								<? $divider = false; ?>
-								<? if (DecoyAuth::developer()): $divider = true; ?>
+								<? if ($auth->developer()): $divider = true; ?>
 									<li><a href="<?=route('decoy\commands')?>">Commands</a></li>
 								<? endif ?>
 								
@@ -75,7 +76,7 @@
 								<? endif ?>
 																
 								<li><a href="/">Public site</a></li>
-								<li><a href="<?=DecoyAuth::logoutUrl()?>">Log out</a></li>
+								<li><a href="<?=$auth->logoutUrl()?>">Log out</a></li>
 							</ul>
 						</ul>
 					

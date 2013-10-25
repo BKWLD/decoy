@@ -1,9 +1,9 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
+use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Config;
-use DecoyAuth;
 use DecoyURL;
 use HTML;
 use Input;
@@ -62,7 +62,7 @@ class Filters {
 		
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
-		if (!DecoyAuth::check()) return App::make('decoy.acl_fail');
+		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
 	}
 	
 	/**

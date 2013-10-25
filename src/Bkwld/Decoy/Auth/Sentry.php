@@ -1,8 +1,10 @@
 <?php namespace Bkwld\Decoy\Auth;
 
 // Dependencies
+use Cartalyst\Sentry\Users\UserNotFoundException;
 use DecoyURL;
 use Html;
+use Sentry as CartalystSentry;
 
 /**
  * This class abstracts the Sentry methods that are used globally
@@ -13,14 +15,14 @@ use Html;
 class Sentry implements AuthInterface {
 	
 	// Get the logged in user
-	static private $user; // Cache an instance to reduce DB queries looking up a user
-	static public function user() {
-		if (!empty(self::$user)) return self::$user; // Use cached user
+	private $user; // Cache an instance to reduce DB queries looking up a user
+	public function user() {
+		if (!empty($this->user)) return $this->user; // Use cached user
 		try {
-			if (!\Sentry::check()) return false; // Are they logged in
-			self::$user = \Sentry::getUser(); 
-			return self::$user;
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+			if (!CartalystSentry::check()) return false; // Are they logged in
+			$this->user = CartalystSentry::getUser(); 
+			return $this->user;
+		} catch (UserNotFoundException $e) {
 			return false; // The logged in user couldn't be found in DB
 		}
 	}
@@ -30,10 +32,10 @@ class Sentry implements AuthInterface {
 	// ---------------------------------------------------------------
 	
 	// Boolean for whether the user is logged in and an admin
-	static public function check() {
+	public function check() {
 		
 		// Get the logged in user
-		if (!($user = self::user())) return false;
+		if (!($user = $this->user())) return false;
 		
 		// Make sure they have admin privledges.  This may be granted even if
 		// they aren't in the "admins" group, though it is the most common way
@@ -41,14 +43,14 @@ class Sentry implements AuthInterface {
 	}
 	
 	// The logged in user's permissions role
-	static public function role() {
-		if (!($user = self::user())) return null;
+	public function role() {
+		if (!($user = $this->user())) return null;
 		return $user->getGroups();
 	}
 
 	// Boolean as to whether the user has developer entitlements
-	static public function developer() {
-		if (!($user = self::user())) return false; // They must be logged in
+	public function developer() {
+		if (!($user = $this->user())) return false; // They must be logged in
 		if ($user->hasAccess('developer')) return true; // They must be a developer
 		return strpos($user->email, '@bkwld.com') !== false; // ... or have bkwld in their email
 	}
@@ -58,18 +60,18 @@ class Sentry implements AuthInterface {
 	// ---------------------------------------------------------------
 	
 	// Controller action that renders the login form
-	static public function loginAction() {
+	public function loginAction() {
 		return 'Bkwld\Decoy\Controllers\Account@login';
 	}
 	
 	// URL to go to that will process their logout
-	static public function logoutUrl() {
+	public function logoutUrl() {
 		return route('decoy\account@logout');
 	}
 	
 	// The URL to if they don't have access
-	static public function deniedUrl() {
-		return action(self::loginAction());
+	public function deniedUrl() {
+		return action($this->loginAction());
 	}
 	
 	// ---------------------------------------------------------------
@@ -77,25 +79,25 @@ class Sentry implements AuthInterface {
 	// ---------------------------------------------------------------
 	
 	// Get their photo
-	static public function userPhoto() {
-		if (!($user = self::user())) return null;
+	public function userPhoto() {
+		if (!($user = $this->user())) return null;
 		return HTML::gravatar($user->email);
 	}
 	
 	// Get their name
-	static public function userName() {
-		if (!($user = self::user())) return null;
+	public function userName() {
+		if (!($user = $this->user())) return null;
 		return $user->first_name;
 	}
 	
 	// Get the URL to their profile
-	static public function userUrl() {
-		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', self::userId());
+	public function userUrl() {
+		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->userId());
 	}
 	
 	// Get their id
-	static public function userId() {
-		if (!($user = self::user())) return null;
+	public function userId() {
+		if (!($user = $this->user())) return null;
 		return $user->id;
 	}
 	

@@ -3,7 +3,6 @@
 // Dependencies
 use App;
 use Config;
-use DecoyAuth;
 use Event;
 use Route;
 
@@ -44,7 +43,7 @@ class Router {
 	 * Account routes
 	 */
 	public function registerAccounts() {
-		Route::get($this->dir, array('as' => 'decoy', 'uses' => DecoyAuth::loginAction()));
+		Route::get($this->dir, array('as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()));
 		Route::post($this->dir, 'Bkwld\Decoy\Controllers\Account@post');
 		Route::get($this->dir.'/account', array('as' => 'decoy\account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index'));
 		Route::get($this->dir.'/logout', array('as' => 'decoy\account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout'));

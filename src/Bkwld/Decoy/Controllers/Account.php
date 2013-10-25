@@ -1,18 +1,18 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
-use \Config;
-use \DecoyAuth;
-use \Exception;
-use \Former;
-use \Input;
-use \Mail;
-use \Redirect;
-use \Section;
-use \Sentry;
-use \Session;
-use \URL;
-use \View;
+use App;
+use Config;
+use Exception;
+use Former;
+use Input;
+use Mail;
+use Redirect;
+use Section;
+use Sentry;
+use Session;
+use URL;
+use View;
 
 // The account controller deals with auth
 class Account extends Base {
@@ -26,7 +26,7 @@ class Account extends Base {
 	 * Redirect to a page where the user can manage their account
 	 */
 	public function index() {
-		return Redirect::to(DecoyAuth::userUrl());
+		return Redirect::to(App::make('decoy.auth')->userUrl());
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Account extends Base {
 		if (Session::has('login_redirect')) Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (DecoyAuth::check()) return Redirect::to(Config::get('decoy::post_login_redirect'));
+		if (App::make('decoy.auth')->check()) return Redirect::to(Config::get('decoy::post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(

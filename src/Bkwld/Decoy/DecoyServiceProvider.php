@@ -2,7 +2,6 @@
 
 use App;
 use Config;
-use DecoyAuth;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
@@ -24,25 +23,11 @@ class DecoyServiceProvider extends ServiceProvider {
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 		
-		// Alias the auth class that is defined in the config for easier referencing.
-		// Call it "DecoyAuth"
-		if (!class_exists('DecoyAuth')) {
-			$auth_class = Config::get('decoy::auth_class');
-			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
-			class_alias($auth_class, 'DecoyAuth', true);
-			if (!is_a(new \DecoyAuth, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
-		}
-		
 		// Register the routes
 		$dir = Config::get('decoy::dir');
 		$router = new Routing\Router($dir);
 		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
-		
-		// Register URL Generators as "DecoyURL".
-		$this->app->singleton('decoy.url', function($app) {
-			return new Routing\UrlGenerator($app->make('request')->path());
-		});
 		
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
@@ -84,20 +69,8 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	public function register() {
 		
-		// Former
-		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
-		$this->app->register('Former\FormerServiceProvider');
-		
-		// Sentry
-		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
-		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
-		
-		// Croppa
-		AliasLoader::getInstance()->alias('Cropa', 'Bkwld\Croppa\Facade');
-		$this->app->register('Bkwld\Croppa\ServiceProvider');
-		
-		// BKWLD PHP Library
-		$this->app->register('Bkwld\Library\LibraryServiceProvider');
+		// Register external packages
+		$this->registerPackages();
 		
 		// Register HTML view helpers as "Decoy".  So they get invoked like: `Decoy::title()`
 		$this->app->singleton('decoy', function($app) {
@@ -116,13 +89,49 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
-			return $app->make('redirect')->to(DecoyAuth::deniedUrl())
+			return $app->make('redirect')->to($app->make('decoy.auth')->deniedUrl())
 				->with('login_error', 'You must login first.')
 				->with('login_redirect', $app->make('request')->fullUrl());
 		});
 		
+		// Register URL Generators as "DecoyURL".
+		$this->app->singleton('decoy.url', function($app) {
+			return new Routing\UrlGenerator($app->make('request')->path());
+		});
+		
+		// Build the auth instance
+		$this->app->singleton('decoy.auth', function($app) {
+			$auth_class = $app->make('config')->get('decoy::auth_class');
+			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
+			$instance = new $auth_class;
+			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
+			return $instance;
+		});
+		
 		// Simple singletons
 		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
+		
+	}
+	
+	/**
+	 * Register external dependencies
+	 */
+	private function registerPackages() {
+		
+		// Former
+		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
+		$this->app->register('Former\FormerServiceProvider');
+		
+		// Sentry
+		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
+		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
+		
+		// Croppa
+		AliasLoader::getInstance()->alias('Cropa', 'Bkwld\Croppa\Facade');
+		$this->app->register('Bkwld\Croppa\ServiceProvider');
+		
+		// BKWLD PHP Library
+		$this->app->register('Bkwld\Library\LibraryServiceProvider');
 		
 	}
 	
@@ -132,7 +141,14 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug', 'decoy.wildcard', 'decoy.acl_fail');
+		return array('decoy', 
+			'decoy.url', 
+			'decoy.router', 
+			'decoy.slug', 
+			'decoy.wildcard', 
+			'decoy.acl_fail', 
+			'decoy.auth'
+		);
 	}
 
 }
