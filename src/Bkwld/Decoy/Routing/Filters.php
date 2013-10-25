@@ -62,11 +62,7 @@ class Filters {
 		
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
-		if (!DecoyAuth::check()) {
-			return Redirect::to(DecoyAuth::deniedUrl())
-				->with('login_error', 'You must login first.')
-				->with('login_redirect', Request::fullUrl());
-		}		
+		if (!DecoyAuth::check()) return App::make('decoy.acl_fail');
 	}
 	
 	/**

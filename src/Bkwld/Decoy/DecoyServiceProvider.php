@@ -2,6 +2,7 @@
 
 use App;
 use Config;
+use DecoyAuth;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
@@ -68,8 +69,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		Config::set('former::push_checkboxes', true);
 		
 		// Tell Laravel where to find the views that were pushed out with the config files
-		App::make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
+		$this->app->make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
 		
+		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
+		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
+			return App::make('decoy.acl_fail');
+		});
 	}
 
 	/**
@@ -109,9 +114,16 @@ class DecoyServiceProvider extends ServiceProvider {
 			);
 		});
 		
+		// Return a redirect response with extra stuff
+		$this->app->singleton('decoy.acl_fail', function($app) {
+			return $app->make('redirect')->to(DecoyAuth::deniedUrl())
+				->with('login_error', 'You must login first.')
+				->with('login_redirect', $app->make('request')->fullUrl());
+		});
+		
 		// Simple singletons
 		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
-
+		
 	}
 	
 	/**
@@ -120,7 +132,7 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug', 'decoy.wildcard');
+		return array('decoy', 'decoy.url', 'decoy.router', 'decoy.slug', 'decoy.wildcard', 'decoy.acl_fail');
 	}
 
 }
