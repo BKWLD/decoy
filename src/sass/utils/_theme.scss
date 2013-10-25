@@ -10,6 +10,9 @@
 		background: $color;
 		@include background(linear-gradient(top, $color, darken($color, 5%)));
 		
+		// There is a border on the bottom
+		border-bottom-color: darken($color, 10%);
+		
 		// Open dropdown
 		.nav li.dropdown.open > .dropdown-toggle,
 		.nav li.dropdown.open.active > .dropdown-toggle {
@@ -31,7 +34,7 @@
 		// Fix text shadows
 		.brand, .nav > li > a {
 			color: rgba($text, .8);
-			@include text-shadow(0 1px 0 darken($color, 25%));
+			@include text-shadow(0 1px 0 darken($color, 20%));
 			&:hover, &:focus {
 				color: $text;
 			}
