@@ -15,6 +15,7 @@
 	color: darken(white, 50);
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	display: none;
+	width: 100%; // Need for mobile sizes for some reason
 	
 	// Specifying padding an inside container so it doesn't animate
 	.conditions {
