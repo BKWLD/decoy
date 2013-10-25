@@ -24,8 +24,12 @@
 			'Email '.$item->first_name.' with changes') ?>
 		
 	<hr/>
-	<div class="controls">
-		<button type="submit" class="btn btn-success"><i class="icon-file icon-white"></i> Save</button>
+	<div class="controls actions">
+		<div class="btn-group">
+			<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+			<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
+			<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+		</div>
 		
 		<? if (!empty($item)): ?>
 			
@@ -45,7 +49,7 @@
 			</a>
 		<? endif ?>
 		
-		<a class="btn" href="<?=URL::to(DecoyURL::relative())?>">Cancel</a>
+		<a class="btn back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
 	</div>
 		
 <?= Former::close() ?>
