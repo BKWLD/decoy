@@ -60,4 +60,11 @@
 		}
 	}
 	
+	// The selected page within fragments
+	body.fragments .nav-pills > .active > a, 
+	body.fragments .nav-pills > .active > a:hover, 
+	body.fragments .nav-pills > .active > a:focus {
+		background: $color;
+	}
+	
 }
