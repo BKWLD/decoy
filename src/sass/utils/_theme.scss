@@ -3,7 +3,10 @@
  */
 @mixin theme($color, $text:white) {
 	
+	// Navbar
 	.navbar-inner {
+		color: $text;
+		color: rgba($text, .8);
 		background: $color;
 		@include background(linear-gradient(top, $color, darken($color, 5%)));
 		
@@ -28,13 +31,23 @@
 		.brand, .nav > li > a {
 			color: rgba($text, .8);
 			@include text-shadow(0 1px 0 darken($color, 25%));
-			&:hover {
+			&:hover, &:focus {
 				color: $text;
 			}
 		}
 		
 		// Carret color
 		.nav li.dropdown > .dropdown-toggle .caret,
+		.nav li.dropdown.active > .dropdown-toggle .caret {
+			border-top-color: $text;
+			border-bottom-color: $text;
+			border-top-color: rgba($text, .8);
+			border-bottom-color: rgba($text, .8);
+		}
+		.nav li.dropdown.open.active > .dropdown-toggle .caret,
+		.nav li.dropdown > a:hover .caret,
+		.nav li.dropdown > a:focus .caret,
+		.nav li.dropdown.open > .dropdown-toggle .caret,
 		.nav li.dropdown.active > .dropdown-toggle .caret,
 		.nav li.dropdown.open.active > .dropdown-toggle .caret {
 			border-top-color: $text;
