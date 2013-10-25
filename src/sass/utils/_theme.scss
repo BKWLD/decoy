@@ -55,7 +55,7 @@
 			border-bottom-color: $text;
 		}
 		
-		// Dropdown items over
+		// Dropdown row :hover
 		.dropdown-menu > li > a:hover,
 		.dropdown-menu > li > a:focus,
 		.dropdown-submenu:hover > a,
@@ -66,7 +66,7 @@
 		// Active page in dropdown
 		.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
 			color: $text;
-			background: darken($color, 10%);
+			background: darken($color, 5%);
 		}
 		
 		// Make the icon look a little sunken in
