@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
-use Bkwld\Decoy\Auth\Sentry as AuthSentry;
+use App;
 use Config;
 use DB;
 use Html;
@@ -70,7 +70,7 @@ class Admin extends Base {
 		$html ='';
 		
 		// If row is you
-		if ($this->id == AuthSentry::userId()) {
+		if ($this->id == App::make('decoy.auth')->userId()) {
 			$html .= '<span class="label label-info">You</span>';
 		}
 		
@@ -130,7 +130,7 @@ class Admin extends Base {
 		if (!empty($input->send_email)) {
 			
 			// Prepare data for mail
-			$admin = AuthSentry::user();
+			$admin = App::make('decoy.auth')->user();
 			$email = array(
 				'first_name' => $admin->first_name,
 				'last_name' => $admin->last_name,
@@ -172,7 +172,7 @@ class Admin extends Base {
 		if (!empty($input->send_email)) {
 			
 			// Prepare data for mail
-			$admin = AuthSentry::user();
+			$admin = App::make('decoy.auth')->user();
 			$email = array(
 				'editor_first_name' => $admin->first_name,
 				'editor_last_name' => $admin->last_name,
