@@ -1,30 +1,27 @@
-<h1>Hello</h1>
+<div class="ui">
+	<div class="max-width">
+		<div class="branding">	
+			<h1><?=Config::get('decoy::site_name')?></h1>
+			<h4>Powered by <a href="http://bkwld.com">Decoy</a></h4>
+		</div>
+		
+		<div class="form">	
+			<?=Former::horizontal_open(action('Bkwld\Decoy\Controllers\Account@login'))?>
+				<?=Former::token()?>
+							
+				<?= View::make('decoy::account._error') ?>
+				
+				<?=Former::text('email') ?>
+				<?=Former::password('password') ?>
+				<?= Former::checkbox('is_remember', false)->text('Remember me?')->check() ?>
 
-<?// Login ?>
-<div class="row">
-	<div class="span6">	
-		<?=Former::horizontal_open(action('Bkwld\Decoy\Controllers\Account@login'))?>
-			<?=Former::token()?>
-
-			<legend>Login</legend>
-			
-			<?= View::make('decoy::account._error') ?>
-			
-			<?=Former::text('email')->class('span3') ?>
-			<?=Former::password('password')->class('span3') ?>
-			<?= Former::checkbox('is_remember', false)->text('Remember me?')->check() ?>
-
-			<div class="controls">
-				<button type="submit" class="btn btn-primary">Login</button>
-				<a href="<?=action('Bkwld\Decoy\Controllers\Account@forgot')?>" class="btn">Forgot Password</a>
-			</div>
-			
-		<?=Former::close()?>
-	</div>
-	
-	<?// Register ?>
-	<div class="span5 offset1">	
-		<legend>Register</legend>
-		<p><i class="icon-info-sign"></i> You must be granted access to this CMS by a current Admin.  You probably know who I'm talking about.</p>
+				<div class="controls">
+					<button type="submit" class="btn btn-primary">Login</button>
+					<a href="<?=action('Bkwld\Decoy\Controllers\Account@forgot')?>" class="btn">Forgot Password</a>
+				</div>
+				
+			<?=Former::close()?>
+		</div>
 	</div>
 </div>
+<div class="bkgd" <?if($image = Config::get('decoy::login_bkgd')):?>style="background-image: url(<?=$image?>)"<?endif?>></div>

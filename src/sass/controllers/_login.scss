@@ -1,0 +1,106 @@
+// The login page
+body.login.index {
+	margin: 0;
+	padding: 0;
+	
+	// Vertical center
+	#main {
+		display: table;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		
+		.ui {
+			display: table-cell;
+			vertical-align: middle;
+			position: relative;
+			z-index: 2;
+			padding: 20px;
+			@include box-sizing(border-box);
+			
+			.max-width {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 840px;
+			}
+		}	
+	}
+
+	// Background image
+	.bkgd {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		@include box-sizing(border-box);
+		background-size: cover;
+		@include opacity(.1);
+	}
+	
+	// Left side
+	.branding {
+		float: left;
+		padding-bottom: 40px; // When stacked, push apart
+		padding-right: 20px; // Don't let form get too close
+		@media (max-width: $bootstrap_nav_break) {
+			padding-right: 0;
+		}
+		@media (max-width: $break-small) {
+			padding-bottom: 20px;
+		}
+		
+		h1 {
+			font-size: 80px;
+			line-height: 1em;
+			margin-top: 45px;
+			@media (max-width: $bootstrap_nav_break) {
+				margin-top: 0;
+			}
+			@media (max-width: $break-small) {
+				margin: 0;
+				font-size: 70px;
+			}
+		}
+		h4 {
+			margin-left: 4px;
+		}
+	}
+	
+	// Right side
+	.form {
+		float: right;
+		padding: 30px;
+		@include border-radius(6px);
+		@include box-sizing(border-box);
+		
+		@media (max-width: $break-small) {
+			padding: 15px;
+		}
+		
+		// Clean up form spacing
+		form { margin: 0; }
+		.control-group { margin-bottom: 10px; }
+		.control-label { width: 90px; }
+		.controls {
+			margin-left: 110px;
+			input[type="email"], input[type="password"] {
+				width: 100%%;
+				@include box-sizing(border-box);
+				height: 30px;
+			}
+		}
+		
+		@media (max-width: $bootstrap_nav_break) {
+			width: 100%;
+			.control-label {
+				width: auto;
+			}
+			.controls {
+				margin-left: auto;
+			}
+		}
+		
+	}
+}

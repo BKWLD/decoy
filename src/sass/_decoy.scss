@@ -26,7 +26,7 @@ $bootstrap_nav_break: 767px;
 @import "utils/theme";
 
 // The partials that form the Decoy style
-@import "partials/general.scss";
+@import "partials/general";
 @import "partials/nav";
 @import "partials/header";
 @import "partials/listing/control_group";
@@ -44,6 +44,9 @@ $bootstrap_nav_break: 767px;
 @import "partials/fragments";
 @import "partials/workers";
 @import "partials/admins";
+
+// Specific pages
+@import "controllers/login";
 
 // Set default color
 @include theme(#61c161);

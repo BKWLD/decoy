@@ -3,6 +3,11 @@ $grey-border: #ddd;
 $light-opacity: .3;
 $near-black: #333;
 
+// Allow for things to be 100% height
+html {
+	min-height: 100%;
+}
+
 // Add a little breathing room to bottom of the page
 body {
 	padding-bottom: 40px;

@@ -49,7 +49,9 @@ class Account extends Base {
 		
 		// Show the login homepage
 		View::inject('title', 'Login');
-		$this->layout->nest('content', 'decoy::account.login');
+		return View::make('decoy::layouts.blank', array(
+			'content' => View::make('decoy::account.login')
+		));
 	}
 	
 	/**

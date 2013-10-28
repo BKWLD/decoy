@@ -123,4 +123,33 @@
 		background: $color;
 	}
 	
+	// The login page
+	body.login.index {
+		@include background(linear-gradient(top, $color, darken($color, 10%)));
+		
+		// Left side
+		.branding {
+			
+			h1 {
+				color: $text;
+				@include text-shadow(1px 2px 0 darken($color, 15%));
+			}
+			h4, h4 a {
+				color: $text;
+				color: rgba($text, .5);
+				& a:hover {
+					text-decoration: none;
+					color: rgba($text, .7);
+				}
+			}
+		}
+		
+		// Right side
+		.form {
+			background: $text;
+			@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
+			border: 1px solid darken($color, 10%);
+		}
+	}
+	
 }
