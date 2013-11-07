@@ -108,6 +108,10 @@ class DecoyServiceProvider extends ServiceProvider {
 			return $instance;
 		});
 		
+		// Register commands
+		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
+		$this->commands(array('command.decoy.generate'));
+
 		// Simple singletons
 		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
 		
@@ -147,7 +151,8 @@ class DecoyServiceProvider extends ServiceProvider {
 			'decoy.slug', 
 			'decoy.wildcard', 
 			'decoy.acl_fail', 
-			'decoy.auth'
+			'decoy.auth',
+			'command.decoy.generate',
 		);
 	}
 
