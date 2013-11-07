@@ -423,5 +423,16 @@ class Helpers {
 	public function frag($key) {
 		return \Bkwld\Decoy\Models\Fragment::value($key);
 	}
-	
+
+	/**
+	 * Render a list of checkboxes to represent a related many-to-many table
+	 * @param Bkwld\Decoy\Models\Base $model A model instance
+	 * @param string $relationship The name of the relationship function on the model
+	 * @param array $options Former key-value pairs, where the key is the function name 
+	 */
+	public function manyToManyChecklist($item, $relationship, $options = array()) {
+		$many_to_many_checklist = new Input\ManyToManyChecklist();
+		return $many_to_many_checklist->render($item, $relationship, $options);
+	}
+
 }
