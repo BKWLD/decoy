@@ -15,15 +15,16 @@ class ManyToManyChecklist {
 
 	/**
 	 * Render the form element
-	 * @param Bkwld\Decoy\Models\Base $model A model instance
+	 * ex: <?= Decoy::manyToManyChecklist($__data, 'events', array('blockHelp' => 'Blah blah')) ?>
+	 * @param array $__data A The data passed to the view, to get at the item
 	 * @param string $relationship The name of the relationship function on the model
 	 * @param array $options Former key-value pairs, where the key is the function name 
 	 * @return string HTML
 	 */
-	public function render($item, $relationship, $options = array()) {
+	public function render($__data, $relationship, $options = array()) {
 
-		// Get all the related items to THIS item
-		if ($id = Former::getValue('id')) $joined = $item->$relationship;
+		// Get all the related items to THE model instance passed to the view
+		if (isset($__data['item'])) $joined = $__data['item']->$relationship;
 
 		// This element will get a special name that will get handled specially by the
 		// base controller. I think Laravel won't try to save fields that begin with
@@ -41,7 +42,7 @@ class ManyToManyChecklist {
 			$ar = array('value' => $row->getKey(), 'name' => $name.'[]');
 
 			// Check if it should be checked
-			if ($joined && $joined->contains($row->getKey())) $ar['checked'] = true;
+			if (isset($joined) && $joined->contains($row->getKey())) $ar['checked'] = true;
 
 			// Add it
 			$boxes[$row->title()] = $ar;
