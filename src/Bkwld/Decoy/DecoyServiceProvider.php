@@ -46,6 +46,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._standard.php');
+		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
 		
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');

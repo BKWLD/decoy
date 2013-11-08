@@ -220,6 +220,14 @@ class Base extends Controller {
 		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
 		return implode(" ", $matches[0]);
 	}
+
+	/**
+	 * Get the description for a controller
+	 * @return string
+	 */
+	public function description() {
+		return $this->DESCRIPTION;
+	}
 	
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.

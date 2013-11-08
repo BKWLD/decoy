@@ -60,13 +60,13 @@ as part of when the view was created.  As in View::make()->with()
 View::composer('decoy::shared.list._standard', function($view) {
 	
 	// Required fields
-	$required = array('title', 'listing', 'controller');
+	$required = array('listing', 'controller');
 	foreach($required as $field) {
 		if (!isset($view->$field)) throw new Exception('Standard listing field is not set: '.$field);
 	}
 	
 	// Make an instance of the controller so values that get in the constructor can be inspected
-	$controller = new $view->controller;
+	if (empty($view->controller_inst)) $view->controller_inst = new $view->controller;
 
 	// Figure out the parent_id, which will be the last numeric segment in the url
 	preg_match('#/(\d+)/[a-z-]*$#i', Request::path(), $matches);
@@ -74,14 +74,17 @@ View::composer('decoy::shared.list._standard', function($view) {
 
 	// Default settings
 	$defaults = array(
+		'title'             => $view->controller_inst->title(),
+		'description'       => $view->controller_inst->description(),
 		'columns'           => array('Title' => 'title'),
 		'auto_link'         => 'first',
 		'convert_dates'     => 'date',
 		'layout'            => 'full',
 		'parent_id'         => $parent_id,
-		'parent_controller' => $controller->parentController(),
-		'many_to_many'      => $controller->isChildInManyToMany(),
-		'tags'              => is_subclass_of($controller->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
+		'parent_controller' => $view->controller_inst->parentController(),
+		'many_to_many'      => $view->controller_inst->isChildInManyToMany(),
+		'tags'              => is_subclass_of($view->controller_inst->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
+		'count'             => $view->listing->count(),
 	);
 
 	// Apply defaults
