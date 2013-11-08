@@ -5,7 +5,7 @@ This partial is used to generate the most common list type views
 found in the admin.  It expects the following variables to have been set
 as part of when the view was created.  As in View::make()->with()
 
-	- title : The title of this page.
+	- title (optional): The title of this page.
 	
 	- listing : The data that is being iterated over.  This may or may
 		not be paginated
@@ -83,8 +83,8 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'parent_id'         => $parent_id,
 		'parent_controller' => $view->controller_inst->parentController(),
 		'many_to_many'      => $view->controller_inst->isChildInManyToMany(),
-		'tags'              => is_subclass_of($view->controller_inst->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
-		'count'             => $view->listing->count(),
+		'tags'              => is_a($view->controller_inst->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
+		'count'             => is_a($view->listing, 'Illuminate\Pagination\Paginator') ? $view->listing->getTotal() : $view->listing->count(),
 	);
 
 	// Apply defaults
