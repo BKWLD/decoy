@@ -32,7 +32,7 @@ class ManyToManyChecklist {
 		$name = self::PREFIX.$relationship;
 
 		// Get the full list of items
-		$query = call_user_func(Str::singular($relationship).'::ordered');
+		$query = call_user_func(ucfirst(Str::singular($relationship)).'::ordered');
 
 		// Create the data that Former expects
 		$boxes = array();
