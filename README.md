@@ -114,7 +114,7 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->take(self::PER_PAGE_SIDEBAR)->get(),
+			'listing'     => $related->paginate(self::PER_PAGE_SIDEBAR)->get(),
 		);
 	}
 
