@@ -53,6 +53,17 @@ body.login.index {
 		@media (max-width: $break-small) {
 			padding-bottom: 20px;
 		}
+
+		@mixin animate {
+			@include transition(all 800ms);
+			@include opacity(0);
+			position: relative;
+			top: -5px;
+			&.show {
+				top: 0;
+				@include opacity(1);
+			}
+		}
 		
 		h1 {
 			font-size: 75px;
@@ -65,19 +76,12 @@ body.login.index {
 				margin: 0;
 				font-size: 70px;
 			}
+			@include animate();
+
 		}
 		h4 {
 			margin-left: 4px;
-
-			// Animate it in
-			@include transition(all 800ms);
-			@include opacity(0);
-			position: relative;
-			top: -5px;
-			&.show {
-				top: 0;
-				@include opacity(1);
-			}
+			@include animate();
 		}
 	}
 	

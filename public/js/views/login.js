@@ -27,6 +27,7 @@ define(function (require) {
 		$win.on('orientationchange resize load', _.debounce(this.resize, 100));
 
 		// Animate in in the subtitle
+		this.$('h1').addClass('show');
 		_.delay(_.bind(function() {
 			this.$('h4').addClass('show');
 		}, this), 1000);
