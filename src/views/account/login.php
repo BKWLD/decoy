@@ -1,4 +1,4 @@
-<div class="ui">
+<div class="ui" data-js-view="login">
 	<div class="max-width">
 		<div class="branding">	
 			<h1><?=Config::get('decoy::site_name')?></h1>

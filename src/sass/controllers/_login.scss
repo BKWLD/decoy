@@ -22,6 +22,8 @@ body.login.index {
 				margin-left: auto;
 				margin-right: auto;
 				max-width: 840px;
+				position: relative;
+				top: -5em;
 			}
 		}	
 	}
@@ -41,19 +43,20 @@ body.login.index {
 	
 	// Left side
 	.branding {
-		float: left;
-		padding-bottom: 40px; // When stacked, push apart
-		padding-right: 20px; // Don't let form get too close
+		width: 50%;
+		position: relative;
 		@media (max-width: $bootstrap_nav_break) {
-			padding-right: 0;
+			width: 100% !important; // Override jquery
+			padding-bottom: 40px; // When stacked, push apart
+			position: static;
 		}
 		@media (max-width: $break-small) {
 			padding-bottom: 20px;
 		}
 		
 		h1 {
-			font-size: 80px;
-			line-height: 1em;
+			font-size: 75px;
+			line-height: .85em;
 			margin-top: 45px;
 			@media (max-width: $bootstrap_nav_break) {
 				margin-top: 0;
@@ -65,12 +68,24 @@ body.login.index {
 		}
 		h4 {
 			margin-left: 4px;
+
+			// Animate it in
+			@include transition(all 800ms);
+			@include opacity(0);
+			position: relative;
+			top: -5px;
+			&.show {
+				top: 0;
+				@include opacity(1);
+			}
 		}
 	}
 	
 	// Right side
 	.form {
-		float: right;
+		position: absolute;
+		right: 0;
+		top: 0;
 		padding: 30px;
 		@include border-radius(6px);
 		@include box-sizing(border-box);
@@ -93,6 +108,7 @@ body.login.index {
 		}
 		
 		@media (max-width: $bootstrap_nav_break) {
+			position: static;
 			width: 100%;
 			.control-label {
 				width: auto;
