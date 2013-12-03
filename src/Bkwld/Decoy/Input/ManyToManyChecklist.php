@@ -44,8 +44,9 @@ class ManyToManyChecklist {
 			// Check if it should be checked
 			if (isset($joined) && $joined->contains($row->getKey())) $ar['checked'] = true;
 
-			// Add it
-			$boxes[$row->title()] = $ar;
+			// Add it.  The str_replace fixes Former's auto conversion of underscores
+			// into spaces.
+			$boxes[str_replace('_', '&#95;', $row->title())] = $ar;
 		}
 		
 		// Create the form element, applying any extra configuration options
