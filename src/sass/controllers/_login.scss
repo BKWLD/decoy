@@ -91,6 +91,7 @@ body.login.index {
 		right: 0;
 		top: 0;
 		padding: 30px;
+		max-width: 380px;
 		@include border-radius(6px);
 		@include box-sizing(border-box);
 		
