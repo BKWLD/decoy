@@ -116,7 +116,8 @@ body.login.index {
 			position: static;
 			width: 100%;
 			.control-label {
-				width: auto;
+				width: 100%;
+				text-align: left;
 			}
 			.controls {
 				margin-left: auto;
