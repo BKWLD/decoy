@@ -1,0 +1,41 @@
+<?php
+
+class {{model}} extends Base {
+	
+	/**
+	 * Example configuration
+
+	// Rules
+	public static $rules = array(
+		'title' => 'required',
+		'image' => 'image',
+		'date' => 'required',
+		'slug' => 'required|unique:articles',
+		'url' => 'url',
+	);
+	
+	// Crops
+	static public $CROPS = array(
+		'image' => array('default' => '1:1'),
+	);
+	
+	// Order by the manually entered date
+	public function scopeOrdered($query) {
+		return $query->orderBy('date', 'desc');
+	}
+	
+	// Create the deep link to this item
+	public function deepLink() {
+		if ($this->url && !$this->body) return $this->url;
+		else return route('article', $this->slug);
+	}
+		
+	// Display the featured status in admin listing
+	public function renderFeaturedStatus() {
+		return $this->featured ? '<span class="badge">Featured</span>' : '';
+	}
+
+	 *
+	 */
+	
+}

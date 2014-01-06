@@ -1,0 +1,31 @@
+<?php namespace Admin;
+
+class {{controller}} extends BaseController {
+
+	/*
+	 * Example settings
+
+	protected $TITLE = 'News & Events';
+	protected $DESCRIPTION = 'News and events yo!';
+	protected $COLUMNS = array(
+		'Title' => 'title',
+		'Status' => 'renderFeaturedStatus',
+		'Date' => 'date',
+	);
+	protected $SEARCH = array(
+		'title',
+		'featured' => array(
+			'type' => 'select',
+			'label' => 'featured status',
+			'options' => array(
+				1 => 'featured',
+				0 => 'not featured',
+			)
+		),
+		'date' => 'date',
+	);
+	
+	 *
+	 */
+
+}

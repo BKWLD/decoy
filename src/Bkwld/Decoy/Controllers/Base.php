@@ -8,6 +8,7 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
+use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -219,6 +220,14 @@ class Base extends Controller {
 		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
 		return implode(" ", $matches[0]);
 	}
+
+	/**
+	 * Get the description for a controller
+	 * @return string
+	 */
+	public function description() {
+		return $this->DESCRIPTION;
+	}
 	
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.
@@ -415,6 +424,10 @@ class Base extends Controller {
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
 		else $item->save();
+
+		// Update Decoy::manyToManyChecklist() relationships
+		$many_to_many_checklist = new ManyToManyChecklist();
+		$many_to_many_checklist->update($item);
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -473,6 +486,10 @@ class Base extends Controller {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 			$item->save();
 		}
+
+		// Update Decoy::manyToManyChecklist() relationships
+		$many_to_many_checklist = new ManyToManyChecklist();
+		$many_to_many_checklist->update($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');

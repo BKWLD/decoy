@@ -95,6 +95,30 @@ The following properties are only relevant if a controller is a parent or child 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
 TODO Describe changing the layout and index
+TODO Describe setting up related forms
+
+### Embeded relationship list
+
+Example:
+
+	<?= !empty($slides) ? View::make('decoy::shared.list._control_group', $slides) : null?>
+
+In this example, `$slides` was populated by this, in the controller:
+
+	// Edit form
+	public function edit($id) {
+		parent::edit($id);
+		$item = \Bkwld\Decoy\Controllers\Model::find($id);
+
+		// Get related data
+		$related = $item->caseStudySlides()->ordered();
+		$this->layout->content->slides = array(
+			'controller'  => 'Admin\CaseStudySlidesController',
+			'listing'     => $related->paginate(self::PER_PAGE_SIDEBAR)->get(),
+		);
+	}
+
+So, you pass it the standard array that listing views require.
 
 ## Features
 

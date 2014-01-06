@@ -50,13 +50,18 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._standard.php');
+		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
 		
-		// Change former's required field HTML
+		// Change Former's required field HTML
 		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
 
-		// Tell former to include unchecked checkboxes in the post
+		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
-		
+
+		// Fomrer currently is converting underscores in block help into spaces.  Shiming this here until it's
+		// resolved: https://github.com/Anahkiasen/former/pull/231
+		Config::set('former::translatable', array('placeholder', 'data_placeholder', 'label'));
+			
 		// Tell Laravel where to find the views that were pushed out with the config files
 		$this->app->make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
 		
@@ -112,6 +117,10 @@ class DecoyServiceProvider extends ServiceProvider {
 			return $instance;
 		});
 		
+		// Register commands
+		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
+		$this->commands(array('command.decoy.generate'));
+
 		// Simple singletons
 		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
 		
@@ -153,6 +162,7 @@ class DecoyServiceProvider extends ServiceProvider {
 			'decoy.acl_fail', 
 			'decoy.auth',
 			'decoy.filters',
+			'command.decoy.generate',
 		);
 	}
 
