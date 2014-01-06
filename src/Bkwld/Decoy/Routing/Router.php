@@ -15,10 +15,11 @@ class Router {
 	/**
 	 * Constructor
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
-	 * @param Illuminate\Http\Request
+	 * @param Bkwld\Decoy\Routing\Filters
 	 */
-	public function __construct($dir) {
+	public function __construct($dir, $filters) {
 		$this->dir = $dir;
+		$this->filters = $filters;
 	}
 	
 	/**
@@ -35,8 +36,7 @@ class Router {
 		$this->registerWildcard();
 		
 		// Setup filters
-		$filters = new Filters($this->dir);
-		$filters->registerAll();
+		$this->filters->registerAll();
 	}
 	
 	/**

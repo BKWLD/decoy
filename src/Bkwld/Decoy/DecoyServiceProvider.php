@@ -23,9 +23,13 @@ class DecoyServiceProvider extends ServiceProvider {
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 		
-		// Register the routes
+		// Filters is a dependency of router and it's used elsewhere
 		$dir = Config::get('decoy::dir');
-		$router = new Routing\Router($dir);
+		$filters = new Routing\Filters($dir);
+		$this->app->instance('decoy.filters', $filters);
+
+		// Register the routes
+		$router = new Routing\Router($dir, $filters);
 		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
 		
@@ -127,7 +131,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 		
 		// Croppa
-		AliasLoader::getInstance()->alias('Cropa', 'Bkwld\Croppa\Facade');
+		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 		
 		// BKWLD PHP Library
@@ -147,7 +151,8 @@ class DecoyServiceProvider extends ServiceProvider {
 			'decoy.slug', 
 			'decoy.wildcard', 
 			'decoy.acl_fail', 
-			'decoy.auth'
+			'decoy.auth',
+			'decoy.filters',
 		);
 	}
 

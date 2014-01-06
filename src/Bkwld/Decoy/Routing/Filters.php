@@ -55,16 +55,24 @@ class Filters {
 	public function acl() {
 		
 		// Do nothing if the current path contains any of the whitelisted urls
-		$path = '/'.Request::path();
-		if ($path === parse_url(route('decoy'), PHP_URL_PATH)                  // Login
-			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
-			|| Str::startsWith($path, '/'.$this->dir.'/reset/')) return;         // Reset
+		if ($this->isPublic()) return;
 		
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
 	}
 	
+	/**
+	 * Return boolean if the current URL is a public one.  Meaning, ACL is not enforced
+	 * @return boolean
+	 */
+	public function isPublic() {
+		$path = '/'.Request::path();
+		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
+			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
+			|| Str::startsWith($path, '/'.$this->dir.'/reset/');                 // Reset
+	}
+
 	/**
 	 * Handle the redirection after save that depends on what submit
 	 * button the user interacte with
