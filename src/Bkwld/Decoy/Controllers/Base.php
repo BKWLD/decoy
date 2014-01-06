@@ -14,7 +14,7 @@ use Config;
 use Croppa;
 use DB;
 use Event;
-use Illuminate\Routing\Controllers\Controller;
+use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Former;
 use Input;
