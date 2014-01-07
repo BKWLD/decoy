@@ -73,7 +73,9 @@ class Router {
 			// Do the detection
 			$router = App::make('decoy.wildcard');
 			$response = $router->detectAndExecute();
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')
+				|| is_a($response, 'Illuminate\View\View')) // Possible when layout is involved
+				return $response;
 			else App::abort(404);
 			
 		})->where('path', '.*');
