@@ -58,7 +58,7 @@ class Wildcard {
 		// Invoke the controller
 		$controller = new $controller();
 		$params = $id ? array($id) : array();
-		return $controller->callAction(App::getFacadeApplication(), App::make('router'), $action, $params);
+		return $controller->callAction($action, $params);
 		
 	}
 	
