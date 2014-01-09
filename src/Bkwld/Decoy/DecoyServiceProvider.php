@@ -28,11 +28,11 @@ class DecoyServiceProvider extends ServiceProvider {
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
-		// Register the routes
+		// Register the routes AFTER all the app routes using the "before" register
 		$router = new Routing\Router($dir, $filters);
-		$router->registerAll();
 		$this->app->instance('decoy.router', $router);
-		
+		$this->app->before(array($router, 'registerAll'));
+
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
 		
