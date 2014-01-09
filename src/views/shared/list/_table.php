@@ -15,7 +15,7 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 // Test the data for presence of special properties
 $actions = 2; // Default
 if ($listing->count()) {
-	$test_row = $listing[0]->toArray();
+	$test_row = $listing[0]->getAttributes();
 	
 	// Has visibilty toggle
 	$has_visible = array_key_exists('visible', $test_row);

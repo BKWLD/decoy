@@ -151,7 +151,7 @@ abstract class Base extends Eloquent {
 		
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
-		$row = $this->toArray();
+		$row = $this->getAttributes();
 		if (!empty(static::$TITLE_COLUMN)) $title .=  $row[static::$TITLE_COLUMN];
 		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
 		else if (isset($row['title'])) $title .= $row['title'];

@@ -70,8 +70,8 @@ class Helpers {
 		);
 		
 		// Convert the item to an array so I can test for values
-		$test_row = $item->toArray();
-		
+		$test_row = $item->getAttributes();
+
 		// If the object has a method defined with the column vaue, use it
 		if (method_exists($item, $column)) {
 			return call_user_func(array($item, $column));
