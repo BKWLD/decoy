@@ -10,7 +10,7 @@ class {{model}} extends Base {
 		'title' => 'required',
 		'image' => 'image',
 		'date' => 'required',
-		'slug' => 'required|unique:articles',
+		'slug' => 'alpha_dash|unique:articles',
 		'url' => 'url',
 	);
 	
