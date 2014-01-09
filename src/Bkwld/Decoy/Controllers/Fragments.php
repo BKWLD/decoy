@@ -3,7 +3,6 @@
 // Dependencies
 use Former;
 use Input;
-use Lang;
 use Redirect;
 use Str;
 use URL;
