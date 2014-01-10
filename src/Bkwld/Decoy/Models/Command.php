@@ -23,6 +23,7 @@ class Command {
 		$commands = self::allCustom();
 		
 		// Add Laravel ones
+		App::register('Illuminate\Foundation\Providers\ConsoleSupportServiceProvider'); // Needed for compile and optimize
 		$commands['Laravel']['Migrate'] = App::make('command.migrate');
 		$commands['Laravel']['Seed'] = App::make('command.seed');
 		$commands['Laravel']['Cache clear'] = App::make('command.cache.clear');
