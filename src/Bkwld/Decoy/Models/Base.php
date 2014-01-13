@@ -212,6 +212,14 @@ abstract class Base extends Eloquent {
 	static public function findBySlug($slug) {
 		return static::where('slug', '=', $slug)->first();
 	}
+
+	/**
+	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
+	 */
+	static public function findBySlugOrFail($slug) {
+		if ($row = self::findBySlug($slug)) return $row;
+		throw new \Illuminate\Database\Eloquent\ModelNotFoundException(get_called_class().' model not found');
+	}
 	
 	//---------------------------------------------------------------------------
 	// Utility methods
