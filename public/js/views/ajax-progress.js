@@ -5,9 +5,11 @@
 define(function (require) {
 	
 	// Dependencies
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		Backbone = require('backbone');
+	var $ = require('jquery')
+		, _ = require('underscore')
+		, Backbone = require('backbone')
+		$doc = $(document)
+	;
 		
 	// Private static vars
 	var app,
@@ -26,8 +28,8 @@ define(function (require) {
 			this.$bar = this.$('.bar');
 			
 			// Listen for start and complete
-			this.$el.ajaxSend(this.send);
-			this.$el.ajaxComplete(this.complete);
+			$doc.ajaxSend(this.send);
+			$doc.ajaxComplete(this.complete);
 		},
 		
 		// Add progress of a new ajax request, thus making the
