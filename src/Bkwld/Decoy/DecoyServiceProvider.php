@@ -145,7 +145,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Croppa
 		if (!array_key_exists('Bkwld\Croppa\ServiceProvider', $providers)) {
 			AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
-			$this->app->registerDeferredProvider('Bkwld\Croppa\ServiceProvider');
+			$this->app->register('Bkwld\Croppa\ServiceProvider');
 		}
 		
 		// BKWLD PHP Library
