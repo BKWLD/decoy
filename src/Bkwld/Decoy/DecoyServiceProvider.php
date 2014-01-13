@@ -57,10 +57,6 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
-
-		// Fomrer currently is converting underscores in block help into spaces.  Shiming this here until it's
-		// resolved: https://github.com/Anahkiasen/former/pull/231
-		Config::set('former::translatable', array('placeholder', 'data_placeholder', 'label'));
 			
 		// Tell Laravel where to find the views that were pushed out with the config files
 		$this->app->make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
