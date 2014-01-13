@@ -285,6 +285,13 @@ abstract class Base extends Eloquent {
 		return Croppa::url($src, $width, $height, $options);
 		
 	}
+
+	/**
+	 * Return an image tag using croppa data
+	 */
+	public function croppaTag($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
+		return '<img src="'.$this->croppa($width, $height, $crop_style, $field, $options).'"/>';
+	}
 	
 	/**
 	 * Get the admin controller class for this model.  It's assumed to NOT be a decoy controller.
