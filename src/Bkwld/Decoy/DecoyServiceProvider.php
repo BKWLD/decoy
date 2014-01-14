@@ -127,31 +127,20 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	private function registerPackages() {
 		
-		// Get all the already loaded providers
-		$providers = $this->app->getLoadedProviders();
-
 		// Former
-		if (!array_key_exists('Former\FormerServiceProvider', $providers)) {
-			AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
-			$this->app->register('Former\FormerServiceProvider');
-		}
+		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
+		$this->app->register('Former\FormerServiceProvider');
 		
 		// Sentry
-		if (!array_key_exists('Cartalyst\Sentry\SentryServiceProvider', $providers)) {
-			AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
-			$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
-		}
+		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
+		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 		
 		// Croppa
-		if (!array_key_exists('Bkwld\Croppa\ServiceProvider', $providers)) {
-			AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
-			$this->app->register('Bkwld\Croppa\ServiceProvider');
-		}
+		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
+		$this->app->register('Bkwld\Croppa\ServiceProvider');
 		
 		// BKWLD PHP Library
-		if (!array_key_exists('Bkwld\Library\LibraryServiceProvider', $providers)) {
-			$this->app->register('Bkwld\Library\LibraryServiceProvider');
-		}
+		$this->app->register('Bkwld\Library\LibraryServiceProvider');
 		
 	}
 	
