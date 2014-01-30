@@ -126,6 +126,7 @@
 	// The login page
 	body.login.index {
 		@include background(linear-gradient(top, $color, darken($color, 10%)));
+		background-position: center center;
 		
 		// Left side
 		.branding {
