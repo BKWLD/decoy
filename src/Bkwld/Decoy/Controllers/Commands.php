@@ -27,7 +27,7 @@ class Commands extends Base {
 	 * Run one of the commands, designed to be called via AJAX
 	 */
 	public function execute($command_name) {
-		
+
 		// Find it
 		if (!($command = Command::find($command_name))) App::abort(404);
 		

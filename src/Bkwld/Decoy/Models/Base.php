@@ -9,6 +9,7 @@ use Config;
 use Croppa;
 use DB;
 use Event;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Input;
 use Log;
@@ -218,7 +219,7 @@ abstract class Base extends Eloquent {
 	 */
 	static public function findBySlugOrFail($slug) {
 		if ($row = self::findBySlug($slug)) return $row;
-		throw new \Illuminate\Database\Eloquent\ModelNotFoundException(get_called_class().' model not found');
+		throw new ModelNotFoundException(get_called_class().' model not found');
 	}
 	
 	//---------------------------------------------------------------------------
