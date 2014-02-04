@@ -57,10 +57,7 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
-			
-		// Tell Laravel where to find the views that were pushed out with the config files
-		$this->app->make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
-		
+
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');

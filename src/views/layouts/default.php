@@ -9,7 +9,8 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<?= View::make('decoy_published::layout.buk_builder._header') ?>
+		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
+		<script src="/js/vendor/modernizr.js"></script>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
@@ -29,6 +30,7 @@
 			<?= $content?>
 		</div>
 		
-	<?= View::make('decoy_published::layout.buk_builder._footer') ?>
+	<script src="/js/vendor/require-jquery.js"></script>
+	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>
