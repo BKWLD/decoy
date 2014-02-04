@@ -10,7 +10,6 @@
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
 		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
-		<script src="/js/vendor/modernizr.js"></script>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
