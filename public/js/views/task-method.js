@@ -14,9 +14,9 @@ define(function (require) {
 	// Public view module
 	var SeedTask = Backbone.View.extend({
 		
-		initialize: function () {
+		initialize: function (options) {
 			_.bindAll(this);
-			app = this.options.app;
+			app = options.app;
 			
 		},
 		

@@ -20,9 +20,9 @@ define(function (require) {
 	var AjaxProgress = Backbone.View.extend({
 		
 		// Constructor
-		initialize: function () {
+		initialize: function (options) {
 			_.bindAll(this);
-			app = this.options.app;
+			app = options.app;
 			
 			// Shared vars
 			this.$bar = this.$('.bar');

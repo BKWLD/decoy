@@ -23,9 +23,9 @@ define(function (require) {
 	// public view module
 	var StandardList = Backbone.View.extend({
 		
-		initialize: function () {
+		initialize: function (options) {
 			_.bindAll(this);
-			app = this.options.app;
+			app = options.app;
 
 			// Get the path to the controller.  If this is not specified via a
 			// data attribtue of "controller-route" then we attempt to infer it from
