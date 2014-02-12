@@ -89,13 +89,90 @@ The following properties are only relevant if a controller is a parent or child 
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
 
+### Populating relation views
+
+To pass the data needed to show related data on an edit page, you need to override the edit() method in your controller.  For instance:
+
+	class PostsController extends BaseController {
+		public function edit($id) {
+
+			// Execute standard logic
+			parent::edit($id);
+			$post = \Post::findOrFail($id);
+
+			// Setup sidebar
+			$this->layout->content->related = array(
+
+				// Related projects
+				array(
+					'title'             => 'Images',
+					'controller'        => 'Admin\PostImages',
+					'listing'           => $post->postImages()->ordered()->paginate($this->PER_PAGE),
+				),
+
+			);
+		}
+	}
+
+A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up like:
+
+	class PostsController extends BaseController {
+
+		// Constructor
+		public function __construct() {
+			parent::__construct();
+
+			// The parent and child relantionships only if currently being
+			// executed as many to many
+			if ($this->PARENT_CONTROLLER == $this->CONTROLLER) {
+				$this->PARENT_TO_SELF = 'related';
+				$this->SELF_TO_PARENT = 'related_as_child';
+			}
+
+		}
+
+		// Edit
+		public function edit($id) {
+
+			// Execute standard logic
+			parent::edit($id);
+			$post = \Post::findOrFail($id);
+
+			// Setup sidebar
+			$this->layout->content->related = array(
+
+				// Related projects
+				array(
+					'title'             => 'Related',
+					'controller'        => $this->CONTROLLER,
+					'listing'           => $post->related()->ordered()->paginate($this->PER_PAGE),
+					'parent_controller' => $this->CONTROLLER, // Can't tell automatically cause of relatinship to self
+					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
+				),
+
+			);
+		}
+
+	}
 
 ## Views
 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
 TODO Describe changing the layout and index
-TODO Describe setting up related forms
+
+### Related sidebar
+
+The View file might look like this:
+
+	<?=View::make('decoy::shared.form_with_related._header', $__data)?>
+		
+		<?= Former::text('title')->class('span6') ?>
+		<?= Former::textarea('body')->class('span6 wysiwyg') ?>
+
+	<?=View::make('decoy::shared.form_with_related._footer', $__data)?>
+
+The related data gets passed to the footer partial and rendered automatically.  Note that the form elements are set to span6 rather than span9.
 
 ### Embeded relationship list
 
@@ -118,7 +195,7 @@ In this example, `$slides` was populated by this, in the controller:
 		);
 	}
 
-So, you pass it the standard array that listing views require.
+In other words, you pass it the standard array that listing views require.
 
 ## Features
 
