@@ -99,7 +99,7 @@ abstract class Base extends Eloquent {
 		// Decoy events
 		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
 		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model = null, $input = null) use ($event, $files) {
+			Event::listen('decoy.'.$event.': '.$class, function($model = null, $options = null) use ($event, $files) {
 				
 				// It's possible a model wasn't defined
 				if (!$model) return;
@@ -129,9 +129,9 @@ abstract class Base extends Eloquent {
 	public function onDeleting() {}
 	public function onDeleted() {}
 	public function onAttaching() {}
-	public function onAttached($pivot) {}
-	public function onRemoving($pivot) {}
-	public function onRemoved($pivot) {}
+	public function onAttached() {}
+	public function onRemoving($ids) {}
+	public function onRemoved($ids) {}
 	
 		
 	//---------------------------------------------------------------------------
