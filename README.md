@@ -37,6 +37,10 @@ Decoy uses the same models as your app uses.  Thus, put them as per normal in /a
 
 ### Many to Many relationships
 
+Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.
+
+The autocomplete UI also expects you to define a `public static $TITLE_COLUMN` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
+
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
 ```
@@ -82,14 +86,14 @@ The following protected proprties allow you to customize how Decoy works from th
 	);
 	```
 
-The following properties are only relevant if a controller is a parent or child of another, as in `has_many()`, `has_many_and_belongs_to()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
+The following properties are only relevant if a controller is a parent or child of another, as in `hasMany()`, `belongsToMany()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
 
 * `PARENT_MODEL` - The model used by the parent controller (i.e. "Project").
 * `PARENT_CONTROLLER` - The parent controller (i.e. "admin.projects").
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
 
-### Populating relation views
+### Setting up relation data
 
 To pass the data needed to show related data on an edit page, you need to override the edit() method in your controller.  For instance:
 
@@ -106,7 +110,7 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'title'             => 'Images',
-					'controller'        => 'Admin\PostImages',
+					'controller'        => 'PostImages',
 					'listing'           => $post->postImages()->ordered()->paginate($this->PER_PAGE),
 				),
 
@@ -125,8 +129,8 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 			// The parent and child relantionships only if currently being
 			// executed as many to many
 			if ($this->PARENT_CONTROLLER == $this->CONTROLLER) {
-				$this->PARENT_TO_SELF = 'related';
-				$this->SELF_TO_PARENT = 'related_as_child';
+				$this->PARENT_TO_SELF = 'posts';
+				$this->SELF_TO_PARENT = 'postsAsChild';
 			}
 
 		}
@@ -145,7 +149,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				array(
 					'title'             => 'Related',
 					'controller'        => $this->CONTROLLER,
-					'listing'           => $post->related()->ordered()->paginate($this->PER_PAGE),
+					'listing'           => $post->posts()->ordered()->paginate($this->PER_PAGE),
 					'parent_controller' => $this->CONTROLLER, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
@@ -195,7 +199,7 @@ In this example, `$slides` was populated by this, in the controller:
 		);
 	}
 
-In other words, you pass it the standard array that listing views require.
+So, you pass it the standard array that listing views require.
 
 ## Features
 
