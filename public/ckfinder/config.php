@@ -25,9 +25,18 @@ $app = require_once($app_dir.'bootstrap/start.php');
  * @return boolean
  */
 function CheckAuthentication() {
+	global $app;
 
-	// Ask Sentry for permission
-	return Sentry::check();
+	// Recreate the session
+	$session = $app->make('session');
+	$session->setId($app->make('encrypter')->decrypt($_COOKIE[$session->getName()]));
+	$session->start();
+
+	// Boot up providers, specifically so package config() calls work
+	$app->boot();
+
+	// Verify the user
+	return $app->make('decoy.auth')->check();
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be
