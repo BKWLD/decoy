@@ -5,6 +5,7 @@
 	 * Example fields
 
 	<?= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline() ?>
+	<?= Former::select('service')->options(PersonLink::$services) ?>
 	<?= Decoy::date('date') ?>
 	<?= Decoy::date('date_end', null, false) ?>
 	<?= Former::text('title')->class('span9') ?>
