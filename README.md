@@ -47,6 +47,15 @@ Since we typically add timestamps to pivot tables, you'll want to call `withTime
 public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('position')->orderBy('prospect_user.position', 'asc'); }
 ```
 
+### Many to Many to Self
+
+I am using this term to describe a model that relates back to it self; like a project that has related projects.  You should define two relationship methods as follows:
+
+	public function projects() { return $this->belongsToMany('Project', 'project_projects', 'project_id', 'related_project_id'); }
+	public function projectsAsChild() { return $this->belongsToMany('Project', 'project_projects', 'related_project_id', 'project_id'); }
+
+The "AsChild()" naming convention is significant.  The Decoy Base Controller checks for this when generating it's UI.
+
 ## Controllers
 
 A lot of Decoy's "magic" comes by having your admin controllers extend the `Bkwld\Decoy\Controllers\Base`.  I typically have the admin controllers extend an application specific base controller (i.e. `Admin\BaseController`) which then extends the `Bkwld\Decoy\Controllers\Base`.
@@ -118,22 +127,9 @@ To pass the data needed to show related data on an edit page, you need to overri
 		}
 	}
 
-A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up like:
+A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up as follows.  Note, this assumes that you've named the relationships on your model as described in the Models section of the README under "many to many to self".
 
 	class PostsController extends BaseController {
-
-		// Constructor
-		public function __construct() {
-			parent::__construct();
-
-			// The parent and child relantionships only if currently being
-			// executed as many to many
-			if ($this->PARENT_CONTROLLER == $this->CONTROLLER) {
-				$this->PARENT_TO_SELF = 'posts';
-				$this->SELF_TO_PARENT = 'postsAsChild';
-			}
-
-		}
 
 		// Edit
 		public function edit($id) {

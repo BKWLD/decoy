@@ -162,6 +162,7 @@ class Base extends Controller {
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
 		if (!empty($this->PARENT_CONTROLLER)) {
+
 			// Determine it's model, so we can call static methods on that model
 			if (empty($this->PARENT_MODEL)) {
 				$this->PARENT_MODEL = $this->model($this->PARENT_CONTROLLER);
@@ -172,10 +173,16 @@ class Base extends Controller {
 			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
 				$this->PARENT_TO_SELF = $this->ancestry->deduceParentRelationship();
 			}
-			
+
+			// If the parent is the same as this controller, assume that it's a many-to-many-to-self
+			// relationship.  Thus, expect a relationship method to be defined on the model
+			// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+			if ($this->PARENT_CONTROLLER == $this->CONTROLLER && method_exists($this->MODEL, $this->PARENT_TO_SELF.'AsChild')) {
+				$this->SELF_TO_PARENT = $this->PARENT_TO_SELF.'AsChild';
+
 			// Figure out the child relationship name, which is typically named the same
 			// as the parent model
-			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
+			} else if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
 				$this->SELF_TO_PARENT = $this->ancestry->deduceChildRelationship();
 			}
 		}
@@ -718,11 +725,6 @@ class Base extends Controller {
 		}
 		return $output;
 	}
-	
-	//---------------------------------------------------------------------------
-	// Private support methods
-	//---------------------------------------------------------------------------
-	
 	
 	
 }
