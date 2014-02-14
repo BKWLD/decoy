@@ -21,7 +21,7 @@ class Position {
 		if ($relationship && Input::has('parent_id')) {
 			$relation = $this->item->{$relationship}();
 			if ($relation instanceof BelongsToMany) {
-				$this->pivot = $relation->where($relationship.'.id', '=', Input::get('parent_id'))->first()->pivot;
+				$this->pivot = $relation->where($relation->getOtherKey(), '=', Input::get('parent_id'))->first()->pivot;
 			}
 		}
 	}
