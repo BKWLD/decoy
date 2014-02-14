@@ -53,7 +53,7 @@ define(function(require) {
 			// Make the WYSIWYGs the same dimension as the textareas by wrapping it in the same span.
 			// The float setting makes block-help be on it's own line (spans get a float otherwise) 
 			var span = $el.closest('.span9').length ? 'span9' : 'span6';
-			$el.wrap('<div class="'+span+'" style="margin-left:0; float:none;">');
+			$el.wrap('<div class="'+span+' wysiwyg-wrap">');
 		
 			// Init CK Editor	and CK Finder
 			var editor = CKEDITOR.replace(this, config);
