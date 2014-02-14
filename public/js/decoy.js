@@ -47,6 +47,9 @@ define(function (require) {
 		// whitelist
 		if (model.whitelist && _.isArray(model.whitelist)) {
 			
+			// Add id by default, needed in Backbone 1.1.1
+			if (!_.contains(model.whitelist, 'id')) model.whitelist.push('id');
+
 			// Don't operate on the real model.  But, for whatever reason, the
 			// collection didn't get brought along on the clone, so do that manually
 			var oldModel = model;
