@@ -8,9 +8,13 @@ The Decoy 2.x docs are very incomplete.  The old docs can be found here: https:/
 2. Run `php artisan migrate --package=bkwld/decoy`
 3. Run `php artisan config:publish bkwld/decoy`
 
+
+
 ## Tests
 
 Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
+
+
 
 ## Routing
 
@@ -30,6 +34,8 @@ Decoy uses custom routing logic to translate it's heirachially path structure in
 TODO Add more examples
 
 For more info, check out the tests/Routing/TestWildcard.php unit tests.
+
+
 
 ## Models
 
@@ -55,6 +61,12 @@ I am using this term to describe a model that relates back to it self; like a pr
 	public function projectsAsChild() { return $this->belongsToMany('Project', 'project_projects', 'related_project_id', 'project_id'); }
 
 The "AsChild()" naming convention is significant.  The Decoy Base Controller checks for this when generating it's UI.
+
+### Polymorphic relationships
+
+You must use the convention of suffixing polymorphic stuff with "able".  For instance, in a one to many, the child should have a "...able()" relationship function.  For example, in a `Slide` controller, it should be called `slideable()`.
+
+
 
 ## Controllers
 
@@ -111,16 +123,15 @@ To pass the data needed to show related data on an edit page, you need to overri
 
 			// Execute standard logic
 			parent::edit($id);
-			$post = \Post::findOrFail($id);
+			$item = \Post::findOrFail($id);
 
 			// Setup sidebar
 			$this->layout->content->related = array(
 
 				// Related projects
 				array(
-					'title'             => 'Images',
-					'controller'        => 'PostImages',
-					'listing'           => $post->postImages()->ordered()->paginate($this->PER_PAGE),
+					'controller'        => 'Admin\PostImages',
+					'listing'           => $item->postImages()->ordered()->paginate($this->PER_PAGE),
 				),
 
 			);
@@ -154,6 +165,10 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 		}
 
 	}
+
+Another use case is polymorphic relationships.  You may need to hard code the `SELF_TO_PARENT` property on the controller if it can't be formed by concatenating the model name with "able".  For instance, the `Slide` model works nicely, it's polymorphic relationship to it's parent can become `slideable`.  But the `Tag` model should be related by `Taggable` but Decoy is looking for `Tagable`.
+
+
 
 ## Views
 
@@ -196,6 +211,8 @@ In this example, `$slides` was populated by this, in the controller:
 	}
 
 So, you pass it the standard array that listing views require.
+
+
 
 ## Features
 

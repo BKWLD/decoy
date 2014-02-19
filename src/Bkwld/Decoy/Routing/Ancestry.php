@@ -103,8 +103,19 @@ class Ancestry {
 	 * is in.
 	 */
 	public function isChildInManyToMany() {
+
+		// See if a relationship is defined
 		$relationship = $this->controller->selfToParent();
 		if (!$relationship) return false;
+
+		// If the relationship ends in 'able' then it's assumed to be
+		// a polymorphic one-to-many.  We're doing it this way because 
+		// running the relationship function (see `$model->{$relationship}()` below)
+		// throws an error when you're not working with a hydrated model.  And this
+		// is exactly what happens in the the shared.list._standard view composer.
+		if (Str::endsWith($relationship, 'able')) return false;
+
+		// Check the class of the relationship
 		$model = $this->controller->model();
 		if (!method_exists($model, $relationship)) return false;
 		$model = new $model; // Needed to be a simple string to work
@@ -164,20 +175,25 @@ class Ancestry {
 	 * a function named "post" for it's relationship
 	 */
 	public function deduceChildRelationship() {
-		
+		$model = $this->controller->model();
+
 		// If one to many, it will be singular
 		$parent_model = $this->getClassName($this->controller->parentModel());
 		$relationship = lcfirst($parent_model);
+		if (method_exists($model, $relationship)) return $relationship;
 		
 		// If it doesn't exist, try the plural version, which would be correct
 		// for a many to many relationship
-		if (!method_exists($this->controller->model(), $relationship)) {
-			$relationship = Str::plural($relationship);
-			if (!method_exists($this->controller->model(), $relationship)) {
-				throw new Exception('Child relationship missing, looking for '.$relationship);
-			}
-		}
-		return $relationship;
+		$plural = Str::plural($relationship);
+		if (method_exists($model, $plural)) return $plural;
+
+		// Look for a polymorphic version, which we get by appending 'able' to the
+		// end of the singular version.  Ex: "Image" model would have imageable().
+		$poly = strtolower($model).'able';
+		if (method_exists($model, $poly)) return $poly;
+
+		// Throw exception
+		throw new Exception('Child relationship missing, looking for '.$relationship);
 	}
 	
 	/**
