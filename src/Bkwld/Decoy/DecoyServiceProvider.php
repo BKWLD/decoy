@@ -138,6 +138,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// BKWLD PHP Library
 		$this->app->register('Bkwld\Library\LibraryServiceProvider');
+
+		// HAML
+		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
 		
 	}
 	
