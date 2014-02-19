@@ -198,6 +198,14 @@ abstract class Base extends Eloquent {
 	public function scopeOrderedAndVisible($query) {
 		return $query->ordered()->visible();
 	}
+
+	/**
+	 * Order a table that has a position value
+	 */
+	public function scopePositioned($query) {
+		return $query->orderBy($this->getTable().'.position', 'asc')
+			->orderBy($this->getTable().'.created_at', 'desc');
+	}
 	
 	/**
 	 * Randomize the results in the DB.  This shouldn't be used for large datasets
