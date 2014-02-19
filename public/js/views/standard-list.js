@@ -138,8 +138,7 @@ define(function (require) {
 				tolerance: 'pointer',
 				revert: 100,
 				containment: $sortable,
-				toleranceType: 'pointer',
-				
+
 				// Create the placeholder with the right column span
 				// http://stackoverflow.com/a/8707306
 				placeholder: 'placeholder',
@@ -148,22 +147,18 @@ define(function (require) {
 					ui.placeholder.html("<td colspan='999'></td>");
 					
 					// For some reason, this always gets created 1px to tall.
-					ui.placeholder.height(ui.placeholder.height()-1);
+					ui.placeholder.height(ui.helper.height()-1);
+
 				},
 
-				// Preserve the widths of columns during dragging
+				// Preserve the widths of columns during dragging by freezing them
+				// in place
 				// From http://cl.ly/170d0h291V10
 				helper: function(e, tr) {
-					var $originals = tr.children();
-					var $helper = tr.clone();
-					$helper.addClass('helper');
-					$helper.children().each(function(index) {
-						$(this).width($originals.eq(index).width());
+					tr.children().each(function(index) {
+						$(this).width($(this).width());
 					});
-					
-					// Without this, the size was being inflated by the border
-					$helper.css('width', (tr.width()) + 'px');
-					return $helper;
+					return tr;
 				},
 				
 				// Callback function after sorting happens.
@@ -178,6 +173,7 @@ define(function (require) {
 				model.save();
 			}, this);
 			
+
 			// Return a reference to the sortable item
 			return $sortable;
 		},
