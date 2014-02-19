@@ -176,3 +176,13 @@ textarea {
 		margin-top: 10px;
 	}
 }
+
+// Push help off of the inputs a little bit when vertically arranged
+.form-vertical {
+	.help-block {
+		margin-top: 5px;
+	}
+	.image-upload .help-block {
+		margin-top: 10px;
+	}
+}
