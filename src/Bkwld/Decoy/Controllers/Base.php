@@ -635,9 +635,9 @@ class Base extends Controller {
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
-			if (is_a($response, '\Response')) return $response;
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 		}
-		
+
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
 		if ($validation->fails()) {
@@ -689,8 +689,9 @@ class Base extends Controller {
 		
 		// Fire them
 		foreach($events as $event) {
-			if ($until) Event::until($event, $args);
-			else Event::fire($event, $args);
+			if ($until) {
+				if ($response = Event::until($event, $args)) return $response;
+			} else Event::fire($event, $args, $until);
 		}
 	}
 	
