@@ -277,3 +277,26 @@ In a standard PagodaBox config, you would put these in your Boxile:
 In this example, "<COMMAND>" is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will run every minute on PB.  And if the worker fails, the heartbeat will continue running it, at a rate of every 15 min (because of PB rate limiting).
 
 In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.
+
+### Slugs
+
+Slugs are auto created from columns named title, name, or specified in the model with a `$TITLE_COLUMN` static property.  Your model should have a validation rule like:
+
+	'slug' => 'alpha_dash|unique:services
+
+Decoy will automatically add ignore for the current id when submittng an UPDATE request.
+
+##### Slugs unqiue across multiple columns
+
+If the slug is unqiue across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
+
+	$table->unique(array('slug', 'category_id'));
+
+In this example, this table has a one-to-many parent table called `categories`.  Specify a rule in the model like:
+
+	'slug' => 'alpha_dash|unique_with:services,category_id,slug',
+
+That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
+
+	!= Former::hidden('category_id', $parent_id)
+
