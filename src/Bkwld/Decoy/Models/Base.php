@@ -120,8 +120,8 @@ abstract class Base extends Eloquent {
 	// from anonymous functions.
 	public function onSaving() {}
 	public function onSaved() {}
-	public function onValidating($input) {}
-	public function onValidated($input) {}
+	public function onValidating() {} // input is passed in first arg
+	public function onValidated() {} // input array is passed in first arg
 	public function onCreating() {}
 	public function onCreated() {}
 	public function onUpdating() {}
@@ -130,8 +130,8 @@ abstract class Base extends Eloquent {
 	public function onDeleted() {}
 	public function onAttaching() {}
 	public function onAttached() {}
-	public function onRemoving($ids) {}
-	public function onRemoved($ids) {}
+	public function onRemoving() {} // ids are passed in first arg
+	public function onRemoved() {} // ids are passed in first arg
 	
 		
 	//---------------------------------------------------------------------------
