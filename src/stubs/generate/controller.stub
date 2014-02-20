@@ -9,8 +9,8 @@ class {{controller}} extends BaseController {
 	protected $DESCRIPTION = 'News and events yo!';
 	protected $COLUMNS = array(
 		'Title' => 'title',
-		'Status' => 'renderFeaturedStatus',
-		'Date' => 'date',
+		'Status' => 'adminColFeaturedStatus',
+		'Date' => 'created_at',
 	);
 	protected $SEARCH = array(
 		'title',

@@ -8,9 +8,9 @@ class {{model}} extends Base {
 	// Rules
 	public static $rules = array(
 		'title' => 'required',
+		'slug' => 'alpha_dash|unique:articles',
 		'image' => 'image',
 		'date' => 'required',
-		'slug' => 'alpha_dash|unique:articles',
 		'url' => 'url',
 	);
 	
@@ -21,7 +21,7 @@ class {{model}} extends Base {
 	
 	// Order by the manually entered date
 	public function scopeOrdered($query) {
-		return $query->orderBy('date', 'desc');
+		return $query->orderBy('published_at', 'desc');
 	}
 	
 	// Create the deep link to this item
@@ -31,7 +31,7 @@ class {{model}} extends Base {
 	}
 		
 	// Display the featured status in admin listing
-	public function renderFeaturedStatus() {
+	public function adminColFeaturedStatus() {
 		return $this->featured ? '<span class="badge">Featured</span>' : '';
 	}
 
