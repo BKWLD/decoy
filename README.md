@@ -286,9 +286,9 @@ Slugs are auto created from columns named title, name, or specified in the model
 
 Decoy will automatically add ignore for the current id when submittng an UPDATE request.
 
-##### Slugs unqiue across multiple columns
+##### Slugs unique across multiple columns
 
-If the slug is unqiue across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
+If the slug is unique across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
 
 	$table->unique(array('slug', 'category_id'));
 
