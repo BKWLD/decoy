@@ -420,15 +420,15 @@ class Base extends Controller {
 			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 		}
 		
-		// Create a new object before validation so that model callbacks on validation
+		// Create a new object and hydrate
 		$item = new Model();
-		
+		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+		App::make('decoy.slug')->merge($item);
+
 		// Validate
-		App::make('decoy.slug')->merge($this->MODEL);
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
 		// Save it
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
 		else $item->save();
 
@@ -482,17 +482,21 @@ class Base extends Controller {
 			else return App::abort(404);
 		}
 
-		// Validate data
-		App::make('decoy.slug')->merge($this->MODEL, $id);
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
-		
-		// Update it
+		// Hydrate for drag-and-drop sorting
 		$position = new Position($item, $this->SELF_TO_PARENT);
-		if ($position->has()) $position->update(); // Handle drag-and-drop sorting
+		if ($position->has()) $position->fill(); 
+		
+		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-			$item->save();
+			App::make('decoy.slug')->merge($item);
 		}
+
+		// Validate data
+		if ($result = $this->validate(Model::$rules, $item)) return $result;
+
+		// Save the record
+		$item->save();
 
 		// Update Decoy::manyToManyChecklist() relationships
 		$many_to_many_checklist = new ManyToManyChecklist();

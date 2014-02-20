@@ -39,7 +39,7 @@ class Position {
 	/**
 	 * Set new position
 	 */
-	public function update() {
+	public function fill() {
 
 		// Write position value to the item
 		if (isset($this->item->position)) {
@@ -49,12 +49,10 @@ class Position {
 			
 			// Do position
 			$this->item->position = Input::get('position');
-			$this->item->save();
 		
 		// Write the position value to the pivot table
 		} else if (isset($this->pivot->position)) {
 			$this->pivot->position = Input::get('position');
-			$this->pivot->save();
 		}
 		
 	}
