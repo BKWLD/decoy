@@ -66,6 +66,13 @@ The "AsChild()" naming convention is significant.  The Decoy Base Controller che
 
 You must use the convention of suffixing polymorphic stuff with "able".  For instance, in a one to many, the child should have a "...able()" relationship function.  For example, in a `Slide` controller, it should be called `slideable()`.
 
+### Polymorphic Many to Many to Self
+
+Example:
+
+	public function services() { return $this->morphedByMany('Service', 'serviceable')->withTimestamps(); }
+	public function servicesAsChild() { return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')->withTimestamps(); }
+
 
 
 ## Controllers
@@ -147,7 +154,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 
 			// Execute standard logic
 			parent::edit($id);
-			$post = \Post::findOrFail($id);
+			$item = \Post::findOrFail($id);
 
 			// Setup sidebar
 			$this->layout->content->related = array(
@@ -156,7 +163,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				array(
 					'title'             => 'Related',
 					'controller'        => $this->CONTROLLER,
-					'listing'           => $post->posts()->ordered()->paginate($this->PER_PAGE),
+					'listing'           => $item->posts()->ordered()->paginate($this->PER_PAGE),
 					'parent_controller' => $this->CONTROLLER, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
