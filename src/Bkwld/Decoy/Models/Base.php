@@ -147,8 +147,13 @@ abstract class Base extends Eloquent {
 		$title = '';
 		
 		// Add a thumbnail to the title if there is an "image" field
-		if (method_exists($this, 'image') && $this->image()) $title .= '<img src="'.Croppa::url($this->image(), 40, 40).'"/> ';
-		elseif (!method_exists($this, 'image') && !empty($this->image)) $title .= '<img src="'.$this->croppa(40,40).'"/> ';
+		if (method_exists($this, 'image') && $image = $this->image()) {
+			if ($image && Str::startsWith($image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
+			else $title .= '<img src="'.Croppa::url($image, 40, 40).'"/> ';
+		} elseif (!method_exists($this, 'image') && !empty($this->image)) {
+			if (Str::startsWith($this->image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
+			else $title .= '<img src="'.$this->croppa(40,40).'"/> ';
+		}
 		
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
