@@ -74,8 +74,9 @@ if ($listing->count()) {
 				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
 				
 				// Figure out the edit link
-				if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->id));
-				else $edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
+				// if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->id));
+				// else $edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
+				$edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>

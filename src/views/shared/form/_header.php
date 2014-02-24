@@ -14,8 +14,6 @@ It expects:
 	  
 	- description (optiona) : A description for the view
 	
-	- no_legened (optional) : A boolean that, if true, hides the legend
-
 */
 
 ?>
@@ -36,11 +34,6 @@ It expects:
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>
-
-<?// The action that is currently being handled ?>
-<? if (empty($no_legend)): ?>
-	<legend><?=empty($item)?'New':'Edit'?></legend>
-<? endif ?>
 
 <?// Form tag ?>
 <?= Former::horizontal_open_for_files() ?>

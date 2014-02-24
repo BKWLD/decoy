@@ -37,5 +37,3 @@ This partial is used to open forms that have a related data sidebar
 	<div class="span6 related-left-col">
 		<?= Former::vertical_open_for_files() ?>
 			<?= Form::token() ?>
-		
-			<legend><?=empty($item)?'New':'Edit'?></legend>

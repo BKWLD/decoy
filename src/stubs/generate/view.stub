@@ -1,6 +1,7 @@
 -/* Standard view
 
 	!=View::make('decoy::shared.form._header', $__data)
+	%legend=empty($item)?'New':'Edit'
 
 	!= Former::text('title')->class('span9') 
 	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline() 
@@ -20,6 +21,7 @@
 -/* Related view
 
 	!=View::make('decoy::shared.form_with_related._header', $__data)
+	%legend=empty($item)?'New':'Edit'
 
 	!= Former::text('title')->class('span6') 
 	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline() 
