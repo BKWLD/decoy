@@ -186,3 +186,15 @@ textarea {
 		margin-top: 10px;
 	}
 }
+
+// For the title of a pivot legend
+legend small img {
+	height: 15px;
+}
+
+// Add additional spacing above every legend but the first when NOT 
+// in the related column.  Putting the form restriction there is enough
+// to ensure that
+form legend:nth-of-type(1n+2) {
+	margin-top: 30px;
+}
