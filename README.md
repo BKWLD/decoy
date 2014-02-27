@@ -1,12 +1,15 @@
 # Decoy
 
-The Decoy 2.x docs are very incomplete.  The old docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md 
+- Active development / the latest version is the 3.0 branch.
+- The master branch represents the latest Decoy 2.0 state
+- The pre-Decoy 2 (pre-Laravel 4) docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md 
 
 ## Installation
 
-1. Run `php artisan migrate --package=cartalyst/sentry`
-2. Run `php artisan migrate --package=bkwld/decoy`
-3. Run `php artisan config:publish bkwld/decoy`
+1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install
+2. Run `php artisan migrate --package=cartalyst/sentry`
+3. Run `php artisan migrate --package=bkwld/decoy`
+4. Run `php artisan config:publish bkwld/decoy`
 
 
 

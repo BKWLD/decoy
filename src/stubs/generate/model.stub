@@ -21,13 +21,12 @@ class {{model}} extends Base {
 	
 	// Order by the manually entered date
 	public function scopeOrdered($query) {
-		return $query->orderBy('published_at', 'desc');
+		return $query->positioned();
 	}
 	
 	// Create the deep link to this item
 	public function deepLink() {
-		if ($this->url && !$this->body) return $this->url;
-		else return route('article', $this->slug);
+		return route('article', $this->slug);
 	}
 		
 	// Display the featured status in admin listing
