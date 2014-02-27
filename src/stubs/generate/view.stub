@@ -1,6 +1,6 @@
 -/* Standard view
 
-	!=View::make('decoy::shared.form._header', $__data)
+	!= View::make('decoy::shared.form._header', $__data)
 
 	!= Former::text('title')->class('span9') 
 	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline() 
@@ -14,12 +14,12 @@
 	!= View::make('decoy::shared.form._display_module', $__data)
 	!= Former::checkbox('featured')->checkboxes(array('Yes' => array('name' => 'featured', 'value' => 1)))->blockHelp('Featured articles will show up in the ticker on the home page.') 
 
-	!=View::make('decoy::shared.form._footer', $__data)
+	!= View::make('decoy::shared.form._footer', $__data)
 
 
 -/* Related view
 
-	!=View::make('decoy::shared.form_with_related._header', $__data)
+	!= View::make('decoy::shared.form_with_related._header', $__data)
 
 	!= Former::text('title')->class('span6') 
 	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline() 
@@ -33,4 +33,4 @@
 	!= View::make('decoy::shared.form._display_module', $__data)
 	!= Former::checkbox('featured')->checkboxes(array('Yes' => array('name' => 'featured', 'value' => 1)))->blockHelp('Featured articles will show up in the ticker on the home page.') 
 
-	!=View::make('decoy::shared.form_with_related._footer', $__data)
+	!= View::make('decoy::shared.form_with_related._footer', $__data)
