@@ -109,6 +109,11 @@ label i {
 // Fix spacing amongst linline radio fields
 .radio.inline, .checkbox.inline {
 	margin-right: 10px;
+
+	// These need an extra push
+	+ .help-block {
+		margin-top: 10px;
+	}
 }
 
 // Button groups need their bottom margin removed
