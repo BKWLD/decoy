@@ -35,12 +35,12 @@ class Admins extends Base {
 
 		// Bind to view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
+			'title'            => $this->title,
 			'controller'       => $this->controller,
-			'description'      => $this->DESCRIPTION,
+			'description'      => $this->description,
 			'count'            => Model::count(),
 			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
+			'columns'          => $this->columns,
 		));
 	}
 	
