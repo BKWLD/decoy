@@ -43,9 +43,6 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	public function usingAdmin() {
 		
-		// Load HTML helpers ** Deprecated **
-		require_once(__DIR__.'/../../helpers.php');
-		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
