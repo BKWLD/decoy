@@ -53,7 +53,7 @@ as part of when the view was created.  As in View::make()->with()
 	  view.  Tags means the content is very simple, there is only a single field the
 	  user needs to input.  This should typically be allowed to set it itself automatically.
 	  
-	- search : The $SEARCH array passed through from the controller config
+	- search : The $search array passed through from the controller config
 
 	  
 */

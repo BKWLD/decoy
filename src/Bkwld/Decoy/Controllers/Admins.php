@@ -14,8 +14,8 @@ use URL;
 class Admins extends Base {
 	
 	// Shared settings
-	protected $DESCRIPTION = 'Users who have access to this admin area.';
-	protected $COLUMNS = array(
+	protected $description = 'Users who have access to this admin area.';
+	protected $columns = array(
 		'Name'          => 'title',
 		'Status'        => 'statuses',
 		'Email'         => 'email',

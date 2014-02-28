@@ -46,17 +46,17 @@ class Base extends Controller {
 	// get set in the constructor.
 	protected $model;       // i.e. Post
 	protected $controller;  // i.e. Admin\PostsController
-	protected $TITLE;       // i.e. News Posts
-	protected $DESCRIPTION; // i.e. Relevant news about the brand
-	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
-	protected $SHOW_VIEW;   // i.e. admin.news.edit
-	protected $SEARCH;      // i.e. An array describing the fields to search upon
+	protected $title;       // i.e. News Posts
+	protected $description; // i.e. Relevant news about the brand
+	protected $columns = array('Title' => 'title'); // The default columns for listings
+	protected $show_view;   // i.e. admin.news.edit
+	protected $search;      // i.e. An array describing the fields to search upon
 	
 	// More of the same, but these are just involved in relationships
-	protected $PARENT_MODEL;      // i.e. Photo
-	protected $PARENT_CONTROLLER; // i.e. admin.photos
-	protected $PARENT_TO_SELF;    // i.e. photos
-	protected $SELF_TO_PARENT;    // i.e. post
+	protected $parent_model;      // i.e. Photo
+	protected $parent_controller; // i.e. admin.photos
+	protected $parent_to_self;    // i.e. photos
+	protected $self_to_parent;    // i.e. post
 	
 	// Shared layout for admin view, set in the constructor
 	public $layout;
@@ -304,7 +304,7 @@ class Base extends Controller {
 	public function parentController() { return $this->PARENT_CONTROLLER; }
 	
 	/**
-	 * Get $SELF_TO_PARENT relationship name
+	 * Get $self_to_parent relationship name
 	 * @return string ex: article
 	 */
 	public function selfToParent() {
