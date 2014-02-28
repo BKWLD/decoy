@@ -141,7 +141,7 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->paginate($this->PER_PAGE),
+					'listing'           => $item->postImages()->ordered()->paginate($this->per_page),
 				),
 
 			);
@@ -165,9 +165,9 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				// Related projects
 				array(
 					'title'             => 'Related',
-					'controller'        => $this->CONTROLLER,
-					'listing'           => $item->posts()->ordered()->paginate($this->PER_PAGE),
-					'parent_controller' => $this->CONTROLLER, // Can't tell automatically cause of relatinship to self
+					'controller'        => $this->controller,
+					'listing'           => $item->posts()->ordered()->paginate($this->per_page),
+					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
 
@@ -216,7 +216,7 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::PER_PAGE_SIDEBAR)->get(),
+			'listing'     => $related->paginate(self::$per_page_sidebar)->get(),
 		);
 	}
 

@@ -39,13 +39,13 @@ class Base extends Controller {
 	//---------------------------------------------------------------------------
 	
 	// Default pagination settings
-	protected $PER_PAGE = 20;
-	const PER_PAGE_SIDEBAR = 6;
+	protected $per_page = 20;
+	protected $per_page_sidebar = 6;
 	
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
-	protected $MODEL;       // i.e. Post
-	protected $CONTROLLER;  // i.e. Admin\PostsController
+	protected $model;       // i.e. Post
+	protected $controller;  // i.e. Admin\PostsController
 	protected $TITLE;       // i.e. News Posts
 	protected $DESCRIPTION; // i.e. Relevant news about the brand
 	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
@@ -124,29 +124,29 @@ class Base extends Controller {
 		$this->layout = $this->config->get('decoy::layout');
 		
 		// Store the controller class for routing
-		if ($class) $this->CONTROLLER = $class;
-		elseif (empty($this->CONTROLLER)) $this->CONTROLLER = get_class($this);
+		if ($class) $this->controller = $class;
+		elseif (empty($this->controller)) $this->controller = get_class($this);
 		
 		// Get the controller name
-		$controller_name = $this->controllerName($this->CONTROLLER);
+		$controller_name = $this->controllerName($this->controller);
 		
 		// Make a default title based on the controller name
 		if (empty($this->TITLE)) $this->TITLE = $this->title($controller_name);
 		
 		// Figure out what the show view should be.  This is the path to the show view file.  Such
 		// as 'admin.news.edit'
-		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->detailPath($this->CONTROLLER);
+		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->detailPath($this->controller);
 		
 		// Try to suss out the model by singularizing the controller
-		if (empty($this->MODEL)) {
-			$this->MODEL = $this->model($this->CONTROLLER);
-			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
+		if (empty($this->model)) {
+			$this->model = $this->model($this->controller);
+			if (!class_exists($this->model)) $this->model = NULL;
 		}
 		
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
-		if ($this->MODEL && !class_exists('Bkwld\Decoy\Controllers\Model')) {
-			if (!class_alias($this->MODEL, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
+		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
+			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
 		
 		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
@@ -177,7 +177,7 @@ class Base extends Controller {
 			// If the parent is the same as this controller, assume that it's a many-to-many-to-self
 			// relationship.  Thus, expect a relationship method to be defined on the model
 			// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
-			if ($this->PARENT_CONTROLLER == $this->CONTROLLER && method_exists($this->MODEL, $this->PARENT_TO_SELF.'AsChild')) {
+			if ($this->PARENT_CONTROLLER == $this->controller && method_exists($this->model, $this->PARENT_TO_SELF.'AsChild')) {
 				$this->SELF_TO_PARENT = $this->PARENT_TO_SELF.'AsChild';
 
 			// Figure out the child relationship name, which is typically named the same
@@ -269,7 +269,7 @@ class Base extends Controller {
 	 * @return string ex: "Slide"
 	 */
 	public function model($class = null) {
-		if (!$class) return $this->MODEL; // for getters
+		if (!$class) return $this->model; // for getters
 		
 		// Swap out the namespace if decoy
 		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
@@ -295,7 +295,7 @@ class Base extends Controller {
 	 * Return controller
 	 * @return string ex: Admin\SlidesController
 	 */
-	public function controller() { return $this->CONTROLLER; }
+	public function controller() { return $this->controller; }
 	
 	/**
 	 * Get parent controller
@@ -328,14 +328,14 @@ class Base extends Controller {
 		
 		// Run the query
 		$search = new Search();
-		$results = $search->apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = $search->apply(Model::ordered(), $this->SEARCH)->paginate($this->per_page);
 		$count = $results->getTotal();
 		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
+			'controller'       => $this->controller,
 			'description'      => $this->DESCRIPTION,
 			'count'            => $count,
 			'listing'          => $results,
@@ -359,13 +359,13 @@ class Base extends Controller {
 
 		// Run the query
 		$search = new Search();
-		$results = $search->apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = $search->apply($query, $this->SEARCH)->paginate($this->per_page);
 		$count = $results->getTotal();
 
 		// Render the view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
 			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
+			'controller'       => $this->controller,
 			'description'      => $this->DESCRIPTION,
 			'count'            => $count,
 			'listing'          => $results,
@@ -395,7 +395,7 @@ class Base extends Controller {
 		// Return view
 		$this->layout->nest('content', $this->SHOW_VIEW, array(
 			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
+			'controller'       => $this->controller,
 			'description'      => $this->DESCRIPTION,
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
@@ -456,7 +456,7 @@ class Base extends Controller {
 		// Render the view
 		$this->layout->nest('content', $this->SHOW_VIEW, array(
 			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
+			'controller'       => $this->controller,
 			'description'      => $this->DESCRIPTION,
 			'item'             => $item,
 			'crops'            => (object) Model::$CROPS,
@@ -533,7 +533,7 @@ class Base extends Controller {
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
 		// Get data matching the query
-		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->MODEL.'::$TITLE_COLUMN must be defined');
+		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->model.'::$TITLE_COLUMN must be defined');
 		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
@@ -689,7 +689,7 @@ class Base extends Controller {
 		
 		// Setup both events
 		$events = array("decoy.{$event}");
-		if (!empty($this->MODEL)) $events[] = "decoy.{$event}: ".$this->MODEL;
+		if (!empty($this->model)) $events[] = "decoy.{$event}: ".$this->model;
 		
 		// Fire them
 		foreach($events as $event) {
