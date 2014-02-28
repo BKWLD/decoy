@@ -15,7 +15,7 @@ class {{model}} extends Base {
 	);
 	
 	// Crops
-	static public $CROPS = array(
+	static public $crops = array(
 		'image' => array('default' => '1:1'),
 	);
 	

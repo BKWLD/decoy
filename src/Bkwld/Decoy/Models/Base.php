@@ -29,12 +29,12 @@ abstract class Base extends Eloquent {
 	// This is designed to be overridden to store the DB column name that
 	// should be used as the source for titles.  Used in the title() function
 	// and in autocompletes.
-	static public $TITLE_COLUMN;
+	static public $title_column;
 	
 	// This is should be overriden like so to specify crops that the image cropping
 	// widget should make UI for
 	// array('image' => array('marquee' => '4:3', 'feature'))
-	static public $CROPS = array();
+	static public $crops = array();
 	
 	/**
 	 * Constructor registers events and configures mass assignment
@@ -158,7 +158,7 @@ abstract class Base extends Eloquent {
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
 		$row = $this->getAttributes();
-		if (!empty(static::$TITLE_COLUMN)) $title .=  $row[static::$TITLE_COLUMN];
+		if (!empty(static::$title_column)) $title .=  $row[static::$title_column];
 		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
 		else if (isset($row['title'])) $title .= $row['title'];
 		else if (App::make('decoy.router')->action() == 'edit')  $title .= 'Edit';
@@ -264,17 +264,17 @@ abstract class Base extends Eloquent {
 	public function croppa($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
 		
 		// Check if the image field has crops
-		if ($crop_style && !array_key_exists($field, static::$CROPS)) {
+		if ($crop_style && !array_key_exists($field, static::$crops)) {
 			throw new \Exception("A crop style was passed for $field but no crops are defined for that field.");
 		}
 		
 		// Check if the crop style is valid
-		if ($crop_style && !Collection::keyOrValueExists($crop_style, static::$CROPS[$field])) {
+		if ($crop_style && !Collection::keyOrValueExists($crop_style, static::$crops[$field])) {
 			throw new \Exception("Crop style '$crop_style' is not defined for the field: $field");
 		}
 		
 		// Default crop style is 'default'
-		if (!$crop_style && !empty(static::$CROPS[$field]) && Collection::keyOrValueExists('default', static::$CROPS[$field])) {
+		if (!$crop_style && !empty(static::$crops[$field]) && Collection::keyOrValueExists('default', static::$crops[$field])) {
 			$crop_style = 'default';
 		}
 		

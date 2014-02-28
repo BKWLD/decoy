@@ -400,7 +400,7 @@ class Base extends Controller {
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
-			'crops'            => (object) Model::$CROPS,
+			'crops'            => (object) Model::$crops,
 		));
 		
 		// Pass parent_id
@@ -459,7 +459,7 @@ class Base extends Controller {
 			'controller'       => $this->controller,
 			'description'      => $this->DESCRIPTION,
 			'item'             => $item,
-			'crops'            => (object) Model::$CROPS,
+			'crops'            => (object) Model::$crops,
 		));
 		
 		// Figure out the parent_id
@@ -533,8 +533,8 @@ class Base extends Controller {
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
 		// Get data matching the query
-		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->model.'::$TITLE_COLUMN must be defined');
-		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+		if (empty(Model::$title_column)) throw new Exception($this->model.'::$title_column must be defined');
+		$query = Model::ordered()->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%');
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
@@ -550,7 +550,7 @@ class Base extends Controller {
 			// returns no results on an exact match that is already attached is because it
 			// already exists.  Otherwise, it would allow the user to create the tag
 			if ($parent->{$this->PARENT_TO_SELF}()
-				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
+				->where(Model::$title_column, '=', Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
@@ -713,7 +713,7 @@ class Base extends Controller {
 			// Only keep the id and title fields
 			$item = new stdClass;
 			$item->id = $row->id;
-			$item->title = $row->{Model::$TITLE_COLUMN};
+			$item->title = $row->{Model::$title_column};
 			
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic

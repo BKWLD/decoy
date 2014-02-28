@@ -48,7 +48,7 @@ Decoy uses the same models as your app uses.  Thus, put them as per normal in /a
 
 Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.
 
-The autocomplete UI also expects you to define a `public static $TITLE_COLUMN` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
+The autocomplete UI also expects you to define a `public static $title_column` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
 
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
@@ -290,7 +290,7 @@ In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will
 
 ### Slugs
 
-Slugs are auto created from columns named title, name, or specified in the model with a `$TITLE_COLUMN` static property.  Your model should have a validation rule like:
+Slugs are auto created from columns named title, name, or specified in the model with a `$title_column` static property.  Your model should have a validation rule like:
 
 	'slug' => 'alpha_dash|unique:services
 
