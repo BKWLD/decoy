@@ -140,11 +140,6 @@
 	@import "_sorting";
 }
 
-// Center the pagination on the page
-.pagination {
-	text-align: center;
-}
-
 // On small browsers, only show the second and last columns in tables
 @media (max-width: $bootstrap_nav_break) {
 	.table {

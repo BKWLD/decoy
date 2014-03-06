@@ -234,6 +234,13 @@ abstract class Base extends Eloquent {
 		if ($row = self::findBySlug($slug)) return $row;
 		throw new ModelNotFoundException(get_called_class().' model not found');
 	}
+
+	/**
+	 * For use with related sidebars, take a specific amount
+	 */
+	static public function sidebar($query, $count = 6) {
+		return $query->take($count)->get();
+	}
 	
 	//---------------------------------------------------------------------------
 	// Utility methods

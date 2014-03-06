@@ -38,10 +38,9 @@ class Base extends Controller {
 	// Default settings
 	//---------------------------------------------------------------------------
 	
-	// Default pagination settings
-	protected $per_page = 20;
-	protected $per_page_sidebar = 6;
-	
+	// Constants
+	const PER_PAGE = 20;
+
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
 	protected $model;       // i.e. Post
@@ -328,7 +327,7 @@ class Base extends Controller {
 		
 		// Run the query
 		$search = new Search();
-		$results = $search->apply(Model::ordered(), $this->search)->paginate($this->per_page);
+		$results = $search->apply(Model::ordered(), $this->search)->paginate($this->perPage());
 		$count = $results->getTotal();
 		
 		// Render the view.  We can assume that Model has an ordered() function
@@ -359,7 +358,7 @@ class Base extends Controller {
 
 		// Run the query
 		$search = new Search();
-		$results = $search->apply($query, $this->search)->paginate($this->per_page);
+		$results = $search->apply($query, $this->search)->paginate($this->perPage());
 		$count = $results->getTotal();
 
 		// Render the view
@@ -731,6 +730,12 @@ class Base extends Controller {
 		return $output;
 	}
 	
+	// Return the per_page based on the input
+	public function perPage() {
+		$per_page = Input::get('count', self::PER_PAGE);
+		if ($per_page == 'all') return 1000;
+		return $per_page;
+	}
 	
 }
 

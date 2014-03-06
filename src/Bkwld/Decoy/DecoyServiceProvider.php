@@ -60,8 +60,8 @@ class DecoyServiceProvider extends ServiceProvider {
 			return App::make('decoy.acl_fail');
 		});
 
-		// Set the paginator to use the Bootstrap 2 syntax (as opposed to 3)
-		Config::set('view.pagination', 'pagination::slider');
+		// Use the Decoy paginator
+		Config::set('view.pagination', 'decoy::shared.list._paginator');
 	}
 
 	/**
