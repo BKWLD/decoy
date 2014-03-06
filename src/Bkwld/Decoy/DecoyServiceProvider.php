@@ -59,6 +59,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
 		});
+
+		// Set the paginator to use the Bootstrap 2 syntax (as opposed to 3)
+		Config::set('view.pagination', 'pagination::slider');
 	}
 
 	/**
