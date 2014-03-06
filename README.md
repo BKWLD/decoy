@@ -48,7 +48,7 @@ Decoy uses the same models as your app uses.  Thus, put them as per normal in /a
 
 Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.
 
-The autocomplete UI also expects you to define a `public static $TITLE_COLUMN` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
+The autocomplete UI also expects you to define a `public static $title_column` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
 
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
@@ -141,7 +141,7 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->paginate($this->PER_PAGE),
+					'listing'           => $item->postImages()->ordered()->paginate($this->per_page),
 				),
 
 			);
@@ -165,9 +165,9 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				// Related projects
 				array(
 					'title'             => 'Related',
-					'controller'        => $this->CONTROLLER,
-					'listing'           => $item->posts()->ordered()->paginate($this->PER_PAGE),
-					'parent_controller' => $this->CONTROLLER, // Can't tell automatically cause of relatinship to self
+					'controller'        => $this->controller,
+					'listing'           => $item->posts()->ordered()->paginate($this->per_page),
+					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
 
@@ -216,7 +216,7 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::PER_PAGE_SIDEBAR)->get(),
+			'listing'     => $related->paginate(self::$per_page_sidebar)->get(),
 		);
 	}
 
@@ -235,9 +235,9 @@ So, you pass it the standard array that listing views require.
 By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
 
 1. Enter the `license_name` and `license_key` in your /app/config/packages/bkwld/decoy/wysiwyg.php config file
-2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/main.js like so:
+2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/start.js like so:
 
-		define('main', function (require) {
+		define(function (require) {
 			require('decoy/modules/wysiwyg').config.allowUploads();
 		});
 		
@@ -290,7 +290,7 @@ In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will
 
 ### Slugs
 
-Slugs are auto created from columns named title, name, or specified in the model with a `$TITLE_COLUMN` static property.  Your model should have a validation rule like:
+Slugs are auto created from columns named title, name, or specified in the model with a `$title_column` static property.  Your model should have a validation rule like:
 
 	'slug' => 'alpha_dash|unique:services
 

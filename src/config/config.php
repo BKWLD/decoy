@@ -16,9 +16,6 @@
 	// redirected to
 	'post_login_redirect' => '/admin/admins',
 	
-	// The image path shown as a background cover image on the login screen
-	'login_bkgd' => '',
-	
 	// -----------------------------------------------------
 	// Decoy Defaults
 	// -----------------------------------------------------

@@ -14,8 +14,8 @@ use URL;
 class Admins extends Base {
 	
 	// Shared settings
-	protected $DESCRIPTION = 'Users who have access to this admin area.';
-	protected $COLUMNS = array(
+	protected $description = 'Users who have access to this admin area.';
+	protected $columns = array(
 		'Name'          => 'title',
 		'Status'        => 'statuses',
 		'Email'         => 'email',
@@ -28,19 +28,19 @@ class Admins extends Base {
 		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
-		$results = Model::ordered()->paginate($this->PER_PAGE)->getIterator();
+		$results = Model::ordered()->paginate($this->per_page)->getIterator();
 		foreach($results as &$item) {
 			$item = new Model((array) $item);
 		}
 
 		// Bind to view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
+			'title'            => $this->title,
+			'controller'       => $this->controller,
+			'description'      => $this->description,
 			'count'            => Model::count(),
 			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
+			'columns'          => $this->columns,
 		));
 	}
 	

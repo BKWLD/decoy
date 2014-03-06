@@ -24,4 +24,4 @@
 		</div>
 	</div>
 </div>
-<div class="bkgd" <?if($image = Config::get('decoy::login_bkgd')):?>style="background-image: url(<?=$image?>)"<?endif?>></div>
+<div class="bkgd"></div>
