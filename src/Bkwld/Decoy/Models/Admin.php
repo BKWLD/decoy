@@ -4,7 +4,7 @@
 use App;
 use Config;
 use DB;
-use Html;
+use HTML;
 use Input;
 use Mail;
 use Redirect;

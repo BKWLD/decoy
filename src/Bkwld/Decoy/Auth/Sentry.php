@@ -3,7 +3,7 @@
 // Dependencies
 use Cartalyst\Sentry\Users\UserNotFoundException;
 use DecoyURL;
-use Html;
+use HTML;
 use Sentry as CartalystSentry;
 
 /**
