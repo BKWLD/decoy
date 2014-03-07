@@ -28,7 +28,9 @@
 		<div id="main" class="container">
 			<?= $content?>
 		</div>
-		
+	
+	<?// Footer embeds ?>
+	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
 	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
 	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
 </body>

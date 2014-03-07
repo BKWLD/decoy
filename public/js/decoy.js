@@ -13,12 +13,8 @@ define(function (require) {
 	require('decoy/plugins/jquery-migrate'); // To ease migration to jQuery 1.9.x
 	require('decoy/plugins/bootstrap');
 	
-	// Utilities
-	require('decoy/modules/utils/csrf'); // Add CSRF token to AJAX requests
-	require('decoy/modules/utils/console'); // Make console.log not error
-	require('decoy/modules/utils/ajax-error'); // Standard handling of AJAX errors
-	
 	// Modules that add mojo globally
+	require('decoy/modules/ajax-error'); // Standard handling of AJAX errors
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
