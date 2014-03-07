@@ -13,7 +13,7 @@ define(function (require) {
 	
 	// Bring in the template for new rows.  Currently, the only need to do this
 	// is for many-to-many row insertion
-	var row_template = _.template(require('decoy/text!decoy/templates/standard-list-row.html'));
+	var row_template = _.template(require('text!decoy/templates/standard-list-row.html'));
 	
 	// private static vars
 	var app,
