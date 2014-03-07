@@ -3,7 +3,7 @@
 // --------------------------------------------------
 define(function (require) {
 	
-	// dependencies
+	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
@@ -15,12 +15,12 @@ define(function (require) {
 	// is for many-to-many row insertion
 	var row_template = _.template(require('text!decoy/templates/standard-list-row.html'));
 	
-	// private static vars
+	// Static vars
 	var app,
 		dataId = 'data-model-id',
 		visibleIconClass = 'icon-eye-open';
 
-	// public view module
+	// View
 	var StandardList = Backbone.View.extend({
 		
 		initialize: function (options) {
@@ -35,7 +35,7 @@ define(function (require) {
 				this.controllerRoute = window.location.pathname;
 			}
 			
-			// cache selectors
+			// Cache
 			this.$deleteBtn = this.$('.delete-selected');
 			this.$deleteAlert = this.$('.delete-alert');
 			this.$bulkActions = this.$('.bulk-actions');
