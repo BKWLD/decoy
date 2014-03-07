@@ -42,6 +42,7 @@ define(function (require) {
 			this.$total = this.$('legend .badge, h1 .badge');
 			this.$trs = this.$el.find('[' + dataId + ']');
 			this.parent_controller = this.$el.data('parent-controller');
+			this.position_offset = this.$el.data('position-offset');
 			
 			// Create model collection from table rows.  The URL is fetched from
 			// the controller-route data attribute of the container.
@@ -120,18 +121,14 @@ define(function (require) {
 			// Tell the server of the new sorting rules by looping through
 			// all rows, looking up the model for the id, and then updating
 			// it's position attribute.
-			var update = function(event, ui) {
+			var update = _.bind(function(event, ui) {
 				var id,
 					$sortableRows = $sortable.find('[' + dataId + ']');
 				_.each($sortableRows, function(el, i) {
 					id = $(el).attr(dataId);
-					this.collection.get(id).set({position: i});
+					this.collection.get(id).set({position: (i + this.position_offset) });
 				}, this);
-			};
-			
-			// When update gets called, make sure that "this" is the
-			// backbone view.
-			update = _.bind(update, this);
+			}, this);
 			
 			// Define options
 			var options = {
