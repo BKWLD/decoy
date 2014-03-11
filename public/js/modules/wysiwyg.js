@@ -21,11 +21,11 @@ define(function(require) {
 		htmlEncodeOutput: false,
 		
 		toolbar : [
-			{ name: 'clipboard', items : [ 'Cut','Copy','Paste','PasteText','PasteFromWord','-','Undo','Redo' ] },
 			{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
 			{ name: 'links', items : [ 'Link','Unlink'] },
 			{ name: 'image', items : [ 'Image' ] },
 			{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+			{ name: 'clipboard', items : [ 'PasteText','PasteFromWord' ] },
 			{ name: 'source', items : [ 'Source' ] }
 		]
 	};
