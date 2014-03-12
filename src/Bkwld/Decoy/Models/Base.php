@@ -50,6 +50,12 @@ abstract class Base extends Eloquent {
 			'parent_id', // Backbone.js may also send this with sort
 		));
 		
+		// Remove any hidden/visible settings that may have been set on models if
+		// the user is in the admin
+		if (Request::is(Config::get('decoy::dir').'*')) {
+			$this->visible = $this->hidden = array();
+		}
+
 		// Continue Laravel construction
 		parent::__construct($attributes);
 		
