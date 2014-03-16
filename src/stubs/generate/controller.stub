@@ -22,6 +22,10 @@ class {{controller}} extends BaseController {
 				0 => 'not featured',
 			)
 		),
+		'category' => array(
+			'type' => 'select',
+			'options' => 'Article::$categories',
+		),
 		'date' => 'date',
 	);
 	
