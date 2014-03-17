@@ -72,6 +72,9 @@ class Helpers {
 		// Convert the item to an array so I can test for values
 		$test_row = $item->getAttributes();
 
+		// Get values needed for static array test
+		$class = get_class($item);
+
 		// If the object has a method defined with the column vaue, use it
 		if (method_exists($item, $column)) {
 			return call_user_func(array($item, $column));
@@ -82,7 +85,23 @@ class Helpers {
 			// Format date if appropriate
 			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $item->$column)) {
 				return date($date_formats[$convert_dates], strtotime($item->$column));
-				
+			
+			// If the column name has a plural form as a static array on the model, use the key
+			// against that array and pull the value.  This is designed to handle my convention
+			// of setting the source for pulldowns, radios, and checkboxes as static arrays
+			// on the model.
+			} else if (($plural = Str::plural($column))
+				&& isset($class::$$plural)
+				&& is_array($class::$$plural)) {
+				$ar = $class::$$plural; // PHP fatal errored unless I saved out this reference
+
+				// Support comma delimited lists by splitting on commas before checking
+				// if the key exists in the array
+				return join(', ', array_map(function($key) use ($ar, $class, $plural) {
+					if (array_key_exists($key, $class::$$plural)) return $ar[$key];
+					else return $key; 
+				}, explode(',', $item->$column)));
+
 			// Just display the column value
 			} else {
 				return $item->$column;
