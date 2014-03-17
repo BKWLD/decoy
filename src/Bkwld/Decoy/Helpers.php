@@ -401,6 +401,10 @@ class Helpers {
 	 */
 	public function datetime($id, $label = null, $value = 'now') {
 		
+		// Preserve the input value, allowing the specific field classes
+		// to massage the visible date in their own way.
+		$original_value = $value;
+
 		// Get the initial value
 		if ($value == 'now') $value = time();
 		if ($former_value = Former::getValue($id)) {
@@ -412,8 +416,8 @@ class Helpers {
 		
 		// Add UI elements plus the hidden field that will contain the mysql formatted value
 		return '<div class="datetime">'
-			.$this->date($id, $label, $value)
-			.$this->time($id, $label, $value)
+			.$this->date($id, $label, $original_value)
+			.$this->time($id, $label, $original_value)
 			.(Former::hidden($id)->id($id)->forceValue($value)->class('datetime'))
 			.'</div>';
 	}
