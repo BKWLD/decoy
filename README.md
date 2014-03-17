@@ -224,6 +224,32 @@ In this example, `$slides` was populated by this, in the controller:
 
 So, you pass it the standard array that listing views require.
 
+### Data for Former select, radio, and checkbox
+
+A convention to follow is to create a static array on the model that populates Former's select, radio, and checkbox types.  The name of the property holding this array should be the plural form of the column that will store the value(s).  The keys of this array are slugs that are stored in a database column and the values are the readable vesions.  For instance:
+
+	static public $categories = array(
+		'inspiring' => 'Inspiring',
+		'quirky' => 'Quirky',
+		'cool' => 'Cool',
+		'adventurous' => 'Adventurous',
+	);
+
+Then, in the edit view, you could do this:
+
+	!= Former::checkbox('category')->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))->push(false)
+
+Furthermore, you can use this array for searching the list view by referencing it in the `search` property on your controller:
+
+	protected $search = array(
+		'title',
+		'category' => array(
+			'type' => 'select',
+			'options' => 'Post::$categories'
+		),
+	);
+
+Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
 
 
 ## Features
