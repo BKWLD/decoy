@@ -163,7 +163,10 @@ class Ancestry {
 		
 		// Verify that it exists
 		if (!method_exists($this->controller->parentModel(), $relationship)) {
-			throw new Exception('Parent relationship missing, looking for: '.$relationship);
+			throw new Exception('Parent relationship missing, looking for: '.$relationship
+				.'. This controller is: '.get_class($this->controller)
+				.'. This parent model is: '.$this->controller->parentModel()
+			);
 		}
 		return $relationship;
 	}
