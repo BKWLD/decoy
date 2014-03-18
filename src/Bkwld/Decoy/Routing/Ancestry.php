@@ -50,12 +50,16 @@ class Ancestry {
 	 * it unlikely that we'd ever explicitly register routes to be children of another.
 	 */
 	public function requestIsChild() {
+
+		// Get all the classes represented in the request
+		$classes = $this->wildcard->getAllClasses();
 		
-		// Only perform check if the route is for a child
-		return $this->wildcard->detectIfChild()
-		
-			// ... and make sure the passed controller is the child that was detected
-			&& $this->isRouteController();
+		// Remove the first class, because we only care about children
+		if (count($classes) <= 1) return false;
+		array_shift($classes);
+
+		// Check if this controller is in the the remaining list of classes
+		return in_array(get_class($this->controller), $classes);
 	}
 
 	/**

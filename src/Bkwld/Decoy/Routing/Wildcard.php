@@ -202,6 +202,28 @@ class Wildcard {
 		return preg_match($pattern, $this->path) === 1;
 		
 	}
+
+	/**
+	 * Return an array of all classes represented in the URL
+	 */
+	public function getAllClasses() {
+
+		// Get all slugs that lead with a slash
+		$pattern = '#(?:/([a-z-]+))#i';
+
+		// If no matches, return an empty array.  Matches will be at first index;
+		preg_match_all($pattern, $this->path, $matches);
+		if (count($matches) <= 1) return array();
+		$matches = $matches[1];
+
+		// Remove actions from the matches list (like "edit")
+		if (in_array($matches[count($matches) - 1], $this->actions)) array_pop($matches);
+
+		// Convert all the matches to their classes
+		return array_map(function($name) {
+			return $this->detectController($this->detectControllerClass($name));
+		}, $matches);
+	}
 	
 	/**
 	 * Figure out the parent controller of the path
