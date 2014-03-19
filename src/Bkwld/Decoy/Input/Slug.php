@@ -26,7 +26,7 @@ class Slug {
 
 			// If we're using the unique_with custom validator from the BKWLD bundle
 			if (strpos($model::$rules['slug'], 'unique_with')) {
-				$model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
+				$model::$rules['slug'] = preg_replace('#(unique_with:\w+,[\w;]+)(,slug)?#i', 
 					'$1,slug,'.$id, 
 					$model::$rules['slug']);
 				
