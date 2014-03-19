@@ -15,8 +15,8 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 // Test the data for presence of special properties
 $actions = 2; // Default
 if ($listing->count()) {
-	$test_row = $listing[0]->getAttributes();
-	
+	$test_row = $listing[0]->toArray();
+
 	// Has visibilty toggle
 	$has_visible = array_key_exists('visible', $test_row);
 		
@@ -74,9 +74,9 @@ if ($listing->count()) {
 				// Render parent id
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
 
-				// Add position value from the row or from the pivot table.  
-				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}' ";
-				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}' ";
+				// Add position value from the row or from the pivot table.
+				if (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}' ";
+				else if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}' ";
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>
