@@ -626,9 +626,15 @@ class Base extends Controller {
 	 */
 	protected function validate($rules, $model = null, $messages = array()) {
 		
-		// Pull the input from the proper place
+		// Pull the input including files
 		$input = Input::all();
-		
+
+		// If a model instance was passed, merge the input on top of that.  This allows
+		// data that may already be set on the model to be validated.  The input will override
+		// anything already set on the model.  In particular, this is done so that auto
+		// generated fields like the slug can be validated.
+		if ($model) $input = array_merge($model->getAttributes(), $input);
+
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
 		// the rules list.
