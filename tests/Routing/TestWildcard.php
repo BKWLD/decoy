@@ -8,141 +8,142 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 	public function testIndex() {
 		
 		$router = new Wildcard('admin', 'GET','admin/articles');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'index');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('index', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/user-dudes');
-		$this->assertEquals($router->detectControllerClass(), 'UserDudes');
-		$this->assertEquals($router->detectAction(), 'indexChild');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('UserDudes', $router->detectControllerClass());
+		$this->assertEquals('indexChild', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/users/40/roles');
-		$this->assertEquals($router->detectControllerClass(), 'Roles');
-		$this->assertEquals($router->detectAction(), 'indexChild');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Roles', $router->detectControllerClass());
+		$this->assertEquals('indexChild', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 	}
 	
 	public function testCreate() {
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/create');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'create');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('create', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/users/create');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'create');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('create', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
+
 	}
 	
 	public function testStore() {
 		
 		$router = new Wildcard('admin', 'POST','admin/articles');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'store');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('store', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/create');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'store');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('store', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/2/users');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'store');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('store', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/2/users/create');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'store');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('store', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 	}
 	
 	public function testEdit() {
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/edit');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'edit');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('edit', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/2/users/40/edit');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'edit');
-		$this->assertEquals($router->detectId(), 40);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('edit', $router->detectAction());
+		$this->assertEquals(40, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 	}
 	
 	public function testUpdate() {
 		
 		$router = new Wildcard('admin', 'PUT','admin/articles/2');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('update', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/2');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('update', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'PUT','admin/articles/2/users/40');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 40);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('update', $router->detectAction());
+		$this->assertEquals(40, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/2/users/40');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'update');
-		$this->assertEquals($router->detectId(), 40);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('update', $router->detectAction());
+		$this->assertEquals(40, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 	}
 	
 	public function testDestroy() {
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'destroy');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('destroy', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2/destroy');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'destroy');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('destroy', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2/users/40');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'destroy');
-		$this->assertEquals($router->detectId(), 40);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('destroy', $router->detectAction());
+		$this->assertEquals(40, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2/users/40/destroy');
-		$this->assertEquals($router->detectControllerClass(), 'Users');
-		$this->assertEquals($router->detectAction(), 'destroy');
-		$this->assertEquals($router->detectId(), 40);
+		$this->assertEquals('Users', $router->detectControllerClass());
+		$this->assertEquals('destroy', $router->detectAction());
+		$this->assertEquals(40, $router->detectId());
 		$this->assertTrue($router->detectIfChild());
 	}
 	
 	public function testAttach() {
 		
 		$router = new Wildcard('admin', 'POST','admin/articles/2/attach');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'attach');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('attach', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 
 	}
@@ -150,9 +151,9 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 	public function testRemove() {
 		
 		$router = new Wildcard('admin', 'DELETE','admin/articles/2/remove');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'remove');
-		$this->assertEquals($router->detectId(), 2);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('remove', $router->detectAction());
+		$this->assertEquals(2, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 
 	}
@@ -160,9 +161,9 @@ class TestRoutingWildcard extends PHPUnit_Framework_TestCase {
 	public function testAutocomplete() {
 		
 		$router = new Wildcard('admin', 'GET','admin/articles/autocomplete');
-		$this->assertEquals($router->detectControllerClass(), 'Articles');
-		$this->assertEquals($router->detectAction(), 'autocomplete');
-		$this->assertEquals($router->detectId(), false);
+		$this->assertEquals('Articles', $router->detectControllerClass());
+		$this->assertEquals('autocomplete', $router->detectAction());
+		$this->assertEquals(false, $router->detectId());
 		$this->assertFalse($router->detectIfChild());
 
 	}
