@@ -140,7 +140,7 @@ class Ancestry {
 		
 		// If a child index view, get the controller from the route
 		} else if ($this->requestIsChild()) {
-			return $this->wildcard->getParentController();
+			return $this->getParentController();
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->isActingAsRelated()) {
@@ -150,6 +150,18 @@ class Ancestry {
 		} else return false;
 	}
 	
+	/**
+	 * Use the array of classes represented in the current route to find the one that
+	 * preceeds the current controller.  The preceeding controller is considered to be
+	 * the parent.
+	 * @return string ex: Admin\NewsController
+	 */
+	public function getParentController() {
+		$classes = $this->wildcard->getAllClasses();
+		$i = array_search(get_class($this->controller), $this->wildcard->getAllClasses());
+		if ($i > 0) return $classes[$i-1];
+		else throw new Exception('Error getting the parent controller.');
+	}
 
 	/**
 	 * Guess as what the relationship function on the parent model will be

@@ -226,24 +226,6 @@ class Wildcard {
 	}
 	
 	/**
-	 * Figure out the parent controller of the path
-	 * @return string For admin/base/2/slides/4/edit, returns "base"
-	 */
-	public function getParentController() {
-		
-		// Find the name of the parent controller, which is string followed by
-		// a number followed by the controller's regexp.  Making sure not to confuse
-		// the action on a parent controller with the child action.
-		$pattern = '#/([a-z-]+)/\d+/(?!('.implode('|', $this->actions).')$)'.$this->controllerNameRegex().'#i';
-		if (!preg_match($pattern, $this->path, $matches)) return false;
-		$name = $matches[1];
-		
-		// Convert it to a class
-		return $this->detectController($this->detectControllerClass($name));
-		
-	}
-	
-	/**
 	 * Return the path that the wildcard instance is operating on
 	 * @return string ex: admin/news/2/edit
 	 */
