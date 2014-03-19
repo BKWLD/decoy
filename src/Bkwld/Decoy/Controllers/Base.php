@@ -414,22 +414,50 @@ class Base extends Controller {
 	 */
 	public function store() {
 		
-		// If there is a parent, make sure it's id is valid
-		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-		}
-		
 		// Create a new object and hydrate
 		$item = new Model();
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		App::make('decoy.slug')->merge($item);
+		$slugger = App::make('decoy.slug');
+		$slugger->merge($item);
+
+		// Add foreign keys to the model instance manually.  This is done
+		// This was added so that the unique_with validator could test slugs that
+		// are unqiue across multiple columns.  Those other columns are typically
+		// foreign keys.
+		foreach ($this->allForeignKeyPairs() as $pair) {
+			$item->setAttribute($pair->key, $pair->val);
+			$slugger->addWhere($item, $pair->key, $pair->val);
+		}
+
+		/*
+
+		// If there is a parent, make sure its id is valid
+		if ($parent_id = $this->ancestry->parentId()) {
+			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
+
+			// ...Then set it's foreign keys manually so they are available during validation.
+			// This was added so that the unique_with validator could test slugs that
+			// are unqiue across multiple columns.  Those other columns are typically
+			// foreign keys.
+			$relation = $parent->{$this->parent_to_self}();
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
+				$item->setAttribute($relation->getPlainForeignKey(), $parent_id);
+				App::make('decoy.slug')->addWhere($item, $relation->getPlainForeignKey(), $parent_id);
+			}
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
+				$item->setAttribute($relation->getPlainMorphType(), $relation->getMorphClass());
+				App::make('decoy.slug')->addWhere($item, $relation->getPlainMorphType(), $relation->getMorphClass());
+			}
+		}
+
+		*/
 
 		// Validate
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
-		// Save it
-		if (!empty($parent_id)) $query = $parent->{$this->parent_to_self}()->save($item);
-		else $item->save();
+		// Save it.  We don't save through relations becaue the foreign keys were manually
+		// set previously.  And many to many relationships are not formed during a store().
+		$item->save();
 
 		// Update Decoy::manyToManyChecklist() relationships
 		$many_to_many_checklist = new ManyToManyChecklist();
@@ -488,7 +516,13 @@ class Base extends Controller {
 		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-			App::make('decoy.slug')->merge($item);
+			$slugger = App::make('decoy.slug');
+			$slugger->merge($item);
+
+			// If this is a child, add "where" conditions on the slug uniqueness
+			foreach ($this->allForeignKeyPairs() as $pair) {
+				$slugger->addWhere($item, $pair->key, $pair->val);
+			}
 		}
 
 		// Validate data
@@ -741,6 +775,56 @@ class Base extends Controller {
 		$per_page = Input::get('count', self::PER_PAGE);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
+	}
+
+	// Get all the foreign keys and values on the relationship with the parent
+	/**
+	 * Get all the foreign keys and values on the relationship with the parent
+	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
+	 * @return array A list of key-val objects that have the column name and value for
+	 * the active relationship
+	 */
+	private function allForeignKeyPairs($relation = null) {
+		$pairs = array();
+
+		// Get the relation if not defined
+		if ($relation || ($relation = $this->parentRelation())) {
+
+			// Add standard belongs to foreign key
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
+				$pairs[] = (object) array(
+					'key' => $relation->getPlainForeignKey(), 
+					'val' => $relation->getParentKey()
+				);
+			}
+
+			// Add polymorphic column
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
+				$pairs[] = (object) array(
+					'key' => $relation->getPlainMorphType(), 
+					'val' => $relation->getMorphClass()
+				);
+			}
+
+			// Return the pairs
+			return $pairs;
+
+		// Relation could not be found, so return nothing
+		} else return array();
+
+	}
+
+	/**
+	 * Run the parent relationship function for the active model, returning the Relation
+	 * object. Returns false if none found.
+	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
+	 */
+	private function parentRelation() {
+		if ($this->parent_to_self
+			&& ($parent_id = $this->ancestry->parentId()) 
+			&& ($parent = self::parentFind($parent_id))) {
+			return $parent->{$this->parent_to_self}();
+		} else return false;
 	}
 	
 }
