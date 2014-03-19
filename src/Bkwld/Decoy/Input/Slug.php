@@ -32,7 +32,7 @@ class Slug {
 				
 			// Regular slugs
 			} else {
-				$model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
+				$model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?(,(NULL|\d+))?#', 
 					'$1,slug,'.$id, 
 					$model::$rules['slug']);
 			}
