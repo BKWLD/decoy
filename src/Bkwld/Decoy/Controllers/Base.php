@@ -640,18 +640,20 @@ class Base extends Controller {
 		// Pull the input including files
 		$input = Input::all();
 
-		// If a model instance was passed, merge the input on top of that.  This allows
-		// data that may already be set on the model to be validated.  The input will override
-		// anything already set on the model.  In particular, this is done so that auto
-		// generated fields like the slug can be validated.
-		if ($model) $input = array_merge($model->getAttributes(), $input);
-
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
 		// the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
+
+		// If a model instance was passed, merge the input on top of that.  This allows
+		// data that may already be set on the model to be validated.  The input will override
+		// anything already set on the model.  In particular, this is done so that auto
+		// generated fields like the slug can be validated.  This intentionally comes after the
+		// AJAX conditional so that we still only validate fields that were present in
+		// the AJAX request.
+		if ($model) $input = array_merge($model->getAttributes(), $input);
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
