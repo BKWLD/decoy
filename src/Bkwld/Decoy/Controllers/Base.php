@@ -429,29 +429,6 @@ class Base extends Controller {
 			$slugger->addWhere($item, $pair->key, $pair->val);
 		}
 
-		/*
-
-		// If there is a parent, make sure its id is valid
-		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-
-			// ...Then set it's foreign keys manually so they are available during validation.
-			// This was added so that the unique_with validator could test slugs that
-			// are unqiue across multiple columns.  Those other columns are typically
-			// foreign keys.
-			$relation = $parent->{$this->parent_to_self}();
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
-				$item->setAttribute($relation->getPlainForeignKey(), $parent_id);
-				App::make('decoy.slug')->addWhere($item, $relation->getPlainForeignKey(), $parent_id);
-			}
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
-				$item->setAttribute($relation->getPlainMorphType(), $relation->getMorphClass());
-				App::make('decoy.slug')->addWhere($item, $relation->getPlainMorphType(), $relation->getMorphClass());
-			}
-		}
-
-		*/
-
 		// Validate
 		if ($result = $this->validate(Model::$rules, $item)) return $result;
 
