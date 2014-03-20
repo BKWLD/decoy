@@ -85,7 +85,7 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'many_to_many'      => $view->controller_inst->isChildInManyToMany(),
 		'tags'              => is_a($view->controller_inst->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 		'count'             => is_a($view->listing, 'Illuminate\Pagination\Paginator') ? $view->listing->getTotal() : $view->listing->count(),
-		'paginator_from'    => (Input::get('page', 1)-1) * Input::get('count', Bkwld\Decoy\Controllers\Base::PER_PAGE),
+		'paginator_from'    => (Input::get('page', 1)-1) * Input::get('count', Bkwld\Decoy\Controllers\Base::$per_page),
 	);
 
 	// Apply defaults

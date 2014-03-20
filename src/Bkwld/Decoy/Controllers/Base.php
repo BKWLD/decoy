@@ -39,7 +39,8 @@ class Base extends Controller {
 	//---------------------------------------------------------------------------
 	
 	// Constants
-	const PER_PAGE = 20;
+	static public $per_page = 20;
+	static public $per_sidebar = 6;
 
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
@@ -751,7 +752,7 @@ class Base extends Controller {
 	
 	// Return the per_page based on the input
 	public function perPage() {
-		$per_page = Input::get('count', self::PER_PAGE);
+		$per_page = Input::get('count', self::$per_sidebar);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
 	}

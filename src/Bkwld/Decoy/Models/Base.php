@@ -227,13 +227,6 @@ abstract class Base extends Eloquent {
 	}
 	
 	/**
-	 * For use with related sidebars, take a specific amount
-	 */
-	public function scopeSidebar($query, $count = 6) {
-		return $query->take($count)->get();
-	}
-
-	/**
 	 * Find by the slug.  Like "find()" but use the slug column instead
 	 */
 	static public function findBySlug($slug) {
