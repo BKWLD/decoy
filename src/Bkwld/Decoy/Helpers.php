@@ -83,7 +83,7 @@ class Helpers {
 		} elseif (array_key_exists($column, $test_row)) {
 
 			// Format date if appropriate
-			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $item->$column)) {
+			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', $item->$column)) {
 				return date($date_formats[$convert_dates], strtotime($item->$column));
 			
 			// If the column name has a plural form as a static array on the model, use the key
