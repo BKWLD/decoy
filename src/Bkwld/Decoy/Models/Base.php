@@ -160,18 +160,28 @@ abstract class Base extends Eloquent {
 			if (Str::startsWith($this->image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
 			else $title .= '<img src="'.$this->croppa(40,40).'"/> ';
 		}
-		
+
+		// Append the text portion of the title
+		return $title.$this->titleText();
+
+	}
+
+	/**
+	 * Deduce the source for the title of the model and return that title
+	 * @return string 
+	 */
+	public function titleText() {
+
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
 		$row = $this->getAttributes();
-		if (!empty(static::$title_column)) $title .=  $row[static::$title_column];
-		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
-		else if (isset($row['title'])) $title .= $row['title'];
-		else if (App::make('decoy.router')->action() == 'edit')  $title .= 'Edit';
-		
-		// Return the finished title
-		return $title;
 
+		// Deduce and return
+		if (!empty(static::$title_column)) return $row[static::$title_column];
+		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
+		else if (isset($row['title'])) return $row['title'];
+		else if (App::make('decoy.router')->action() == 'edit') return 'Edit';
+		else return '';
 	}
 
 	/**
