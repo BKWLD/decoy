@@ -34,7 +34,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->before(array($router, 'registerAll'));
 
 		// Do bootstrapping that only matters if user has requested an admin URL
-		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
+		if ($this->app['decoy']->handling()) $this->usingAdmin();
 		
 	}
 	
@@ -150,7 +150,8 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 
+		return array(
+			'decoy', 
 			'decoy.url', 
 			'decoy.router', 
 			'decoy.slug', 

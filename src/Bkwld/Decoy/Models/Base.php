@@ -8,6 +8,7 @@ use Bkwld\Decoy\Input\Files;
 use Config;
 use Croppa;
 use DB;
+use Decoy;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -52,9 +53,7 @@ abstract class Base extends Eloquent {
 		
 		// Remove any hidden/visible settings that may have been set on models if
 		// the user is in the admin
-		if (Request::is(Config::get('decoy::dir').'*')) {
-			$this->visible = $this->hidden = array();
-		}
+		if (Decoy::handling()) $this->visible = $this->hidden = array();
 
 		// Continue Laravel construction
 		parent::__construct($attributes);
@@ -65,12 +64,10 @@ abstract class Base extends Eloquent {
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
 	public function hasGetMutator($key) { 
-		if (Request::is(Config::get('decoy::dir').'*')) return false;
-		else return parent::hasGetMutator($key);
+		return Decoy::handling() ?  false : parent::hasGetMutator($key);
 	}
 	public function hasSetMutator($key) { 
-		if (Request::is(Config::get('decoy::dir').'*')) return false;
-		else return parent::hasSetMutator($key);
+		return Decoy::handling() ?  false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------

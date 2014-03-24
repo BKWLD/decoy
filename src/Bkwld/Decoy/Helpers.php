@@ -461,4 +461,15 @@ class Helpers {
 		return $many_to_many_checklist->render($item, $relationship, $options);
 	}
 
+	/**
+	 * Is Decoy handling the request?
+	 * @return boolean 
+	 */
+	private $is_handling;
+	public function handling() {
+		if (!is_null($this->is_handling)) return $this->is_handling;
+		$this->is_handling = Request::is(Config::get('decoy::dir').'*');
+		return $this->is_handling;
+	}
+
 }
