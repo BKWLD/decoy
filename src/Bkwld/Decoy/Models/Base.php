@@ -62,6 +62,16 @@ abstract class Base extends Eloquent {
 		// Register Laravel model events
 		static::registerModelEvents();
 	}
+
+	// Disable all mutatators while in Admin by returning that no mutators exist
+	public function hasGetMutator($key) { 
+		if (Request::is(Config::get('decoy::dir').'*')) return false;
+		else return parent::hasGetMutator($key);
+	}
+	public function hasSetMutator($key) { 
+		if (Request::is(Config::get('decoy::dir').'*')) return false;
+		else return parent::hasSetMutator($key);
+	}
 	
 	//---------------------------------------------------------------------------
 	// Model event callbacks
