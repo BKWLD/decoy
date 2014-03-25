@@ -8,6 +8,7 @@ use Bkwld\Decoy\Input\Files;
 use Config;
 use Croppa;
 use DB;
+use Decoy;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -52,15 +53,21 @@ abstract class Base extends Eloquent {
 		
 		// Remove any hidden/visible settings that may have been set on models if
 		// the user is in the admin
-		if (Request::is(Config::get('decoy::dir').'*')) {
-			$this->visible = $this->hidden = array();
-		}
+		if (Decoy::handling()) $this->visible = $this->hidden = array();
 
 		// Continue Laravel construction
 		parent::__construct($attributes);
 		
 		// Register Laravel model events
 		static::registerModelEvents();
+	}
+
+	// Disable all mutatators while in Admin by returning that no mutators exist
+	public function hasGetMutator($key) { 
+		return Decoy::handling() ?  false : parent::hasGetMutator($key);
+	}
+	public function hasSetMutator($key) { 
+		return Decoy::handling() ?  false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -160,18 +167,28 @@ abstract class Base extends Eloquent {
 			if (Str::startsWith($this->image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
 			else $title .= '<img src="'.$this->croppa(40,40).'"/> ';
 		}
-		
+
+		// Append the text portion of the title
+		return $title.$this->titleText();
+
+	}
+
+	/**
+	 * Deduce the source for the title of the model and return that title
+	 * @return string 
+	 */
+	public function titleText() {
+
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
 		$row = $this->getAttributes();
-		if (!empty(static::$title_column)) $title .=  $row[static::$title_column];
-		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
-		else if (isset($row['title'])) $title .= $row['title'];
-		else if (App::make('decoy.router')->action() == 'edit')  $title .= 'Edit';
-		
-		// Return the finished title
-		return $title;
 
+		// Deduce and return
+		if (!empty(static::$title_column)) return $row[static::$title_column];
+		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
+		else if (isset($row['title'])) return $row['title'];
+		else if (App::make('decoy.router')->action() == 'edit') return 'Edit';
+		else return '';
 	}
 
 	/**
@@ -227,13 +244,6 @@ abstract class Base extends Eloquent {
 	}
 	
 	/**
-	 * For use with related sidebars, take a specific amount
-	 */
-	public function scopeSidebar($query, $count = 6) {
-		return $query->take($count)->get();
-	}
-
-	/**
 	 * Find by the slug.  Like "find()" but use the slug column instead
 	 */
 	static public function findBySlug($slug) {
@@ -244,8 +254,7 @@ abstract class Base extends Eloquent {
 	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
 	 */
 	static public function findBySlugOrFail($slug) {
-		if ($row = self::findBySlug($slug)) return $row;
-		throw new ModelNotFoundException(get_called_class().' model not found');
+		return static::where('slug', '=', $slug)->firstOrFail();
 	}
 	
 	//---------------------------------------------------------------------------

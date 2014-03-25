@@ -9,7 +9,7 @@
  */
 
 $presenter = new Illuminate\Pagination\BootstrapPresenter($paginator); 
-if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::PER_PAGE): ?>
+if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::$per_page): ?>
 	<div class="pagination">
 	
 		<?// The list of pages ?>
@@ -20,7 +20,7 @@ if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::PER_PAGE): ?>
 		<? endif ?>
 	
 		<?// Per page selector
-		$options = array(Bkwld\Decoy\Controllers\Base::PER_PAGE, 40, 'all');
+		$options = array(Bkwld\Decoy\Controllers\Base::$per_page, 40, 'all');
 		$count = Input::get('count', $options[0]); ?>
 		<ul class="per-page">
 			<li class="disabled"><span>Show</span></li>

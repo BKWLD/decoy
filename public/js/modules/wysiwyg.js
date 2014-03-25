@@ -11,7 +11,7 @@ define(function(require) {
 	// Default config
 	var config = {
 		customConfig: '', // Don't load external config js file
-		enterMode : CKEDITOR.ENTER_BR,
+		enterMode : CKEDITOR.ENTER_P, // <br>s are no good because ul/ol isn't allowed in them
 		allowedContent: true, // Allow all HTML tags
 		
 		// Don't add entities, trust the input.  This was added so that entities in the

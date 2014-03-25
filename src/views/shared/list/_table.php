@@ -15,8 +15,8 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 // Test the data for presence of special properties
 $actions = 2; // Default
 if ($listing->count()) {
-	$test_row = $listing[0]->getAttributes();
-	
+	$test_row = $listing[0]->toArray();
+
 	// Has visibilty toggle
 	$has_visible = array_key_exists('visible', $test_row);
 		
@@ -63,20 +63,20 @@ if ($listing->count()) {
 			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
 			// rows from multiple models
 			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
+		
+			// Figure out the edit link
+			if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->getKey()));
+			else $edit = URL::to(DecoyURL::relative('edit', $item->getKey(), $controller));
 			?>
 	
-			<tr 
-				data-model-id="<?=$item->id?>"
-				<? if (!empty($parent_id)): ?> data-parent-id="<?=$parent_id?>"<? endif ?>
+			<tr data-model-id="<?=$item->getKey()?>"
 				<?
-				// Add position value from the row or from the pivot table.  
-				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
-				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
-				
-				// Figure out the edit link
-				// if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->id));
-				// else $edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
-				$edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
+				// Render parent id
+				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
+
+				// Add position value from the row or from the pivot table.
+				if (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}' ";
+				else if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}' ";
 				?>
 			>
 				<td><input type="checkbox" name="select-row"></td>

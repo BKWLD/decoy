@@ -26,13 +26,13 @@ class Slug {
 
 			// If we're using the unique_with custom validator from the BKWLD bundle
 			if (strpos($model::$rules['slug'], 'unique_with')) {
-				$model::$rules['slug'] = preg_replace('#(unique_with:\w+,\w+)(,slug)?#i', 
+				$model::$rules['slug'] = preg_replace('#(unique_with:\w+,[\w;]+)(,slug)?#i', 
 					'$1,slug,'.$id, 
 					$model::$rules['slug']);
 				
 			// Regular slugs
 			} else {
-				$model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?#', 
+				$model::$rules['slug'] = preg_replace('#(unique:\w+)(,slug)?(,(NULL|\d+))?#', 
 					'$1,slug,'.$id, 
 					$model::$rules['slug']);
 			}
@@ -54,7 +54,43 @@ class Slug {
 				break;
 			}
 		}
-		
 	}
+
+	/**
+	 * Add where conditions to the rule.  This is designed to be "chained" with the regular
+	 * slug merge function
+	 */
+	public function addWhere($item, $column, $val) {
+
+		// Get the class name
+		$model = get_class($item);
+
+		// Only act when the rules have a slug column and a "unique" rule
+		if (!(in_array('slug', array_keys($model::$rules))
+			&& preg_match('#unique(\||:|$)#i', $model::$rules['slug']))) return;
+
+		// Break up the rules
+		$rules = explode('|', $model::$rules['slug']);
+
+		// Loop through the rules to find the "unique" rule
+		$rules = array_map(function($rule) use ($item, $column, $val) {
+			if (!preg_match('#^unique#i', $rule)) return $rule;
+
+			// Add a null primary key value if not defined
+			$rule = preg_replace('#(unique:\w+)(,slug)?$#', '$1,slug,NULL', $rule);
+
+			// Add the primary key column name if not defined
+			$rule = preg_replace('#unique:\w+,slug,\w+$#', '$0,'.$item->getKeyName(), $rule);
+
+			// Now, add the where
+			return $rule.','.$column.','.$val;
+
+		}, $rules);
+
+		// Re-apply the rules to the model
+		$model::$rules['slug'] = implode('|', $rules);
+
+	}
+	
 	
 }

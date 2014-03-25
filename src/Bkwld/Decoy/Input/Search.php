@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Input;
 
 // Dependencies
+use Bkwld\Decoy\Exception;
 use Input;
 use Log;
 
@@ -40,30 +41,7 @@ class Search {
 		return $query;
 		
 	}
-	
-	// Make the shorthand options of the search config explicit
-	public function longhand($config) {
-		$search = array();
-		foreach($config as $key => $val) {
-			
-			// Not associative assume it's a text field
-			if (is_numeric($key)) {
-				$search[$val] = array('type' => 'text', 'label' => str_replace('_', ' ', ucwords($val)));
-			
-			// If value isn't an array, make a default label
-			} else if (!is_array($val)) {
-				$search[$key] = array('type' => $val, 'label' => str_replace('_', ' ', ucwords($key)));
-			
-			// Add the meta array
-			} else {
-				if (empty($val['label'])) $val['label'] = str_replace('_', ' ', ucwords($key));
-				$search[$key] = $val;
-			}
-			
-		}
-		return $search;
-	}
-	
+
 	// Add a condition to a query
 	private function condition($query, $field, $comparison, $input) {
 		switch ($comparison) {
@@ -86,5 +64,57 @@ class Search {
 				return $query->where($field, $comparison, $input);
 		}
 	}
+	
+	// Make the shorthand options of the search config explicit
+	public function longhand($config) {
+		$search = array();
+		foreach($config as $key => $val) {
+			
+			// Not associative assume it's a text field
+			if (is_numeric($key)) {
+				$search[$val] = array('type' => 'text', 'label' => str_replace('_', ' ', ucwords($val)));
+			
+			// If value isn't an array, make a default label
+			} else if (!is_array($val)) {
+				$search[$key] = array('type' => $val, 'label' => str_replace('_', ' ', ucwords($key)));
+			
+			// Add the meta array
+			} else {
+
+				// Make a default label
+				if (empty($val['label'])) $val['label'] = str_replace('_', ' ', ucwords($key));
+
+				// Support class static method or variable as options for a select
+				if (!empty($val['type']) 
+					&& $val['type'] == 'select' 
+					&& !empty($val['options']) 
+					&& is_string($val['options'])) {
+					$val['options'] = $this->longhandOptions($val['options']);
+				}
+
+				// Apply the meta data
+				$search[$key] = $val;
+			}
+			
+		}
+		return $search;
+	}
+
+	// Parse select options
+	private function longhandOptions($options) {
+
+		// Call static method
+		if (preg_match('#::.+\(\)#', $options)) return call_user_func($options);
+
+		// Return static variable
+		else if (preg_match('#::\$#', $options)) {
+			list($class, $var) = explode('::$', $options);
+			return $class::$$var;
+		
+		// Unknown format
+		} else throw new Exception('Could not parse option: '.$options);
+
+	}
+
 	
 }

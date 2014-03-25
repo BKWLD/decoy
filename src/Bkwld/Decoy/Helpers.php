@@ -72,6 +72,9 @@ class Helpers {
 		// Convert the item to an array so I can test for values
 		$test_row = $item->getAttributes();
 
+		// Get values needed for static array test
+		$class = get_class($item);
+
 		// If the object has a method defined with the column vaue, use it
 		if (method_exists($item, $column)) {
 			return call_user_func(array($item, $column));
@@ -80,9 +83,25 @@ class Helpers {
 		} elseif (array_key_exists($column, $test_row)) {
 
 			// Format date if appropriate
-			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $item->$column)) {
+			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', $item->$column)) {
 				return date($date_formats[$convert_dates], strtotime($item->$column));
-				
+			
+			// If the column name has a plural form as a static array on the model, use the key
+			// against that array and pull the value.  This is designed to handle my convention
+			// of setting the source for pulldowns, radios, and checkboxes as static arrays
+			// on the model.
+			} else if (($plural = Str::plural($column))
+				&& isset($class::$$plural)
+				&& is_array($class::$$plural)) {
+				$ar = $class::$$plural; // PHP fatal errored unless I saved out this reference
+
+				// Support comma delimited lists by splitting on commas before checking
+				// if the key exists in the array
+				return join(', ', array_map(function($key) use ($ar, $class, $plural) {
+					if (array_key_exists($key, $class::$$plural)) return $ar[$key];
+					else return $key; 
+				}, explode(',', $item->$column)));
+
 			// Just display the column value
 			} else {
 				return $item->$column;
@@ -401,6 +420,10 @@ class Helpers {
 	 */
 	public function datetime($id, $label = null, $value = 'now') {
 		
+		// Preserve the input value, allowing the specific field classes
+		// to massage the visible date in their own way.
+		$original_value = $value;
+
 		// Get the initial value
 		if ($value == 'now') $value = time();
 		if ($former_value = Former::getValue($id)) {
@@ -412,8 +435,8 @@ class Helpers {
 		
 		// Add UI elements plus the hidden field that will contain the mysql formatted value
 		return '<div class="datetime">'
-			.$this->date($id, $label, $value)
-			.$this->time($id, $label, $value)
+			.$this->date($id, $label, $original_value)
+			.$this->time($id, $label, $original_value)
 			.(Former::hidden($id)->id($id)->forceValue($value)->class('datetime'))
 			.'</div>';
 	}
@@ -436,6 +459,17 @@ class Helpers {
 	public function manyToManyChecklist($item, $relationship, $options = array()) {
 		$many_to_many_checklist = new Input\ManyToManyChecklist();
 		return $many_to_many_checklist->render($item, $relationship, $options);
+	}
+
+	/**
+	 * Is Decoy handling the request?
+	 * @return boolean 
+	 */
+	private $is_handling;
+	public function handling() {
+		if (!is_null($this->is_handling)) return $this->is_handling;
+		$this->is_handling = Request::is(Config::get('decoy::dir').'*');
+		return $this->is_handling;
 	}
 
 }
