@@ -110,9 +110,9 @@ Set the maximum size of uploaded images. If an uploaded image is larger, it
 gets scaled down proportionally. Set to 0 to disable this feature.
 */
 $config['Images'] = Array(
-		'maxWidth' => 1600,
-		'maxHeight' => 1200,
-		'quality' => 80);
+		'maxWidth' => 2400,
+		'maxHeight' => 2400,
+		'quality' => 90);
 
 /*
 RoleSessionVar : the session variable name that CKFinder must use to retrieve
