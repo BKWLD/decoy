@@ -141,14 +141,14 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->sidebar(),
+					'listing'           => $item->postImages()->ordered()->take(self::$per_sidebar)->get(),
 				),
 
 			);
 		}
 	}
 
-The related property is a specially named one.  The `decoy::shared.list.form_with_related._footer` partial looks for this and iterates through it, generating `decoy::shared.list._standard` partials with the data you pass in each element of the related array.  The `sidebar()` function is a helper scope in the Decoy base model that combines a `take()` and `get()`.
+The related property is a specially named one.  The `decoy::shared.list.form_with_related._footer` partial looks for this and iterates through it, generating `decoy::shared.list._standard` partials with the data you pass in each element of the related array.
 
 A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up as follows.  Note, this assumes that you've named the relationships on your model as described in the Models section of the README under "many to many to self".
 
@@ -168,7 +168,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				array(
 					'title'             => 'Related',
 					'controller'        => $this->controller,
-					'listing'           => $item->posts()->ordered()->sidebar(),
+					'listing'           => $item->posts()->ordered()->take(self::$per_sidebar)->get(),
 					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
@@ -218,7 +218,7 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->sidebar(),
+			'listing'     => $related->take(self::$per_sidebar)->get(),
 		);
 	}
 
