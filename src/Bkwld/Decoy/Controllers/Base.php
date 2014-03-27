@@ -752,7 +752,7 @@ class Base extends Controller {
 	
 	// Return the per_page based on the input
 	public function perPage() {
-		$per_page = Input::get('count', self::$per_sidebar);
+		$per_page = Input::get('count', self::$per_page);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
 	}
