@@ -488,8 +488,9 @@ class Base extends Controller {
 		}
 
 		// Hydrate for drag-and-drop sorting
-		$position = new Position($item, $this->self_to_parent);
-		if ($position->has()) $position->fill(); 
+		if (Request::ajax() 
+			&& ($position = new Position($item, $this->self_to_parent)) 
+			&& $position->has()) $position->fill(); 
 		
 		// ... else hydrate normally
 		else {
