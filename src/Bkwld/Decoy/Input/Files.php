@@ -70,6 +70,11 @@ class Files {
 		$fields = $this->fields($item);
 		foreach(App::make('request')->files->all() as $field => $file) {
 			
+			// If files isn't a file object, ignore it.  This may happen if there is a file input
+			// field that is labeled like an array, i.e. <input name="some[1][thing]>".  In this case,
+			// don't try to handle it.
+			if (!is_a($file, 'SplFileInfo')) continue;
+
 			// Require there to be an entry in the rules array for all files.  This will matter
 			// when deleting later
 			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", or "file" rule.  Decoy requires all files to have an entry in the $rules array.');
