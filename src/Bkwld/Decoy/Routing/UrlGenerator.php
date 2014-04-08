@@ -125,9 +125,7 @@ class UrlGenerator {
 		$controller = preg_replace('#Controller$#', '', $controller);
 		
 		// Convert study caps to dashes
-		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller, $matches);
-		$controller = implode("-", $matches[0]);
-		$controller = strtolower($controller);
+		$controller = Str::snake($controller, '-');
 		
 		// Done
 		return $controller;
