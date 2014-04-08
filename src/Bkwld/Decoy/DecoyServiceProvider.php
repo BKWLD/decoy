@@ -55,6 +55,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
 
+		// Use Decoy's subclass of the Sentry user class
+		Config::set('cartalyst/sentry::users.model', 'Bkwld\Decoy\Auth\SentryUser');
+
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
