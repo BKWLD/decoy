@@ -3,6 +3,7 @@
 // Dependencies
 use Config;
 use Illuminate\Http\Request;
+use Str;
 
 /**
  * This class exists to help make links between pages in Decoy, which is
@@ -53,7 +54,7 @@ class UrlGenerator {
 		if ($child) {
 			
 			// If the child has a backslash, it's a namespaced class name, so convert to just name
-			if (strpos($child, '\\') !== false) $child = $this->controllerForUrl($child);
+			if (strpos($child, '\\') !== false) $child = $this->slugController($child);
 			
 			// If the child is the same as the current controller in the path, then don't add the
 			// child.  For instance, if you are on an articles controller and the child is for
@@ -97,7 +98,7 @@ class UrlGenerator {
 		}
 		
 		// Convert controller for URL
-		$controller = $this->controllerForUrl($controller);
+		$controller = $this->slugController($controller);
 		
 		// Begin the url
 		$path = '/'.$decoy.'/'.$controller;
@@ -118,7 +119,7 @@ class UrlGenerator {
 	 * @param string $controller ex: Admin\ArticlesAreCoolController
 	 * @return string ex: articles-are-cool
 	 */
-	private function controllerForUrl($controller) {
+	public function slugController($controller) {
 		
 		// Get the controller name
 		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $controller);
