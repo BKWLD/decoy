@@ -103,6 +103,7 @@
 	// Give images a border
 	tr img {
 		border: 1px solid $grey-border;
+		@include box-sizing(border-box);
 	}
 	
 	// Make gravatar images a good size (for the admins view)
