@@ -39,15 +39,24 @@ class Helpers {
 	 */
 	public function bodyClass() {
 		$path = Request::path();
+		$classes = array();
 
-		// Spell condition for the reset page, which passes the token in as part of the route
+		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
 
 		// Get the controller and action from the URL
 		preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
 		$controller = empty($matches[1]) ? 'login' : $matches[1];
 		$action = empty($matches[2]) ? 'index' : $matches[2];
-		return $controller.' '.$action;
+		array_push($classes, $controller, $action);
+
+		// Add the admin roles
+		foreach(app('decoy.auth')->role() as $role) {
+			array_push($classes, 'role-'.$role);
+		}
+
+		// Return the list of classes
+		return implode(' ', $classes);
 	}
 
 	/**
