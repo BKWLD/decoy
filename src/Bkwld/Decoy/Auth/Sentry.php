@@ -46,8 +46,12 @@ class Sentry implements AuthInterface {
 	// associtated with the user
 	public function role($role = null) {
 		if (!($user = $this->user())) return null;
+
+		// Return boolean as to whether the passed group is attached to the user
 		if ($role) return $user->inGroup(CartalystSentry::findGroupByName($role));
-		return $user->getGroups();
+		
+		// Return all group names
+		return $user->getGroups()->map(function($group) { return $group->getName(); });
 	}
 
 	// Boolean as to whether the user has developer entitlements
