@@ -42,9 +42,11 @@ class Sentry implements AuthInterface {
 		return $user->hasAccess('admin');
 	}
 	
-	// The logged in user's permissions role
-	public function role() {
+	// Check if a user is in a specific role or return the list of all roles
+	// associtated with the user
+	public function role($role = null) {
 		if (!($user = $this->user())) return null;
+		if ($role) return $user->inGroup(CartalystSentry::findGroupByName($role));
 		return $user->getGroups();
 	}
 
