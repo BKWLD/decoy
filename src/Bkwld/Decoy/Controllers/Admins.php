@@ -4,6 +4,7 @@
 use App;
 use DecoyURL;
 use Input;
+use Former;
 use Sentry;
 use Redirect;
 use URL;
@@ -54,6 +55,11 @@ class Admins extends Base {
 		
 		// Create
 		$id = Model::create(Input::get());
+
+		// If a group was passed, add the group
+		if ($group = Input::get('group')) {
+			Model::find($id)->sentryUser()->addGroup(Sentry::findGroupByName($group));
+		}
 		
 		// Redirect to edit view
 		return Redirect::to(DecoyURL::relative('edit', $id));
@@ -67,8 +73,12 @@ class Admins extends Base {
 		// Make password optional
 		unset(Model::$rules['password']);
 		
-		// Rest of logic is the default
-		return parent::edit($id);
+		// Run default logic (which doesn't return a response)
+		parent::edit($id);
+
+		// Populate the group
+		Former::populateField('group', Model::find($id)->getGroupName());
+
 	}
 	
 	/**

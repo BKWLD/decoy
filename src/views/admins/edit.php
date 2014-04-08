@@ -17,11 +17,15 @@
 		<div class="span6"><?= Former::text('last_name', 'Last name')->class('span3') ?></div>
 	</div>
 
+	<? if(($groups = Config::get('decoy::groups')) && !empty($groups)): ?>
+		<?= Former::radios('group')->radios(Bkwld\Library\Laravel\Former::radioArray($groups)) ?>
+	<? endif ?>
+
 	<?= Former::checkbox('send_email', false)
 		->value(1)
 		->text(empty($item)?
 			'Send welcome email, including password':
-			'Email '.$item->first_name.' with changes') ?>
+			'Email '.$item->first_name.' with login changes') ?>
 		
 	<hr/>
 	<div class="controls actions">

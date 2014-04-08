@@ -15,6 +15,13 @@
 	// After a succesfull login, this is the absolute path or url that should be
 	// redirected to
 	'post_login_redirect' => '/admin/admins',
+
+	// These groups that super admins can assign other admins to on the admin
+	// edit page.  If left empty, all admins will be assigned to the default
+	// level of "admin".  It 
+	'groups' => array(
+		// 'super' => '<b>Super admin</b> - Can manage everything within the admin site'
+	),
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

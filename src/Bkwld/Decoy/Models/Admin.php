@@ -39,7 +39,7 @@ class Admin extends Base {
 		return DB::table('users')
 			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
 			->leftJoin('throttle', 'throttle.user_id', '=', 'users.id')
-			->where('users_groups.group_id', '=', self::adminGroupId())
+			->whereIn('users_groups.group_id', self::adminGroupIds())
 			->orderBy('last_name', 'asc')
 			->groupBy('users.id')
 			->select(array('users.id',
@@ -56,7 +56,7 @@ class Admin extends Base {
 	static public function count() {
 		return DB::table('users')
 			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->where('users_groups.group_id', '=', self::adminGroupId())
+			->whereIn('users_groups.group_id', self::adminGroupIds())
 			->count();
 	}
 	
@@ -98,11 +98,33 @@ class Admin extends Base {
 	}
 	
 	/**
-	 * Get the admin group id
+	 * Get the ids of all groups that have the "admin" permission
 	 * @return integer
 	 */
-	static public function adminGroupId() {
-		return Sentry::getGroupProvider()->findByName('admins')->id;
+	static public function adminGroupIds() {
+
+		// Get all the groups that are admins
+		$groups = array_filter(Sentry::findAllGroups(), function($group) {
+			$permissions = $group->getPermissions();
+			return !empty($permissions['admin']);
+		});
+
+		// Return just their ids
+		return array_map(function($group) {
+			return $group->getId();
+		}, $groups);
+	}
+
+	/**
+	 * Get the group name of the admin.  This will only return group
+	 * names that are explicitly in the `groups` config
+	 */
+	public function getGroupName() {
+		$keys = array_keys(Config::get('decoy::groups'));
+		$group = array_first($this->sentryUser()->getGroups(), function($i, $group) use ($keys) {
+			return in_array($group->getName(), $keys);
+		});
+		if ($group) return $group->getName();
 	}
 	
 	/**
@@ -122,9 +144,14 @@ class Admin extends Base {
 			'activated' => true,
 		));
 		
-		// Add to admins
-    $group = Sentry::getGroupProvider()->findByName('admins');
-    $user->addGroup($group);
+		// Add to the specified group
+		if (isset($input->group)) {
+			$user->addGroup(Sentry::findGroupByName($input->group));
+
+		// Else add to the default group
+		} else {
+			$user->addGroup(Sentry::findGroupByName('admins'));
+		}
 		
 		// Send email
 		if (!empty($input->send_email)) {
@@ -167,6 +194,22 @@ class Admin extends Base {
 		$user->first_name = $input->first_name;
 		$user->last_name = $input->last_name;
 		$user->save();
+
+		// If a group was passed, add the group and remove the old groups
+		if (isset($input->group)) {
+
+			// Remove the old group IF it is one of the onese that are listed
+			// in the config.  Aka, one of the ones that was actually selectable
+			// in the admin.  This keeps, for instance, the developer group attached.
+			$keys = array_keys(Config::get('decoy::groups'));
+			foreach($user->getGroups() as $group) {
+				if (!in_array($group->getName(), $keys)) continue;
+				$user->removeGroup($group);
+			}
+
+			// Add the new group
+			$user->addGroup(Sentry::findGroupByName($input->group));
+		}
 		
 		// Send email
 		if (!empty($input->send_email)) {
