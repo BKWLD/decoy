@@ -51,8 +51,11 @@ class Helpers {
 		array_push($classes, $controller, $action);
 
 		// Add the admin roles
-		foreach(app('decoy.auth')->role() as $role) {
-			array_push($classes, 'role-'.$role);
+		$roles = app('decoy.auth')->role();
+		if (is_array($roles)) {
+			foreach($roles as $role) {
+				array_push($classes, 'role-'.$role);
+			}
 		}
 
 		// Return the list of classes
