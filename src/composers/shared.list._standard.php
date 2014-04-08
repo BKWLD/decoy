@@ -11,7 +11,7 @@ as part of when the view was created.  As in View::make()->with()
 		not be paginated
 		
 	- controller : A string depicting the controller.  This is used in
-		generating links.  I.e. 'admin.news'
+		generating links.  I.e. 'Admin\NewsController'
 		
 	- columns (optional) : An array of key value pairs.  The keys are the title of
 		the column.  The values are the database column or method to call
