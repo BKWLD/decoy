@@ -351,7 +351,7 @@ That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll ne
 
 Here is an example of a groups and permissions from the Decoy config:
 
-	'groups' => array(
+	'roles' => array(
 		'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
 		'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
 		'super' => '<b>Super Admin</b> - Can manage everything.',
@@ -370,7 +370,7 @@ Here is an example of a groups and permissions from the Decoy config:
 		),
 	),
 
-The groups array generates the list of groups on the Admin edit screen.  The keys of that array become Groups in Sentry.  Within Decoy, these are called roles.
+The roles array generates the list of roles on the Admin edit screen.  The keys of that array become Groups in Sentry.
 
 The permissions array defines what a user can and can't do.  This could have been run through Sentry but I chose my own approach for two reasons:
 
