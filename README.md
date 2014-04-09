@@ -358,14 +358,13 @@ Here is an example of a groups and permissions from the Decoy config:
 	),
 
 	'permissions' => array(
-		'cant' => array(
-			'general' => array(
-				'categories.create',
-				'categories.destroy',
-				'slides.create',
-				'slides.destroy',
-				'sub-categories.create',
-				'sub-categories.destroy',
+		'general' => array(
+			'cant' => array(
+				'create.categories',
+				'destroy.categories',
+				'manage.slides',
+				'manage.sub-categories',
+				'manage.forms',
 			),
 		),
 	),

@@ -19,16 +19,10 @@
 	// Roles that super admins can assign other admins to on the admin
 	// edit page.  If left empty, all admins will be assigned to the default
 	// level of "admin".
-	'roles' => array(
-		// 'super' => '<b>Super admin</b> - Can manage everything within the admin site'
-	),
+	'roles' => array(),
 
 	// Permissions settings
-	'permissions' => array(
-		'cant' => array(
-			// 'limited' => array('news.destroy')
-		),
-	),
+	'permissions' => array(),
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

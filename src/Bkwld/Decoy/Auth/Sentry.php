@@ -73,8 +73,8 @@ class Sentry implements AuthInterface {
 		// They must be logged in
 		if (!($user = $this->user())) return false;
 
-		// If no permissions have been defined, do nothing.  Only supporting "cant" for now.
-		if (!Config::has('decoy::permissions.cant')) return true;
+		// If no permissions have been defined, do nothing.  Btw, only supporting "cant" for now.
+		if (!Config::has('decoy::permissions')) return true;
 
 		// Get the slug version of the controller.  Test if a URL was passed first
 		// and, if not, treat it like a full controller name.  URLs are used in the nav
@@ -87,8 +87,8 @@ class Sentry implements AuthInterface {
 
 			// If the action is listed as "can't" then immediately deny.  Also check for
 			// "manage" which means they can't do ANYTHING
-			$actions = Config::get('decoy::permissions.cant.'.$role);
-			if (in_array($controller.'.'.$action, $actions) || in_array($controller.'.manage', $actions)) return false;
+			$actions = Config::get('decoy::permissions.'.$role.'.cant');
+			if (in_array($action.'.'.$controller, $actions) || in_array('manage.'.$controller, $actions)) return false;
 		}
 
 		// I guess we're good to go
