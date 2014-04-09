@@ -74,7 +74,7 @@ class Sentry implements AuthInterface {
 		if (!($user = $this->user())) return false;
 
 		// If no permissions have been defined, do nothing.  Only supporting "cant" for now.
-		if (empty(Config::get('decoy::permissions.cant'))) return true;
+		if (!Config::has('decoy::permissions.cant')) return true;
 
 		// Get the slug version of the controller
 		$controller = DecoyURL::slugController($controller);
