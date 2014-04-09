@@ -17,8 +17,8 @@
 		<div class="span6"><?= Former::text('last_name', 'Last name')->class('span3') ?></div>
 	</div>
 
-	<? if(($groups = Config::get('decoy::groups')) && !empty($groups)): ?>
-		<?= Former::radios('group')->radios(Bkwld\Library\Laravel\Former::radioArray($groups)) ?>
+	<? if(($roles = Config::get('decoy::roles')) && !empty($roles)): ?>
+		<?= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles)) ?>
 	<? endif ?>
 
 	<?= Former::checkbox('send_email', false)
@@ -30,12 +30,18 @@
 	<hr/>
 	<div class="controls actions">
 		<div class="btn-group">
-			<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
-			<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
-			<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+			<? if (app('decoy.auth')->can('update', $controller)): ?>
+				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+			<? endif ?>
+			<? if (app('decoy.auth')->can('update', $controller) && app('decoy.auth')->can('create', $controller)): ?>
+				<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
+			<? endif ?>
+			<? if (app('decoy.auth')->can('update', $controller)): ?>
+				<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+			<? endif ?>
 		</div>
 		
-		<? if (!empty($item)): ?>
+		<? if (!empty($item) && app('decoy.auth')->can('update', $controller)): ?>
 			
 			<? if (!$item->disabled()): ?>
 				<a class="btn btn-warning js-tooltip" href="<?=URL::to(DecoyURL::relative('disable', $item->id))?>" title="Remove ability to login">

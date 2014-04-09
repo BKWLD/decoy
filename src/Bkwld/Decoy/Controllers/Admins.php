@@ -55,11 +55,6 @@ class Admins extends Base {
 		
 		// Create
 		$id = Model::create(Input::get());
-
-		// If a group was passed, add the group
-		if ($group = Input::get('group')) {
-			Model::find($id)->sentryUser()->addGroup(Sentry::findGroupByName($group));
-		}
 		
 		// Redirect to edit view
 		return Redirect::to(DecoyURL::relative('edit', $id));
@@ -76,8 +71,8 @@ class Admins extends Base {
 		// Run default logic (which doesn't return a response)
 		parent::edit($id);
 
-		// Populate the group
-		Former::populateField('group', Model::find($id)->getGroupName());
+		// Populate the role
+		Former::populateField('role', Model::find($id)->getRoleName());
 
 	}
 	

@@ -116,11 +116,11 @@ class Admin extends Base {
 	}
 
 	/**
-	 * Get the group name of the admin.  This will only return group
-	 * names that are explicitly in the `groups` config
+	 * Get the role name of the admin.  This will only return group
+	 * names that are explicitly in the `roles` config
 	 */
-	public function getGroupName() {
-		$keys = array_keys(Config::get('decoy::groups'));
+	public function getRoleName() {
+		$keys = array_keys(Config::get('decoy::roles'));
 		$group = array_first($this->sentryUser()->getGroups(), function($i, $group) use ($keys) {
 			return in_array($group->getName(), $keys);
 		});
@@ -145,8 +145,8 @@ class Admin extends Base {
 		));
 		
 		// Add to the specified group
-		if (isset($input->group)) {
-			$user->addGroup(Sentry::findGroupByName($input->group));
+		if (isset($input->role)) {
+			$user->addGroup(Sentry::findGroupByName($input->role));
 
 		// Else add to the default group
 		} else {
@@ -195,20 +195,20 @@ class Admin extends Base {
 		$user->last_name = $input->last_name;
 		$user->save();
 
-		// If a group was passed, add the group and remove the old groups
-		if (isset($input->group)) {
+		// If a role was passed, add the group and remove the old groups
+		if (isset($input->role)) {
 
 			// Remove the old group IF it is one of the onese that are listed
 			// in the config.  Aka, one of the ones that was actually selectable
 			// in the admin.  This keeps, for instance, the developer group attached.
-			$keys = array_keys(Config::get('decoy::groups'));
+			$keys = array_keys(Config::get('decoy::roles'));
 			foreach($user->getGroups() as $group) {
 				if (!in_array($group->getName(), $keys)) continue;
 				$user->removeGroup($group);
 			}
 
 			// Add the new group
-			$user->addGroup(Sentry::findGroupByName($input->group));
+			$user->addGroup(Sentry::findGroupByName($input->role));
 		}
 		
 		// Send email

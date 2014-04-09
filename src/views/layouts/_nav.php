@@ -69,7 +69,7 @@
 							</a>
 							<ul class="dropdown-menu">
 								
-								<? if (is_a($auth, 'Bkwld\Decoy\Auth\Sentry')): ?>
+								<? if (is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && app('decoy.auth')->can('read', 'admins')): ?>
 									<li><a href="<?=DecoyURL::action('Bkwld\Decoy\Controllers\Admins@index')?>">Admins</a></li>
 									<li><a href="<?=$auth->userUrl()?>">Your account</a></li>
 									<li class="divider"></li>
