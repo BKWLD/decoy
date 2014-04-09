@@ -92,6 +92,7 @@ class Sentry implements AuthInterface {
 			// If the action is listed as "can't" then immediately deny.  Also check for
 			// "manage" which means they can't do ANYTHING
 			$actions = Config::get('decoy::permissions.'.$role.'.cant');
+			if (empty($actions)) continue; // If no permissions are defined in can't, they are good to go
 			if (in_array($action.'.'.$controller, $actions) || in_array('manage.'.$controller, $actions)) return false;
 		}
 
