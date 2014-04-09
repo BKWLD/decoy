@@ -2,6 +2,7 @@
 
 // Dependencies
 use Cartalyst\Sentry\Users\UserNotFoundException;
+use Config;
 use DecoyURL;
 use HTML;
 use Sentry as CartalystSentry;
@@ -42,6 +43,13 @@ class Sentry implements AuthInterface {
 		return $user->hasAccess('admin');
 	}
 	
+	// Boolean as to whether the user has developer entitlements
+	public function developer() {
+		if (!($user = $this->user())) return false; // They must be logged in
+		if ($user->hasAccess('developer')) return true; // They must be a developer
+		return strpos($user->email, '@bkwld.com') !== false; // ... or have bkwld in their email
+	}
+
 	// Check if a user is in a specific role or return the list of all roles
 	// associtated with the user
 	public function role($role = null) {
@@ -54,11 +62,32 @@ class Sentry implements AuthInterface {
 		return $user->getGroups()->map(function($group) { return $group->getName(); });
 	}
 
-	// Boolean as to whether the user has developer entitlements
-	public function developer() {
-		if (!($user = $this->user())) return false; // They must be logged in
-		if ($user->hasAccess('developer')) return true; // They must be a developer
-		return strpos($user->email, '@bkwld.com') !== false; // ... or have bkwld in their email
+	/**
+	 * Check if the user has permission to do something
+	 * @param string $controller ex: Admin\ArticlesAreCoolController
+	 * @param string $action ex: destroy
+	 * @return boolean
+	 */
+	public function can($controller, $action) {
+
+		// They must be logged in
+		if (!($user = $this->user())) return false;
+
+		// If no permissions have been defined, do nothing.  Only supporting "cant" for now.
+		if (empty(Config::get('decoy::permissions.cant'))) return true;
+
+		// Get the slug version of the controller
+		$controller = DecoyURL::slugController($controller);
+
+		// Loop through the users roles
+		foreach($this->role() as $role) {
+
+			// If the action is listed as "can't" then immediately deny
+			if (in_array($controller.'.'.$action, Config::get('decoy::permissions.cant.'.$role))) return false;
+		}
+
+		// I guess we're good to go
+		return true;
 	}
 	
 	// ---------------------------------------------------------------

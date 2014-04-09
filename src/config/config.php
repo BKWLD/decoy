@@ -22,6 +22,12 @@
 	'groups' => array(
 		// 'super' => '<b>Super admin</b> - Can manage everything within the admin site'
 	),
+
+	// Permissions settings
+	'permissions' => array(
+		'cant' => array(
+		),
+	),
 	
 	// -----------------------------------------------------
 	// Decoy Defaults

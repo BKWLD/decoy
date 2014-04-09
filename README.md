@@ -347,3 +347,35 @@ That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll ne
 
 	!= Former::hidden('category_id', $parent_id)
 
+### Permissions
+
+Here is an example of a groups and permissions from the Decoy config:
+
+	'groups' => array(
+		'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
+		'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
+		'super' => '<b>Super Admin</b> - Can manage everything.',
+	),
+
+	'permissions' => array(
+		'cant' => array(
+			'general' => array(
+				'categories.create',
+				'categories.destroy',
+				'slides.create',
+				'slides.destroy',
+				'sub-categories.create',
+				'sub-categories.destroy',
+			),
+		),
+	),
+
+The groups array generates the list of groups on the Admin edit screen.  The keys of that array become Groups in Sentry.  Within Decoy, these are called roles.
+
+The permissions array defines what a user can and can't do.  This could have been run through Sentry but I chose my own approach for two reasons:
+
+1. I didn't like having to make database migrations everytime a group permissions configuration changed
+2. In many projects, most roles can do almost everything and I wanted to be able to blacklist actions.  Sentry operates from a whitelist-only perspective.
+
+In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.
+

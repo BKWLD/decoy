@@ -17,12 +17,18 @@ It expects:
 	<hr/>
 	<div class="controls actions">
 		<div class="btn-group">
-			<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
-			<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
-			<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+			<? if (app('decoy.auth')->can($controller, 'update')): ?>
+				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+			<? endif ?>
+			<? if (app('decoy.auth')->can($controller, 'update') && app('decoy.auth')->can($controller, 'create')): ?>
+				<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
+			<? endif ?> 
+			<? if (app('decoy.auth')->can($controller, 'update')): ?>
+				<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
+			<? endif ?>
 		</div>
 		
-		<? if (!empty($item)): ?>
+		<? if (!empty($item) && app('decoy.auth')->can($controller, 'destroy')): ?>
 			<a class="btn btn-danger delete" href="<?=DecoyURL::relative('destroy', $item->id)?>">
 				<i class="icon-trash icon-white"></i> Delete
 			</a>
