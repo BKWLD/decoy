@@ -14,8 +14,9 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	// Fragments don't need timestamps
 	public $timestamps = false;
 	
-	// Language files to ignore
-	private static $ignore = array('pagination', 'reminders', 'validation');
+	// Language files to ignore.  "admin" is in there because that is a convention
+	// that I use to store block help lines.
+	private static $ignore = array('pagination', 'reminders', 'validation', 'admin');
 	
 	// Use the key as the primary key
 	public $primaryKey = 'key';
