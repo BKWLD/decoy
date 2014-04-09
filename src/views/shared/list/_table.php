@@ -30,7 +30,7 @@ if ($listing->count()) {
 	<thead>
 			<tr>
 
-				<? if (app('decoy.auth')->can($controller, 'destroy')): ?>
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
 					<th class="select-all"><i class="icon-check"></i></th>
 				<? else: ?>
 					<th class="hide"></th>
@@ -86,7 +86,7 @@ if ($listing->count()) {
 			>
 				
 				<?// Checkboxes or bullets ?>
-				<? if (app('decoy.auth')->can($controller, 'destroy')): ?>
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
 					<td><input type="checkbox" name="select-row"></td>
 				<? else: ?>
 					<td class="hide"></td>
@@ -114,7 +114,7 @@ if ($listing->count()) {
 				<td>
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can($controller, 'update')): ?>
+					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><i class="icon-eye-open"></i></a>
 						<? else: ?>
@@ -127,7 +127,7 @@ if ($listing->count()) {
 					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
 
 					<?// Delete or remove ?>
-					<? if (app('decoy.auth')->can($controller, 'destroy')): ?>
+					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
 						<span class="edit-delete-seperator">|</span>
 						 
 						 <?// Many to many listings have remove icons instead of trash?>

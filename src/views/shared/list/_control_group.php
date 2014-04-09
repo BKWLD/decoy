@@ -9,7 +9,7 @@ $__data['layout'] = 'control group';
 		<?=$title?>
 		
 		<?// So far, not supporting many-to-many in the control group layout?>
-		<? if (app('decoy.auth')->can($controller, 'create')): ?>
+		<? if (app('decoy.auth')->can('create', $controller)): ?>
 			<div class="btn-group">
 				<a href="<?=URL::to(DecoyURL::relative('create', null, $controller))?>" class="btn btn-info btn-small new"><i class="icon-plus icon-white"></i> New</a>
 			</div>

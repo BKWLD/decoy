@@ -20,7 +20,7 @@ It expects:
 
 <?// Page title ?>
 <h1 class="form-header"><?=$title?>
-	<? if(!empty($item) && app('decoy.auth')->can($controller, 'create')): ?>
+	<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
 				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>

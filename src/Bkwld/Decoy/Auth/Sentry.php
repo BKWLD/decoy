@@ -64,11 +64,11 @@ class Sentry implements AuthInterface {
 
 	/**
 	 * Check if the user has permission to do something
-	 * @param string $controller Controller name (Admin\ArticlesController) or URL (/admin/articles)
 	 * @param string $action ex: destroy
+	 * @param string $controller Controller name (Admin\ArticlesController) or URL (/admin/articles)
 	 * @return boolean
 	 */
-	public function can($controller, $action) {
+	public function can($action, $controller) {
 
 		// They must be logged in
 		if (!($user = $this->user())) return false;

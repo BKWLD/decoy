@@ -28,7 +28,7 @@ with a related data sidebar.  It expects:
 				if (is_array($list)) {
 				
 					// Check that the user has permission to view it
-					if (!app('decoy.auth')->can($list['controller'], 'read')) continue;
+					if (!app('decoy.auth')->can('read', $list['controller'])) continue;
 
 					// Automatically set the list to sidebar mode
 					$list['layout'] = 'sidebar';

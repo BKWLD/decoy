@@ -38,7 +38,7 @@
 										<? foreach($page->children as $child): ?>
 											<? if (!empty($child->divider)): ?>
 												<li class="divider"></li>
-											<? elseif(app('decoy.auth')->can($child->url, 'read')): 
+											<? elseif(app('decoy.auth')->can('read', $child->url)): 
 												$child_added = true; ?>
 												<li class="<?=$child->active?'active':null?>"><a href="<?=$child->url?>"><?=$child->label?></a></li>
 											<? endif ?>
@@ -53,7 +53,7 @@
 								?>
 								
 							<?// Standard link ?>
-							<? elseif(app('decoy.auth')->can($page->url, 'read')): ?>
+							<? elseif(app('decoy.auth')->can('read', $page->url)): ?>
 								<li class="<?=$page->active?'active':null?>"><a href="<?=$page->url?>"><?=$page->label?></a></li>
 							<? endif ?>
 						<? endforeach ?>
