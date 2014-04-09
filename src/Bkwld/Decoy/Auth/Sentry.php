@@ -65,7 +65,10 @@ class Sentry implements AuthInterface {
 	/**
 	 * Check if the user has permission to do something
 	 * @param string $action ex: destroy
-	 * @param string $controller Controller name (Admin\ArticlesController) or URL (/admin/articles)
+	 * @param string $controller 
+	 *        - controller name (Admin\ArticlesController)
+	 *        - URL (/admin/articles)
+	 *        - slug (articles)
 	 * @return boolean
 	 */
 	public function can($action, $controller) {
@@ -77,7 +80,8 @@ class Sentry implements AuthInterface {
 		if (!Config::has('decoy::permissions')) return true;
 
 		// Get the slug version of the controller.  Test if a URL was passed first
-		// and, if not, treat it like a full controller name.  URLs are used in the nav
+		// and, if not, treat it like a full controller name.  URLs are used in the nav.
+		// Also, an already slugified controller name will work fine too.
 		if (preg_match('#/'.Config::get('decoy::dir').'/([^/]+)#', $controller, $matches)) {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
