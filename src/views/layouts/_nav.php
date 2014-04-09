@@ -22,7 +22,14 @@
 						<? foreach($pages as $page): ?>
 							
 							<?// Dropdown menu?>
-							<? if (!empty($page->children)): ?>
+							<? if (!empty($page->children)):
+
+								// Buffer the output so that it is only shown if children were added.  There
+								// could be none if they were hidden by permissions rules
+								ob_start();
+								$child_added = false;
+
+								?>
 								<li class="dropdown <?=$page->active?'active':null?>">
 									<a href="#" class="dropdown-toggle" data-toggle="dropdown"><?=$page->label?> <b class="caret"></b></a>
 									<ul class="dropdown-menu">
@@ -31,16 +38,22 @@
 										<? foreach($page->children as $child): ?>
 											<? if (!empty($child->divider)): ?>
 												<li class="divider"></li>
-											<? else: ?>
+											<? elseif(app('decoy.auth')->can($child->url, 'read')): 
+												$child_added = true; ?>
 												<li class="<?=$child->active?'active':null?>"><a href="<?=$child->url?>"><?=$child->label?></a></li>
 											<? endif ?>
 										<? endforeach ?>
 										
 									</ul>
 								</li>
+								<?
+								// Only show the dropdown if a child was added
+								if ($child_added) ob_end_flush();
+								else ob_end_clean();
+								?>
 								
 							<?// Standard link ?>
-							<? else: ?>
+							<? elseif(app('decoy.auth')->can($page->url, 'read')): ?>
 								<li class="<?=$page->active?'active':null?>"><a href="<?=$page->url?>"><?=$page->label?></a></li>
 							<? endif ?>
 						<? endforeach ?>
