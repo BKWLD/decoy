@@ -82,8 +82,10 @@ class Sentry implements AuthInterface {
 		// Loop through the users roles
 		foreach($this->role() as $role) {
 
-			// If the action is listed as "can't" then immediately deny
-			if (in_array($controller.'.'.$action, Config::get('decoy::permissions.cant.'.$role))) return false;
+			// If the action is listed as "can't" then immediately deny.  Also check for
+			// "manage" which means they can't do ANYTHING
+			$actions = Config::get('decoy::permissions.cant.'.$role);
+			if (in_array($controller.'.'.$action, $actions) || in_array($controller.'.manage', $actions)) return false;
 		}
 
 		// I guess we're good to go

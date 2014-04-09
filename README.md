@@ -377,5 +377,11 @@ The permissions array defines what a user can and can't do.  This could have bee
 1. I didn't like having to make database migrations everytime a group permissions configuration changed
 2. In many projects, most roles can do almost everything and I wanted to be able to blacklist actions.  Sentry operates from a whitelist-only perspective.
 
-In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.
+In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.  The full list of supported actions that can be denied are:
+
+- create
+- read
+- update
+- destroy
+- manage (combines all of the above)
 
