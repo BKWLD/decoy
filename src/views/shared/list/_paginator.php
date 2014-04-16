@@ -20,7 +20,10 @@ if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::$per_page): ?>
 		<? endif ?>
 	
 		<?// Per page selector
-		$options = array(Bkwld\Decoy\Controllers\Base::$per_page, 40, 'all');
+		$options = array(
+			Bkwld\Decoy\Controllers\Base::$per_page, 
+			Bkwld\Decoy\Controllers\Base::$per_page * 2, 
+			'all');
 		$count = Input::get('count', $options[0]); ?>
 		<ul class="per-page">
 			<li class="disabled"><span>Show</span></li>
