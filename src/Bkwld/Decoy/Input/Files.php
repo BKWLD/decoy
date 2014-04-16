@@ -68,7 +68,8 @@ class Files {
 	 */
 	public function save($item) {
 		$fields = $this->fields($item);
-		foreach(App::make('request')->files->all() as $field => $file) {
+		$files = App::make('request')->files;
+		foreach($files->all() as $field => $file) {
 			
 			// If files isn't a file object, ignore it.  This may happen if there is a file input
 			// field that is labeled like an array, i.e. <input name="some[1][thing]>".  In this case,
@@ -84,6 +85,11 @@ class Files {
 			
 			// The base model has the logic that saves the file
 			$item->$field = $item->saveFile($field);
+
+			// Remove this file from the input, it's already been processed.  This prevents
+			// other models that may be touched during the processing of this request (like because
+			// of event handlers) from trying to act on this file
+			$files->remove($field);
 		}	
 	}
 	
@@ -93,7 +99,7 @@ class Files {
 	private function fields($item) {
 		$fields = array();
 		foreach($item::$rules as $field => $rules) {
-			if (preg_match('#file|image|mime#i', $rules)) $fields[] = $field;
+			if (preg_match('#file|image|mimes#i', $rules)) $fields[] = $field;
 		}
 		return $fields;
 	}
