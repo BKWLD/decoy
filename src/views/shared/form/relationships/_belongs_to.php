@@ -11,6 +11,7 @@
 		->autocomplete('off')
 		->append($append);
 	if ($title) $input->forceValue($title);
+	if ($blockHelp) $input->blockHelp($blockHelp);
 	echo $input;
 	?>
 		
