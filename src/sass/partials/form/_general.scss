@@ -56,7 +56,7 @@ label {
 }
 
 // Make the help blocks after legends positioned better
-.form-vertical legend + .help-block {
+.form-vertical legend + .help-block, .form-horizontal legend + .help-block {
 	margin-top: -.9em;
 	margin-bottom: 1em;
 }
