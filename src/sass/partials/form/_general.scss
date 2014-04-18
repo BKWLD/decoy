@@ -55,6 +55,12 @@ label {
 	}
 }
 
+// Make the help blocks after legends positioned better
+.form-vertical legend + .help-block {
+	margin-top: -1em;
+	margin-bottom: 1em;
+}
+
 // Highlight each control group on rollover
 .control-group {
 	padding: 8px;
