@@ -201,7 +201,7 @@ The View file might look like this:
 
 The related data gets passed to the footer partial and rendered automatically.  Note that the form elements are set to span6 rather than span9.
 
-### Embeded relationship list
+### Embeded / inline relationship list
 
 Example:
 
@@ -222,7 +222,13 @@ In this example, `$slides` was populated by this, in the controller:
 		);
 	}
 
-So, you pass it the standard array that listing views require.
+So, you pass it the standard array that listing views require.  Here's a HAML example:
+
+	-if(isset($item))
+		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->take(10)->get(), ))
+	-else
+		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+
 
 ### Data for Former select, radio, and checkbox
 
@@ -250,15 +256,6 @@ Furthermore, you can use this array for searching the list view by referencing i
 	);
 
 Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
-
-### Inline related listing
-
-A listing of related items can be displayed within a detail page as a quasi-form element rather than in the sidebar.  Here an example of the HAML code to do this:
-
-	-if(isset($item))
-		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->take(10)->get(), ))
-	-else
-		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
 
 
 ## Features
