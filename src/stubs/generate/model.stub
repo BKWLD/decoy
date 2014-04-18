@@ -19,7 +19,7 @@ class {{model}} extends Base {
 		'image' => array('default' => '1:1'),
 	);
 	
-	// Order by the manually entered date
+	// Order by drag and drop
 	public function scopeOrdered($query) {
 		return $query->positioned();
 	}
