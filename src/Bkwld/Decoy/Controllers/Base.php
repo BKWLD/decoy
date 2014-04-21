@@ -655,7 +655,9 @@ class Base extends Controller {
 		// generated fields like the slug can be validated.  This intentionally comes after the
 		// AJAX conditional so that we still only validate fields that were present in
 		// the AJAX request.
-		if ($model) $input = array_merge($model->getAttributes(), $input);
+		if ($model && method_exists($model, 'getAttributes')) {
+			$input = array_merge($model->getAttributes(), $input);
+		}
 
 		// Fire event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
