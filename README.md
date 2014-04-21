@@ -141,7 +141,7 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->take(self::$per_sidebar)->get(),
+					'listing'           => $item->postImages()->ordered()->paginate(self::$per_sidebar),
 				),
 
 			);
@@ -168,7 +168,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				array(
 					'title'             => 'Related',
 					'controller'        => $this->controller,
-					'listing'           => $item->posts()->ordered()->take(self::$per_sidebar)->get(),
+					'listing'           => $item->posts()->ordered()->paginate(self::$per_sidebar),
 					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
@@ -218,14 +218,14 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->take(self::$per_sidebar)->get(),
+			'listing'     => $related->paginate(self::$per_sidebar),
 		);
 	}
 
 So, you pass it the standard array that listing views require.  Here's a HAML example:
 
 	-if(isset($item))
-		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->take(10)->get(), ))
+		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
 	-else
 		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
 
