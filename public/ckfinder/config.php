@@ -27,10 +27,19 @@ $app = require_once($app_dir.'bootstrap/start.php');
 function CheckAuthentication() {
 	global $app;
 
-	// Recreate the session
-	$session = $app->make('session');
-	$session->setId($app->make('encrypter')->decrypt($_COOKIE[$session->getName()]));
-	$session->start();
+	// Decrypt all cookies.  This is based on a simplification of
+	// Illuminate\Cookie\Guard's decrypt().  This should make both the session
+	// and cookie cookies work
+	$encrypter = $app->make('encrypter');
+	$request = $app->make('request');
+	foreach($request->cookies as $key => $cookie) {
+
+		// Laravel, encrypted cookies
+		try { $request->cookies->set($key, $encrypter->decrypt($cookie)); } 
+
+		// Other cookies
+		catch (Exception $e) { $request->cookies->set($key, null); }
+	}
 
 	// Boot up providers, specifically so package config() calls work
 	$app->boot();
