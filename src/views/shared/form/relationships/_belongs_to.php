@@ -10,8 +10,8 @@
 		->placeholder('Search')
 		->autocomplete('off')
 		->append($append);
-	if ($title) $input->forceValue($title);
-	if ($blockHelp) $input->blockHelp($blockHelp);
+	if (!empty($title)) $input->forceValue($title);
+	if (!empty($blockHelp)) $input->blockHelp($blockHelp);
 	echo $input;
 	?>
 		
