@@ -30,7 +30,7 @@ class Fragments extends Base {
 
 		// Merge files into non-files input such that it's nested
 		// where you would expect the files to be.
-		$input = array_replace_recursive(Input::get(), Input::file());
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 		
 		// Loop through the input and check if the field is different from the language
 		// file version
