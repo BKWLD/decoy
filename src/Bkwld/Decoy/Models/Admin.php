@@ -23,6 +23,7 @@ class Admin extends Base {
 	public static $rules = array(
 		'email' => 'required|email|unique:users,email',
 		'password' => 'required',
+		'confirm_password' => 'sometimes|required_with:password|same:password',
 		'first_name' => 'required',
 		'last_name' => 'required',
 	);

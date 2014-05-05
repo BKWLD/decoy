@@ -43,6 +43,9 @@
 	// Default admin credentials
 	'default_login' => 'redacted',
 	'default_password' => 'redacted',
+
+	// Use a password input field for admins
+	'obscure_admin_password' => false,
 	
 	// Mail FROM info
 	'mail_from_name' => 'Site Admin',

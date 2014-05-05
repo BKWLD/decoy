@@ -7,10 +7,17 @@
 	
 	
 	<?= Former::text('email')->class('span9') ?>
-	<?= Former::text('password')
-		->class('span9')
-		->forceValue(empty($item)?Str::random(16):null)
-		->placeholder(empty($item)?null:'Leave blank to prevent change') ?>
+	<? if (Config::get('decoy::obscure_admin_password')): ?>
+		<div class="row">
+			<div class="span6"><?= Former::password('password') ->class('span3')?></div>
+			<div class="span6"><?= Former::password('confirm_password') ->class('span3')?></div>
+		</div>
+	<? else: ?>
+		<?= Former::text('password')
+			->class('span9')
+			->forceValue(empty($item)?Str::random(16):null)
+			->placeholder(empty($item)?null:'Leave blank to prevent change') ?>
+	<? endif ?>
 
 	<div class="row">
 		<div class="span6"><?= Former::text('first_name', 'First name')->class('span3') ?></div>
