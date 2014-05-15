@@ -266,6 +266,7 @@ abstract class Base extends Eloquent {
 	 * A no-op that should return the deep link to this content
 	 */
 	public function deepLink() {}
+	public function getDeepLinkAttribute() { return $this->deepLink(); }
 
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched
