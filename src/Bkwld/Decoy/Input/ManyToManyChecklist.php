@@ -64,7 +64,7 @@ class ManyToManyChecklist {
 		}
 		
 		// Create the form element, applying any extra configuration options
-		$el = Former::checkbox($relationship)->checkboxes($boxes);
+		$el = Former::checkbox($relationship)->checkboxes($boxes)->addGroupClass('many-to-many-checklist');
 		foreach($options as $func => $args) $el = call_user_func_array(array($el, $func), (array) $args);
 		return $el;
 

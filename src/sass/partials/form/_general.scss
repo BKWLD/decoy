@@ -215,3 +215,10 @@ form legend:nth-of-type(1n+2) {
 	@include text-shadow(none);
 }
 
+.many-to-many-checklist {
+	.checkbox input[type="checkbox"] {
+		float: none;
+		margin-right: 6px;
+		margin-top: 0;
+	}
+}
