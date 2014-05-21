@@ -20,7 +20,8 @@ class ManyToManyChecklist {
 	 * ex: <?= Decoy::manyToManyChecklist($__data, 'events', array('blockHelp' => 'Blah blah')) ?>
 	 * @param array $__data A The data passed to the view, to get at the item
 	 * @param string $relationship The name of the relationship function on the model
-	 * @param array $options Former key-value pairs, where the key is the function name 
+	 * @param array $options Former key-value pairs, where the key is the function name.  Also, you
+	 *                       append onto the query with a key of "query" and a callback for the value.
 	 * @return string HTML
 	 */
 	public function render($__data, $relationship, $options = array()) {
@@ -35,6 +36,10 @@ class ManyToManyChecklist {
 
 		// Get the full list of items
 		$query = call_user_func(ucfirst(Str::singular($relationship)).'::ordered');
+		if (!empty($options['query']) && is_callable($options['query'])) {
+			call_user_func($options['query'], $query);
+			unset($options['query']);
+		}
 
 		// Create the data that Former expects
 		$boxes = array();
