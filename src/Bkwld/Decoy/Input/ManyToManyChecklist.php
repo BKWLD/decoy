@@ -53,14 +53,14 @@ class ManyToManyChecklist {
 
 			// Add it.  The str_replace fixes Former's auto conversion of underscores
 			// into spaces.
-			$boxes[str_replace('_', '&#95;', $row->title())] = $ar;
+			$boxes[str_replace('_', '&#95;', '<a href="/admin/'.Str::snake($relationship,'-').'/'.$row->getKey().'/edit">'.$row->title().'</a>')] = $ar;
 		}
 
 		// Render an empty message if no boxes created
 		if (empty($boxes)) {
 			$label = String::titleFromKey($relationship);
 			return Decoy::inputlessField($relationship, $label,
-				'<i class="icon-info-sign"></i> You have not <a href="/admin/'.$relationship.'">created</a> any <b>'.$label.'</b>.');
+				'<i class="icon-info-sign"></i> You have not <a href="/admin/'.Str::snake($relationship,'-').'">created</a> any <b>'.$label.'</b>.');
 		}
 		
 		// Create the form element, applying any extra configuration options
