@@ -8,7 +8,6 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
-use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -436,10 +435,6 @@ class Base extends Controller {
 		// Save it.  We don't save through relations becaue the foreign keys were manually
 		// set previously.  And many to many relationships are not formed during a store().
 		$item->save();
-
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -509,10 +504,6 @@ class Base extends Controller {
 
 		// Save the record
 		$item->save();
-
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
