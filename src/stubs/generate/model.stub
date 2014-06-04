@@ -5,7 +5,7 @@ class {{model}} extends Base {
 	/**
 	 * Example configuration
 
-	// Rules
+	// Validation rules
 	public static $rules = array(
 		'title' => 'required',
 		'slug' => 'alpha_dash|unique:articles',
@@ -14,7 +14,7 @@ class {{model}} extends Base {
 		'url' => 'url',
 	);
 	
-	// Crops
+	// Cropping tool definitions
 	static public $crops = array(
 		'image' => array('default' => '1:1'),
 	);
