@@ -635,7 +635,7 @@ class Base extends Controller {
 		// an update.  The array_filter() is there to strip out empties from the files array.  This
 		// prevents empty file fields from overriding the contents of the hidden field that stores
 		// the previous file name.
-		$input = array_merge(Input::get(), array_filter(Input::file()));
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
 		// Fire validating event
 		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
