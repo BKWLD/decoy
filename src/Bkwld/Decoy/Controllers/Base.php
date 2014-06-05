@@ -430,7 +430,7 @@ class Base extends Controller {
 		}
 
 		// Validate
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 
 		// Save it.  We don't save through relations becaue the foreign keys were manually
 		// set previously.  And many to many relationships are not formed during a store().
@@ -500,7 +500,7 @@ class Base extends Controller {
 		}
 
 		// Validate data
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 
 		// Save the record
 		$item->save();
@@ -624,11 +624,10 @@ class Base extends Controller {
 	// shared logic for that
 	/**
 	 * Shared validation helper
-	 * @param array $rules    A typical rules array
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $model = null, $messages = array()) {
+	protected function validate($model, $messages = array()) {
 		
 		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
 		// does a recursive merge which results in file fields containing BOTH the string version
@@ -637,6 +636,15 @@ class Base extends Controller {
 		// prevents empty file fields from overriding the contents of the hidden field that stores
 		// the previous file name.
 		$input = array_merge(Input::get(), array_filter(Input::file()));
+
+		// Fire validating event
+		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+		}
+
+		// Pull the rules from the model instance.  This itentionally comes after the validating
+		// event is fired, so handlers of that event can modify the rules.
+		$rules = $model::$rules;
 
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
@@ -653,11 +661,6 @@ class Base extends Controller {
 		// the AJAX request.
 		if ($model && method_exists($model, 'getAttributes')) {
 			$input = array_merge($model->getAttributes(), $input);
-		}
-
-		// Fire event
-		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 		}
 
 		// Validate
