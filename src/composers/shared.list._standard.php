@@ -93,11 +93,4 @@ View::composer('decoy::shared.list._standard', function($view) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
 	
-	// Massage the shorthand search config options
-	if (isset($view->search)) {
-		$search = new Bkwld\Decoy\Input\Search();
-		$view->search = $search->longhand($view->search);
-	}
-
-	
 });
