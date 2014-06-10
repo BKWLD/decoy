@@ -126,6 +126,7 @@ body.fragments .nav-pills > .active > a:focus {
 
 // The login page
 body.login.index {
+	background: $theme-color;
 	@include background(linear-gradient(top, $theme-color, darken($theme-color, 10%)));
 	background-position: center center;
 	
