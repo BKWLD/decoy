@@ -625,9 +625,10 @@ class Base extends Controller {
 	/**
 	 * Shared validation helper
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($model, $messages = array()) {
+	protected function validate($model = null, $rules = null, $messages = array()) {
 		
 		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
 		// does a recursive merge which results in file fields containing BOTH the string version
@@ -638,13 +639,13 @@ class Base extends Controller {
 		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
 		// Fire validating event
-		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
+		if ($model && ($response = $this->fireEvent('validating', array($model, $input), true))) {
 			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 		}
 
 		// Pull the rules from the model instance.  This itentionally comes after the validating
 		// event is fired, so handlers of that event can modify the rules.
-		$rules = $model::$rules;
+		if ($model && empty($rules)) $rules = $model::$rules;
 
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
