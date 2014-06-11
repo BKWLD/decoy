@@ -144,7 +144,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
-			foreach(array('textarea', 'wysiwyg', 'image', 'file') as $type) {
+			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to') as $type) {
 				if (Lang::has($key.','.$type)) {
 					if ($type == 'image') return self::massageLangValue(Lang::get($key.','.$type));
 					return Lang::get($key.','.$type);

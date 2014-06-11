@@ -285,8 +285,11 @@ Start by creating new language files in /app/lang/en.  There are some convention
 	
 	<?php return array(
 		'marquee_title' => 'Welcome to the site',
+		'marquee.featured_article,belongs_to' => '/admin/articles',
+
 		'intro.title' => 'This is some great stuff',
 		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
+
 		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
 		'deep_dive.headshot,image' => '/img/path/to/heashot',
 		'deep_dive.pdf,file' => '/files/path/to/file',

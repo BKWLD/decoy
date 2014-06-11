@@ -50,6 +50,9 @@
 									case 'file':
 										echo Decoy::fileUpload($value->key, $label);
 										break;
+									case 'belongs_to':
+										echo Decoy::belongsTo($value->key, $value->value, array('label' => $label));
+										break;
 								}
 							} ?>
 						</div>
