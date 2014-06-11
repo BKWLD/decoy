@@ -35,7 +35,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			
 			// Format title and add as a node
 			$title_key = $title; // Preserve for use with the full_key
-			$title = Library\Utils\String::titleFromKey($title);
+			$title = ucwords(Library\Utils\String::titleFromKey($title));
 			$output[$title] = array();
 			
 			// Break the keys for all the pairs up by section
