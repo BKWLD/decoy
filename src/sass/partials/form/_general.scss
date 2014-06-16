@@ -163,6 +163,9 @@ legend > .btn-small {
 .control-group.inputless {
 	.controls {
 		padding: 5px 0;
+		.help-block {
+			margin-top: 5px;
+		}
 	}
 }
 
