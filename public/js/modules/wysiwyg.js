@@ -12,7 +12,23 @@ define(function(require) {
 	var config = {
 		customConfig: '', // Don't load external config js file
 		enterMode : CKEDITOR.ENTER_P, // <br>s are no good because ul/ol isn't allowed in them
-		allowedContent: true, // Allow all HTML tags
+
+		// Allow everything but ...
+		// http://docs.ckeditor.com/#!/guide/dev_disallowed_content-section-how-to-allow-everything-except...
+		allowedContent: {
+			$1: {
+				elements: CKEDITOR.dtd,
+				attributes: true,
+				styles: true,
+				classes: true
+			}
+		},
+		disallowedContent: {
+
+			// Don't allow inline width and height on image tags.  Base on
+			// http://stackoverflow.com/a/18047106/59160
+			img: {styles: ['width','height'] }
+		},
 		
 		// Don't add entities, trust the input.  This was added so that entities in the
 		// language conf file for fragments doesn't return `changed()` because CKEditor
@@ -29,47 +45,6 @@ define(function(require) {
 			{ name: 'source', items : [ 'Source' ] }
 		]
 	};
-
-	// For uploaded images, don't specify the width and height as inline styles.  Instead,
-	// make the attributes on the img tag.
-	// http://stackoverflow.com/a/6056896/59160
-	CKEDITOR.on('instanceReady', function (ev) {
-		ev.editor.dataProcessor.htmlFilter.addRules({
-			elements: {
-				$: function (element) {
-					// Output dimensions of images as width and height
-					if (element.name == 'img') {
-						var style = element.attributes.style;
-
-						if (style) {
-							// Get the width from the style.
-							var match = /(?:^|\s)width\s*:\s*(\d+)px/i.exec(style),
-								width = match && match[1];
-
-							// Get the height from the style.
-							match = /(?:^|\s)height\s*:\s*(\d+)px/i.exec(style);
-							var height = match && match[1];
-
-							if (width) {
-								element.attributes.style = element.attributes.style.replace(/(?:^|\s)width\s*:\s*(\d+)px;?/i, '');
-								element.attributes.width = width;
-							}
-
-							if (height) {
-								element.attributes.style = element.attributes.style.replace(/(?:^|\s)height\s*:\s*(\d+)px;?/i, '');
-								element.attributes.height = height;
-							}
-						}
-					}
-
-					if (!element.attributes.style)
-						delete element.attributes.style;
-
-					return element;
-				}
-			}
-		});
-	});
 	
 	// Enable CKFinder
 	var allow_uploads = false;
