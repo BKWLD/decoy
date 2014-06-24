@@ -474,13 +474,14 @@ class Helpers {
 	}
 
 	/**
-	 * Is Decoy handling the request?
+	 * Is Decoy handling the request?  Check if the current path is exactly "admin" or if
+	 * it contains admin/*
 	 * @return boolean 
 	 */
 	private $is_handling;
 	public function handling() {
 		if (!is_null($this->is_handling)) return $this->is_handling;
-		$this->is_handling = Request::is(Config::get('decoy::dir').'*');
+		$this->is_handling = preg_match('#^'.Config::get('decoy::dir').'($|/)'.'#i', Request::path());
 		return $this->is_handling;
 	}
 
