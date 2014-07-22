@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
+use App;
 use Former;
 use Input;
 use Redirect;
@@ -15,11 +16,17 @@ class Fragments extends Base {
 	/**
 	 * All fragments view
 	 */
-	public function index() {
+	public function index($tab=null) {
+		$data = Model::organized();
+
+		if ($tab && !in_array($tab, array_map(function($title) {
+			return Str::slug($title);
+		}, array_keys($data)))) App::abort(404);
+
 		Former::withRules(Model::rules());
 		Former::populate(Model::values());
 		$this->layout->nest('content', 'decoy::fragments.index', array(
-			'fragments' => Model::organized(),
+			'fragments' => $data,
 		));
 	}
 	

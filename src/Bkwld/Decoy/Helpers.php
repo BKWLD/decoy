@@ -44,6 +44,9 @@ class Helpers {
 		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
 
+		// If fragments, then return
+		if (strpos($path, '/fragments/') !== false) return 'fragments index role-admins role-developers';
+
 		// Get the controller and action from the URL
 		preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
 		$controller = empty($matches[1]) ? 'login' : $matches[1];
