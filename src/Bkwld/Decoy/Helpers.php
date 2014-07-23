@@ -44,8 +44,10 @@ class Helpers {
 		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
 
-		// If fragments, then return
-		if (strpos($path, '/fragments/') !== false) return 'fragments index role-admins role-developers';
+		// Since fragments support deep links, the deep linked slug was being added to the
+		// body class instead of "fragments" and breaking styles.  All fragments sub pages
+		// should have the same body class.
+		if (strpos($path, '/fragments/') !== false) return 'fragments index';
 
 		// Get the controller and action from the URL
 		preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
