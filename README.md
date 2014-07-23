@@ -1,11 +1,5 @@
 # Decoy
 
-### Contributing
-
-- The `master` branch represents what will be come the next **minor** release.
-- A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
-- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  
-
 ## Installation
 
 1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install.  This reflects the latest stable branch.
@@ -14,8 +8,14 @@
 4. Run `php artisan config:publish bkwld/decoy`
 
 
+### Contributing
 
-## Tests
+- The `master` branch represents what will be come the next **minor** release.
+- A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
+- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  
+
+
+### Tests
 
 Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
 
