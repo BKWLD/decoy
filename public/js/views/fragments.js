@@ -45,7 +45,7 @@ define(function (require) {
 				var slug = this.$nav.first().data('slug');
 				this.router.navigate('/admin/fragments/' + slug);
 				this.page = slug;
-			}, this)x
+			}, this)
 		}));
 
 		Backbone.history.start({pushState: true});
