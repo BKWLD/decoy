@@ -102,8 +102,8 @@ class Router {
 	 * Fragments
 	 */
 	public function registerFragments() {
-		Route::get($this->dir.'/fragments', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@index', 'as' => 'decoy\fragments'));
-		Route::post($this->dir.'/fragments', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@store', 'as' => 'decoy\fragments@store'));
+		Route::get($this->dir.'/fragments/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@index', 'as' => 'decoy\fragments'));
+		Route::post($this->dir.'/fragments/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@store', 'as' => 'decoy\fragments@store'));
 	}
 	
 	/**
