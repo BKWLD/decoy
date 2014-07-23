@@ -10,6 +10,10 @@
 		{
 			"name": "Aaron Nunley",
 			"email": "info@bkwld.com"
+		},
+		{
+			"name": "Matt Aebersold",
+			"email": "info@bkwld.com"
 		}
 	],
 	"require": {
