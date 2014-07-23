@@ -1,12 +1,14 @@
 # Decoy
 
-- Active development / the latest version is the 3.0 branch.
-- The master branch represents the latest Decoy 2.0 state
-- The pre-Decoy 2 (pre-Laravel 4) docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md 
+## Contributing
+
+- The `master` branch represents what will be come the next **minor** release.
+- A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
+- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  
 
 ## Installation
 
-1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install
+1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install.  This reflects the latest stable branch.
 2. Run `php artisan migrate --package=cartalyst/sentry`
 3. Run `php artisan migrate --package=bkwld/decoy`
 4. Run `php artisan config:publish bkwld/decoy`
