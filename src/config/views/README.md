@@ -1,1 +1,0 @@
-These files are stored in here so they get pushed out of the vendor directory.

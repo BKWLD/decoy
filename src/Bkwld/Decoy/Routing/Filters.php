@@ -60,6 +60,18 @@ class Filters {
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
+
+		// If permissions were defined, see if the user has permission for the current action
+		if (Config::has('permissions')) {
+			$wildcard = app('decoy.wildcard');
+			if (!app('decoy.auth')->can(
+				$this->mapActionToPermission($wildcard->detectAction()), 
+				$wildcard->detectControllerName())) {
+
+				// If they don't throw the appropriate arror
+				return App::abort(401);
+			}
+		}
 	}
 	
 	/**
@@ -71,6 +83,21 @@ class Filters {
 		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
 			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
 			|| Str::startsWith($path, '/'.$this->dir.'/reset/');                 // Reset
+	}
+
+	/**
+	 * Map the actions from the wildcard router into the smaller set supported by
+	 * the Decoy permissions system
+	 */
+	private function mapActionToPermission($action) {
+		switch($action) {
+			case 'new':
+			case 'store': return 'create';
+			case 'edit':
+			case 'index':
+			case 'indexChild': return 'read';
+			default: return $action;
+		}
 	}
 
 	/**

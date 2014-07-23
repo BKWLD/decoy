@@ -2,8 +2,9 @@
 
 // Dependencies
 use Cartalyst\Sentry\Users\UserNotFoundException;
+use Config;
 use DecoyURL;
-use Html;
+use HTML;
 use Sentry as CartalystSentry;
 
 /**
@@ -42,17 +43,61 @@ class Sentry implements AuthInterface {
 		return $user->hasAccess('admin');
 	}
 	
-	// The logged in user's permissions role
-	public function role() {
-		if (!($user = $this->user())) return null;
-		return $user->getGroups();
-	}
-
 	// Boolean as to whether the user has developer entitlements
 	public function developer() {
 		if (!($user = $this->user())) return false; // They must be logged in
 		if ($user->hasAccess('developer')) return true; // They must be a developer
 		return strpos($user->email, '@bkwld.com') !== false; // ... or have bkwld in their email
+	}
+
+	// Check if a user is in a specific role or return the list of all roles
+	// associtated with the user
+	public function role($role = null) {
+		if (!($user = $this->user())) return null;
+
+		// Return boolean as to whether the passed group is attached to the user
+		if ($role) return $user->inGroup(CartalystSentry::findGroupByName($role));
+		
+		// Return all group names
+		return $user->getGroups()->map(function($group) { return $group->getName(); });
+	}
+
+	/**
+	 * Check if the user has permission to do something
+	 * @param string $action ex: destroy
+	 * @param string $controller 
+	 *        - controller name (Admin\ArticlesController)
+	 *        - URL (/admin/articles)
+	 *        - slug (articles)
+	 * @return boolean
+	 */
+	public function can($action, $controller) {
+
+		// They must be logged in
+		if (!($user = $this->user())) return false;
+
+		// If no permissions have been defined, do nothing.  Btw, only supporting "cant" for now.
+		if (!Config::has('decoy::permissions')) return true;
+
+		// Get the slug version of the controller.  Test if a URL was passed first
+		// and, if not, treat it like a full controller name.  URLs are used in the nav.
+		// Also, an already slugified controller name will work fine too.
+		if (preg_match('#/'.Config::get('decoy::dir').'/([^/]+)#', $controller, $matches)) {
+			$controller = $matches[1];
+		} else $controller = DecoyURL::slugController($controller);
+
+		// Loop through the users roles
+		foreach($this->role() as $role) {
+
+			// If the action is listed as "can't" then immediately deny.  Also check for
+			// "manage" which means they can't do ANYTHING
+			$actions = Config::get('decoy::permissions.'.$role.'.cant');
+			if (empty($actions)) continue; // If no permissions are defined in can't, they are good to go
+			if (in_array($action.'.'.$controller, $actions) || in_array('manage.'.$controller, $actions)) return false;
+		}
+
+		// I guess we're good to go
+		return true;
 	}
 	
 	// ---------------------------------------------------------------

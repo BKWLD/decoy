@@ -14,15 +14,13 @@ It expects:
 	  
 	- description (optiona) : A description for the view
 	
-	- no_legened (optional) : A boolean that, if true, hides the legend
-
 */
 
 ?>
 
 <?// Page title ?>
 <h1 class="form-header"><?=$title?>
-	<? if(!empty($item)): ?>
+	<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
 				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
@@ -36,11 +34,6 @@ It expects:
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>
-
-<?// The action that is currently being handled ?>
-<? if (empty($no_legend)): ?>
-	<legend><?=empty($item)?'New':'Edit'?></legend>
-<? endif ?>
 
 <?// Form tag ?>
 <?= Former::horizontal_open_for_files() ?>

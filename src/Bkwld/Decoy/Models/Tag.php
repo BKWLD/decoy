@@ -57,7 +57,7 @@ abstract class Tag extends Base {
 	);
 	
 	// Where to get the title from
-	static public $TITLE_COLUMN = 'value';
+	static public $title_column = 'value';
 	
 	// Create a new instance if one doesn't exist.  If one does exist,
 	// return that instance

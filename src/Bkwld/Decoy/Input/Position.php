@@ -21,7 +21,7 @@ class Position {
 		if ($relationship && Input::has('parent_id')) {
 			$relation = $this->item->{$relationship}();
 			if ($relation instanceof BelongsToMany) {
-				$this->pivot = $relation->where($relationship.'.id', '=', Input::get('parent_id'))->first()->pivot;
+				$this->pivot = $relation->where($relation->getOtherKey(), '=', Input::get('parent_id'))->first()->pivot;
 			}
 		}
 	}
@@ -39,22 +39,22 @@ class Position {
 	/**
 	 * Set new position
 	 */
-	public function update() {
+	public function fill() {
+
+		// Write the position value to the pivot table
+		if (isset($this->pivot->position)) {
+			$this->pivot->position = Input::get('position');
+			$this->pivot->save();
 
 		// Write position value to the item
-		if (isset($this->item->position)) {
+		} else if (isset($this->item->position)) {
 			
 			// Visiblity may be set at the same time and would be ignored otherwise
 			if (Input::has('visible')) $this->item->visible = Input::get('visible');
 			
 			// Do position
 			$this->item->position = Input::get('position');
-			$this->item->save();
 		
-		// Write the position value to the pivot table
-		} else if (isset($this->pivot->position)) {
-			$this->pivot->position = Input::get('position');
-			$this->pivot->save();
 		}
 		
 	}

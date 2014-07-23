@@ -1,0 +1,9 @@
+// Center the pagination on the page
+.pagination {
+	text-align: center;
+
+	// Selector for the number to show per page
+	ul {
+		margin: 0 7px;
+	}
+}

@@ -16,8 +16,9 @@ View::composer('decoy::shared.list._control_group', function($view) {
 
 	// Default settings
 	$defaults = array(
-		'title'       => $view->controller_inst->title(),
-		'description' => $view->controller_inst->description(),
+		'title'        => $view->controller_inst->title(),
+		'description'  => $view->controller_inst->description(),
+		'many_to_many' => $view->controller_inst->isChildInManyToMany(),
 	);
 
 	// Apply defaults

@@ -27,10 +27,14 @@ class Fragments extends Base {
 	 * Handle form post
 	 */
 	public function store() {
+
+		// Merge files into non-files input such that it's nested
+		// where you would expect the files to be.
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 		
 		// Loop through the input and check if the field is different from the language
 		// file version
-		foreach(Input::all() as $key => $val) {
+		foreach($input as $key => $val) {
 			
 			// Ignore any fields that lead with an underscore, like _token
 			if (Str::is('_*', $key)) continue;

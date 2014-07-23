@@ -34,7 +34,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->before(array($router, 'registerAll'));
 
 		// Do bootstrapping that only matters if user has requested an admin URL
-		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
+		if ($this->app['decoy']->handling()) $this->usingAdmin();
 		
 	}
 	
@@ -43,28 +43,26 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	public function usingAdmin() {
 		
-		// Load HTML helpers ** Deprecated **
-		require_once(__DIR__.'/../../helpers.php');
-		
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._standard.php');
 		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
+		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
 
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
-			
-		// Tell Laravel where to find the views that were pushed out with the config files
-		$this->app->make('view')->addNamespace('decoy_published', app_path().'/config/packages/bkwld/decoy/views');
-		
+
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
 		});
+
+		// Use the Decoy paginator
+		Config::set('view.pagination', 'decoy::shared.list._paginator');
 	}
 
 	/**
@@ -141,6 +139,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// BKWLD PHP Library
 		$this->app->register('Bkwld\Library\LibraryServiceProvider');
+
+		// HAML
+		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
 		
 	}
 	
@@ -150,7 +151,8 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 
+		return array(
+			'decoy', 
 			'decoy.url', 
 			'decoy.router', 
 			'decoy.slug', 

@@ -5,14 +5,14 @@ class {{controller}} extends BaseController {
 	/*
 	 * Example settings
 
-	protected $TITLE = 'News & Events';
-	protected $DESCRIPTION = 'News and events yo!';
-	protected $COLUMNS = array(
+	protected $title = 'News & Events';
+	protected $description = 'News and events yo!';
+	protected $columns = array(
 		'Title' => 'title',
-		'Status' => 'renderFeaturedStatus',
-		'Date' => 'date',
+		'Status' => 'adminColFeaturedStatus',
+		'Date' => 'created_at',
 	);
-	protected $SEARCH = array(
+	protected $search = array(
 		'title',
 		'featured' => array(
 			'type' => 'select',
@@ -21,6 +21,10 @@ class {{controller}} extends BaseController {
 				1 => 'featured',
 				0 => 'not featured',
 			)
+		),
+		'category' => array(
+			'type' => 'select',
+			'options' => 'Article::$categories',
 		),
 		'date' => 'date',
 	);

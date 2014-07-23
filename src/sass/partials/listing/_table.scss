@@ -103,6 +103,7 @@
 	// Give images a border
 	tr img {
 		border: 1px solid $grey-border;
+		@include box-sizing(border-box);
 	}
 	
 	// Make gravatar images a good size (for the admins view)
@@ -138,11 +139,6 @@
 	
 	// Add sorting rules
 	@import "_sorting";
-}
-
-// Center the pagination on the page
-.pagination {
-	text-align: center;
 }
 
 // On small browsers, only show the second and last columns in tables

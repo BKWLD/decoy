@@ -8,7 +8,6 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
-use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -38,25 +37,25 @@ class Base extends Controller {
 	// Default settings
 	//---------------------------------------------------------------------------
 	
-	// Default pagination settings
-	protected $PER_PAGE = 20;
-	const PER_PAGE_SIDEBAR = 6;
-	
+	// Constants
+	static public $per_page = 20;
+	static public $per_sidebar = 6;
+
 	// Values that get shared by many controller methods.  Default values for these
 	// get set in the constructor.
-	protected $MODEL;       // i.e. Post
-	protected $CONTROLLER;  // i.e. Admin\PostsController
-	protected $TITLE;       // i.e. News Posts
-	protected $DESCRIPTION; // i.e. Relevant news about the brand
-	protected $COLUMNS = array('Title' => 'title'); // The default columns for listings
-	protected $SHOW_VIEW;   // i.e. admin.news.edit
-	protected $SEARCH;      // i.e. An array describing the fields to search upon
+	protected $model;       // i.e. Post
+	protected $controller;  // i.e. Admin\PostsController
+	protected $title;       // i.e. News Posts
+	protected $description; // i.e. Relevant news about the brand
+	protected $columns = array('Title' => 'title'); // The default columns for listings
+	protected $show_view;   // i.e. admin.news.edit
+	protected $search;      // i.e. An array describing the fields to search upon
 	
 	// More of the same, but these are just involved in relationships
-	protected $PARENT_MODEL;      // i.e. Photo
-	protected $PARENT_CONTROLLER; // i.e. admin.photos
-	protected $PARENT_TO_SELF;    // i.e. photos
-	protected $SELF_TO_PARENT;    // i.e. post
+	protected $parent_model;      // i.e. Photo
+	protected $parent_controller; // i.e. admin.photos
+	protected $parent_to_self;    // i.e. photos
+	protected $self_to_parent;    // i.e. post
 	
 	// Shared layout for admin view, set in the constructor
 	public $layout;
@@ -124,29 +123,29 @@ class Base extends Controller {
 		$this->layout = $this->config->get('decoy::layout');
 		
 		// Store the controller class for routing
-		if ($class) $this->CONTROLLER = $class;
-		elseif (empty($this->CONTROLLER)) $this->CONTROLLER = get_class($this);
+		if ($class) $this->controller = $class;
+		elseif (empty($this->controller)) $this->controller = get_class($this);
 		
 		// Get the controller name
-		$controller_name = $this->controllerName($this->CONTROLLER);
+		$controller_name = $this->controllerName($this->controller);
 		
 		// Make a default title based on the controller name
-		if (empty($this->TITLE)) $this->TITLE = $this->title($controller_name);
+		if (empty($this->title)) $this->title = $this->title($controller_name);
 		
 		// Figure out what the show view should be.  This is the path to the show view file.  Such
 		// as 'admin.news.edit'
-		if (empty($this->SHOW_VIEW)) $this->SHOW_VIEW = $this->detailPath($this->CONTROLLER);
+		if (empty($this->show_view)) $this->show_view = $this->detailPath($this->controller);
 		
 		// Try to suss out the model by singularizing the controller
-		if (empty($this->MODEL)) {
-			$this->MODEL = $this->model($this->CONTROLLER);
-			if (!class_exists($this->MODEL)) $this->MODEL = NULL;
+		if (empty($this->model)) {
+			$this->model = $this->model($this->controller);
+			if (!class_exists($this->model)) $this->model = NULL;
 		}
 		
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
-		if ($this->MODEL && !class_exists('Bkwld\Decoy\Controllers\Model')) {
-			if (!class_alias($this->MODEL, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
+		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
+			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
 		
 		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
@@ -155,28 +154,35 @@ class Base extends Controller {
 		if ($this->route->currentRouteAction()) return;
 		
 		// If the current route has a parent, discover what it is
-		if (empty($this->PARENT_CONTROLLER) && $this->ancestry->isChildRoute()) {
-			$this->PARENT_CONTROLLER = $this->ancestry->deduceParentController();
+		if (empty($this->parent_controller) && $this->ancestry->isChildRoute()) {
+			$this->parent_controller = $this->ancestry->deduceParentController();
 		}
 
 		// If a parent controller was found, proceed to find the parent model, parent
 		// relationship, and child relationship
-		if (!empty($this->PARENT_CONTROLLER)) {
+		if (!empty($this->parent_controller)) {
+
 			// Determine it's model, so we can call static methods on that model
-			if (empty($this->PARENT_MODEL)) {
-				$this->PARENT_MODEL = $this->model($this->PARENT_CONTROLLER);
+			if (empty($this->parent_model)) {
+				$this->parent_model = $this->model($this->parent_controller);
 			}
 
 			// Figure out what the relationship function to the child (this controller's
 			// model) on the parent model
-			if (empty($this->PARENT_TO_SELF) && $this->PARENT_MODEL) {
-				$this->PARENT_TO_SELF = $this->ancestry->deduceParentRelationship();
+			if (empty($this->parent_to_self) && $this->parent_model) {
+				$this->parent_to_self = $this->ancestry->deduceParentRelationship();
 			}
-			
+
+			// If the parent is the same as this controller, assume that it's a many-to-many-to-self
+			// relationship.  Thus, expect a relationship method to be defined on the model
+			// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+			if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
+				$this->self_to_parent = $this->parent_to_self.'AsChild';
+
 			// Figure out the child relationship name, which is typically named the same
 			// as the parent model
-			if (empty($this->SELF_TO_PARENT) && $this->PARENT_MODEL) {
-				$this->SELF_TO_PARENT = $this->ancestry->deduceChildRelationship();
+			} else if (empty($this->self_to_parent) && $this->parent_model) {
+				$this->self_to_parent = $this->ancestry->deduceChildRelationship();
 			}
 		}
 	}
@@ -216,7 +222,7 @@ class Base extends Controller {
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
 	public function title($controller_name = null) {
-		if (!$controller_name) return $this->TITLE; // For when this is invoked as a getter for $this->TITLE
+		if (!$controller_name) return $this->title; // For when this is invoked as a getter for $this->title
 		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
 		return implode(" ", $matches[0]);
 	}
@@ -226,7 +232,7 @@ class Base extends Controller {
 	 * @return string
 	 */
 	public function description() {
-		return $this->DESCRIPTION;
+		return $this->description;
 	}
 	
 	/**
@@ -262,7 +268,7 @@ class Base extends Controller {
 	 * @return string ex: "Slide"
 	 */
 	public function model($class = null) {
-		if (!$class) return $this->MODEL; // for getters
+		if (!$class) return $this->model; // for getters
 		
 		// Swap out the namespace if decoy
 		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
@@ -282,26 +288,26 @@ class Base extends Controller {
 	 * Return parent model
 	 * @return string ex: "Article"
 	 */
-	public function parentModel() { return $this->PARENT_MODEL; }
+	public function parentModel() { return $this->parent_model; }
 	
 	/**
 	 * Return controller
 	 * @return string ex: Admin\SlidesController
 	 */
-	public function controller() { return $this->CONTROLLER; }
+	public function controller() { return $this->controller; }
 	
 	/**
 	 * Get parent controller
 	 * @return string ex: Admin\ArticlesController
 	 */
-	public function parentController() { return $this->PARENT_CONTROLLER; }
+	public function parentController() { return $this->parent_controller; }
 	
 	/**
-	 * Get $SELF_TO_PARENT relationship name
+	 * Get $self_to_parent relationship name
 	 * @return string ex: article
 	 */
 	public function selfToParent() {
-		return $this->SELF_TO_PARENT;
+		return $this->self_to_parent;
 	}
 	
 	/**
@@ -321,19 +327,19 @@ class Base extends Controller {
 		
 		// Run the query
 		$search = new Search();
-		$results = $search->apply(Model::ordered(), $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = $search->apply(Model::ordered(), $this->search)->paginate($this->perPage());
 		$count = $results->getTotal();
 		
 		// Render the view.  We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
+			'title'            => $this->title,
+			'controller'       => $this->controller,
+			'description'      => $this->description,
 			'count'            => $count,
 			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
-			'search'           => $this->SEARCH,
+			'columns'          => $this->columns,
+			'search'           => $this->search,
 		));
 		
 		// Inform the breadcrumbs
@@ -348,23 +354,23 @@ class Base extends Controller {
 		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
 			
 		// Get the list of rows
-		$query = $parent->{$this->PARENT_TO_SELF}()->ordered();
+		$query = $parent->{$this->parent_to_self}()->ordered();
 
 		// Run the query
 		$search = new Search();
-		$results = $search->apply($query, $this->SEARCH)->paginate($this->PER_PAGE);
+		$results = $search->apply($query, $this->search)->paginate($this->perPage());
 		$count = $results->getTotal();
 
 		// Render the view
 		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
+			'title'            => $this->title,
+			'controller'       => $this->controller,
+			'description'      => $this->description,
 			'count'            => $count,
 			'listing'          => $results,
-			'columns'          => $this->COLUMNS,
+			'columns'          => $this->columns,
 			'parent_id'        => $parent_id,
-			'search'           => $this->SEARCH,
+			'search'           => $this->search,
 		));
 		
 		// Inform the breadcrumbs
@@ -386,14 +392,14 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Return view
-		$this->layout->nest('content', $this->SHOW_VIEW, array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
+		$this->layout->nest('content', $this->show_view, array(
+			'title'            => $this->title,
+			'controller'       => $this->controller,
+			'description'      => $this->description,
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
-			'crops'            => (object) Model::$CROPS,
+			'crops'            => (object) Model::$crops,
 		));
 		
 		// Pass parent_id
@@ -408,26 +414,27 @@ class Base extends Controller {
 	 */
 	public function store() {
 		
-		// If there is a parent, make sure it's id is valid
-		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-		}
-		
-		// Create a new object before validation so that model callbacks on validation
+		// Create a new object and hydrate
 		$item = new Model();
-		
-		// Validate
-		App::make('decoy.slug')->merge($this->MODEL);
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
-
-		// Save it
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		if (!empty($parent_id)) $query = $parent->{$this->PARENT_TO_SELF}()->save($item);
-		else $item->save();
+		$slugger = App::make('decoy.slug');
+		$slugger->merge($item);
 
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
+		// Add foreign keys to the model instance manually.  This is done
+		// This was added so that the unique_with validator could test slugs that
+		// are unqiue across multiple columns.  Those other columns are typically
+		// foreign keys.
+		foreach ($this->allForeignKeyPairs() as $pair) {
+			$item->setAttribute($pair->key, $pair->val);
+			$slugger->addWhere($item, $pair->key, $pair->val);
+		}
+
+		// Validate
+		if ($result = $this->validate($item)) return $result;
+
+		// Save it.  We don't save through relations becaue the foreign keys were manually
+		// set previously.  And many to many relationships are not formed during a store().
+		$item->save();
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -447,17 +454,17 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Render the view
-		$this->layout->nest('content', $this->SHOW_VIEW, array(
-			'title'            => $this->TITLE,
-			'controller'       => $this->CONTROLLER,
-			'description'      => $this->DESCRIPTION,
+		$this->layout->nest('content', $this->show_view, array(
+			'title'            => $this->title,
+			'controller'       => $this->controller,
+			'description'      => $this->description,
 			'item'             => $item,
-			'crops'            => (object) Model::$CROPS,
+			'crops'            => (object) Model::$crops,
 		));
 		
 		// Figure out the parent_id
-		if ($this->SELF_TO_PARENT) {
-			$foreign_key = $item->{$this->SELF_TO_PARENT}()->getForeignKey();
+		if ($this->self_to_parent) {
+			$foreign_key = $item->{$this->self_to_parent}()->getForeignKey();
 			$this->layout->content->parent_id = $item->{$foreign_key};
 		}
 		
@@ -475,21 +482,28 @@ class Base extends Controller {
 			else return App::abort(404);
 		}
 
-		// Validate data
-		App::make('decoy.slug')->merge($this->MODEL, $id);
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		// Hydrate for drag-and-drop sorting
+		if (Request::ajax() 
+			&& ($position = new Position($item, $this->self_to_parent)) 
+			&& $position->has()) $position->fill(); 
 		
-		// Update it
-		$position = new Position($item, $this->SELF_TO_PARENT);
-		if ($position->has()) $position->update(); // Handle drag-and-drop sorting
+		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-			$item->save();
+			$slugger = App::make('decoy.slug');
+			$slugger->merge($item);
+
+			// If this is a child, add "where" conditions on the slug uniqueness
+			foreach ($this->allForeignKeyPairs() as $pair) {
+				$slugger->addWhere($item, $pair->key, $pair->val);
+			}
 		}
 
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
+		// Validate data
+		if ($result = $this->validate($item)) return $result;
+
+		// Save the record
+		$item->save();
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
@@ -522,8 +536,8 @@ class Base extends Controller {
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
 		// Get data matching the query
-		if (empty(Model::$TITLE_COLUMN)) throw new Exception($this->MODEL.'::$TITLE_COLUMN must be defined');
-		$query = Model::ordered()->where(Model::$TITLE_COLUMN, 'LIKE', '%'.Input::get('query').'%');
+		if (empty(Model::$title_column)) throw new Exception($this->model.'::$title_column must be defined');
+		$query = Model::ordered()->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%');
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
@@ -538,8 +552,8 @@ class Base extends Controller {
 			// to manys with tags because we want to know if the reason that autocomplete
 			// returns no results on an exact match that is already attached is because it
 			// already exists.  Otherwise, it would allow the user to create the tag
-			if ($parent->{$this->PARENT_TO_SELF}()
-				->where(Model::$TITLE_COLUMN, '=', Input::get('query'))
+			if ($parent->{$this->parent_to_self}()
+				->where(Model::$title_column, '=', Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
@@ -547,7 +561,7 @@ class Base extends Controller {
 			// Get the ids of already attached rows through the relationship function.  There
 			// are ways to do just in SQL but then we lose the ability for the relationship
 			// function to apply conditions, like is done in polymoprhic relationships.
-			$siblings = $parent->{$this->PARENT_TO_SELF}()->get();
+			$siblings = $parent->{$this->parent_to_self}()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
@@ -572,7 +586,7 @@ class Base extends Controller {
 		
 		// Do the attach
 		$this->fireEvent('attaching', array($item));
-		$item->{$this->SELF_TO_PARENT}()->attach(Input::get('parent_id'));
+		$item->{$this->self_to_parent}()->attach(Input::get('parent_id'));
 		$this->fireEvent('attached', array($item));
 		
 		// Return the response
@@ -593,7 +607,7 @@ class Base extends Controller {
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
 		$item = $this->parentFind($parent_id);
 		$this->fireEvent('removing', array($item, $ids));
-		$item->{$this->PARENT_TO_SELF}()->detach($ids);
+		$item->{$this->parent_to_self}()->detach($ids);
 		$this->fireEvent('removed', array($item, $ids));
 		
 		// Redirect.  We can use back cause this is never called from a "show"
@@ -610,15 +624,29 @@ class Base extends Controller {
 	// shared logic for that
 	/**
 	 * Shared validation helper
-	 * @param array $rules    A typical rules array
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $model = null, $messages = array()) {
+	protected function validate($model = null, $rules = null, $messages = array()) {
 		
-		// Pull the input from the proper place
-		$input = Input::all();
-		
+		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
+		// does a recursive merge which results in file fields containing BOTH the string version
+		// of the previous file plus the new File instance when the user is replacing a file during
+		// an update.  The array_filter() is there to strip out empties from the files array.  This
+		// prevents empty file fields from overriding the contents of the hidden field that stores
+		// the previous file name.
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+
+		// Fire validating event
+		if ($model && ($response = $this->fireEvent('validating', array($model, $input), true))) {
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+		}
+
+		// Pull the rules from the model instance.  This itentionally comes after the validating
+		// event is fired, so handlers of that event can modify the rules.
+		if ($model && empty($rules)) $rules = $model::$rules;
+
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
 		// the rules list.
@@ -626,11 +654,16 @@ class Base extends Controller {
 			$rules = array_only($rules, array_keys($input));
 		}
 
-		// Fire event
-		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
-			if (is_a($response, '\Response')) return $response;
+		// If a model instance was passed, merge the input on top of that.  This allows
+		// data that may already be set on the model to be validated.  The input will override
+		// anything already set on the model.  In particular, this is done so that auto
+		// generated fields like the slug can be validated.  This intentionally comes after the
+		// AJAX conditional so that we still only validate fields that were present in
+		// the AJAX request.
+		if ($model && method_exists($model, 'getAttributes')) {
+			$input = array_merge($model->getAttributes(), $input);
 		}
-		
+
 		// Validate
 		$validation = Validator::make($input, $rules, $messages);
 		if ($validation->fails()) {
@@ -678,19 +711,20 @@ class Base extends Controller {
 		
 		// Setup both events
 		$events = array("decoy.{$event}");
-		if (!empty($this->MODEL)) $events[] = "decoy.{$event}: ".$this->MODEL;
+		if (!empty($this->model)) $events[] = "decoy.{$event}: ".$this->model;
 		
 		// Fire them
 		foreach($events as $event) {
-			if ($until) Event::until($event, $args);
-			else Event::fire($event, $args);
+			if ($until) {
+				if ($response = Event::until($event, $args)) return $response;
+			} else Event::fire($event, $args, $until);
 		}
 	}
 	
 	// Run the find method on the parent model
 	protected function parentFind($parent_id) {
-		if (empty($this->PARENT_MODEL)) return false;
-		return call_user_func($this->PARENT_MODEL.'::find', $parent_id);
+		if (empty($this->parent_model)) return false;
+		return call_user_func($this->parent_model.'::find', $parent_id);
 	}
 	
 	// Format the results of a query in the format needed for the autocomplete repsonses
@@ -701,13 +735,13 @@ class Base extends Controller {
 			// Only keep the id and title fields
 			$item = new stdClass;
 			$item->id = $row->id;
-			$item->title = $row->{Model::$TITLE_COLUMN};
+			$item->title = $row->{Model::$title_column};
 			
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic
 			// found in Decoy::renderListColumn();
 			$item->columns = array();
-			foreach($this->COLUMNS as $column) {
+			foreach($this->columns as $column) {
 				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
 				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
 				else $item->columns[$column] = null;
@@ -719,75 +753,61 @@ class Base extends Controller {
 		return $output;
 	}
 	
-	//---------------------------------------------------------------------------
-	// Private support methods
-	//---------------------------------------------------------------------------
-	
-	
+	// Return the per_page based on the input
+	public function perPage() {
+		$per_page = Input::get('count', static::$per_page);
+		if ($per_page == 'all') return 1000;
+		return $per_page;
+	}
+
+	// Get all the foreign keys and values on the relationship with the parent
+	/**
+	 * Get all the foreign keys and values on the relationship with the parent
+	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
+	 * @return array A list of key-val objects that have the column name and value for
+	 * the active relationship
+	 */
+	private function allForeignKeyPairs($relation = null) {
+		$pairs = array();
+
+		// Get the relation if not defined
+		if ($relation || ($relation = $this->parentRelation())) {
+
+			// Add standard belongs to foreign key
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
+				$pairs[] = (object) array(
+					'key' => $relation->getPlainForeignKey(), 
+					'val' => $relation->getParentKey()
+				);
+			}
+
+			// Add polymorphic column
+			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
+				$pairs[] = (object) array(
+					'key' => $relation->getPlainMorphType(), 
+					'val' => $relation->getMorphClass()
+				);
+			}
+
+			// Return the pairs
+			return $pairs;
+
+		// Relation could not be found, so return nothing
+		} else return array();
+
+	}
+
+	/**
+	 * Run the parent relationship function for the active model, returning the Relation
+	 * object. Returns false if none found.
+	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
+	 */
+	private function parentRelation() {
+		if ($this->parent_to_self
+			&& ($parent_id = $this->ancestry->parentId()) 
+			&& ($parent = self::parentFind($parent_id))) {
+			return $parent->{$this->parent_to_self}();
+		} else return false;
+	}
 	
 }
-
-/*
-
-
-abstract class Decoy_Base_Controller extends Controller {
-	
-	
-	
-	//---------------------------------------------------------------------------
-	// Utility methods
-	//---------------------------------------------------------------------------
-
-	// Processing function for handling sorting when the position column is on pivot table.  As
-	// would be the case in all many to manys.
-	protected function update_pivot_position($id) {
-		
-		// If there is not a PUT request with a property of position, return false
-		// to tell the invoker to continue processing
-		if (Request::getMethod() != 'PUT' || !Request::ajax()) return false;
-		$input = Input::get();
-		if (!isset($input['position'])) return false;
-		
-		// Update the pivot position
-		list($table) = $this->pivot();
-		DB::table($table)
-			->where('id', '=', $id)
-			->update(array('position' => $input['position']));
-		
-		// Return success
-		return Response::json('null');
-		
-	}
-
-
-	//---------------------------------------------------------------------------
-	// Private support methods
-	//---------------------------------------------------------------------------
-	
-	
-	// Get the pivot table name and the child foreign key (the active Model) is probably
-	// the child, and the parent foreign key column name
-	private function pivot() {
-		
-		// If the request doesn't know it's child of another class (often because an exeption)
-		// this won't work
-		if (empty($this->SELF_TO_PARENT)) throw new Exception('Empty self to parent relationship in pivot');
-		if (empty($this->PARENT_TO_SELF)) throw new Exception('Empty parent to self relationship in pivot');
-		
-		// Lookup the table and column
-		$listing_instance = new Model;
-		$parent_instance = new $this->PARENT_MODEL;
-		$pivot_table = $listing_instance->{$this->SELF_TO_PARENT}()->pivot()->model->table();
-		$pivot_child_foreign = $pivot_table.'.'.$listing_instance->{$this->SELF_TO_PARENT}()->foreign_key();
-		$pivot_parent_foreign = $pivot_table.'.'.$parent_instance->{$this->PARENT_TO_SELF}()->foreign_key();
-		return array($pivot_table, $pivot_child_foreign, $pivot_parent_foreign);
-	}
-	
-	// Get the id column of the model
-	private function child_key() {
-		$listing_instance = new Model;
-		return $listing_instance->table().'.'.$listing_instance::$key;
-	}
-
-}
-*/

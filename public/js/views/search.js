@@ -128,11 +128,11 @@ define(function (require) {
 							'<option value=">">is after</option>'+
 							'<option value="<">is before</option>'+
 							'<option value="=">is on</option>'+
-						'</select>'+
+						'</select>').add($(''+
 						'<div class="input-append input date">'+
 							'<input class="date input-field" maxlength="10" placeholder="mm/dd/yyyy" type="text">'+
 							'<span class="add-on"><i class="icon-calendar"></i></span>'+
-						'</div>').datepicker();
+						'</div>').datepicker());
 				
 				// Number selector
 				case 'number':

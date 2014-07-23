@@ -14,7 +14,7 @@ $bootstrap_nav_break: 767px;
 @import "plugins/bootstrap-responsive";
 
 // UI plugins
-@import "plugins/jquery-ui-1.9.0.custom";
+@import "plugins/jquery-ui";
 @import "plugins/bootstrap-datepicker";
 @import "plugins/bootstrap-timepicker";
 @import "plugins/bootstrap-notify";
@@ -23,7 +23,6 @@ $bootstrap_nav_break: 767px;
 // Utilities
 @import "utils/respond-to";
 @import "utils/edit-only";
-@import "utils/theme";
 
 // The partials that form the Decoy style
 @import "partials/general";
@@ -33,6 +32,7 @@ $bootstrap_nav_break: 767px;
 @import "partials/listing/search";
 @import "partials/listing/sorting";
 @import "partials/listing/table";
+@import "partials/listing/pagination";
 @import "partials/moderation";
 @import "partials/form/crop";
 @import "partials/form/file";
@@ -48,5 +48,5 @@ $bootstrap_nav_break: 767px;
 // Specific pages
 @import "controllers/login";
 
-// Set default color
-@include theme(#61c161);
+// Override with the theme
+@import "utils/theme";

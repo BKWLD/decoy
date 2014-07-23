@@ -27,10 +27,19 @@ $app = require_once($app_dir.'bootstrap/start.php');
 function CheckAuthentication() {
 	global $app;
 
-	// Recreate the session
-	$session = $app->make('session');
-	$session->setId($app->make('encrypter')->decrypt($_COOKIE[$session->getName()]));
-	$session->start();
+	// Decrypt all cookies.  This is based on a simplification of
+	// Illuminate\Cookie\Guard's decrypt().  This should make both the session
+	// and cookie cookies work
+	$encrypter = $app->make('encrypter');
+	$request = $app->make('request');
+	foreach($request->cookies as $key => $cookie) {
+
+		// Laravel, encrypted cookies
+		try { $request->cookies->set($key, $encrypter->decrypt($cookie)); } 
+
+		// Other cookies
+		catch (Exception $e) { $request->cookies->set($key, null); }
+	}
 
 	// Boot up providers, specifically so package config() calls work
 	$app->boot();
@@ -110,9 +119,9 @@ Set the maximum size of uploaded images. If an uploaded image is larger, it
 gets scaled down proportionally. Set to 0 to disable this feature.
 */
 $config['Images'] = Array(
-		'maxWidth' => 1600,
-		'maxHeight' => 1200,
-		'quality' => 80);
+		'maxWidth' => 2400,
+		'maxHeight' => 2400,
+		'quality' => 90);
 
 /*
 RoleSessionVar : the session variable name that CKFinder must use to retrieve
@@ -196,14 +205,14 @@ to execute JavaScript code and to e.g. perform an XSS attack. Grant permission
 to upload `.swf` files only if you understand and can accept this risk.
 ==============================================================================
 */
-$config['DefaultResourceTypes'] = 'Images';
+$config['DefaultResourceTypes'] = 'Images,Files';
 
 $config['ResourceType'][] = Array(
-		'name' => 'Files',				// Single quotes not allowed
+		'name' => 'Files',
 		'url' => $baseUrl . 'files',
 		'directory' => $baseDir . 'files',
 		'maxSize' => 0,
-		'allowedExtensions' => '7z,aiff,asf,avi,bmp,csv,doc,docx,fla,flv,gif,gz,gzip,jpeg,jpg,mid,mov,mp3,mp4,mpc,mpeg,mpg,ods,odt,pdf,png,ppt,pptx,pxd,qt,ram,rar,rm,rmi,rmvb,rtf,sdc,sitd,swf,sxc,sxw,tar,tgz,tif,tiff,txt,vsd,wav,wma,wmv,xls,xlsx,zip',
+		'allowedExtensions' => 'doc,docx,pdf',
 		'deniedExtensions' => '');
 
 $config['ResourceType'][] = Array(
@@ -212,14 +221,6 @@ $config['ResourceType'][] = Array(
 		'directory' => $baseDir . 'images',
 		'maxSize' => 0,
 		'allowedExtensions' => 'bmp,gif,jpeg,jpg,png',
-		'deniedExtensions' => '');
-
-$config['ResourceType'][] = Array(
-		'name' => 'Flash',
-		'url' => $baseUrl . 'flash',
-		'directory' => $baseDir . 'flash',
-		'maxSize' => 0,
-		'allowedExtensions' => 'swf,flv',
 		'deniedExtensions' => '');
 
 /*

@@ -9,7 +9,7 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<?= View::make('decoy_published::layout.buk_builder._header') ?>
+		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
@@ -28,7 +28,10 @@
 		<div id="main" class="container">
 			<?= $content?>
 		</div>
-		
-	<?= View::make('decoy_published::layout.buk_builder._footer') ?>
+	
+	<?// Footer embeds ?>
+	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
+	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
+	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>

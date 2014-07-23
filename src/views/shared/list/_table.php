@@ -15,8 +15,8 @@ if (!isset($convert_dates)) $convert_dates = 'date';
 // Test the data for presence of special properties
 $actions = 2; // Default
 if ($listing->count()) {
-	$test_row = $listing[0]->getAttributes();
-	
+	$test_row = $listing[0]->toArray();
+
 	// Has visibilty toggle
 	$has_visible = array_key_exists('visible', $test_row);
 		
@@ -29,8 +29,13 @@ if ($listing->count()) {
 <table class="table listing columns-<?=count($columns)?>">
 	<thead>
 			<tr>
-				<th class="select-all"><i class="icon-check"></i></th>
-				
+
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+					<th class="select-all"><i class="icon-check"></i></th>
+				<? else: ?>
+					<th class="hide"></th>
+				<? endif ?>
+
 				<?// Loop through the columns array and create columns?>
 				<? foreach(array_keys($columns) as $column): ?>
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
@@ -63,22 +68,29 @@ if ($listing->count()) {
 			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
 			// rows from multiple models
 			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
+		
+			// Figure out the edit link
+			if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->getKey()));
+			else $edit = URL::to(DecoyURL::relative('edit', $item->getKey(), $controller));
 			?>
 	
-			<tr 
-				data-model-id="<?=$item->id?>"
-				<? if (!empty($parent_id)): ?> data-parent-id="<?=$parent_id?>"<? endif ?>
+			<tr data-model-id="<?=$item->getKey()?>"
 				<?
-				// Add position value from the row or from the pivot table.  
-				if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}'";
-				elseif (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}'";
-				
-				// Figure out the edit link
-				if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->id));
-				else $edit = URL::to(DecoyURL::relative('edit', $item->id, $controller));
+				// Render parent id
+				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
+
+				// Add position value from the row or from the pivot table.
+				if (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}' ";
+				else if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}' ";
 				?>
 			>
-				<td><input type="checkbox" name="select-row"></td>
+				
+				<?// Checkboxes or bullets ?>
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+					<td><input type="checkbox" name="select-row"></td>
+				<? else: ?>
+					<td class="hide"></td>
+				<? endif ?>
 				
 				<?// Loop through columns and add columns ?>
 				<? $column_names = array_keys($columns) ?>
@@ -102,7 +114,7 @@ if ($listing->count()) {
 				<td>
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible): ?>
+					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><i class="icon-eye-open"></i></a>
 						<? else: ?>
@@ -113,15 +125,19 @@ if ($listing->count()) {
 					
 					<?// Edit link?>
 					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
-					<span class="edit-delete-seperator">|</span>
-					 
-					 <?// Many to many listings have remove icons instead of trash?>
-					<? if ($many_to_many): ?>
-						<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
-						
-					<?// Regular listings actually delete rows ?>
-					<? else: ?> 
-						<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+
+					<?// Delete or remove ?>
+					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+						<span class="edit-delete-seperator">|</span>
+						 
+						 <?// Many to many listings have remove icons instead of trash?>
+						<? if ($many_to_many): ?>
+							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+							
+						<?// Regular listings actually delete rows ?>
+						<? else: ?> 
+							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<? endif ?>
 					<? endif ?>
 				</td>
 			</tr>

@@ -70,7 +70,7 @@ class Generate extends Command {
 	private function generateView() {
 
 		// Figure out the naming
-		$path = 'app/views/admin/'.Str::plural(Str::snake($this->argument('model'))).'/edit.php';
+		$path = 'app/views/admin/'.Str::plural(Str::snake($this->argument('model'))).'/edit.haml.php';
 		$file = base_path().'/'.$path;
 
 		// Copy the stub over

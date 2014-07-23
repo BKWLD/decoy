@@ -5,33 +5,32 @@ class {{model}} extends Base {
 	/**
 	 * Example configuration
 
-	// Rules
+	// Validation rules
 	public static $rules = array(
 		'title' => 'required',
+		'slug' => 'alpha_dash|unique:articles',
 		'image' => 'image',
 		'date' => 'required',
-		'slug' => 'alpha_dash|unique:articles',
 		'url' => 'url',
 	);
 	
-	// Crops
-	static public $CROPS = array(
+	// Cropping tool definitions
+	static public $crops = array(
 		'image' => array('default' => '1:1'),
 	);
 	
-	// Order by the manually entered date
+	// Order by drag and drop
 	public function scopeOrdered($query) {
-		return $query->orderBy('date', 'desc');
+		return $query->positioned();
 	}
 	
 	// Create the deep link to this item
 	public function deepLink() {
-		if ($this->url && !$this->body) return $this->url;
-		else return route('article', $this->slug);
+		return route('article', $this->slug);
 	}
 		
 	// Display the featured status in admin listing
-	public function renderFeaturedStatus() {
+	public function adminColFeaturedStatus() {
 		return $this->featured ? '<span class="badge">Featured</span>' : '';
 	}
 

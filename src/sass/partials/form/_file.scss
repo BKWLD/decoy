@@ -19,11 +19,6 @@ input[type="file"] {
 		}
 	}
 	
-	// Make the images span the full column when in a related view
-	.span6 & .img-polaroid {
-		width: 100%;
-	}
-	
 	// Style the image delete button
 	.image-delete { 
 		margin-top: 10px;

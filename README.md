@@ -11,9 +11,13 @@
 3. Run `php artisan migrate --package=bkwld/decoy`
 4. Run `php artisan config:publish bkwld/decoy`
 
+
+
 ## Tests
 
 Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
+
+
 
 ## Routing
 
@@ -34,17 +38,45 @@ TODO Add more examples
 
 For more info, check out the tests/Routing/TestWildcard.php unit tests.
 
+
+
 ## Models
 
 Decoy uses the same models as your app uses.  Thus, put them as per normal in /app/models.  However, instead of extending Eloquent, they should sextend Bkwld\Decoy\Models\Base.
 
 ### Many to Many relationships
 
+Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.
+
+The autocomplete UI also expects you to define a `public static $title_column` property in your model with a value that matches the column name that is used for the title.  Currently, you can ONLY match against a single column in the database.
+
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
 ```
 public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('position')->orderBy('prospect_user.position', 'asc'); }
 ```
+
+### Many to Many to Self
+
+I am using this term to describe a model that relates back to it self; like a project that has related projects.  You should define two relationship methods as follows:
+
+	public function projects() { return $this->belongsToMany('Project', 'project_projects', 'project_id', 'related_project_id'); }
+	public function projectsAsChild() { return $this->belongsToMany('Project', 'project_projects', 'related_project_id', 'project_id'); }
+
+The "AsChild()" naming convention is significant.  The Decoy Base Controller checks for this when generating it's UI.
+
+### Polymorphic relationships
+
+You must use the convention of suffixing polymorphic stuff with "able".  For instance, in a one to many, the child should have a "...able()" relationship function.  For example, in a `Slide` controller, it should be called `slideable()`.
+
+### Polymorphic Many to Many to Self
+
+Example:
+
+	public function services() { return $this->morphedByMany('Service', 'serviceable')->withTimestamps(); }
+	public function servicesAsChild() { return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')->withTimestamps(); }
+
+
 
 ## Controllers
 
@@ -85,12 +117,69 @@ The following protected proprties allow you to customize how Decoy works from th
 	);
 	```
 
-The following properties are only relevant if a controller is a parent or child of another, as in `has_many()`, `has_many_and_belongs_to()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
+The following properties are only relevant if a controller is a parent or child of another, as in `hasMany()`, `belongsToMany()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
 
 * `PARENT_MODEL` - The model used by the parent controller (i.e. "Project").
 * `PARENT_CONTROLLER` - The parent controller (i.e. "admin.projects").
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
+
+### Setting up relation data
+
+To pass the data needed to show related data on an edit page, you need to override the edit() method in your controller.  For instance:
+
+	class PostsController extends BaseController {
+		public function edit($id) {
+
+			// Execute standard logic
+			parent::edit($id);
+			$item = \Post::findOrFail($id);
+
+			// Setup sidebar
+			$this->layout->content->related = array(
+
+				// Related projects
+				array(
+					'controller'        => 'Admin\PostImages',
+					'listing'           => $item->postImages()->ordered()->paginate(self::$per_sidebar),
+				),
+
+			);
+		}
+	}
+
+The related property is a specially named one.  The `decoy::shared.list.form_with_related._footer` partial looks for this and iterates through it, generating `decoy::shared.list._standard` partials with the data you pass in each element of the related array.
+
+A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up as follows.  Note, this assumes that you've named the relationships on your model as described in the Models section of the README under "many to many to self".
+
+	class PostsController extends BaseController {
+
+		// Edit
+		public function edit($id) {
+
+			// Execute standard logic
+			parent::edit($id);
+			$item = \Post::findOrFail($id);
+
+			// Setup sidebar
+			$this->layout->content->related = array(
+
+				// Related projects
+				array(
+					'title'             => 'Related',
+					'controller'        => $this->controller,
+					'listing'           => $item->posts()->ordered()->paginate(self::$per_sidebar),
+					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
+					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
+				),
+
+			);
+		}
+
+	}
+
+Another use case is polymorphic relationships.  You may need to hard code the `SELF_TO_PARENT` property on the controller if it can't be formed by concatenating the model name with "able".  For instance, the `Slide` model works nicely, it's polymorphic relationship to it's parent can become `slideable`.  But the `Tag` model should be related by `Taggable` but Decoy is looking for `Tagable`.
+
 
 
 ## Views
@@ -98,9 +187,21 @@ The following properties are only relevant if a controller is a parent or child 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
 TODO Describe changing the layout and index
-TODO Describe setting up related forms
 
-### Embeded relationship list
+### Related sidebar
+
+The View file might look like this:
+
+	<?=View::make('decoy::shared.form_with_related._header', $__data)?>
+		
+		<?= Former::text('title')->class('span6') ?>
+		<?= Former::textarea('body')->class('span6 wysiwyg') ?>
+
+	<?=View::make('decoy::shared.form_with_related._footer', $__data)?>
+
+The related data gets passed to the footer partial and rendered automatically.  Note that the form elements are set to span6 rather than span9.
+
+### Embeded / inline relationship list
 
 Example:
 
@@ -117,11 +218,45 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::PER_PAGE_SIDEBAR)->get(),
+			'listing'     => $related->paginate(self::$per_sidebar),
 		);
 	}
 
-So, you pass it the standard array that listing views require.
+So, you pass it the standard array that listing views require.  Here's a HAML example:
+
+	-if(isset($item))
+		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
+	-else
+		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+
+
+### Data for Former select, radio, and checkbox
+
+A convention to follow is to create a static array on the model that populates Former's select, radio, and checkbox types.  The name of the property holding this array should be the plural form of the column that will store the value(s).  The keys of this array are slugs that are stored in a database column and the values are the readable vesions.  For instance:
+
+	static public $categories = array(
+		'inspiring' => 'Inspiring',
+		'quirky' => 'Quirky',
+		'cool' => 'Cool',
+		'adventurous' => 'Adventurous',
+	);
+
+Then, in the edit view, you could do this:
+
+	!= Former::checkbox('category')->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))->push(false)
+
+Furthermore, you can use this array for searching the list view by referencing it in the `search` property on your controller:
+
+	protected $search = array(
+		'title',
+		'category' => array(
+			'type' => 'select',
+			'options' => 'Post::$categories'
+		),
+	);
+
+Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
+
 
 ## Features
 
@@ -134,9 +269,9 @@ So, you pass it the standard array that listing views require.
 By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
 
 1. Enter the `license_name` and `license_key` in your /app/config/packages/bkwld/decoy/wysiwyg.php config file
-2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/main.js like so:
+2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/start.js like so:
 
-		define('main', function (require) {
+		define(function (require) {
 			require('decoy/modules/wysiwyg').config.allowUploads();
 		});
 		
@@ -150,8 +285,11 @@ Start by creating new language files in /app/lang/en.  There are some convention
 	
 	<?php return array(
 		'marquee_title' => 'Welcome to the site',
+		'marquee.featured_article,belongs_to' => '/admin/articles',
+
 		'intro.title' => 'This is some great stuff',
 		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
+
 		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
 		'deep_dive.headshot,image' => '/img/path/to/heashot',
 		'deep_dive.pdf,file' => '/files/path/to/file',
@@ -177,12 +315,72 @@ In a standard PagodaBox config, you would put these in your Boxile:
 	web1:
 		name: app
 		cron:
-			- "* * * * *": "php artisan <COMMAND> --heartbeat --env=$LARAVEL_ENV"
+			- "* * * * *": "php artisan <COMMAND> --heartbeat"
 	
 	worker1:
 		name: worker
-		exec: "php artisan <COMMAND> --worker --env=$LARAVEL_ENV"
+		exec: "php artisan <COMMAND> --worker"
 
 In this example, "<COMMAND>" is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will run every minute on PB.  And if the worker fails, the heartbeat will continue running it, at a rate of every 15 min (because of PB rate limiting).
 
 In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.
+
+### Slugs
+
+Slugs are auto created from columns named title, name, or specified in the model with a `$title_column` static property.  Your model should have a validation rule like:
+
+	'slug' => 'alpha_dash|unique:services
+
+Decoy will automatically add ignore for the current id when submittng an UPDATE request.
+
+##### Slugs unique across multiple columns
+
+If the slug is unique across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
+
+	$table->unique(array('slug', 'category_id'));
+
+In this example, this table has a one-to-many parent table called `categories`.  Specify a rule in the model like:
+
+	'slug' => 'alpha_dash|unique_with:services,category_id,slug',
+
+That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
+
+	!= Former::hidden('category_id', $parent_id)
+
+### Permissions
+
+Here is an example of a groups and permissions from the Decoy config:
+
+	'roles' => array(
+		'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
+		'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
+		'super' => '<b>Super Admin</b> - Can manage everything.',
+	),
+
+	'permissions' => array(
+		'general' => array(
+			'cant' => array(
+				'create.categories',
+				'destroy.categories',
+				'manage.slides',
+				'manage.sub-categories',
+				'manage.forms',
+			),
+		),
+	),
+
+The roles array generates the list of roles on the Admin edit screen.  The keys of that array become Groups in Sentry.
+
+The permissions array defines what a user can and can't do.  This could have been run through Sentry but I chose my own approach for two reasons:
+
+1. I didn't like having to make database migrations everytime a group permissions configuration changed
+2. In many projects, most roles can do almost everything and I wanted to be able to blacklist actions.  Sentry operates from a whitelist-only perspective.
+
+In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.  The full list of supported actions that can be denied are:
+
+- create
+- read
+- update
+- destroy
+- manage (combines all of the above)
+

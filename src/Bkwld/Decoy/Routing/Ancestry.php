@@ -50,12 +50,16 @@ class Ancestry {
 	 * it unlikely that we'd ever explicitly register routes to be children of another.
 	 */
 	public function requestIsChild() {
+
+		// Get all the classes represented in the request
+		$classes = $this->wildcard->getAllClasses();
 		
-		// Only perform check if the route is for a child
-		return $this->wildcard->detectIfChild()
-		
-			// ... and make sure the passed controller is the child that was detected
-			&& $this->isRouteController();
+		// Remove the first class, because we only care about children
+		if (count($classes) <= 1) return false;
+		array_shift($classes);
+
+		// Check if this controller is in the the remaining list of classes
+		return in_array(get_class($this->controller), $classes);
 	}
 
 	/**
@@ -103,8 +107,19 @@ class Ancestry {
 	 * is in.
 	 */
 	public function isChildInManyToMany() {
+
+		// See if a relationship is defined
 		$relationship = $this->controller->selfToParent();
 		if (!$relationship) return false;
+
+		// If the relationship ends in 'able' then it's assumed to be
+		// a polymorphic one-to-many.  We're doing it this way because 
+		// running the relationship function (see `$model->{$relationship}()` below)
+		// throws an error when you're not working with a hydrated model.  And this
+		// is exactly what happens in the the shared.list._standard view composer.
+		if (Str::endsWith($relationship, 'able')) return false;
+
+		// Check the class of the relationship
 		$model = $this->controller->model();
 		if (!method_exists($model, $relationship)) return false;
 		$model = new $model; // Needed to be a simple string to work
@@ -125,7 +140,7 @@ class Ancestry {
 		
 		// If a child index view, get the controller from the route
 		} else if ($this->requestIsChild()) {
-			return $this->wildcard->getParentController();
+			return $this->getParentController();
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->isActingAsRelated()) {
@@ -135,6 +150,18 @@ class Ancestry {
 		} else return false;
 	}
 	
+	/**
+	 * Use the array of classes represented in the current route to find the one that
+	 * preceeds the current controller.  The preceeding controller is considered to be
+	 * the parent.
+	 * @return string ex: Admin\NewsController
+	 */
+	public function getParentController() {
+		$classes = $this->wildcard->getAllClasses();
+		$i = array_search(get_class($this->controller), $this->wildcard->getAllClasses());
+		if ($i > 0) return $classes[$i-1];
+		else throw new Exception('Error getting the parent controller.');
+	}
 
 	/**
 	 * Guess as what the relationship function on the parent model will be
@@ -152,7 +179,10 @@ class Ancestry {
 		
 		// Verify that it exists
 		if (!method_exists($this->controller->parentModel(), $relationship)) {
-			throw new Exception('Parent relationship missing, looking for: '.$relationship);
+			throw new Exception('Parent relationship missing, looking for: '.$relationship
+				.'. This controller is: '.get_class($this->controller)
+				.'. This parent model is: '.$this->controller->parentModel()
+			);
 		}
 		return $relationship;
 	}
@@ -164,20 +194,25 @@ class Ancestry {
 	 * a function named "post" for it's relationship
 	 */
 	public function deduceChildRelationship() {
-		
+		$model = $this->controller->model();
+
 		// If one to many, it will be singular
 		$parent_model = $this->getClassName($this->controller->parentModel());
 		$relationship = lcfirst($parent_model);
+		if (method_exists($model, $relationship)) return $relationship;
 		
 		// If it doesn't exist, try the plural version, which would be correct
 		// for a many to many relationship
-		if (!method_exists($this->controller->model(), $relationship)) {
-			$relationship = Str::plural($relationship);
-			if (!method_exists($this->controller->model(), $relationship)) {
-				throw new Exception('Child relationship missing, looking for '.$relationship);
-			}
-		}
-		return $relationship;
+		$plural = Str::plural($relationship);
+		if (method_exists($model, $plural)) return $plural;
+
+		// Look for a polymorphic version, which we get by appending 'able' to the
+		// end of the singular version.  Ex: "Image" model would have imageable().
+		$poly = strtolower($model).'able';
+		if (method_exists($model, $poly)) return $poly;
+
+		// Throw exception
+		throw new Exception('Child relationship missing, looking for '.$relationship);
 	}
 	
 	/**

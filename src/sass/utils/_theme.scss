@@ -1,156 +1,167 @@
-/**
- * Apply a color treatment to the navbar (mostly)
- */
-@mixin theme($color, $text:white) {
+
+// Default settings, these should be overrided in app/sass/admin/style.scss
+$theme-color: #61c161 !default;
+$theme-text: white !default;
+$theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
+
+// Navbar
+.navbar-inner {
+
+	// Tell IE to stop doing it's own thing
+	filter: none;
+	-ms-filter: none;
+
+	// Set colors
+	color: $theme-text;
+	color: rgba($theme-text, .8);
+	background: $theme-color;
+	@include background(linear-gradient(top, $theme-color, darken($theme-color, 5%)));
 	
-	// Navbar
-	.navbar-inner {
-		color: $text;
-		color: rgba($text, .8);
-		background: $color;
-		@include background(linear-gradient(top, $color, darken($color, 5%)));
-		
-		// There is a border on the bottom
-		border-bottom-color: darken($color, 10%);
-		
-		// Open dropdown
-		.nav li.dropdown.open > .dropdown-toggle,
-		.nav li.dropdown.open.active > .dropdown-toggle {
-			color: $text;
-			background: darken($color, 10%);
-			@include background(linear-gradient(top, darken($color, 10%), $color));
-			@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.125));
+	// There is a border on the bottom
+	border-bottom-color: darken($theme-color, 10%);
+	
+	// Open dropdown
+	.nav li.dropdown.open > .dropdown-toggle,
+	.nav li.dropdown.open.active > .dropdown-toggle {
+		color: $theme-text;
+		background: darken($theme-color, 10%);
+		@include background(linear-gradient(top, darken($theme-color, 10%), $theme-color));
+		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.125));
+	}
+	
+	// Active section
+	.nav > .active > a,
+	.nav > .active > a:hover,
+	.nav > .active > a:focus,
+	.nav li.dropdown.active > .dropdown-toggle {
+		color: $theme-text;
+		background: darken($theme-color, 10%);
+	}
+	
+	// Fix text shadows
+	.brand, .nav > li > a {
+		color: rgba($theme-text, .8);
+		@include text-shadow(0 1px 0 darken($theme-color, 20%));
+		&:hover, &:focus {
+			color: $theme-text;
 		}
+	}
+	
+	// Carret color
+	.nav li.dropdown > .dropdown-toggle .caret,
+	.nav li.dropdown.active > .dropdown-toggle .caret {
+		border-top-color: $theme-text;
+		border-bottom-color: $theme-text;
+		border-top-color: rgba($theme-text, .8);
+		border-bottom-color: rgba($theme-text, .8);
+	}
+	.nav li.dropdown.open.active > .dropdown-toggle .caret,
+	.nav li.dropdown > a:hover .caret,
+	.nav li.dropdown > a:focus .caret,
+	.nav li.dropdown.open > .dropdown-toggle .caret,
+	.nav li.dropdown.active > .dropdown-toggle .caret,
+	.nav li.dropdown.open.active > .dropdown-toggle .caret {
+		border-top-color: $theme-text;
+		border-bottom-color: $theme-text;
+	}
+	
+	// Dropdown row :hover
+	.dropdown-menu > li > a:hover,
+	.dropdown-menu > li > a:focus,
+	.dropdown-submenu:hover > a,
+	.dropdown-submenu:focus > a {
+		background: $theme-color;
+	}
+	
+	// Active page in dropdown
+	.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
+		color: $theme-text;
+		background: darken($theme-color, 5%);
+	}
+	
+	// Make the icon look a little sunken in
+	.gravatar {
+		@include box-shadow(0 1px 1px 0 darken($theme-color, 10%));
+	}
+	
+	// The mobile toggle
+	.btn-navbar {
+		@include background(linear-gradient(top, lighten($theme-color, 5%), darken($theme-color, 10%)));
+	}
+	
+	// Mobile stuff
+	@media (max-width: $bootstrap_nav_break) {
+		.nav-collapse {
 		
-		// Active section
-		.nav > .active > a,
-		.nav > .active > a:hover,
-		.nav > .active > a:focus,
-		.nav li.dropdown.active > .dropdown-toggle {
-			color: $text;
-			background: darken($color, 10%);
-		}
-		
-		// Fix text shadows
-		.brand, .nav > li > a {
-			color: rgba($text, .8);
-			@include text-shadow(0 1px 0 darken($color, 20%));
-			&:hover, &:focus {
-				color: $text;
+			// The submenu labels
+			.nav > li > a,
+			.dropdown-menu a {
+				color: $theme-text;
+				color: rgba($theme-text, .8);
+				font-weight: normal;
 			}
-		}
-		
-		// Carret color
-		.nav li.dropdown > .dropdown-toggle .caret,
-		.nav li.dropdown.active > .dropdown-toggle .caret {
-			border-top-color: $text;
-			border-bottom-color: $text;
-			border-top-color: rgba($text, .8);
-			border-bottom-color: rgba($text, .8);
-		}
-		.nav li.dropdown.open.active > .dropdown-toggle .caret,
-		.nav li.dropdown > a:hover .caret,
-		.nav li.dropdown > a:focus .caret,
-		.nav li.dropdown.open > .dropdown-toggle .caret,
-		.nav li.dropdown.active > .dropdown-toggle .caret,
-		.nav li.dropdown.open.active > .dropdown-toggle .caret {
-			border-top-color: $text;
-			border-bottom-color: $text;
-		}
-		
-		// Dropdown row :hover
-		.dropdown-menu > li > a:hover,
-		.dropdown-menu > li > a:focus,
-		.dropdown-submenu:hover > a,
-		.dropdown-submenu:focus > a {
-			background: $color;
-		}
-		
-		// Active page in dropdown
-		.dropdown-menu .active > a, .dropdown-menu .active > a:hover {
-			color: $text;
-			background: darken($color, 5%);
-		}
-		
-		// Make the icon look a little sunken in
-		.gravatar {
-			@include box-shadow(0 1px 1px 0 darken($color, 10%));
-		}
-		
-		// The mobile toggle
-		.btn-navbar {
-			@include background(linear-gradient(top, lighten($color, 5%), darken($color, 10%)));
-		}
-		
-		// Mobile stuff
-		@media (max-width: $bootstrap_nav_break) {
-			.nav-collapse {
 			
-				// The submenu labels
-				.nav > li > a,
-				.dropdown-menu a {
-					color: $text;
-					color: rgba($text, .8);
-					font-weight: normal;
-				}
-				
-				// The hovers on menu items
-				.nav > li > a:hover,
-				.nav > li > a:focus,
-				.dropdown-menu a:hover,
-				.dropdown-menu a:focus {
-					background: none;
-					color: $text;
-				}
-				
-				// Active section
-				.nav > .active > a,
-				.nav > .active > a:hover,
-				.nav > .active > a:focus,
-				.nav li.dropdown.active > .dropdown-toggle {
-					color: $text;
-					background: darken($color, 10%);
-				}
+			// The hovers on menu items
+			.nav > li > a:hover,
+			.nav > li > a:focus,
+			.dropdown-menu a:hover,
+			.dropdown-menu a:focus {
+				background: none;
+				color: $theme-text;
 			}
-		}
-		
-	}
-	
-	// The selected page within fragments
-	body.fragments .nav-pills > .active > a, 
-	body.fragments .nav-pills > .active > a:hover, 
-	body.fragments .nav-pills > .active > a:focus {
-		background: $color;
-	}
-	
-	// The login page
-	body.login.index {
-		@include background(linear-gradient(top, $color, darken($color, 10%)));
-		background-position: center center;
-		
-		// Left side
-		.branding {
 			
-			h1 {
-				color: $text;
-				@include text-shadow(1px 2px 0 darken($color, 15%));
+			// Active section
+			.nav > .active > a,
+			.nav > .active > a:hover,
+			.nav > .active > a:focus,
+			.nav li.dropdown.active > .dropdown-toggle {
+				color: $theme-text;
+				background: darken($theme-color, 10%);
 			}
-			h4, h4 a {
-				color: $text;
-				color: rgba($text, .5);
-				& a:hover {
-					text-decoration: none;
-					color: rgba($text, .7);
-				}
-			}
-		}
-		
-		// Right side
-		.form {
-			background: $text;
-			@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
-			border: 1px solid darken($color, 10%);
 		}
 	}
 	
+}
+
+// The selected page within fragments
+body.fragments .nav-pills > .active > a, 
+body.fragments .nav-pills > .active > a:hover, 
+body.fragments .nav-pills > .active > a:focus {
+	background: $theme-color;
+}
+
+// The login page
+body.login.index {
+	background: $theme-color;
+	@include background(linear-gradient(top, $theme-color, darken($theme-color, 10%)));
+	background-position: center center;
+	
+	// Bkgd image
+	@if ($theme-bkgd) {
+		.bkgd { background: $theme-bkgd; }
+	}
+
+	// Left side
+	.branding {
+		
+		h1 {
+			color: $theme-text;
+			@include text-shadow(1px 2px 0 darken($theme-color, 15%));
+		}
+		h4, h4 a {
+			color: $theme-text;
+			color: rgba($theme-text, .5);
+			& a:hover {
+				text-decoration: none;
+				color: rgba($theme-text, .7);
+			}
+		}
+	}
+	
+	// Right side
+	.form {
+		background: $theme-text;
+		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
+		border: 1px solid darken($theme-color, 10%);
+	}
 }
