@@ -1,6 +1,6 @@
 # Decoy
 
-## Contributing
+### Contributing
 
 - The `master` branch represents what will be come the next **minor** release.
 - A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
