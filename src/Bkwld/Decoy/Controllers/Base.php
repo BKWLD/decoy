@@ -8,7 +8,6 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
-use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -431,15 +430,11 @@ class Base extends Controller {
 		}
 
 		// Validate
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 
 		// Save it.  We don't save through relations becaue the foreign keys were manually
 		// set previously.  And many to many relationships are not formed during a store().
 		$item->save();
-
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -505,14 +500,10 @@ class Base extends Controller {
 		}
 
 		// Validate data
-		if ($result = $this->validate(Model::$rules, $item)) return $result;
+		if ($result = $this->validate($item)) return $result;
 
 		// Save the record
 		$item->save();
-
-		// Update Decoy::manyToManyChecklist() relationships
-		$many_to_many_checklist = new ManyToManyChecklist();
-		$many_to_many_checklist->update($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
@@ -633,14 +624,28 @@ class Base extends Controller {
 	// shared logic for that
 	/**
 	 * Shared validation helper
-	 * @param array $rules    A typical rules array
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
 	 */
-	protected function validate($rules, $model = null, $messages = array()) {
+	protected function validate($model = null, $rules = null, $messages = array()) {
 		
-		// Pull the input including files
-		$input = Input::all();
+		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
+		// does a recursive merge which results in file fields containing BOTH the string version
+		// of the previous file plus the new File instance when the user is replacing a file during
+		// an update.  The array_filter() is there to strip out empties from the files array.  This
+		// prevents empty file fields from overriding the contents of the hidden field that stores
+		// the previous file name.
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+
+		// Fire validating event
+		if ($model && ($response = $this->fireEvent('validating', array($model, $input), true))) {
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+		}
+
+		// Pull the rules from the model instance.  This itentionally comes after the validating
+		// event is fired, so handlers of that event can modify the rules.
+		if ($model && empty($rules)) $rules = $model::$rules;
 
 		// If an AJAX update, don't require all fields to be present. Pass
 		// just the keys of the input to the array_only function to filter
@@ -655,11 +660,8 @@ class Base extends Controller {
 		// generated fields like the slug can be validated.  This intentionally comes after the
 		// AJAX conditional so that we still only validate fields that were present in
 		// the AJAX request.
-		if ($model) $input = array_merge($model->getAttributes(), $input);
-
-		// Fire event
-		if ($response = $this->fireEvent('validating', array($model, $input), true)) {
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
+		if ($model && method_exists($model, 'getAttributes')) {
+			$input = array_merge($model->getAttributes(), $input);
 		}
 
 		// Validate
@@ -753,7 +755,7 @@ class Base extends Controller {
 	
 	// Return the per_page based on the input
 	public function perPage() {
-		$per_page = Input::get('count', self::$per_page);
+		$per_page = Input::get('count', static::$per_page);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
 	}

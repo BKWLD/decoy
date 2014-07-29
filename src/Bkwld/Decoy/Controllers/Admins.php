@@ -4,6 +4,7 @@
 use App;
 use DecoyURL;
 use Input;
+use Former;
 use Sentry;
 use Redirect;
 use URL;
@@ -50,7 +51,7 @@ class Admins extends Base {
 	public function store() {
 
 		// Validate
-		if ($result = $this->validate(Model::$rules)) return $result;
+		if ($result = $this->validate(null, Model::$rules)) return $result;
 		
 		// Create
 		$id = Model::create(Input::get());
@@ -67,8 +68,12 @@ class Admins extends Base {
 		// Make password optional
 		unset(Model::$rules['password']);
 		
-		// Rest of logic is the default
-		return parent::edit($id);
+		// Run default logic (which doesn't return a response)
+		parent::edit($id);
+
+		// Populate the role
+		Former::populateField('role', Model::find($id)->getRoleName());
+
 	}
 	
 	/**
@@ -83,7 +88,7 @@ class Admins extends Base {
 		// is excluded from uniqueness check
 		unset(Model::$rules['password']);
 		Model::$rules['email'] = Model::$rules['email'].','.$id;
-		if ($result = $this->validate(Model::$rules)) return $result;
+		if ($result = $this->validate(null, Model::$rules)) return $result;
 		
 		// Update
 		$admin->update(Input::get());

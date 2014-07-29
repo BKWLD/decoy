@@ -14,26 +14,22 @@ use Str;
 class Files {
 	
 	/**
-	 * Remove the required restriction if a file has already been uploaded
+	 * Massage validation rules when editing a file
 	 */
 	public function preValidate($item) {
 
 		// Get all the fields for this model instance that should have files
 		foreach($this->fields($item) as $field) {
 			
-			// If the field is required but there is a new file being uploaded or we're
-			// re-saving the previous file (the delete checkbox was not checked) then
-			// remove the required validation
-			if (!empty($rules)
-				&& array_key_exists($field, $rules)
-				&& Str::contains($rules[$column], 'required')
-				&& (Input::hasFile($field) || Input::has('field'))) {
-				
-				// Delete the required validation and get rid of any double pipes or starting
-				// or ending pipes that may have resulted from the str_replace
-				$item::$rules[$column] = str_replace('required', '', $item::$rules[$field]);
-				$item::$rules[$column] = str_replace('||', '|', $item::$rules[$field]);
-				$item::$rules[$column] = trim($item::$rules[$field], '|');
+			// If the field has a value but not a file, then we can assume that we're
+			// re-saving the page with no image changes.  Since the incoming value for the
+			// field is a simple string, remove the mime validations
+			if (Input::has($field) && !Input::hasFile($field)) {
+				$item::$rules[$field] = preg_replace('#(image|mimes)[^|]*#', '', $item::$rules[$field]);
+
+				// Cleanup extra pipes
+				$item::$rules[$field] = preg_replace('#\|{2,}#', '|', $item::$rules[$field]);
+				$item::$rules[$field] = trim($item::$rules[$field], '|');
 			}
 		}
 	}
@@ -68,7 +64,8 @@ class Files {
 	 */
 	public function save($item) {
 		$fields = $this->fields($item);
-		foreach(App::make('request')->files->all() as $field => $file) {
+		$files = App::make('request')->files;
+		foreach($files->all() as $field => $file) {
 			
 			// If files isn't a file object, ignore it.  This may happen if there is a file input
 			// field that is labeled like an array, i.e. <input name="some[1][thing]>".  In this case,
@@ -84,6 +81,11 @@ class Files {
 			
 			// The base model has the logic that saves the file
 			$item->$field = $item->saveFile($field);
+
+			// Remove this file from the input, it's already been processed.  This prevents
+			// other models that may be touched during the processing of this request (like because
+			// of event handlers) from trying to act on this file
+			$files->remove($field);
 		}	
 	}
 	
@@ -93,7 +95,7 @@ class Files {
 	private function fields($item) {
 		$fields = array();
 		foreach($item::$rules as $field => $rules) {
-			if (preg_match('#file|image|mime#i', $rules)) $fields[] = $field;
+			if (preg_match('#file|image|mimes#i', $rules)) $fields[] = $field;
 		}
 		return $fields;
 	}

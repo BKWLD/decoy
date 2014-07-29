@@ -29,8 +29,13 @@ if ($listing->count()) {
 <table class="table listing columns-<?=count($columns)?>">
 	<thead>
 			<tr>
-				<th class="select-all"><i class="icon-check"></i></th>
-				
+
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+					<th class="select-all"><i class="icon-check"></i></th>
+				<? else: ?>
+					<th class="hide"></th>
+				<? endif ?>
+
 				<?// Loop through the columns array and create columns?>
 				<? foreach(array_keys($columns) as $column): ?>
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
@@ -79,7 +84,13 @@ if ($listing->count()) {
 				else if (array_key_exists('position', $test_row)) echo "data-position='{$item->position}' ";
 				?>
 			>
-				<td><input type="checkbox" name="select-row"></td>
+				
+				<?// Checkboxes or bullets ?>
+				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+					<td><input type="checkbox" name="select-row"></td>
+				<? else: ?>
+					<td class="hide"></td>
+				<? endif ?>
 				
 				<?// Loop through columns and add columns ?>
 				<? $column_names = array_keys($columns) ?>
@@ -103,7 +114,7 @@ if ($listing->count()) {
 				<td>
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible): ?>
+					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><i class="icon-eye-open"></i></a>
 						<? else: ?>
@@ -114,15 +125,19 @@ if ($listing->count()) {
 					
 					<?// Edit link?>
 					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
-					<span class="edit-delete-seperator">|</span>
-					 
-					 <?// Many to many listings have remove icons instead of trash?>
-					<? if ($many_to_many): ?>
-						<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
-						
-					<?// Regular listings actually delete rows ?>
-					<? else: ?> 
-						<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+
+					<?// Delete or remove ?>
+					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+						<span class="edit-delete-seperator">|</span>
+						 
+						 <?// Many to many listings have remove icons instead of trash?>
+						<? if ($many_to_many): ?>
+							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+							
+						<?// Regular listings actually delete rows ?>
+						<? else: ?> 
+							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+						<? endif ?>
 					<? endif ?>
 				</td>
 			</tr>

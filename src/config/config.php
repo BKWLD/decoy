@@ -15,6 +15,14 @@
 	// After a succesfull login, this is the absolute path or url that should be
 	// redirected to
 	'post_login_redirect' => '/admin/admins',
+
+	// Roles that super admins can assign other admins to on the admin
+	// edit page.  If left empty, all admins will be assigned to the default
+	// level of "admin".
+	'roles' => array(),
+
+	// Permissions settings
+	'permissions' => array(),
 	
 	// -----------------------------------------------------
 	// Decoy Defaults
@@ -35,6 +43,9 @@
 	// Default admin credentials
 	'default_login' => 'redacted',
 	'default_password' => 'redacted',
+
+	// Use a password input field for admins
+	'obscure_admin_password' => false,
 	
 	// Mail FROM info
 	'mail_from_name' => 'Site Admin',

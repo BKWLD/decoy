@@ -39,15 +39,32 @@ class Helpers {
 	 */
 	public function bodyClass() {
 		$path = Request::path();
+		$classes = array();
 
-		// Spell condition for the reset page, which passes the token in as part of the route
+		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
+
+		// Since fragments support deep links, the deep linked slug was being added to the
+		// body class instead of "fragments" and breaking styles.  All fragments sub pages
+		// should have the same body class.
+		if (strpos($path, '/fragments/') !== false) return 'fragments index';
 
 		// Get the controller and action from the URL
 		preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
 		$controller = empty($matches[1]) ? 'login' : $matches[1];
 		$action = empty($matches[2]) ? 'index' : $matches[2];
-		return $controller.' '.$action;
+		array_push($classes, $controller, $action);
+
+		// Add the admin roles
+		$roles = app('decoy.auth')->role();
+		if ($roles && (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
+			foreach($roles as $role) {
+				array_push($classes, 'role-'.$role);
+			}
+		}
+
+		// Return the list of classes
+		return implode(' ', $classes);
 	}
 
 	/**
@@ -442,12 +459,15 @@ class Helpers {
 	}
 	
 	/**
-	 * Get the value of a Fragment given it's key
+	 * Get the value of a Fragment given it's key then trim any whitespace from it.  The
+	 * trim is so that checks can be more easily made for `empty()`.  And it's done in this
+	 * helper rather than in the model so that the internal logic that handles "empty" database
+	 * records is unaffected.
 	 * @param string $key 
 	 * @return string The value
 	 */
 	public function frag($key) {
-		return \Bkwld\Decoy\Models\Fragment::value($key);
+		return trim(\Bkwld\Decoy\Models\Fragment::value($key));
 	}
 
 	/**
@@ -462,13 +482,14 @@ class Helpers {
 	}
 
 	/**
-	 * Is Decoy handling the request?
+	 * Is Decoy handling the request?  Check if the current path is exactly "admin" or if
+	 * it contains admin/*
 	 * @return boolean 
 	 */
 	private $is_handling;
 	public function handling() {
 		if (!is_null($this->is_handling)) return $this->is_handling;
-		$this->is_handling = Request::is(Config::get('decoy::dir').'*');
+		$this->is_handling = preg_match('#^'.Config::get('decoy::dir').'($|/)'.'#i', Request::path());
 		return $this->is_handling;
 	}
 

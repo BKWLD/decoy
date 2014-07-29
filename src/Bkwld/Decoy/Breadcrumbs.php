@@ -125,7 +125,7 @@ class Breadcrumbs {
 			$controller = new $controller;
 			
 			// Add controller to breadcrumbs
-			$breadcrumbs[URL::to($url)] = $controller->title();
+			$breadcrumbs[URL::to($url)] = strip_tags($controller->title(), '<img>');
 			
 			// Add a detail if it exists
 			if (!isset($segments[$i+1])) break;
@@ -141,7 +141,7 @@ class Breadcrumbs {
 				$url .= '/' . $id;
 				$model = $controller->model();
 				$item = call_user_func($model.'::find', $id);
-				$breadcrumbs[URL::to($url.'/edit')] = $item->title();
+				$breadcrumbs[URL::to($url.'/edit')] = strip_tags($item->title(), '<img>');
 			}
 		}
 		

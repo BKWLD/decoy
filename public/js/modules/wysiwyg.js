@@ -12,7 +12,23 @@ define(function(require) {
 	var config = {
 		customConfig: '', // Don't load external config js file
 		enterMode : CKEDITOR.ENTER_P, // <br>s are no good because ul/ol isn't allowed in them
-		allowedContent: true, // Allow all HTML tags
+
+		// Allow everything but ...
+		// http://docs.ckeditor.com/#!/guide/dev_disallowed_content-section-how-to-allow-everything-except...
+		allowedContent: {
+			$1: {
+				elements: CKEDITOR.dtd,
+				attributes: true,
+				styles: true,
+				classes: true
+			}
+		},
+		disallowedContent: {
+
+			// Don't allow inline width and height on image tags.  Base on
+			// http://stackoverflow.com/a/18047106/59160
+			img: {styles: ['width','height'] }
+		},
 		
 		// Don't add entities, trust the input.  This was added so that entities in the
 		// language conf file for fragments doesn't return `changed()` because CKEditor

@@ -14,11 +14,11 @@
 		<? endif ?>
 		
 		<?// If we've declared this relationship a many to many one, show the autocomplete ?>
-		<? if ($many_to_many): ?>
+		<? if (!empty($many_to_many) && app('decoy.auth')->can('update', $controller)): ?>
 			<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
 		
 		<?// Else it's a regular one to many, so show a link to create a new item ?>
-		<? else: ?>
+		<? elseif (app('decoy.auth')->can('create', $controller)): ?>
 			<div class="btn-group">
 				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new" ><i class="icon-plus icon-white"></i> New</a>
 			</div>

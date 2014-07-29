@@ -1,15 +1,18 @@
 <?
 
 /**
- * This is implemented by the _pagination partial and hydrated
- * by the Bkwld\Decoy\Html\Paginator class to render pagination.
- * It is based on /laravel/framework/src/Illuminate/Pagination/views/slider.php
+ * This is implemented by the _pagination partial and is based on 
+ * /laravel/framework/src/Illuminate/Pagination/views/slider.php
  * The paginator is only shown if there are more results than the smallest
  * per_page option.
  */
 
+// Figure out what controller is handling the request
+$controller = app('decoy.wildcard')->detectController();
+$per_page = $controller::$per_page;
+
 $presenter = new Illuminate\Pagination\BootstrapPresenter($paginator); 
-if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::$per_page): ?>
+if ($paginator->getTotal() > $per_page): ?>
 	<div class="pagination">
 	
 		<?// The list of pages ?>
@@ -20,7 +23,10 @@ if ($paginator->getTotal() > Bkwld\Decoy\Controllers\Base::$per_page): ?>
 		<? endif ?>
 	
 		<?// Per page selector
-		$options = array(Bkwld\Decoy\Controllers\Base::$per_page, 40, 'all');
+		$options = array(
+			$per_page, 
+			$per_page * 2, 
+			'all');
 		$count = Input::get('count', $options[0]); ?>
 		<ul class="per-page">
 			<li class="disabled"><span>Show</span></li>

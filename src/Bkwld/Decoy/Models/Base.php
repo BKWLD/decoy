@@ -5,6 +5,7 @@ use App;
 use Bkwld\Library\Utils\File;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Decoy\Input\Files;
+use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Config;
 use Croppa;
 use DB;
@@ -49,6 +50,7 @@ abstract class Base extends Eloquent {
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
+			'select-row', // This is the name of the checkboxes used for bulk delete
 		));
 		
 		// Remove any hidden/visible settings that may have been set on models if
@@ -88,9 +90,12 @@ abstract class Base extends Eloquent {
 		if (in_array($class, self::$models_registered_for_events)) return;
 		self::$models_registered_for_events[] = $class;
 		
-		// Setup a files instance for auto handling of file input
+		// Setup a Files instance for auto handling of file input
 		$files = new Files();
-		
+
+		// Setup a ManyToManyChecklist to create pivot rows
+		$many_to_many_checklist = Decoy::handling() ? new ManyToManyChecklist() : null;
+
 		// Built in Laravel model events.  Note the special file handling that happens
 		// on save and delete
 		self::creating (function($model){ return $model->onCreating(); });
@@ -102,7 +107,10 @@ abstract class Base extends Eloquent {
 			$files->save($model);
 			return $model->onSaving(); 
 		});
-		self::saved    (function($model){ return $model->onSaved(); });
+		self::saved    (function($model) use ($many_to_many_checklist) { 
+			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
+			return $model->onSaved(); 
+		});
 		self::deleting (function($model) use ($files){ 
 			$files->delete($model); 
 			return $model->onDeleting(); 
@@ -265,6 +273,7 @@ abstract class Base extends Eloquent {
 	 * A no-op that should return the deep link to this content
 	 */
 	public function deepLink() {}
+	public function getDeepLinkAttribute() { return $this->deepLink(); }
 
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched

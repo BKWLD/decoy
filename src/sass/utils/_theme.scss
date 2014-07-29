@@ -6,6 +6,12 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Navbar
 .navbar-inner {
+
+	// Tell IE to stop doing it's own thing
+	filter: none;
+	-ms-filter: none;
+
+	// Set colors
 	color: $theme-text;
 	color: rgba($theme-text, .8);
 	background: $theme-color;
@@ -126,6 +132,7 @@ body.fragments .nav-pills > .active > a:focus {
 
 // The login page
 body.login.index {
+	background: $theme-color;
 	@include background(linear-gradient(top, $theme-color, darken($theme-color, 10%)));
 	background-position: center center;
 	

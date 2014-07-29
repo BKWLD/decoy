@@ -1,1 +1,1 @@
-<p>Follow this link to activate the new password you set for yourself: <a href="<?=$url?>"><?=$url?></a>.  If you did not recently try to reset your password, then ignore this email.</p>
+<p>Follow this link to set a new password: <a href="<?=$url?>"><?=$url?></a>.  If you did not recently try to reset your password, ignore this email.</p>

@@ -55,6 +55,12 @@ label {
 	}
 }
 
+// Make the help blocks after legends positioned better
+.form-vertical legend + .help-block, .form-horizontal legend + .help-block {
+	margin-top: -.9em;
+	margin-bottom: 1em;
+}
+
 // Highlight each control group on rollover
 .control-group {
 	padding: 8px;
@@ -157,6 +163,9 @@ legend > .btn-small {
 .control-group.inputless {
 	.controls {
 		padding: 5px 0;
+		.help-block {
+			margin-top: 5px;
+		}
 	}
 }
 
@@ -202,4 +211,17 @@ legend small img {
 // to ensure that
 form legend:nth-of-type(1n+2) {
 	margin-top: 30px;
+}
+
+// Make the Bootstrap tooltips not inherit text shadow
+.tooltip {
+	@include text-shadow(none);
+}
+
+.many-to-many-checklist {
+	.checkbox input[type="checkbox"] {
+		float: none;
+		margin-right: 6px;
+		margin-top: 0;
+	}
 }
