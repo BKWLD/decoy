@@ -364,7 +364,8 @@ class Helpers {
 	 * This renders a date selection box
 	 */
 	public function date($id, $label = null, $value = 'now') {
-		
+		\Log::notice('Decoy::date($id, $label, $value) has been deprecated by Former::date($id, $label, $value).');
+
 		// Defaults
 		if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 		if ($value == 'now') $value = date("m/d/Y");
