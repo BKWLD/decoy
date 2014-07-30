@@ -48,7 +48,7 @@ class Date extends Field {
 		if ($this->value) $this->value = date('m/d/Y', strtotime($this->value));
 
 		// Apend the button that the calendar selector hooks into
-  	$this->append('<i class="icon-calendar"></i>');
+		$this->append('<i class="icon-calendar"></i>');
 
 	}
 
@@ -62,27 +62,27 @@ class Date extends Field {
 	}
 
 	/**
-   * Prints out the current tag
-   *
-   * @return string An input tag
-   */
-  public function render() {
+	 * Prints out the current tag
+	 *
+	 * @return string An input tag
+	 */
+	public function render() {
 
-  	// Create HTML string
-  	$html = parent::render();
+		// Create HTML string
+		$html = parent::render();
 
-  	// Convert the value to a mysql friendly format or leave null.
-  	$mysql_date = $this->value ? 
+		// Convert the value to a mysql friendly format or leave null.
+		$mysql_date = $this->value ? 
 			date(Library\Utils\Constants::MYSQL_DATE, strtotime($this->value)) : 
 			null;
 
-  	// Add a hidden field that will contain the mysql value, for storing in db
-  	$html .= HtmlInput::hidden($this->name, $mysql_date)
-  		->class('date')
-  		->id($this->name);
+		// Add a hidden field that will contain the mysql value, for storing in db
+		$html .= HtmlInput::hidden($this->name, $mysql_date)
+			->class('date')
+			->id($this->name);
 
-  	// Return the string
-  	return $html;
-  }
+		// Return the string
+		return $html;
+	}
 
 }

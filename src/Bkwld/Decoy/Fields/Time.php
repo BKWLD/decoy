@@ -51,7 +51,7 @@ class Time extends Field {
 		$this->blockHelp('Time is in '.date('T'));
 
 		// Apend the button that the calendar selector hooks into
-  	$this->append('<i class="icon-time"></i>');
+		$this->append('<i class="icon-time"></i>');
 
 	}
 
@@ -65,27 +65,27 @@ class Time extends Field {
 	}
 
 	/**
-   * Prints out the current tag
-   *
-   * @return string An input tag
-   */
-  public function render() {
+	 * Prints out the current tag
+	 *
+	 * @return string An input tag
+	 */
+	public function render() {
 
-  	// Create HTML string
-  	$html = parent::render();
+		// Create HTML string
+		$html = parent::render();
 
-  	// Convert the value to a mysql friendly format or leave null.
-  	$mysql_date = $this->value ? 
+		// Convert the value to a mysql friendly format or leave null.
+		$mysql_date = $this->value ? 
 			date(Library\Utils\Constants::MYSQL_TIME, strtotime($this->value)) : 
 			null;
 
-  	// Add a hidden field that will contain the mysql value, for storing in db
-  	$html .= HtmlInput::hidden($this->name, $mysql_date)
-  		->class('time')
-  		->id($this->name);
+		// Add a hidden field that will contain the mysql value, for storing in db
+		$html .= HtmlInput::hidden($this->name, $mysql_date)
+			->class('time')
+			->id($this->name);
 
-  	// Return the string
-  	return $html;
-  }
+		// Return the string
+		return $html;
+	}
 
 }
