@@ -386,3 +386,10 @@ In the example above, you can see that I've specified that the `general` role **
 - destroy
 - manage (combines all of the above)
 
+### Form widgets
+
+The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like "blockhelp", etc.
+
+- `Former::date()` - Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).  Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI.  If you set the value to 'now' (`Former::date('date')->value('now')`), the current date will populate the field.
+- `Former::time()` - Create a time [selector widget](http://cl.ly/image/22062i19133Y).  Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI. If you set the value to 'now' (`Former::time('time')->value('now')`), the current time will populate the field.
+
