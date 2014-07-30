@@ -18,5 +18,14 @@ class SentryUser extends User {
 		if (Config::get('site.live') === false || App::environment() != 'production') return true;
 		else return parent::checkPersistCode($persistCode);
 	}
+
+	/**
+	 * Override the groups relationship method to explicitly set the foreign key.
+	 * It was using THIS model's class name to form it, which isn't correct.
+	 * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+	 */
+	public function groups() {
+		return $this->belongsToMany(static::$groupModel, static::$userGroupsPivot, 'user_id');
+	}
 	
 }
