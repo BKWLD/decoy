@@ -7,10 +7,10 @@ use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
 
 /**
- * Create a date input that uses a bootstrap plugin to generate
+ * Create a time input that uses a bootstrap plugin to generate
  * a selectable calendar widget
  */
-class Date extends Field {
+class Time extends Field {
 
 	/**
 	 * Properties to be injected as attributes
@@ -33,9 +33,9 @@ class Date extends Field {
 
 		// Set default attributes
 		$attributes = array_merge(array(
-			'class' => 'date span2',
-			'maxlength' => 10,
-			'placeholder' => 'MM/DD/YY',
+			'class' => 'time span2',
+			'maxlength' => 8,
+			'placeholder' => 'HH:MM',
 			'id' => null, // We don't want to conflict on the id
 		), (array) $attributes);
 
@@ -45,10 +45,13 @@ class Date extends Field {
 		// Part of the parent's constructor populates the value field using posted
 		// or populated data.  If there is a value now (or if there was before), make
 		// it human readable.  This assumes it WAS a MYSQL timestamp.
-		if ($this->value) $this->value = date('m/d/Y', strtotime($this->value));
+		if ($this->value) $this->value = date('h:i A', strtotime($this->value));
+
+		// Add some default blockhelp about the timezone
+		$this->blockHelp('Time is in '.date('T'));
 
 		// Apend the button that the calendar selector hooks into
-  	$this->append('<i class="icon-calendar"></i>');
+  	$this->append('<i class="icon-time"></i>');
 
 	}
 
@@ -58,7 +61,7 @@ class Date extends Field {
 	 * @param  string $value A new value
 	 */
 	public function value($value) {
-		return parent::value(date('m/d/Y', strtotime($value)));
+		return parent::value(date('h:i A', strtotime($value)));
 	}
 
 	/**
@@ -73,12 +76,12 @@ class Date extends Field {
 
   	// Convert the value to a mysql friendly format or leave null.
   	$mysql_date = $this->value ? 
-			date(Library\Utils\Constants::MYSQL_DATE, strtotime($this->value)) : 
+			date(Library\Utils\Constants::MYSQL_TIME, strtotime($this->value)) : 
 			null;
 
   	// Add a hidden field that will contain the mysql value, for storing in db
   	$html .= HtmlInput::hidden($this->name, $mysql_date)
-  		->class('date')
+  		->class('time')
   		->id($this->name);
 
   	// Return the string

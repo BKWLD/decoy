@@ -399,7 +399,8 @@ class Helpers {
 	 * This renders a time selection box
 	 */
 	public function time($id, $label = null, $value = 'now') {
-		
+		\Log::notice('Decoy::date($id, $label, $value) has been deprecated by Former::time($id, $label, $value).');
+
 		// Defaults
 		if (empty($label)) $label = Library\Utils\String::titleFromKey($id);
 		if ($value == 'now') $value = date('h:i A');
