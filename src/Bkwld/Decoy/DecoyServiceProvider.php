@@ -6,7 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
-use Former;
+use Former\Former;
+use Former\MethodDispatcher;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -50,6 +51,15 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
+		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
+		// When https://github.com/Anahkiasen/former/pull/278 gets accepted into the master
+		// branch, I can just sub out the MethodDispatcher directly.
+		$this->app->singleton('former', function ($app) {
+			return new Former($app, new MethodDispatcher($app, array(
+				'Bkwld\Decoy\Fields\\', Former::FIELDSPACE
+			)));
+		});
+
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
 
