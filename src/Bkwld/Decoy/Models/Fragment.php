@@ -14,8 +14,9 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	// Fragments don't need timestamps
 	public $timestamps = false;
 	
-	// Language files to ignore
-	private static $ignore = array('pagination', 'reminders', 'validation');
+	// Language files to ignore.  "admin" is in there because that is a convention
+	// that I use to store block help lines.
+	private static $ignore = array('pagination', 'reminders', 'validation', 'admin');
 	
 	// Use the key as the primary key
 	public $primaryKey = 'key';
@@ -34,7 +35,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			
 			// Format title and add as a node
 			$title_key = $title; // Preserve for use with the full_key
-			$title = Library\Utils\String::titleFromKey($title);
+			$title = ucwords(Library\Utils\String::titleFromKey($title));
 			$output[$title] = array();
 			
 			// Break the keys for all the pairs up by section
@@ -143,7 +144,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
-			foreach(array('textarea', 'wysiwyg', 'image', 'file') as $type) {
+			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to') as $type) {
 				if (Lang::has($key.','.$type)) {
 					if ($type == 'image') return self::massageLangValue(Lang::get($key.','.$type));
 					return Lang::get($key.','.$type);

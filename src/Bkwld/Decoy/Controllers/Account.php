@@ -129,7 +129,7 @@ class Account extends Base {
 	public function postForgot() {
 		
 		// Validate
-		if ($result = $this->validate($this->forgot_rules)) return $result;
+		if ($result = $this->validate(null, $this->forgot_rules)) return $result;
 
 		// Find the user using the user email address
 		try {
@@ -200,7 +200,7 @@ class Account extends Base {
 		}
 		
 		// Validate
-		if ($result = $this->validate($this->reset_rules, $this->reset_msgs)) return $result;
+		if ($result = $this->validate(null, $this->reset_rules, $this->reset_msgs)) return $result;
 		
 		// Replace their password
 		$user->attemptResetPassword($code, Input::get('password'));

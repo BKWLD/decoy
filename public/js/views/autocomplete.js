@@ -20,6 +20,7 @@ define(function (require) {
 		selection: null,  // The whole object (from the JSON server response) that is chosen
 		route: null,
 		throttle: 200,
+		last_query: null,
 		
 		// Init
 		initialize: function () {
@@ -51,7 +52,15 @@ define(function (require) {
 		// Query the server for matches.  Defined as it's own method so it can be
 		// overriden without having to replace the whole AJAX call.
 		query: function(query, process) {
+
+			// Make sure the term actually changed.  This is to prevent the
+			// command key (for instance, when doing a command-a) from
+			// trigger it.
+			if (query == this.last_query) return;
+
+			// Run the query.
 			this.execute({query:query}, process);
+			this.last_query = query
 		},
 		
 		// Execute the query on the server.  In other words, do the ajax

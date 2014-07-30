@@ -11,7 +11,7 @@ as part of when the view was created.  As in View::make()->with()
 		not be paginated
 		
 	- controller : A string depicting the controller.  This is used in
-		generating links.  I.e. 'admin.news'
+		generating links.  I.e. 'Admin\NewsController'
 		
 	- columns (optional) : An array of key value pairs.  The keys are the title of
 		the column.  The values are the database column or method to call
@@ -85,18 +85,12 @@ View::composer('decoy::shared.list._standard', function($view) {
 		'many_to_many'      => $view->controller_inst->isChildInManyToMany(),
 		'tags'              => is_a($view->controller_inst->model(), 'Bkwld\Decoy\Models\Tag') ? true : false,
 		'count'             => is_a($view->listing, 'Illuminate\Pagination\Paginator') ? $view->listing->getTotal() : $view->listing->count(),
+		'paginator_from'    => (Input::get('page', 1)-1) * Input::get('count', Bkwld\Decoy\Controllers\Base::$per_page),
 	);
 
 	// Apply defaults
 	foreach($defaults as $key => $val) {
 		if (!isset($view->$key)) $view->$key = $val;
 	}
-	
-	// Massage the shorthand search config options
-	if (isset($view->search)) {
-		$search = new Bkwld\Decoy\Input\Search();
-		$view->search = $search->longhand($view->search);
-	}
-
 	
 });

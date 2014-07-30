@@ -5,9 +5,11 @@ use App;
 use Bkwld\Library\Utils\File;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Decoy\Input\Files;
+use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Config;
 use Croppa;
 use DB;
+use Decoy;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -48,13 +50,26 @@ abstract class Base extends Eloquent {
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
+			'select-row', // This is the name of the checkboxes used for bulk delete
 		));
 		
+		// Remove any hidden/visible settings that may have been set on models if
+		// the user is in the admin
+		if (Decoy::handling()) $this->visible = $this->hidden = array();
+
 		// Continue Laravel construction
 		parent::__construct($attributes);
 		
 		// Register Laravel model events
 		static::registerModelEvents();
+	}
+
+	// Disable all mutatators while in Admin by returning that no mutators exist
+	public function hasGetMutator($key) { 
+		return Decoy::handling() ?  false : parent::hasGetMutator($key);
+	}
+	public function hasSetMutator($key) { 
+		return Decoy::handling() ?  false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -75,9 +90,12 @@ abstract class Base extends Eloquent {
 		if (in_array($class, self::$models_registered_for_events)) return;
 		self::$models_registered_for_events[] = $class;
 		
-		// Setup a files instance for auto handling of file input
+		// Setup a Files instance for auto handling of file input
 		$files = new Files();
-		
+
+		// Setup a ManyToManyChecklist to create pivot rows
+		$many_to_many_checklist = Decoy::handling() ? new ManyToManyChecklist() : null;
+
 		// Built in Laravel model events.  Note the special file handling that happens
 		// on save and delete
 		self::creating (function($model){ return $model->onCreating(); });
@@ -89,7 +107,10 @@ abstract class Base extends Eloquent {
 			$files->save($model);
 			return $model->onSaving(); 
 		});
-		self::saved    (function($model){ return $model->onSaved(); });
+		self::saved    (function($model) use ($many_to_many_checklist) { 
+			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
+			return $model->onSaved(); 
+		});
 		self::deleting (function($model) use ($files){ 
 			$files->delete($model); 
 			return $model->onDeleting(); 
@@ -154,18 +175,28 @@ abstract class Base extends Eloquent {
 			if (Str::startsWith($this->image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
 			else $title .= '<img src="'.$this->croppa(40,40).'"/> ';
 		}
-		
+
+		// Append the text portion of the title
+		return $title.$this->titleText();
+
+	}
+
+	/**
+	 * Deduce the source for the title of the model and return that title
+	 * @return string 
+	 */
+	public function titleText() {
+
 		// Convert to an array so I can test for the presence of values.
 		// As an object, it would throw exceptions
 		$row = $this->getAttributes();
-		if (!empty(static::$title_column)) $title .=  $row[static::$title_column];
-		else if (isset($row['name'])) $title .=  $row['name']; // Name before title to cover the case of people with job titles
-		else if (isset($row['title'])) $title .= $row['title'];
-		else if (App::make('decoy.router')->action() == 'edit')  $title .= 'Edit';
-		
-		// Return the finished title
-		return $title;
 
+		// Deduce and return
+		if (!empty(static::$title_column)) return $row[static::$title_column];
+		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
+		else if (isset($row['title'])) return $row['title'];
+		else if (App::make('decoy.router')->action() == 'edit') return 'Edit';
+		else return '';
 	}
 
 	/**
@@ -231,8 +262,7 @@ abstract class Base extends Eloquent {
 	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
 	 */
 	static public function findBySlugOrFail($slug) {
-		if ($row = self::findBySlug($slug)) return $row;
-		throw new ModelNotFoundException(get_called_class().' model not found');
+		return static::where('slug', '=', $slug)->firstOrFail();
 	}
 	
 	//---------------------------------------------------------------------------
@@ -243,6 +273,7 @@ abstract class Base extends Eloquent {
 	 * A no-op that should return the deep link to this content
 	 */
 	public function deepLink() {}
+	public function getDeepLinkAttribute() { return $this->deepLink(); }
 
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched

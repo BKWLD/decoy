@@ -50,12 +50,16 @@ class Ancestry {
 	 * it unlikely that we'd ever explicitly register routes to be children of another.
 	 */
 	public function requestIsChild() {
+
+		// Get all the classes represented in the request
+		$classes = $this->wildcard->getAllClasses();
 		
-		// Only perform check if the route is for a child
-		return $this->wildcard->detectIfChild()
-		
-			// ... and make sure the passed controller is the child that was detected
-			&& $this->isRouteController();
+		// Remove the first class, because we only care about children
+		if (count($classes) <= 1) return false;
+		array_shift($classes);
+
+		// Check if this controller is in the the remaining list of classes
+		return in_array(get_class($this->controller), $classes);
 	}
 
 	/**
@@ -136,7 +140,7 @@ class Ancestry {
 		
 		// If a child index view, get the controller from the route
 		} else if ($this->requestIsChild()) {
-			return $this->wildcard->getParentController();
+			return $this->getParentController();
 		
 		// If this controller is a related view of another, the parent is the main request	
 		} else if ($this->isActingAsRelated()) {
@@ -146,6 +150,18 @@ class Ancestry {
 		} else return false;
 	}
 	
+	/**
+	 * Use the array of classes represented in the current route to find the one that
+	 * preceeds the current controller.  The preceeding controller is considered to be
+	 * the parent.
+	 * @return string ex: Admin\NewsController
+	 */
+	public function getParentController() {
+		$classes = $this->wildcard->getAllClasses();
+		$i = array_search(get_class($this->controller), $this->wildcard->getAllClasses());
+		if ($i > 0) return $classes[$i-1];
+		else throw new Exception('Error getting the parent controller.');
+	}
 
 	/**
 	 * Guess as what the relationship function on the parent model will be
@@ -163,7 +179,10 @@ class Ancestry {
 		
 		// Verify that it exists
 		if (!method_exists($this->controller->parentModel(), $relationship)) {
-			throw new Exception('Parent relationship missing, looking for: '.$relationship);
+			throw new Exception('Parent relationship missing, looking for: '.$relationship
+				.'. This controller is: '.get_class($this->controller)
+				.'. This parent model is: '.$this->controller->parentModel()
+			);
 		}
 		return $relationship;
 	}

@@ -19,7 +19,9 @@ define(function (require) {
 		'crop-styles': require('decoy/views/image_upload/crop-styles'),
 		'image-fullscreen': require('decoy/views/image_upload/image-fullscreen'),
 		'worker': require('decoy/views/worker'),
-		'login': require('decoy/views/login')
+		'login': require('decoy/views/login'),
+		'redirect-select': require('decoy/views/redirect-select'),
+		'fragments': require('decoy/views/fragments')
 		// 'mason': require('decoy/views/mason'), // This is incomplete
 	};
 });

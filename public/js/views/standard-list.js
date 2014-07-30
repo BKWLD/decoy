@@ -3,7 +3,7 @@
 // --------------------------------------------------
 define(function (require) {
 	
-	// dependencies
+	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
@@ -13,14 +13,14 @@ define(function (require) {
 	
 	// Bring in the template for new rows.  Currently, the only need to do this
 	// is for many-to-many row insertion
-	var row_template = _.template(require('decoy/text!decoy/templates/standard-list-row.html'));
+	var row_template = _.template(require('text!decoy/templates/standard-list-row.html'));
 	
-	// private static vars
+	// Static vars
 	var app,
 		dataId = 'data-model-id',
 		visibleIconClass = 'icon-eye-open';
 
-	// public view module
+	// View
 	var StandardList = Backbone.View.extend({
 		
 		initialize: function (options) {
@@ -35,13 +35,14 @@ define(function (require) {
 				this.controllerRoute = window.location.pathname;
 			}
 			
-			// cache selectors
+			// Cache
 			this.$deleteBtn = this.$('.delete-selected');
 			this.$deleteAlert = this.$('.delete-alert');
 			this.$bulkActions = this.$('.bulk-actions');
 			this.$total = this.$('legend .badge, h1 .badge');
 			this.$trs = this.$el.find('[' + dataId + ']');
 			this.parent_controller = this.$el.data('parent-controller');
+			this.position_offset = this.$el.data('position-offset');
 			
 			// Create model collection from table rows.  The URL is fetched from
 			// the controller-route data attribute of the container.
@@ -120,18 +121,14 @@ define(function (require) {
 			// Tell the server of the new sorting rules by looping through
 			// all rows, looking up the model for the id, and then updating
 			// it's position attribute.
-			var update = function(event, ui) {
+			var update = _.bind(function(event, ui) {
 				var id,
 					$sortableRows = $sortable.find('[' + dataId + ']');
 				_.each($sortableRows, function(el, i) {
 					id = $(el).attr(dataId);
-					this.collection.get(id).set({position: i});
+					this.collection.get(id).set({position: (i + this.position_offset) });
 				}, this);
-			};
-			
-			// When update gets called, make sure that "this" is the
-			// backbone view.
-			update = _.bind(update, this);
+			}, this);
 			
 			// Define options
 			var options = {

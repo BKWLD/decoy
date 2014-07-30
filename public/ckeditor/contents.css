@@ -431,3 +431,7 @@ body {
 	line-height: 1.6em;
 }
 
+/**
+ * Most sites use a reset, so remove the margins on p tags to match
+ */
+p { margin: 0; }

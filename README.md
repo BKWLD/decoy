@@ -1,12 +1,14 @@
 # Decoy
 
-- Active development / the latest version is the 3.0 branch.
-- The master branch represents the latest Decoy 2.0 state
-- The pre-Decoy 2 (pre-Laravel 4) docs can be found here: https://github.com/BKWLD/decoy/blob/laravel-3/README.md 
+## Contributing
+
+- The `master` branch represents what will be come the next **minor** release.
+- A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
+- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  
 
 ## Installation
 
-1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install
+1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install.  This reflects the latest stable branch.
 2. Run `php artisan migrate --package=cartalyst/sentry`
 3. Run `php artisan migrate --package=bkwld/decoy`
 4. Run `php artisan config:publish bkwld/decoy`
@@ -141,12 +143,14 @@ To pass the data needed to show related data on an edit page, you need to overri
 				// Related projects
 				array(
 					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->paginate($this->per_page),
+					'listing'           => $item->postImages()->ordered()->paginate(self::$per_sidebar),
 				),
 
 			);
 		}
 	}
+
+The related property is a specially named one.  The `decoy::shared.list.form_with_related._footer` partial looks for this and iterates through it, generating `decoy::shared.list._standard` partials with the data you pass in each element of the related array.
 
 A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up as follows.  Note, this assumes that you've named the relationships on your model as described in the Models section of the README under "many to many to self".
 
@@ -166,7 +170,7 @@ A weird use case is one where a model relates to itself.  Like a news post that 
 				array(
 					'title'             => 'Related',
 					'controller'        => $this->controller,
-					'listing'           => $item->posts()->ordered()->paginate($this->per_page),
+					'listing'           => $item->posts()->ordered()->paginate(self::$per_sidebar),
 					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
 					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
 				),
@@ -199,7 +203,7 @@ The View file might look like this:
 
 The related data gets passed to the footer partial and rendered automatically.  Note that the form elements are set to span6 rather than span9.
 
-### Embeded relationship list
+### Embeded / inline relationship list
 
 Example:
 
@@ -216,12 +220,44 @@ In this example, `$slides` was populated by this, in the controller:
 		$related = $item->caseStudySlides()->ordered();
 		$this->layout->content->slides = array(
 			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::$per_page_sidebar)->get(),
+			'listing'     => $related->paginate(self::$per_sidebar),
 		);
 	}
 
-So, you pass it the standard array that listing views require.
+So, you pass it the standard array that listing views require.  Here's a HAML example:
 
+	-if(isset($item))
+		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
+	-else
+		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+
+
+### Data for Former select, radio, and checkbox
+
+A convention to follow is to create a static array on the model that populates Former's select, radio, and checkbox types.  The name of the property holding this array should be the plural form of the column that will store the value(s).  The keys of this array are slugs that are stored in a database column and the values are the readable vesions.  For instance:
+
+	static public $categories = array(
+		'inspiring' => 'Inspiring',
+		'quirky' => 'Quirky',
+		'cool' => 'Cool',
+		'adventurous' => 'Adventurous',
+	);
+
+Then, in the edit view, you could do this:
+
+	!= Former::checkbox('category')->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))->push(false)
+
+Furthermore, you can use this array for searching the list view by referencing it in the `search` property on your controller:
+
+	protected $search = array(
+		'title',
+		'category' => array(
+			'type' => 'select',
+			'options' => 'Post::$categories'
+		),
+	);
+
+Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
 
 
 ## Features
@@ -251,8 +287,11 @@ Start by creating new language files in /app/lang/en.  There are some convention
 	
 	<?php return array(
 		'marquee_title' => 'Welcome to the site',
+		'marquee.featured_article,belongs_to' => '/admin/articles',
+
 		'intro.title' => 'This is some great stuff',
 		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
+
 		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
 		'deep_dive.headshot,image' => '/img/path/to/heashot',
 		'deep_dive.pdf,file' => '/files/path/to/file',
@@ -278,11 +317,11 @@ In a standard PagodaBox config, you would put these in your Boxile:
 	web1:
 		name: app
 		cron:
-			- "* * * * *": "php artisan <COMMAND> --heartbeat --env=$LARAVEL_ENV"
+			- "* * * * *": "php artisan <COMMAND> --heartbeat"
 	
 	worker1:
 		name: worker
-		exec: "php artisan <COMMAND> --worker --env=$LARAVEL_ENV"
+		exec: "php artisan <COMMAND> --worker"
 
 In this example, "<COMMAND>" is your command name, like "import:feeds".  With a setup like the above (and the default worker static config options), your command will run every minute on PB.  And if the worker fails, the heartbeat will continue running it, at a rate of every 15 min (because of PB rate limiting).
 
@@ -309,4 +348,41 @@ In this example, this table has a one-to-many parent table called `categories`. 
 That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
 
 	!= Former::hidden('category_id', $parent_id)
+
+### Permissions
+
+Here is an example of a groups and permissions from the Decoy config:
+
+	'roles' => array(
+		'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
+		'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
+		'super' => '<b>Super Admin</b> - Can manage everything.',
+	),
+
+	'permissions' => array(
+		'general' => array(
+			'cant' => array(
+				'create.categories',
+				'destroy.categories',
+				'manage.slides',
+				'manage.sub-categories',
+				'manage.forms',
+			),
+		),
+	),
+
+The roles array generates the list of roles on the Admin edit screen.  The keys of that array become Groups in Sentry.
+
+The permissions array defines what a user can and can't do.  This could have been run through Sentry but I chose my own approach for two reasons:
+
+1. I didn't like having to make database migrations everytime a group permissions configuration changed
+2. In many projects, most roles can do almost everything and I wanted to be able to blacklist actions.  Sentry operates from a whitelist-only perspective.
+
+In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.  The full list of supported actions that can be denied are:
+
+- create
+- read
+- update
+- destroy
+- manage (combines all of the above)
 

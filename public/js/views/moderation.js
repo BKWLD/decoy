@@ -160,8 +160,8 @@ define(function (require) {
 			
 			// After any change, replace pagination with the refresh button
 			if (this.$pagination.length && this.$pagination.find('li').length > 1) {
-				this.$pagination.find('li').remove();
-				this.$pagination.find('ul').append('<li><a href="'+window.location.href+'">Reload for more moderation options</a></li>');
+				this.$pagination.find('ul').remove();
+				this.$pagination.append('<ul><li><a href="'+window.location.href+'">Reload for more moderation options</a></li></ul>');
 			}
 		}
 		

@@ -6,7 +6,8 @@ use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
-use Former;
+use Former\Former;
+use Former\MethodDispatcher;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -34,7 +35,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->before(array($router, 'registerAll'));
 
 		// Do bootstrapping that only matters if user has requested an admin URL
-		if ($this->app['request']->is($dir.'*')) $this->usingAdmin();
+		if ($this->app['decoy']->handling()) $this->usingAdmin();
 		
 	}
 	
@@ -48,17 +49,33 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._standard.php');
 		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
+		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
+		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
+		// When https://github.com/Anahkiasen/former/pull/278 gets accepted into the master
+		// branch, I can just sub out the MethodDispatcher directly.
+		$this->app->singleton('former', function ($app) {
+			return new Former($app, new MethodDispatcher($app, array(
+				'Bkwld\Decoy\Fields\\', Former::FIELDSPACE
+			)));
+		});
+
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
 
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
 
+		// Use Decoy's subclass of the Sentry user class
+		Config::set('cartalyst/sentry::users.model', 'Bkwld\Decoy\Auth\SentryUser');
+
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
 		});
+
+		// Use the Decoy paginator
+		Config::set('view.pagination', 'decoy::shared.list._paginator');
 	}
 
 	/**
@@ -147,7 +164,8 @@ class DecoyServiceProvider extends ServiceProvider {
 	 * @return array
 	 */
 	public function provides() {
-		return array('decoy', 
+		return array(
+			'decoy', 
 			'decoy.url', 
 			'decoy.router', 
 			'decoy.slug', 
