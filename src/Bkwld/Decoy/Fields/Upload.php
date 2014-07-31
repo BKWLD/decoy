@@ -17,9 +17,16 @@ class Upload extends File {
 	/**
 	 * Preserve blockhelp data
 	 *
-	 * @var array
+	 * @var string
 	 */
 	private $blockhelp;
+
+	/**
+	 * Preserve blockhelp attribues
+	 *
+	 * @var array
+	 */
+	private $blockhelp_attributes;
 
 	/**
 	 * Create a regular file type field
@@ -48,7 +55,8 @@ class Upload extends File {
 	 * @param  array  $attributes Facultative attributes
 	 */
 	public function blockhelp($help, $attributes = array()) {
-		$this->blockhelp = func_get_args();
+		$this->blockhelp = $help;
+		$this->blockhelp_attributes = $attributes;
 		return $this;
 	}
 
@@ -61,16 +69,14 @@ class Upload extends File {
 	public function wrapAndRender() {
 
 		// Wrap manually set help text in a wrapper class
-		if (empty($this->blockhelp[0])) $this->blockhelp = array('');
-		else $this->blockhelp[0] = '<span class="regular-help">'.$this->blockhelp[0].'</span>';
+		$help = $this->blockhelp;
+		if ($help) $help = '<span class="regular-help">'.$help.'</span>';
 
 		// Append the review UI to the blockhelp
-		if ($this->value) $this->blockhelp[0] .= $this->renderReview();
+		if ($this->value) $help .= $this->renderReview();
 
 		// Apply all of the blockhelp arguments to the group
-		if (!empty($this->blockhelp)) {
-			call_user_func_array(array($this->group, 'blockhelp'), $this->blockhelp);
-		}
+		if ($help) $this->group->blockhelp($help, $this->blockhelp_attributes);
 
 		// Continue doing normal wrapping
 		return parent::wrapAndRender();

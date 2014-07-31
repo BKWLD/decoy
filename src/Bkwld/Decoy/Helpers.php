@@ -136,7 +136,8 @@ class Helpers {
 	 * image has already been uploaded
 	 */
 	public function imageUpload($id = null, $label = null, $help = null, $crops = null) {
-		
+		\Log::notice('Decoy::imageUpload($id, $label, $help, $crops) has been deprecated by Former::image($id, $label)->blockHelp($help)->crops($crops).');
+
 		// Defaults
 		if ($id === null) $id = 'image';
 		$block_help = '';
@@ -148,7 +149,7 @@ class Helpers {
 			
 		// On a create / new form, so just show a simple file input field
 		if (empty($image)) {
-			return '<div class="image-upload">'.Former::file($id, $label)->accept('image')->blockHelp($block_help).'</div>';	
+			return Former::file($id, $label)->accept('image')->blockHelp($block_help)->addGroupClass('upload image-upload');	
 		}
 		
 		// Else if on an edit view, show the old image and a delete button.  Also, store the old filename
@@ -213,7 +214,7 @@ class Helpers {
 		
 		// Create a hidden field for the crops if they were defined.  Former requires this happens
 		// before the file element is created
-		$crop_field = !empty($crops) ? (string) Former::hidden($id.'_crops') : '';
+		if (!empty($crops)) $block_help .= Former::hidden($id.'_crops')->toString();
 		
 		// Figure out if the field should be required
 		$rules = Former::getRules($id);
@@ -221,7 +222,7 @@ class Helpers {
 		
 		// Add delete checkbox
 		if (!$is_required && $is_uploaded) {
-			$block_help .= '<label for="'.$id.'-delete" class="checkbox image-delete">
+			$block_help .= '<label for="'.$id.'-delete" class="checkbox upload-delete">
 				<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 				<a href="'.$image.'"><code><i class="icon-file"></i>'.basename($image).'</code></a></label>';
 		}
@@ -233,7 +234,7 @@ class Helpers {
 		// Make the file field.  We're setting a class of required rather than actually setting the field
 		// to required so that Former doesn't tell the DOM to the required attribute.  We don't want the
 		// browser to enforce requirement, we just want the icon to indicate that it is required.
-		$file = Former::file($id, $label)->accept('image')->blockHelp($block_help);
+		$file = Former::file($id, $label)->accept('image')->blockHelp($block_help)->addGroupClass('upload image-upload');
 		if ($is_required) $file = $file->class('required')->setAttribute('required', null);
 		
 		// Check for errors registered to the "real" form element
@@ -242,7 +243,7 @@ class Helpers {
 		
 		// Assemble all the elements
 		$file = (string) $file;
-		return '<div class="image-upload" data-js-view="image-fullscreen">'.$hidden.$file.$crop_field.'</div>';
+		return '<div data-js-view="image-fullscreen">'.$hidden.$file.'</div>';
 		
 	}
 
@@ -263,7 +264,7 @@ class Helpers {
 		
 		// If on a create / new form, so just show a simple file input field
 		if (empty($file)) {
-			return '<div class="file-upload">'.Former::file($id, $label)->blockHelp($block_help).'</div>';
+			return Former::file($id, $label)->blockHelp($block_help)->addGroupClass('upload');
 		}
 		
 		// If on an edit view, show the old image and a delete button.  Also, store the old filename
@@ -280,7 +281,7 @@ class Helpers {
 		
 		// Add delete checkbox
 		if (!$is_required && $is_uploaded) {
-			$block_help .= '<label for="'.$id.'-delete" class="checkbox file-delete">
+			$block_help .= '<label for="'.$id.'-delete" class="checkbox upload-delete">
 				<input id="'.$id.'-delete" type="checkbox" name="'.$id.'" value="">Delete 
 				<a href="'.$file.'"><code><i class="icon-file"></i>'.basename($file).'</code></a></label>';
 		
@@ -302,10 +303,10 @@ class Helpers {
 		// Make the file field.  We're setting a class of required rather than actually setting the field
 		// to required so that Former doesn't tell the DOM to the required attribute.  We don't want the
 		// browser to enforce requirement, we just want the icon to indicate that it is required.
-		$file = Former::file($id, $label)->blockHelp($block_help);
+		$file = Former::file($id, $label)->blockHelp($block_help)->addGroupClass('upload');
 		if ($is_required) $file = $file->class('required')->setAttribute('required', null);
 		if (!empty($errors)) $file = $file->state('error')->inlineHelp($errors);
-		return '<div class="file-upload">'.$hidden.$file.'</div>';
+		return $hidden.$file;
 		
 	}
 

@@ -22,7 +22,6 @@
 	}
 
 	.img-polaroid { 
-		margin-top: 10px;
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
@@ -41,19 +40,13 @@
 	}
 	.download, .upload-delete {
 		margin-top: 5px;
+		margin-bottom: 0;
 		font-size: 14px;
 		i {
 			position: relative;
 			top: -1px;
 		}
 		code { background: none; }
-	}
-
-	// Addintion styling for image upload deletes
-	&.image-upload .upload-delete { 
-		margin-top: 5px;
-		color: #D14;
-		a { color: #D14;}
 	}
 
 	// This wraps explicitly passed blockhelp
