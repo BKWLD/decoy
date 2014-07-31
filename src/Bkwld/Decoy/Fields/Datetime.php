@@ -8,8 +8,8 @@ use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
 
 /**
- * Create a time input that uses a bootstrap plugin to generate
- * a selectable calendar widget
+ * Combine the date and time fields into a single control group (thus the 
+ * control group is actually generated via JS; see comments below)
  */
 class Datetime extends Field {
 
