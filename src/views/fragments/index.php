@@ -47,7 +47,7 @@
 											echo Former::textarea($value->key, $label)->class('wysiwyg');
 											break;
 										case 'image':
-											echo Decoy::imageUpload($value->key, $label);
+											echo Former::image($value->key, $label);
 											break;
 										case 'file':
 											echo Former::upload($value->key, $label);
