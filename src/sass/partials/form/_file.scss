@@ -8,64 +8,55 @@
 	margin-bottom: 5px;
 }
 
+// These are the image upload control groups.  The 10px margins here just seemd to
+// look better than the 5px that is generally the spacing on the help block.
 .control-group.upload {
 
-	// These are the image upload control groups.  The 10px margins here just seemd to
-	// look better than the 5px that is generally the spacing on the help block.
-	.help-block {
-
-		.jcrop-tracker {
-			background: transparent;
-		}
-
-		.jcrop-holder {
-			background-color: transparent !important;
-			background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
-		}
-
-		.img-polaroid { 
-			margin-top: 10px;
-			background: transparent;
-			z-index: 100;
-			@include box-sizing(border-box);
-			&.no-help { // There is no help text, so we don't need to push away from it
-				margin-top: 5px;
-			}
-		}
-		
-		// This the styling for generic file uploads
-		.download {
-			color: inherit;
-			a, code { color: #1E8AAA; }
-		}
-		.file-delete {
-			&, a { color: #D14; }
-		}
-		.download, .file-delete {
-			margin-top: 5px;
-			font-size: 14px;
-			i {
-				position: relative;
-				top: -1px;
-			}
-			code { background: none; }
-		}
-
-		// Addintion styling for image upload deletes
-		.image-delete { 
-			margin-top: 5px;
-			font-size: 14px;
-			color: #D14;
-			a { color: #D14;}
-			i {
-				position: relative;
-				top: -1px;
-			}
-			code { background: none; }
-		}
-
-		// This wraps explicitly passed blockhelp
-		.regular-help { display: block; }
+	.jcrop-tracker {
+		background: transparent;
 	}
+
+	.jcrop-holder {
+		background-color: transparent !important;
+		background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+	}
+
+	.img-polaroid { 
+		margin-top: 10px;
+		background: transparent;
+		z-index: 100;
+		@include box-sizing(border-box);
+		&.no-help { // There is no help text, so we don't need to push away from it
+			margin-top: 5px;
+		}
+	}
+	
+	// This the styling for generic file uploads
+	.download {
+		color: inherit;
+		a, code { color: #1E8AAA; }
+	}
+	.upload-delete {
+		&, a { color: #D14; }
+	}
+	.download, .upload-delete {
+		margin-top: 5px;
+		font-size: 14px;
+		i {
+			position: relative;
+			top: -1px;
+		}
+		code { background: none; }
+	}
+
+	// Addintion styling for image upload deletes
+	&.image-upload .upload-delete { 
+		margin-top: 5px;
+		color: #D14;
+		a { color: #D14;}
+	}
+
+	// This wraps explicitly passed blockhelp
+	.regular-help { display: block; }
 
 }

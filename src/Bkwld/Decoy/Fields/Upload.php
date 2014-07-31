@@ -33,7 +33,7 @@ class Upload extends File {
 	 */
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
-		$this->addGroupClass('upload file-upload');
+		$this->addGroupClass('upload');
 	}
 
 	/**
@@ -124,7 +124,7 @@ class Upload extends File {
 	 * @return string HTML
 	 */
 	protected function renderDestuctableReview() {
-		return '<label for="'.$this->name.'-delete" class="checkbox file-delete">
+		return '<label for="'.$this->name.'-delete" class="checkbox upload-delete">
 			<input id="'.$this->name.'-delete" type="checkbox" name="'.$this->name.'" value="">
 			Delete '.$this->renderDownloadLink().'
 			</label>';
