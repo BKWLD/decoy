@@ -50,7 +50,7 @@
 											echo Decoy::imageUpload($value->key, $label);
 											break;
 										case 'file':
-											echo Decoy::fileUpload($value->key, $label);
+											echo Former::upload($value->key, $label);
 											break;
 										case 'belongs_to':
 											echo Decoy::belongsTo($value->key, $value->value, array('label' => $label));

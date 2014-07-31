@@ -401,3 +401,5 @@ The following additional fields come with Decoy.  They are implemented through F
   - To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
 
 - `Former::note()` - A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.  Use like `!=Former::note($label, $text)`
+
+- `Former::upload()` - Creates a [file upload field](http://cl.ly/image/1a0q0C0p3V3y) with addtional UI for reviewing the last upload and deleting it.

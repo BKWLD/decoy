@@ -250,7 +250,8 @@ class Helpers {
 	 * Make a file upload field.  It shows a download link for already uploaded files
 	 */
 	public function fileUpload($id = null, $label = null, $help = null) {
-		
+		\Log::notice('Decoy::fileUpload($id, $label, $help) has been deprecated by Former::upload($id, $label)->blockHelp($help).');
+
 		// Defaults
 		if ($id === null) $id = 'file';
 		$block_help = '';
