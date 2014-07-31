@@ -229,7 +229,7 @@ So, you pass it the standard array that listing views require.  Here's a HAML ex
 	-if(isset($item))
 		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
 	-else
-		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+		!= Former::note('Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
 
 
 ### Data for Former select, radio, and checkbox
@@ -400,3 +400,4 @@ The following additional fields come with Decoy.  They are implemented through F
   - You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
   - To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
 
+- `Former::note()` - A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.  Use like `!=Former::note($label, $text)`

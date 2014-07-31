@@ -59,7 +59,7 @@ class ManyToManyChecklist {
 		// Render an empty message if no boxes created
 		if (empty($boxes)) {
 			$label = String::titleFromKey($relationship);
-			return Decoy::inputlessField($relationship, $label,
+			return Former::note($label,
 				'<i class="icon-info-sign"></i> You have not <a href="/admin/'.Str::snake($relationship,'-').'">created</a> any <b>'.$label.'</b>.');
 		}
 		

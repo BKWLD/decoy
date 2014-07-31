@@ -350,7 +350,8 @@ class Helpers {
 	 * $key - The key that the value is associated with in former
 	 */
 	public function inputlessField($key, $label = null, $value = null) {
-		
+		\Log::notice('Decoy::inputlessField($key, $label, $value) has been deprecated by Former::note($label, $value).');
+
 		// Get defaults
 		if (empty($label)) $label = Library\Utils\String::titleFromKey($key);
 		if (empty($value)) $value = Former::getValue($key);
