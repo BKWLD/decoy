@@ -20,7 +20,7 @@ class Time extends Field {
 	protected $injectedProperties = array('type', 'name', 'value');
 
 	/**
-	 * Build a text field but add some default stuff that benefits dates
+	 * Build a text field but add some default stuff that benefits times
 	 *
 	 * @param Container $app        The Illuminate Container
 	 * @param string    $type       text

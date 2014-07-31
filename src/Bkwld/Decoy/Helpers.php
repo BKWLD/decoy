@@ -438,7 +438,8 @@ class Helpers {
 	 * also make sure that datetime input field gets populated on value change.
 	 */
 	public function datetime($id, $label = null, $value = 'now') {
-		
+		\Log::notice('Decoy::datetime($id, $label, $value) has been deprecated by Former::datetime($id, $label, $value).');
+
 		// Preserve the input value, allowing the specific field classes
 		// to massage the visible date in their own way.
 		$original_value = $value;

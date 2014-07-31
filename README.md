@@ -390,6 +390,13 @@ In the example above, you can see that I've specified that the `general` role **
 
 The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like "blockhelp", etc.
 
-- `Former::date()` - Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).  Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI.  If you set the value to 'now' (`Former::date('date')->value('now')`), the current date will populate the field.
-- `Former::time()` - Create a time [selector widget](http://cl.ly/image/22062i19133Y).  Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI. If you set the value to 'now' (`Former::time('time')->value('now')`), the current time will populate the field.
+- `Former::date()` - Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).  Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI.
+  - If you set the value to 'now' (`Former::date('date')->value('now')`), the current date will populate the field.
+
+- `Former::time()` - Create a time [selector widget](http://cl.ly/image/22062i19133Y).  Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI.
+  - If you set the value to 'now' (`Former::time('time')->value('now')`), the current time will populate the field.
+
+- `Former::datetime()` - Create a [date-time widget](http://cl.ly/image/3I2G1X1h3s3c), which is like the concatenation of the `date()` and `time()` elements.
+  - You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
+  - To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
 
