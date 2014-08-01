@@ -18,14 +18,14 @@ class Datetime extends Field {
 	 *
 	 * @var Bkwld\Decoy\Fields\Date
 	 */
-	public $date;
+	private $date;
 
 	/**
 	 * Store the time field instance
 	 *
 	 * @var Bkwld\Decoy\Fields\Time
 	 */
-	public $time;
+	private $time;
 
 	/**
 	 * Store the passed choices but ultimately a unique field won't be built.  Instead, 
