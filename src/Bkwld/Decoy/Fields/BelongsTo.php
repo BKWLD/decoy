@@ -16,7 +16,7 @@ class BelongsTo extends Field {
 	 *
 	 * @var string
 	 */
-	private $time;
+	private $route;
 
 	/**
 	 * Properties to be injected as attributes
