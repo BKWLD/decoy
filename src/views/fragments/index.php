@@ -53,7 +53,7 @@
 											echo Former::upload($value->key, $label);
 											break;
 										case 'belongs_to':
-											echo Decoy::belongsTo($value->key, $value->value, array('label' => $label));
+											echo Former::belongsTo($value->key, $label)->route($value->value);
 											break;
 									}
 								} ?>

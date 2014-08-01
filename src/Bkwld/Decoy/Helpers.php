@@ -325,7 +325,8 @@ class Helpers {
 	 *     - create - A boolean, if true, allows the user to enter values not in autocomplete
 	 */
 	public function belongsTo($id, $route, $options = array()) {
-		
+		\Log::notice('Decoy::belongsTo($id, $route, $options) has been deprecated by Former::belongsTo($id)->route($route).');
+
 		// Start data array
 		$data = array(
 			'id' => $id,

@@ -391,18 +391,22 @@ In the example above, you can see that I've specified that the `general` role **
 The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like "blockhelp", etc.
 
 - `Former::date()` - Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).  Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI.
-  - If you set the value to 'now' (`Former::date('date')->value('now')`), the current date will populate the field.
+	- If you set the value to 'now' (`Former::date('date')->value('now')`), the current date will populate the field.
 
 - `Former::time()` - Create a time [selector widget](http://cl.ly/image/22062i19133Y).  Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI.
-  - If you set the value to 'now' (`Former::time('time')->value('now')`), the current time will populate the field.
+	- If you set the value to 'now' (`Former::time('time')->value('now')`), the current time will populate the field.
 
 - `Former::datetime()` - Create a [date-time widget](http://cl.ly/image/3I2G1X1h3s3c), which is like the concatenation of the `date()` and `time()` elements.
-  - You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
-  - To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
+	- You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
+	- To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
 
 - `Former::note()` - A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.  Use like `!=Former::note($label, $text)`
 
 - `Former::upload()` - Creates a [file upload field](http://cl.ly/image/1a0q0C0p3V3y) with addtional UI for reviewing the last upload and deleting it.
 
 - `Former::image()` - Creates an [image upload field](http://cl.ly/image/1M03383E293b) with addtional UI for reviewing the last upload and deleting it.
-  - Chain `crops($crops->{image})` onto it to use the cropping tool, where `{image}` is the name of the field field.
+	- Chain `crops($crops->{image})` onto it to use the cropping tool, where `{image}` is the name of the field field.
+
+- `Former::belongsTo()` - Create an [autocomplete field](http://cl.ly/image/2e3D3E2o2U2K) that populates a foreign key in a belongs to relationship.
+	- You must chain `route($route)` to provide the route that can be AJAX GET requested to serve data to the autocomplete.  For example `/admin/products`.
+
