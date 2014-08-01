@@ -89,8 +89,19 @@ class Upload extends File {
 	 * @return string An input tag
 	 */
 	public function render() {
-		if ($this->value) return $this->renderHidden().parent::render();
-		else return parent::render();
+
+		// A file has already been uploaded
+		if ($this->value) {
+
+			// If it's required, show the icon but don't enforce it.  There is already
+			// a file uploaded after all
+			if ($this->isRequired()) $this->setAttribute('required', null);
+
+			// Add hidden field and return
+			return $this->renderHidden().parent::render();
+		
+		// The field is empty
+		} else return parent::render();
 	}
 
 	/**
