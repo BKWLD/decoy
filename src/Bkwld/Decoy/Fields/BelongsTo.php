@@ -108,7 +108,16 @@ class BelongsTo extends Field {
 		$this->addClass('autocomplete');
 
 		// Add the hidden field and return
-		return parent::render().HtmlInput::hidden($this->name);
+		return parent::render().$this->renderHidden();
+	}
+
+	/**
+	 * Render the hidden field that contains the previous value
+	 *
+	 * @return string A hidden field
+	 */
+	protected function renderHidden() {
+		return HtmlInput::hidden($this->name, $this->value);
 	}
 
 }
