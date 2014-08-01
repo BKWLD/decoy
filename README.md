@@ -403,3 +403,6 @@ The following additional fields come with Decoy.  They are implemented through F
 - `Former::note()` - A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.  Use like `!=Former::note($label, $text)`
 
 - `Former::upload()` - Creates a [file upload field](http://cl.ly/image/1a0q0C0p3V3y) with addtional UI for reviewing the last upload and deleting it.
+
+- `Former::image()` - Creates an [image upload field](http://cl.ly/image/1M03383E293b) with addtional UI for reviewing the last upload and deleting it.
+  - Chain `crops($crops->{image})` onto it to use the cropping tool, where `{image}` is the name of the field field.
