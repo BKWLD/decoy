@@ -1,7 +1,6 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
-use Bkwld\Library;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
