@@ -33,7 +33,7 @@ class Date extends Field {
 
 		// Set default attributes
 		$attributes = array_merge(array(
-			'class' => 'date span2',
+			'class' => 'span2',
 			'maxlength' => 10,
 			'placeholder' => 'MM/DD/YY',
 			'id' => null, // We don't want to conflict on the id
@@ -67,6 +67,9 @@ class Date extends Field {
 	 * @return string An input tag
 	 */
 	public function render() {
+
+		// Always add this class
+		$this->addClass('date');
 
 		// Create HTML string
 		$html = parent::render();

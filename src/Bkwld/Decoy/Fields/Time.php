@@ -33,7 +33,7 @@ class Time extends Field {
 
 		// Set default attributes
 		$attributes = array_merge(array(
-			'class' => 'time span2',
+			'class' => 'span2',
 			'maxlength' => 8,
 			'placeholder' => 'HH:MM',
 			'id' => null, // We don't want to conflict on the id
@@ -70,6 +70,9 @@ class Time extends Field {
 	 * @return string An input tag
 	 */
 	public function render() {
+
+		// Always add this class
+		$this->addClass('time');
 
 		// Create HTML string
 		$html = parent::render();
