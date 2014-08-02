@@ -266,6 +266,7 @@ Finally, there is some automatic logic on the list table that will take the valu
 
 [Sentry](http://docs.cartalyst.com/sentry-2), the pacakge that currently powers authentication, automatically logs out any users who may be logged in when someone logs in using the same creds from another computer.  This can be annoying, so admins should switch to using user specific accounts instead of the default redacted account.
 
+
 ### Enabling CKFinder for file uploads
 
 By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
@@ -277,6 +278,7 @@ By default, CKFinder is turned off because a new license must be purchased for e
 			require('decoy/modules/wysiwyg').config.allowUploads();
 		});
 		
+
 ### Fragments
 
 One off strings, images, and files can be managed in Decoy through the Fragments feature.  Fragments work by reading language files and producing a tabbed form from their key value pairs.  The values from the language file are treated as the default for the key; admins can override that default with Decoy.  The frontend developer pulls the fragment value through the `Decoy::frag($key)` helper.
@@ -304,6 +306,7 @@ Thus:
 - The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
 - Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::frag() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
 
+
 ### Workers
 
 If you make a Laravel command extend from `Bkwld\Decoy\Models\Worker`, the command is embued with some extra functionality.  The following options get added:
@@ -327,6 +330,7 @@ In this example, "<COMMAND>" is your command name, like "import:feeds".  With a 
 
 In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.
 
+
 ### Slugs
 
 Slugs are auto created from columns named title, name, or specified in the model with a `$title_column` static property.  Your model should have a validation rule like:
@@ -348,6 +352,7 @@ In this example, this table has a one-to-many parent table called `categories`. 
 That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
 
 	!= Former::hidden('category_id', $parent_id)
+
 
 ### Permissions
 
@@ -385,6 +390,7 @@ In the example above, you can see that I've specified that the `general` role **
 - update
 - destroy
 - manage (combines all of the above)
+
 
 ### Form fields
 
