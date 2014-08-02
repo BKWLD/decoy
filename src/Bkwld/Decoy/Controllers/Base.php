@@ -399,6 +399,7 @@ class Base extends Controller {
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
+			'item'             => null,
 			'crops'            => (object) Model::$crops,
 		));
 		
