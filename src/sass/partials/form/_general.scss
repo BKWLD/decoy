@@ -160,7 +160,7 @@ legend > .btn-small {
 
 // The inputless control-group is created with a helper and is for fields
 // that don't have an input .. derr
-.control-group.inputless {
+.control-group.inputless, .control-group.note {
 	.controls {
 		padding: 5px 0;
 		.help-block {
@@ -195,9 +195,6 @@ textarea {
 .form-vertical {
 	.help-block {
 		margin-top: 5px;
-	}
-	.image-upload .help-block {
-		margin-top: 10px;
 	}
 }
 

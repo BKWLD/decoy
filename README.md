@@ -229,7 +229,7 @@ So, you pass it the standard array that listing views require.  Here's a HAML ex
 	-if(isset($item))
 		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
 	-else
-		!= Decoy::inputlessField('events', 'Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+		!= Former::note('Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
 
 
 ### Data for Former select, radio, and checkbox
@@ -266,6 +266,7 @@ Finally, there is some automatic logic on the list table that will take the valu
 
 [Sentry](http://docs.cartalyst.com/sentry-2), the pacakge that currently powers authentication, automatically logs out any users who may be logged in when someone logs in using the same creds from another computer.  This can be annoying, so admins should switch to using user specific accounts instead of the default redacted account.
 
+
 ### Enabling CKFinder for file uploads
 
 By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
@@ -277,6 +278,7 @@ By default, CKFinder is turned off because a new license must be purchased for e
 			require('decoy/modules/wysiwyg').config.allowUploads();
 		});
 		
+
 ### Fragments
 
 One off strings, images, and files can be managed in Decoy through the Fragments feature.  Fragments work by reading language files and producing a tabbed form from their key value pairs.  The values from the language file are treated as the default for the key; admins can override that default with Decoy.  The frontend developer pulls the fragment value through the `Decoy::frag($key)` helper.
@@ -304,6 +306,7 @@ Thus:
 - The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
 - Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::frag() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
 
+
 ### Workers
 
 If you make a Laravel command extend from `Bkwld\Decoy\Models\Worker`, the command is embued with some extra functionality.  The following options get added:
@@ -327,6 +330,7 @@ In this example, "<COMMAND>" is your command name, like "import:feeds".  With a 
 
 In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will show up in a listing in the admin at /admin/workers.  From this interface you can make sure the worker is still running and view logs.
 
+
 ### Slugs
 
 Slugs are auto created from columns named title, name, or specified in the model with a `$title_column` static property.  Your model should have a validation rule like:
@@ -348,6 +352,7 @@ In this example, this table has a one-to-many parent table called `categories`. 
 That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
 
 	!= Former::hidden('category_id', $parent_id)
+
 
 ### Permissions
 
@@ -386,3 +391,71 @@ In the example above, you can see that I've specified that the `general` role **
 - destroy
 - manage (combines all of the above)
 
+
+### Form fields
+
+The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like "blockhelp", etc.
+
+- `Former::date()` 
+
+	- Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).
+	- Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI. If you set the value to `'now'`, the current date will populate the field``
+	
+			!= Former::date('date', 'Start date')->value('now'`
+
+
+- `Former::time()` 
+
+	- Create a time [selector widget](http://cl.ly/image/22062i19133Y).
+	- Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI. If you set the value to `'now'`, the current date will populate the field.
+
+			!= Former::time('time')->value('now')
+
+
+- `Former::datetime()` 
+
+	- Create a [date-time widget](http://cl.ly/image/3I2G1X1h3s3c), which is like the concatenation of the `date()` and `time()` elements.
+	- You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
+	- To access the Former `Field` instances for each field, access the public properties `$date` and `$time`.
+
+			!= Former::datetime('when')->date(array('data-example', 'Hey'))->value('now')
+
+
+- `Former::note()`
+
+	- A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.
+
+			!= Former::note('Creator', $author->name)
+
+
+- `Former::upload()`
+
+	- Creates a [file upload field](http://cl.ly/image/1a0q0C0p3V3y) with addtional UI for reviewing the last upload and deleting it.
+
+			!= Former::upload('file')
+
+
+- `Former::image()` 
+
+	- Creates an [image upload field](http://cl.ly/image/1M03383E293b) with addtional UI for reviewing the last upload and deleting it.
+	- Chain `crops($crops->{image})` onto it to use the cropping tool, where `{image}` is the name of the field field.
+
+			!= Former::image('image', 'Profile image')->crops($crops->image)->blockHelp('Choose an image for the user')
+
+
+- `Former::belongsTo()`
+
+	- Creates an [autocomplete field](http://cl.ly/image/2e3D3E2o2U2K) that populates a foreign key in a belongs to relationship.
+	- You must chain `route($route)` to provide the route that can be AJAX GET requested to serve data to the autocomplete.  For example `/admin/products`.
+
+			!= Former::belongsTo('related_product_id', 'Related product')->route('/admin/products')
+
+
+- `Former::manyToManyChecklist()` 
+
+	- Render a [list of checkboxes](http://cl.ly/image/0b2w0J312z2i) to represent a related many-to-many table.  The underlying Former field `type` is a checkbox.
+	- The relationship name is stored in the field `name`.  This is the name of the relationship method that is defined on the model that is currently being edited in Decoy.
+	- You must pass it a model instance that is the parent of the manyToMany relationship by chaining `->item($item)`; this is typically the model instance that is being edited in decoy.  An instance of the relationship will be automatically saved as the `value` of the field; you shouldn't specify a `value()`.
+	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
+
+			!= Former::manyToManyChecklist('hubs')->item($item)->scope(function($query) use ($product) { return $query->where('product_id', '=', $product->id); })

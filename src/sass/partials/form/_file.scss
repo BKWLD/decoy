@@ -1,6 +1,6 @@
 // Chrome currently is screwing up the display of the label
 // when line height is set: http://cl.ly/image/1o2W1V2y0d21
-input[type="file"] {
+.control-group input[type="file"] {
 	line-height: inherit;
 	position: relative;
 	top: 4px;
@@ -10,7 +10,7 @@ input[type="file"] {
 
 // These are the image upload control groups.  The 10px margins here just seemd to
 // look better than the 5px that is generally the spacing on the help block.
-.help-block {
+.control-group.upload {
 
 	.jcrop-tracker {
 		background: transparent;
@@ -22,7 +22,6 @@ input[type="file"] {
 	}
 
 	.img-polaroid { 
-		margin-top: 10px;
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
@@ -31,31 +30,17 @@ input[type="file"] {
 		}
 	}
 	
-	// Style the image delete button
-	.image-delete { 
-		margin-top: 10px;
-		font-size: 14px;
-		color: #D14;
-		a { color: #D14;}
-		i {
-			position: relative;
-			top: -1px;
-		}
-		code { background: none; }
-	}
-	.image-help { display: block; }
-}
-
-// This the styling for generic file uploads
-.help-block {
+	// This the styling for generic file uploads
 	.download {
+		color: inherit;
 		a, code { color: #1E8AAA; }
 	}
-	.file-delete {
+	.upload-delete {
 		&, a { color: #D14; }
 	}
-	.download, .file-delete {
-		margin-top: 10px;
+	.download, .upload-delete {
+		margin-top: 5px;
+		margin-bottom: 0;
 		font-size: 14px;
 		i {
 			position: relative;
@@ -63,4 +48,8 @@ input[type="file"] {
 		}
 		code { background: none; }
 	}
+
+	// This wraps explicitly passed blockhelp
+	.regular-help { display: block; }
+
 }
