@@ -8,6 +8,7 @@ use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
+use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Library;
 use Config;
@@ -470,6 +471,13 @@ class Base extends Controller {
 			'item'             => $item,
 			'crops'            => (object) Model::$crops,
 		));
+
+		// If the subclass implements the sidebar no-op, use it's response for
+		// the related data.
+		if ($listings = $this->sidebar($item)) {
+			$sidebar = new Sidebar($listings, $item);
+			$this->layout->content->related = $sidebar->render();
+		}
 		
 		// Figure out the parent_id
 		if ($this->self_to_parent) {
@@ -769,7 +777,15 @@ class Base extends Controller {
 		return $per_page;
 	}
 
-	// Get all the foreign keys and values on the relationship with the parent
+	/**
+	 * A no-op that can be used to generate the sidebar on an edit page without subclassing
+	 * the edit() method.
+	 * @param  Illuminate\Database\Eloquent\Model $item The model instance the edit page
+	 *         is currently acting upon.
+	 * @return Bkwld\Decoy\Fields\Listing | string
+	 */
+	protected function sidebar($item) {}
+
 	/**
 	 * Get all the foreign keys and values on the relationship with the parent
 	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation

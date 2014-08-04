@@ -278,8 +278,10 @@ class Listing extends Field {
 	 * @return int The amount
 	 */
 	protected function perPage() {
+		if ($this->take) return $this->take;
 		$controller = $this->controllerNameOfModel($this->name);
-		return Input::get('count', $this->take ?: $controller::$per_page);
+		if ($this->layout == 'sidebar') return $controller::$per_page_sidebar;
+		else return Input::get('count', $controller::$per_page);
 	}
 
 }
