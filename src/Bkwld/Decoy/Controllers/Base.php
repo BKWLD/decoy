@@ -234,6 +234,14 @@ class Base extends Controller {
 	public function description() {
 		return $this->description;
 	}
+
+	/**
+	 * Get the columns for a controller
+	 * @return array
+	 */
+	public function columns() {
+		return $this->columns;
+	}
 	
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.

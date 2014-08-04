@@ -13,20 +13,7 @@ use Str;
  * The relationship instance that is being represented is stored in the value.
  */
 class ManyToManyChecklist extends Checkbox {
-
-	/**
-	 * Preserve the scope
-	 *
-	 * @var callable
-	 */
-	private $scope;
-
-	/**
-	 * Preserve the label text
-	 *
-	 * @var callable
-	 */
-	private $label_text;
+	use Traits\CaptureLabel, Traits\Scopable;
 
 	/**
 	 * Pass is in the parent instance (the instance being edited in the admin) as the `item`.  
@@ -41,30 +28,6 @@ class ManyToManyChecklist extends Checkbox {
 		if ($item 
 			&& is_a($item, 'Illuminate\Database\Eloquent\Model')
 			&& method_exists($item, $this->name)) $this->value = $item->{$this->name};
-		return $this;
-	}
-
-	/**
-	 * Override the parent label so we can use the raw text of the label
-	 * 
-	 * @param  string $text       A label
-   * @param  array  $attributes The label's attributes
-   * @return Field              A field
-	 */
-	public function label($text, $attributes = array()) {
-		$this->label_text = $text;
-		return parent::label($text, $attributes);
-	}
-
-	/**
-	 * Allow the developer to customize the query for related items.  We'll execute the
-	 * scope function, passing it a reference to this query to customize
-	 *
-	 * @param callable $callback
-	 * @return Field A field
-	 */
-	public function scope($callback) {
-		if (is_callable($callback)) $this->scope = $callback;
 		return $this;
 	}
 
