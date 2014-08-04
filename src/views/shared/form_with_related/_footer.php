@@ -5,7 +5,7 @@ This partial is used to generate the last part of the a form
 with a related data sidebar.  It expects:
 	
 	- controller : A string depicting the controller.  This is used in
-		generating links.  I.e. 'admin.news'
+		generating links.  I.e. 'Admin\PostsController'
 	
 	- item (optional) : The data that is being edited
 
