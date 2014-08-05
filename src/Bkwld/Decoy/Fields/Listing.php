@@ -6,7 +6,9 @@ use Bkwld\Decoy\Exception;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Collection;
 use DecoyURL;
+use Former;
 use Input;
 use Str;
 use View;
@@ -36,9 +38,16 @@ class Listing extends Field {
 	/**
 	 * Preserve the controller
 	 *
-	 * @var Bkwld\Decoy\Controller\Base | string
+	 * @var Bkwld\Decoy\Controller\Base
 	 */
 	private $controller;
+
+	/**
+	 * Preserve the controller class name
+	 *
+	 * @var string
+	 */
+	private $controller_name;
 
 	/**
 	 * Preserve the items
@@ -71,13 +80,51 @@ class Listing extends Field {
 	private $take;
 
 	/**
-	 * Store the controller class name or instance
+   * Set up a Field instance.  Note, the model class name is passed in place of the nemae
+   *
+   * @param Container $app        The Illuminate Container
+	 * @param string    $type       text
+	 * @param string    $model      The model class name
+	 * @param string    $label      Its label
+	 * @param string    $value      Its value
+	 * @param array     $attributes Attributes
+   */
+  public function __construct(Container $app, $type, $model, $label, $value, $attributes) {
+
+  	// Instantiate a controller given the model name
+  	$this->controller($this->controllerNameOfModel($model));
+
+  	// If no title is passed, set it to the controller name
+  	if (!$label && $this->controller) $label = $this->controller->title();
+  	elseif (!$label) $label = Str::plural($model);
+
+  	// Continue instantiation
+    parent::__construct($app, $type, $model, $label, $value, $attributes);
+  }
+
+	/**
+	 * Replace the controller
 	 *
-	 * @param  Illuminate\Pagination\Paginator | array $controller
+	 * @param  Bkwld\Decoy\Controllers\Base | string $controller
 	 * @return Field This field
 	 */
 	public function controller($controller) {
-		$this->controller = $controller;
+
+		// Instantiate a string controller
+		if (is_string($controller)
+			&& class_exists($controller)
+			&& is_subclass_of($controller, 'Bkwld\Decoy\Controllers\Base')) {
+			$this->controller_name = $controller;
+			$this->controller = new $controller;
+
+		// Or, validate a passed controller instance
+		} elseif (is_object($controller)
+			&& is_a($controller, 'Bkwld\Decoy\Controllers\Base')) {
+			$this->controller_name = get_class($controller);
+			$this->controller = $controller;
+		}
+		
+		// Chain
 		return $this;
 	}
 
@@ -149,20 +196,27 @@ class Listing extends Field {
 	 */
 	protected function wrapInControlGroup() {
 
-		// Get a controller instance
-		$controller = $this->createController();
-
-		// Add create button
-		if (app('decoy.auth')->can('create', $controller)) {
-			$this->label($this->label_text.$this->makeCreateBtn());
-		}
-
-		// Use the controller description for blockhelp
-		$this->blockhelp($controller->description());
-
 		// Add generic stuff
 		$this->setAttribute('id', false);
 		$this->addGroupClass('list-control-group');
+
+		// Use the controller description for blockhelp
+		$this->blockhelp($this->controller->description());
+
+		// Show no results if there is no parent specified
+		if (empty($this->parent_item)) {
+			$this->addGroupClass('note');
+			return $this->group->wrapField(Former::note($this->label_text, '
+				<i class="icon-info-sign"></i> You must save before you can add <b>'.$this->label_text.'</b>.
+			'));
+		}
+
+		// Add create button if we have permission and if there is a parent item
+		if (app('decoy.auth')->can('create', $this->controller)) {
+			$this->group->setLabel($this->label_text.$this->makeCreateBtn());
+		}
+
+		// Return the wrapped field
 		return $this->group->wrapField($this);
 	}
 
@@ -174,22 +228,18 @@ class Listing extends Field {
 	 */
 	public function getContent() {
 
-		// Get a controller instance
-		$controller = $this->createController();
-		$controller_name = get_class($controller);
-
 		// Check that the current user has permission to access this controller
-		if (!app('decoy.auth')->can('read', $controller_name)) continue;
+		if (!app('decoy.auth')->can('read', $this->controller)) continue;
 
 		// Get the listing of items
 		$items = $this->getItems();
 
 		// Create all the vars the standard list expects
 		$vars = array(
-			'controller'        => $controller_name,
-			'title'             => $this->label_text ?: $controller->title(),
-			'description'       => $controller->description(),
-			'columns'           => $this->getColumns($controller),
+			'controller'        => $this->controller_name,
+			'title'             => $this->label_text,
+			'description'       => $this->controller->description(),
+			'columns'           => $this->getColumns($this->controller),
 			'auto_link'         => 'first',
 			'convert_dates'     => 'date',
 			'layout'            => $this->layout,
@@ -206,45 +256,12 @@ class Listing extends Field {
 		if ($this->parent_item) {
 			$vars['parent_id'] = $this->parent_item->getKey();
 			$vars['parent_controller'] = $this->controllerNameOfModel(get_class($this->parent_item));
-			$vars['many_to_many'] = $controller->isChildInManyToMany();
+			$vars['many_to_many'] = $this->controller->isChildInManyToMany();
 		}
 
 		// Return the view, passing in a bunch of variables
 		return View::make('decoy::shared.list._standard', $vars)->render();
 
-	}
-
-	/**
-	 * Create an instance of the controller being listed, writing it to the instance
-	 * controller variable
-	 *
-	 * @return Bkwld\Decoy\Controllers\Base
-	 */
-	protected function createController() {
-
-		// If undefined, create from model
-		if (empty($this->controller)) $this->controller = $this->createControllerFromModel();
-
-		// If a string instantiate it
-		else if (is_string($this->controller)) $this->controller = new $this->controller;
-
-		// Validate we have a correct one
-		if (!is_a($this->controller, 'Bkwld\Decoy\Controllers\Base')) {
-			throw new Exception('Could not create a controller instance');
-		}
-
-		// Return it
-		return $this->controller;
-	}
-
-	/**
-	 * Guess at the name of the controller given it's model and instantiate it
-	 *
-	 * @return Bkwld\Decoy\Controller\Base
-	 */
-	protected function createControllerFromModel() {
-		$controller = $this->controllerNameOfModel($this->name);
-		return new $controller;
 	}
 
 	/**
@@ -276,11 +293,9 @@ class Listing extends Field {
 	 * @return string URL
 	 */
 	protected function getCreateURL() {
-		$controller = $this->createController();
-		$controller_name = get_class($controller);
-		return $controller->isChildInManyToMany() ? 
-			DecoyURL::action($controller_name.'@create') : 
-			DecoyURL::relative('create', null, $controller_name);
+		return $this->controller->isChildInManyToMany() ? 
+			DecoyURL::action($this->controller_name.'@create') : 
+			DecoyURL::relative('create', null, $this->controller_name);
 	}
 
 	/**
@@ -313,7 +328,11 @@ class Listing extends Field {
 	 * @return Illuminate\Pagination\Paginator | Illuminate\Database\Eloquent\Collection
 	 */
 	protected function getItems() {
+
+		// The user specified items so use them
 		if ($this->items) return $this->items;
+
+		// Query the DB for items to display
 		else return $this->queryForItems();
 	}
 
@@ -353,15 +372,12 @@ class Listing extends Field {
 		
 		// If a sidebar, use the default
 		else if ($this->layout == 'sidebar') {
-			$controller_name = $this->controllerNameOfModel($this->name);
-			return $controller_name::$per_page_sidebar;
+			$name = $this->controller_name;
+			return $name::$per_page_sidebar;
 		}
 
 		// Else, use the controller's pagination logic
-		else {
-			$controller = $this->createController();
-			return $controller->perPage();
-		}
+		else return $this->controller->perPage();
 	}
 
 }
