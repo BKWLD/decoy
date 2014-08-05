@@ -4,7 +4,6 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
-use Bkwld\Decoy\Routing\Ancestry;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
@@ -119,12 +118,10 @@ class Base extends Controller {
 	 * Note, not all dependencies are currently injected
 	 * 
 	 * @param Config $config
-	 * @param Ancestry $ancestry
 	 * @param Illuminate\Routing\Router $route
 	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
 	 */
 	private $config;
-	private $ancestry;
 	private $route;
 	private $url;
 	public function injectDependencies($dependencies = null) {
@@ -132,7 +129,6 @@ class Base extends Controller {
 		// Set manually passed dependencies
 		if ($dependencies) {
 			$this->config = $dependencies['config'];
-			$this->ancestry = $dependencies['ancestry'];
 			$this->route = $dependencies['route'];
 			$this->url = $dependencies['url'];
 			return true;
@@ -143,7 +139,6 @@ class Base extends Controller {
 			$this->config = App::make('config');
 			$this->url = App::make('decoy.url');
 			$request = App::make('request');
-			$this->ancestry = new Ancestry($this, App::make('decoy.wildcard'), $request, $this->url);
 			$this->route = App::make('router');
 			return true;
 		}
@@ -185,6 +180,14 @@ class Base extends Controller {
 		// generic term of "Model"
 		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
 			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
+		}
+
+		// If the input contains info on the parent, immediately instantiate
+		// the parent instance
+		if (($parent_id = Input::get('parent_id'))
+			&& ($parent_controller = Input::get('parent_controller'))) {
+			$parent_model_class = $this->model($parent_controller);
+			$this->parent($parent_model_class::findOrFail($parent_id));
 		}
 
 	}
@@ -355,23 +358,13 @@ class Base extends Controller {
 	public function parentController() { return $this->parent_controller; }
 	
 	/**
-	 * Pass along this request on ancestry, so we can keep that private for now
+	 * Determine whether the relationship between the parent to this controller
+	 * is a many to many
 	 * 
 	 * @return boolean
 	 */
 	public function isChildInManyToMany() {
-		
-		// If the relationship ends in 'able' then it's assumed to be
-		// a polymorphic one-to-many.  We're doing it this way because 
-		// running the relationship function (see `$model->{$relationship}()` below)
-		// throws an error when you're not working with a hydrated model.  And this
-		// is exactly what happens in the the shared.list._standard view composer.
-		if (Str::endsWith($this->self_to_parent, 'able')) return false;
-
-		// Check the class of the relationship
-		if (!method_exists($this->model, $this->self_to_parent)) return false;
-		$model = new $this->model;
-		return is_a($model->{$this->self_to_parent}(), 
+		return is_a($this->parentRelation(), 
 			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
 
 	}
@@ -408,11 +401,10 @@ class Base extends Controller {
 	public function indexChild() {
 
 		// Make sure the parent is valid
-		$parent_id = $this->ancestry->parentId();
-		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
+		if (!$this->parent) return App::abort(404);
 			
 		// Get the list of rows
-		$query = $parent->{$this->parent_to_self}()->ordered();
+		$query = $this->parentRelation()->ordered();
 
 		// Run the query
 		$search = new Search();
@@ -427,7 +419,7 @@ class Base extends Controller {
 			'count'            => $count,
 			'listing'          => $results,
 			'columns'          => $this->columns,
-			'parent_id'        => $parent_id,
+			'parent_id'        => $this->parent->getKey(),
 			'search'           => $this->search,
 		));
 		
@@ -440,11 +432,6 @@ class Base extends Controller {
 	 * Create form
 	 */
 	public function create() {
-		
-		// If there is a parent, make sure it's id is valid
-		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-		}
 
 		// Pass validation through
 		Former::withRules(Model::$rules);
@@ -462,7 +449,7 @@ class Base extends Controller {
 		));
 		
 		// Pass parent_id
-		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
+		if (isset($this->parent)) $this->layout->content->parent_id = $this->parent->getKey();
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
@@ -609,16 +596,11 @@ class Base extends Controller {
 		// in the pivot table for the parent
 		if ($this->isChildInManyToMany()) {
 			
-			// Require parent_id
-			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
-			$parent_id = Input::get('parent_id');
-			$parent = $this->parentFind($parent_id);
-			
 			// See if there is an exact match on what's been entered.  This is useful for many
 			// to manys with tags because we want to know if the reason that autocomplete
 			// returns no results on an exact match that is already attached is because it
 			// already exists.  Otherwise, it would allow the user to create the tag
-			if ($parent->{$this->parent_to_self}()
+			if ($this->parentRelation()
 				->where(Model::$title_column, '=', Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
@@ -627,7 +609,7 @@ class Base extends Controller {
 			// Get the ids of already attached rows through the relationship function.  There
 			// are ways to do just in SQL but then we lose the ability for the relationship
 			// function to apply conditions, like is done in polymoprhic relationships.
-			$siblings = $parent->{$this->parent_to_self}()->get();
+			$siblings = $this->parentRelation()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
@@ -647,12 +629,11 @@ class Base extends Controller {
 	public function attach($id) {
 		
 		// Require there to be a parent id and a valid id for the resource
-		if (!Input::has('parent_id')) return Response::json(null, 404);
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
 		$this->fireEvent('attaching', array($item));
-		$item->{$this->self_to_parent}()->attach(Input::get('parent_id'));
+		$item->{$this->self_to_parent}()->attach($this->parent);
 		$this->fireEvent('attached', array($item));
 		
 		// Return the response
@@ -667,14 +648,10 @@ class Base extends Controller {
 		// Support removing many ids at once
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 		
-		// Get the parent id
-		$parent_id = Input::get('parent_id');
-		
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
-		$item = $this->parentFind($parent_id);
-		$this->fireEvent('removing', array($item, $ids));
-		$item->{$this->parent_to_self}()->detach($ids);
-		$this->fireEvent('removed', array($item, $ids));
+		$this->fireEvent('removing', array($this->parent, $ids));
+		$this->parentRelation()->detach($ids);
+		$this->fireEvent('removed', array($this->parent, $ids));
 		
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
@@ -787,12 +764,6 @@ class Base extends Controller {
 		}
 	}
 	
-	// Run the find method on the parent model
-	protected function parentFind($parent_id) {
-		if (empty($this->parent_model)) return false;
-		return call_user_func($this->parent_model.'::find', $parent_id);
-	}
-	
 	// Format the results of a query in the format needed for the autocomplete repsonses
 	public function formatAutocompleteResponse($results) {
 		$output = array();
@@ -877,11 +848,10 @@ class Base extends Controller {
 	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
 	 */
 	private function parentRelation() {
-		if ($this->parent_to_self
-			&& ($parent_id = $this->ancestry->parentId()) 
-			&& ($parent = self::parentFind($parent_id))) {
-			return $parent->{$this->parent_to_self}();
-		} else return false;
+		if ($this->parent
+			&& method_exists($this->parent, $this->parent_to_self)) 
+			return $this->parent->{$this->parent_to_self}();
+		else return false;
 	}
 	
 }
