@@ -102,31 +102,6 @@ class Ancestry {
 	}
 	
 	/**
-	 * Return a boolean for whether the parent relationship represents a many to many.  This is
-	 * different from isChildRoute() because it also checks what kind of relationship the child
-	 * is in.
-	 */
-	public function isChildInManyToMany() {
-
-		// See if a relationship is defined
-		$relationship = $this->controller->selfToParent();
-		if (!$relationship) return false;
-
-		// If the relationship ends in 'able' then it's assumed to be
-		// a polymorphic one-to-many.  We're doing it this way because 
-		// running the relationship function (see `$model->{$relationship}()` below)
-		// throws an error when you're not working with a hydrated model.  And this
-		// is exactly what happens in the the shared.list._standard view composer.
-		if (Str::endsWith($relationship, 'able')) return false;
-
-		// Check the class of the relationship
-		$model = $this->controller->model();
-		if (!method_exists($model, $relationship)) return false;
-		$model = new $model; // Needed to be a simple string to work
-		return is_a($model->{$relationship}(), 'Illuminate\Database\Eloquent\Relations\BelongsToMany');
-	}
-	
-	/**
 	 * Guess at what the parent controller is by examing the route or input varibles
 	 * @return string ex: Admin\NewsController
 	 */

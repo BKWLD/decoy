@@ -55,8 +55,15 @@ class Wildcard {
 			$controller, $action, $id
 		));
 				
-		// Invoke the controller
+		// Instantiate controller
 		$controller = new $controller();
+		if ($parent = $this->detectParent()) {
+			list($parent_slug, $parent_id) = $parent;
+			$parent_model = Str::singular(Str::studly($parent_slug));
+			$controller->parent($parent_model::findOrFail($parent_id));
+		}
+
+		// Execute the request
 		$params = $id ? array($id) : array();
 		return $controller->callAction($action, $params);
 		
@@ -120,10 +127,6 @@ class Wildcard {
 	 */
 	public function detectAction() {
 		
-		// Get whether the request acts as a child.  This modifies some of the
-		// actions that would be called
-		$is_child = $this->detectIfChild();
-		
 		// If the path ends in one of the special actions, use that as the action
 		// as long as the verb is a GET
 		if (preg_match('#[a-z-]+$#i', $this->path, $matches)) {
@@ -152,7 +155,7 @@ class Wildcard {
 		// Else, it must end with the controller name
 		switch($this->verb) {
 			case 'POST': return 'store';
-			case 'GET': return $is_child ? 'indexChild' : 'index';
+			case 'GET': return 'index';
 		}
 		
 		// Must have been an erorr if we got here
@@ -179,28 +182,21 @@ class Wildcard {
 	
 	/**
 	 * Detect the parent id of the path
-	 * @return mixed An id number or false
+	 * 
+	 * @return mixed False or an array containing:
+	 *         - The slug of the parent controller
+	 *         - The id of the parent record
 	 */
-	public function detectParentId() {
+	public function detectParent() {
 		
 		// Look for a string, then a number (the parent id), followed by a non-action
 		// string, then possiby a number and/or an action string and then the end
-		$pattern = '#[a-z-]+/(\d+)/(?!'.implode('|', $this->actions).')[a-z-]+(/\d+)?(/('.implode('|', $this->actions).'))?$#i';
-		if (preg_match($pattern, $this->path, $matches)) return $matches[1];
-		return false;		
-	}
-	
-	/**
-	 * Detect if the request is for a child of another controller
-	 * @return boolean
-	 */
-	public function detectIfChild() {
-		
-		// A child is a controller preceeded by an id and another controller
-		// though there may be an action on the end (which should be ignored)
-		$pattern = '#[a-z-]+/\d+/(?!$|'.implode('$|', $this->actions).'$)#i';
-		return preg_match($pattern, $this->path) === 1;
-		
+		$pattern = '#([a-z-]+)/(\d+)/(?!'.implode('|', $this->actions).')[a-z-]+(?:/\d+)?(/('.implode('|', $this->actions).'))?$#i';
+		if (preg_match($pattern, $this->path, $matches)) return array(
+			$matches[1],
+			$matches[2],
+		);
+		return false;
 	}
 
 	/**

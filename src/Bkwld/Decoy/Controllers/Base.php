@@ -52,12 +52,50 @@ class Base extends Controller {
 	protected $show_view;   // i.e. admin.news.edit
 	protected $search;      // i.e. An array describing the fields to search upon
 	
-	// More of the same, but these are just involved in relationships
-	protected $parent_model;      // i.e. Photo
-	protected $parent_controller; // i.e. admin.photos
-	protected $parent_to_self;    // i.e. photos
-	protected $self_to_parent;    // i.e. post
+	//---------------------------------------------------------------------------
+	// Properties that define relationships
+	//---------------------------------------------------------------------------
+
+	/**
+	 * An instance of the model that is the parent of the controller that is handling
+	 * the request
+	 * 
+	 * @var Illuminate\Database\Eloquent\Model
+	 */
+	protected $parent;
 	
+	/**
+	 * Model class name i.e. Photo
+	 * 
+	 * @var string
+	 */
+	protected $parent_model;
+	
+	/**
+	 * Controller class name i.e. Admin\PhotosController
+	 * 
+	 * @var sting
+	 */
+	protected $parent_controller;
+	
+	/**
+	 * Relationship name on parents i.e. photos
+	 * 
+	 * @var string
+	 */
+	protected $parent_to_self;
+	
+	/**
+	 * Relationship name on this controller's model to the parent i.e. post
+	 * 
+	 * @var string
+	 */
+	protected $self_to_parent;
+	
+	//---------------------------------------------------------------------------
+	// Constructing
+	//---------------------------------------------------------------------------
+
 	// Shared layout for admin view, set in the constructor
 	public $layout;
 	protected function setupLayout() {
@@ -148,44 +186,7 @@ class Base extends Controller {
 		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
 			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
-		
-		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
-		// explicitly in the router, we assume there is no ancestry at play.  The ancestry class
-		// assumes that the route was resolved using the Decoy wildcard router
-		if ($this->route->currentRouteAction()) return;
-		
-		// If the current route has a parent, discover what it is
-		if (empty($this->parent_controller) && $this->ancestry->isChildRoute()) {
-			$this->parent_controller = $this->ancestry->deduceParentController();
-		}
 
-		// If a parent controller was found, proceed to find the parent model, parent
-		// relationship, and child relationship
-		if (!empty($this->parent_controller)) {
-
-			// Determine it's model, so we can call static methods on that model
-			if (empty($this->parent_model)) {
-				$this->parent_model = $this->model($this->parent_controller);
-			}
-
-			// Figure out what the relationship function to the child (this controller's
-			// model) on the parent model
-			if (empty($this->parent_to_self) && $this->parent_model) {
-				$this->parent_to_self = $this->ancestry->deduceParentRelationship();
-			}
-
-			// If the parent is the same as this controller, assume that it's a many-to-many-to-self
-			// relationship.  Thus, expect a relationship method to be defined on the model
-			// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
-			if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
-				$this->self_to_parent = $this->parent_to_self.'AsChild';
-
-			// Figure out the child relationship name, which is typically named the same
-			// as the parent model
-			} else if (empty($this->self_to_parent) && $this->parent_model) {
-				$this->self_to_parent = $this->ancestry->deduceChildRelationship();
-			}
-		}
 	}
 	
 	/**
@@ -272,7 +273,7 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Figure out the model for a class
+	 * Figure out the model for a controller class
 	 * @param string $class ex: "Admin\SlidesController"
 	 * @return string ex: "Slide"
 	 */
@@ -294,37 +295,85 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Return parent model
-	 * @return string ex: "Article"
-	 */
-	public function parentModel() { return $this->parent_model; }
-	
-	/**
 	 * Return controller
+	 * 
 	 * @return string ex: Admin\SlidesController
 	 */
 	public function controller() { return $this->controller; }
 	
 	/**
+	 * Give this controller a parent model instance.  For instance, this makes the index
+	 * view a listing of just the children of the parent.
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $parent
+	 */
+	public function parent($parent) {
+
+		// Save out the passed reference
+		$this->parent = $parent;
+
+		// Save out sub properties that I hope to deprecate
+		$this->parent_model = get_class($this->parent);
+		$this->parent_controller = 'Admin\\'.Str::plural($this->parent_model).'Controller';
+
+		// Figure out what the relationship function to the child (this controller's
+		// model) on the parent model .  It will be the plural version of this model's
+		// name.
+		$this->parent_to_self = Str::plural(lcfirst($this->model));
+
+		// If the parent is the same as this controller, assume that it's a many-to-many-to-self
+		// relationship.  Thus, expect a relationship method to be defined on the model
+		// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+		if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
+			$this->self_to_parent = $this->parent_to_self.'AsChild';
+
+		// Save out to self to parent relationship.  It will be singular if the relationship
+		// is a many to many.
+		} else {
+			$relationship = lcfirst(get_class($this->parent));
+			$this->self_to_parent = $this->isChildInManyToMany()? 
+				Str::plural($relationship): 
+				$relationship;
+		}
+
+		// Make chainable
+		return $this;
+	}
+
+	/**
+	 * Return parent model
+	 * 
+	 * @return string ex: "Article"
+	 */
+	public function parentModel() { return $this->parent_model; }
+
+	/**
 	 * Get parent controller
+	 * 
 	 * @return string ex: Admin\ArticlesController
 	 */
 	public function parentController() { return $this->parent_controller; }
 	
 	/**
-	 * Get $self_to_parent relationship name
-	 * @return string ex: article
-	 */
-	public function selfToParent() {
-		return $this->self_to_parent;
-	}
-	
-	/**
 	 * Pass along this request on ancestry, so we can keep that private for now
+	 * 
 	 * @return boolean
 	 */
 	public function isChildInManyToMany() {
-		return $this->ancestry->isChildInManyToMany();
+		
+		// If the relationship ends in 'able' then it's assumed to be
+		// a polymorphic one-to-many.  We're doing it this way because 
+		// running the relationship function (see `$model->{$relationship}()` below)
+		// throws an error when you're not working with a hydrated model.  And this
+		// is exactly what happens in the the shared.list._standard view composer.
+		if (Str::endsWith($this->self_to_parent, 'able')) return false;
+
+		// Check the class of the relationship
+		if (!method_exists($this->model, $this->self_to_parent)) return false;
+		$model = new $this->model;
+		return is_a($model->{$this->self_to_parent}(), 
+			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
+
 	}
 	
 	//---------------------------------------------------------------------------

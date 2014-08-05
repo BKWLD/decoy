@@ -123,6 +123,11 @@ class Listing extends Field {
 			$this->controller_name = get_class($controller);
 			$this->controller = $controller;
 		}
+
+		// Re-apply the parent if one was set
+		if ($this->parent_item && $this->controller) {
+			$this->controller->parent($this->parent_item);
+		}
 		
 		// Chain
 		return $this;
@@ -164,6 +169,7 @@ class Listing extends Field {
 	 */
 	public function parent($parent) {
 		$this->parent_item = $parent;
+		$this->controller->parent($parent);
 		return $this;
 	}
 

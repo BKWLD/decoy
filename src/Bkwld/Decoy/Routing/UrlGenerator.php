@@ -3,7 +3,7 @@
 // Dependencies
 use Config;
 use Illuminate\Http\Request;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * This class exists to help make links between pages in Decoy, which is
