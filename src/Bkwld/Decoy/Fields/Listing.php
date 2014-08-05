@@ -83,23 +83,46 @@ class Listing extends Field {
    * Set up a Field instance.  Note, the model class name is passed in place of the nemae
    *
    * @param Container $app        The Illuminate Container
-	 * @param string    $type       text
+	 * @param string    $type       Not really used, but kept for inheritance sake
 	 * @param string    $model      The model class name
 	 * @param string    $label      Its label
 	 * @param string    $value      Its value
 	 * @param array     $attributes Attributes
+	 * @param array     $config      Additional parameters passed by factories
    */
-  public function __construct(Container $app, $type, $model, $label, $value, $attributes) {
+  public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
 
   	// Instantiate a controller given the model name
-  	$this->controller($this->controllerNameOfModel($model));
+  	$this->controller(isset($config['controller'])
+  		? $config['controller']
+  		: $this->controllerNameOfModel($model)
+  	);
 
   	// If no title is passed, set it to the controller name
   	if (!$label && $this->controller) $label = $this->controller->title();
   	elseif (!$label) $label = Str::plural($model);
 
+  	// Add passed items
+  	if (isset($config['items'])) $this->items($config['items']);
+
   	// Continue instantiation
     parent::__construct($app, $type, $model, $label, $value, $attributes);
+  }
+
+  /**
+   * A factory to create an instance using the passed controller.  This is to prevent
+   * duplicate controller instantations when invoked from the base controller.
+   *
+   * @param Bkwld\Decoy\Controllers\Base $controller
+   * @param Illuminate\Pagination\Paginator $items
+   * @return Bkwld\Decoy\Field\Listing
+   */
+  public static function createFromController($controller, $items) {
+  	$model = $controller->model();
+  	return Former::listing($model, null, null, null, array(
+  		'controller' => $controller,
+  		'items' => $items,
+  	));
   }
 
 	/**

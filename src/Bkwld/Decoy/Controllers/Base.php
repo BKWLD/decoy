@@ -4,11 +4,12 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
-use Bkwld\Decoy\Routing\Wildcard;
+use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
+use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Config;
 use Croppa;
@@ -183,7 +184,8 @@ class Base extends Controller {
 		}
 
 		// If the input contains info on the parent, immediately instantiate
-		// the parent instance
+		// the parent instance.  These are populated by some AJAX calls like autocomplete
+		// on a many to many and the attach method.
 		if (($parent_id = Input::get('parent_id'))
 			&& ($parent_controller = Input::get('parent_controller'))) {
 			$parent_model_class = $this->model($parent_controller);
@@ -393,9 +395,7 @@ class Base extends Controller {
 		$results = $search->apply($query, $this->search)->paginate($this->perPage());
 		
 		// Render the view using the `listing` builder.
-		$listing = Former::listing($this->model)
-			->controller($this)
-			->items($results);
+		$listing = Listing::createFromController($this, $results);
 		if ($this->parent) $listing->parent($this->parent);
 		$this->layout->content = $listing;
 		
