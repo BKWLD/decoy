@@ -66,6 +66,7 @@ class Sentry implements AuthInterface {
 	 * Check if the user has permission to do something
 	 * @param string $action ex: destroy
 	 * @param string $controller 
+	 *        - controller instance
 	 *        - controller name (Admin\ArticlesController)
 	 *        - URL (/admin/articles)
 	 *        - slug (articles)
@@ -78,6 +79,9 @@ class Sentry implements AuthInterface {
 
 		// If no permissions have been defined, do nothing.  Btw, only supporting "cant" for now.
 		if (!Config::has('decoy::permissions')) return true;
+
+		// Convert controller instance to it's name
+		if (is_object($controller)) $controller = get_class($controller);
 
 		// Get the slug version of the controller.  Test if a URL was passed first
 		// and, if not, treat it like a full controller name.  URLs are used in the nav.
