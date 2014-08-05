@@ -1,7 +1,7 @@
 <? // This partial loads the standard list into a control group container.
 
 // Automatically update the data with the right layout
-$__data['layout'] = 'control group';
+if (empty($__data['layout'])) $__data['layout'] = 'control group';
 ?>
 
 <div class="control-group list-control-group">
