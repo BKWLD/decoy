@@ -424,7 +424,7 @@ class Base extends Controller {
 		));
 		
 		// Pass parent_id
-		if (isset($this->parent)) $this->layout->content->parent_id = $this->parent->getKey();
+		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
@@ -491,11 +491,8 @@ class Base extends Controller {
 		}
 		
 		// Figure out the parent_id
-		if ($this->self_to_parent) {
-			$foreign_key = $item->{$this->self_to_parent}()->getForeignKey();
-			$this->layout->content->parent_id = $item->{$foreign_key};
-		}
-		
+		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
+
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
