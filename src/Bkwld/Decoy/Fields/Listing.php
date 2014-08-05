@@ -6,9 +6,11 @@ use Bkwld\Decoy\Exception;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
+use DecoyURL;
 use Input;
 use Str;
 use View;
+use URL;
 
 /**
  * Create a table-layout listing of records in the database.  An index view.  It may
@@ -21,8 +23,15 @@ use View;
  * 	->take(20)
  */
 class Listing extends Field {
-	use Traits\CaptureLabel;
-	use Traits\Scopable;
+	use Traits\CaptureLabel, Traits\Scopable;
+
+	/**
+	 * Override Former Field and Tag properties to wrap the listing inside of
+	 * another div that can have classes and such added onto them.
+	 */
+	protected $element = 'div';
+	protected $isSelfClosing = false;
+	protected $injectedProperties = array();
 
 	/**
 	 * Preserve the controller
@@ -89,17 +98,14 @@ class Listing extends Field {
 	 * Store the layout choice.  Possibilities
 	 * - full (default)
 	 * - sidebar
-	 * - control group
+	 * - form
 	 *
 	 * @param  string $layout
 	 * @return Field This field
 	 */
 	public function layout($layout) {
-		if (in_array($layout, array(
-			'full', 
-			'sidebar', 
-			'control group',
-			))) $this->layout = $layout;
+		if ($layout == 'control group') $layout = 'form'; // Backwards compat
+		if (in_array($layout, array('full', 'sidebar', 'form'))) $this->layout = $layout;
 		return $this;
 	}
 
@@ -129,18 +135,44 @@ class Listing extends Field {
 	 * Render the layout, .i.e. put it in a control group or a different
 	 * wrapper
 	 *
-	 * @return string
+	 * @return string HTML
 	 */
 	public function wrapAndRender() {
+		if ($this->layout == 'form') return $this->wrapInControlGroup();
 		return $this->render();
 	}
 
 	/**
-	 * Render the listing
+	 * Add customization to the control group rendering
 	 *
-	 * @return string An input tag
+	 * @return string HTML
 	 */
-	public function render() {
+	protected function wrapInControlGroup() {
+
+		// Get a controller instance
+		$controller = $this->createController();
+
+		// Add create button
+		if (app('decoy.auth')->can('create', $controller)) {
+			$this->label($this->label_text.$this->makeCreateBtn());
+		}
+
+		// Use the controller description for blockhelp
+		$this->blockhelp($controller->description());
+
+		// Add generic stuff
+		$this->setAttribute('id', false);
+		$this->addGroupClass('list-control-group');
+		return $this->group->wrapField($this);
+	}
+
+	/**
+	 * Render the listing.  This is added using getContent so Former will wrap it all in a
+	 * div that classes (and other Former APIs) can by chained onto.
+	 *
+	 * @return string HTML
+	 */
+	public function getContent() {
 
 		// Get a controller instance
 		$controller = $this->createController();
@@ -183,15 +215,26 @@ class Listing extends Field {
 	}
 
 	/**
-	 * Create an instance of the controller being listed
+	 * Create an instance of the controller being listed, writing it to the instance
+	 * controller variable
 	 *
-	 * @return Bkwld\Decoy\Controller\Base
+	 * @return Bkwld\Decoy\Controllers\Base
 	 */
 	protected function createController() {
-		if (empty($this->controller)) return $this->createControllerFromModel();
-		else if (is_string($this->controller)) return new $this->controller;
-		else if (is_a($this->controller, 'Bkwld\Decoy\Controller\Base')) return $this->controller;
-		throw new Exception('Could not create a controller instance');
+
+		// If undefined, create from model
+		if (empty($this->controller)) $this->controller = $this->createControllerFromModel();
+
+		// If a string instantiate it
+		else if (is_string($this->controller)) $this->controller = new $this->controller;
+
+		// Validate we have a correct one
+		if (!is_a($this->controller, 'Bkwld\Decoy\Controllers\Base')) {
+			throw new Exception('Could not create a controller instance');
+		}
+
+		// Return it
+		return $this->controller;
 	}
 
 	/**
@@ -212,6 +255,32 @@ class Listing extends Field {
 	 */
 	protected function controllerNameOfModel($model) {
 		return 'Admin\\'.Str::plural($model).'Controller';
+	}
+
+
+	/**
+	 * Make the create button for control group listing
+	 *
+	 * @return string HTML
+	 */
+	protected function makeCreateBtn() {
+		return '<div class="btn-group">
+			<a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
+			<i class="icon-plus icon-white"></i> New</a>
+			</div>';
+	}
+
+	/**
+	 * Get the create URL for this controller
+	 *
+	 * @return string URL
+	 */
+	protected function getCreateURL() {
+		$controller = $this->createController();
+		$controller_name = get_class($controller);
+		return $controller->isChildInManyToMany() ? 
+			DecoyURL::action($controller_name.'@create') : 
+			DecoyURL::relative('create', null, $controller_name);
 	}
 
 	/**
@@ -278,10 +347,21 @@ class Listing extends Field {
 	 * @return int The amount
 	 */
 	protected function perPage() {
+
+		// If the user specified a limit, use it
 		if ($this->take) return $this->take;
-		$controller = $this->controllerNameOfModel($this->name);
-		if ($this->layout == 'sidebar') return $controller::$per_page_sidebar;
-		else return Input::get('count', $controller::$per_page);
+		
+		// If a sidebar, use the default
+		else if ($this->layout == 'sidebar') {
+			$controller_name = $this->controllerNameOfModel($this->name);
+			return $controller_name::$per_page_sidebar;
+		}
+
+		// Else, use the controller's pagination logic
+		else {
+			$controller = $this->createController();
+			return $controller->perPage();
+		}
 	}
 
 }
