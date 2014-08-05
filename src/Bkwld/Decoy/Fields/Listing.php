@@ -246,6 +246,7 @@ class Listing extends Field {
 			'title'             => $this->label_text,
 			'description'       => $this->controller->description(),
 			'columns'           => $this->getColumns($this->controller),
+			'search'            => $this->controller->search(),
 			'auto_link'         => 'first',
 			'convert_dates'     => 'date',
 			'layout'            => $this->layout,

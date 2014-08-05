@@ -249,6 +249,14 @@ class Base extends Controller {
 	}
 	
 	/**
+	 * Get the search settings for a controller
+	 * @return array
+	 */
+	public function search() {
+		return $this->search;
+	}
+
+	/**
 	 * Get the directory for the detail views.  It's based off the controller name.
 	 * This is basically a conversion to snake case from studyly case
 	 * @param string $class ex: 'Admin\NewsController'
@@ -376,56 +384,23 @@ class Base extends Controller {
 	// Listing page
 	public function index() {
 		
-		// Run the query
-		$search = new Search();
-		$results = $search->apply(Model::ordered(), $this->search)->paginate($this->perPage());
-		$count = $results->getTotal();
-		
-		// Render the view.  We can assume that Model has an ordered() function
-		// because it's defined on Decoy's Base_Model
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->title,
-			'controller'       => $this->controller,
-			'description'      => $this->description,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->columns,
-			'search'           => $this->search,
-		));
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
-	}
-	
-	// List page when the view is for a child in a related sense
-	public function indexChild() {
+		// Open up the query. We can assume that Model has an ordered() function
+		// because it's defined on Decoy's Base_Model.
+		$query = $this->parent ? $this->parentRelation()->ordered() : Model::ordered();
 
-		// Make sure the parent is valid
-		if (!$this->parent) return App::abort(404);
-			
-		// Get the list of rows
-		$query = $this->parentRelation()->ordered();
-
-		// Run the query
+		// Run the query. 
 		$search = new Search();
 		$results = $search->apply($query, $this->search)->paginate($this->perPage());
-		$count = $results->getTotal();
-
-		// Render the view
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->title,
-			'controller'       => $this->controller,
-			'description'      => $this->description,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->columns,
-			'parent_id'        => $this->parent->getKey(),
-			'search'           => $this->search,
-		));
+		
+		// Render the view using the `listing` builder.
+		$listing = Former::listing($this->model)
+			->controller($this)
+			->items($results);
+		if ($this->parent) $listing->parent($this->parent);
+		$this->layout->content = $listing;
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
-		
 	}
 	
 	/**
