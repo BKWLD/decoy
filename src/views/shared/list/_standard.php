@@ -1,5 +1,3 @@
-<?// This partial is populated through the help of a view composer as well as a special helper ?>
-
 <div class="standard-list" 
 	data-js-view="standard-list" 
 	data-controller-route="<?=URL::to(DecoyURL::action($controller))?>" 
