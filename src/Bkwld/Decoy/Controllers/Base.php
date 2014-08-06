@@ -308,13 +308,6 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Return controller
-	 * 
-	 * @return string ex: Admin\SlidesController
-	 */
-	public function controller() { return $this->controller; }
-	
-	/**
 	 * Give this controller a parent model instance.  For instance, this makes the index
 	 * view a listing of just the children of the parent.
 	 *
@@ -352,20 +345,6 @@ class Base extends Controller {
 		// Make chainable
 		return $this;
 	}
-
-	/**
-	 * Return parent model
-	 * 
-	 * @return string ex: "Article"
-	 */
-	public function parentModel() { return $this->parent_model; }
-
-	/**
-	 * Get parent controller
-	 * 
-	 * @return string ex: Admin\ArticlesController
-	 */
-	public function parentController() { return $this->parent_controller; }
 	
 	/**
 	 * Determine whether the relationship between the parent to this controller
