@@ -179,8 +179,16 @@ class Listing extends Field {
 	 * @return Field This field
 	 */
 	public function layout($layout) {
+
+		// Save the layout
 		if ($layout == 'control group') $layout = 'form'; // Backwards compat
 		if (in_array($layout, array('full', 'sidebar', 'form'))) $this->layout = $layout;
+
+		// Make the default width of form layout a span9.  Because typically the form
+		// layout is only used on full width forms
+		if ($layout == 'form') $this->addClass('span9');
+
+		// Chain
 		return $this;
 	}
 
