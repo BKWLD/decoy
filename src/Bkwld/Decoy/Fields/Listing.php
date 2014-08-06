@@ -411,7 +411,7 @@ class Listing extends Field {
 		// If a sidebar, use the default
 		else if ($this->layout == 'sidebar') {
 			$name = $this->controller_name;
-			return $name::$per_page_sidebar;
+			return $name::$per_sidebar;
 		}
 
 		// Else, use the controller's pagination logic
