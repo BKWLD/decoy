@@ -160,31 +160,11 @@ The related data gets passed to the footer partial and rendered automatically.  
 
 ### Embeded / inline relationship list
 
-Example:
+A standard list (like seen on index views) can be embedded in form like:
 
-	<?= !empty($slides) ? View::make('decoy::shared.list._control_group', $slides) : null?>
+	!= Former::listing('Faqs')->parent($item)->layout('form')->take(100)
 
-In this example, `$slides` was populated by this, in the controller:
-
-	// Edit form
-	public function edit($id) {
-		parent::edit($id);
-		$item = \Bkwld\Decoy\Controllers\Model::find($id);
-
-		// Get related data
-		$related = $item->caseStudySlides()->ordered();
-		$this->layout->content->slides = array(
-			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::$per_sidebar),
-		);
-	}
-
-So, you pass it the standard array that listing views require.  Here's a HAML example:
-
-	-if(isset($item))
-		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
-	-else
-		!= Former::note('Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+See the documentation under Form Fields for the full API of `listing()`.
 
 
 ### Data for Former select, radio, and checkbox
