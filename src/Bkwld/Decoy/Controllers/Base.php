@@ -385,6 +385,9 @@ class Base extends Controller {
 	
 	// Listing page
 	public function index() {
+
+		// Look for overriden views
+		$this->overrideViews();
 		
 		// Open up the query. We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model.
@@ -407,6 +410,9 @@ class Base extends Controller {
 	 * Create form
 	 */
 	public function create() {
+
+		// Look for overriden views
+		$this->overrideViews();
 
 		// Pass validation through
 		Former::withRules(Model::$rules);
@@ -469,6 +475,9 @@ class Base extends Controller {
 
 		// Get the work
 		if (!($item = Model::find($id))) return App::abort(404);
+
+		// Look for overriden views
+		$this->overrideViews();
 
 		// Populate form
 		Former::populate($item);
@@ -825,5 +834,17 @@ class Base extends Controller {
 			return $this->parent->{$this->parent_to_self}();
 		else return false;
 	}
-	
+
+	/**
+	 * Tell Laravel to look for view files within the app admin views so that,
+	 * on a controller-level basis, the app can customize elements of an admin
+	 * view through it's partials.
+	 */
+	protected function overrideViews() {
+		app('view.finder')->prependNamespace('decoy', app_path()
+			.'/views/admin/'
+			.Str::snake($this->controllerName())
+		);
+	}
+
 }
