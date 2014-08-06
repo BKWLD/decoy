@@ -1,7 +1,7 @@
 <?
 /**
  * Render a table of model rows.  Required variables:
- * - iterator
+ * - listing
  * - columns
  * - controller
  */

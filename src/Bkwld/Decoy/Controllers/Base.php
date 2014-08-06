@@ -4,11 +4,12 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
-use Bkwld\Decoy\Routing\Ancestry;
-use Bkwld\Decoy\Routing\Wildcard;
+use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Position;
+use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
+use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Config;
 use Croppa;
@@ -51,12 +52,50 @@ class Base extends Controller {
 	protected $show_view;   // i.e. admin.news.edit
 	protected $search;      // i.e. An array describing the fields to search upon
 	
-	// More of the same, but these are just involved in relationships
-	protected $parent_model;      // i.e. Photo
-	protected $parent_controller; // i.e. admin.photos
-	protected $parent_to_self;    // i.e. photos
-	protected $self_to_parent;    // i.e. post
+	//---------------------------------------------------------------------------
+	// Properties that define relationships
+	//---------------------------------------------------------------------------
+
+	/**
+	 * An instance of the model that is the parent of the controller that is handling
+	 * the request
+	 * 
+	 * @var Illuminate\Database\Eloquent\Model
+	 */
+	protected $parent;
 	
+	/**
+	 * Model class name i.e. Photo
+	 * 
+	 * @var string
+	 */
+	protected $parent_model;
+	
+	/**
+	 * Controller class name i.e. Admin\PhotosController
+	 * 
+	 * @var sting
+	 */
+	protected $parent_controller;
+	
+	/**
+	 * Relationship name on parents i.e. photos
+	 * 
+	 * @var string
+	 */
+	protected $parent_to_self;
+	
+	/**
+	 * Relationship name on this controller's model to the parent i.e. post
+	 * 
+	 * @var string
+	 */
+	protected $self_to_parent;
+	
+	//---------------------------------------------------------------------------
+	// Constructing
+	//---------------------------------------------------------------------------
+
 	// Shared layout for admin view, set in the constructor
 	public $layout;
 	protected function setupLayout() {
@@ -80,12 +119,10 @@ class Base extends Controller {
 	 * Note, not all dependencies are currently injected
 	 * 
 	 * @param Config $config
-	 * @param Ancestry $ancestry
 	 * @param Illuminate\Routing\Router $route
 	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
 	 */
 	private $config;
-	private $ancestry;
 	private $route;
 	private $url;
 	public function injectDependencies($dependencies = null) {
@@ -93,7 +130,6 @@ class Base extends Controller {
 		// Set manually passed dependencies
 		if ($dependencies) {
 			$this->config = $dependencies['config'];
-			$this->ancestry = $dependencies['ancestry'];
 			$this->route = $dependencies['route'];
 			$this->url = $dependencies['url'];
 			return true;
@@ -104,7 +140,6 @@ class Base extends Controller {
 			$this->config = App::make('config');
 			$this->url = App::make('decoy.url');
 			$request = App::make('request');
-			$this->ancestry = new Ancestry($this, App::make('decoy.wildcard'), $request, $this->url);
 			$this->route = App::make('router');
 			return true;
 		}
@@ -147,44 +182,16 @@ class Base extends Controller {
 		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
 			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
 		}
-		
-		// The rest of the logic has to do with ancestry.  If we're on a URL that was registered
-		// explicitly in the router, we assume there is no ancestry at play.  The ancestry class
-		// assumes that the route was resolved using the Decoy wildcard router
-		if ($this->route->currentRouteAction()) return;
-		
-		// If the current route has a parent, discover what it is
-		if (empty($this->parent_controller) && $this->ancestry->isChildRoute()) {
-			$this->parent_controller = $this->ancestry->deduceParentController();
+
+		// If the input contains info on the parent, immediately instantiate
+		// the parent instance.  These are populated by some AJAX calls like autocomplete
+		// on a many to many and the attach method.
+		if (($parent_id = Input::get('parent_id'))
+			&& ($parent_controller = Input::get('parent_controller'))) {
+			$parent_model_class = $this->model($parent_controller);
+			$this->parent($parent_model_class::findOrFail($parent_id));
 		}
 
-		// If a parent controller was found, proceed to find the parent model, parent
-		// relationship, and child relationship
-		if (!empty($this->parent_controller)) {
-
-			// Determine it's model, so we can call static methods on that model
-			if (empty($this->parent_model)) {
-				$this->parent_model = $this->model($this->parent_controller);
-			}
-
-			// Figure out what the relationship function to the child (this controller's
-			// model) on the parent model
-			if (empty($this->parent_to_self) && $this->parent_model) {
-				$this->parent_to_self = $this->ancestry->deduceParentRelationship();
-			}
-
-			// If the parent is the same as this controller, assume that it's a many-to-many-to-self
-			// relationship.  Thus, expect a relationship method to be defined on the model
-			// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
-			if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
-				$this->self_to_parent = $this->parent_to_self.'AsChild';
-
-			// Figure out the child relationship name, which is typically named the same
-			// as the parent model
-			} else if (empty($this->self_to_parent) && $this->parent_model) {
-				$this->self_to_parent = $this->ancestry->deduceChildRelationship();
-			}
-		}
 	}
 	
 	/**
@@ -234,7 +241,23 @@ class Base extends Controller {
 	public function description() {
 		return $this->description;
 	}
+
+	/**
+	 * Get the columns for a controller
+	 * @return array
+	 */
+	public function columns() {
+		return $this->columns;
+	}
 	
+	/**
+	 * Get the search settings for a controller
+	 * @return array
+	 */
+	public function search() {
+		return $this->search;
+	}
+
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.
 	 * This is basically a conversion to snake case from studyly case
@@ -263,7 +286,7 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Figure out the model for a class
+	 * Figure out the model for a controller class
 	 * @param string $class ex: "Admin\SlidesController"
 	 * @return string ex: "Slide"
 	 */
@@ -285,37 +308,75 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Return parent model
-	 * @return string ex: "Article"
-	 */
-	public function parentModel() { return $this->parent_model; }
-	
-	/**
 	 * Return controller
+	 * 
 	 * @return string ex: Admin\SlidesController
 	 */
 	public function controller() { return $this->controller; }
 	
 	/**
+	 * Give this controller a parent model instance.  For instance, this makes the index
+	 * view a listing of just the children of the parent.
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $parent
+	 */
+	public function parent($parent) {
+
+		// Save out the passed reference
+		$this->parent = $parent;
+
+		// Save out sub properties that I hope to deprecate
+		$this->parent_model = get_class($this->parent);
+		$this->parent_controller = 'Admin\\'.Str::plural($this->parent_model).'Controller';
+
+		// Figure out what the relationship function to the child (this controller's
+		// model) on the parent model .  It will be the plural version of this model's
+		// name.
+		$this->parent_to_self = Str::plural(lcfirst($this->model));
+
+		// If the parent is the same as this controller, assume that it's a many-to-many-to-self
+		// relationship.  Thus, expect a relationship method to be defined on the model
+		// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+		if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
+			$this->self_to_parent = $this->parent_to_self.'AsChild';
+
+		// Save out to self to parent relationship.  It will be singular if the relationship
+		// is a many to many.
+		} else {
+			$relationship = lcfirst(get_class($this->parent));
+			$this->self_to_parent = $this->isChildInManyToMany()? 
+				Str::plural($relationship): 
+				$relationship;
+		}
+
+		// Make chainable
+		return $this;
+	}
+
+	/**
+	 * Return parent model
+	 * 
+	 * @return string ex: "Article"
+	 */
+	public function parentModel() { return $this->parent_model; }
+
+	/**
 	 * Get parent controller
+	 * 
 	 * @return string ex: Admin\ArticlesController
 	 */
 	public function parentController() { return $this->parent_controller; }
 	
 	/**
-	 * Get $self_to_parent relationship name
-	 * @return string ex: article
-	 */
-	public function selfToParent() {
-		return $this->self_to_parent;
-	}
-	
-	/**
-	 * Pass along this request on ancestry, so we can keep that private for now
+	 * Determine whether the relationship between the parent to this controller
+	 * is a many to many
+	 * 
 	 * @return boolean
 	 */
 	public function isChildInManyToMany() {
-		return $this->ancestry->isChildInManyToMany();
+		return is_a($this->parentRelation(), 
+			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
+
 	}
 	
 	//---------------------------------------------------------------------------
@@ -325,68 +386,27 @@ class Base extends Controller {
 	// Listing page
 	public function index() {
 		
-		// Run the query
-		$search = new Search();
-		$results = $search->apply(Model::ordered(), $this->search)->paginate($this->perPage());
-		$count = $results->getTotal();
-		
-		// Render the view.  We can assume that Model has an ordered() function
-		// because it's defined on Decoy's Base_Model
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->title,
-			'controller'       => $this->controller,
-			'description'      => $this->description,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->columns,
-			'search'           => $this->search,
-		));
-		
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
-	}
-	
-	// List page when the view is for a child in a related sense
-	public function indexChild() {
+		// Open up the query. We can assume that Model has an ordered() function
+		// because it's defined on Decoy's Base_Model.
+		$query = $this->parent ? $this->parentRelation()->ordered() : Model::ordered();
 
-		// Make sure the parent is valid
-		$parent_id = $this->ancestry->parentId();
-		if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-			
-		// Get the list of rows
-		$query = $parent->{$this->parent_to_self}()->ordered();
-
-		// Run the query
+		// Run the query. 
 		$search = new Search();
 		$results = $search->apply($query, $this->search)->paginate($this->perPage());
-		$count = $results->getTotal();
-
-		// Render the view
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->title,
-			'controller'       => $this->controller,
-			'description'      => $this->description,
-			'count'            => $count,
-			'listing'          => $results,
-			'columns'          => $this->columns,
-			'parent_id'        => $parent_id,
-			'search'           => $this->search,
-		));
+		
+		// Render the view using the `listing` builder.
+		$listing = Listing::createFromController($this, $results);
+		if ($this->parent) $listing->parent($this->parent);
+		$this->layout->content = $listing;
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
-		
 	}
 	
 	/**
 	 * Create form
 	 */
 	public function create() {
-		
-		// If there is a parent, make sure it's id is valid
-		if ($parent_id = $this->ancestry->parentId()) {
-			if (!($parent = self::parentFind($parent_id))) return App::abort(404);
-		}
 
 		// Pass validation through
 		Former::withRules(Model::$rules);
@@ -404,7 +424,7 @@ class Base extends Controller {
 		));
 		
 		// Pass parent_id
-		if (isset($parent_id)) $this->layout->content->parent_id = $parent_id;
+		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
@@ -462,13 +482,17 @@ class Base extends Controller {
 			'item'             => $item,
 			'crops'            => (object) Model::$crops,
 		));
-		
-		// Figure out the parent_id
-		if ($this->self_to_parent) {
-			$foreign_key = $item->{$this->self_to_parent}()->getForeignKey();
-			$this->layout->content->parent_id = $item->{$foreign_key};
+
+		// If the subclass implements the sidebar no-op, use it's response for
+		// the related data.
+		if ($listings = $this->sidebar($item)) {
+			$sidebar = new Sidebar($listings, $item);
+			$this->layout->content->related = $sidebar->render();
 		}
 		
+		// Figure out the parent_id
+		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
+
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
@@ -544,16 +568,11 @@ class Base extends Controller {
 		// in the pivot table for the parent
 		if ($this->isChildInManyToMany()) {
 			
-			// Require parent_id
-			if (!Input::has('parent_id')) throw new Exception('You must pass the parent id');
-			$parent_id = Input::get('parent_id');
-			$parent = $this->parentFind($parent_id);
-			
 			// See if there is an exact match on what's been entered.  This is useful for many
 			// to manys with tags because we want to know if the reason that autocomplete
 			// returns no results on an exact match that is already attached is because it
 			// already exists.  Otherwise, it would allow the user to create the tag
-			if ($parent->{$this->parent_to_self}()
+			if ($this->parentRelation()
 				->where(Model::$title_column, '=', Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
@@ -562,7 +581,7 @@ class Base extends Controller {
 			// Get the ids of already attached rows through the relationship function.  There
 			// are ways to do just in SQL but then we lose the ability for the relationship
 			// function to apply conditions, like is done in polymoprhic relationships.
-			$siblings = $parent->{$this->parent_to_self}()->get();
+			$siblings = $this->parentRelation()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
@@ -582,12 +601,11 @@ class Base extends Controller {
 	public function attach($id) {
 		
 		// Require there to be a parent id and a valid id for the resource
-		if (!Input::has('parent_id')) return Response::json(null, 404);
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
 		$this->fireEvent('attaching', array($item));
-		$item->{$this->self_to_parent}()->attach(Input::get('parent_id'));
+		$item->{$this->self_to_parent}()->attach($this->parent);
 		$this->fireEvent('attached', array($item));
 		
 		// Return the response
@@ -602,14 +620,10 @@ class Base extends Controller {
 		// Support removing many ids at once
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 		
-		// Get the parent id
-		$parent_id = Input::get('parent_id');
-		
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
-		$item = $this->parentFind($parent_id);
-		$this->fireEvent('removing', array($item, $ids));
-		$item->{$this->parent_to_self}()->detach($ids);
-		$this->fireEvent('removed', array($item, $ids));
+		$this->fireEvent('removing', array($this->parent, $ids));
+		$this->parentRelation()->detach($ids);
+		$this->fireEvent('removed', array($this->parent, $ids));
 		
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
@@ -722,12 +736,6 @@ class Base extends Controller {
 		}
 	}
 	
-	// Run the find method on the parent model
-	protected function parentFind($parent_id) {
-		if (empty($this->parent_model)) return false;
-		return call_user_func($this->parent_model.'::find', $parent_id);
-	}
-	
 	// Format the results of a query in the format needed for the autocomplete repsonses
 	public function formatAutocompleteResponse($results) {
 		$output = array();
@@ -761,7 +769,15 @@ class Base extends Controller {
 		return $per_page;
 	}
 
-	// Get all the foreign keys and values on the relationship with the parent
+	/**
+	 * A no-op that can be used to generate the sidebar on an edit page without subclassing
+	 * the edit() method.
+	 * @param  Illuminate\Database\Eloquent\Model $item The model instance the edit page
+	 *         is currently acting upon.
+	 * @return Bkwld\Decoy\Fields\Listing | string
+	 */
+	protected function sidebar($item) {}
+
 	/**
 	 * Get all the foreign keys and values on the relationship with the parent
 	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
@@ -804,11 +820,10 @@ class Base extends Controller {
 	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
 	 */
 	private function parentRelation() {
-		if ($this->parent_to_self
-			&& ($parent_id = $this->ancestry->parentId()) 
-			&& ($parent = self::parentFind($parent_id))) {
-			return $parent->{$this->parent_to_self}();
-		} else return false;
+		if ($this->parent
+			&& method_exists($this->parent, $this->parent_to_self)) 
+			return $this->parent->{$this->parent_to_self}();
+		else return false;
 	}
 	
 }

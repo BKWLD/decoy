@@ -5,7 +5,7 @@ This partial is used to generate the last part of the a form
 with a related data sidebar.  It expects:
 	
 	- controller : A string depicting the controller.  This is used in
-		generating links.  I.e. 'admin.news'
+		generating links.  I.e. 'Admin\PostsController'
 	
 	- item (optional) : The data that is being edited
 
@@ -21,7 +21,7 @@ with a related data sidebar.  It expects:
 		<?
 		// If there is related data, loop through each list of related data
 		// and display the list
-		if (!empty($related)) {
+		if (!empty($related) && is_array($related)) {
 			foreach($related as $list) {
 				
 				// If list is an array, display it using standard list
@@ -39,7 +39,7 @@ with a related data sidebar.  It expects:
 				// Otherwise, treat $list as straight HTML that should be echoed
 				} else echo $list;
 			}	
-		}
+		} else if (!empty($related)) echo $related;
 		?>
 
 		<? if (empty($item)): ?>

@@ -126,63 +126,18 @@ The following properties are only relevant if a controller is a parent or child 
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
 
-### Setting up relation data
+### Setting up relational data
 
-To pass the data needed to show related data on an edit page, you need to override the edit() method in your controller.  For instance:
+To pass the data needed to show related data on an edit page, you need to override the sidebar() no-op method in your controller.  Passing it instances of `Former::listing`.  For instance:
 
-	class PostsController extends BaseController {
-		public function edit($id) {
-
-			// Execute standard logic
-			parent::edit($id);
-			$item = \Post::findOrFail($id);
-
-			// Setup sidebar
-			$this->layout->content->related = array(
-
-				// Related projects
-				array(
-					'controller'        => 'Admin\PostImages',
-					'listing'           => $item->postImages()->ordered()->paginate(self::$per_sidebar),
-				),
-
-			);
-		}
+	protected function sidebar($item) {
+		return array(
+			Former::listing('Block')->take(30),
+			Former::listing('Contributor')->take(30),
+		);
 	}
 
-The related property is a specially named one.  The `decoy::shared.list.form_with_related._footer` partial looks for this and iterates through it, generating `decoy::shared.list._standard` partials with the data you pass in each element of the related array.
-
-A weird use case is one where a model relates to itself.  Like a news post that has related projects.  You would set that up as follows.  Note, this assumes that you've named the relationships on your model as described in the Models section of the README under "many to many to self".
-
-	class PostsController extends BaseController {
-
-		// Edit
-		public function edit($id) {
-
-			// Execute standard logic
-			parent::edit($id);
-			$item = \Post::findOrFail($id);
-
-			// Setup sidebar
-			$this->layout->content->related = array(
-
-				// Related projects
-				array(
-					'title'             => 'Related',
-					'controller'        => $this->controller,
-					'listing'           => $item->posts()->ordered()->paginate(self::$per_sidebar),
-					'parent_controller' => $this->controller, // Can't tell automatically cause of relatinship to self
-					'many_to_many'      => true, // Can't tell automatically cause of relatinship to self
-				),
-
-			);
-		}
-
-	}
-
-Another use case is polymorphic relationships.  You may need to hard code the `SELF_TO_PARENT` property on the controller if it can't be formed by concatenating the model name with "able".  For instance, the `Slide` model works nicely, it's polymorphic relationship to it's parent can become `slideable`.  But the `Tag` model should be related by `Taggable` but Decoy is looking for `Tagable`.
-
-
+See the "Form fields" section of this README for more info in it's API.
 
 ## Views
 
@@ -205,31 +160,11 @@ The related data gets passed to the footer partial and rendered automatically.  
 
 ### Embeded / inline relationship list
 
-Example:
+A standard list (like seen on index views) can be embedded in form like:
 
-	<?= !empty($slides) ? View::make('decoy::shared.list._control_group', $slides) : null?>
+	!= Former::listing('Faqs')->parent($item)->layout('form')->take(100)
 
-In this example, `$slides` was populated by this, in the controller:
-
-	// Edit form
-	public function edit($id) {
-		parent::edit($id);
-		$item = \Bkwld\Decoy\Controllers\Model::find($id);
-
-		// Get related data
-		$related = $item->caseStudySlides()->ordered();
-		$this->layout->content->slides = array(
-			'controller'  => 'Admin\CaseStudySlidesController',
-			'listing'     => $related->paginate(self::$per_sidebar),
-		);
-	}
-
-So, you pass it the standard array that listing views require.  Here's a HAML example:
-
-	-if(isset($item))
-		!= View::make('decoy::shared.list._control_group', array( 'controller' => 'Admin\DatesController', 'listing' => $item->dates()->ordered()->paginate(10), ))
-	-else
-		!= Former::note('Events', '<i class="icon-info-sign"></i> You must create the <b>Page</b> before you can add <b>Events</b>.')
+See the documentation under Form Fields for the full API of `listing()`.
 
 
 ### Data for Former select, radio, and checkbox
@@ -459,3 +394,21 @@ The following additional fields come with Decoy.  They are implemented through F
 	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
 
 			!= Former::manyToManyChecklist('hubs')->item($item)->scope(function($query) use ($product) { return $query->where('product_id', '=', $product->id); })
+
+
+- `Former::listing()`
+
+	- Creates an table of model instances like shown in Decoy's index view.  The `name` for the field should be the model class that is being rendered.  Like `Article`.
+	- `controller()` specifies the controller name if it can't be automatically determined.  You may also pass it an instance of a controller class.
+	- `items()` stores a collection of model instances to display in the list.  This is optional, `listing()` will try and make a query using the model name to form a query.
+	- `layout()` allows you to specify the layout.  This is automatically set when subclassing the base controller's `sidebar` no-op.
+		- `full` - A full width view like shown on Decoy's index view.
+		- `sidebar` - A narrow view like shown in an edit view's related column.
+		- `form` - A full width view designed to be show in a horizontal form.
+	- `parent()` - Pass an instance of the field being edited if this listing is meant to show children of the parent.  Like in the related sidebar on the edit page.  This is automatically set when subclassing the base controller's `sidebar` no-op.
+	- `take()` - A integer; how many rows to display.
+	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
+
+			!= Former::listing('Author')->take(30)->layout('form')->parent($item)
+
+
