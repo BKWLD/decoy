@@ -104,6 +104,9 @@
 	tr img {
 		border: 1px solid $grey-border;
 		@include box-sizing(border-box);
+
+		// Pushes subsequent text off the edge of the image, usually a thumbnail
+		margin-right: 5px;
 	}
 	
 	// Make gravatar images a good size (for the admins view)
