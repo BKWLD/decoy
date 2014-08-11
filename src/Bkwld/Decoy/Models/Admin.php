@@ -4,6 +4,7 @@
 use App;
 use Config;
 use DB;
+use DecoyURL;
 use HTML;
 use Input;
 use Mail;
