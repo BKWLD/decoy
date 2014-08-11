@@ -64,10 +64,16 @@ class Account extends Base {
 			Sentry::getThrottleProvider()->enable();
 			
 			// Attempt to login
-			Sentry::authenticate(array(
+			$user = Sentry::authenticate(array(
 				'email' => Input::get('email'),
 				'password' => Input::get('password'),
 			), Input::get('is_remember') == 1);
+			
+			// Check if they are banned. Sentry's authenticate SHOULD do this but isn't.
+			$throttle = Sentry::findThrottlerByUserId($user->getId());
+			if($banned = $throttle->isBanned()) {
+				return $this->loginError('You have been banned.');
+			}
 
 			// Login must have succeeded
 			return Redirect::to(Session::get('login_redirect', URL::current()));
@@ -81,6 +87,8 @@ class Account extends Base {
 			return $this->loginError('Those credentials could not be found.');
 		} catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e) {
 			return $this->loginError('Your ability to login has been suspended for '.Config::get('cartalyst/sentry::sentry.throttling.suspension_time').' minutes.');
+		} catch (Cartalyst\Sentry\Throttling\UserBannedException $e) {
+			return $this->loginError('You have been banned.');
 		
 		// Handle other errrors
 		} catch (Exception $e) {			
