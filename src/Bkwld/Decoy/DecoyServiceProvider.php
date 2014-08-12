@@ -66,9 +66,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
 
-		// Use Decoy's subclass of the Sentry user class
-		Config::set('cartalyst/sentry::users.model', 'Bkwld\Decoy\Auth\SentryUser');
-
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
@@ -117,10 +114,26 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Build the auth instance
 		$this->app->singleton('decoy.auth', function($app) {
+
+			// Build an instance of the specified auth class if it's a valid class path
 			$auth_class = $app->make('config')->get('decoy::auth_class');
 			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
 			$instance = new $auth_class;
 			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
+
+			// If using Sentry, apply customizations.  Do this here so that requests that
+			// aren't handled by Decoy (like the requireDecoyAuthUntilLive() one) will benefit
+			// from the customizations.
+			if ($auth_class == '\Bkwld\Decoy\Auth\Sentry') {
+
+				// Disable the checkPersistCode() function when not on a live/prod site
+				$app->make('config')->set(
+					'cartalyst/sentry::users.model', 
+					'Bkwld\Decoy\Auth\SentryUser'
+				);
+			}
+			
+			// Return the auth class instance
 			return $instance;
 		});
 		
