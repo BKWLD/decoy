@@ -15,7 +15,7 @@
 - A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace `{branch}` with the latest versioned-branch):
 
 	```bash
-	git log {branch}..master --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative 
+	git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master
 	```
 
 
