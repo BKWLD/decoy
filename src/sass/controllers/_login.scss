@@ -24,6 +24,9 @@ body.login.index {
 				max-width: 840px;
 				position: relative;
 				top: -5em;
+				@media (max-width: $break-small) {
+					top: 0;
+				}
 			}
 		}	
 	}
