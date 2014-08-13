@@ -24,6 +24,10 @@
 		position: relative;
 		text-align: right;
 		margin-right: 88px; // Compensate for the submit button in centering
+		@media (max-width: $break-small) {
+			text-align: initial;
+			margin-right: 0px;
+		}
 		
 		// Center the labels on the left
 		.intro {
@@ -55,6 +59,13 @@
 			position: absolute;
 			bottom: 8px;
 			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+			@media (max-width: $break-small) {
+				position: relative;
+				bottom: 0px;
+				right: 0;
+				left: 0;
+				width: 100%;
+			}
 		}
 		
 		// Make all the inputs the same size
@@ -63,12 +74,30 @@
 			@include box-sizing(border-box);
 			width: $width;
 			height: 30px;
+			@media (max-width: $break-small) {
+				width: 100%;
+				margin: 2px 2px !important;
+			}
 		}
 		input.date {width: $width - 27px; }
 		
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
 			margin: 0 2px;
+		}
+
+		// mobile date picker input
+		@media (max-width: $break-small) {
+			.input-append.input.date {
+				width: 100%;
+				margin: 0;
+				.add-on {
+					margin-top: 2px;
+				}
+			}
+			.input.date {
+				width: 91.5%;
+			}
 		}
 	}
 }
