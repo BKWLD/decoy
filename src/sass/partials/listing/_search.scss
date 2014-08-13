@@ -57,9 +57,6 @@
 			padding: 0;
 			@media (max-width: $break-search) {
 				position: relative;
-				width: 42%;
-				left: 30px;
-				@include border-radius(5px);
 			}
 		}
 		
@@ -91,7 +88,7 @@
 		input.date {
 			width: $width - 27px;
 			@media (max-width: $break-search) {
-				width: 100%;
+				width: 85.5%;
 			}
 		}
 		
@@ -100,6 +97,18 @@
 			margin: 0 2px;
 			@media (max-width: $break-search) {
 				margin: 2px 0;
+			}
+		}
+		.comparisons {
+			@media (max-width: $break-search) {
+				width: 48%;
+				margin-right: 1%;
+			}
+		}
+		.input-field {
+			@media (max-width: $break-search) {
+				width: 50%;
+				margin-left: 1%;
 			}
 		}
 
