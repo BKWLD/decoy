@@ -39,7 +39,13 @@
 		}
 		 
 		// Line spacing
-		.condition { margin: 5px; }
+		.condition { 
+			margin: 5px;
+			@media (max-width: $break-search) {
+				width: 80%;
+				position: relative;
+			}
+		}
 		
 		// The labels (label tags and selectors are used by bootstrap)
 		@media (max-width: $bootstrap_nav_break) {
@@ -56,7 +62,9 @@
 			height: $radius*2;
 			padding: 0;
 			@media (max-width: $break-search) {
-				position: relative;
+				position: absolute;
+				right: -18%;
+				top: 26%;
 			}
 		}
 		
@@ -88,7 +96,7 @@
 		input.date {
 			width: $width - 27px;
 			@media (max-width: $break-search) {
-				width: 85.5%;
+				width: 100%;
 			}
 		}
 		
@@ -101,13 +109,13 @@
 		}
 		.comparisons {
 			@media (max-width: $break-search) {
-				width: 48%;
+				width: 46%;
 				margin-right: 1%;
 			}
 		}
 		.input-field {
 			@media (max-width: $break-search) {
-				width: 50%;
+				width: 52%;
 				margin-left: 1%;
 			}
 		}
@@ -118,11 +126,11 @@
 				margin: 0;
 			}
 			.input.date {
-				width: 50%;
+				width: 52%;
 			}
 			.input-append .add-on {
-				position: absolute;
-				right: 1.5% !important;
+				position: relative;
+				right: 25px;
 			}
 		}
 	}
