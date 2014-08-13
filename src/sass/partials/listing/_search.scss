@@ -1,5 +1,6 @@
 // The search interface
 .search {
+	$break-search: 577px;
 	$search-bkgd: darken($light-grey, 3%);
 	$search-shadow: darken($search-bkgd, 5%);
 
@@ -23,8 +24,9 @@
 		display: inline-block;
 		position: relative;
 		text-align: right;
+		box-sizing: border-box;
 		margin-right: 88px; // Compensate for the submit button in centering
-		@media (max-width: $break-small) {
+		@media (max-width: $break-search) {
 			text-align: initial;
 			margin-right: 0px;
 		}
@@ -52,6 +54,12 @@
 			width: $radius*2;
 			height: $radius*2;
 			padding: 0;
+			@media (max-width: $break-search) {
+				position: relative;
+				width: 42%;
+				left: 30px;
+				@include border-radius(5px);
+			}
 		}
 		
 		// The search button
@@ -59,7 +67,7 @@
 			position: absolute;
 			bottom: 8px;
 			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
-			@media (max-width: $break-small) {
+			@media (max-width: $break-search) {
 				position: relative;
 				bottom: 0px;
 				right: 0;
@@ -74,12 +82,17 @@
 			@include box-sizing(border-box);
 			width: $width;
 			height: 30px;
-			@media (max-width: $break-small) {
+			@media (max-width: $break-search) {
 				width: 100%;
 				margin: 2px 2px !important;
 			}
 		}
-		input.date {width: $width - 27px; }
+		input.date {
+			width: $width - 27px;
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
+		}
 		
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
@@ -87,16 +100,15 @@
 		}
 
 		// mobile date picker input
-		@media (max-width: $break-small) {
+		@media (max-width: $break-search) {
 			.input-append.input.date {
-				width: 100%;
 				margin: 0;
 				.add-on {
 					margin-top: 2px;
 				}
 			}
 			.input.date {
-				width: 91.5%;
+				width: 50%;
 			}
 		}
 	}
