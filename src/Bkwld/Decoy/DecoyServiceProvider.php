@@ -1,13 +1,13 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
+use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
 use Former\Former;
-use Former\MethodDispatcher;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -52,8 +52,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
 		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
-		// When https://github.com/Anahkiasen/former/pull/278 gets accepted into the master
-		// branch, I can just sub out the MethodDispatcher directly.
+		// When https://github.com/Anahkiasen/former/pull/359 get accepted and tagged, I can
+		// call add() on the existing methodDispatcher().
 		$this->app->singleton('former', function ($app) {
 			return new Former($app, new MethodDispatcher($app, array(
 				'Bkwld\Decoy\Fields\\', Former::FIELDSPACE
