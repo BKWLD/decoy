@@ -1,13 +1,13 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
+use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
 use Former\Former;
-use Former\MethodDispatcher;
 
 class DecoyServiceProvider extends ServiceProvider {
 
