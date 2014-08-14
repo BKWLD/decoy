@@ -7,6 +7,12 @@
   ],
   "dependencies": {
   	"jquery": "~1",
-  	"bootstrap": "~3"
+  	"bootstrap": "~3",
+    "requirejs": "~2",
+    "lodash": "~2",
+    "backbone": "~1",
+    "requirejs-text": "~2",
+    "jquery-hammerjs": "~1",
+    "bkwld": "bkwld/js-library"
   }
 }
