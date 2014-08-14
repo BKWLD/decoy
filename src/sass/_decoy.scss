@@ -11,7 +11,7 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 // variables
 $bootstrap_nav_break: 767px;
 @import "plugins/bootstrap";
-@import "plugins/bootstrap-responsive";
+@import "plugins/bootstrap-theme";
 
 // UI plugins
 @import "plugins/jquery-ui";

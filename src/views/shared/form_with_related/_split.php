@@ -41,4 +41,4 @@ the sidebar for related data on forms that have a related data sidebar.
 </div>
 
 <?// Related data container?>
-<div class="span5 offset1 related">
+<div class="col-md-5 col-md-offset-1 related">
