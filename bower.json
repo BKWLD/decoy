@@ -8,7 +8,7 @@
   ],
   "dependencies": {
     "jquery": "~1",
-    "bootstrap": "~3",
+    "bootstrap-sass-official": "~3",
     "requirejs": "~2",
     "lodash": "~2",
     "backbone": "~1",
