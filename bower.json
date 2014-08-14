@@ -1,0 +1,19 @@
+{
+  "name": "decoy",
+  "version": "4.0.0",
+  "private": true,
+  "main": "",
+  "ignore": [
+    "*"
+  ],
+  "dependencies": {
+    "jquery": "~1",
+    "bootstrap-sass-official": "~3",
+    "requirejs": "~2",
+    "lodash": "~2",
+    "backbone": "~1",
+    "requirejs-text": "~2",
+    "jquery-hammerjs": "~1",
+    "bkwld": "bkwld/js-library"
+  }
+}
