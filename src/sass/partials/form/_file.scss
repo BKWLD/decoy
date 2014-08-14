@@ -1,6 +1,6 @@
 // Chrome currently is screwing up the display of the label
 // when line height is set: http://cl.ly/image/1o2W1V2y0d21
-.control-group input[type="file"] {
+.form-group input[type="file"] {
 	line-height: inherit;
 	position: relative;
 	top: 4px;
@@ -10,7 +10,7 @@
 
 // These are the image upload control groups.  The 10px margins here just seemd to
 // look better than the 5px that is generally the spacing on the help block.
-.control-group.upload {
+.form-group.upload {
 
 	.jcrop-tracker {
 		background: transparent;

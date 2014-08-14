@@ -61,10 +61,10 @@
 		margin-left: 5px;
 		@include opacity(.4);
 		cursor: pointer;
-		.control-group:hover & {
+		.form-group:hover & {
 			@include opacity(.7);
 		}
-		.control-group &:hover {
+		.form-group &:hover {
 			@include opacity(1);
 		}
 	}
@@ -82,13 +82,13 @@
 	border: 1px solid $light-grey;
 	padding: 0px;
 	
-	// This was on the control-group previously
+	// This was on the form-group previously
 	.form-vertical & {
 		margin-top: -8px;
 	}
 
-	// Reset the spacing of the control-group
-	.control-group, &.control-group {
+	// Reset the spacing of the form-group
+	.form-group, &.form-group {
 		margin: 0;
 		padding: 5px;
 	}

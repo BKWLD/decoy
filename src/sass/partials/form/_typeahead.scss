@@ -24,8 +24,8 @@
 		padding: 5px;
 	}
 	
-	// Get rid of the text shadow that control-groups get
-	.control-group:hover & {
+	// Get rid of the text shadow that form-groups get
+	.form-group:hover & {
 		text-shadow: none;
 	}
 }

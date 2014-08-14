@@ -1,5 +1,5 @@
 // Remove the effect of legend + control group, it's adding too much spacing
-legend + .control-group {
+legend + .form-group {
 	margin-top: 0;
 }
 
@@ -20,7 +20,7 @@ i.required {
 // Doning down the help signs
 .help-block .icon-question-sign {
 	@include opacity($light-opacity);
-	.control-group:hover & {
+	.form-group:hover & {
 		@include opacity(1);
 	}
 }
@@ -37,6 +37,7 @@ i.required {
 
 // Distinguish between labels and help blocks
 label {
+	display: block;
 	color: black;
 	font-size: 14.5px;
 }
@@ -45,12 +46,12 @@ label {
 	
 	// Don't make the help block text red.  The actual error message will be in an
 	// inline help block
-	.control-group.error & { 
+	.form-group.error & { 
 		color: #999;
 	}
 	
 	// Darken the text on rollover
-	.control-group:hover & {
+	.form-group:hover & {
 		color: $near-black;
 	}
 }
@@ -62,7 +63,7 @@ label {
 }
 
 // Highlight each control group on rollover
-.control-group {
+.form-group {
 	padding: 8px;
 	margin: -8px;
 	@include border-radius(4px);
@@ -81,7 +82,7 @@ label {
 
 // Show validation error messages (which show up in inline blocks)
 // on their own line.  It looks better
-.control-group.error {
+.form-group.error {
 	.help-inline {
 		display: block;
 		padding: 0;
@@ -91,7 +92,7 @@ label {
 }
 
 // Don't change the color of inputs on validation errors
-.control-group.error {
+.form-group.error {
 	input, textarea, select {
 		color: inherit;
 	}
@@ -120,6 +121,11 @@ label i {
 	+ .help-block {
 		margin-top: 10px;
 	}
+}
+// Fix indentation on checkboxes
+.radio, .checkbox {
+	margin-top: 0;
+	padding-left: 20px;
 }
 
 // Button groups need their bottom margin removed
@@ -158,9 +164,9 @@ legend > .btn-small {
 	margin-bottom: 0;
 }
 
-// The inputless control-group is created with a helper and is for fields
+// The inputless form-group is created with a helper and is for fields
 // that don't have an input .. derr
-.control-group.inputless, .control-group.note {
+.form-group.inputless, .form-group.note {
 	.controls {
 		padding: 5px 0;
 		.help-block {
@@ -220,5 +226,11 @@ form legend:nth-of-type(1n+2) {
 		float: none;
 		margin-right: 6px;
 		margin-top: 0;
+	}
+	.form-control {
+		@include box-shadow(none);
+	}
+	img {
+		padding: 0 10px;
 	}
 }

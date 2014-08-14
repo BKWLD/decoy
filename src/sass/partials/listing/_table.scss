@@ -1,7 +1,7 @@
 .table {
 
-	// If the table is in a control group, don't add bottom margin
-	.control-group & {
+	// If the table is in a form group, don't add bottom margin
+	.form-group & {
 		margin-bottom: 0;
 	}
 
