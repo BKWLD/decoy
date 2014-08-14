@@ -42,8 +42,12 @@
 		.condition { 
 			margin: 5px;
 			@media (max-width: $break-search) {
-				width: 80%;
+				margin: 0px;
+				padding: 5px 20% 5px 5px;
 				position: relative;
+				&:nth-child(even) {
+					background: #e3e3e3;
+				}
 			}
 		}
 		
@@ -63,7 +67,7 @@
 			padding: 0;
 			@media (max-width: $break-search) {
 				position: absolute;
-				right: -18%;
+				right: 3%;
 				top: 26%;
 			}
 		}
@@ -77,7 +81,7 @@
 				position: relative;
 				bottom: 0px;
 				right: 0;
-				left: 0;
+				left: -1px;
 				width: 98%;
 				margin: 5px;
 			}
