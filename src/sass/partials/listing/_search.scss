@@ -1,5 +1,6 @@
 // The search interface
 .search {
+	$break-search: 577px;
 	$search-bkgd: darken($light-grey, 3%);
 	$search-shadow: darken($search-bkgd, 5%);
 
@@ -23,7 +24,13 @@
 		display: inline-block;
 		position: relative;
 		text-align: right;
+		box-sizing: border-box;
 		margin-right: 88px; // Compensate for the submit button in centering
+		@media (max-width: $break-search) {
+			text-align: initial;
+			margin-right: 0px;
+			width: 100%;
+		}
 		
 		// Center the labels on the left
 		.intro {
@@ -32,7 +39,17 @@
 		}
 		 
 		// Line spacing
-		.condition { margin: 5px; }
+		.condition { 
+			margin: 5px;
+			@media (max-width: $break-search) {
+				margin: 0px;
+				padding: 5px 20% 5px 5px;
+				position: relative;
+				&:nth-child(even) {
+					background: #e3e3e3;
+				}
+			}
+		}
 		
 		// The labels (label tags and selectors are used by bootstrap)
 		@media (max-width: $bootstrap_nav_break) {
@@ -48,6 +65,11 @@
 			width: $radius*2;
 			height: $radius*2;
 			padding: 0;
+			@media (max-width: $break-search) {
+				position: absolute;
+				right: 3%;
+				top: 26%;
+			}
 		}
 		
 		// The search button
@@ -55,6 +77,14 @@
 			position: absolute;
 			bottom: 8px;
 			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+			@media (max-width: $break-search) {
+				position: relative;
+				bottom: 0px;
+				right: 0;
+				left: -1px;
+				width: 98%;
+				margin: 5px;
+			}
 		}
 		
 		// Make all the inputs the same size
@@ -63,12 +93,49 @@
 			@include box-sizing(border-box);
 			width: $width;
 			height: 30px;
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
 		}
-		input.date {width: $width - 27px; }
+		input.date {
+			width: $width - 27px;
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
+		}
 		
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
 			margin: 0 2px;
+			@media (max-width: $break-search) {
+				margin: 2px 0;
+			}
+		}
+		.comparisons {
+			@media (max-width: $break-search) {
+				width: 46%;
+				margin-right: 1%;
+			}
+		}
+		.input-field {
+			@media (max-width: $break-search) {
+				width: 52%;
+				margin-left: 1%;
+			}
+		}
+
+		// mobile date picker input
+		@media (max-width: $break-search) {
+			.input-append.input.date {
+				margin: 0;
+			}
+			.input.date {
+				width: 52%;
+			}
+			.input-append .add-on {
+				position: relative;
+				right: 25px;
+			}
 		}
 	}
 }

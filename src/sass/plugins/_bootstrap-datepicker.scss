@@ -18,6 +18,10 @@
   /*.dow {
 		border-top: 1px solid #ddd !important;
 	}*/
+  @media (max-width: 577px) {
+    left: initial !important;
+    right: 14%;
+  }
 
 }
 .datepicker:before {
@@ -30,6 +34,10 @@
   position: absolute;
   top: -7px;
   left: 6px;
+  @media (max-width: 577px) {
+    right: 36px;
+    left: initial;
+  }
 }
 .datepicker:after {
   content: '';
@@ -40,6 +48,10 @@
   position: absolute;
   top: -6px;
   left: 7px;
+  @media (max-width: 577px) {
+    right: 37px;
+    left: initial;
+  }
 }
 .datepicker > div {
   display: none;
