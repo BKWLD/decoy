@@ -2,6 +2,9 @@
   "name": "Decoy",
   "version": "4.0.0",
   "private": true,
+  "ignore": [
+    "*"
+  ],
   "dependencies": {
   	"jquery": "~2",
   	"bootstrap": "~3"
