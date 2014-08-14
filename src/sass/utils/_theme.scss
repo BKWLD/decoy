@@ -5,11 +5,12 @@ $theme-text: white !default;
 $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Navbar
-.navbar-inner {
+.navbar .container {
 
 	// Tell IE to stop doing it's own thing
 	filter: none;
 	-ms-filter: none;
+	padding: 0 15px;
 
 	// Set colors
 	color: $theme-text;
@@ -21,8 +22,8 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 	border-bottom-color: darken($theme-color, 10%);
 	
 	// Open dropdown
-	.nav li.dropdown.open > .dropdown-toggle,
-	.nav li.dropdown.open.active > .dropdown-toggle {
+	.navbar-nav li.dropdown.open > .dropdown-toggle,
+	.navbar-nav li.dropdown.open.active > .dropdown-toggle {
 		color: $theme-text;
 		background: darken($theme-color, 10%);
 		@include background(linear-gradient(top, darken($theme-color, 10%), $theme-color));
@@ -30,16 +31,19 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 	}
 	
 	// Active section
-	.nav > .active > a,
-	.nav > .active > a:hover,
-	.nav > .active > a:focus,
-	.nav li.dropdown.active > .dropdown-toggle {
+	.navbar-nav > .active > a,
+	.navbar-nav > .active > a:hover,
+	.navbar-nav > .active > a:focus,
+	.navbar-nav li.dropdown.active > .dropdown-toggle {
 		color: $theme-text;
 		background: darken($theme-color, 10%);
 	}
-	
+	.navbar-nav li:hover > a {
+		color: $theme-text;
+	}
+
 	// Fix text shadows
-	.brand, .nav > li > a {
+	.navbar-brand, .navbar-nav > li > a {
 		color: rgba($theme-text, .8);
 		@include text-shadow(0 1px 0 darken($theme-color, 20%));
 		&:hover, &:focus {
@@ -48,19 +52,19 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 	}
 	
 	// Carret color
-	.nav li.dropdown > .dropdown-toggle .caret,
-	.nav li.dropdown.active > .dropdown-toggle .caret {
+	.navbar-nav li.dropdown > .dropdown-toggle .caret,
+	.navbar-nav li.dropdown.active > .dropdown-toggle .caret {
 		border-top-color: $theme-text;
 		border-bottom-color: $theme-text;
 		border-top-color: rgba($theme-text, .8);
 		border-bottom-color: rgba($theme-text, .8);
 	}
-	.nav li.dropdown.open.active > .dropdown-toggle .caret,
-	.nav li.dropdown > a:hover .caret,
-	.nav li.dropdown > a:focus .caret,
-	.nav li.dropdown.open > .dropdown-toggle .caret,
-	.nav li.dropdown.active > .dropdown-toggle .caret,
-	.nav li.dropdown.open.active > .dropdown-toggle .caret {
+	.navbar-nav li.dropdown.open.active > .dropdown-toggle .caret,
+	.navbar-nav li.dropdown > a:hover .caret,
+	.navbar-nav li.dropdown > a:focus .caret,
+	.navbar-nav li.dropdown.open > .dropdown-toggle .caret,
+	.navbar-nav li.dropdown.active > .dropdown-toggle .caret,
+	.navbar-nav li.dropdown.open.active > .dropdown-toggle .caret {
 		border-top-color: $theme-text;
 		border-bottom-color: $theme-text;
 	}
@@ -85,16 +89,16 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 	}
 	
 	// The mobile toggle
-	.btn-navbar {
+	.navbar-toggle {
 		@include background(linear-gradient(top, lighten($theme-color, 5%), darken($theme-color, 10%)));
 	}
 	
 	// Mobile stuff
 	@media (max-width: $bootstrap_nav_break) {
-		.nav-collapse {
+		.navbar-collapse {
 		
 			// The submenu labels
-			.nav > li > a,
+			.navbar-nav > li > a,
 			.dropdown-menu a {
 				color: $theme-text;
 				color: rgba($theme-text, .8);
@@ -102,8 +106,8 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 			}
 			
 			// The hovers on menu items
-			.nav > li > a:hover,
-			.nav > li > a:focus,
+			.navbar-nav > li > a:hover,
+			.navbar-nav > li > a:focus,
 			.dropdown-menu a:hover,
 			.dropdown-menu a:focus {
 				background: none;
@@ -111,10 +115,10 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 			}
 			
 			// Active section
-			.nav > .active > a,
-			.nav > .active > a:hover,
-			.nav > .active > a:focus,
-			.nav li.dropdown.active > .dropdown-toggle {
+			.navbar-nav > .active > a,
+			.navbar-nav > .active > a:hover,
+			.navbar-nav > .active > a:focus,
+			.navbar-nav li.dropdown.active > .dropdown-toggle {
 				color: $theme-text;
 				background: darken($theme-color, 10%);
 			}

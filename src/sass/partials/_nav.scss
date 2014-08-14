@@ -10,13 +10,13 @@
 	}
 	
 	// Make the account pulldown flush to the right edge
-	.nav.pull-right .dropdown-toggle {
+	.navbar-nav.pull-right .dropdown-toggle {
 		margin-right: -15px;
 	}
 	
 	// Make the responsive nav have the same margins as the page
 	@media (max-width: $bootstrap_nav_break) {
-		.navbar-inner {
+		.container {
 			padding-left: 15px;
 			padding-right: 15px;
 		}
@@ -24,13 +24,13 @@
 	
 	// Switch to using line height instead of padding so that that the gravatar
 	// can be bigger without pushing the page down
-	.nav > li > a {
+	.navbar-nav > li > a {
 		padding-top: 0;
 		padding-bottom: 0;
-		line-height: 40px;
+		line-height: 50px;
 		.gravatar { margin-top: -2px; }
 	}
-	.nav .dropdown-toggle .caret {
+	.navbar-nav .dropdown-toggle .caret {
 		vertical-align: middle;
 			margin-top: -2px;
 	}
