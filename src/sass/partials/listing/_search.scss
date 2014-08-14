@@ -1,5 +1,6 @@
 // The search interface
 .search {
+	// Set a breakpoint optimized for the search bar to fit on mobile
 	$break-search: 580px;
 	$search-bkgd: darken($light-grey, 3%);
 	$search-shadow: darken($search-bkgd, 5%);
@@ -26,6 +27,8 @@
 		text-align: right;
 		box-sizing: border-box;
 		margin-right: 88px; // Compensate for the submit button in centering
+
+		// making the conditions box full width on break and reset the alignment
 		@media (max-width: $break-search) {
 			text-align: initial;
 			margin-right: 0px;
@@ -48,6 +51,9 @@
 				margin: 0px;
 				padding: 5px 43px 5px 5px;
 				position: relative;
+
+				// adding background color on every other condition to make it more
+				// noticeable where the sections are
 				&:nth-child(even) {
 					background: #e3e3e3;
 				}
@@ -82,6 +88,9 @@
 			position: absolute;
 			bottom: 8px;
 			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+
+			// when the search fields expand on mobile, position the serach button below them
+			// and make it match the width of fields
 			@media (max-width: $break-search) {
 				position: relative;
 				bottom: 0px;
@@ -126,6 +135,7 @@
 				margin: 2px 0;
 			}
 		}
+		// make sure the fields all fit the same
 		.comparisons {
 			@media (max-width: $break-search) {
 				width: 46%;
@@ -177,3 +187,26 @@
 		@include transition(margin-right 400ms ease-out);
 	}
 }
+
+// Setting the datepicker field to be visible when viewed on mobile, and not get pushed
+// off the right of the screen
+.datepicker {
+  @media (max-width: 577px) {
+    left: initial !important;
+    right: 14%;
+  }
+}
+.datepicker:before {
+  @media (max-width: 577px) {
+    right: 36px;
+    left: initial;
+  }
+}
+.datepicker:after {
+  @media (max-width: 577px) {
+    right: 37px;
+    left: initial;
+  }
+}
+
+
