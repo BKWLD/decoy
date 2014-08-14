@@ -107,6 +107,16 @@
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
 			margin: 0 2px;
+
+			// After the first break, remove the left margin on the first item to make
+			// the rows horiztonally center better
+			@media (max-width: $bootstrap_nav_break) {
+				&.fields {
+					margin-left: 0;
+				}
+			}
+
+			// Space out vertically stacked
 			@media (max-width: $break-search) {
 				margin: 2px 0;
 			}
