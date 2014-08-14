@@ -2,12 +2,13 @@
   "name": "decoy",
   "version": "4.0.0",
   "private": true,
+  "main": "",
   "ignore": [
     "*"
   ],
   "dependencies": {
-  	"jquery": "~1",
-  	"bootstrap": "~3",
+    "jquery": "~1",
+    "bootstrap": "~3",
     "requirejs": "~2",
     "lodash": "~2",
     "backbone": "~1",
