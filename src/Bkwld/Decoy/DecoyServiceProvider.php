@@ -47,8 +47,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
-		require_once(__DIR__.'/../../composers/shared.list._standard.php');
-		require_once(__DIR__.'/../../composers/shared.list._control_group.php');
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
 		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
