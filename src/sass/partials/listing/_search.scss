@@ -41,9 +41,12 @@
 		// Line spacing
 		.condition { 
 			margin: 5px;
+
+			// Push contents off the right side of the container to make room
+			// for the add buttons.  And do alternating colors for each row
 			@media (max-width: $break-search) {
 				margin: 0px;
-				padding: 5px 20% 5px 5px;
+				padding: 5px 43px 5px 5px;
 				position: relative;
 				&:nth-child(even) {
 					background: #e3e3e3;
@@ -65,9 +68,11 @@
 			width: $radius*2;
 			height: $radius*2;
 			padding: 0;
+
+			// When stacked, position vertically between the stack and on the right
 			@media (max-width: $break-search) {
 				position: absolute;
-				right: 3%;
+				right: 5px;
 				top: 26%;
 			}
 		}
