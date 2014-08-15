@@ -66,7 +66,7 @@ define(function (require) {
 	});
 	
 	// Apply the date picker to each instance on the
-	$('.input-append:has(.date)').each(function(i, el) {
+	$('.input-group-addon:has(.date)').each(function(i, el) {
 		new DatePicker({el:el});
 	});
 	

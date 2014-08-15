@@ -21,7 +21,7 @@ This partial is used to open forms that have a related data sidebar
 	<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
 		<div class="btn-toolbar pull-right">
 			<div class="btn-group">
-				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="glyphicon glyphicon-plus icon-white"></i> New</a>
 			</div>
 		</div>
 	<? endif ?>

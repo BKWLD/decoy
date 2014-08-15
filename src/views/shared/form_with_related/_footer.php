@@ -44,7 +44,7 @@ with a related data sidebar.  It expects:
 
 		<? if (empty($item)): ?>
 			<p><legend>Related</legend></p>
-			<p><i class="icon-info-sign"></i> You must create a new entry before you can add related content.</p>
+			<p><i class="glyphicon glyphicon-info-sign"></i> You must create a new entry before you can add related content.</p>
 		<? endif ?>
 	</div>
 </div>

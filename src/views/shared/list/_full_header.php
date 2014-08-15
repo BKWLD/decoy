@@ -8,10 +8,10 @@
 		<?// Button to open the search form ?>
 		<? if (!empty($search)): ?>
 			<div class="btn-group animated-clear closed search-controls">
-				<a class="btn search-toggle"><i class="icon-search"></i></a>
+				<a class="btn search-toggle"><i class="glyphicon glyphicon-search"></i></a>
 
 				<?// Change the default container to fix a Chrome issue https://github.com/BKWLD/decoy/issues/239 ?>
-				<a class="btn search-clear js-tooltip" data-container=".full-header .btn-toolbar" title="Reset search"><i class="icon-ban-circle"></i></a>
+				<a class="btn search-clear js-tooltip" data-container=".full-header .btn-toolbar" title="Reset search"><i class="glyphicon glyphicon-ban-circle"></i></a>
 			</div>
 		<? endif ?>
 		
@@ -22,7 +22,7 @@
 		<?// Else it's a regular one to many, so show a link to create a new item ?>
 		<? elseif (app('decoy.auth')->can('create', $controller)): ?>
 			<div class="btn-group">
-				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new" ><i class="icon-plus icon-white"></i> New</a>
+				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new" ><i class="glyphicon glyphicon-plus icon-white"></i> New</a>
 			</div>
 		<? endif ?>
 

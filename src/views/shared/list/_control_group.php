@@ -1,4 +1,4 @@
-<div class="control-group list-control-group">
+<div class="form-group list-control-group">
 	<label class="control-label">
 		<?=$title?>
 		
