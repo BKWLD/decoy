@@ -467,16 +467,9 @@ define(function (require) {
 					
 				});
 			}
-			
-			// Add the template to the list, above the first row with a model id.  Or
-			// if there are no results, replace the last row, which will be the
-			// 'no results found' message
-			var $caret = this.$('tbody ['+dataId+']').first();
-			if ($caret.length) $caret.before($row);
-			else this.$('tbody tr').last().replaceWith($row);
 
 			// Register it
-			this.registerInsertedRow($row);
+			this.addInsertedRow($row);
 
 			// Fade it in
 			$row.hide().fadeIn();
@@ -485,11 +478,19 @@ define(function (require) {
 
 		// Insert a new row by passing a reference to its DOM element
 		insertEl: function(e, el) {
-			this.registerInsertedRow($(el));
+			this.addInsertedRow($(el));
 		},
 
-		// Apply common methods after a new row has been added
-		registerInsertedRow: function($row) {
+		// Add the row to the DOM, reigster it with Backbone, and run other common
+		// methods upon it.
+		addInsertedRow: function($row) {
+
+			// Add the template to the list, above the first row with a model id.  Or
+			// if there are no results, replace the last row, which will be the
+			// 'no results found' message
+			var $caret = this.$('tbody ['+dataId+']').first();
+			if ($caret.length) $caret.before($row);
+			else this.$('tbody tr').last().replaceWith($row);
 
 			// Add the backbone brains (it's not expecting a jquery object)
 			this.initRow($row[0]);
