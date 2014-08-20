@@ -1,5 +1,7 @@
 // The search interface
 .search {
+	// Set a breakpoint optimized for the search bar to fit on mobile
+	$break-search: 580px;
 	$search-bkgd: darken($light-grey, 3%);
 	$search-shadow: darken($search-bkgd, 5%);
 
@@ -23,7 +25,15 @@
 		display: inline-block;
 		position: relative;
 		text-align: right;
+		box-sizing: border-box;
 		margin-right: 88px; // Compensate for the submit button in centering
+
+		// making the conditions box full width on break and reset the alignment
+		@media (max-width: $break-search) {
+			text-align: initial;
+			margin-right: 0px;
+			width: 100%;
+		}
 		
 		// Center the labels on the left
 		.intro {
@@ -32,7 +42,23 @@
 		}
 		 
 		// Line spacing
-		.condition { margin: 5px; }
+		.condition { 
+			margin: 5px;
+
+			// Push contents off the right side of the container to make room
+			// for the add buttons.  And do alternating colors for each row
+			@media (max-width: $break-search) {
+				margin: 0px;
+				padding: 5px 43px 5px 5px;
+				position: relative;
+
+				// adding background color on every other condition to make it more
+				// noticeable where the sections are
+				&:nth-child(even) {
+					background: #e3e3e3;
+				}
+			}
+		}
 		
 		// The labels (label tags and selectors are used by bootstrap)
 		@media (max-width: $bootstrap_nav_break) {
@@ -48,6 +74,13 @@
 			width: $radius*2;
 			height: $radius*2;
 			padding: 0;
+
+			// When stacked, position vertically between the stack and on the right
+			@media (max-width: $break-search) {
+				position: absolute;
+				right: 5px;
+				top: 26%;
+			}
 		}
 		
 		// The search button
@@ -55,6 +88,17 @@
 			position: absolute;
 			bottom: 8px;
 			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+
+			// when the search fields expand on mobile, position the serach button below them
+			// and make it match the width of fields
+			@media (max-width: $break-search) {
+				position: relative;
+				bottom: 0px;
+				right: 0;
+				left: -1px;
+				width: 98%;
+				margin: 5px;
+			}
 		}
 		
 		// Make all the inputs the same size
@@ -63,12 +107,60 @@
 			@include box-sizing(border-box);
 			width: $width;
 			height: 30px;
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
 		}
-		input.date {width: $width - 27px; }
+		input.date {
+			width: $width - 27px;
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
+		}
 		
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
 			margin: 0 2px;
+
+			// After the first break, remove the left margin on the first item to make
+			// the rows horiztonally center better
+			@media (max-width: $bootstrap_nav_break) {
+				&.fields {
+					margin-left: 0;
+				}
+			}
+
+			// Space out vertically stacked
+			@media (max-width: $break-search) {
+				margin: 2px 0;
+			}
+		}
+		// make sure the fields all fit the same
+		.comparisons {
+			@media (max-width: $break-search) {
+				width: 46%;
+				margin-right: 1%;
+			}
+		}
+		.input-field {
+			@media (max-width: $break-search) {
+				width: 52%;
+				margin-left: 1%;
+			}
+		}
+
+		// mobile date picker input
+		@media (max-width: $break-search) {
+			.input-append.input.date {
+				margin: 0;
+			}
+			.input.date {
+				width: 52%;
+			}
+			.input-append .add-on {
+				position: relative;
+				right: 25px;
+			}
 		}
 	}
 }
@@ -95,3 +187,26 @@
 		@include transition(margin-right 400ms ease-out);
 	}
 }
+
+// Setting the datepicker field to be visible when viewed on mobile, and not get pushed
+// off the right of the screen
+.datepicker {
+  @media (max-width: 577px) {
+    left: initial !important;
+    right: 14%;
+  }
+}
+.datepicker:before {
+  @media (max-width: 577px) {
+    right: 36px;
+    left: initial;
+  }
+}
+.datepicker:after {
+  @media (max-width: 577px) {
+    right: 37px;
+    left: initial;
+  }
+}
+
+
