@@ -186,7 +186,8 @@ define(function (require) {
 			'click .delete-now': 'deleteNow',
 			'click .remove-now': 'removeNow',
 			'click .visibility': 'toggleVisibility',
-			'insert': 'insertNew'
+			'insert': 'insertNew',
+			'insertEl': 'insertEl'
 		},
 		
 		// Delete the row via JS
@@ -473,19 +474,32 @@ define(function (require) {
 			var $caret = this.$('tbody ['+dataId+']').first();
 			if ($caret.length) $caret.before($row);
 			else this.$('tbody tr').last().replaceWith($row);
+
+			// Register it
+			this.registerInsertedRow($row);
+
+			// Fade it in
+			$row.hide().fadeIn();
 			
+		},
+
+		// Insert a new row by passing a reference to its DOM element
+		insertEl: function(e, el) {
+			this.registerInsertedRow($(el));
+		},
+
+		// Apply common methods after a new row has been added
+		registerInsertedRow: function($row) {
+
 			// Add the backbone brains (it's not expecting a jquery object)
 			this.initRow($row[0]);
-			
+
 			// Increment the counter
 			this.$total.text(parseInt(this.$total.first().text(),10) + 1);
 			
 			// Enable tooltips
-			this.$el.find('.js-tooltip').tooltip({ animation: false });
-			
-			// Fade it in
-			$row.hide().fadeIn();
-			
+			$row.find('.js-tooltip').tooltip({ animation: false });
+
 		},
 		
 		// render view from model changes
