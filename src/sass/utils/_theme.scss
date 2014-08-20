@@ -163,5 +163,16 @@ body.login.index {
 		background: $theme-text;
 		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
 		border: 1px solid darken($theme-color, 10%);
+
+		// Make the hovers fit better
+		.control-group:hover {
+			background: lighten($theme-text, 5%);
+		}
+
+		// Disable the autofill bkgd color
+		// http://stackoverflow.com/a/14205994/59160
+		input:-webkit-autofill {
+			-webkit-box-shadow: 0 0 0 1000px white inset;
+		}
 	}
 }
