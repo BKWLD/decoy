@@ -57,11 +57,11 @@ class ManyToManyChecklist extends Checkbox {
 			$boxes[$this->generateBoxLabel($row)] = $this->generateBox($row);
 		}
 
-		// Render the checkboxes, adding a hidden field before the set so that if
+		// Render the checkboxes, adding a hidden field after the set so that if
 		// all boxes are un-checked, an empty value will be sent
 		if (count($boxes)) {
 			$this->checkboxes($boxes);
-			return HtmlInput::hidden($this->boxName()).parent::render();
+			return parent::render().HtmlInput::hidden($this->boxName());
 
 		// There are no relations yet, show a message to that effect
 		} else {
