@@ -47,10 +47,11 @@ class Files {
 			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
 			if (Input::hasFile($field) || !Input::has($field)) {
 
-				// Try and delete the image with Croppa.  If Croppa won't delete, then
-				// do a regular delete.  The croppa route is preferred because it will delete
-				// all the crops that were found.
-				if (Croppa::delete($old) === false) unlink(public_path().$old);
+				// If the file has an image suffix, use Croppa to delete
+				if (Str::endsWith($old, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($old);
+
+				// Otherwise, do a normal delete
+				else unlink(public_path().$old);
 				
 				// Remove crop data if it exits
 				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;
