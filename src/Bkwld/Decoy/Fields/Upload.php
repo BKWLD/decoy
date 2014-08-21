@@ -13,20 +13,7 @@ use Str;
  * and deleting it.
  */
 class Upload extends File {
-
-	/**
-	 * Preserve blockhelp data
-	 *
-	 * @var string
-	 */
-	private $blockhelp;
-
-	/**
-	 * Preserve blockhelp attribues
-	 *
-	 * @var array
-	 */
-	private $blockhelp_attributes;
+	use Traits\CaptureBlockHelp;
 
 	/**
 	 * Create a regular file type field
@@ -41,23 +28,6 @@ class Upload extends File {
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
 		$this->addGroupClass('upload');
-	}
-
-	/**
-	 * Store the block help locally so that we can append the review within it
-	 * right before rendering.  If we decide to move the review UI out of block-help, the
-	 * field constructor should replace the group with an instance of a subclass that
-	 * adds some public methods to hook into the field wrapping logic.
-	 *
-	 * This method is ordinarily declared in the Former Group
-	 *
-	 * @param  string $help       The help text
-	 * @param  array  $attributes Facultative attributes
-	 */
-	public function blockhelp($help, $attributes = array()) {
-		$this->blockhelp = $help;
-		$this->blockhelp_attributes = $attributes;
-		return $this;
 	}
 
 	/**
