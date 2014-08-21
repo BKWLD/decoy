@@ -66,10 +66,10 @@ abstract class Base extends Eloquent {
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
 	public function hasGetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasGetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ?  false : parent::hasGetMutator($key);
 	}
 	public function hasSetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasSetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ?  false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------
