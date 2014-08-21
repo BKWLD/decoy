@@ -52,4 +52,11 @@
 	// This wraps explicitly passed blockhelp
 	.regular-help { display: block; }
 
+	// Show the max upload size only on hover
+	.max-size { display: none; }
+	&:hover .max-size { 
+		display: inline-block; 
+		@include opacity(.7);
+	}
+
 }
