@@ -46,7 +46,6 @@ abstract class Base extends Eloquent {
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
 			'_token', // Part of CSRF protection
-			'_wysihtml5_mode',
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
