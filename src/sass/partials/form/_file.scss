@@ -56,7 +56,7 @@
 	.max-size { display: none; }
 	&:hover .max-size { 
 		display: inline-block; 
-		@include opacity(.7);
+		@include opacity(.6);
 	}
 
 }
