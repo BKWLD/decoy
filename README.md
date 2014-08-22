@@ -388,6 +388,12 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::image('image', 'Profile image')->crops($crops->image)->blockHelp('Choose an image for the user')
 
 
+- `Former::video()` 
+
+	- Creates an video upload field with showing the status of encoding via an external service and playback controls of the video.
+	- To encode with an external service, add a validator of `video:encoding` for the field in the model class.
+
+
 - `Former::belongsTo()`
 
 	- Creates an [autocomplete field](http://cl.ly/image/2e3D3E2o2U2K) that populates a foreign key in a belongs to relationship.

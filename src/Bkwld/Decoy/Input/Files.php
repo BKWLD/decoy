@@ -83,6 +83,12 @@ class Files {
 			// The base model has the logic that saves the file
 			$item->$field = $item->saveFile($field);
 
+			// If the validation rules include a request to encode a video, add it to the encoding queue
+			if (Str::contains($item::$rules[$field], 'video:encode')) {
+				$encoder = new VideoEncoder();
+				$encoder->add($item, $field);
+			}
+
 			// Remove this file from the input, it's already been processed.  This prevents
 			// other models that may be touched during the processing of this request (like because
 			// of event handlers) from trying to act on this file
