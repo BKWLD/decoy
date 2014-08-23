@@ -6,7 +6,7 @@ use Config;
 /**
  * Render many to many checklists and process their submittal
  */
-class VideoEncoder {
+class Encoder {
 
 	/**
 	 * The source model record
@@ -16,14 +16,14 @@ class VideoEncoder {
 	protected $model;
 
 	/**
-	 * The source video
+	 * The source asset
 	 *
 	 * @var string 
 	 */
 	protected $source;
 
 	/**
-	 * Encode a video file that is referenced in a attribute on a model instance
+	 * Encode an asset that is referenced in a attribute on a model instance
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $model 
 	 * @param  string $attribute 
@@ -55,7 +55,7 @@ class VideoEncoder {
 	protected function requestEncode() {
 		
 		// Build an instance of the service provider and request an encode
-		$class = Config::get('decoy::video.encode.class');
+		$class = Config::get('decoy::encode.class');
 		$encoder = new $class;
 		$encoder->encode($this->source, array($this, 'storeJob'));
 	}
