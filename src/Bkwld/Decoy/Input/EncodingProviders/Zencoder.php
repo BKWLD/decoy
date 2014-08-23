@@ -11,11 +11,11 @@ use Services_Zencoder_Exception;
 class Zencoder implements EncoderInterface {
 
 	/**
-	 * Default outputs config
+	 * Default outputs configuration
 	 *
 	 * @var array
 	 */
-	protected $config = array(
+	protected $defaults = array(
 		'mp4' => array(
 			'format' => 'mp4',
 		), 
@@ -59,13 +59,30 @@ class Zencoder implements EncoderInterface {
 		
 		// Try to create a job
 		try {
-			$job = $this->sdk->jobs->create(
-				// NEED TO CREATE A FUNCTION TO MASSAGE THE SOURCE AND CONFIG OPTIONS IN
-			);
+			$job = $this->sdk->jobs->create(array('input' => $source), $this->outputsConfig());
 			call_user_func($callback, $job->id, $this->outputsToHash($jobs->outputs));
 		} catch(Services_Zencoder_Exception $e) {
 			// TODO OUT EXCEPTION HANDLING
 		}
+
+	}
+
+	/**
+	 * Create the outputs config by merging the `outputs` config of the encode config
+	 * file in with $this->defaults and then massaging into Zencoder's expected forat
+	 * 
+	 * @return array
+	 */
+	protected function outputsConfig() {
+
+		// Remove any outputs that have been empty-ed in the config file
+		
+		
+		// Apply settings that are common to all outputs
+
+		// Merge config file ontop of defaults
+
+		// Return
 
 	}
 
@@ -75,7 +92,7 @@ class Zencoder implements EncoderInterface {
 	 * @param array $outputs
 	 * @return array
 	 */
-	public function outputsToHash($outputs) {
+	protected function outputsToHash($outputs) {
 		// FINISH THIS
 	}
 
