@@ -11,6 +11,20 @@ use Services_Zencoder_Exception;
 class Zencoder implements EncoderInterface {
 
 	/**
+	 * Default outputs config
+	 *
+	 * @var array
+	 */
+	protected $config = array(
+		'mp4' => array(
+			'format' => 'mp4',
+		), 
+		'webm' => array(
+			'format' => 'webm',
+		),
+	);
+
+	/**
 	 * An instance of the official SDK
 	 *
 	 * @var Services_Zencoder

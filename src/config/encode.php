@@ -5,7 +5,7 @@
 	 * interface and contains the logic to push a video encode request to service
 	 * provider and handle the responses
 	 */
-	'class' => '\Bkwld\Decoy\Input\EncodingProviders\Zencoder',
+	'provider' => '\Bkwld\Decoy\Input\EncodingProviders\Zencoder',
 
 	/**
 	 * The API key used to access the specified provider
@@ -18,16 +18,9 @@
 	'destination' => 'REQUIRED',
 
 	/**
-	 * An object that is used to tell the encoding provider how to prepare
-	 * it's outputs
+	 * A associative array that can be used to remove or override the default
+	 * output configuration that is defined in the specified encoding provider
 	 */
-	'outputs' => array(
-		array(
-			'format' => 'mp4',
-		),
-		array(
-			'format' => 'webm',
-		),
-	),
+	'outputs' => array(),
 
 );

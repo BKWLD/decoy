@@ -55,7 +55,7 @@ class Encoder {
 	protected function requestEncode() {
 		
 		// Build an instance of the service provider and request an encode
-		$class = Config::get('decoy::encode.class');
+		$class = Config::get('decoy::encode.provider');
 		$encoder = new $class;
 		$encoder->encode($this->source, array($this, 'storeJob'));
 	}
