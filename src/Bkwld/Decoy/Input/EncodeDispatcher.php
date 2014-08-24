@@ -70,7 +70,8 @@ class EncodeDispatcher {
 	 * @return void 
 	 */
 	public function storeJob($uid, $outputs) {
-
+		echo $uid."\n";
+		print_r($outputs);
 	}
 
 	/**
