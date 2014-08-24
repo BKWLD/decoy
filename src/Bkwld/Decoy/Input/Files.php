@@ -85,7 +85,7 @@ class Files {
 
 			// If the validation rules include a request to encode a video, add it to the encoding queue
 			if (Str::contains($item::$rules[$field], 'video:encode')) {
-				$encoder = new VideoEncoder();
+				$encoder = new EncodeDispatcher();
 				$encoder->add($item, $field);
 			}
 

@@ -66,7 +66,7 @@ class Zencoder {
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
-			$this->encoder->storeError(implode(', ', $e->getErrors()));
+			$this->dispatcher->storeError(implode(', ', $e->getErrors()));
 		}
 
 	}
