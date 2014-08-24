@@ -56,8 +56,8 @@ class Encoder {
 		
 		// Build an instance of the service provider and request an encode
 		$class = Config::get('decoy::encode.provider');
-		$encoder = new $class;
-		$encoder->encode($this->source, array($this, 'storeJob'));
+		$encoder = new $class($this);
+		$encoder->encode($this->source);
 	}
 
 	/**
@@ -69,7 +69,17 @@ class Encoder {
 	 *                       absolute paths of where the output will be saved
 	 * @return void 
 	 */
-	protected function storeJob($uid, $outputs) {
+	public function storeJob($uid, $outputs) {
+
+	}
+
+	/**
+	 * Store a record of an error with the encode
+	 * 
+	 * @param  string $message
+	 * @return void  
+	 */
+	public function storeError($message) {
 
 	}
 
