@@ -6,7 +6,7 @@ use Config;
 /**
  * Render many to many checklists and process their submittal
  */
-class Encoder {
+class EncodeDispatcher {
 
 	/**
 	 * The source model record

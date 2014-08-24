@@ -2,7 +2,7 @@
 
 // Dependencies
 use Config;
-use Bkwld\Decoy\Input\Encoder;
+use Bkwld\Decoy\Input\EncodeDispatcher;
 use Services_Zencoder;
 use Services_Zencoder_Exception;
 
@@ -26,11 +26,11 @@ class Zencoder {
 	);
 
 	/**
-	 * The encoder instance that invoked this provider
+	 * The dispatcher instance that invoked this provider
 	 *
-	 * @var Bkwld\Decoy\Input\Encoder
+	 * @var Bkwld\Decoy\Input\EncodeDispatcher
 	 */
-	protected $encoder;
+	protected $dispatcher;
 
 	/**
 	 * An instance of the official SDK
@@ -42,31 +42,31 @@ class Zencoder {
 	/**
 	 * Inject dependencies
 	 *
-	 * @param Bkwld\Decoy\Input\Encoder $encoder 
+	 * @param Bkwld\Decoy\Input\EncodeDispatcher $encoder 
 	 */
-	public function __construct(Encoder $encoder) {
-		$this->encoder = $encoder;
+	public function __construct(EncodeDispatcher $dispatcher) {
+		$this->dispatcher = $dispatcher;
 		$this->sdk = new Services_Zencoder(Config::get('decoy::encode.api_key'));
 	}
 
 	/**
 	 * Tell the service to encode an asset it's source
 	 *
-	 * @param string $source A string that can be resolved by the encoder
-	 *                       to find the source asset.  For instance, an
-	 *                       absolute path to the asset on this server
-	 * @return string A uid to the encode job on the service
+	 * @param string $source A URI for the source asset that can be resolved
+	 *                       by the dispatcher
+	 * @return void 
 	 */
-	public function encode($source, $callback) {
+	public function encode($source) {
 		
 		// Try to create a job
 		try {
-			$job = $this->sdk->jobs->create(array('input' => $source), $this->outputsConfig());
-			$this->encoder->storeJob($job->id, $this->outputsToHash($job->outputs));
+			print_r($this->outputsConfig());
+			// $job = $this->sdk->jobs->create(array('input' => $source), $this->outputsConfig());
+			// $this->dispatcher->storeJob($job->id, $this->outputsToHash($job->outputs));
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
-			$this->encoder->storeError(implode(', ', $e->getErrors());
+			$this->encoder->storeError(implode(', ', $e->getErrors()));
 		}
 
 	}
