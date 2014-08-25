@@ -49,10 +49,7 @@ class Zencoder extends EncodingProvider {
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
-			if (($errors = $e->getErrors()) && is_a($errors, 'Services_Zencoder_Error')) {
-				$errors = get_object_vars($errors); // Convert errors object to an array 
-			}
-			$this->model->storeError(implode(', ', $errors));
+			$this->model->storeError(implode(', ', $this->zencoderArray($e->getErrors())));
 		} catch(Exception $e) {
 			$this->model->storeError($e->getMessage());
 		}
@@ -107,8 +104,21 @@ class Zencoder extends EncodingProvider {
 	 * @return array
 	 */
 	protected function outputsToHash($outputs) {
-		// FINISH THIS
-		return $outputs;
+		return array_map(function($output) {
+			return $output->url;
+		}, $this->zencoderArray($outputs));
+	}
+
+	/**
+	 * Convert a Services_Zencoder_Object object to an array
+	 *
+	 * @param Services_Zencoder_Object|array $obj
+	 * @return array 
+	 */
+	public function zencoderArray($obj) {
+		if (is_array($obj)) return $obj;
+		if (is_a($obj, 'Services_Zencoder_Object')) return get_object_vars($obj);
+		throw new Exception('Unexpected object: '.get_class($obj));
 	}
 
 }
