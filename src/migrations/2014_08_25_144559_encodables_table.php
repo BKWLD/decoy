@@ -18,10 +18,15 @@ class EncodablesTable extends Migration {
 			$table->string('encodable_type');
 			$table->integer('encodable_id')->unsigned();
 			$table->string('encodable_attribute');
-			$table->string('status');
+			$table->string('status')->index();
+			$table->string('job_id')->nullable()->index();
 			$table->text('outputs')->nullable();
 			$table->text('message')->nullable();
 			$table->timestamps();
+
+			$table->index(array('encodable_id', 'encodable_type', 'encodable_attribute'));
+			$table->index(array('encodable_type', 'encodable_id', 'encodable_attribute'));
+			$table->index(array('encodable_attribute', 'encodable_id', 'encodable_type'));
 		});
 	}
 
