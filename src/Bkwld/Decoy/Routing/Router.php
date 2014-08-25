@@ -33,6 +33,9 @@ class Router {
 		$this->registerCommands();
 		$this->registerFragments();
 		$this->registerWorkers();
+		$this->registerEncode();
+
+		// Register wildcard last
 		$this->registerWildcard();
 		
 		// Setup filters
