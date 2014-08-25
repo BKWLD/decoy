@@ -40,7 +40,7 @@ abstract class EncodingProvider {
 	/**
 	 * Tell the service to encode an asset it's source
 	 *
-	 * @param string $source A URI for the source asset
+	 * @param string $source A full URL for the source asset
 	 * @return void 
 	 */
 	abstract function encode($source);
