@@ -28,7 +28,7 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Tell the service to encode an asset it's source
 	 *
-	 * @param string $source A URI for the source asset
+	 * @param string $source A full URL for the source asset
 	 * @return void 
 	 */
 	public function encode($source) {
@@ -36,9 +36,12 @@ class Zencoder extends EncodingProvider {
 		// Tell the Zencoder SDK to create a job
 		try {
 			$sdk = new Services_Zencoder(Config::get('decoy::encode.api_key'));
+			$outputs = $this->outputsConfig();
+			\Log::debug('Zencoder input: '.$source);
+			\Log::debug('Zencoder output: ', $outputs);
 			$job = $sdk->jobs->create(array(
 				'input' => $source, 
-				'output' => $this->outputsConfig(),
+				'output' => $this->outputsConfig($outputs),
 			));
 
 			// Store the response from the SDK
