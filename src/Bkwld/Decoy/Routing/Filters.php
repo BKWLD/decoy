@@ -47,6 +47,17 @@ class Filters {
 		// expressions, thus had to catch all
 		Route::filter('decoy.editRedirect', array($this, 'editRedirect'));
 		Route::when($this->dir.'/*', 'decoy.editRedirect', array('get'));
+
+		// Add CSRF verification
+		Route::filter('decoy.csrf', array($this, 'csrf'));
+		Route::when($this->dir.'/*', 'decoy.csrf');
+
+		// Tell IE that we're compatible so it doesn't show the compatbility checkbox
+		// http://stackoverflow.com/a/3726605/59160
+		Route::filter('decoy.ie-edge', function($request, $response) {
+			$response->header('X-UA-Compatible', 'IE=Edge');
+		});
+		Route::when($this->dir.'/*', 'decoy.ie-edge');
 	}
 	
 	/**
@@ -129,6 +140,16 @@ class Filters {
 	public function editRedirect() {
 		$url = Request::url();
 		if (preg_match('#/\d+$#', $url)) return Redirect::to($url.'/edit');
+	}
+
+	/**
+	 * Apply CSRF
+	 */
+	public function csrf() {
+
+		// Apply it
+		return \Bkwld\Library\Laravel\Filters::csrf();
+
 	}
 	
 }
