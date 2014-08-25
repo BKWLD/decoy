@@ -1,8 +1,11 @@
 <?php namespace Bkwld\Decoy\Input\EncodingProviders;
 
 // Dependencies
+use App;
 use Config;
 use Bkwld\Decoy\Input\EncodeDispatcher;
+use Bkwld\Decoy\Exception;
+use Request;
 use Services_Zencoder;
 use Services_Zencoder_Exception;
 
@@ -57,13 +60,15 @@ class Zencoder {
 	 * @return void 
 	 */
 	public function encode($source) {
-		
-		// Try to create a job
+
+		// Tell the Zencoder SDK to create a job
 		try {
 			$job = $this->sdk->jobs->create(array(
 				'input' => $source, 
 				'output' => $this->outputsConfig(),
 			));
+
+			// Store the response from the SDK
 			$this->dispatcher->storeJob($job->id, $this->outputsToHash($job->outputs));
 
 		// Report an error with the encode
@@ -72,6 +77,8 @@ class Zencoder {
 				$errors = get_object_vars($errors); // Convert errors object to an array 
 			}
 			$this->dispatcher->storeError(implode(', ', $errors));
+		} catch(Exception $e) {
+			$this->dispatcher->storeError($e->getMessage());
 		}
 
 	}
@@ -136,6 +143,9 @@ class Zencoder {
 			// Slower encodes for better quality.  Their docs recommended this
 			// which is why I'm using it instead of "1".
 			$config['speed'] = 2;
+
+			// Register for notifications for when the conding is done
+			$config['notifications'] = array($this->notificationURL());
 		}
 
 		// Strip the keys from the array at this point, Zencoder doesn't like them
@@ -151,6 +161,36 @@ class Zencoder {
 	protected function outputsToHash($outputs) {
 		// FINISH THIS
 		return $outputs;
+	}
+
+	/**
+	 * Get the notifications URL
+	 *
+	 * @return string 
+	 */
+	protected function notificationURL() {
+
+		// Get the host name from env variable if running through CLI
+		$host = App::runningInConsole() && isset($_SERVER['SERVER_NAME']) 
+			? $_SERVER['SERVER_NAME'] 
+			: Request::getHost();
+
+		// Verify that the host is public
+		if (!($ip = gethostbyname($host)) 
+			|| preg_match('#^(127)|(10)|(192\.168)#', $ip)) throw new Exception('The server name ('.$host.')
+			does not appear to be publicly accessible.  If running from CLI, pass the server name in
+			via ENV variables like: `HOST=10147f98.ngrok.com php artisan your:command`.');
+
+		// Produce the route, passing in the host explicitly.  This allows CLI invocations to
+		// be supported.
+		if (!App::runningInConsole()) return route('decoy\encode@notify');
+		else {
+			$generator = app('url');
+			$generator->forceRootUrl('http://'.$host);
+			$url = $generator->route('decoy\encode@notify');
+			$generator->forceRootUrl(null);
+			return $url;
+		}
 	}
 
 }
