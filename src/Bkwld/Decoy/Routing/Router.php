@@ -113,6 +113,14 @@ class Router {
 		Route::get($this->dir.'/workers', array('uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy\workers'));
 		Route::get($this->dir.'/workers/tail/{worker}', array('uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy\workers@tail'));
 	}
+
+	/**
+	 * Encoding
+	 */
+	public function registerEncode() {
+		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
+		}));
+	}
 	
 	/**
 	 * Set and get the action for this request
