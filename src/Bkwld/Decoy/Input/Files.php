@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use Bkwld\Decoy\Models\Encoding;
 use Croppa;
 use Exception;
 use Input;
@@ -51,7 +52,7 @@ class Files {
 				if (Str::endsWith($old, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($old);
 
 				// Otherwise, do a normal delete
-				else unlink(public_path().$old);
+				elseif (file_exists(public_path().$old)) unlink(public_path().$old);
 				
 				// Remove crop data if it exits
 				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;
@@ -75,7 +76,7 @@ class Files {
 
 			// Require there to be an entry in the rules array for all files.  This will matter
 			// when deleting later
-			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", "video", or "file" rule.  Decoy requires all files to have an entry in the $rules array.');
+			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", "video", or "file" rule. Decoy requires all files to have an entry in the $rules array.');
 			
 			// Double check there is data and not just a key
 			if (!Input::hasFile($field)) continue; 
@@ -83,16 +84,23 @@ class Files {
 			// The base model has the logic that saves the file
 			$item->$field = $item->saveFile($field);
 
-			// If the validation rules include a request to encode a video, add it to the encoding queue
-			if (Str::contains($item::$rules[$field], 'video:encode')) {
-				$encoder = new EncodeDispatcher();
-				$encoder->add($item, $field);
-			}
-
 			// Remove this file from the input, it's already been processed.  This prevents
 			// other models that may be touched during the processing of this request (like because
 			// of event handlers) from trying to act on this file
 			$files->remove($field);
+
+			// If the validation rules include a request to encode a video, add it to the encoding queue
+			if (Str::contains($item::$rules[$field], 'video:encode')) {
+
+				// Check for required relationship function on parent
+				if (!method_exists($item, 'encodings')) throw new Exception(get_class($item).' must define an "encodings()" function.');
+
+				// Create a new encoding model instance. It's callbacks will talk to the encoding provvider.
+				$item->encodings()->save(new Encoding(array(
+					'encodable_attribute' => $field,
+				)));
+			}
+			
 		}	
 	}
 	

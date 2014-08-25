@@ -122,6 +122,9 @@ class Router {
 	 */
 	public function registerEncode() {
 		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
+			echo 'inside';
+			\Log::info('inside');
+			return 'yeah boyyyeee';
 		}));
 	}
 	

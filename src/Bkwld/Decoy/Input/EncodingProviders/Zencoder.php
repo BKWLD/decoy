@@ -1,18 +1,15 @@
 <?php namespace Bkwld\Decoy\Input\EncodingProviders;
 
 // Dependencies
-use App;
-use Config;
-use Bkwld\Decoy\Input\EncodeDispatcher;
 use Bkwld\Decoy\Exception;
-use Request;
+use Config;
 use Services_Zencoder;
 use Services_Zencoder_Exception;
 
 /**
  * Encode videos with Zencoder
  */
-class Zencoder {
+class Zencoder extends EncodingProvider {
 
 	/**
 	 * Default outputs configuration
@@ -29,56 +26,32 @@ class Zencoder {
 	);
 
 	/**
-	 * The dispatcher instance that invoked this provider
-	 *
-	 * @var Bkwld\Decoy\Input\EncodeDispatcher
-	 */
-	protected $dispatcher;
-
-	/**
-	 * An instance of the official SDK
-	 *
-	 * @var Services_Zencoder
-	 */
-	protected $sdk;
-
-	/**
-	 * Inject dependencies
-	 *
-	 * @param Bkwld\Decoy\Input\EncodeDispatcher $encoder 
-	 */
-	public function __construct(EncodeDispatcher $dispatcher) {
-		$this->dispatcher = $dispatcher;
-		$this->sdk = new Services_Zencoder(Config::get('decoy::encode.api_key'));
-	}
-
-	/**
 	 * Tell the service to encode an asset it's source
 	 *
-	 * @param string $source A URI for the source asset that can be resolved
-	 *                       by the dispatcher
+	 * @param string $source A URI for the source asset
 	 * @return void 
 	 */
 	public function encode($source) {
 
 		// Tell the Zencoder SDK to create a job
 		try {
-			$job = $this->sdk->jobs->create(array(
+			$sdk = new Services_Zencoder(Config::get('decoy::encode.api_key'));
+			$job = $sdk->jobs->create(array(
 				'input' => $source, 
 				'output' => $this->outputsConfig(),
 			));
 
 			// Store the response from the SDK
-			$this->dispatcher->storeJob($job->id, $this->outputsToHash($job->outputs));
+			$this->model->storeJob($job->id, $this->outputsToHash($job->outputs));
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
 			if (($errors = $e->getErrors()) && is_a($errors, 'Services_Zencoder_Error')) {
 				$errors = get_object_vars($errors); // Convert errors object to an array 
 			}
-			$this->dispatcher->storeError(implode(', ', $errors));
+			$this->model->storeError(implode(', ', $errors));
 		} catch(Exception $e) {
-			$this->dispatcher->storeError($e->getMessage());
+			$this->model->storeError($e->getMessage());
 		}
 
 	}
@@ -91,34 +64,6 @@ class Zencoder {
 	 */
 	protected function outputsConfig() {
 		return $this->addCommonProps($this->mergeConfigWithDefaults());
-	}
-
-	/**
-	 * Update the defaults with the user config
-	 *
-	 * @return array
-	 */
-	protected function mergeConfigWithDefaults() {
-
-		// Loop though user config and modify the defaults
-		$outputs = $this->defaults;
-		foreach(Config::get('decoy::encode.outputs') as $key => $config) {
-
-			// If user key doesn't exist in the defaults, it's new, and just
-			// straight pass it through
-			if (!array_key_exists($key, $outputs)) $outputs[$key] = $config;
-
-			// If there is a user key for one of the defaults but no value, then
-			// the delete the output
-			else if (empty($config)) unset($outputs[$key]);
-
-			// Else, merge the user config onto the default for that key
-			else $outputs[$key] = array_merge($outputs[$key], $config);
-		}
-
-		// Return the massaged outputs
-		return $outputs;
-
 	}
 
 	/**
@@ -161,36 +106,6 @@ class Zencoder {
 	protected function outputsToHash($outputs) {
 		// FINISH THIS
 		return $outputs;
-	}
-
-	/**
-	 * Get the notifications URL
-	 *
-	 * @return string 
-	 */
-	protected function notificationURL() {
-
-		// Get the host name from env variable if running through CLI
-		$host = App::runningInConsole() && isset($_SERVER['SERVER_NAME']) 
-			? $_SERVER['SERVER_NAME'] 
-			: Request::getHost();
-
-		// Verify that the host is public
-		if (!($ip = gethostbyname($host)) 
-			|| preg_match('#^(127)|(10)|(192\.168)#', $ip)) throw new Exception('The server name ('.$host.')
-			does not appear to be publicly accessible.  If running from CLI, pass the server name in
-			via ENV variables like: `HOST=10147f98.ngrok.com php artisan your:command`.');
-
-		// Produce the route, passing in the host explicitly.  This allows CLI invocations to
-		// be supported.
-		if (!App::runningInConsole()) return route('decoy\encode@notify');
-		else {
-			$generator = app('url');
-			$generator->forceRootUrl('http://'.$host);
-			$url = $generator->route('decoy\encode@notify');
-			$generator->forceRootUrl(null);
-			return $url;
-		}
 	}
 
 }
