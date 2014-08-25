@@ -2,6 +2,7 @@
 
 // Dependencies
 use Config;
+use Request;
 
 /**
  * Stores the status of an encoding job and the converted outputs.
@@ -19,8 +20,8 @@ class Encoding extends Base {
 	public function encodable() { return $this->morphTo(); }
 
 	/**
-	 * Set default fields and pass the encoding job onto the
-	 * encoding service provider
+	 * Set default fields and delete any old encodings for the same source.
+	 * Then request the provider to encode it.
 	 */
 	public function onCreating() {
 
@@ -36,7 +37,7 @@ class Encoding extends Base {
 		// Build an instance of the service provider and request an encode
 		$class = Config::get('decoy::encode.provider');
 		$encoder = new $class($this);
-		$encoder->encode($this->source());
+		$encoder->encode(Request::root().$this->source());
 
 	}
 
