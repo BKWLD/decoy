@@ -57,11 +57,9 @@ class Filters {
 		Route::when($this->dir.'/*', 'decoy.editRedirect', array('get'));
 
 		// Tell IE that we're compatible so it doesn't show the compatbility checkbox
-		// http://stackoverflow.com/a/3726605/59160
-		Route::filter('decoy.ie-edge', function($request, $response) {
+		Route::after(function($request, $response) {
 			$response->header('X-UA-Compatible', 'IE=Edge');
 		});
-		Route::when($this->dir.'/*', 'decoy.ie-edge');
 	}
 	
 	/**
