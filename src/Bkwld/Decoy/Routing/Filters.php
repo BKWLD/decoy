@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Config;
+use Decoy;
 use DecoyURL;
 use HTML;
 use Input;
@@ -34,6 +35,13 @@ class Filters {
 	 * Register all filters
 	 */
 	public function registerAll() {
+
+		// Dont' register anything if we're not in the admin.  These routes 
+		if (!Decoy::handling()) return;
+
+		// Filters are added during a "before" handler via the Decoy service
+		// provider, so this can just be run directly.
+		$this->csrf();
 		
 		// Access control
 		Route::filter('decoy.acl', array($this, 'acl'));
@@ -47,10 +55,6 @@ class Filters {
 		// expressions, thus had to catch all
 		Route::filter('decoy.editRedirect', array($this, 'editRedirect'));
 		Route::when($this->dir.'/*', 'decoy.editRedirect', array('get'));
-
-		// Add CSRF verification
-		Route::filter('decoy.csrf', array($this, 'csrf'));
-		Route::when($this->dir.'/*', 'decoy.csrf');
 
 		// Tell IE that we're compatible so it doesn't show the compatbility checkbox
 		// http://stackoverflow.com/a/3726605/59160
@@ -149,9 +153,9 @@ class Filters {
 	 */
 	public function csrf() {
 
-		// Routes to ignore
-		if (Route::is('decoy\encode@notify')) return;
-		
+		// Routes to ignore.  Note, for some reason the 
+		if (Request::is(Route::getRoutes()->getByName('decoy\encode@notify')->uri())) return;
+
 		// Apply it
 		return \Bkwld\Library\Laravel\Filters::csrf();
 
