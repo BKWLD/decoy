@@ -59,7 +59,7 @@ class Encoding extends Base {
 	 * @return void 
 	 */
 	public function onCreated() {
-		static::encoder()->encode(Request::root().$this->source(), $this);
+		static::encoder()->encode($this->source(), $this);
 	}
 
 	/**
@@ -89,7 +89,9 @@ class Encoding extends Base {
 	 *                document root
 	 */
 	public function source() {
-		return $this->encodable->{$this->encodable_attribute};
+		$val = $this->encodable->{$this->encodable_attribute};
+		if (preg_match('#^http#', $val)) return $val;
+		else return Request::root().$val;
 	}
 
 	/**
