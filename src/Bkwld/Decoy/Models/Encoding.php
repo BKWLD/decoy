@@ -18,7 +18,7 @@ class Encoding extends Base {
 	static private $states = array(
 		'error',      // Any type of error
 		'pending',    // No response from encoder yet
-		'requested',  // The encoder API has been hit
+		'queued',     // The encoder API has been hit
 		'processing', // Encoding has started
 		'complete',   // Encode is finished
 		'cancelled',  // The user has canceled the encode
@@ -101,7 +101,7 @@ class Encoding extends Base {
 	 * @return void 
 	 */
 	public function storeJob($job_id, $outputs = null) {
-		$this->status = 'requested';
+		$this->status = 'queued';
 		$this->job_id = $job_id;
 		$this->outputs = json_encode($outputs);
 		$this->save();
