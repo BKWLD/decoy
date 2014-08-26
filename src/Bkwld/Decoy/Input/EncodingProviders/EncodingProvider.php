@@ -22,28 +22,21 @@ abstract class EncodingProvider {
 	protected $defaults = array();
 
 	/**
-	 * The Encoding model requesting the encode
-	 *
-	 * @var Bkwld\Decoy\Models\Encoding
-	 */
-	protected $model;
-
-	/**
-	 * Inject dependencies
-	 *
-	 * @param Bkwld\Decoy\Models\Encoding $model 
-	 */
-	public function __construct(Encoding $model) {
-		$this->model = $model;
-	}
-
-	/**
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
+	 * @param Bkwld\Decoy\Models\Encoding $model 
 	 * @return void 
 	 */
-	abstract function encode($source);
+	abstract public function encode($source, Encoding $model);
+	
+	/**
+	 * Handle notification requests from the SDK
+	 *
+	 * @param array $input Input::get()
+	 * @return mixed Reponse to the API 
+	 */
+	abstract public function handleNotification($input);
 
 	/**
 	 * Update the default configwith the user config

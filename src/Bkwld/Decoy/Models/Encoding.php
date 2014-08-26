@@ -13,6 +13,18 @@ use Request;
 class Encoding extends Base {
 
 	/**
+	 * Comprehensive list of states
+	 */
+	static private $states = array(
+		'error',      // Any type of error
+		'pending',    // No response from encoder yet
+		'requested',  // The encoder API has been hit
+		'processing', // Encoding has started
+		'complete',   // Encode is finished
+		'cancelled',  // The user has canceled the encode
+	);
+
+	/**
 	 * Polymorphic relationship definition
 	 *
 	 * @return \Illuminate\Database\Eloquent\Relations\MorphTo
@@ -21,7 +33,8 @@ class Encoding extends Base {
 
 	/**
 	 * Set default fields and delete any old encodings for the same source.
-	 * Then request the provider to encode it.
+	 *
+	 * @return void 
 	 */
 	public function onCreating() {
 
@@ -33,12 +46,39 @@ class Encoding extends Base {
 
 		// Default values
 		$this->status = 'pending';
+		
+	}
 
-		// Build an instance of the service provider and request an encode
+	/**
+	 * Once the model is created, try to encode it.  This is done during
+	 * the created callback so we can we call save() on the record without
+	 * triggering an infitie loop like can happen if one tries to save while
+	 * saving
+	 *
+	 * @return void 
+	 */
+	public function onCreated() {
+		static::encoder()->encode(Request::root().$this->source(), $this);
+	}
+
+	/**
+	 * Make an instance of the encoding provider
+	 *
+	 * @param array $input Input::get()
+	 * @return mixed Reponse to the API
+	 */
+	static public function notify($input) {
+		return static::encoder()->handleNotification($input);
+	}
+
+	/**
+	 * Get an instance of the configured encoding provider
+	 *
+	 * @return Bkwld\Decoy\Input\EncodingProviders\EncodingProvider
+	 */
+	static public function encoder() {
 		$class = Config::get('decoy::encode.provider');
-		$encoder = new $class($this);
-		$encoder->encode(Request::root().$this->source());
-
+		return new $class;
 	}
 
 	/**
@@ -61,20 +101,24 @@ class Encoding extends Base {
 	 * @return void 
 	 */
 	public function storeJob($job_id, $outputs = null) {
-		$this->status = 'encoding';
+		$this->status = 'requested';
 		$this->job_id = $job_id;
 		$this->outputs = json_encode($outputs);
+		$this->save();
 	}
 
 	/**
-	 * Store a record of an error with the encode
-	 * 
+	 * Update the status of the encode
+	 *
+	 * @param  string status 
 	 * @param  string $message
 	 * @return void  
 	 */
-	public function storeError($message) {
-		$this->status = 'error';
+	public function status($status, $message = null) {
+		if (!in_array($status, static::$states)) throw new Exception('Unknown state: '.$status);
+		$this->status = $status;
 		$this->message = $message;
+		$this->save();
 	}
 
 }

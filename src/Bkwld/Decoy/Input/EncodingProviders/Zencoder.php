@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Exception;
+use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Services_Zencoder;
 use Services_Zencoder_Exception;
@@ -29,29 +30,29 @@ class Zencoder extends EncodingProvider {
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
+	 * @param Bkwld\Decoy\Models\Encoding $model 
 	 * @return void 
 	 */
-	public function encode($source) {
+	public function encode($source, Encoding $model) {
 
 		// Tell the Zencoder SDK to create a job
 		try {
-			$sdk = new Services_Zencoder(Config::get('decoy::encode.api_key'));
 			$outputs = $this->outputsConfig();
 			\Log::debug('Zencoder input: '.$source);
 			\Log::debug('Zencoder output: ', $outputs);
-			$job = $sdk->jobs->create(array(
+			$job = $this->sdk()->jobs->create(array(
 				'input' => $source, 
 				'output' => $this->outputsConfig($outputs),
 			));
 
 			// Store the response from the SDK
-			$this->model->storeJob($job->id, $this->outputsToHash($job->outputs));
+			$model->storeJob($job->id, $this->outputsToHash($job->outputs));
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
-			$this->model->storeError(implode(', ', $this->zencoderArray($e->getErrors())));
+			$model->status('error', implode(' ', $this->zencoderArray($e->getErrors())));
 		} catch(Exception $e) {
-			$this->model->storeError($e->getMessage());
+			$model->status('error', $e->getMessage());
 		}
 
 	}
@@ -107,6 +108,59 @@ class Zencoder extends EncodingProvider {
 		return array_map(function($output) {
 			return $output->url;
 		}, $this->zencoderArray($outputs));
+	}
+
+	/**
+	 * Handle notification requests from the SDK
+	 *
+	 * @param array $input Input::get()
+	 * @return mixed Reponse to the API 
+	 */
+	public function handleNotification($input) {
+
+		// Parse the input
+		$job = $this->sdk()->notifications->parseIncoming()->job;
+
+		// Find the encoding model instance.  If it's not found, then just
+		// ignore it.  This can easily happen if someone replaces a video
+		// while one is being uploaded.
+		if (!$model = Encoding::where('job_id', '=', $job->id)->first()) return;
+
+		// Update the model
+		switch($job->state) {
+			
+			// Simple passthru of status
+			case 'processing';
+			case 'cancelled';
+				$model->status($job->state); 
+				break;
+			
+			// Massage name
+			case 'finished':
+				$model->status('complete'); 
+				break;
+			
+			// Find error messages on the output
+			case 'failed':
+				$errors = array_map(function($output) {
+					return $output->error_message;
+				}, $this->zencoderArray($job->outputs));
+				$model->status('error', implode(' ', $errors));
+				break;
+			
+			// Default
+			default:
+				$model->status('error', 'Unkown Zencoder state: '.$job->state);
+		}
+	}
+
+	/**
+	 * Build an instance of the SDK
+	 *
+	 * @return Services_Zencoder
+	 */
+	public function sdk() {
+		return new Services_Zencoder(Config::get('decoy::encode.api_key'));
 	}
 
 	/**

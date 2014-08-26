@@ -2,8 +2,10 @@
 
 // Dependencies
 use App;
+use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Event;
+use Input;
 use Route;
 
 /**
@@ -121,10 +123,11 @@ class Router {
 	 * Encoding
 	 */
 	public function registerEncode() {
+
+		// Make a simply handler for notify callbacks.  The encoding model will pass the the handling
+		// onto whichever provider is registered.
 		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
-			echo 'inside';
-			\Log::info('inside');
-			return 'yeah boyyyeee';
+			return Encoding::notify(Input::get());
 		}));
 	}
 	
