@@ -63,6 +63,7 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderPlayerOrStatus() {
+		if (!$this->encoding) return $this->renderError('No encoding instance found.');
 		switch($this->encoding->status) {
 			case 'complete': return $this->renderPlayer();
 			case 'error': return $this->renderError($this->encoding->message);
@@ -71,8 +72,6 @@ class VideoEncoder extends Upload {
 			case 'queued': return $this->renderProgress($this->encoding->status, .25);
 			case 'processing': return $this->renderProgress($this->encoding->status, .50);
 		}
-		// if ($this->encoding->status == 'complete')
-		return $this->renderStatus();
 	}
 
 	/**
