@@ -101,8 +101,12 @@
 
 	// The video player
 	video {
-		margin-left: 0;
+
+		// Push off top
 		margin-top: 5px;
+
+		// Make ti scale 
+		max-width: 100%;
 	}
 
 }

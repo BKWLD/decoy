@@ -85,6 +85,7 @@ class VideoEncoder extends Upload {
 			->addClass($this->span())
 			->addClass('img-polaroid')
 			->controls()
+			->width(580) // Matches the default width of image field preview
 		;
 	}
 
