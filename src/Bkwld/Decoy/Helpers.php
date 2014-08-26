@@ -500,4 +500,13 @@ class Helpers {
 		return $this->is_handling;
 	}
 
+	/**
+	 * Force Decoy to believe that it's handling or not handling the request
+	 * @param boolean $bool 
+	 * @return void 
+	 */
+	public function forceHandling($bool) {
+		$this->is_handling = $bool;
+	}
+
 }
