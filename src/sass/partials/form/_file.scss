@@ -52,7 +52,10 @@
 	}
 
 	// This wraps explicitly passed blockhelp
-	.regular-help { display: block; }
+	.regular-help { 
+		display: block; 
+		margin-top: 5px;
+	}
 
 	// Show the max upload size only on hover
 	.max-size { display: none; }
@@ -94,6 +97,12 @@
 	// Error message
 	.error {
 		color: #d14;
+	}
+
+	// The video player
+	video {
+		margin-left: 0;
+		margin-top: 5px;
 	}
 
 }

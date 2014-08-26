@@ -81,7 +81,11 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderPlayer() {
-		return $this->encoding->getTagAttribute();
+		return $this->encoding->getTagAttribute()
+			->addClass($this->span())
+			->addClass('img-polaroid')
+			->controls()
+		;
 	}
 
 	/**

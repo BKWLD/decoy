@@ -133,7 +133,7 @@ class Encoding extends Base {
 		if (!$sources = $this->outputs) return;
 
 		// Start the tag
-		$tag = Element::video()->class('preview');
+		$tag = Element::video();
 
 		// Loop through the outputs and add them as sources
 		foreach(json_decode($sources) as $type => $src) {
