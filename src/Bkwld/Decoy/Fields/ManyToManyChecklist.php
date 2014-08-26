@@ -13,7 +13,7 @@ use Str;
  * The relationship instance that is being represented is stored in the value.
  */
 class ManyToManyChecklist extends Checkbox {
-	use Traits\CaptureLabel, Traits\Scopable;
+	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
 
 	/**
 	 * Prints out the field, wrapped in its group.  This is the opportunity
@@ -109,7 +109,7 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	protected function children() {
-		if (($item = app('former.populator')->all())
+		if (($item = $this->model())
 			&& is_a($item, 'Illuminate\Database\Eloquent\Model')
 			&& method_exists($item, $this->name)) return $item->{$this->name};
 	}
