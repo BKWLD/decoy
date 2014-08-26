@@ -9,7 +9,7 @@ use Former;
  * encodes and the playback of a video.
  */
 class VideoEncoder extends Upload {
-	use Traits\CaptureBlockHelp, Traits\Helpers;
+	use Traits\Helpers;
 
 	/**
 	 * The encoding row for the field
@@ -81,6 +81,7 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderPlayer() {
+		return $this->encoding->getTagAttribute();
 	}
 
 	/**

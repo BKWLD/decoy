@@ -3,6 +3,7 @@
 // Dependencies
 use Config;
 use Request;
+use HtmlObject\Element;
 
 /**
  * Stores the status of an encoding job and the converted outputs.
@@ -119,6 +120,31 @@ class Encoding extends Base {
 		$this->status = $status;
 		$this->message = $message;
 		$this->save();
+	}
+
+	/**
+	 * Generate an HTML5 video tag via Former's HtmlObject for the outputs
+	 *
+	 * @return HtmlObject\Element
+	 */
+	public function getTagAttribute() {
+
+		// Require sources
+		if (!$sources = $this->outputs) return;
+
+		// Start the tag
+		$tag = Element::video()->class('preview');
+
+		// Loop through the outputs and add them as sources
+		foreach(json_decode($sources) as $type => $src) {
+			$tag->appendChild(Element::source()
+				->type('video/'.$type)
+				->src($src)
+			);
+		}
+
+		// Return the tag
+		return $tag;
 	}
 
 }
