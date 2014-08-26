@@ -16,22 +16,6 @@ class ManyToManyChecklist extends Checkbox {
 	use Traits\CaptureLabel, Traits\Scopable;
 
 	/**
-	 * Pass is in the parent instance (the instance being edited in the admin) as the `item`.  
-	 * This is the most common usage.  The relationship instance is extracted if the item 
-	 * is not empty.  In this fashion, the developer doesn't need to test whether the 
-	 * item has a value when implementing this field.
-	 *
-	 * @param Illuminate\Database\Eloquent\Model $item 
-	 * @@return Field A field
-	 */
-	public function item($item) {
-		if ($item 
-			&& is_a($item, 'Illuminate\Database\Eloquent\Model')
-			&& method_exists($item, $this->name)) $this->value = $item->{$this->name};
-		return $this;
-	}
-
-	/**
 	 * Prints out the field, wrapped in its group.  This is the opportunity
 	 * to tack additional stuff onto the control group
 	 * 
@@ -100,7 +84,7 @@ class ManyToManyChecklist extends Checkbox {
 		return array(
 			'name' => $this->boxName(),
 			'value' => $row->getKey(),
-			'checked' => isset($this->value) && $this->value->contains($row->getKey()),
+			'checked' => ($children = $this->children()) && $children->contains($row->getKey()),
 		);
 	}
 
@@ -117,6 +101,26 @@ class ManyToManyChecklist extends Checkbox {
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
 		$html = str_replace('_', '&#95;', $html);
 		return $html;
+	}
+
+	/**
+	 * Get a collection of all the children that are already associated with the parent
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	protected function children() {
+		if (($item = app('former.populator')->all())
+			&& is_a($item, 'Illuminate\Database\Eloquent\Model')
+			&& method_exists($item, $this->name)) return $item->{$this->name};
+	}
+
+	/**
+	 * Deprecated function
+	 * @param Illuminate\Database\Eloquent\Model $item 
+	 * @return Field A field
+	 */
+	public function item($item) {
+		\Log::info('ManyToManyChecklist::item() is deprecated.  The item is now fetched automatically from Former::populate');
 	}
 
 }
