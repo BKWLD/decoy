@@ -29,6 +29,7 @@ class Zencoder extends EncodingProvider {
 		),
 
 		// For HLS encoding
+		/* Disabled for now
 		'hls-low' => array(
 			'type' => 'segmented',
 			'format' => 'mp4',
@@ -46,6 +47,7 @@ class Zencoder extends EncodingProvider {
 			'height' => 720,
 			'h264_profile' => 'high',
 		),
+		*/
 	);
 
 	/**
