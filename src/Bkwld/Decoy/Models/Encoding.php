@@ -139,8 +139,8 @@ class Encoding extends Base {
 	 */
 	public function getTagAttribute() {
 
-		// Require and for the encoding to be complete
-		if (!$sources = $this->outputs && $this->status == 'complete') return;
+		// Require sources and for the encoding to be complete
+		if (!($sources = $this->outputs) && $this->status != 'complete') return;
 
 		// Start the tag
 		$tag = Element::video();
