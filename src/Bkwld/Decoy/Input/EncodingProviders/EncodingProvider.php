@@ -6,6 +6,7 @@ use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Request;
+use Str;
 
 /**
  * Base class for encoding providers that provides some shared logic
@@ -64,6 +65,15 @@ abstract class EncodingProvider {
 		// Return the massaged outputs
 		return $outputs;
 
+	}
+
+	/**
+	 * Produce the destination directory
+	 *
+	 * @return string 
+	 */
+	protected function destination() {
+		return Config::get('decoy::encode.destination').'/'.Str::random(32).'/';
 	}
 
 	/**

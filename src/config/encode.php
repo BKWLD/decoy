@@ -6,8 +6,8 @@
 	'api_key' => 'REQUIRED',
 
 	/**
-	 * The destination endpoint.
-	 * Ex: s3://bucket-name/directory/
+	 * The destination directory.
+	 * Ex: s3://bucket-name/directory
 	 */
 	'destination' => 'REQUIRED',
 

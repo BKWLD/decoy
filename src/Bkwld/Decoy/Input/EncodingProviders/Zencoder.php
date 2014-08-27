@@ -51,7 +51,7 @@ class Zencoder extends EncodingProvider {
 	);
 
 	/**
-	 * The Encoding model instance that this encode is relateted to
+	 * The Encoding model instance that this encode is related to
 	 *
 	 * @var Bkwld\Decoy\Models\Encoding
 	 */
@@ -112,7 +112,7 @@ class Zencoder extends EncodingProvider {
 			'height' => 540,
 
 			// Destination location as a directory
-			'base_url' => Config::get('decoy::encode.destination'),
+			'base_url' => $this->destination(),
 
 			// Make the outputs web readable on S3
 			'public' => 1,
@@ -130,8 +130,8 @@ class Zencoder extends EncodingProvider {
 		foreach($outputs as $label => &$config) {
 			$common['label'] = $label;
 
-			// Make the filename from the model id and the output label
-			$common['filename'] = $this->model->getKey().'-'$label.'.'.$config['format'];
+			// Make the filename from the label
+			$common['filename'] = $label.'.'.$config['format'];
 
 			// Do the merge
 			$config = array_merge($common, $config);
