@@ -126,8 +126,20 @@ class Zencoder extends EncodingProvider {
 		// while one is being uploaded.
 		if (!$model = Encoding::where('job_id', '=', $job->id)->first()) return;
 
+		// Loop through the jobs and look for error messages.  A job may recieve a
+		// seperate notification for each output that has failed though the job
+		// is still processessing.
+		$errors = trim(implode(' ', array_map(function($output) {
+			return isset($output->error_message) ? '(Output '.$output->label.') '.$output->error_message : null;
+		}, $this->zencoderArray($job->outputs))));
+
+		// If there were any messages, treat the job as errored.  This also tries
+		// to fix an issue I saw where a final "error" notifcation wasn't fired even
+		// though multiple jobs failed.
+		$state = empty($errors) ? $job->state : 'failed';
+
 		// Update the model
-		switch($job->state) {
+		switch($state) {
 			
 			// Simple passthru of status
 			case 'processing';
@@ -142,10 +154,7 @@ class Zencoder extends EncodingProvider {
 			
 			// Find error messages on the output
 			case 'failed':
-				$errors = array_map(function($output) {
-					return $output->error_message;
-				}, $this->zencoderArray($job->outputs));
-				$model->status('error', implode(' ', $errors));
+				$model->status('error', $errors);
 				break;
 			
 			// Default

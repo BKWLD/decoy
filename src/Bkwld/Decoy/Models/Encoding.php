@@ -119,8 +119,16 @@ class Encoding extends Base {
 	 */
 	public function status($status, $message = null) {
 		if (!in_array($status, static::$states)) throw new Exception('Unknown state: '.$status);
-		$this->status = $status;
-		$this->message = $message;
+
+		// Append messages
+		if ($this->message) $this->message .= ' ';
+		$this->message .= $message;
+
+		// If a job is errored, don't unset it.  Thus, if one output fails, a notification
+		// from a later output succeeding still means an overall failure.
+		if ($this->status != 'error') $this->status = $status;
+
+		// Save it
 		$this->save();
 	}
 
@@ -131,14 +139,20 @@ class Encoding extends Base {
 	 */
 	public function getTagAttribute() {
 
-		// Require sources
-		if (!$sources = $this->outputs) return;
+		// Require and for the encoding to be complete
+		if (!$sources = $this->outputs && $this->status == 'complete') return;
 
 		// Start the tag
 		$tag = Element::video();
 
 		// Loop through the outputs and add them as sources
+		$types = array('mp4', 'webm', 'ogg');
 		foreach(json_decode($sources) as $type => $src) {
+
+			// Only allow basic output types
+			if (!in_array($type, $types)) continue;
+
+			// Add a source to the video tag
 			$tag->appendChild(Element::source()
 				->type('video/'.$type)
 				->src($src)
