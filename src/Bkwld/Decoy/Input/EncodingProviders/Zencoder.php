@@ -18,13 +18,42 @@ class Zencoder extends EncodingProvider {
 	 * @var array
 	 */
 	protected $defaults = array(
+
+		// Normal HTML5 formats
 		'mp4' => array(
 			'format' => 'mp4',
-		), 
+			'h264_profile' => 'high',
+		),
 		'webm' => array(
 			'format' => 'webm',
 		),
+
+		// For HLS encoding
+		'hls-low' => array(
+			'type' => 'segmented',
+			'format' => 'mp4',
+			'height' => 360,
+			'h264_profile' => 'baseline',
+		),
+		'hls-med' => array(
+			'type' => 'segmented',
+			'format' => 'mp4',
+			'h264_profile' => 'main',
+		),
+		'hls-high' => array(
+			'type' => 'segmented',
+			'format' => 'mp4',
+			'height' => 720,
+			'h264_profile' => 'high',
+		),
 	);
+
+	/**
+	 * The Encoding model instance that this encode is relateted to
+	 *
+	 * @var Bkwld\Decoy\Models\Encoding
+	 */
+	protected $model;
 
 	/**
 	 * Tell the service to encode an asset it's source
@@ -34,12 +63,11 @@ class Zencoder extends EncodingProvider {
 	 * @return void 
 	 */
 	public function encode($source, Encoding $model) {
+		$this->model = $model;
 
 		// Tell the Zencoder SDK to create a job
 		try {
 			$outputs = $this->outputsConfig();
-			\Log::debug('Zencoder input: '.$source);
-			\Log::debug('Zencoder output: ', $outputs);
 			$job = $this->sdk()->jobs->create(array(
 				'input' => $source, 
 				'output' => $this->outputsConfig($outputs),
@@ -74,24 +102,37 @@ class Zencoder extends EncodingProvider {
 	 * @return array 
 	 */
 	protected function addCommonProps($outputs) {
-		$destination = Config::get('decoy::encode.destination');
-		foreach($outputs as $label => &$config) {
 
-			// Set a label
-			$config['label'] = $label;
+		// Common settings
+		$common = array(
+
+			// Default height (960x540 at 16:9)
+			'height' => 540,
 
 			// Destination location as a directory
-			$config['base_url'] = $destination;
+			'base_url' => Config::get('decoy::encode.destination'),
 
 			// Make the outputs web readable on S3
-			$config['public'] = 1;
+			'public' => 1,
 
 			// Slower encodes for better quality.  Their docs recommended this
 			// which is why I'm using it instead of "1".
-			$config['speed'] = 2;
+			'speed' => 2,
 
 			// Register for notifications for when the conding is done
-			$config['notifications'] = array($this->notificationURL());
+			'notifications' => array($this->notificationURL()),
+
+		);
+
+		// Apply common settings ontop of the passed config
+		foreach($outputs as $label => &$config) {
+			$common['label'] = $label;
+
+			// Make the filename from the model id and the output label
+			$common['filename'] = $this->model->getKey().'-'$label.'.'.$config['format'];
+
+			// Do the merge
+			$config = array_merge($common, $config);
 		}
 
 		// Strip the keys from the array at this point, Zencoder doesn't like them
