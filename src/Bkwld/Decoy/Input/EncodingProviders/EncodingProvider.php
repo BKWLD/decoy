@@ -23,13 +23,37 @@ abstract class EncodingProvider {
 	protected $defaults = array();
 
 	/**
+	 * The Encoding model instance that this encode is related to
+	 *
+	 * @var Bkwld\Decoy\Models\Encoding
+	 */
+	protected $model;
+
+	/**
+	 * Inject dependencies
+	 * 
+	 * @param Bkwld\Decoy\Models\Encoding $model
+	 */
+	public function __construct(Encoding $model = null) {
+		$this->model = $model;
+	}
+
+	/**
+	 * Produce the destination directory
+	 *
+	 * @return string 
+	 */
+	protected function destination() {
+		return Config::get('decoy::encode.destination').'/'.Str::random(32).'/';
+	}
+
+	/**
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
-	 * @param Bkwld\Decoy\Models\Encoding $model 
 	 * @return void 
 	 */
-	abstract public function encode($source, Encoding $model);
+	abstract public function encode($source);
 	
 	/**
 	 * Handle notification requests from the SDK
@@ -68,15 +92,6 @@ abstract class EncodingProvider {
 	}
 
 	/**
-	 * Produce the destination directory
-	 *
-	 * @return string 
-	 */
-	protected function destination() {
-		return Config::get('decoy::encode.destination').'/'.Str::random(32).'/';
-	}
-
-	/**
 	 * Get the notifications URL
 	 *
 	 * @return string 
@@ -104,5 +119,12 @@ abstract class EncodingProvider {
 			return $url;
 		}
 	}
+
+	/**
+	 * Return the encoding percentage as an int
+	 *
+	 * @return int 0-100
+	 */
+	abstract public function progress();
 
 }

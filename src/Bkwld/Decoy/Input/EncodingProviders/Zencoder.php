@@ -51,21 +51,12 @@ class Zencoder extends EncodingProvider {
 	);
 
 	/**
-	 * The Encoding model instance that this encode is related to
-	 *
-	 * @var Bkwld\Decoy\Models\Encoding
-	 */
-	protected $model;
-
-	/**
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
-	 * @param Bkwld\Decoy\Models\Encoding $model 
 	 * @return void 
 	 */
-	public function encode($source, Encoding $model) {
-		$this->model = $model;
+	public function encode($source) {
 
 		// Tell the Zencoder SDK to create a job
 		try {
@@ -76,13 +67,13 @@ class Zencoder extends EncodingProvider {
 			));
 
 			// Store the response from the SDK
-			$model->storeJob($job->id, $this->outputsToHash($job->outputs));
+			$this->model->storeJob($job->id, $this->outputsToHash($job->outputs));
 
 		// Report an error with the encode
 		} catch(Services_Zencoder_Exception $e) {
-			$model->status('error', implode(' ', $this->zencoderArray($e->getErrors())));
+			$this->model->status('error', implode(' ', $this->zencoderArray($e->getErrors())));
 		} catch(Exception $e) {
-			$model->status('error', $e->getMessage());
+			$this->model->status('error', $e->getMessage());
 		}
 
 	}
@@ -203,6 +194,23 @@ class Zencoder extends EncodingProvider {
 			// Default
 			default:
 				$model->status('error', 'Unkown Zencoder state: '.$job->state);
+		}
+	}
+
+	/**
+	 * Return the encoding percentage as an int
+	 *
+	 * @return int 0-100
+	 */
+	public function progress() {
+		try {
+			$progress = $this->sdk()->jobs->progress($this->model->job_id);
+			\Log::info(print_r($progress,1));
+			if ($progress->state == 'finished') return 100;
+			else return $progress->progress;
+			return $progress;
+		} catch (\Exception $e) {
+			return 0;
 		}
 	}
 

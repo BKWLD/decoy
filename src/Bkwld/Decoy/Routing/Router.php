@@ -124,6 +124,11 @@ class Router {
 	 */
 	public function registerEncode() {
 
+		// Get the status of an encode
+		Route::get($this->dir.'/encode/{id}/progress', function($id) {
+			return Encoding::findOrFail($id)->forProgress();
+		});
+
 		// Make a simply handler for notify callbacks.  The encoding model will pass the the handling
 		// onto whichever provider is registered.
 		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {

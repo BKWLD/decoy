@@ -30,11 +30,17 @@ class VideoEncoder extends Upload {
 	 */
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, $type, $name, $label, $value, $attributes);
+
+		// Add attributes for styling and JS views
 		$this->addGroupClass('video-encoder');
+		$this->group->data_js_view('video-encoder');
 
 		// Get the encoding row if it exists
 		if ($item = $this->model()) {
 			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $name)->first();
+
+			// Add the data attributes for JS view
+			$this->group->data_encode($this->encoding->id);
 		}
 	}
 
@@ -68,9 +74,9 @@ class VideoEncoder extends Upload {
 			case 'complete': return $this->renderPlayer();
 			case 'error': return $this->renderError($this->encoding->message);
 			case 'cancelled': return $this->renderError('The encoding job was manually cancelled');
-			case 'pending': return $this->renderProgress('', 0);
-			case 'queued': return $this->renderProgress($this->encoding->status, .25);
-			case 'processing': return $this->renderProgress($this->encoding->status, .50);
+			case 'pending': return $this->renderProgress('');
+			case 'queued': return $this->renderProgress($this->encoding->status);
+			case 'processing': return $this->renderProgress($this->encoding->status);
 		}
 	}
 
@@ -80,12 +86,7 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderPlayer() {
-		return $this->encoding->getTagAttribute()
-			->addClass($this->span())
-			->addClass('img-polaroid')
-			->controls()
-			->width(580) // Matches the default width of image field preview
-		;
+		return $this->encoding->getAdminPlayerAttribute();
 	}
 
 	/**
@@ -102,11 +103,13 @@ class VideoEncoder extends Upload {
 	 *
 	 * @return string HTML
 	 */
-	protected function renderProgress($status, $perc) {
+	protected function renderProgress($status) {
 		return '<span class="status">
 				Encoding 
 				<span class="progress progress-striped active">
-					<span class="bar" style="width: '.($perc*100).'%;">'.ucfirst($status).'</span>
+					<span class="bar" style="width: '
+					.($this->encoding->getProgressAttribute())
+					.'%;">'.$status.'</span>
 				</span>
 			</span>';
 	}

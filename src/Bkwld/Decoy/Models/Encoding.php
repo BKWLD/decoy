@@ -33,6 +33,18 @@ class Encoding extends Base {
 	public function encodable() { return $this->morphTo(); }
 
 	/**
+	 * Return an assoc array for output to JSON when admin asks
+	 * for progress on an encode
+	 *
+	 * @return Bkwld\Decoy\Models\Encoding
+	 */
+	public function forProgress() {
+		$this->setVisible(array('status', 'message', 'admin_player', 'progress'));
+		$this->setAppends(array('admin_player', 'progress'));
+		return $this;
+	}
+
+	/**
 	 * Set default fields and delete any old encodings for the same source.
 	 *
 	 * @return void 
@@ -59,7 +71,7 @@ class Encoding extends Base {
 	 * @return void 
 	 */
 	public function onCreated() {
-		static::encoder()->encode($this->source(), $this);
+		static::encoder($this)->encode($this->source());
 	}
 
 	/**
@@ -75,11 +87,12 @@ class Encoding extends Base {
 	/**
 	 * Get an instance of the configured encoding provider
 	 *
+	 * @param Bkwld\Decoy\Models\Encoding
 	 * @return Bkwld\Decoy\Input\EncodingProviders\EncodingProvider
 	 */
-	static public function encoder() {
+	static public function encoder(Encoding $model = null) {
 		$class = Config::get('decoy::encode.provider');
-		return new $class;
+		return new $class($model);
 	}
 
 	/**
@@ -133,6 +146,34 @@ class Encoding extends Base {
 	}
 
 	/**
+	 * Generate an HTML5 video tag with extra elements for displaying in the admin
+	 *
+	 * @return string
+	 */
+	public function getAdminPlayerAttribute() {
+		if (!$tag = $this->getTagAttribute()) return;
+		return $tag
+			->addClass('img-polaroid')
+			->controls()
+			->width(580) // Matches the default width of image field preview
+			->render()
+		;
+	}
+
+	/**
+	 * Get the progress percentage of the encode
+	 *
+	 * @return int 0-100
+	 */
+	public function getProgressAttribute() {
+		switch($this->status) {
+			case 'pending': return 0;
+			case 'queued': return 25;
+			case 'processing': return (static::encoder($this)->progress()/100*50) + 50;
+		}
+	}
+
+	/**
 	 * Generate an HTML5 video tag via Former's HtmlObject for the outputs
 	 *
 	 * @return HtmlObject\Element
@@ -140,7 +181,7 @@ class Encoding extends Base {
 	public function getTagAttribute() {
 
 		// Require sources and for the encoding to be complete
-		if (!($sources = $this->outputs) && $this->status != 'complete') return;
+		if (!($sources = $this->outputs) || $this->status != 'complete') return;
 
 		// Start the tag
 		$tag = Element::video();
