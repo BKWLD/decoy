@@ -22,7 +22,7 @@ class Zencoder extends EncodingProvider {
 		// Normal HTML5 formats
 		'mp4' => array(
 			'format' => 'mp4',
-			'h264_profile' => 'high',
+			'h264_profile' => 'main',
 		),
 		'webm' => array(
 			'format' => 'webm',
