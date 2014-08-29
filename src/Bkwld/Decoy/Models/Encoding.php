@@ -187,22 +187,25 @@ class Encoding extends Base {
 
 		// Require sources and for the encoding to be complete
 		if (!($sources = $this->outputs) || $this->status != 'complete') return;
+		$sources = json_decode($sources);
 
 		// Start the tag
 		$tag = Element::video();
 
 		// Loop through the outputs and add them as sources
-		$types = array('mp4', 'webm', 'ogg');
-		foreach(json_decode($sources) as $type => $src) {
+		$types = array('mp4', 'webm', 'ogg', 'playlist');
+		foreach($sources as $type => $src) {
 
 			// Only allow basic output types
 			if (!in_array($type, $types)) continue;
 
+			// Make the source
+			$source = Element::source()->src($src);
+			if ($type == 'playlist') $source->type('application/x-mpegurl');
+			else $source->type('video/'.$type);
+
 			// Add a source to the video tag
-			$tag->appendChild(Element::source()
-				->type('video/'.$type)
-				->src($src)
-			);
+			$tag->appendChild($source);
 		}
 
 		// Return the tag

@@ -19,35 +19,55 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected $defaults = array(
 
-		// Normal HTML5 formats
-		'mp4' => array(
-			'format' => 'mp4',
-			'h264_profile' => 'main',
-		),
-		'webm' => array(
-			'format' => 'webm',
-		),
-
-		// For HLS encoding
-		/* Disabled for now
-		'hls-low' => array(
+		// For HLS encoding, inspired by:
+		// https://app.zencoder.com/docs/guides/encoding-settings/http-live-streaming
+		// This is intentionally before the normal HTML5 formats so the eventual
+		// video tag has the playlist source first.
+		'hls-low' => [
 			'type' => 'segmented',
-			'format' => 'mp4',
-			'height' => 360,
+			'format' => 'ts',
+			'height' => 270, // Width: 480
 			'h264_profile' => 'baseline',
-		),
-		'hls-med' => array(
+			'watermarks' => [
+				'url' => 'http://r53.cooltext.com/rendered/cooltext1695753545.png',
+			]
+		],
+		'hls-med' => [
 			'type' => 'segmented',
+			'format' => 'ts',
+			'height' => 540, // Width: 960
+			'h264_profile' => 'main',
+			'watermarks' => [
+				'url' => 'http://r54.cooltext.com/rendered/cooltext1695754431.png',
+			]
+		],
+		'hls-high' => [
+			'type' => 'segmented',
+			'format' => 'ts',
+			'height' => 720, // Width: 1280
+			'h264_profile' => 'high',
+			'watermarks' => [
+				'url' => 'http://r53.cooltext.com/rendered/cooltext1695754755.png',
+			]
+		],
+		'playlist' => [
+			'streams' => [
+				[ 'bandwidth' => 640, 'path' => 'hls-low.m3u8'],
+				[ 'bandwidth' => 1200, 'path' => 'hls-med.m3u8'],
+				[ 'bandwidth' => 2040, 'path' => 'hls-high.m3u8'],
+			],
+			'type' => 'playlist',
+			'format' => 'm3u8',
+		],
+
+		// Normal HTML5 formats
+		'mp4' => [
 			'format' => 'mp4',
 			'h264_profile' => 'main',
-		),
-		'hls-high' => array(
-			'type' => 'segmented',
-			'format' => 'mp4',
-			'height' => 720,
-			'h264_profile' => 'high',
-		),
-		*/
+		],
+		'webm' => [
+			'format' => 'webm',
+		],
 	);
 
 	/**
@@ -97,7 +117,7 @@ class Zencoder extends EncodingProvider {
 	protected function addCommonProps($outputs) {
 
 		// Common settings
-		$common = array(
+		$common = [
 
 			// Default height (960x540 at 16:9)
 			'height' => 540,
@@ -115,7 +135,7 @@ class Zencoder extends EncodingProvider {
 			// Register for notifications for when the conding is done
 			'notifications' => array($this->notificationURL()),
 
-		);
+		];
 
 		// Apply common settings ontop of the passed config
 		foreach($outputs as $label => &$config) {
