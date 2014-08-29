@@ -173,7 +173,7 @@ class Encoding extends Base {
 	public function getProgressAttribute() {
 		switch($this->status) {
 			case 'pending': return 0;
-			case 'queued': return 25;
+			case 'queued': return (static::encoder($this)->progress()/100*25) + 25;
 			case 'processing': return (static::encoder($this)->progress()/100*50) + 50;
 		}
 	}
