@@ -28,27 +28,18 @@ class Zencoder extends EncodingProvider {
 			'format' => 'ts',
 			'height' => 270, // Width: 480
 			'h264_profile' => 'baseline',
-			'watermarks' => [
-				'url' => 'http://r53.cooltext.com/rendered/cooltext1695753545.png',
-			]
 		],
 		'hls-med' => [
 			'type' => 'segmented',
 			'format' => 'ts',
 			'height' => 540, // Width: 960
 			'h264_profile' => 'main',
-			'watermarks' => [
-				'url' => 'http://r54.cooltext.com/rendered/cooltext1695754431.png',
-			]
 		],
 		'hls-high' => [
 			'type' => 'segmented',
 			'format' => 'ts',
 			'height' => 720, // Width: 1280
 			'h264_profile' => 'high',
-			'watermarks' => [
-				'url' => 'http://r53.cooltext.com/rendered/cooltext1695754755.png',
-			]
 		],
 		'playlist' => [
 			'streams' => [
