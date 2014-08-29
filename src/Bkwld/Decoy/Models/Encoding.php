@@ -135,7 +135,7 @@ class Encoding extends Base {
 
 		// Append messages
 		if ($this->message) $this->message .= ' ';
-		$this->message .= $message;
+		if ($message) $this->message .= $message;
 
 		// If a job is errored, don't unset it.  Thus, if one output fails, a notification
 		// from a later output succeeding still means an overall failure.
