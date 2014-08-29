@@ -42,4 +42,14 @@ trait Encodable {
 		}
 	}
 
+	/**
+	 * Tap into the deleted callback to delete this record if the parent is removed
+	 *
+	 * @return void 
+	 */
+	public function onDeleted() {
+		parent::onDeleted();
+		$this->encodings()->delete();
+	}
+
 }
