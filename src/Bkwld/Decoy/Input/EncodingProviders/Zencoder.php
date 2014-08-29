@@ -205,7 +205,6 @@ class Zencoder extends EncodingProvider {
 	public function progress() {
 		try {
 			$progress = $this->sdk()->jobs->progress($this->model->job_id);
-			\Log::info(print_r($progress,1));
 			if ($progress->state == 'finished') return 100;
 			else return $progress->progress;
 			return $progress;
