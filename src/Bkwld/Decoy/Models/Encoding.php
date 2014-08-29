@@ -133,6 +133,11 @@ class Encoding extends Base {
 	public function status($status, $message = null) {
 		if (!in_array($status, static::$states)) throw new Exception('Unknown state: '.$status);
 
+		// If the current status is complete, don't update again.  I have seen cases of a late
+		// processing call on a HLS stream file after it's already been set to complete.  I think
+		// it could just be weird internet delays.
+		if ($this->complete == 'complete') return;
+
 		// Append messages
 		if ($this->message) $this->message .= ' ';
 		if ($message) $this->message .= $message;
