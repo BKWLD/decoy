@@ -6,7 +6,8 @@
 	'api_key' => 'REQUIRED',
 
 	/**
-	 * The destination directory.
+	 * The destination directory.  In other words, where the encoded video files
+	 * should be pushed to.
 	 * Ex: s3://bucket-name/directory
 	 */
 	'destination' => 'REQUIRED',
