@@ -24,7 +24,8 @@
 		"cartalyst/sentry": "2.0.*",
 		"bkwld/croppa": "~3.0",
 		"bkwld/library": "~2.13",
-		"bkwld/laravel-haml": "~2.0"
+		"bkwld/laravel-haml": "~2.0",
+		"zencoder/zencoder-php": "~2.2"
 	},
 	"require-dev": {
 		"phpunit/phpunit": "3.7.*",
