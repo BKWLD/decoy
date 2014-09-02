@@ -96,7 +96,30 @@ class Zencoder extends EncodingProvider {
 	 * @return array
 	 */
 	protected function outputsConfig() {
-		return $this->addCommonProps($this->mergeConfigWithDefaults());
+		return $this->addCommonProps(
+			$this->filterHLS(
+				$this->mergeConfigWithDefaults()
+		));
+	}
+
+	/**
+	 * If the playlist is set to `false` then remove all the HLS encodings.  HLS
+	 * is the "http live streaming" outputs that let us serve a video that can adjust
+	 * quality levels in response to the bandwidth of the clietn.  Works only on iPhone,
+	 * Android, and Safari right now.
+	 *
+	 * @param array $config A config assoc array
+	 * @return array
+	 */
+	protected function filterHLS($config) {
+		
+		// Do not allow any outputs that have a type of "segmented" or "playlist"
+		if (empty($config['playlist'])) return array_filter($config, function($output) {
+			return !(isset($output['type']) && in_array($output['type'], ['segmented', 'playlist']));
+		});
+
+		// Else, passthrough the config
+		else return $config;
 	}
 
 	/**
