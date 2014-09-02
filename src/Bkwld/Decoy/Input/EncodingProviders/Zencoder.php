@@ -23,29 +23,70 @@ class Zencoder extends EncodingProvider {
 		// https://app.zencoder.com/docs/guides/encoding-settings/http-live-streaming
 		// This is intentionally before the normal HTML5 formats so the eventual
 		// video tag has the playlist source first.
-		'hls-low' => [
+		'hls-240' => [
 			'type' => 'segmented',
 			'format' => 'ts',
-			'height' => 270, // Width: 480
 			'h264_profile' => 'baseline',
+			'width': 400,
+			'decoder_bitrate_cap': 300,
+			'decoder_buffer_size': 800,
+			'video_bitrate': 200,
+			'max_frame_rate': 15,
+			
 		],
-		'hls-med' => [
+		'hls-440' => [
 			'type' => 'segmented',
 			'format' => 'ts',
-			'height' => 540, // Width: 960
+			'h264_profile' => 'baseline',
+			'width': 400,
+			'decoder_bitrate_cap': 600,
+			'decoder_buffer_size': 1600,
+			'video_bitrate': 400,
+		],
+		'hls-640' => [
+			'type' => 'segmented',
+			'format' => 'ts',
 			'h264_profile' => 'main',
+			'width': 480,
+			'decoder_bitrate_cap': 900,
+			'decoder_buffer_size': 2400,
+			'video_bitrate': 600,
 		],
-		'hls-high' => [
+		'hls-1040' => [
 			'type' => 'segmented',
 			'format' => 'ts',
-			'height' => 720, // Width: 1280
+			'h264_profile' => 'main',
+			'width': 640,
+			'decoder_bitrate_cap': 1500,
+      'decoder_buffer_size': 4000,
+      'video_bitrate': 1000,
+		],
+		'hls-1540' => [
+			'type' => 'segmented',
+			'format' => 'ts',
 			'h264_profile' => 'high',
+			'width': 960,
+			'decoder_bitrate_cap': 2250,
+      'decoder_buffer_size': 6000,
+      'video_bitrate': 1500,
+		],
+		'hls-2040' => [
+			'type' => 'segmented',
+			'format' => 'ts',
+			'h264_profile' => 'high',
+			'width': 1024,
+			'decoder_bitrate_cap': 3000,
+			'decoder_buffer_size': 8000,
+			'video_bitrate': 2000,
 		],
 		'playlist' => [
 			'streams' => [
-				[ 'bandwidth' => 640, 'path' => 'hls-low.m3u8'],
-				[ 'bandwidth' => 1200, 'path' => 'hls-med.m3u8'],
-				[ 'bandwidth' => 2040, 'path' => 'hls-high.m3u8'],
+				[ 'bandwidth' => 2040, 'path' => 'hls-2040.m3u8'],
+				[ 'bandwidth' => 1540, 'path' => 'hls-1540.m3u8'],
+				[ 'bandwidth' => 1040, 'path' => 'hls-1040.m3u8'],
+				[ 'bandwidth' => 640, 'path' => 'hls-640.m3u8'],
+				[ 'bandwidth' => 440, 'path' => 'hls-440.m3u8'],
+				[ 'bandwidth' => 240, 'path' => 'hls-240.m3u8'],
 			],
 			'type' => 'playlist',
 			'format' => 'm3u8',
@@ -133,8 +174,8 @@ class Zencoder extends EncodingProvider {
 		// Common settings
 		$common = [
 
-			// Default height (960x540 at 16:9)
-			'height' => 540,
+			// Default width (960x540 at 16:9)
+			'width' => 960,
 
 			// Destination location as a directory
 			'base_url' => $this->destination(),
@@ -145,6 +186,10 @@ class Zencoder extends EncodingProvider {
 			// Slower encodes for better quality.  Their docs recommended this
 			// which is why I'm using it instead of "1".
 			'speed' => 2,
+
+			// Normalize audio
+			'audio_bitrate': 56,
+			'audio_sample_rate': 22050,
 
 			// Register for notifications for when the conding is done
 			'notifications' => array($this->notificationURL()),
