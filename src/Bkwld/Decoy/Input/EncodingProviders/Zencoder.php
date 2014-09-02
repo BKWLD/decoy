@@ -32,7 +32,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_buffer_size' => 800,
 			'video_bitrate' => 200,
 			'max_frame_rate' => 15,
-			
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/0s1n2T0F0800/Image%202014-09-02%20at%2012.27.14%20PM.png', ],
 		],
 		'hls-440' => [
 			'type' => 'segmented',
@@ -42,6 +42,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_bitrate_cap' => 600,
 			'decoder_buffer_size' => 1600,
 			'video_bitrate' => 400,
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/0V1S2z1w1J0k/Image%202014-09-02%20at%2012.27.39%20PM.png', ],
 		],
 		'hls-640' => [
 			'type' => 'segmented',
@@ -51,6 +52,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_bitrate_cap' => 900,
 			'decoder_buffer_size' => 2400,
 			'video_bitrate' => 600,
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/131Z3e2j0V13/Image%202014-09-02%20at%2012.27.50%20PM.png', ],
 		],
 		'hls-1040' => [
 			'type' => 'segmented',
@@ -60,6 +62,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_bitrate_cap' => 1500,
       'decoder_buffer_size' => 4000,
       'video_bitrate' => 1000,
+      // 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/2E3u1U3C3M1T/Image%202014-09-02%20at%2012.28.00%20PM.png', ],
 		],
 		'hls-1540' => [
 			'type' => 'segmented',
@@ -69,6 +72,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_bitrate_cap' => 2250,
       'decoder_buffer_size' => 6000,
       'video_bitrate' => 1500,
+      // 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/11392V0W4421/Image%202014-09-02%20at%2012.28.14%20PM.png', ],
 		],
 		'hls-2040' => [
 			'type' => 'segmented',
@@ -78,6 +82,7 @@ class Zencoder extends EncodingProvider {
 			'decoder_bitrate_cap' => 3000,
 			'decoder_buffer_size' => 8000,
 			'video_bitrate' => 2000,
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/1W0K1x1d2X2c/Image%202014-09-02%20at%2012.28.23%20PM.png', ],
 		],
 		'playlist' => [
 			'streams' => [
