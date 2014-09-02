@@ -224,6 +224,14 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected function outputsToHash($outputs) {
 		return array_map(function($output) {
+
+			// If a destination_root was set, subsitute that in for the destination
+			// in the retured URL
+			if ($root = Config::get('decoy::encode.destination_root')) {
+				return str_replace(Config::get('decoy::encode.destination'), $root, $output->url);
+			}
+
+			// Else just return the URL
 			return $output->url;
 		}, $this->zencoderArray($outputs));
 	}
