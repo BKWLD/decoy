@@ -1,6 +1,8 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use App;
+use Bkwld\Decoy\Models\Encoding;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
 use Config;
@@ -10,6 +12,9 @@ use Lang;
 use Str;
 
 class Fragment extends \Illuminate\Database\Eloquent\Model {
+
+	// Incorporate the encodable trait because video encoders are acceptable
+	use Traits\Encodable;
 	
 	// Fragments don't need timestamps
 	public $timestamps = false;
@@ -224,24 +229,37 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		$key = self::confKey($input_name);
 		
 		// Save out a file if there was one
-		if (Input::hasFile($input_name)) {
+		if ($has_file = Input::hasFile($input_name)) {
 			$value = File::publicPath(File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir')));
+
+			// Remove it from the input so any sub models (like Encoding) don't
+			// try and handle it
+			App::make('request')->files->remove($input_name);
 		}
 				
 		// See if a row already exists
-		if ($row = self::find($key)) {
+		if ($row = self::where('key', '=', $input_name)->first()) {
 			
 			// Update the row if there is a value that is different
 			// than one in a config file
 			if ($value && !self::unchanged($input_name, $value)) {
-				return $row->update(array('value' => $value));
+				$row->update(array('value' => $value));
 				
 			// Delete the row
-			} else return $row->delete();
+			} else $row->delete();
 		
 		// The row didn't exist, so create it
 		} else if ($value && !self::unchanged($input_name, $value)) {
-			return self::create(array('key' => $key, 'value' => $value));
+			$row = self::create(array('key' => $key, 'value' => $value));
+		}
+
+		// If a video encoder field was saved, encode the file
+		if ($has_file && $row
+			&& is_a($row, 'Bkwld\Decoy\Models\Fragment')
+			&& Str::contains($input_name, 'video-encoder')) {
+			$row->encodings()->save(new Encoding(array(
+				'encodable_attribute' => $input_name,
+			)));
 		}
 	}
 	
