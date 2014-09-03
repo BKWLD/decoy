@@ -49,6 +49,9 @@
 										case 'image':
 											echo Former::image($value->key, $label);
 											break;
+										case 'video-encoder':
+											echo Former::videoEncoder($value->key, $label);
+											break;
 										case 'file':
 											echo Former::upload($value->key, $label);
 											break;
