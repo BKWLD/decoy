@@ -258,7 +258,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			&& is_a($row, 'Bkwld\Decoy\Models\Fragment')
 			&& Str::contains($input_name, 'video-encoder')) {
 			$row->encodings()->save(new Encoding(array(
-				'encodable_attribute' => $input_name,
+				'encodable_attribute' => 'value',
 			)));
 		}
 	}
