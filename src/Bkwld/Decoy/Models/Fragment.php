@@ -11,7 +11,7 @@ use Input;
 use Lang;
 use Str;
 
-class Fragment extends \Illuminate\Database\Eloquent\Model {
+class Fragment extends Base {
 
 	// Incorporate the encodable trait because video encoders are acceptable
 	use Traits\Encodable;
@@ -236,9 +236,13 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 			// try and handle it
 			App::make('request')->files->remove($input_name);
 		}
-				
+
 		// See if a row already exists
 		if ($row = self::where('key', '=', $key)->first()) {
+
+			// Files are managed manually here, don't do the normal Decoy Base Model
+			// file handling.
+			$row->auto_manage_files = false;
 			
 			// Update the row if there is a value that is different
 			// than one in a config file
