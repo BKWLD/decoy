@@ -241,7 +241,9 @@ class Fragment extends Base {
 		if ($row = self::where('key', '=', $key)->first()) {
 
 			// Files are managed manually here, don't do the normal Decoy Base Model
-			// file handling.
+			// file handling.  It doesn't work here because it expects the Input to
+			// contain fields for a single model instance.  Whereas frags manages many
+			// model records at once.
 			$row->auto_manage_files = false;
 			
 			// Update the row if there is a value that is different
@@ -249,7 +251,8 @@ class Fragment extends Base {
 			if ($value && !self::unchanged($input_name, $value)) {
 				$row->update(array('value' => $value));
 				
-			// Delete the row
+			// Delete the row.  This will also delete encoding rows thanks to the 
+			// encodable trait and this class extending from the Decoy base model.
 			} else $row->delete();
 		
 		// The row didn't exist, so create it
