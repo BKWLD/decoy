@@ -75,6 +75,23 @@ class Encoding extends Base {
 	}
 
 	/**
+	 * Delete encoded files that are local to this filesystem
+	 */
+	public function onDeleted() {
+
+		// Get the sources
+		if (!$sources = $this->outputs) return;
+		$sources = json_decode($sources);
+
+		// Loop through the sources and try to delete them
+		foreach($sources as $source) {
+			if (preg_match('#^/#', $source) && file_exists(public_path().$source)) {
+				unlink(public_path().$source);
+			}
+		}
+	}
+
+	/**
 	 * Make an instance of the encoding provider
 	 *
 	 * @param array $input Input::get()

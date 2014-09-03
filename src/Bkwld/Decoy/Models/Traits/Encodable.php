@@ -49,7 +49,11 @@ trait Encodable {
 	 */
 	public function onDeleted() {
 		parent::onDeleted();
-		$this->encodings()->delete();
+
+		// Delete each individually so model callbacks can respond
+		$this->encodings()->get()->each(function($encode) {
+			$encode->delete();
+		});
 	}
 
 }
