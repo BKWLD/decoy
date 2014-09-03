@@ -238,7 +238,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		}
 				
 		// See if a row already exists
-		if ($row = self::where('key', '=', $input_name)->first()) {
+		if ($row = self::where('key', '=', $key)->first()) {
 			
 			// Update the row if there is a value that is different
 			// than one in a config file
