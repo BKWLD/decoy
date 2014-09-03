@@ -208,6 +208,7 @@ class Encoding extends Base {
 
 		// Start the tag
 		$tag = Element::video();
+		$tag->value('Your browser does not support the video tag. You should <a href="http://whatbrowser.org/">consider updating</a>.');
 
 		// Loop through the outputs and add them as sources
 		$types = array('mp4', 'webm', 'ogg', 'playlist');
