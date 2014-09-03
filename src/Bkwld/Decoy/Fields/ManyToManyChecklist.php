@@ -114,13 +114,4 @@ class ManyToManyChecklist extends Checkbox {
 			&& method_exists($item, $this->name)) return $item->{$this->name};
 	}
 
-	/**
-	 * Deprecated function
-	 * @param Illuminate\Database\Eloquent\Model $item 
-	 * @return Field A field
-	 */
-	public function item($item) {
-		\Log::notice('ManyToManyChecklist::item() is deprecated.  The item is now fetched automatically from Former::populate');
-	}
-
 }
