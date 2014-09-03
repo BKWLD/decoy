@@ -18,9 +18,6 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	// that I use to store block help lines.
 	private static $ignore = array('pagination', 'reminders', 'validation', 'admin');
 	
-	// Use the key as the primary key
-	public $primaryKey = 'key';
-	
 	// Allow mass assignment
 	protected $fillable = array('key', 'value');
 	
@@ -115,28 +112,27 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	/**
 	 * Get a value given a key from the DB but falling back to a language file
 	 */
-	static private $pairs;
+	static private $pairs; // Array
 	static private $db_checked = false;
 	public static function value($key) {
 		
 		// Get all pairs to reduce DB lookups
 		if (!self::$db_checked) {
-			self::$pairs = self::all();
+			self::$pairs = self::lists('value', 'key');
 			self::$db_checked = true;
 			
 			// Add untyped versions of pairs to the array so that items can be looked
 			// up even if their type isn't included.  This is another peformance hit.
-			foreach(self::$pairs as $pair) {
-				if (Str::contains($pair->key,',')) {
-					$clone = $pair->replicate();
-					$clone->key = preg_replace('#,.*$#', '', $pair->key);
-					self::$pairs->add($clone);
+			foreach(self::$pairs as $key => $val) {
+				if (Str::contains($key, ',')) {
+					$key = preg_replace('#,.*$#', '', $key);
+					self::$pairs[$key] = $val;
 				}
 			}			
 		}
 		
 		// Check if the key is in the db
-		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
+		if (array_key_exists($key, self::$pairs)) return self::$pairs[$key];
 		
 		// Else return the value from the config file
 		else if (Lang::has($key)) return self::massageLangValue(Lang::get($key));
