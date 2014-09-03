@@ -11,7 +11,7 @@ use Input;
 use Lang;
 use Str;
 
-class Fragment extends \Illuminate\Database\Eloquent\Model {
+class Fragment extends Base {
 
 	// Incorporate the encodable trait because video encoders are acceptable
 	use Traits\Encodable;
