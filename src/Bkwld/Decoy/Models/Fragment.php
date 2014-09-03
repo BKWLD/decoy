@@ -77,7 +77,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 				
 				// Make all files that are unchanged required so that there is no
 				// delete checkbox shown in the form
-				if (self::unchangedImage($input_name, self::value($title.'.'.$key))) {
+				if (self::unchangedFile($input_name, self::value($title.'.'.$key))) {
 					$rules[$input_name] = 'required';
 				}
 				
@@ -201,17 +201,17 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (Input::hasFile($input_name)) return false;
 		
 		// If no file was posted but we're getting a value, then it must be unchanged
-		if (self::unchangedImage($input_name, $val)) return true;
+		if (self::unchangedFile($input_name, $val)) return true;
 		
 		// Do a string comparison after simplifying all whitespace
 		return self::clean(Lang::get(self::confkey($input_name))) === self::clean($val);
 	}
 	
 	/**
-	 * Test if an field is for an image and if it's unchanged
+	 * Test if an field is for an file and if it's unchanged
 	 */
-	public static function unchangedImage($input_name, $val) {
-		return Str::endsWith($input_name, array(',image', ',file')) 
+	public static function unchangedFile($input_name, $val) {
+		return Str::endsWith($input_name, array(',image', ',file', ',video-encoder')) 
 			&& Str::is('/uploads/fragments/*', $val);
 	}
 	
