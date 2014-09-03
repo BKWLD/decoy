@@ -186,7 +186,8 @@ define(function (require) {
 			'click .delete-now': 'deleteNow',
 			'click .remove-now': 'removeNow',
 			'click .visibility': 'toggleVisibility',
-			'insert': 'insertNew'
+			'insert': 'insertNew',
+			'insertEl': 'insertEl'
 		},
 		
 		// Delete the row via JS
@@ -466,26 +467,40 @@ define(function (require) {
 					
 				});
 			}
+
+			// Register it
+			this.addInsertedRow($row);
+
+			// Fade it in
+			$row.hide().fadeIn();
 			
+		},
+
+		// Insert a new row by passing a reference to its DOM element
+		insertEl: function(e, el) {
+			this.addInsertedRow($(el));
+		},
+
+		// Add the row to the DOM, reigster it with Backbone, and run other common
+		// methods upon it.
+		addInsertedRow: function($row) {
+
 			// Add the template to the list, above the first row with a model id.  Or
 			// if there are no results, replace the last row, which will be the
 			// 'no results found' message
 			var $caret = this.$('tbody ['+dataId+']').first();
 			if ($caret.length) $caret.before($row);
 			else this.$('tbody tr').last().replaceWith($row);
-			
+
 			// Add the backbone brains (it's not expecting a jquery object)
 			this.initRow($row[0]);
-			
+
 			// Increment the counter
 			this.$total.text(parseInt(this.$total.first().text(),10) + 1);
 			
 			// Enable tooltips
-			this.$el.find('.js-tooltip').tooltip({ animation: false });
-			
-			// Fade it in
-			$row.hide().fadeIn();
-			
+			$row.find('.js-tooltip').tooltip({ animation: false });
+
 		},
 		
 		// render view from model changes

@@ -11,8 +11,14 @@
 ### Contributing
 
 - The `master` branch represents what will be come the next **minor** release.
+
 - A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.
-- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  
+
+- A riskier feature should be worked on in a feature branch and then moved into master.  When it's finished, it can be come part of the next minor vesion release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace `{branch}` with the latest versioned-branch):
+
+	```bash
+	git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master
+	```
 
 
 ### Tests
@@ -143,7 +149,11 @@ See the "Form fields" section of this README for more info in it's API.
 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
-TODO Describe changing the layout and index
+### Overriding a Decoy partial
+
+You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at app/views/admin/articles/shared/_pagination.php you can customize the pagination partial JUST for the articles controller.
+
+In addition, you can override a partial for ALL controllers through built in [Laravel functionality](http://laravel.com/docs/packages#package-views).
 
 ### Related sidebar
 
@@ -378,6 +388,14 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::image('image', 'Profile image')->crops($crops->image)->blockHelp('Choose an image for the user')
 
 
+- `Former::video()` 
+
+	- Creates a [video upload field](http://yo.bkwld.com/image/1R3V1T2o1R1P) with addtional UI for checking the progress of the encoding and then playing back the video.
+	- Review the feature on Encoding from this doc for more information on the setup of the video encoding feature of Decoy.
+
+			!= Former::video('video')
+
+
 - `Former::belongsTo()`
 
 	- Creates an [autocomplete field](http://cl.ly/image/2e3D3E2o2U2K) that populates a foreign key in a belongs to relationship.
@@ -390,10 +408,9 @@ The following additional fields come with Decoy.  They are implemented through F
 
 	- Render a [list of checkboxes](http://cl.ly/image/0b2w0J312z2i) to represent a related many-to-many table.  The underlying Former field `type` is a checkbox.
 	- The relationship name is stored in the field `name`.  This is the name of the relationship method that is defined on the model that is currently being edited in Decoy.
-	- You must pass it a model instance that is the parent of the manyToMany relationship by chaining `->item($item)`; this is typically the model instance that is being edited in decoy.  An instance of the relationship will be automatically saved as the `value` of the field; you shouldn't specify a `value()`.
 	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
 
-			!= Former::manyToManyChecklist('hubs')->item($item)->scope(function($query) use ($product) { return $query->where('product_id', '=', $product->id); })
+			!= Former::manyToManyChecklist('hubs')->scope(function($query) use ($product) { return $query->where('product_id', '=', $product->id); })
 
 
 - `Former::listing()`
@@ -412,3 +429,10 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::listing('Author')->take(30)->layout('form')->parent($item)
 
 
+### Video encoding
+
+The `Former::video` form field creates the upload field for a video in the admin.  However, there is additional setup that the developer must do to make video encoding work.  Currently, only one provider is supported for video encoding, [Zencoder](https://zencoder.com/), but it's implementation is relatively abstracted; other providers could be added in the future.
+
+You'll need to edit the Decoy "encoding.php" config file.  It should be within your app/configs/packages directory.  The comments for each config parameter should be sufficient to explain how to use them.  Depending on where you are pushing the encoded videos to, you may need to spin up an S3 instance.  If you push to SFTP you can generate a key-pair locally (`ssh-keygen`), post the private key to [Zencoder](https://app.zencoder.com/account/credentials) and then add the public key to the server's authorized_keys.
+
+Note: by default, segmented files for [HTTP Live Streaming](http://en.wikipedia.org/wiki/HTTP_Live_Streaming) while be created.  This increases encoding cost and time but will create a better experience for mobile users.  To disable this, set the `outputs` config to have `'playlist' => false`.

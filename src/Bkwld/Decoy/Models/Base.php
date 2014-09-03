@@ -46,7 +46,6 @@ abstract class Base extends Eloquent {
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
 			'_token', // Part of CSRF protection
-			'_wysihtml5_mode',
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
@@ -66,10 +65,10 @@ abstract class Base extends Eloquent {
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
 	public function hasGetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasGetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasGetMutator($key);
 	}
 	public function hasSetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasSetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -165,20 +164,7 @@ abstract class Base extends Eloquent {
 	 * that are named like common things that would be titles
 	 */
 	public function title() {
-		$title = '';
-		
-		// Add a thumbnail to the title if there is an "image" field
-		if (method_exists($this, 'image') && $image = $this->image()) {
-			if ($image && Str::startsWith($image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
-			else $title .= '<img src="'.Croppa::url($image, 40, 40).'"/> ';
-		} elseif (!method_exists($this, 'image') && !empty($this->image)) {
-			if (Str::startsWith($this->image, array('//', 'http'))) $title .= '<img src="'.$image.'"/> ';
-			else $title .= '<img src="'.$this->croppa(40,40).'"/> ';
-		}
-
-		// Append the text portion of the title
-		return $title.$this->titleText();
-
+		return $this->croppaTag(40, 40).$this->titleText();
 	}
 
 	/**
@@ -291,9 +277,21 @@ abstract class Base extends Eloquent {
 	/**
 	 * Form a croppa URL, taking advantage of being able to set more columns null.  Also,
 	 * provides an easier way to inform the source crops
+	 * @param int $width 
+	 * @param int $height
+	 * @param string $crop_style A key from the $crops property of the model
+	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
+	 *                      string of the column name in the database
+	 * @param array $options Croppa-style options
+	 * @return string A croppa URL
 	 */
 	public function croppa($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
 		
+		// Get the image src path
+		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
+		else $src = $this->$field;
+		if (empty($src)) return;
+
 		// Check if the image field has crops
 		if ($crop_style && !array_key_exists($field, static::$crops)) {
 			throw new \Exception("A crop style was passed for $field but no crops are defined for that field.");
@@ -308,11 +306,6 @@ abstract class Base extends Eloquent {
 		if (!$crop_style && !empty(static::$crops[$field]) && Collection::keyOrValueExists('default', static::$crops[$field])) {
 			$crop_style = 'default';
 		}
-		
-		// Get the image src path
-		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
-		else $src = $this->$field;
-		if (empty($src)) return;
 		
 		// If there is a crop value, add it to the options
 		if ($crop_style) {
@@ -341,9 +334,17 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Return an image tag using croppa data
+	 * @param int $width 
+	 * @param int $height
+	 * @param string $crop_style A key from the $crops property of the model
+	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
+	 *                      string of the column name in the database
+	 * @param array $options Croppa-style options
+	 * @return string An image tag
 	 */
 	public function croppaTag($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
-		return '<img src="'.$this->croppa($width, $height, $crop_style, $field, $options).'"/>';
+		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		return '<img src="'.$url.'"/>';
 	}
 	
 	/**

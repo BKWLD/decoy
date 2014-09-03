@@ -24,6 +24,9 @@ body.login.index {
 				max-width: 840px;
 				position: relative;
 				top: -5em;
+				@media (max-width: $bootstrap_nav_break) {
+					top: 0;
+				}
 			}
 		}	
 	}
@@ -49,6 +52,8 @@ body.login.index {
 			width: 100% !important; // Override jquery
 			padding-bottom: 40px; // When stacked, push apart
 			position: static;
+			max-width: 380px;
+			margin: 0 auto;
 		}
 		@media (max-width: $break-small) {
 			padding-bottom: 20px;
@@ -115,6 +120,7 @@ body.login.index {
 		@media (max-width: $bootstrap_nav_break) {
 			position: static;
 			width: 100%;
+			margin: 0 auto;
 			.control-label {
 				width: 100%;
 				text-align: left;

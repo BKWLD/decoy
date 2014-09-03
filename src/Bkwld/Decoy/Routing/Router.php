@@ -2,8 +2,10 @@
 
 // Dependencies
 use App;
+use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Event;
+use Input;
 use Route;
 
 /**
@@ -33,6 +35,9 @@ class Router {
 		$this->registerCommands();
 		$this->registerFragments();
 		$this->registerWorkers();
+		$this->registerEncode();
+
+		// Register wildcard last
 		$this->registerWildcard();
 		
 		// Setup filters
@@ -112,6 +117,23 @@ class Router {
 	public function registerWorkers() {
 		Route::get($this->dir.'/workers', array('uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy\workers'));
 		Route::get($this->dir.'/workers/tail/{worker}', array('uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy\workers@tail'));
+	}
+
+	/**
+	 * Encoding
+	 */
+	public function registerEncode() {
+
+		// Get the status of an encode
+		Route::get($this->dir.'/encode/{id}/progress', function($id) {
+			return Encoding::findOrFail($id)->forProgress();
+		});
+
+		// Make a simply handler for notify callbacks.  The encoding model will pass the the handling
+		// onto whichever provider is registered.
+		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
+			return Encoding::notify(Input::get());
+		}));
 	}
 	
 	/**

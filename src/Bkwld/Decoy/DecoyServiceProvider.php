@@ -1,13 +1,13 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
+use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
 use Former\Former;
-use Former\MethodDispatcher;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -29,10 +29,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
-		// Register the routes AFTER all the app routes using the "before" register
+		// Register the routes AFTER all the app routes using the "before" register.  Unless
+		// the app is running via the CLI where we want the routes reigsterd for URL generation.
 		$router = new Routing\Router($dir, $filters);
 		$this->app->instance('decoy.router', $router);
-		$this->app->before(array($router, 'registerAll'));
+		if (App::runningInConsole()) $router->registerAll();
+		else $this->app->before(array($router, 'registerAll'));
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
@@ -50,8 +52,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
 		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
-		// When https://github.com/Anahkiasen/former/pull/278 gets accepted into the master
-		// branch, I can just sub out the MethodDispatcher directly.
+		// When https://github.com/Anahkiasen/former/pull/359 get accepted and tagged, I can
+		// call add() on the existing methodDispatcher().
 		$this->app->singleton('former', function ($app) {
 			return new Former($app, new MethodDispatcher($app, array(
 				'Bkwld\Decoy\Fields\\', Former::FIELDSPACE
@@ -63,9 +65,6 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Tell Former to include unchecked checkboxes in the post
 		Config::set('former::push_checkboxes', true);
-
-		// Use Decoy's subclass of the Sentry user class
-		Config::set('cartalyst/sentry::users.model', 'Bkwld\Decoy\Auth\SentryUser');
 
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
@@ -115,10 +114,26 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Build the auth instance
 		$this->app->singleton('decoy.auth', function($app) {
+
+			// Build an instance of the specified auth class if it's a valid class path
 			$auth_class = $app->make('config')->get('decoy::auth_class');
 			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
 			$instance = new $auth_class;
 			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
+
+			// If using Sentry, apply customizations.  Do this here so that requests that
+			// aren't handled by Decoy (like the requireDecoyAuthUntilLive() one) will benefit
+			// from the customizations.
+			if ($auth_class == '\Bkwld\Decoy\Auth\Sentry') {
+
+				// Disable the checkPersistCode() function when not on a live/prod site
+				$app->make('config')->set(
+					'cartalyst/sentry::users.model', 
+					'Bkwld\Decoy\Auth\SentryUser'
+				);
+			}
+			
+			// Return the auth class instance
 			return $instance;
 		});
 		
