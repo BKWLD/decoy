@@ -302,7 +302,7 @@ class Fragment extends Base {
 	 * @return void 
 	 */
 	public function onDeleted() {
-		parent::onDeleted();
+		if (Str::contains($this->key, ',video-encoder')) $this->deleteEncodings();
 		if (static::isFile($this->key)) $this->deleteFile($this->value);
 	}
 	
