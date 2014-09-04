@@ -216,8 +216,17 @@ class Fragment extends Base {
 	 * Test if an field is for an file and if it's unchanged
 	 */
 	public static function unchangedFile($input_name, $val) {
-		return Str::endsWith($input_name, array(',image', ',file', ',video-encoder')) 
-			&& Str::is('/uploads/fragments/*', $val);
+		return static::isFile($input_name) && Str::is('/uploads/fragments/*', $val);
+	}
+
+	/**
+	 * Test if an input name represents a file
+	 *
+	 * @param string $input_name 
+	 * @return boolean 
+	 */
+	public static function isFile($input_name) {
+		return Str::endsWith($input_name, array(',image', ',file', ',video-encoder'));
 	}
 	
 	/**
