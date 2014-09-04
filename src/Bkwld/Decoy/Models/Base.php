@@ -210,7 +210,7 @@ abstract class Base extends Eloquent {
 	 * @param string $file The path to the file relative to the doc root
 	 * @return void 
 	 */
-	protected function deleteFile($file) {
+	public function deleteFile($file) {
 	
 		// If the file has an image suffix, use Croppa to delete
 		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
