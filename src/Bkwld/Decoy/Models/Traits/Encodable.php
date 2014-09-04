@@ -21,7 +21,7 @@ trait Encodable {
 	 * @param  string $field
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function encode($field = 'video') {
+	public function encoding($field = 'video') {
 		return $this->encodings()->where('encodable_attribute', '=', $field)->first();
 	}
 			
@@ -31,7 +31,7 @@ trait Encodable {
 	 * @return string HTML
 	 */
 	public function adminColEncodeStatus() {
-		if (!$encode = $this->encode()) return '<span class="label">Pending</span>';
+		if (!$encode = $this->encoding()) return '<span class="label">Pending</span>';
 		switch($encode->status) {
 			case 'pending': return '<span class="label">'.ucfirst($encode->status).'</span>';
 			case 'error':
