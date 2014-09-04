@@ -111,7 +111,7 @@ body.login.index {
 		.controls {
 			margin-left: 110px;
 			input[type="email"], input[type="password"] {
-				width: 100%%;
+				width: 100%;
 				@include box-sizing(border-box);
 				height: 30px;
 			}
