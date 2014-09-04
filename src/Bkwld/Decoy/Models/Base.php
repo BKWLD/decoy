@@ -133,7 +133,7 @@ abstract class Base extends Eloquent {
 				if (!$model) return;
 				
 				// Special files behavior
-				if ($event == 'validating' && $this->manage_files) $files->preValidate($model);
+				if ($event == 'validating' && $model->auto_manage_files) $files->preValidate($model);
 				
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
