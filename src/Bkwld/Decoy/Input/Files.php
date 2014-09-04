@@ -90,36 +90,10 @@ class Files {
 			$files->remove($field);
 
 			// If the validation rules include a request to encode a video, add it to the encoding queue
-			if (Str::contains($item::$rules[$field], 'video:encode')) $this->encode($item, $field);
+			if (Str::contains($item::$rules[$field], 'video:encode') 
+				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
 			
 		}	
-	}
-
-	/**
-	 * Encode a file using the Encoding model
-	 */
-	protected function encode($item, $field) {
-
-		// Check for required relationship function on parent
-		if (!method_exists($item, 'encodings')) {
-			throw new Exception(get_class($item).' must define an "encodings()" function.');
-		}
-
-		// Create a new encoding model instance. It's callbacks will talk to the encoding provvider.
-		// Save it after the model is fully saved so the foreign id is available for the 
-		// polymorphic relationship.
-		$item->saved(function($model) use ($field, $item) {
-
-			// Make sure that that the model instance handling the event is the one
-			// we're updating.
-			if ($item != $model) return;
-
-			// Create the new encoding
-			$model->encodings()->save(new Encoding(array(
-				'encodable_attribute' => $field,
-			)));
-		});
-
 	}
 	
 	/**
