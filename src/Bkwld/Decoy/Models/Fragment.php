@@ -2,7 +2,6 @@
 
 // Dependencies
 use App;
-use Bkwld\Decoy\Models\Encoding;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
 use Config;
@@ -269,14 +268,42 @@ class Fragment extends Base {
 			$row = self::create(array('key' => $key, 'value' => $value));
 		}
 
-		// If a video encoder field was saved, encode the file
-		if ($has_file && $row
-			&& is_a($row, 'Bkwld\Decoy\Models\Fragment')
-			&& Str::contains($input_name, 'video-encoder')) {
-			$row->encodings()->save(new Encoding(array(
-				'encodable_attribute' => 'value',
-			)));
+	}
+
+	/**
+	 * When updating a row, delete old files
+	 *
+	 * @return void 
+	 */
+	public function onUpdating() {
+		parent::onUpdating();
+		if (static::isFile($this->key) && $this->isDirty('value')) {
+			$this->deleteFile($this->getOriginal('value'));
 		}
+	}
+
+	/**
+	 * When saving a row, trigger an encode if necessary
+	 *
+	 * @return void 
+	 */
+	public function onSaving() {
+		parent::onSaving();
+		if (static::isFile($this->key) 
+			&& $this->isDirty('value') 
+			&& Str::contains($this->key, ',video-encoder')) {
+			$this->encodeOnSave('value');
+		}
+	}
+
+	/**
+	 * When deleting a row, delete source file
+	 *
+	 * @return void 
+	 */
+	public function onDeleted() {
+		parent::onDeleted();
+		if (static::isFile($this->key)) $this->deleteFile($this->value);
 	}
 	
 	/**
