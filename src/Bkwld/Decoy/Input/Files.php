@@ -48,11 +48,8 @@ class Files {
 			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
 			if (Input::hasFile($field) || !Input::has($field)) {
 
-				// If the file has an image suffix, use Croppa to delete
-				if (Str::endsWith($old, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($old);
-
-				// Otherwise, do a normal delete
-				elseif (file_exists(public_path().$old)) unlink(public_path().$old);
+				// Delete the file using method on the base model
+				$item->deleteFile($old);
 				
 				// Remove crop data if it exits
 				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;

@@ -204,6 +204,22 @@ abstract class Base extends Eloquent {
 		return $path;
 	}
 	
+	/**
+	 * Delete the file referenced by the Frag
+	 *
+	 * @param string $file The path to the file relative to the doc root
+	 * @return void 
+	 */
+	protected function deleteFile($file) {
+	
+		// If the file has an image suffix, use Croppa to delete
+		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
+
+		// Otherwise, do a normal delete
+		elseif (file_exists(public_path().$file)) unlink(public_path().$file);
+		
+	}
+
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------
