@@ -9,6 +9,7 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 // downloaded into the public js directory and which can
 // be found here thanks to `import path` setting in the
 // Gruntfile.
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap-compass";
 @import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 
 // Config
