@@ -1,0 +1,24 @@
+.navbar-default {
+	
+	// Add a shadow
+	@include box-shadow(rgba(black,.2) 0 2px 2px);
+	
+	// Gravatar sizing
+	.gravatar {
+		width: auto;
+		height: 24px;
+	}
+	
+	// Switch to using line height instead of padding so that that the gravatar
+	// can be bigger without pushing the page down
+	.navbar-nav > li > a {
+		padding-top: 0;
+		padding-bottom: 0;
+		line-height: 50px;
+		.gravatar { margin-top: -2px; }
+	}
+	.navbar-nav .dropdown-toggle .caret {
+		vertical-align: middle;
+		margin-top: -2px;
+	}
+}

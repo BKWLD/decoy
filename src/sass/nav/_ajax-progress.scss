@@ -1,0 +1,18 @@
+// The progress bar (and makes a nice shadow when not animating)
+#ajax-progress {
+	
+	// Remove the rounding so it's flush with edges and reduce the height
+	@include border-radius(0);
+	height: 3px;
+	margin: 0;
+	
+	// Make the background invisible
+	background: none;
+	@include box-shadow(none);
+	
+	// Pin it to the bottom of the nav var
+	position: absolute;
+	bottom: -3px;
+	width: 100%;
+	
+}
