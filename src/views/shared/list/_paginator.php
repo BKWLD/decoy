@@ -13,11 +13,11 @@ $per_page = $controller::$per_page;
 
 $presenter = new Illuminate\Pagination\BootstrapPresenter($paginator); 
 if ($paginator->getTotal() > $per_page): ?>
-	<div class="pagination">
+	<div class="pagination-wrapper">
 	
 		<?// The list of pages ?>
 		<? if ($paginator->getLastPage() > 1): ?>
-			<ul>
+			<ul class="pagination">
 				<?=$presenter->render(); ?>
 			</ul>
 		<? endif ?>
@@ -28,7 +28,7 @@ if ($paginator->getTotal() > $per_page): ?>
 			$per_page * 2, 
 			'all');
 		$count = Input::get('count', $options[0]); ?>
-		<ul class="per-page">
+		<ul class="per-page pagination">
 			<li class="disabled"><span>Show</span></li>
 			<? foreach($options as $option): ?>
 				<? if ($count == $option): ?>
