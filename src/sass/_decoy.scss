@@ -5,48 +5,11 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
 
-// Bootstrap
-// To tweak the path to images and where the nav switches to
-// the responsive layout, I had to hack it with the following
-// variables
-$bootstrap_nav_break: 767px;
-@import "plugins/bootstrap";
-@import "plugins/bootstrap-theme";
+// Get Bootstrap from the Bower dependency which has been
+// downloaded into the public js directory and which can
+// be found here thanks to `import path` setting in the
+// Gruntfile.
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
 
-// UI plugins
-@import "plugins/jquery-ui";
-@import "plugins/bootstrap-datepicker";
-@import "plugins/bootstrap-timepicker";
-@import "plugins/bootstrap-notify";
-@import "plugins/jquery.Jcrop";
-
-// Utilities
-@import "utils/respond-to";
-@import "utils/edit-only";
-
-// The partials that form the Decoy style
-@import "partials/general";
-@import "partials/nav";
-@import "partials/header";
-@import "partials/listing/control_group";
-@import "partials/listing/search";
-@import "partials/listing/sorting";
-@import "partials/listing/table";
-@import "partials/listing/pagination";
-@import "partials/moderation";
-@import "partials/form/crop";
-@import "partials/form/file";
-@import "partials/form/general";
-@import "partials/form/inline";
-@import "partials/form/related";
-@import "partials/form/typeahead";
-@import "partials/commands";
-@import "partials/fragments";
-@import "partials/workers";
-@import "partials/admins";
-
-// Specific pages
-@import "controllers/login";
-
-// Override with the theme
-@import "utils/theme";
+// Config
+@import "variables";
