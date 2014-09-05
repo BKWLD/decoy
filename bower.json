@@ -14,6 +14,6 @@
     "backbone": "~1",
     "requirejs-text": "~2",
     "jquery-hammerjs": "~1",
-    "bkwld": "bkwld/js-library"
+    "bkwld": "bkwld/js-library#~0"
   }
 }
