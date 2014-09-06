@@ -5,12 +5,8 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
 
-// Get Bootstrap from the Bower dependency which has been
-// downloaded into the public js directory and which can
-// be found here thanks to `import path` setting in the
-// Gruntfile.
-@import "bootstrap-sass-official/assets/stylesheets/bootstrap-compass";
-@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
+// Bootstrap
+@import "bootstrap";
 
 // Config
 @import "variables";

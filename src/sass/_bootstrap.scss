@@ -1,0 +1,14 @@
+// Customize the fontctions that Bootstrap uses to resolve paths
+// to fonts and images
+@function twbs-font-path($path) {
+  @return "/js/admin/vendor/bootstrap-sass-official/assets/fonts/"+$path;
+}
+@function twbs-image-path($path) {
+  @return "/js/admin/vendor/bootstrap-sass-official/assets/images/"+$path;
+}
+
+// Get Bootstrap from the Bower dependency which has been
+// downloaded into the public js directory and which can
+// be found here thanks to `import path` setting in the
+// Gruntfile.
+@import "bootstrap-sass-official/assets/stylesheets/bootstrap";
