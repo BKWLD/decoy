@@ -1,3 +1,4 @@
+// Contains the top navbar
 .navbar-default {
 	
 	// Add a shadow
@@ -21,4 +22,9 @@
 		vertical-align: middle;
 		margin-top: -2px;
 	}
+}
+
+// Since the nav is fixed, this pushes the page down
+body {
+	padding-top: 50px;
 }
