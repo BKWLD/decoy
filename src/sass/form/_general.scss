@@ -1,0 +1,18 @@
+// All labels on vertical forms are on their own line. This
+// fixes issues with inline radio fields displaying wrong:
+// http://yo.bkwld.com/image/130i1B2o070b
+.form-vertical .control-label {
+	display: block;
+}
+
+// Former is setting a class of "radio" on inline
+// radio elements.  It should ONLY have radio-inline.  As
+// a result, an incorrect margin-top is being added.  This
+// rule clears it and other settings
+// http://yo.bkwld.com/image/0D3a1q1T1q1z
+// https://github.com/Anahkiasen/former/pull/375
+.form-vertical .radio-inline {
+	margin-top: 0;
+	min-height: 0;
+	position: static;
+}

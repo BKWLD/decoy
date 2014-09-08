@@ -17,7 +17,7 @@ i.required {
 	}
 }
 
-// Doning down the help signs
+// Toning down the help signs
 .help-block .icon-question-sign {
 	@include opacity($light-opacity);
 	.form-group:hover & {
