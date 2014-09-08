@@ -32,7 +32,7 @@ define(function (require) {
 			var i = $tab.index();
 			
 			// Make that image visible
-			var imgs = this.$el.closest('.crops').find('.imgs > *');
+			var imgs = this.$el.closest('.image-upload-cropper').find('.imgs > *');
 			imgs.hide();
 			imgs.eq(i).show();
 			imgs.eq(i).find('img').trigger('active'); // The crop view happens on the img tag

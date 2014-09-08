@@ -15,7 +15,7 @@
 
 // This container contains multiple instances of images that get turned
 // into jcrop instances.
-.image-upload .crops {
+.image-upload-cropper {
 	position: relative;
 	display: block;
 	margin-top: -5px;
@@ -56,6 +56,9 @@
 				background-color: white;
 				position: relative;
 				z-index: 1;
+				.form-group:hover & {
+					background-color: $gray-lighter;
+				}
 			}
 			
 			// Rollover
@@ -91,10 +94,10 @@
 		margin-left: 5px;
 		@include opacity(.4);
 		cursor: pointer;
-	}
-	&:hover .fullscreen-toggle {
-		@include opacity(.7);
-		&:hover { @include opacity(1); }
+		.form-group:hover & {
+			@include opacity(.7);
+			&:hover { @include opacity(1); }
+		}
 	}
 }
 

@@ -111,7 +111,7 @@ class Image extends Upload {
 	protected function renderCropper() {
 
 		// Open container
-		$html = '<span class="crops">';
+		$html = '<span class="image-upload-cropper">';
 			
 		// Add the tabs
 		$html .= '<span class="tabs" data-js-view="crop-styles">';

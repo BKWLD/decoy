@@ -62,24 +62,6 @@ label {
 	margin-bottom: 1em;
 }
 
-// Highlight each control group on rollover
-.form-group {
-	padding: 8px;
-	margin: -8px;
-	@include border-radius(4px);
-	margin-bottom: 14px;
-	input, textarea, select {
-		margin-bottom: 0;
-	}
-	&:hover {
-		background-color: $light-grey;
-		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	}
-	&.error:hover {
-		background-color: #F2DEDE; // This is the Boostrap error bkgd red color
-	}
-}
-
 // Show validation error messages (which show up in inline blocks)
 // on their own line.  It looks better
 .form-group.error {
