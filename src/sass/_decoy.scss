@@ -5,8 +5,9 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
 
-// Bootstrap
+// Plugins
 @import "bootstrap";
+@import "plugins/*";
 
 // Config
 @import "variables";
