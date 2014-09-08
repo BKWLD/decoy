@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use Bkwld\Decoy\Models\Encoding;
 use Croppa;
 use Exception;
 use Input;
@@ -25,7 +26,7 @@ class Files {
 			// re-saving the page with no image changes.  Since the incoming value for the
 			// field is a simple string, remove the mime validations
 			if (Input::has($field) && !Input::hasFile($field)) {
-				$item::$rules[$field] = preg_replace('#(image|mimes)[^|]*#', '', $item::$rules[$field]);
+				$item::$rules[$field] = preg_replace('#(image|mimes|video)[^|]*#', '', $item::$rules[$field]);
 
 				// Cleanup extra pipes
 				$item::$rules[$field] = preg_replace('#\|{2,}#', '|', $item::$rules[$field]);
@@ -47,10 +48,8 @@ class Files {
 			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
 			if (Input::hasFile($field) || !Input::has($field)) {
 
-				// Try and delete the image with Croppa.  If Croppa won't delete, then
-				// do a regular delete.  The croppa route is preferred because it will delete
-				// all the crops that were found.
-				if (Croppa::delete($old) === false) unlink(public_path().$old);
+				// Delete the file using method on the base model
+				$item->deleteFile($old);
 				
 				// Remove crop data if it exits
 				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;
@@ -74,7 +73,7 @@ class Files {
 
 			// Require there to be an entry in the rules array for all files.  This will matter
 			// when deleting later
-			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", or "file" rule.  Decoy requires all files to have an entry in the $rules array.');
+			if (!in_array($field, $fields)) throw new Exception('A file was uploaded to "'.$field.'" but this was not added in the model $rules array as a file with an "image", "mimes", "video", or "file" rule. Decoy requires all files to have an entry in the $rules array.');
 			
 			// Double check there is data and not just a key
 			if (!Input::hasFile($field)) continue; 
@@ -86,6 +85,11 @@ class Files {
 			// other models that may be touched during the processing of this request (like because
 			// of event handlers) from trying to act on this file
 			$files->remove($field);
+
+			// If the validation rules include a request to encode a video, add it to the encoding queue
+			if (Str::contains($item::$rules[$field], 'video:encode') 
+				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
+			
 		}	
 	}
 	
@@ -95,7 +99,7 @@ class Files {
 	private function fields($item) {
 		$fields = array();
 		foreach($item::$rules as $field => $rules) {
-			if (preg_match('#file|image|mimes#i', $rules)) $fields[] = $field;
+			if (preg_match('#file|image|mimes|video#i', $rules)) $fields[] = $field;
 		}
 		return $fields;
 	}

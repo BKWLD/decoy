@@ -29,10 +29,12 @@ class DecoyServiceProvider extends ServiceProvider {
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
-		// Register the routes AFTER all the app routes using the "before" register
+		// Register the routes AFTER all the app routes using the "before" register.  Unless
+		// the app is running via the CLI where we want the routes reigsterd for URL generation.
 		$router = new Routing\Router($dir, $filters);
 		$this->app->instance('decoy.router', $router);
-		$this->app->before(array($router, 'registerAll'));
+		if (App::runningInConsole()) $router->registerAll();
+		else $this->app->before(array($router, 'registerAll'));
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();

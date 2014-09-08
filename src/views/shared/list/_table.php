@@ -111,7 +111,7 @@ if ($listing->count()) {
 				<? endforeach ?>
 				
 				<?// Standard action links?>
-				<td>
+				<td class="actions">
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
 					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
@@ -146,7 +146,7 @@ if ($listing->count()) {
 		<?// Maybe there were no results found ?>
 		<? if (!$listing->count()): ?>
 			<tr>
-				<td colspan="999">No results found</td>
+				<td colspan="999" class="no-results">No results found</td>
 			</tr>
 		<? endif ?>
 		

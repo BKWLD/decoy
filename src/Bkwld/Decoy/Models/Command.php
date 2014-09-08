@@ -60,6 +60,9 @@ class Command {
 			$name = $command->getName();
 			if (strpos($name, ':')) list($namespace, $name) = explode(':', $name);
 			else $namespace = 'misc';
+
+			// Massage name
+			$name = str_replace('-', ' ', ucfirst($name));
 			
 			// Group commands by namespace
 			if (!array_key_exists('namespace', $commands)) $commands[ucfirst($namespace)] = array();

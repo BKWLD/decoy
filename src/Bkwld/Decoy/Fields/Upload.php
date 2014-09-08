@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
-use Bkwld\Library;
+use Bkwld\Library\Utils;
 use Config;
 use Former\Form\Fields\File;
 use HtmlObject\Input as HtmlInput;
@@ -13,20 +13,7 @@ use Str;
  * and deleting it.
  */
 class Upload extends File {
-
-	/**
-	 * Preserve blockhelp data
-	 *
-	 * @var string
-	 */
-	private $blockhelp;
-
-	/**
-	 * Preserve blockhelp attribues
-	 *
-	 * @var array
-	 */
-	private $blockhelp_attributes;
+	use Traits\CaptureBlockHelp;
 
 	/**
 	 * Create a regular file type field
@@ -41,23 +28,6 @@ class Upload extends File {
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
 		$this->addGroupClass('upload');
-	}
-
-	/**
-	 * Store the block help locally so that we can append the review within it
-	 * right before rendering.  If we decide to move the review UI out of block-help, the
-	 * field constructor should replace the group with an instance of a subclass that
-	 * adds some public methods to hook into the field wrapping logic.
-	 *
-	 * This method is ordinarily declared in the Former Group
-	 *
-	 * @param  string $help       The help text
-	 * @param  array  $attributes Facultative attributes
-	 */
-	public function blockhelp($help, $attributes = array()) {
-		$this->blockhelp = $help;
-		$this->blockhelp_attributes = $attributes;
-		return $this;
 	}
 
 	/**
@@ -83,7 +53,7 @@ class Upload extends File {
 	}
 
 	/**
-	 * Prints out the current tag. The hidden field with the current upload is
+	 * Prints out the current file upload field. The hidden field with the current upload is
 	 * prepended before the input so it can be overriden
 	 *
 	 * @return string An input tag
@@ -98,10 +68,10 @@ class Upload extends File {
 			if ($this->isRequired()) $this->setAttribute('required', null);
 
 			// Add hidden field and return
-			return $this->renderHidden().parent::render();
+			return $this->renderHidden().parent::render().$this->renderMaxUpload();
 		
 		// The field is empty
-		} else return parent::render();
+		} else return parent::render().$this->renderMaxUpload();
 	}
 
 	/**
@@ -124,6 +94,15 @@ class Upload extends File {
 	}
 
 	/**
+	 * Display the max upload size supported
+	 *
+	 * @return string HTML for a tooltip
+	 */
+	protected function renderMaxUpload() {
+		return '<span class="label max-size">Max: '.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</span>';
+	}
+
+	/**
 	 * Check if the file is in the uploads directory. The use case for this arose 
 	 * with the Fragments system where the default images would usually be in the 
 	 * img directory
@@ -131,7 +110,7 @@ class Upload extends File {
 	 * @return boolean
 	 */
 	protected function isInUploads() {
-		$upload_dir = Library\Utils\File::publicPath(Config::get('decoy::upload_dir'));
+		$upload_dir = Utils\File::publicPath(Config::get('decoy::upload_dir'));
 		return Str::is($upload_dir.'*', $this->value);
 	}
 

@@ -37,6 +37,12 @@ abstract class Base extends Eloquent {
 	// widget should make UI for
 	// array('image' => array('marquee' => '4:3', 'feature'))
 	static public $crops = array();
+
+	/**
+	 * If true, process file handling updates via Decoy's Input\Files class during
+	 * model callbacks
+	 */
+	public $auto_manage_files = true;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
@@ -46,7 +52,6 @@ abstract class Base extends Eloquent {
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
 			'_token', // Part of CSRF protection
-			'_wysihtml5_mode',
 			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
@@ -66,10 +71,10 @@ abstract class Base extends Eloquent {
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
 	public function hasGetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasGetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasGetMutator($key);
 	}
 	public function hasSetMutator($key) { 
-		return Decoy::handling() ?  false : parent::hasSetMutator($key);
+		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasSetMutator($key);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -103,8 +108,10 @@ abstract class Base extends Eloquent {
 		self::updating (function($model){ return $model->onUpdating(); });
 		self::updated  (function($model){ return $model->onUpdated(); });
 		self::saving   (function($model) use ($files){ 
-			$files->delete($model);
-			$files->save($model);
+			if ($model->auto_manage_files) {
+				$files->delete($model);
+				$files->save($model);
+			}
 			return $model->onSaving(); 
 		});
 		self::saved    (function($model) use ($many_to_many_checklist) { 
@@ -112,7 +119,7 @@ abstract class Base extends Eloquent {
 			return $model->onSaved(); 
 		});
 		self::deleting (function($model) use ($files){ 
-			$files->delete($model); 
+			if ($model->auto_manage_files) $files->delete($model); 
 			return $model->onDeleting(); 
 		});
 		self::deleted  (function($model){ return $model->onDeleted(); });
@@ -126,7 +133,7 @@ abstract class Base extends Eloquent {
 				if (!$model) return;
 				
 				// Special files behavior
-				if ($event == 'validating') $files->preValidate($model);
+				if ($event == 'validating' && $model->auto_manage_files) $files->preValidate($model);
 				
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
@@ -153,7 +160,7 @@ abstract class Base extends Eloquent {
 	public function onAttached() {}
 	public function onRemoving() {} // ids are passed in first arg
 	public function onRemoved() {} // ids are passed in first arg
-	
+
 		
 	//---------------------------------------------------------------------------
 	// Overrideable methods
@@ -197,6 +204,22 @@ abstract class Base extends Eloquent {
 		return $path;
 	}
 	
+	/**
+	 * Delete the file referenced by the Frag
+	 *
+	 * @param string $file The path to the file relative to the doc root
+	 * @return void 
+	 */
+	public function deleteFile($file) {
+	
+		// If the file has an image suffix, use Croppa to delete
+		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
+
+		// Otherwise, do a normal delete
+		elseif (file_exists(public_path().$file)) unlink(public_path().$file);
+		
+	}
+
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------

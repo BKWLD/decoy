@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Config;
+use Decoy;
 use DecoyURL;
 use HTML;
 use Input;
@@ -34,6 +35,13 @@ class Filters {
 	 * Register all filters
 	 */
 	public function registerAll() {
+
+		// Dont' register anything if we're not in the admin.  These routes 
+		if (!Decoy::handling()) return;
+
+		// Filters are added during a "before" handler via the Decoy service
+		// provider, so this can just be run directly.
+		$this->csrf();
 		
 		// Access control
 		Route::filter('decoy.acl', array($this, 'acl'));
@@ -47,6 +55,11 @@ class Filters {
 		// expressions, thus had to catch all
 		Route::filter('decoy.editRedirect', array($this, 'editRedirect'));
 		Route::when($this->dir.'/*', 'decoy.editRedirect', array('get'));
+
+		// Tell IE that we're compatible so it doesn't show the compatbility checkbox
+		Route::after(function($request, $response) {
+			$response->header('X-UA-Compatible', 'IE=Edge');
+		});
 	}
 	
 	/**
@@ -82,7 +95,9 @@ class Filters {
 		$path = '/'.Request::path();
 		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
 			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
-			|| Str::startsWith($path, '/'.$this->dir.'/reset/');                 // Reset
+			|| Str::startsWith($path, '/'.$this->dir.'/reset/')                  // Reset
+			|| Route::is('decoy\encode@notify')                                  // Notification handler from encoder
+		;
 	}
 
 	/**
@@ -129,6 +144,19 @@ class Filters {
 	public function editRedirect() {
 		$url = Request::url();
 		if (preg_match('#/\d+$#', $url)) return Redirect::to($url.'/edit');
+	}
+
+	/**
+	 * Apply CSRF
+	 */
+	public function csrf() {
+
+		// Routes to ignore.  Note, for some reason the 
+		if (Request::is(Route::getRoutes()->getByName('decoy\encode@notify')->uri())) return;
+
+		// Apply it
+		return \Bkwld\Library\Laravel\Filters::csrf();
+
 	}
 	
 }
