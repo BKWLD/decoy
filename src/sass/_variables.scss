@@ -6,4 +6,4 @@ $light-opacity: .3;
 $near-black: #333;
 
 // Dimensions
-$bootstrap_nav_break: 767px; // This will be deprecated
+$bootstrap_nav_break: $screen-sm; // This should be deprecated

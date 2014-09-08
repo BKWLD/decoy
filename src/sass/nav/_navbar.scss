@@ -15,16 +15,11 @@
 	.navbar-nav > li > a {
 		padding-top: 0;
 		padding-bottom: 0;
-		line-height: 50px;
+		line-height: $navbar-height;
 		.gravatar { margin-top: -2px; }
 	}
 	.navbar-nav .dropdown-toggle .caret {
 		vertical-align: middle;
 		margin-top: -2px;
 	}
-}
-
-// Since the nav is fixed, this pushes the page down
-body {
-	padding-top: 50px;
 }
