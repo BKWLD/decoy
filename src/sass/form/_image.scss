@@ -1,12 +1,36 @@
+// Stls related to there being no croper
+.image-upload {
+
+	.img-thumbnail { 
+		background: transparent;
+		z-index: 100;
+		@include box-sizing(border-box);
+		&.no-help { // There is no help text, so we don't need to push away from it
+			margin-top: 5px;
+		}
+	}
+
+}
+
+
 // This container contains multiple instances of images that get turned
 // into jcrop instances.
-.help-block .crops {
+.image-upload .crops {
 	position: relative;
 	display: block;
-	margin-top: 5px;
+	margin-top: -5px;
+
+	// Show a checkered background behind the image
+	.jcrop-tracker {
+		background: transparent;
+	}
+	.jcrop-holder {
+		background-color: transparent !important;
+		background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+	}
 	
 	// Remove the margin that we want when no crops are present
-	.img-polaroid {
+	.img-thumbnail {
 		margin: 0;
 	}
 	
@@ -57,16 +81,20 @@
 	}
 	
 	// The fullscreen button
-	.icon-fullscreen {
+	.fullscreen-toggle {
+
+		// Disabled for now because BS3 columns are position relative and
+		// it's preventing this unit from expanding outside.  It would need
+		// to be done my moving around in the DOM.
+		display: none;
+
 		margin-left: 5px;
 		@include opacity(.4);
 		cursor: pointer;
-		.form-group:hover & {
-			@include opacity(.7);
-		}
-		.form-group &:hover {
-			@include opacity(1);
-		}
+	}
+	&:hover .fullscreen-toggle {
+		@include opacity(.7);
+		&:hover { @include opacity(1); }
 	}
 }
 
@@ -93,8 +121,8 @@
 		padding: 5px;
 	}
 	
-	// A non-related view won't have had this set eyt
-	.img-polaroid {
+	// A non-related view won't have had this set yet
+	.img-thumbnail {
 		width: 100%;
 	}
 	

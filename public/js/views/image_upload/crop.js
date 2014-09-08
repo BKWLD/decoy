@@ -99,7 +99,7 @@ define(function (require) {
 				self.jcrop = this;
 				
 				// Put all of the jcrop instances in a parent to give them the polariod effect
-				self.$el.siblings('.jcrop-holder').wrap('<div class="img-polaroid" style="display: inline-block;"/>');
+				self.$el.siblings('.jcrop-holder').wrap('<div class="img-thumbnail" style="display: inline-block;"/>');
 			});
 			
 		},

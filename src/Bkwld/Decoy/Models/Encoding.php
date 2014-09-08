@@ -175,7 +175,7 @@ class Encoding extends Base {
 	public function getAdminPlayerAttribute() {
 		if (!$tag = $this->getTagAttribute()) return;
 		return $tag
-			->addClass('img-polaroid')
+			->addClass('img-thumbnail')
 			->controls()
 			->width(580) // Matches the default width of image field preview
 			->render()

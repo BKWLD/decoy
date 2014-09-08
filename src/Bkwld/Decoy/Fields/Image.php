@@ -126,7 +126,7 @@ class Image extends Upload {
 		$html .= '</span>';
 		
 		// Add fullscreen button
-		$html .= '<i class="icon-fullscreen fullscreen-toggle"></i>';
+		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
 		
 		// Add the images
 		$html .= '<span class="imgs">';
@@ -190,8 +190,8 @@ class Image extends Upload {
 	 * Make the class for the image tag
 	 */
 	protected function imgTag() {
-		if ($this->has_blockhelp) return 'img-polaroid';
-		else return 'img-polaroid no-help';
+		if ($this->has_blockhelp) return 'img-thumbnail';
+		else return 'img-thumbnail no-help';
 	}
 
 }

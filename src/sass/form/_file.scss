@@ -1,0 +1,58 @@
+// Chrome currently is screwing up the display of the label
+// when line height is set: http://cl.ly/image/1o2W1V2y0d21
+// .form-group input[type="file"] {
+// 	line-height: inherit;
+// 	position: relative;
+// 	top: 4px;
+// 	height: inherit;
+// 	margin-bottom: 5px;
+// }
+
+// These are the image upload control groups.  The 10px margins here just seemd to
+// look better than the 5px that is generally the spacing on the help block.
+.form-group.upload {
+
+	// Don't make it block because it pushes max off it
+	input[type="file"] {
+		display: inline;
+	}
+	
+	// This the styling for generic file uploads
+	.download {
+		color: inherit;
+		a { color: #1E8AAA; }
+	}
+	.upload-delete {
+		&, a { color: #D14; }
+	}
+	.download, .upload-delete, .status {
+		display: block;
+		margin-top: 5px;
+
+		// The icon
+		.glyphicon {
+			margin-right: 2px;
+		}
+	}
+
+	// The link to a file field.  This simulates the look of the
+	// code tag
+	.download-link {
+		padding: 2px 4px;
+		border: 1px solid $gray-lighter;
+		font-family: $font-family-monospace;
+		font-size: 12px;
+	}
+
+	// Show the max upload size only on hover
+	.max-size { display: none; }
+	&:hover .max-size { 
+
+		// Fade it to match block help
+		@include opacity(.6);
+
+		// Push it off the file field a bit
+		margin-left: 10px;
+	}
+
+}

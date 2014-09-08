@@ -13,7 +13,7 @@ trait InsertMarkup {
 	 * @return void       
 	 */
 	public function beforeBlockHelp($html) {
-
+		// TODO
 	}
 
 	/**

@@ -91,7 +91,7 @@ class Upload extends File {
 	 * @return string HTML for a tooltip
 	 */
 	protected function renderMaxUpload() {
-		return '<span class="label max-size">Max: '.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</span>';
+		return '<span class="label label-default max-size">Max: '.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</span>';
 	}
 
 	/**
@@ -112,7 +112,7 @@ class Upload extends File {
 	 * @return string HTML
 	 */
 	protected function renderDestuctableReview() {
-		return '<label for="'.$this->name.'-delete" class="checkbox upload-delete">
+		return '<label for="'.$this->name.'-delete" class="checkbox-inline upload-delete">
 			<input id="'.$this->name.'-delete" type="checkbox" name="'.$this->name.'" value="">
 			Delete '.$this->renderDownloadLink().'
 			</label>';
@@ -135,8 +135,8 @@ class Upload extends File {
 	 * @return string HTML
 	 */
 	protected function renderDownloadLink() {
-		return '<a href="'.$this->value.'">
-			<code><i class="icon-file"></i>'.basename($this->value).'</code>
+		return '<a class="download-link" href="'.$this->value.'">
+			<span class="glyphicon glyphicon-file"></span>'.basename($this->value).'
 			</a>';
 	}
 
