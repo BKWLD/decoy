@@ -88,10 +88,10 @@ class BelongsTo extends Field {
 	 */
 	protected function appendEditButton() {
 		if ($this->value) $this->append('<button type="button" class="btn btn-info">
-				<i class="icon-pencil icon-white"></i>
+				<span class="glyphicon glyphicon-pencil"></span>
 			</button>');
 		else $this->append('<button type="button" class="btn" disabled>
-				<i class="icon-ban-circle"></i>
+				<span class="glyphicon glyphicon-ban-circle"></span>
 			</button>');
 	}
 

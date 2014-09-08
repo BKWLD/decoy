@@ -20,7 +20,7 @@ define(function (require) {
 			
 			// Cache selectors
 			this.$status = this.$('button');
-			this.$icon = this.$status.find('i');
+			this.$icon = this.$status.find('.glyphicon');
 			this.$hidden = this.$('input[type="hidden"]');
 			this.edit_route = null; // Allows the edit_route to be updated externally
 			
@@ -60,14 +60,14 @@ define(function (require) {
 		// Make the UI indicate a match
 		renderMatch: function() {
 			this.$status.addClass('btn-info').prop('disabled', false).attr('href', this.route+'/'+this.id);
-			this.$icon.removeClass().addClass('icon-pencil icon-white');
+			this.$icon.removeClass('glyphicon-ban-circle').addClass('glyphicon-pencil');
 			this.$hidden.val(this.id);
 		},
 		
 		// Make the UI indicate a miss
 		renderMiss: function() {
 			this.$status.removeClass('btn-info').prop('disabled', true).removeAttr('href');
-			this.$icon.removeClass().addClass('icon-ban-circle');
+			this.$icon.removeClass('glyphicon-pencil').addClass('glyphicon-ban-circle');
 			this.$hidden.val('');
 		},
 		
