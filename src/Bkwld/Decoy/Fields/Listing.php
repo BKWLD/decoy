@@ -223,6 +223,9 @@ class Listing extends Field {
 	 */
 	public function wrapAndRender() {
 
+		// Don't set an id
+		$this->setAttribute('id', false);
+
 		// Because it's a field, Former will add this.  But it's not really
 		// appropriate for a listing
 		$this->removeClass('form-control');
@@ -240,7 +243,6 @@ class Listing extends Field {
 	protected function wrapInControlGroup() {
 
 		// Add generic stuff
-		$this->setAttribute('id', false);
 		$this->addGroupClass('list-control-group');
 
 		// Use the controller description for blockhelp
