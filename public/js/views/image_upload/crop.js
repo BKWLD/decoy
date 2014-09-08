@@ -7,8 +7,8 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	require('decoy/plugins/jquery.Jcrop');
-	require('decoy/plugins/jquery.imagesloaded');
+	require('jcrop');
+	require('imagesloaded');
 	
 	// Define a backbone view for each image
 	var Crop = Backbone.View.extend({
