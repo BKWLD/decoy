@@ -34,3 +34,15 @@
 		background-color: $state-danger-bg; // This is the Boostrap error bkgd red color
 	}
 }
+
+// Tweaks for legends
+legend {
+
+	// This is specifically for the "view" button that is part of
+	// the display module header
+	> .btn-xs {
+		top: 3px;
+		position: relative;
+	}
+
+}
