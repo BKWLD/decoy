@@ -19,18 +19,20 @@ It expects:
 ?>
 
 <?// Page title ?>
-<h1 class="form-header"><?=$title?>
-	<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
-		<div class="btn-toolbar pull-right">
-			<div class="btn-group">
-				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="glyphicon glyphicon-plus icon-white"></i> New</a>
+<div class-"page-header form-header">
+	<h1><?=$title?>
+		<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
+			<div class="btn-toolbar pull-right">
+				<div class="btn-group">
+					<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="glyphicon glyphicon-plus"></i> New</a>
+				</div>
 			</div>
-		</div>
-	<? endif ?>
-	<? if (!empty($description)):?>
-		<small><?=$description?></small>
-	<? endif ?>
-</h1>
+		<? endif ?>
+		<? if (!empty($description)):?>
+			<small><?=$description?></small>
+		<? endif ?>
+	</h1>
+</div>
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>

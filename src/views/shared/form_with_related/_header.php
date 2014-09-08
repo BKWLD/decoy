@@ -17,18 +17,21 @@ This partial is used to open forms that have a related data sidebar
 
 ?>
 
-<h1 class="form-header related-form"><?=$title?>
-	<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
-		<div class="btn-toolbar pull-right">
-			<div class="btn-group">
-				<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><i class="glyphicon glyphicon-plus icon-white"></i> New</a>
+<?// Page title ?>
+<div class-"page-header form-header related-form">
+	<h1><?=$title?>
+		<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
+			<div class="btn-toolbar pull-right">
+				<div class="btn-group">
+					<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new"><span class="glyphicon glyphicon-plus"></span> New</a>
+				</div>
 			</div>
-		</div>
-	<? endif ?>
-	<? if (!empty($description)):?>
-		<small><?=$description?></small>
-	<? endif ?>
-</h1>
+		<? endif ?>
+		<? if (!empty($description)):?>
+			<small><?=$description?></small>
+		<? endif ?>
+	</h1>
+</div>
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>

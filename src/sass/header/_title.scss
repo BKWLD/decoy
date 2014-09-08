@@ -10,11 +10,13 @@ h1 {
 	
 	// Elements in the title area
 	.btn-toolbar {
+
+		// Push the h1 description away from it so it can't but up against it
 		margin-left: 20px;
+		
+		/* Disabling till I test if it's still needed in BS3
+
 		line-height: 30px;
-		.btn {
-			font-weight: normal;
-		}
 		
 		// Many to many forms need some adjusting
 		form {
@@ -25,6 +27,8 @@ h1 {
 			position: relative;
 			top: 1px;
 		}
+
+		*/
 	}	
 }
 

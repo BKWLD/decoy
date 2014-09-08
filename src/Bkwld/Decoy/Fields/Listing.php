@@ -222,6 +222,12 @@ class Listing extends Field {
 	 * @return string HTML
 	 */
 	public function wrapAndRender() {
+
+		// Because it's a field, Former will add this.  But it's not really
+		// appropriate for a listing
+		$this->removeClass('form-control');
+
+		// Render the markup
 		if ($this->layout == 'form') return $this->wrapInControlGroup();
 		return $this->render();
 	}
