@@ -10,6 +10,7 @@
     "backbone": "~1",
     "bootstrap-sass-official": "~3",
     "bkwld": "bkwld/js-library#~0",
+    "imagesloaded": "~3",
     "jcrop": "master",
     "jquery": "~1",
     "jquery-hammerjs": "~1",
