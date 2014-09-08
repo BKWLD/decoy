@@ -20,6 +20,13 @@ class Image extends Upload {
 	private $crops;
 
 	/**
+	 * Track whether the field has blockhelp
+	 *
+	 * @var boolean
+	 */
+	private $has_blockhelp = false;
+
+	/**
 	 * Create a regular file type field
 	 *
 	 * @param Container $app        The Illuminate Container
@@ -38,6 +45,15 @@ class Image extends Upload {
 
 		// Make it accept only images
 		$this->accept('image');
+	}
+
+	/**
+	 * Override the basic blockhelp function to keep track of whether it's
+	 * been provided.  Former doesn't provide an API for this.
+	 */
+	public function blockhelp() {
+		$this->has_blockhelp = true;
+		return call_user_func_array(array('parent', 'blockhelp'), func_get_args());
 	}
 
 	/**
@@ -174,7 +190,7 @@ class Image extends Upload {
 	 * Make the class for the image tag
 	 */
 	protected function imgTag() {
-		if ($this->blockhelp) return 'img-polaroid';
+		if ($this->has_blockhelp) return 'img-polaroid';
 		else return 'img-polaroid no-help';
 	}
 

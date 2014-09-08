@@ -13,7 +13,7 @@ use Str;
  * and deleting it.
  */
 class Upload extends File {
-	use Traits\CaptureBlockHelp;
+	use Traits\InsertMarkup;
 
 	/**
 	 * Create a regular file type field
@@ -31,25 +31,17 @@ class Upload extends File {
 	}
 
 	/**
-	 * Prints out the field, wrapped in its group.  This is the opportunity
-	 * to tack additional stuff into the blockhelp before it is rendered
+	 * Prints out the field, wrapped in its group.  Additional review UI is tacked on here.
 	 * 
 	 * @return string
 	 */
 	public function wrapAndRender() {
 
-		// Wrap manually set help text in a wrapper class
-		$help = $this->blockhelp;
-		if ($help) $help = '<span class="regular-help">'.$help.'</span>';
+		// Get the rendered control group
+		$html = parent::wrapAndRender();
 
-		// Append the review UI to the blockhelp
-		if ($this->value) $help .= $this->renderReview();
-
-		// Apply all of the blockhelp arguments to the group
-		if ($help) $this->group->blockhelp($help, $this->blockhelp_attributes);
-
-		// Continue doing normal wrapping
-		return parent::wrapAndRender();
+		// Add extra markup
+		return $this->appendToGroup($html, $this->renderReview());
 	}
 
 	/**
