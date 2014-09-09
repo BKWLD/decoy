@@ -121,6 +121,7 @@ class ManyToManyChecklist extends Checkbox {
 	 */
 	public function item($item) {
 		\Log::notice('ManyToManyChecklist::item() is deprecated.  The item is now fetched automatically from Former::populate');
+		return $this;
 	}
 
 }
