@@ -1,0 +1,14 @@
+.many-to-many-checklist {
+
+	// Make the checkboxes vertically centered if there are images
+	// as part of the label titles
+	input[type="checkbox"] {
+		position: relative;
+		margin-right: 8px;
+	}
+
+	// Push the text of the image in titles
+	img {
+		padding-right: 8px;
+	}
+}

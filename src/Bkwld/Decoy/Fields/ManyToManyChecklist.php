@@ -85,6 +85,9 @@ class ManyToManyChecklist extends Checkbox {
 			'name' => $this->boxName(),
 			'value' => $row->getKey(),
 			'checked' => ($children = $this->children()) && $children->contains($row->getKey()),
+
+			// Former is giving these a class of "form-control" which isn't correct
+			'class' => false,
 		);
 	}
 
