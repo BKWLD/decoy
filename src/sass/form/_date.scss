@@ -1,0 +1,11 @@
+
+// Give the date input a fixed size
+$date-input-width: 150px;
+.input-group.date {
+	width: $date-input-width;
+}
+
+// Position the date picker over the component
+.datepicker {
+	margin-left: $date-input-width - 35px;
+}

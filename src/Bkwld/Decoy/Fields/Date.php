@@ -33,7 +33,6 @@ class Date extends Field {
 
 		// Set default attributes
 		$attributes = array_merge(array(
-			'class' => 'col-xs-2',
 			'maxlength' => 10,
 			'placeholder' => 'MM/DD/YY',
 			'id' => null, // We don't want to conflict on the id
@@ -48,7 +47,7 @@ class Date extends Field {
 		if ($this->value) $this->value = date('m/d/Y', strtotime($this->value));
 
 		// Apend the button that the calendar selector hooks into
-		$this->append('<i class="glyphicon glyphicon-calendar"></i>');
+		$this->append('<span class="glyphicon glyphicon-calendar"></span>');
 
 	}
 

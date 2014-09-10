@@ -8,7 +8,7 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	require('decoy/plugins/bootstrap-datepicker'); // http://cl.ly/1N401g3z3M0E
+	require('bootstrap-datepicker');
 	
 	// Define backbone view
 	var DatePicker = Backbone.View.extend({
@@ -22,7 +22,10 @@ define(function (require) {
 			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].date');
 			
 			// Add the widget
-			this.$el.addClass('date').datepicker();
+			this.$el.addClass('date').datepicker({
+				keyboardNavigation: false, // Makes it possible to manually type in
+				todayHighlight: true
+			});
 			
 		},
 		
@@ -66,7 +69,7 @@ define(function (require) {
 	});
 	
 	// Apply the date picker to each instance on the
-	$('.input-group-addon:has(.date)').each(function(i, el) {
+	$('.input-group:has(.date)').each(function(i, el) {
 		new DatePicker({el:el});
 	});
 	
