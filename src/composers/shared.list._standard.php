@@ -66,7 +66,10 @@ View::composer('decoy::shared.list._standard', function($view) {
 	}
 	
 	// Make an instance of the controller so values that get in the constructor can be inspected
-	if (empty($view->controller_inst)) $view->controller_inst = new $view->controller;
+	if (empty($view->controller_inst)) {
+		$view->controller_inst = new $view->controller;
+		if ($view->parent) $view->controller_inst->parent($view->parent);
+	}
 
 	// Figure out the parent_id, which will be the last numeric segment in the url
 	preg_match('#/(\d+)/[a-z-]*$#i', Request::path(), $matches);
