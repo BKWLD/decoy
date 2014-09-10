@@ -34,7 +34,7 @@ It expects:
 			</a>
 		<? endif ?>
 		
-		<a class="btn back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
+		<a class="btn btn-default back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
 	</div>
 
 <?= Former::close() ?>
