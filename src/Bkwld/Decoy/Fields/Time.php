@@ -33,7 +33,6 @@ class Time extends Field {
 
 		// Set default attributes
 		$attributes = array_merge(array(
-			'class' => 'span2',
 			'maxlength' => 8,
 			'placeholder' => 'HH:MM',
 			'id' => null, // We don't want to conflict on the id
@@ -41,6 +40,7 @@ class Time extends Field {
 
 		// Create a text type field
 		parent::__construct($app, 'text', $name, $label, $value, $attributes);
+		$this->addGroupClass('time-field');
 
 		// Part of the parent's constructor populates the value field using posted
 		// or populated data.  If there is a value now (or if there was before), make
@@ -51,7 +51,7 @@ class Time extends Field {
 		$this->blockHelp('Time is in '.date('T'));
 
 		// Apend the button that the calendar selector hooks into
-		$this->append('<i class="icon-time"></i>');
+		$this->append('<span class="glyphicon glyphicon-time"></span>');
 
 	}
 
@@ -83,9 +83,7 @@ class Time extends Field {
 			null;
 
 		// Add a hidden field that will contain the mysql value, for storing in db
-		$html .= HtmlInput::hidden($this->name, $mysql_date)
-			->class('time')
-			->id($this->name);
+		$html .= HtmlInput::hidden($this->name, $mysql_date)->id($this->name);
 
 		// Return the string
 		return $html;

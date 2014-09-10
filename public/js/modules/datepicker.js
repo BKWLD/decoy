@@ -18,13 +18,14 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$('input.date');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].date');
+			this.$input = this.$(':text');
+			this.$hidden = $(':hidden[name='+this.$input.attr('name')+']');
 			
 			// Add the widget
 			this.$el.addClass('date').datepicker({
 				keyboardNavigation: false, // Makes it possible to manually type in
-				todayHighlight: true
+				todayHighlight: true,
+				orientation: 'top left'
 			});
 			
 		},

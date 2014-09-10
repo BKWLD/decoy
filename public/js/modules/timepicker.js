@@ -8,7 +8,7 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	require('decoy/plugins/bootstrap-timepicker'); // http://cl.ly/0r0P0L1G142g
+	require('bootstrap-3-timepickr');
 	
 	// Define backbone view
 	var TimePicker = Backbone.View.extend({
@@ -18,18 +18,13 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$('input.time');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].time');
+			this.$input = this.$(':text');
+			this.$hidden = $(':hidden[name='+this.$input.attr('name')+']');
 			
 			// Add the widget
 			this.$el.addClass('bootstrap-timepicker');
 			this.$input.timepicker({ defaultTime: false });
 			this.$widget = this.$('.bootstrap-timepicker-widget');
-			
-			// Position the widget over the add-on
-			this.$widget.css({
-				left: this.$('.add-on').position().left - 5
-			});
 			
 			// Strip input names in the widget so it doesn't get submitted
 			this.$widget.find('input').each(function() {
@@ -77,7 +72,7 @@ define(function (require) {
 	});
 	
 	// Apply the picker to each instance on the page
-	$('.input-append:has(.time)').each(function(i, el) {
+	$('.input-group:has(.time)').each(function(i, el) {
 		new TimePicker({el:el});
 	});
 	

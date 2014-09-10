@@ -1,0 +1,12 @@
+
+// Reduce the size of the timepicker
+$time-input-width: 150px;
+.time-field .input-group {
+	width: $time-input-width;
+}
+
+// Position the picker over the component
+.bootstrap-timepicker-widget {
+	width: 200px;
+	left: $time-input-width - 38px;
+}
