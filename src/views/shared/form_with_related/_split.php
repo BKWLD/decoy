@@ -15,7 +15,7 @@ the sidebar for related data on forms that have a related data sidebar.
 			
 		<?// Submit buttons?>
 		<hr/>
-		<div class="controls actions">
+		<div class="form-actions">
 			<div class="btn-group">
 				<? if (app('decoy.auth')->can('update', $controller)): ?>
 					<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>

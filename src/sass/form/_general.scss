@@ -53,3 +53,9 @@ legend {
 	}
 
 }
+
+// The actions btns should have a bottom margin so they wrap to multiple
+// lines nicer
+.form-actions .btn {
+	margin-bottom: 5px;
+}

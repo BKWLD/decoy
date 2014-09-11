@@ -35,7 +35,7 @@
 			'Email '.$item->first_name.' with login changes') ?>
 		
 	<hr/>
-	<div class="controls actions">
+	<div class="form-actions">
 		<div class="btn-group">
 			<? if (app('decoy.auth')->can('update', $controller)): ?>
 				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
@@ -66,7 +66,7 @@
 			</a>
 		<? endif ?>
 		
-		<a class="btn back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
+		<a class="btn btn-default back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
 	</div>
 		
 <?= Former::close() ?>
