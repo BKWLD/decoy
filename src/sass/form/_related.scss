@@ -31,10 +31,8 @@
 			
 			// Make the input form match the small add button
 			input {
-				font-size: 11.9px;
-				@include box-sizing(border-box); // This was needed for mobile
-				height: 26px;
-				min-height: 26px;
+				height: auto;
+				padding: $padding-xs-vertical $padding-xs-horizontal;
 			}
 		}
 	}

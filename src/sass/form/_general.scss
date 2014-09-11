@@ -35,25 +35,6 @@
 	}
 }
 
-// Tweaks for legends
-legend {
-
-	// This is specifically for the "view" button that is part of
-	// the display module header
-	> .btn-xs {
-		top: 3px;
-		position: relative;
-	}
-
-	// Add additional spacing above every legend but the first when NOT 
-	// in the related column.  Putting the form restriction there is enough
-	// to ensure that
-	form &:nth-of-type(1n+2) {
-		margin-top: 30px;
-	}
-
-}
-
 // The actions btns should have a bottom margin so they wrap to multiple
 // lines nicer
 .form-actions .btn {

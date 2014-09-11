@@ -1,0 +1,85 @@
+.table {
+
+	// Always make the second column the widest, assuming
+	// that to be the title.  This relies on table-layout fixed where
+	// the first row sets the widths of all subsequent rows
+	table-layout: fixed;
+	td,th {
+		white-space: nowrap;
+	}
+
+	// Size the columns by the number of columns, always making the first column the biggest
+	$weighting: 1.3;
+	@for $i from 1 through 6 {
+		&.columns-#{$i} {
+						
+			// Default width of columns
+			th {  width: 100%/$i/$weighting; }
+			
+			// The title column
+			th:first-child + th { width: 100% - 100%/$i/$weighting*($i - 1); }
+		}
+	}
+	
+	// Column defaults
+	th {
+		@include box-sizing(content-box); // This is required to push the "actions" off the right edge
+	}
+	th:first-child {
+		width: 10px;
+	}
+	th:last-child {
+		padding-right: 10px;
+		text-align: right;
+		&.actions-2 { width: 41px; } 
+		&.actions-3 { width: 57px; }
+	}
+	td { // All cells are told to consume the full available width and ellipsis any leftover
+		width: 100%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+	td:last-child {
+		text-align: right;
+		padding-left: 0;
+	}
+	td:first-child { // When there is only one row, this will supercede the above
+		text-align: left;
+	}
+
+	// Style the header
+	thead {
+		background: $light-grey;
+		
+		// Dim the color on the header content and
+		// make the text smaller
+		th {
+			@include opacity($light-opacity);
+			font-size: 12px;
+			text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+
+			// Bulk action rollover
+			&.select-all:hover {
+				@include opacity(1);
+			}
+		}
+	}
+
+	// Add border lines to the bottom rather than top of row	
+	td,th {
+		border-bottom: 1px solid $grey-border;
+		border-top: none;
+	}
+
+	// The select all al button
+	.select-all {
+		cursor: pointer;
+	}
+
+	// Add a slight rollover so it's easier to track with the eyes.  Not using
+	// Bootstrap's .table-hover because it is too dark
+	tbody tr:hover {
+		background-color: #FCFCFC;
+	}
+
+}

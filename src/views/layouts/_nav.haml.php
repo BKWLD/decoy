@@ -1,7 +1,7 @@
 -# This patial is populated from a view composer
 -$auth = App::make('decoy.auth')
 .navbar.navbar-default.navbar-fixed-top(role='navigation')
-	.container-fluid
+	.container
 
 		-# Brand and hamburger
 		.navbar-header

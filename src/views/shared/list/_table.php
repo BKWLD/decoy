@@ -31,7 +31,7 @@ if ($listing->count()) {
 			<tr>
 
 				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
-					<th class="select-all"><i class="icon-check"></i></th>
+					<th class="select-all"><span class="glyphicon glyphicon-check"></span></th>
 				<? else: ?>
 					<th class="hide"></th>
 				<? endif ?>
@@ -51,7 +51,7 @@ if ($listing->count()) {
 			<tr class="hide warning bulk-actions">
 				<td colspan="999">
 					<a class="btn btn-warning remove-confirm" href="#">
-						<i class="icon-remove icon-white"></i> Remove Selected
+						<span class="glyphicon glyphicon-remove"></span> Remove Selected
 					</a>
 				</td>
 			</tr>
@@ -116,15 +116,15 @@ if ($listing->count()) {
 					<?// Toggle visibility link.  This requires JS to work. ?>
 					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
 						<? if ($item->visible): ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><i class="icon-eye-open"></i></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><span class="glyphicon glyphicon-eye-open"></span></a>
 						<? else: ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><i class="icon-"></i></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><span class="glyphicon"></span></a>
 						<? endif ?>
 						<span class="visible-edit-seperator">|</span>
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=$edit?>"><i class="icon-pencil" title="Edit"></i></a>
+					<a href="<?=$edit?>"><span class="glyphicon glyphicon-pencil" title="Edit"></span></a>
 
 					<?// Delete or remove ?>
 					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
@@ -132,11 +132,11 @@ if ($listing->count()) {
 						 
 						 <?// Many to many listings have remove icons instead of trash?>
 						<? if ($many_to_many): ?>
-							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><i class="icon-remove"></i></a>
+							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><span class="glyphicon glyphicon-remove"></span></a>
 							
 						<?// Regular listings actually delete rows ?>
 						<? else: ?> 
-							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><i class="icon-trash"></i></a>
+							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><span class="glyphicon glyphicon-trash"></span></a>
 						<? endif ?>
 					<? endif ?>
 				</td>
