@@ -8,9 +8,7 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone'),
 		manifest = require('decoy/modules/manifest');
-	
-	// Plugins
-	require('decoy/plugins/bootstrap');
+	require('bootstrap');
 	
 	// Modules that add mojo globally
 	require('decoy/modules/ajax-error'); // Standard handling of AJAX errors
