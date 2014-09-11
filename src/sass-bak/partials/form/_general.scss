@@ -170,8 +170,3 @@ textarea {
 legend small img {
 	height: 15px;
 }
-
-// Make the Bootstrap tooltips not inherit text shadow
-.tooltip {
-	@include text-shadow(none);
-}

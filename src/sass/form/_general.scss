@@ -48,3 +48,8 @@
 		@include opacity(1);
 	}
 }
+
+// Make the Bootstrap tooltips not inherit text shadow
+.tooltip {
+	@include text-shadow(none);
+}
