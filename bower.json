@@ -19,6 +19,6 @@
     "lodash": "~2",
     "requirejs": "~2",
     "requirejs-text": "~2",
-    "typeahead.js": "~10"
+    "typeahead.js": "~0"
   }
 }
