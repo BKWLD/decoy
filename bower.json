@@ -8,7 +8,7 @@
   ],
   "dependencies": {
     "backbone": "~1",
-    "bootstrap-sass-official": "~3",
+    "bootstrap": "~3",
     "bootstrap-datepicker": "~1",
     "bootstrap-3-timepickr": "~0",
     "bkwld": "bkwld/js-library#~0",
