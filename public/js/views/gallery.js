@@ -8,7 +8,7 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	require('decoy/plugins/jquery.imagesloaded');
+	require('imagesloaded');
 	
 	// Public view module
 	var Gallery = Backbone.View.extend({
