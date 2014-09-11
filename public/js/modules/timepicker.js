@@ -30,6 +30,10 @@ define(function (require) {
 			this.$widget.find('input').each(function() {
 				$(this).attr('name', null);
 			});
+
+			// Move the widget after the input so it doesn't mess with the styling
+			// that depends on :first and :last
+			this.$widget.insertAfter(this.$input);
 			
 		},
 		

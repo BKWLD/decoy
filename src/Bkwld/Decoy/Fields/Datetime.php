@@ -113,7 +113,7 @@ class Datetime extends Field {
 			->id($this->name);
 
 		// Return html
-		return '<div class="datetime">'
+		return '<div class="datetime-field">'
 			.$this->date->wrapAndRender()
 			.$this->time->wrapAndRender()
 			.$hidden

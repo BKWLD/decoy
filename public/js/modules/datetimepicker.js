@@ -17,8 +17,8 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$hidden_date = this.$(':hidden.date');
-			this.$hidden_time = this.$(':hidden.time');
+			this.$hidden_date = this.$('.date-field :hidden');
+			this.$hidden_time = this.$('.time-field :hidden');
 			this.$hidden = this.$('> :hidden').last();
 			
 			// Make UI look better
@@ -34,25 +34,26 @@ define(function (require) {
 		move: function() {
 			
 			// Selectors
-			var $controls = this.$('input[type=text].date').closest('.controls')
-				, $time = this.$('input[type=text].time').parent()
-				, $time_control_group = $time.closest('.control-group')
-				, $date_help = $controls.find('.help-block')
-				, $time_help = $time_control_group.find('.help-block')
+			var $date_group = this.$('.date-field')
+				, $time = this.$('.time-field :text').parent()
+				, $time_group = $time.closest('.time-field')
+				, $date_help = $date_group.find('.help-block')
+				, $time_help = $time_group.find('.help-block')
 			;
 			
 			// Move it
-			$controls.append($time);
+			$date_group.append($time);
+			$date_group.find('.input-group').wrapAll('<div class="input-groups" >');
 			
 			// Add spacing
 			$time.css('margin-left', 5);
 			
 			// Move over help text
 			if ($time_help.length && $date_help.length) $date_help.append($time_help.text());
-			else if ($time_help.length) $controls.append($time_help);
+			else if ($time_help.length) $date_group.append($time_help);
 			
 			// Kill the useless control group
-			$time_control_group.remove();
+			$time_group.remove();
 			
 		},
 		
@@ -65,7 +66,7 @@ define(function (require) {
 	});
 	
 	// Apply the picker to each instance on the page
-	$('form > div.datetime').each(function(i, el) {
+	$('.datetime-field').each(function(i, el) {
 		new DateTimePicker({el:el});
 	});
 		
