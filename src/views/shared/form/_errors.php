@@ -1,8 +1,8 @@
 <?// Display form wide errors?>
 <? if ($errors->any()): ?>
 
-	<div class="alert alert-error">
-	  <button type="button" class="close" data-dismiss="alert">×</button>
+	<div class="alert alert-danger" role="alert">
+	  <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
 	  <strong>Validation Error!</strong>
 	  
 	  <?// Special duplicate slug method?>
