@@ -10,7 +10,6 @@ define(function (require) {
 		manifest = require('decoy/modules/manifest');
 	
 	// Plugins
-	require('decoy/plugins/jquery-migrate'); // To ease migration to jQuery 1.9.x
 	require('decoy/plugins/bootstrap');
 	
 	// Modules that add mojo globally
