@@ -88,4 +88,40 @@
 		color: $text-color;
 	}
 
+	// Give images a border
+	tr img {
+		border: 1px solid $grey-border;
+		@include box-sizing(border-box);
+
+		// Pushes subsequent text off the edge of the image, usually a thumbnail
+		margin-right: 5px;
+	}
+
+	// Vertically center align all cells, for rows with image thumbnails in there
+	td {
+		vertical-align: middle;
+		input[type="radio"], input[type="checkbox"] {
+			margin: 0;
+		}
+	}
+	
+	// Make gravatar images a good size (for the admins view)
+	.gravatar {
+		width: 40px;
+		height: 40px;
+	}
+
 }
+
+// On small browsers, only show the second and last columns in tables
+@media (max-width: $bootstrap_nav_break) {
+	.table {
+		th, td {
+			display: none;
+		}
+		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
+			display: table-cell;
+		}	
+	}
+}
+

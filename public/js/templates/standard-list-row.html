@@ -1,9 +1,9 @@
 <tr data-model-id="<%=id%>" data-parent-id="<%=parent_id%>" class="new">
 	<td><input type="checkbox" name="select-row"></td>
 	<td><a href="<%=controller%>/<%=id%>"><%=label%></a></td>
-	<td>
-		<a href="<%=controller%>/<%=id%>"><i class="icon-pencil" title="Edit"></i></a>
+	<td class="actions">
+		<a href="<%=controller%>/<%=id%>" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
 		 | 
-		<a href="#" class="remove-now"><i class="icon-remove js-tooltip" title="Remove relationship" data-placement="left"></i></a>
+		<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><span class="glyphicon glyphicon-remove js-tooltip" title="Remove relationship" data-placement="left"></span></a>
 	</td>
 </tr>
