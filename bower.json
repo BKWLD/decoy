@@ -18,6 +18,7 @@
     "jquery-hammerjs": "~1",
     "lodash": "~2",
     "requirejs": "~2",
-    "requirejs-text": "~2"
+    "requirejs-text": "~2",
+    "typeahead.js": "~10"
   }
 }
