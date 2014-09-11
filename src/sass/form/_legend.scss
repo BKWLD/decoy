@@ -1,13 +1,6 @@
 // Tweaks for legends
 legend {
 
-	// This is specifically for -xs sized elements thar are floated right like
-	// the view button display module and the many to many autocomplete.
-	> .btn-xs, > .btn-toolbar {
-		top: 3px;
-		position: relative;
-	}
-
 	// Add additional spacing above every legend but the first when NOT 
 	// in the related column.  Putting the form restriction there is enough
 	// to ensure that

@@ -65,8 +65,9 @@
 		}
 	}
 
-	// Add border lines to the bottom rather than top of row	
-	td,th {
+	// Add border lines to the bottom rather than top of row.  The
+	// th selector is so explicit because that is what bootstrap had.
+	td, & > thead > tr > th {
 		border-bottom: 1px solid $grey-border;
 		border-top: none;
 	}
@@ -80,6 +81,11 @@
 	// Bootstrap's .table-hover because it is too dark
 	tbody tr:hover {
 		background-color: #FCFCFC;
+	}
+
+	// Make the icons the normal color, don't make them blue
+	.actions a {
+		color: $text-color;
 	}
 
 }

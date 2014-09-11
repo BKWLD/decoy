@@ -11,7 +11,7 @@
 	<?// Else it's a regular one to many, so show a link to create a new item ?>
 	<? elseif (app('decoy.auth')->can('create', $controller)): ?>
 		<div class="btn-group">
-			<a href="<?=URL::to(DecoyURL::relative('create', null, $controller))?>" class="btn btn-info btn-xs new"><span class="glyphicon glyphicon-plus"></span> New</a>
+			<a href="<?=URL::to(DecoyURL::relative('create', null, $controller))?>" class="btn btn-info btn-sm new"><span class="glyphicon glyphicon-plus"></span> New</a>
 		</div>
 	<? endif ?>
 	
