@@ -65,7 +65,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		\Former::framework('TwitterBootstrap3');
 
 		// Change Former's required field HTML
-		Config::set('former::required_text', ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>');
+		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
 
 		// Tell Former to include unchecked checkboxes in the post
 		// Config::set('former::push_checkboxes', true);

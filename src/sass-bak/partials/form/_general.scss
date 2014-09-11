@@ -9,14 +9,6 @@ form > p {
 	margin-bottom: 20px;
 }
 
-// Toning down the required icons
-i.required {
-	@include opacity($light-opacity);
-	&:hover {
-		@include opacity(1);
-	}
-}
-
 // Toning down the help signs
 .help-block .icon-question-sign {
 	@include opacity($light-opacity);

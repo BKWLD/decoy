@@ -81,8 +81,8 @@ define(function (require) {
 		// Add "Required" icons to file input fields where we're manually applying
 		// a required class with Former, which puts it on the input rather than the control group.  We
 		// want these fields to look required but not actually be enforced by the browser.
-		var required_html = ' <i class="icon-exclamation-sign js-tooltip required" title="Required field"></i>';
-		$('input.required').closest('.control-group').find('label').first().append(required_html);
+		var required_html = ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>';
+		$('input.required').siblings('.control-label').append(required_html);
 		
 		// And "Help" icons
 		// Disabled cause I'm not sure we really want this

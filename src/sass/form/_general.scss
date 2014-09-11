@@ -40,3 +40,11 @@
 .form-actions .btn {
 	margin-bottom: 5px;
 }
+
+// Toning down the required icons
+.glyphicon.required {
+	@include opacity($light-opacity);
+	&:hover {
+		@include opacity(1);
+	}
+}
