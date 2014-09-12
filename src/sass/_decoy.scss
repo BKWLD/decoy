@@ -6,8 +6,8 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 @import "compass/utilities/general/clearfix";
 
 // Plugins
-@import "plugins/bootstrap/init";
-@import "plugins/*";
+@import "vendor/bootstrap/init";
+@import "vendor/*";
 
 // Config
 @import "variables";
