@@ -8,6 +8,7 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
+	require('typeahead');
 			
 	// public view module
 	var Autocomplete = Backbone.View.extend({
@@ -37,17 +38,19 @@ define(function (require) {
 
 			// Initialize the Bootstrap typahead plugin, which generates the
 			// autocomplete menu
-			// this.$input.typeahead({
-			// 	source: _.debounce(this.query, this.throttle) // Throttle requests
-			// });
+			this.$input.typeahead({
+				highlight: true,
+				hint: false // I don't like the visual redundancy this introduces
+			},{
+				source: _.debounce(this.query, this.throttle) // Throttle requests
+			});
+
+			// Listen for matching events
+			this.$input.on('typeahead:selected typeahead:autocompleted', this.match);
 				
 		},
-		
-		// Register interaction events
-		events: {
-			'input input[type="text"]': 'match',
-			'change input[type="text"]': 'match'
-		},
+
+		events: {},
 		
 		// Query the server for matches.  Defined as it's own method so it can be
 		// overriden without having to replace the whole AJAX call.
@@ -88,7 +91,7 @@ define(function (require) {
 			var labels = [];
 			if (_.isArray(data)) {
 				_.each(data, function(row) {
-					labels.push(row.title);
+					labels.push({ value: row.title });
 					this.data[row.title] = row;
 				}, this);
 			}
@@ -108,9 +111,10 @@ define(function (require) {
 		match: function(e) {
 			
 			// Exact match selected
-			if (this.data[this.$input.val()]) {
+			var val = this.$input.val();
+			if (this.data[val]) {
 				this.found = true;
-				this.title = this.$input.val();
+				this.title = val;
 				this.selection = this.data[this.title];
 				this.id = this.selection.id;
 				
