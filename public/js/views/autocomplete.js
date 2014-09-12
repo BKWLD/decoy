@@ -74,58 +74,6 @@ define(function (require) {
 			return this.route+'/autocomplete?query=%QUERY';
 		},
 		
-		// Query the server for matches.  Defined as it's own method so it can be
-		// overriden without having to replace the whole AJAX call.
-		query: function(query, process) {
-
-			// Make sure the term actually changed.  This is to prevent the
-			// command key (for instance, when doing a command-a) from
-			// trigger it.
-			if (query == this.last_query) return;
-
-			// Run the query.
-			this.execute({query:query}, process);
-			this.last_query = query
-		},
-		
-		// Execute the query on the server.  In other words, do the ajax
-		execute: function(request, process) {
-			
-			// Make the request
-			$.ajax(this.route+'/autocomplete', {
-				data: request,
-				type:'GET',
-				dataType: 'JSON'
-			})
-			
-			// Success
-			.done(_.bind(function(data) { this.response(data, process); }, this));
-	
-		},
-		
-		// The response from the server
-		response: function(data, process) {
-			
-			// Loop through results and massage the results.  We need an array
-			// of just labels for the typeahead.  And we need a key/val pairs
-			// to get the id back from the label when saving it.
-			this.data = {};
-			var labels = [];
-			if (_.isArray(data)) {
-				_.each(data, function(row) {
-					labels.push({ value: row.title });
-					this.data[row.title] = row;
-				}, this);
-			}
-			
-			// Tell typeahead about the labels
-			process(labels);
-			
-			// Check again if there is a match in the textfield
-			this.match();
-			
-		},
-		
 		// Callback from after the user inputs anything in the textfield.  Basically,
 		// we want to constantly check if what they've entered is valid rather than
 		// rely on bootstrap to tell us.  Cause their events to fire with every change
