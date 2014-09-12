@@ -89,8 +89,9 @@ define(function (require) {
 				var payload = { id: this.id, parent_id: this.parent_id, columns: this.selection.columns };
 				this.$el.trigger('insert', payload);
 				
-				// Clear the input to add another
-				this.$input.val('')
+				// Clear the input to add another.  Must use typeahead to clear or it will reset
+				// the value after you de-focus.
+				this.$input.typeahead('val', '')
 				.focus()
 				.prop('placeholder', 'Add another');
 				this.match();

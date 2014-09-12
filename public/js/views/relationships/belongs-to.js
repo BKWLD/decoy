@@ -38,7 +38,7 @@ define(function (require) {
 			// the value of the input with the one that we cached during
 			// the edit
 			if (this.$hidden.val() && this.$hidden.val() == this.$input.val()) {
-				this.$input.val(storage.get(this.$input.attr('name')));
+				this.$input.typeahead('val', storage.get(this.$input.attr('name')));
 				this.id = this.$hidden.val();
 				this.found = true;
 				this.renderMatch();
@@ -73,7 +73,7 @@ define(function (require) {
 		
 		// Clear the field if there is no match on blur
 		blur: function(e) {
-			if (!this.found) this.$input.val('');
+			if (!this.found) this.$input.typeahead('val', '');
 		},
 		
 		// Visit the edit page
