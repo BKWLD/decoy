@@ -57,11 +57,14 @@ define(function (require) {
 				source: this.bloodhound.ttAdapter()
 			});
 
-			// Listen for matching events
+			// When typeahead is open, listen for selections
 			this.$input.on('typeahead:opened', _.bind(function() {
 				this.$input.off('input change', this.match);
 				this.$input.on('typeahead:selected typeahead:autocompleted', this.match);
 			}, this));
+
+			// When it's closed, look for input changes that may invalidate
+			// previous selections
 			this.$input.on('typeahead:closed', _.bind(function() {
 				this.$input.off('typeahead:selected typeahead:autocompleted', this.match);
 				this.$input.on('input change', this.match);
@@ -69,15 +72,15 @@ define(function (require) {
 				
 		},
 
-		// Form the URL for the query
+		// Form the URL for the query.  This is in a function so that it can be
+		// subclassed
 		url: function() {
 			return this.route+'/autocomplete?query=%QUERY';
 		},
 		
 		// Callback from after the user inputs anything in the textfield.  Basically,
 		// we want to constantly check if what they've entered is valid rather than
-		// rely on bootstrap to tell us.  Cause their events to fire with every change
-		// the user makes.
+		// rely on bootstrap to tell us.
 		match: function(e, suggestion, dataset) {
 			
 			// A suggestion was found
