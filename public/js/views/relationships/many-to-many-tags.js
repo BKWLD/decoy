@@ -103,7 +103,7 @@ define(function (require) {
 				// Add the new row to the collection so it
 				// matches now
 				model.id = data.id;
-				this.add(model.title, model);
+				this.add(model);
 				
 				// Now, attach the new row
 				this.attach();

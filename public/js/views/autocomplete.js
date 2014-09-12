@@ -99,10 +99,10 @@ define(function (require) {
 
 		},
 		
-		// Add a new item to the data array.  Title is the key to the collection
-		// dicitonary. Model is an object like: {id, title, columns:{}}
-		add:function(title, model) {
-			this.data[title] = model;
+		// Add a new item to the data array. Model is an object like: 
+		// {id, title, columns:{}}
+		add:function(model) {
+			this.bloodhound.add(model);
 		}
 		
 	});
