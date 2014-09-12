@@ -22,6 +22,7 @@ define(function (require) {
 			this.$status = this.$('button');
 			this.$icon = this.$status.find('i');
 			this.$hidden = this.$('input[type="hidden"]');
+			this.edit_route = null; // Allows the edit_route to be updated externally
 			
 			// Add extra events
 			this.events = _.clone(this.events);
@@ -78,7 +79,7 @@ define(function (require) {
 		// Visit the edit page
 		edit: function(e) {
 			e.preventDefault();
-			location.href = this.route+'/'+this.$hidden.val();
+			location.href = (this.edit_route || this.route)+'/'+this.$hidden.val();
 		}
 				
 	});
