@@ -20,7 +20,7 @@ define(function (require) {
 		title: null,
 		selection: null,  // The whole object (from the JSON server response) that is chosen
 		route: null,
-		throttle: 200,
+		throttle: 150,
 		last_query: null,
 		
 		// Init
@@ -36,21 +36,43 @@ define(function (require) {
 			// Cache selectors
 			this.$input = this.$('input[type="text"]');
 
+			// Init Bloodhound instance that tells typeahead where to get data
+			this.bloodhound = new Bloodhound({
+				remote: {
+					url: this.url(),
+					rateLimitWait: this.throttle
+				},
+				datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.val); },
+				queryTokenizer: Bloodhound.tokenizers.whitespace
+			});
+			this.bloodhound.initialize();
+
 			// Initialize the Bootstrap typahead plugin, which generates the
 			// autocomplete menu
 			this.$input.typeahead({
 				highlight: true,
 				hint: false // I don't like the visual redundancy this introduces
 			},{
-				source: _.debounce(this.query, this.throttle) // Throttle requests
+				displayKey: 'title',
+				source: this.bloodhound.ttAdapter()
 			});
 
 			// Listen for matching events
-			this.$input.on('typeahead:selected typeahead:autocompleted', this.match);
+			this.$input.on('typeahead:opened', _.bind(function() {
+				this.$input.off('input change', this.match);
+				this.$input.on('typeahead:selected typeahead:autocompleted', this.match);
+			}, this));
+			this.$input.on('typeahead:closed', _.bind(function() {
+				this.$input.off('typeahead:selected typeahead:autocompleted', this.match);
+				this.$input.on('input change', this.match);
+			}, this));
 				
 		},
 
-		events: {},
+		// Form the URL for the query
+		url: function() {
+			return this.route+'/autocomplete?query=%QUERY';
+		},
 		
 		// Query the server for matches.  Defined as it's own method so it can be
 		// overriden without having to replace the whole AJAX call.
@@ -108,18 +130,18 @@ define(function (require) {
 		// we want to constantly check if what they've entered is valid rather than
 		// rely on bootstrap to tell us.  Cause their events to fire with every change
 		// the user makes.
-		match: function(e) {
+		match: function(e, suggestion, dataset) {
 			
-			// Exact match selected
-			var val = this.$input.val();
-			if (this.data[val]) {
+			// A suggestion was found
+			if (suggestion) {
 				this.found = true;
-				this.title = val;
-				this.selection = this.data[this.title];
-				this.id = this.selection.id;
+				this.title = suggestion.title;
+				this.id = suggestion.id;
+				this.selection = suggestion;
 				
-			// No exact match
-			} else {
+			// The current input is different than the old one and there
+			// was no suggestion, so wipe it.
+			} else if (this.title != this.$input.val()) {
 				this.found = false;
 				this.title = this.selection = this.id = null;
 			}

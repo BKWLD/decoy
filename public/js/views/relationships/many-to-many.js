@@ -14,33 +14,33 @@ define(function (require) {
 		
 		// Init
 		initialize: function () {
-			Autocomplete.prototype.initialize.call(this);
 
 			// There must be a parent_id and parent_controller defined for the saving to work
 			this.parent_id = this.$el.data('parent-id');
 			this.parent_controller = this.$el.data('parent-controller');
+
+			// Call init after the parent info is read
+			Autocomplete.prototype.initialize.apply(this, arguments);
 			
 			// Cache selectors
 			this.$submit = this.$('button[type="submit"]');
 			this.$icon = this.$submit.find('i');
 			
 			// Add extra events
-			this.events = _.clone(this.events);
-			this.events.submit = 'attach';
+			this.$el.on('submit', this.attach);
 		},
 		
-		// Define a new query method so we can pass the parent_id
-		query: function(query, process) {
-			this.execute({
-				query:query,
+		// Add the parent stuff to query
+		url: function() {
+			return Autocomplete.prototype.url.apply(this)+'&'+$.param({
 				parent_id: this.parent_id,
 				parent_controller: this.parent_controller
-				}, process);
+			});
 		},
 		
 		// Overide the match function to toggle the state of the add button
 		match: function() {
-			var changed = Autocomplete.prototype.match.call(this);
+			var changed = Autocomplete.prototype.match.apply(this, arguments);
 			if (this.found) this.enable();
 			else this.disable();
 		},
@@ -70,7 +70,7 @@ define(function (require) {
 			
 			// Don't execute it no match is found.  Call the base match
 			// because we don't want any UI logic now.
-			Autocomplete.prototype.match.call(this);
+			Autocomplete.prototype.match.apply(this, arguments);
 			if (!this.found) return;
 				
 			// Make the request

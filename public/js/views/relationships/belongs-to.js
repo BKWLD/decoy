@@ -16,7 +16,7 @@ define(function (require) {
 		
 		// Init
 		initialize: function () {
-			Autocomplete.prototype.initialize.call(this);
+			Autocomplete.prototype.initialize.apply(this, arguments);
 			
 			// Cache selectors
 			this.$status = this.$('button');
@@ -25,9 +25,8 @@ define(function (require) {
 			this.edit_route = null; // Allows the edit_route to be updated externally
 			
 			// Add extra events
-			this.events = _.clone(this.events);
-			this.events['click button'] = 'edit';
-			this.events['blur input[type="text"]'] = 'blur';
+			this.$('button').on('click', this.edit);
+			this.$input.on('blur', this.blur);
 			
 			// If there is already a value, count that as a match
 			if (this.$hidden.val()) this.found = true;
@@ -48,7 +47,7 @@ define(function (require) {
 		// Overide the match function to toggle the state of the match
 		// icons and to set the hidden input field
 		match: function() {
-			Autocomplete.prototype.match.call(this);
+			Autocomplete.prototype.match.apply(this, arguments);
 			if (this.found) this.renderMatch();
 			else this.renderMiss();
 			
