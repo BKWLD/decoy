@@ -97,8 +97,9 @@
 		margin-right: 5px;
 	}
 
-	// Vertically center align all cells, for rows with image thumbnails in there
-	td {
+	// Vertically center align all cells, for rows with image thumbnails in there.
+	// Needed super specifity to override some BS stuff
+	& > tbody > tr > td {
 		vertical-align: middle;
 		input[type="radio"], input[type="checkbox"] {
 			margin: 0;
