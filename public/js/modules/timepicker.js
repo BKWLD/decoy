@@ -19,7 +19,7 @@ define(function (require) {
 			
 			// Cache selectors
 			this.$input = this.$(':text');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+']');
+			this.$hidden = this.$(':hidden');
 			
 			// Add the widget
 			this.$el.addClass('bootstrap-timepicker');
