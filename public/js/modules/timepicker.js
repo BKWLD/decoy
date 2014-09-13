@@ -18,8 +18,8 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$('input.time');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].time');
+			this.$input = this.$(':text');
+			this.$hidden = this.$(':hidden');
 			
 			// Add the widget
 			this.$el.addClass('bootstrap-timepicker');
