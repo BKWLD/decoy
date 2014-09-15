@@ -127,10 +127,10 @@ class Fragment extends Base {
 			
 			// Add untyped versions of pairs to the array so that items can be looked
 			// up even if their type isn't included.  This is another peformance hit.
-			foreach(self::$pairs as $key => $val) {
-				if (Str::contains($key, ',')) {
-					$key = preg_replace('#,.*$#', '', $key);
-					self::$pairs[$key] = $val;
+			foreach(self::$pairs as $pair_key => $pair_val) {
+				if (Str::contains($pair_key, ',')) {
+					$pair_key = preg_replace('#,.*$#', '', $pair_key);
+					self::$pairs[$pair_key] = $pair_val;
 				}
 			}			
 		}
