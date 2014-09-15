@@ -25,7 +25,7 @@ define(function (require) {
 			this.move();
 
 			// Events
-			this.$('.input-append :text').on('change', this.change);
+			this.$hidden_date.add(this.$hidden_time).on('change', this.change);
 		},
 		
 		// Move the time picker into the date picker controls
