@@ -142,7 +142,8 @@ class Fragment extends Base {
 			// First get the key without the type suffix and see if there is a video-encoder row
 			// in the database
 			$base_key = ($i = strpos($key, ',')) ? substr($key, 0, $i) : $key;
-			if (array_key_exists($base_key.',video-encoder', self::$pairs)) {
+			if (!\Decoy::handling()
+				&& array_key_exists($base_key.',video-encoder', self::$pairs)) {
 
 				// See if we've already generate the tag
 				$tag_key = $base_key.',video-tag';
