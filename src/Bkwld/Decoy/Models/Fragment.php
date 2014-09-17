@@ -136,7 +136,26 @@ class Fragment extends Base {
 		}
 		
 		// Check if the key is in the db
-		if (array_key_exists($key, self::$pairs)) return self::$pairs[$key];
+		if (array_key_exists($key, self::$pairs)) {
+
+			// If the key is for a video encoder, add the rendered video tag to the array.
+			// First get the key without the type suffix and see if there is a video-encoder row
+			// in the database
+			$base_key = ($i = strpos($key, ',')) ? substr($key, 0, $i) : $key;
+			if (array_key_exists($base_key.',video-encoder', self::$pairs)) {
+
+				// See if we've already generate the tag
+				$tag_key = $base_key.',video-tag';
+				if (array_key_exists($tag_key, self::$pairs)) return self::$pairs[$tag_key];
+
+				// Else, generate the tag and return it.
+				else return (self::$pairs[$tag_key] = self::where('key', '=', $base_key.',video-encoder')
+					->firstOrFail()->encoding('value')->tag);
+			}
+
+			// Return the value for the key
+			return self::$pairs[$key];
+		}
 		
 		// Else return the value from the config file
 		else if (Lang::has($key)) return self::massageLangValue(Lang::get($key));
@@ -144,7 +163,7 @@ class Fragment extends Base {
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
-			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to') as $type) {
+			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to', 'video-encoder') as $type) {
 				if (Lang::has($key.','.$type)) {
 					if ($type == 'image') return self::massageLangValue(Lang::get($key.','.$type));
 					return Lang::get($key.','.$type);
