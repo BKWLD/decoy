@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Breadcrumbs;
+use Bkwld\Decoy\Models\Fragment;
 use Bkwld\Library;
 use Config;
 use Croppa;
@@ -474,7 +475,8 @@ class Helpers {
 	 * @return string The value
 	 */
 	public function frag($key) {
-		return trim(\Bkwld\Decoy\Models\Fragment::value($key));
+		if (is_string($val = Fragment::value($key))) return trim($val);
+		return $val;
 	}
 
 	/**
