@@ -33,7 +33,7 @@ define(function (require) {
 			
 			// Selectors
 			var $controls = this.$('.date-field .controls')
-				, $time = this.$('.time-field :text').parent()
+				, $time = this.$('.time-field .input-append')
 				, $time_control_group = $time.closest('.control-group')
 				, $date_help = $controls.find('.help-block')
 				, $time_help = $time_control_group.find('.help-block')
