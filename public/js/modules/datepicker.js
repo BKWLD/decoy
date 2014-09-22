@@ -23,13 +23,11 @@ define(function (require) {
 			
 			// Add the widget
 			this.$el.addClass('date').datepicker();
+
+			// Add events
+			this.$input.on('change', this.update);
+			this.$input.on('blur', this.blur);
 			
-		},
-		
-		// Add events
-		events: {
-			'change input': 'update',
-			'blur input': 'blur'
 		},
 		
 		// Listen for changes to the datepicker and update the related hidden field

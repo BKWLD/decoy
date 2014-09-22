@@ -35,13 +35,11 @@ define(function (require) {
 			this.$widget.find('input').each(function() {
 				$(this).attr('name', null);
 			});
+
+			// Add events
+			this.$input.on('change', this.update);
+			this.$input.on('focus', this.focus);
 			
-		},
-		
-		// Add events
-		events: {
-			'change input': 'update',
-			'focus input': 'focus'
 		},
 		
 		// Update hidden field when value changes
