@@ -39,14 +39,24 @@ class Files {
 	 * Loop through all file fields and delete any files that are present in the old
 	 * item instance and are being replaced by a new file or who have been deleted by
 	 * checkbox (setting their value to empty).
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $item 
+	 * @param boolean $force Bypass many of the checks and definitely delete if it's found
 	 */
-	public function delete($item) {
+	public function delete($item, $force = false) {
 		$all = Input::all();
 		foreach($this->fields($item) as $field) {
 			$old = $item->getOriginal($field);
-			if (empty($old)) continue; // Nothing to delete found
-			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
-			if (Input::hasFile($field) || !Input::has($field)) {
+
+			// Nothing to delete found
+			if (empty($old)) continue;
+
+			// Not touching this file field (probably AJAX positioning)
+			if (!array_key_exists($field, $all) && !$force) continue;
+
+			// Delete if a new file was uploaded or there it was cleared or if we're being
+			// forced (like if the model was deleted)
+			if (Input::hasFile($field) || !Input::has($field) || $force) {
 
 				// Delete the file using method on the base model
 				$item->deleteFile($old);
