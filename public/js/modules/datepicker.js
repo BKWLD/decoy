@@ -18,8 +18,8 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$(':text');
-			this.$hidden = this.$(':hidden');
+			this.$input = this.$('input[type="text"]');
+			this.$hidden = this.$('input[type="hidden"]');
 			
 			// Add the widget
 			this.$el.addClass('date').datepicker();
