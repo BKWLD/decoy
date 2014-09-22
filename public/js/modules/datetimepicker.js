@@ -17,9 +17,9 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$hidden_date = this.$('.date-field :hidden');
-			this.$hidden_time = this.$('.time-field :hidden');
-			this.$hidden = this.$('> :hidden').last();
+			this.$hidden_date = this.$('.date-field input[type="hidden"]');
+			this.$hidden_time = this.$('.time-field input[type="hidden"]');
+			this.$hidden = this.$('> input[type="hidden"]').last();
 			
 			// Make UI look better
 			this.move();
