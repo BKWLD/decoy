@@ -14,6 +14,8 @@ class ContentBecomesFragments extends Migration {
 		//
 		Schema::drop('content');
 		Schema::create('fragments', function($table){
+			$table->engine = 'InnoDB';
+			
 			$table->increments('id');
 			$table->string('key')->unique();
 			$table->text('value')->nullable();
