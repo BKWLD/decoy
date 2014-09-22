@@ -52,6 +52,7 @@ define(function (require) {
 			
 			// Update hidden field
 			this.$hidden.val(parts[3]+'-'+parts[1]+'-'+parts[2]);
+			this.$hidden.trigger('change');
 			this.parts = parts;
 		},
 		

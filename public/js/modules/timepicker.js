@@ -65,6 +65,7 @@ define(function (require) {
 			
 			// Update hidden field
 			this.$hidden.val(parts[1]+':'+parts[2]+':00');
+			this.$hidden.trigger('change');
 		},
 		
 		// Show the modal on focs
