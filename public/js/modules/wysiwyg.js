@@ -11,7 +11,7 @@ define(function(require) {
 	// Default config
 	var config = {
 		customConfig: '', // Don't load external config js file
-		enterMode : CKEDITOR.ENTER_P, // <br>s are no good because ul/ol isn't allowed in them
+		enterMode : CKEDITOR.ENTER_P, // <br>s are not advisable ul/ol aren't allowed in <p>s
 
 		// Allow everything but ...
 		// http://docs.ckeditor.com/#!/guide/dev_disallowed_content-section-how-to-allow-everything-except...
