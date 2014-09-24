@@ -103,11 +103,13 @@ class Search {
 	// Parse select options
 	private function longhandOptions($options) {
 
-		// Call static method
-		if (preg_match('#::.+\(\)#', $options)) return call_user_func($options);
+		// Call static method.  You don't pass the paranethesis
+		// to static calls
+		if (preg_match('#::.+\(\)#', $options)) {
+			return call_user_func(substr($options, 0, strlen($options) - 2));
 
 		// Return static variable
-		else if (preg_match('#::\$#', $options)) {
+		} else if (preg_match('#::\$#', $options)) {
 			list($class, $var) = explode('::$', $options);
 			return $class::$$var;
 		

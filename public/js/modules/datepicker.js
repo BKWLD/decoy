@@ -18,18 +18,16 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$('input.date');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].date');
+			this.$input = this.$('input[type="text"]');
+			this.$hidden = this.$('input[type="hidden"]');
 			
 			// Add the widget
 			this.$el.addClass('date').datepicker();
+
+			// Add events
+			this.$input.on('change', this.update);
+			this.$input.on('blur', this.blur);
 			
-		},
-		
-		// Add events
-		events: {
-			'change input': 'update',
-			'blur input': 'blur'
 		},
 		
 		// Listen for changes to the datepicker and update the related hidden field
@@ -54,6 +52,7 @@ define(function (require) {
 			
 			// Update hidden field
 			this.$hidden.val(parts[3]+'-'+parts[1]+'-'+parts[2]);
+			this.$hidden.trigger('change');
 			this.parts = parts;
 		},
 		

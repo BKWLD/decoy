@@ -41,6 +41,7 @@ class Date extends Field {
 
 		// Create a text type field
 		parent::__construct($app, 'text', $name, $label, $value, $attributes);
+		$this->addGroupClass('date-field');
 
 		// Part of the parent's constructor populates the value field using posted
 		// or populated data.  If there is a value now (or if there was before), make
@@ -80,9 +81,7 @@ class Date extends Field {
 			null;
 
 		// Add a hidden field that will contain the mysql value, for storing in db
-		$html .= HtmlInput::hidden($this->name, $mysql_date)
-			->class('date')
-			->id($this->name);
+		$html .= HtmlInput::hidden($this->name, $mysql_date)->id($this->name);
 
 		// Return the string
 		return $html;

@@ -18,8 +18,8 @@ define(function (require) {
 			_.bindAll(this);
 			
 			// Cache selectors
-			this.$input = this.$('input.time');
-			this.$hidden = $(':hidden[name='+this.$input.attr('name')+'].time');
+			this.$input = this.$('input[type="text"]');
+			this.$hidden = this.$('input[type="hidden"]');
 			
 			// Add the widget
 			this.$el.addClass('bootstrap-timepicker');
@@ -35,13 +35,11 @@ define(function (require) {
 			this.$widget.find('input').each(function() {
 				$(this).attr('name', null);
 			});
+
+			// Add events
+			this.$input.on('change', this.update);
+			this.$input.on('focus', this.focus);
 			
-		},
-		
-		// Add events
-		events: {
-			'change input': 'update',
-			'focus input': 'focus'
 		},
 		
 		// Update hidden field when value changes
@@ -67,6 +65,7 @@ define(function (require) {
 			
 			// Update hidden field
 			this.$hidden.val(parts[1]+':'+parts[2]+':00');
+			this.$hidden.trigger('change');
 		},
 		
 		// Show the modal on focs
