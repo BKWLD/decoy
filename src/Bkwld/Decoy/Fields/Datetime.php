@@ -63,9 +63,16 @@ class Datetime extends Field {
 	 * @return $this
 	 */
 	public function value($value) {
-		$this->value = $value;
+
+		// Set the value using parent, so that if there is already one specified
+		// from populate or POST
+		parent::value($value);
+
+		// Set the value of the subfields
 		$this->date->value($value);
 		$this->time->value($value);
+
+		// Chainable
 		return $this;
 	}
 
@@ -103,6 +110,7 @@ class Datetime extends Field {
 	public function render() {
 
 		// Convert the value to a mysql friendly format or leave null.
+		\Log::info($this->value);
 		$mysql_date = $this->value ? 
 			date(Library\Utils\Constants::MYSQL_DATETIME, strtotime($this->value)) : 
 			null;
