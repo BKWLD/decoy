@@ -110,7 +110,6 @@ class Datetime extends Field {
 	public function render() {
 
 		// Convert the value to a mysql friendly format or leave null.
-		\Log::info($this->value);
 		$mysql_date = $this->value ? 
 			date(Library\Utils\Constants::MYSQL_DATETIME, strtotime($this->value)) : 
 			null;
