@@ -59,9 +59,10 @@ class UrlGenerator {
 			// If the child is the same as the current controller in the path, then don't add the
 			// child.  For instance, if you are on an articles controller and the child is for
 			// articles, don't form a child link.  This logic exists so we can execute relative()
-			// from listing views and pass it the controller of a list item and not worrk about
-			// whether we're already on that page or whether the list is for related data.
-			if (!preg_match('#'.$child.'(/\d+)?$#i', $path)) $path .= '/'.$child;
+			// from listing views and pass it the controller of a list item and not worry about
+			// whether we're already on that page or whether the list is for related data.  However,
+			// allow it if the link is to an index view.  This is valid for many to many to self.
+			if (!preg_match('#'.$child.'(/\d+)?$#i', $path) || $action == 'index') $path .= '/'.$child;
 			
 			// If the action was not index and there was an id, add it
 			if ($action != 'index' && $id) $path .= '/'.$id;
