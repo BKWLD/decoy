@@ -13,22 +13,10 @@ h1 {
 
 		// Push the h1 description away from it so it can't but up against it
 		margin-left: 20px;
-		
-		/* Disabling till I test if it's still needed in BS3
 
-		line-height: 30px;
+		// Tweak vertical positioning, this looks better
+		margin-top: 6px;
 		
-		// Many to many forms need some adjusting
-		form {
-			margin: 0;
-			display: inline-block;
-			vertical-align: middle;
-			margin-left: 5px; // In case there is a search on the left
-			position: relative;
-			top: 1px;
-		}
-
-		*/
 	}	
 }
 
