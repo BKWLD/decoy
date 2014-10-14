@@ -112,7 +112,7 @@ define(function (require) {
 			
 			// Unset everything
 			this.jcrop.destroy();
-			this.$el.siblings('.img-polaroid').remove();
+			this.$el.siblings('.img-thumbnail').remove();
 			this.jcrop = null;
 			this.initted = false;
 			
