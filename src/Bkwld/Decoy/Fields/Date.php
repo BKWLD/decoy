@@ -48,7 +48,7 @@ class Date extends Field {
 		if ($this->value) $this->value = date('m/d/Y', strtotime($this->value));
 
 		// Apend the button that the calendar selector hooks into
-		$this->append('<span class="glyphicon glyphicon-calendar"></span>');
+		$this->append('<button class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></span></button>');
 
 	}
 

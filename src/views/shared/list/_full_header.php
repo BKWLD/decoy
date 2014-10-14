@@ -1,6 +1,6 @@
 <?// The title that is pulled into a full width list ?>
 
-<div class="page-header full-header">
+<div class="full-header">
 	<h1>
 		<?=$title?> <span class="badge"><?=$count?></span>
 		

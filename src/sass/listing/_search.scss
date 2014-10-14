@@ -1,7 +1,8 @@
 // The search interface
 .search {
+
 	// Set a breakpoint optimized for the search bar to fit on mobile
-	$break-search: 580px;
+	$break-search: 585px;
 	$search-bkgd: darken($light-grey, 3%);
 	$search-shadow: darken($search-bkgd, 5%);
 
@@ -11,7 +12,6 @@
 	@include border-radius(4px 4px 0 0);
 	text-align: center;
 	background: $search-bkgd;
-	// @include background-image(linear-gradient($search-bkgd, $search-bkgd 95%, $search-shadow));
 	@include box-shadow(darken(white, 20) 0px 1px 3px 0 inset);
 	overflow: hidden;
 	color: darken(white, 50);
@@ -26,9 +26,9 @@
 		position: relative;
 		text-align: right;
 		box-sizing: border-box;
-		margin-right: 88px; // Compensate for the submit button in centering
+		margin-right: 92px; // Compensate for the submit button in centering
 
-		// making the conditions box full width on break and reset the alignment
+		// Making the conditions box full width on break and reset the alignment
 		@media (max-width: $break-search) {
 			text-align: initial;
 			margin-right: 0px;
@@ -52,7 +52,7 @@
 				padding: 5px 43px 5px 5px;
 				position: relative;
 
-				// adding background color on every other condition to make it more
+				// Adding background color on every other condition to make it more
 				// noticeable where the sections are
 				&:nth-child(even) {
 					background: #e3e3e3;
@@ -86,10 +86,10 @@
 		// The search button
 		button[type="submit"] {
 			position: absolute;
-			bottom: 8px;
-			right: -86px; // Harcoded estimation of width ... wish i had a smarter approach
+			bottom: 7px;
+			right: -85px; // Harcoded estimation of width ... wish i had a smarter approach
 
-			// when the search fields expand on mobile, position the serach button below them
+			// When the search fields expand on mobile, position the serach button below them
 			// and make it match the width of fields
 			@media (max-width: $break-search) {
 				position: relative;
@@ -102,26 +102,27 @@
 		}
 		
 		// Make all the inputs the same size
-		$width: 130px;
-		input, select {
+		$width: 135px;
+		input, select, .input-group {
 			@include box-sizing(border-box);
 			width: $width;
-			height: 30px;
-			@media (max-width: $break-search) {
-				width: 100%;
-			}
-		}
-		input.date {
-			width: $width - 27px;
 			@media (max-width: $break-search) {
 				width: 100%;
 			}
 		}
 		
+		// Override BS which wants to break to block earlier than we want to
+		input, select { display: inline-block; }
+		.input-group { 
+			display: inline-table; 
+			vertical-align: middle;
+			.input-field { width: 100%; }
+		}
+
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
 			margin: 0 2px;
-
+			
 			// After the first break, remove the left margin on the first item to make
 			// the rows horiztonally center better
 			@media (max-width: $bootstrap_nav_break) {
@@ -143,6 +144,14 @@
 			}
 		}
 		.input-field {
+			
+			// Reduce text field padding.  This loosk best on Chrome
+			&[type="text"] {
+				padding-left: 8px; 
+				padding-right: 8px; 
+			}
+			
+			// Break
 			@media (max-width: $break-search) {
 				width: 52%;
 				margin-left: 1%;
@@ -151,13 +160,13 @@
 
 		// mobile date picker input
 		@media (max-width: $break-search) {
-			.input-append.input.date {
+			.input-group.input.date {
 				margin: 0;
 			}
 			.input.date {
 				width: 52%;
 			}
-			.input-append .add-on {
+			.input-group .input-group-addon {
 				position: relative;
 				right: 25px;
 			}
@@ -178,8 +187,12 @@
 		right: 0;
 	}
 	&.closed {
-		.btn { border-radius: 4px; }
 		.search-toggle { margin-right: 0;}
+
+		// When closed, don't look like a button group
+		.btn { 
+			border-radius: $border-radius-base !important; 
+		}
 	}
 	
 	// Only animate after the initial page load

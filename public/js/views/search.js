@@ -28,14 +28,13 @@ define(function (require) {
 			
 			// Cache selectors
 			this.schema = this.$el.data('schema');
-			this.title = this.$el.data('title');
 			this.$conditions = this.$('.conditions');
 			this.$submit = this.$conditions.find('button[type="submit"]');
 			this.$search_actions = $('h1 .search-toggle').closest('.btn-group');
 			
 			// Make the add and substract buttons
-			this.$add = $('<button type="button" class="btn add"><i class="icon-plus">');
-			this.$subtract = $('<button type="button" class="btn subtract"><i class="icon-minus">');
+			this.$add = $('<button type="button" class="btn btn-default add"><span class="glyphicon glyphicon-plus">');
+			this.$subtract = $('<button type="button" class="btn btn-default subtract"><span class="glyphicon glyphicon-minus">');
 			
 			// Listen for the clicks on the open/close and clear buttons
 			this.$search_actions.find('.search-toggle').click(this.toggle);
@@ -48,11 +47,6 @@ define(function (require) {
 			_.defer(_.bind(function() {
 				this.$search_actions.addClass('initialized');
 			}, this));
-			
-			// Redirect the page to apply the filter if there is no query in the
-			// url but there is at state.
-			// Not currently applied cause it was weird UX
-			// this.applyState();
 			
 		},
 		
@@ -113,44 +107,44 @@ define(function (require) {
 				
 				// Text input
 				case 'text':
-					return '<select class="comparisons">'+
+					return '<select class="comparisons form-control">'+
 							'<option value="%*%">contains</option>'+
 							'<option value="=">is exactly</option>'+
 							'<option value="*%">begins with</option>'+
 							'<option value="%*">ends with</option>'+
 							'<option value="!%*%">doesn\'t contain</option>'+
 						'</select>'+
-						'<input type="text" class="input input-field"/>';
+						'<input type="text" class="input input-field form-control"/>';
 				
 				// Date selector
 				case 'date':
-					return $('<select class="comparisons">'+
+					return $('<select class="comparisons form-control">'+
 							'<option value=">">is after</option>'+
 							'<option value="<">is before</option>'+
 							'<option value="=">is on</option>'+
 						'</select>').add($(''+
-						'<div class="input-append input date">'+
-							'<input class="date input-field" maxlength="10" placeholder="mm/dd/yyyy" type="text">'+
-							'<span class="add-on"><i class="icon-calendar"></i></span>'+
+						'<div class="input-group input date">'+
+							'<input class="date input-field form-control" maxlength="10" placeholder="mm/dd/yyyy" type="text">'+
+							'<span class="input-group-btn"><button class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></button></span></span>'+
 						'</div>').datepicker());
 				
 				// Number selector
 				case 'number':
-					return '<select class="comparisons">'+
+					return '<select class="comparisons form-control">'+
 							'<option value="=">is</option>'+
 							'<option value="!=">is not</option>'+
 							'<option value="<">is less than</option>'+
 							'<option value=">">is greater than</option>'+
 						'</select>'+
-						'<input type="number" class="input input-field">';
+						'<input type="number" class="input input-field form-control">';
 				
 				// Select menu
 				case 'select':
-					var comparisons = '<select class="comparisons">'+
+					var comparisons = '<select class="comparisons form-control">'+
 							'<option value="=">is</option>'+
 							'<option value="!=">is not</option>'+
 						'</select>';
-					var $select = $('<select class="input input-field">');
+					var $select = $('<select class="input input-field form-control">');
 					_.each(meta.options, function(label, value) {
 						$select.append($('<option>').text(label).val(value));
 					});
@@ -174,13 +168,13 @@ define(function (require) {
 			var $condition = $('<div>').addClass('condition');
 			
 			// Add initial title
-			if (is_first) $condition.append('<span class="intro">Find '+this.title+' where the</span>');
+			if (is_first) $condition.append('<span class="intro">Filter where the</span>');
 			else $condition.append('<span class="intro">and where the</span>');
 						
 			// Add the fields list
 			if (_.size(this.schema) > 1) {
 				$condition.append('</span>');
-				var $fields = $('<select>').addClass('fields');
+				var $fields = $('<select class="form-control">').addClass('fields');
 				_.each(this.schema, function(meta, field) {
 					$fields.append($('<option>').text(meta.label.toLowerCase()).val(field));
 				});

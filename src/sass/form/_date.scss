@@ -7,5 +7,10 @@ $date-input-width: 150px;
 
 // Position the date picker over the component
 .datepicker {
-	margin-left: $date-input-width - 35px;
+	margin-left: 4px;
+}
+
+// Hide the outline on the icon appended button
+.input-group.date .input-group-btn .btn {
+	outline: none;
 }
