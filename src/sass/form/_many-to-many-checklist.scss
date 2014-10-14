@@ -24,6 +24,19 @@
 		.checkbox {
 			width: 50%;
 			display: inline-block;
+			@media (max-width: $screen-xs) {
+				width: auto;
+				display: block;
+			}
 		}
+
+		// Ellipsis long labels
+		label {
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			padding-right: 10px;
+		}
+
 	}
 }
