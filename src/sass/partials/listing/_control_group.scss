@@ -19,8 +19,11 @@
 	}
 	
 	// Make the listing flush
-	.span9, .span6 {
+	[class*="span"] {
 		margin-left: 0;
+
+		// Don't float it because it messes up the layout of the help block
+		float: none;
 	}
 
 	// Move block help down

@@ -242,6 +242,7 @@ Start by creating new language files in /app/lang/en.  There are some convention
 		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
 		'deep_dive.headshot,image' => '/img/path/to/heashot',
 		'deep_dive.pdf,file' => '/files/path/to/file',
+		'deep_dive.video,video-encoder' => '',
 	);
 	
 Thus:

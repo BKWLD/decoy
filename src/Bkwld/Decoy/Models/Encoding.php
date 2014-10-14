@@ -4,6 +4,7 @@
 use Config;
 use Request;
 use HtmlObject\Element;
+use Bkwld\Library\Utils\File;
 
 /**
  * Stores the status of an encoding job and the converted outputs.
@@ -81,13 +82,15 @@ class Encoding extends Base {
 
 		// Get the sources
 		if (!$sources = $this->outputs) return;
-		$sources = json_decode($sources);
+		$sources = (array) json_decode($sources);
 
-		// Loop through the sources and try to delete them
-		foreach($sources as $source) {
-			if (preg_match('#^/#', $source) && file_exists(public_path().$source)) {
-				unlink(public_path().$source);
-			}
+		// Get the directory of an output
+		if (count($sources)                          // If there are sources
+			&& ($first = array_pop($sources))          // Get the last source
+			&& preg_match('#^/(?!/)#', $first)         // Make sure it's a local path
+			&& ($dir = public_path().dirname($first))  // Get the path of the filename
+			&& is_dir($dir)) {                         // Make sure it's a directory
+			File::deleteDir($dir);
 		}
 	}
 
@@ -208,6 +211,7 @@ class Encoding extends Base {
 
 		// Start the tag
 		$tag = Element::video();
+		$tag->value('Your browser does not support the video tag. You should <a href="http://whatbrowser.org/">consider updating</a>.');
 
 		// Loop through the outputs and add them as sources
 		$types = array('mp4', 'webm', 'ogg', 'playlist');

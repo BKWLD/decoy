@@ -23,7 +23,7 @@
 		"anahkiasen/html-object": "1.*",
 		"cartalyst/sentry": "2.0.*",
 		"bkwld/croppa": "~3.0",
-		"bkwld/library": "~2.13",
+		"bkwld/library": "~2.16",
 		"bkwld/laravel-haml": "~2.0",
 		"zencoder/zencoder-php": "~2.2"
 	},

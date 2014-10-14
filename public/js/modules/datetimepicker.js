@@ -15,27 +15,25 @@ define(function (require) {
 		// Constructor
 		initialize: function() {
 			_.bindAll(this);
-			
+
 			// Cache selectors
-			this.$hidden_date = this.$(':hidden.date');
-			this.$hidden_time = this.$(':hidden.time');
-			this.$hidden = this.$('> :hidden').last();
+			this.$hidden_date = this.$('.date-field input[type="hidden"]');
+			this.$hidden_time = this.$('.time-field input[type="hidden"]');
+			this.$hidden = this.$('> input[type="hidden"]').last();
 			
 			// Make UI look better
 			this.move();
-		},
-		
-		// Events
-		events: {
-			'change .input-append > input': 'change'
+
+			// Events
+			this.$hidden_date.add(this.$hidden_time).on('change', this.change);
 		},
 		
 		// Move the time picker into the date picker controls
 		move: function() {
 			
 			// Selectors
-			var $controls = this.$('input[type=text].date').closest('.controls')
-				, $time = this.$('input[type=text].time').parent()
+			var $controls = this.$('.date-field .controls')
+				, $time = this.$('.time-field .input-append')
 				, $time_control_group = $time.closest('.control-group')
 				, $date_help = $controls.find('.help-block')
 				, $time_help = $time_control_group.find('.help-block')

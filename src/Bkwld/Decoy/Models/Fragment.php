@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use App;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
 use Config;
@@ -9,7 +10,10 @@ use Input;
 use Lang;
 use Str;
 
-class Fragment extends \Illuminate\Database\Eloquent\Model {
+class Fragment extends Base {
+
+	// Incorporate the encodable trait because video encoders are acceptable
+	use Traits\Encodable;
 	
 	// Fragments don't need timestamps
 	public $timestamps = false;
@@ -17,9 +21,6 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	// Language files to ignore.  "admin" is in there because that is a convention
 	// that I use to store block help lines.
 	private static $ignore = array('pagination', 'reminders', 'validation', 'admin');
-	
-	// Use the key as the primary key
-	public $primaryKey = 'key';
 	
 	// Allow mass assignment
 	protected $fillable = array('key', 'value');
@@ -80,7 +81,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 				
 				// Make all files that are unchanged required so that there is no
 				// delete checkbox shown in the form
-				if (self::unchangedImage($input_name, self::value($title.'.'.$key))) {
+				if (self::unchangedFile($input_name, self::value($title.'.'.$key))) {
 					$rules[$input_name] = 'required';
 				}
 				
@@ -115,28 +116,47 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 	/**
 	 * Get a value given a key from the DB but falling back to a language file
 	 */
-	static private $pairs;
+	static private $pairs; // Array
 	static private $db_checked = false;
 	public static function value($key) {
 		
 		// Get all pairs to reduce DB lookups
 		if (!self::$db_checked) {
-			self::$pairs = self::all();
+			self::$pairs = self::lists('value', 'key');
 			self::$db_checked = true;
 			
 			// Add untyped versions of pairs to the array so that items can be looked
 			// up even if their type isn't included.  This is another peformance hit.
-			foreach(self::$pairs as $pair) {
-				if (Str::contains($pair->key,',')) {
-					$clone = $pair->replicate();
-					$clone->key = preg_replace('#,.*$#', '', $pair->key);
-					self::$pairs->add($clone);
+			foreach(self::$pairs as $pair_key => $pair_val) {
+				if (Str::contains($pair_key, ',')) {
+					$pair_key = preg_replace('#,.*$#', '', $pair_key);
+					self::$pairs[$pair_key] = $pair_val;
 				}
 			}			
 		}
 		
 		// Check if the key is in the db
-		if (self::$pairs->contains($key)) return self::$pairs->find($key)->value;
+		if (array_key_exists($key, self::$pairs)) {
+
+			// If the key is for a video encoder, add the rendered video tag to the array.
+			// First get the key without the type suffix and see if there is a video-encoder row
+			// in the database
+			$base_key = ($i = strpos($key, ',')) ? substr($key, 0, $i) : $key;
+			if (!\Decoy::handling()
+				&& array_key_exists($base_key.',video-encoder', self::$pairs)) {
+
+				// See if we've already generate the tag
+				$tag_key = $base_key.',video-tag';
+				if (array_key_exists($tag_key, self::$pairs)) return self::$pairs[$tag_key];
+
+				// Else, generate the tag and return it.
+				else return (self::$pairs[$tag_key] = self::where('key', '=', $base_key.',video-encoder')
+					->firstOrFail()->encoding('value')->tag);
+			}
+
+			// Return the value for the key
+			return self::$pairs[$key];
+		}
 		
 		// Else return the value from the config file
 		else if (Lang::has($key)) return self::massageLangValue(Lang::get($key));
@@ -144,7 +164,7 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		// Check for types.  This just exists to make the Decoy::frag() helper
 		// easier to use.  It does have a performance impact, though.
 		else {
-			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to') as $type) {
+			foreach(array('textarea', 'wysiwyg', 'image', 'file', 'belongs_to', 'video-encoder') as $type) {
 				if (Lang::has($key.','.$type)) {
 					if ($type == 'image') return self::massageLangValue(Lang::get($key.','.$type));
 					return Lang::get($key.','.$type);
@@ -205,18 +225,27 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		if (Input::hasFile($input_name)) return false;
 		
 		// If no file was posted but we're getting a value, then it must be unchanged
-		if (self::unchangedImage($input_name, $val)) return true;
+		if (self::unchangedFile($input_name, $val)) return true;
 		
 		// Do a string comparison after simplifying all whitespace
 		return self::clean(Lang::get(self::confkey($input_name))) === self::clean($val);
 	}
 	
 	/**
-	 * Test if an field is for an image and if it's unchanged
+	 * Test if an field is for an file and if it's unchanged
 	 */
-	public static function unchangedImage($input_name, $val) {
-		return Str::endsWith($input_name, array(',image', ',file')) 
-			&& Str::is('/uploads/fragments/*', $val);
+	public static function unchangedFile($input_name, $val) {
+		return static::isFile($input_name) && Str::is('/uploads/fragments/*', $val);
+	}
+
+	/**
+	 * Test if an input name represents a file
+	 *
+	 * @param string $input_name 
+	 * @return boolean 
+	 */
+	public static function isFile($input_name) {
+		return Str::endsWith($input_name, array(',image', ',file', ',video-encoder'));
 	}
 	
 	/**
@@ -228,25 +257,73 @@ class Fragment extends \Illuminate\Database\Eloquent\Model {
 		$key = self::confKey($input_name);
 		
 		// Save out a file if there was one
-		if (Input::hasFile($input_name)) {
+		if ($has_file = Input::hasFile($input_name)) {
 			$value = File::publicPath(File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir')));
+
+			// Remove it from the input so any sub models (like Encoding) don't
+			// try and handle it
+			App::make('request')->files->remove($input_name);
 		}
-				
+
 		// See if a row already exists
-		if ($row = self::find($key)) {
+		if ($row = self::where('key', '=', $key)->first()) {
+
+			// Files are managed manually here, don't do the normal Decoy Base Model
+			// file handling.  It doesn't work here because it expects the Input to
+			// contain fields for a single model instance.  Whereas frags manages many
+			// model records at once.
+			$row->auto_manage_files = false;
 			
 			// Update the row if there is a value that is different
 			// than one in a config file
 			if ($value && !self::unchanged($input_name, $value)) {
-				return $row->update(array('value' => $value));
+				$row->update(array('value' => $value));
 				
-			// Delete the row
-			} else return $row->delete();
+			// Delete the row.  This will also delete encoding rows thanks to the 
+			// encodable trait and this class extending from the Decoy base model.
+			} else $row->delete();
 		
 		// The row didn't exist, so create it
 		} else if ($value && !self::unchanged($input_name, $value)) {
-			return self::create(array('key' => $key, 'value' => $value));
+			$row = self::create(array('key' => $key, 'value' => $value));
 		}
+
+	}
+
+	/**
+	 * When updating a row, delete old files
+	 *
+	 * @return void 
+	 */
+	public function onUpdating() {
+		parent::onUpdating();
+		if (static::isFile($this->key) && $this->isDirty('value')) {
+			$this->deleteFile($this->getOriginal('value'));
+		}
+	}
+
+	/**
+	 * When saving a row, trigger an encode if necessary
+	 *
+	 * @return void 
+	 */
+	public function onSaving() {
+		parent::onSaving();
+		if (static::isFile($this->key) 
+			&& $this->isDirty('value') 
+			&& Str::contains($this->key, ',video-encoder')) {
+			$this->encodeOnSave('value');
+		}
+	}
+
+	/**
+	 * When deleting a row, delete source file
+	 *
+	 * @return void 
+	 */
+	public function onDeleted() {
+		if (Str::contains($this->key, ',video-encoder')) $this->deleteEncodings();
+		if (static::isFile($this->key)) $this->deleteFile($this->value);
 	}
 	
 	/**

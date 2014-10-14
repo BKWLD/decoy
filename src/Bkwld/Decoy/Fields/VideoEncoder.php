@@ -3,6 +3,7 @@
 // Dependencies
 use Illuminate\Container\Container;
 use Former;
+use Route;
 
 /**
  * Creates a file upload field with addtional UI for tracking the status of video
@@ -37,7 +38,8 @@ class VideoEncoder extends Upload {
 
 		// Get the encoding row if it exists
 		if ($item = $this->model()) {
-			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $name)->first();
+			$attribute = Route::is('decoy\fragments') ? 'value' : $name;
+			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $attribute)->first();
 
 			// Add the data attributes for JS view
 			$this->group->data_encode($this->encoding->id);

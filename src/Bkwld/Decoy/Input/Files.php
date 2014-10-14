@@ -39,20 +39,27 @@ class Files {
 	 * Loop through all file fields and delete any files that are present in the old
 	 * item instance and are being replaced by a new file or who have been deleted by
 	 * checkbox (setting their value to empty).
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $item 
+	 * @param boolean $force Bypass many of the checks and definitely delete if it's found
 	 */
-	public function delete($item) {
+	public function delete($item, $force = false) {
 		$all = Input::all();
 		foreach($this->fields($item) as $field) {
 			$old = $item->getOriginal($field);
-			if (empty($old)) continue; // Nothing to delete found
-			if (!array_key_exists($field, $all)) continue; // Not touching this file field (probably AJAX positioning)
-			if (Input::hasFile($field) || !Input::has($field)) {
 
-				// If the file has an image suffix, use Croppa to delete
-				if (Str::endsWith($old, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($old);
+			// Nothing to delete found
+			if (empty($old)) continue;
 
-				// Otherwise, do a normal delete
-				elseif (file_exists(public_path().$old)) unlink(public_path().$old);
+			// Not touching this file field (probably AJAX positioning)
+			if (!array_key_exists($field, $all) && !$force) continue;
+
+			// Delete if a new file was uploaded or there it was cleared or if we're being
+			// forced (like if the model was deleted)
+			if (Input::hasFile($field) || !Input::has($field) || $force) {
+
+				// Delete the file using method on the base model
+				$item->deleteFile($old);
 				
 				// Remove crop data if it exits
 				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;
@@ -90,36 +97,10 @@ class Files {
 			$files->remove($field);
 
 			// If the validation rules include a request to encode a video, add it to the encoding queue
-			if (Str::contains($item::$rules[$field], 'video:encode')) $this->encode($item, $field);
+			if (Str::contains($item::$rules[$field], 'video:encode') 
+				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
 			
 		}	
-	}
-
-	/**
-	 * Encode a file using the Encoding model
-	 */
-	protected function encode($item, $field) {
-
-		// Check for required relationship function on parent
-		if (!method_exists($item, 'encodings')) {
-			throw new Exception(get_class($item).' must define an "encodings()" function.');
-		}
-
-		// Create a new encoding model instance. It's callbacks will talk to the encoding provvider.
-		// Save it after the model is fully saved so the foreign id is available for the 
-		// polymorphic relationship.
-		$item->saved(function($model) use ($field, $item) {
-
-			// Make sure that that the model instance handling the event is the one
-			// we're updating.
-			if ($item != $model) return;
-
-			// Create the new encoding
-			$model->encodings()->save(new Encoding(array(
-				'encodable_attribute' => $field,
-			)));
-		});
-
 	}
 	
 	/**

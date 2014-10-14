@@ -37,6 +37,12 @@ abstract class Base extends Eloquent {
 	// widget should make UI for
 	// array('image' => array('marquee' => '4:3', 'feature'))
 	static public $crops = array();
+
+	/**
+	 * If true, process file handling updates via Decoy's Input\Files class during
+	 * model callbacks
+	 */
+	public $auto_manage_files = true;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
@@ -102,8 +108,10 @@ abstract class Base extends Eloquent {
 		self::updating (function($model){ return $model->onUpdating(); });
 		self::updated  (function($model){ return $model->onUpdated(); });
 		self::saving   (function($model) use ($files){ 
-			$files->delete($model);
-			$files->save($model);
+			if ($model->auto_manage_files) {
+				$files->delete($model);
+				$files->save($model);
+			}
 			return $model->onSaving(); 
 		});
 		self::saved    (function($model) use ($many_to_many_checklist) { 
@@ -111,7 +119,7 @@ abstract class Base extends Eloquent {
 			return $model->onSaved(); 
 		});
 		self::deleting (function($model) use ($files){ 
-			$files->delete($model); 
+			if ($model->auto_manage_files) $files->delete($model, true); 
 			return $model->onDeleting(); 
 		});
 		self::deleted  (function($model){ return $model->onDeleted(); });
@@ -125,7 +133,7 @@ abstract class Base extends Eloquent {
 				if (!$model) return;
 				
 				// Special files behavior
-				if ($event == 'validating') $files->preValidate($model);
+				if ($event == 'validating' && $model->auto_manage_files) $files->preValidate($model);
 				
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
@@ -152,7 +160,7 @@ abstract class Base extends Eloquent {
 	public function onAttached() {}
 	public function onRemoving() {} // ids are passed in first arg
 	public function onRemoved() {} // ids are passed in first arg
-	
+
 		
 	//---------------------------------------------------------------------------
 	// Overrideable methods
@@ -196,6 +204,22 @@ abstract class Base extends Eloquent {
 		return $path;
 	}
 	
+	/**
+	 * Delete the file referenced by the Frag
+	 *
+	 * @param string $file The path to the file relative to the doc root
+	 * @return void 
+	 */
+	public function deleteFile($file) {
+	
+		// If the file has an image suffix, use Croppa to delete
+		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
+
+		// Otherwise, do a normal delete
+		elseif (file_exists(public_path().$file)) unlink(public_path().$file);
+		
+	}
+
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------
