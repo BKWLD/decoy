@@ -15,7 +15,7 @@ define(function (require) {
 		// Constructor
 		initialize: function() {
 			_.bindAll(this);
-			
+
 			// Cache selectors
 			this.$hidden_date = this.$('.date-field input[type="hidden"]');
 			this.$hidden_time = this.$('.time-field input[type="hidden"]');
@@ -23,11 +23,9 @@ define(function (require) {
 			
 			// Make UI look better
 			this.move();
-		},
-		
-		// Events
-		events: {
-			'change .input-append > input': 'change'
+
+			// Events
+			this.$hidden_date.add(this.$hidden_time).on('change', this.change);
 		},
 		
 		// Move the time picker into the date picker controls

@@ -34,13 +34,11 @@ define(function (require) {
 			// Move the widget after the input so it doesn't mess with the styling
 			// that depends on :first and :last
 			this.$widget.insertAfter(this.$input);
+
+			// Add events
+			this.$input.on('change', this.update);
+			this.$input.on('focus', this.focus);
 			
-		},
-		
-		// Add events
-		events: {
-			'change input': 'update',
-			'focus input': 'focus'
 		},
 		
 		// Update hidden field when value changes
@@ -66,6 +64,7 @@ define(function (require) {
 			
 			// Update hidden field
 			this.$hidden.val(parts[1]+':'+parts[2]+':00');
+			this.$hidden.trigger('change');
 		},
 		
 		// Show the modal on focs

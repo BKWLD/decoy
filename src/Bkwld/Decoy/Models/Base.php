@@ -119,7 +119,7 @@ abstract class Base extends Eloquent {
 			return $model->onSaved(); 
 		});
 		self::deleting (function($model) use ($files){ 
-			if ($model->auto_manage_files) $files->delete($model); 
+			if ($model->auto_manage_files) $files->delete($model, true); 
 			return $model->onDeleting(); 
 		});
 		self::deleted  (function($model){ return $model->onDeleted(); });

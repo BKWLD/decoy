@@ -70,21 +70,31 @@ abstract class EncodingProvider {
 	 */
 	protected function mergeConfigWithDefaults() {
 
+		// Store config options that should be applied to all outputs
+		$common = [];
+
 		// Loop though user config and modify the defaults
 		$outputs = $this->defaults;
 		foreach(Config::get('decoy::encode.outputs') as $key => $config) {
 
-			// If user key doesn't exist in the defaults, it's new, and just
-			// straight pass it through
-			if (!array_key_exists($key, $outputs)) $outputs[$key] = $config;
-
 			// If there is a user key for one of the defaults but no value, then
 			// the delete the output
-			else if (empty($config)) unset($outputs[$key]);
+			if (empty($config)) unset($outputs[$key]);
+
+			// If there the config option is not not an array, then it is a setting
+			// for ALL outputs
+			else if (!is_array($config)) $common[$key] = $config;
+
+			// If user key doesn't exist in the defaults, it's new, and just
+			// straight pass it through
+			else if (!array_key_exists($key, $outputs)) $common[$key] = $config;
 
 			// Else, merge the user config onto the default for that key
 			else $outputs[$key] = array_merge($outputs[$key], $config);
 		}
+
+		// Apply common settings to all outputs
+		foreach($outputs as &$output) $output = array_merge($output, $common);
 
 		// Return the massaged outputs
 		return $outputs;

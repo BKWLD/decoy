@@ -14,6 +14,7 @@ class EncodablesTable extends Migration {
 	{
 		Schema::create('encodings', function(Blueprint $table)
 		{
+			$table->engine = 'InnoDB';
 			$table->increments('id');
 			$table->string('encodable_type');
 			$table->integer('encodable_id')->unsigned();

@@ -32,6 +32,11 @@ with a related data sidebar.  It expects:
 
 					// Automatically set the list to sidebar mode
 					$list['layout'] = 'sidebar';
+
+					// Tell the view composer who the parent is since controller's can't
+					// suss that out on their own anymore.
+					$list['parent'] = $item;
+					$list['parent_id'] = $item->id;
 					
 					// Display it
 					echo View::make('decoy::shared.list._standard', $list);
