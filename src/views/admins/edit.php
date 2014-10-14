@@ -38,7 +38,7 @@
 	<div class="form-actions">
 		<div class="btn-group">
 			<? if (app('decoy.auth')->can('update', $controller)): ?>
-				<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+				<button name="_save" value="save" type="submit" class="btn btn-success save"><span class="glyphicon glyphicon-file"></span> Save</button>
 			<? endif ?>
 			<? if (app('decoy.auth')->can('update', $controller) && app('decoy.auth')->can('create', $controller)): ?>
 				<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
@@ -52,17 +52,17 @@
 			
 			<? if (!$item->disabled()): ?>
 				<a class="btn btn-warning js-tooltip" href="<?=URL::to(DecoyURL::relative('disable', $item->id))?>" title="Remove ability to login">
-					<i class="icon-ban-circle icon-white"></i> Disable
+					<span class="glyphicon glyphicon-ban-circle"></span> Disable
 				</a>
 				
 			<? else: ?>
 				<a class="btn btn-warning js-tooltip" href="<?=URL::to(DecoyURL::relative('enable', $item->id))?>" title="Allow admin to login again">
-					<i class="icon-ok-circle icon-white"></i> Enable
+					<span class="glyphicon glyphicon-ok-circle"></span> Enable
 				</a>
 			<? endif ?>
 			
 			<a class="btn btn-danger" href="<?=URL::to(DecoyURL::relative('destroy', $item->id))?>">
-				<i class="icon-trash icon-white"></i> Delete
+				<span class="glyphicon glyphicon-trash"></span> Delete
 			</a>
 		<? endif ?>
 		

@@ -252,7 +252,7 @@ class Listing extends Field {
 		if (empty($this->parent_item)) {
 			$this->addGroupClass('note');
 			return $this->group->wrapField(Former::note($this->label_text, '
-				<i class="icon-info-sign"></i> You must save before you can add <b>'.$this->label_text.'</b>.
+				<span class="glyphicon glyphicon-info-sign"></span> You must save before you can add <b>'.$this->label_text.'</b>.
 			'));
 		}
 
@@ -329,7 +329,7 @@ class Listing extends Field {
 	protected function makeCreateBtn() {
 		return '<div class="btn-group">
 			<a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
-			<i class="icon-plus icon-white"></i> New</a>
+			<span class="glyphicon glyphicon-plus"></span> New</a>
 			</div>';
 	}
 

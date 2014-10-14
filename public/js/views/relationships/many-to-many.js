@@ -49,14 +49,12 @@ define(function (require) {
 		enable: function() {
 			if (this.$submit.hasClass('btn-info')) return;
 			this.$submit.addClass('btn-info').prop('disabled', false);
-			this.$icon.addClass('icon-white');
 		},
 		
 		// Disable the form
 		disable: function() {
 			if (!this.$submit.hasClass('btn-info')) return;
 			this.$submit.removeClass('btn-info').prop('disabled', true);
-			this.$icon.removeClass('icon-white');
 		},
 		
 		// Determine if the form should be disabled

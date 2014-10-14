@@ -69,7 +69,7 @@
 			
 			<hr/>
 			<div class="controls actions">
-				<button type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save all tabs</button>
+				<button type="submit" class="btn btn-success save"><span class="glyphicon glyphicon-file"></span> Save all tabs</button>
 			</div>
 			
 		</div>

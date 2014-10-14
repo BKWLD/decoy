@@ -2,7 +2,7 @@
 <tr class="hide warning bulk-actions">
 	<td colspan="999">
 		<a class="btn btn-danger delete-selected" href="#">
-			<i class="icon-trash icon-white"></i> Delete Selected
+			<span class="glyphicon glyphicon-trash"></span> Delete Selected
 		</a>
 	</td>
 </tr>
@@ -12,6 +12,6 @@
 	<td colspan="999">
 		<span>Are you sure?</span>
 		<a class="btn btn-danger delete-confirm" href="#">Yes, Delete</a>
-		<a class="btn delete-cancel" href="#">Cancel</a>
+		<a class="btn btn-default delete-cancel" href="#">Cancel</a>
 	</td>
 </tr>

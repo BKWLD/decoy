@@ -18,7 +18,7 @@ the sidebar for related data on forms that have a related data sidebar.
 		<div class="form-actions">
 			<div class="btn-group">
 				<? if (app('decoy.auth')->can('update', $controller)): ?>
-					<button name="_save" value="save" type="submit" class="btn btn-success save"><i class="icon-file icon-white"></i> Save</button>
+					<button name="_save" value="save" type="submit" class="btn btn-success save"><span class="glyphicon glyphicon-file"></span> Save</button>
 				<? endif ?>
 				<? if (app('decoy.auth')->can('update', $controller) && app('decoy.auth')->can('create', $controller)): ?>
 					<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
@@ -30,7 +30,7 @@ the sidebar for related data on forms that have a related data sidebar.
 			
 			<? if (!empty($item) && app('decoy.auth')->can('destroy', $controller)): ?>
 				<a class="btn btn-danger delete" href="<?=DecoyURL::relative('destroy', $item->id)?>">
-					<i class="icon-trash icon-white"></i> Delete
+					<span class="glyphicon glyphicon-trash"></span> Delete
 				</a>
 			<? endif ?>
 			

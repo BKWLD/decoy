@@ -49,7 +49,7 @@ class ManyToManyChecklist extends Checkbox {
 
 		// There are no relations yet, show a message to that effect
 		} else {
-			return '<i class="icon-info-sign"></i> 
+			return '<span class="glyphicon glyphicon-info-sign"></span> 
 				You have not <a href="/admin/'.Str::snake($this->name,'-').'">created</a> 
 				any <b>'.ucfirst($this->label_text).'</b>.';
 		}
