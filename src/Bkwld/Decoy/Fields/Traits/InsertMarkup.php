@@ -17,14 +17,24 @@ trait InsertMarkup {
 	}
 
 	/**
-	 * Insert html at the very end of the group
+	 * Insert html at the very end of the group unless the form is horizontal
+	 * in which case it goes inside the last sub-div (so that the classes that pad
+	 * the controls can take affect)
 	 * 
 	 * @param  string $group The rendered group as html
 	 * @param  string $html 
 	 * @return string       
 	 */
 	public function appendToGroup($group, $html) {
-		return preg_replace('#(</div>)$#', $html.'$1', $group);
+
+		// Horizontal form
+		if (app('former.form')->isOfType('horizontal')) {
+			return preg_replace('#(</div>\s*</div>)$#', $html.'$1', $group);
+
+		// Vertical form
+		} else {
+			return preg_replace('#(</div>)$#', $html.'$1', $group);
+		}
 	}
 
 }
