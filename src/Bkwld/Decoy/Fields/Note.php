@@ -27,7 +27,7 @@ class Note extends Field {
 		parent::__construct($app, $type, '', $label, $value, $attributes);
 
 		// Add a class to the group for extra styling
-		$this->addGroupClass('note');
+		$this->addClass('form-control-static');
 	}
 
 	/**
@@ -36,7 +36,12 @@ class Note extends Field {
 	 * @return string An input tag
 	 */
 	public function render() {
-		return Element::create('div', $this->value, $this->attributes);
+
+		// Remove default class
+		$this->removeClass('form-control');
+
+		// Render the element
+		return Element::create('p', $this->value, $this->attributes);
 	}
 
 }

@@ -132,17 +132,6 @@ legend .btn-toolbar {
 	margin-bottom: 0;
 }
 
-// The inputless form-group is created with a helper and is for fields
-// that don't have an input .. derr
-.form-group.inputless, .form-group.note {
-	.controls {
-		padding: 5px 0;
-		.help-block {
-			margin-top: 5px;
-		}
-	}
-}
-
 // Make textareas 3 lines long
 textarea {
 	height: 4.3em;
