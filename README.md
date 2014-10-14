@@ -410,6 +410,7 @@ The following additional fields come with Decoy.  They are implemented through F
 	- Render a [list of checkboxes](http://cl.ly/image/0b2w0J312z2i) to represent a related many-to-many table.  The underlying Former field `type` is a checkbox.
 	- The relationship name is stored in the field `name`.  This is the name of the relationship method that is defined on the model that is currently being edited in Decoy.
 	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
+	- You can display the results in two columns rather than one by chaining `addGroupClass('two-col')`
 
 			!= Former::manyToManyChecklist('hubs')->scope(function($query) use ($product) { return $query->where('product_id', '=', $product->id); })
 

@@ -11,4 +11,19 @@
 	img {
 		padding-right: 8px;
 	}
+
+	// Layout the items in two columns
+	&.two-col {
+
+		// Account for the margins and pull the list up
+		.control-label {
+			margin-bottom: -5px;
+		}
+
+		// Make cols
+		.checkbox {
+			width: 50%;
+			display: inline-block;
+		}
+	}
 }
