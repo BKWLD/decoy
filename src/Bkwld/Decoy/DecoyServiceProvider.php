@@ -62,7 +62,9 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Use Bootstrap 3
 		Config::set('former::framework', 'TwitterBootstrap3');
-		\Former::framework('TwitterBootstrap3');
+
+		// Reduce the horizontal form's label width
+		Config::set('former::TwitterBootstrap3.labelWidths.small', 3);
 
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
