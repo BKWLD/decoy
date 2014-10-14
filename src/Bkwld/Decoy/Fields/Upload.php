@@ -81,7 +81,8 @@ class Upload extends File {
 	 * @return string HTML
 	 */
 	protected function renderReview() {
-		if (!$this->isRequired() && $this->isInUploads()) return $this->renderDestuctableReview();
+		if (!$this->value) return;
+		else if (!$this->isRequired() && $this->isInUploads()) return $this->renderDestuctableReview();
 		else return $this->renderIndestructibleReview();
 	}
 
