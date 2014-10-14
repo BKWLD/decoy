@@ -32,6 +32,17 @@
 	&.error:hover {
 		background-color: $state-danger-bg; // This is the Boostrap error bkgd red color
 	}
+
+	// Reset BS's extra padding on form-groups found on horinztonal forms
+	@media(max-width: $bootstrap_nav_break) {
+		.form-horizontal & {
+			margin-left: -$form-group-pad;
+			margin-right: -$form-group-pad;
+			> [class*="col-"] {
+				padding: 0; 
+			}
+		}
+	}
 }
 
 // The actions btns should have a bottom margin so they wrap to multiple
