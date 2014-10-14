@@ -243,7 +243,7 @@ class Listing extends Field {
 	protected function wrapInControlGroup() {
 
 		// Add generic stuff
-		$this->addGroupClass('list-control-group');
+		$this->addGroupClass('list-form-group');
 
 		// Use the controller description for blockhelp
 		$this->blockhelp($this->controller->description());

@@ -19,8 +19,8 @@
 
 // Highlight each control group on rollover
 .form-group {
-	padding: 8px;
-	margin: -8px;
+	padding: $form-group-pad;
+	margin: -$form-group-pad;
 	@include border-radius(4px);
 	margin-bottom: 15px;
 	input, textarea, select {
@@ -28,7 +28,6 @@
 	}
 	&:hover {
 		background-color: $light-grey;
-		text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	}
 	&.error:hover {
 		background-color: $state-danger-bg; // This is the Boostrap error bkgd red color

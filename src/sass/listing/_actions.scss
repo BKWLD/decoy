@@ -1,0 +1,20 @@
+.table {
+
+	// Make the icons the normal color, don't make them blue
+	.actions a {
+		color: $text-color;
+	}
+
+	// This is the icon that indicates whether a row is visible or not
+	.visibility {
+		width: 18px;
+		height: 18px;
+		padding: 1px;
+		display: inline-block;
+		border: 1px inset #EEE;
+		line-height: 0;
+		font-size: 13px;
+		vertical-align: middle;
+	}
+
+}

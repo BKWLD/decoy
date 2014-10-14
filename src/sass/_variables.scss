@@ -5,5 +5,8 @@ $grey-border: #ddd;
 $light-opacity: .3;
 $near-black: #333;
 
-// Dimensions
+// Break points
 $bootstrap_nav_break: $screen-sm; // This should be deprecated
+
+// Sizing
+$form-group-pad: 8px !default;

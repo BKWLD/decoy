@@ -1,0 +1,16 @@
+.table {
+
+	// The select all al button
+	.select-all {
+		cursor: pointer;
+	}
+
+	// Row that contains bulk action interface
+	tr.warning, tr.error {
+		td {
+			text-align: center;
+			vertical-align: middle;
+		}
+	}
+
+}

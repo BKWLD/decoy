@@ -72,20 +72,10 @@
 		border-top: none;
 	}
 
-	// The select all al button
-	.select-all {
-		cursor: pointer;
-	}
-
 	// Add a slight rollover so it's easier to track with the eyes.  Not using
 	// Bootstrap's .table-hover because it is too dark
 	tbody tr:hover {
 		background-color: #FCFCFC;
-	}
-
-	// Make the icons the normal color, don't make them blue
-	.actions a {
-		color: $text-color;
 	}
 
 	// Give images a border
@@ -110,6 +100,11 @@
 	.gravatar {
 		width: 40px;
 		height: 40px;
+	}
+
+	// If there are multiple badges in a row, give them a little breathing roomt
+	.label {
+		margin: 0 2px;
 	}
 
 }
