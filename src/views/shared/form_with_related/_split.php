@@ -1,43 +1,5 @@
-<? 
-
-/*
-This partial is used to generate the HTML that ends the new/edit form and begins
-the sidebar for related data on forms that have a related data sidebar.
-
-	- controller : A string depicting the controller.  This is used in
-		generating links.  I.e. 'admin.news'
-		
-	- item (optional) : The data that is being edited
-
-*/
-
-?>
-			
-		<?// Submit buttons?>
-		<hr/>
-		<div class="form-actions">
-			<div class="btn-group">
-				<? if (app('decoy.auth')->can('update', $controller)): ?>
-					<button name="_save" value="save" type="submit" class="btn btn-success save"><span class="glyphicon glyphicon-file"></span> Save</button>
-				<? endif ?>
-				<? if (app('decoy.auth')->can('update', $controller) && app('decoy.auth')->can('create', $controller)): ?>
-					<button name="_save" value="new" type="submit" class="btn btn-success save_new">&amp; New</button>
-				<? endif ?> 
-				<? if (app('decoy.auth')->can('update', $controller)): ?>
-					<button name="_save" value="back" type="submit" class="btn btn-success save_back">&amp; Back</button>
-				<? endif ?>
-			</div>
-			
-			<? if (!empty($item) && app('decoy.auth')->can('destroy', $controller)): ?>
-				<a class="btn btn-danger delete" href="<?=DecoyURL::relative('destroy', $item->id)?>">
-					<span class="glyphicon glyphicon-trash"></span> Delete
-				</a>
-			<? endif ?>
-			
-			<a class="btn btn-default back" href="<?=Bkwld\Decoy\Breadcrumbs::smartBack()?>">Back</a>
-		</div>
-
-	<?= Former::close() ?>
+	<?// Show to normal footer buttons ?>
+	<?=View::make('decoy::shared.form._footer', $__data); ?>
 </div>
 
 <?// Related data container?>

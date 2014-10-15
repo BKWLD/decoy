@@ -1,0 +1,17 @@
+/**
+ * The submit buttons on form pages
+ */
+
+// On vertical forms, don't push actions over
+.form-vertical .form-actions {
+	margin: 0;
+	padding: 0;
+	float: none;
+	width: auto;
+}
+
+// The actions btns should have a bottom margin so they wrap to multiple
+// lines nicer
+.form-actions .btn {
+	margin-bottom: 5px;
+}
