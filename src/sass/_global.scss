@@ -7,3 +7,11 @@ html {
 body {
 	padding-bottom: 40px;
 }
+
+// Make the label font size bigger again
+.label {
+	font-size: 12px;
+	
+	// Make the text look a lil more v-centered
+	padding-bottom: .25em;
+}
