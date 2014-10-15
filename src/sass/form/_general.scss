@@ -70,3 +70,8 @@
 .help-block {
 	margin-bottom: 0;
 }
+
+// Make textareas 4 lines long
+textarea.form-control {
+	height: 6.8em;
+}

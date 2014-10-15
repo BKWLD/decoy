@@ -92,28 +92,6 @@ legend .btn-toolbar {
 	}
 }
 
-
-// This field doesn't need to be so big
-#seo_description {
-	height: 6em;
-}
-
-// Position the belongs to btn correctly
-.belongs-to .input-append .btn {
-	padding-left: 8px;
-	padding-right: 8px;
-}
-
-// This margin was adding unnecessary space, as in the date selector
-.input-append, .input-prepend {
-	margin-bottom: 0;
-}
-
-// Make textareas 3 lines long
-textarea {
-	height: 4.3em;
-}
-
 // This class is applied by wysiwyg.js and helps make CKEditor work with bootstrap
 .wysiwyg-wrap {
 	margin-left:0;
