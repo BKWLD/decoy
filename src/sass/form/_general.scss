@@ -45,11 +45,19 @@
 	}
 }
 
-// Toning down the required icons
+// Required field icons
 .glyphicon.required {
+
+	// Toning down the required icons
 	@include opacity($light-opacity);
 	&:hover {
 		@include opacity(1);
+	}
+
+	// Fix the tooltips on horizontal forms which were wrapping
+	// to two lines
+	& + .tooltip {
+		white-space: nowrap;
 	}
 }
 

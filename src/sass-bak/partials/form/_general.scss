@@ -9,14 +9,6 @@ form > p {
 	margin-bottom: 20px;
 }
 
-// Toning down the help signs
-.help-block .icon-question-sign {
-	@include opacity($light-opacity);
-	.form-group:hover & {
-		@include opacity(1);
-	}
-}
-
 // Making the counts in moderation tabs match the colors of the text
 .nav-tabs {
 	a { color: #999; }
@@ -71,13 +63,6 @@ label {
 		color: inherit;
 	}
 }
-
-// Shift icons that are in labels down a smidge
-label i {
-	position: relative;
-	top: 1px;
-}
-
 
 // Fix spacing amongst linline radio fields
 .radio.inline, .checkbox.inline {
@@ -159,10 +144,6 @@ form legend:nth-of-type(1n+2) {
 	margin-top: 30px;
 }
 
-// Make the Bootstrap tooltips not inherit text shadow
-.tooltip {
-	@include text-shadow(none);
-}
 
 .many-to-many-checklist {
 	.checkbox input[type="checkbox"] {

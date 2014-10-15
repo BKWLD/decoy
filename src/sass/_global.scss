@@ -20,3 +20,11 @@ body {
 .dropdown {
 	cursor: pointer;
 }
+
+// Shift icons that are in labels down a smidge
+.control-label, .btn {
+	.glyphicon {
+		position: relative;
+		top: 1px;
+	}
+}
