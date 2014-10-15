@@ -2,7 +2,7 @@
 	<small>Monitor whether workers are running or not.  The logic of a failed worker is still executed regularly, just at a slower interval.</small>
 </h1>
 
-<ul id="workers" class="unstyled">
+<ul id="workers" class="list-unstyled">
 	
 	<? foreach($workers as $worker): ?>
 		<li data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower(urlencode($worker->getName())))?> data-interval="<?=$worker->currentInterval('raw')?>">

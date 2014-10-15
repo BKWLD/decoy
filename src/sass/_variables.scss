@@ -3,7 +3,7 @@
 $light-grey: whiteSmoke;
 $grey-border: #ddd;
 $light-opacity: .3;
-$near-black: #333;
+$near-black: $gray-dark;
 
 // Break points
 $bootstrap_nav_break: $screen-sm; // This should be deprecated

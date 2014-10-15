@@ -33,7 +33,7 @@ define(function (require) {
 			this.$pending_count = this.$('.pending-count');
 			this.$approved_count = this.$('.approved-count');
 			this.$denied_count = this.$('.denied-count');
-			this.$pagination = $('.pagination');
+			this.$pagination = $('.pagination-wrapper');
 			
 			// Create model collections from data in the DOM.  The URL is fetched from
 			// the controller-route data attribute of the container.
@@ -129,7 +129,7 @@ define(function (require) {
 		// another tab.  This is triggered by an event so other views can trigger it.
 		hide: function(e, status) {
 			var $item = $(e.target);
-			$item.fadeOut(300);
+			$item.parent().fadeOut(300);
 			if (status && status != 'pending') $item.addClass(status+'-outro');
 		},
 		
@@ -159,9 +159,10 @@ define(function (require) {
 			if (old.status == 'pending') this.update_count(this.$pending_count, -1);
 			
 			// After any change, replace pagination with the refresh button
-			if (this.$pagination.length && this.$pagination.find('li').length > 1) {
-				this.$pagination.find('ul').remove();
-				this.$pagination.append('<ul><li><a href="'+window.location.href+'">Reload for more moderation options</a></li></ul>');
+			if (this.$pagination && this.$pagination.length) {
+				this.$pagination.remove();
+				this.$pagination = null;
+				this.$el.append('<div class="reload"><a href="'+window.location.href+'">Reload for more moderation options</a></div>');
 			}
 		}
 		

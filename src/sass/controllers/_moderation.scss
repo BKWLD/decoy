@@ -1,12 +1,33 @@
+// The tab ui
+.moderation .nav-tabs {
+
+	// Make the inactive text lighter
+	a { 
+		color: $gray-light; 
+		.badge { background-color: $gray-light; }
+	}
+	
+	// Reset the active tab
+	.active a { 
+		color: $gray-dark; 
+		.badge { background-color: $gray-dark; }
+	}
+
+}
+
+// The listing
 .moderation .listing {
 	@include flush-cols;
 	min-height: 1px; // Makes it so the pagination isn't flush wiith the tabs when all photos are approved
-	
+
+	// Push off of the nav-tabs
+	padding-top: $grid-gutter-width;
+
 	// One of the cells
 	.item {
-		@include box-sizing('border-box');
+		$pad: 8px;
 		background-color: $light-grey;
-		padding: 10px;
+		padding: $pad;
 		margin-bottom: 20px;
 		position: relative;
 		padding-bottom: 50px;
@@ -14,6 +35,9 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		word-wrap: break-word;
+
+		// Reserve space for borders
+		border: 2px solid transparent;
 		
 		// Title / caption text
 		.rollover {
@@ -23,8 +47,8 @@
 			background-color: rgba(0,0,0,.8);
 			color: whiteSmoke;
 			padding: 4px;
-			left:10px;
-			right:10px;
+			left: $pad;
+			right: $pad;
 			
 			.stats {
 				@include opacity(.5);
@@ -80,11 +104,10 @@
 			left: 0px;
 			bottom: 0px;
 			right: 0px;
-			padding: 10px;
+			padding: $pad;
 			background-color: $light-grey; // Give a bkgd color so it looks better if overlapping
 			text-align: center;
 			> .btn {
-				@include box-sizing('border-box');
 				width: 49%;
 			}
 		}
@@ -102,8 +125,6 @@
 		// Approved state
 		&.approved {
 			border: 2px solid #7CC27C;
-			@include box-shadow(rgba(55, 129, 55, 0.3) 0 0 10px);
-			padding: 8px;
 			
 			// Hide the approve button
 			.actions {
@@ -118,8 +139,6 @@
 		// Denied state
 		&.denied {
 			border: 2px solid #FBB450;
-			@include box-shadow(rgba(251, 180, 80, 0.3) 0 0 10px);
-			padding: 8px;
 			
 			// Hide the deny button
 			.actions {
@@ -133,23 +152,29 @@
 		// fading out
 		&.approved-outro {
 			border: 2px solid #7CC27C;
-			@include box-shadow(rgba(55, 129, 55, 0.3) 0 0 10px);
 		}
 		&.denied-outro {
 			border: 2px solid #FBB450;
-			@include box-shadow(rgba(251, 180, 80, 0.3) 0 0 10px);
 		}
 	}
 }
 
 // Make the none message be spaced down a bit
 .moderation .none {
-	margin-top: 20px;
+	margin-top: $grid-gutter-width;
 }
 
 // A select meny for filtering by category
 .moderation .categories {
 
+	// Override BS 100% width
+	width: auto;
+
 	// Stops a gap from appearing in the nav-tabs
 	margin-bottom: 0;
+}
+
+// Reload message
+.moderation .reload {
+	text-align: center;
 }
