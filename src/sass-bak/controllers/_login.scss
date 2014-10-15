@@ -24,7 +24,7 @@ body.login.index {
 				max-width: 840px;
 				position: relative;
 				top: -5em;
-				@media (max-width: $bootstrap_nav_break) {
+				@media (max-width: $main-break) {
 					top: 0;
 				}
 			}
@@ -48,7 +48,7 @@ body.login.index {
 	.branding {
 		width: 50%;
 		position: relative;
-		@media (max-width: $bootstrap_nav_break) {
+		@media (max-width: $main-break) {
 			width: 100% !important; // Override jquery
 			padding-bottom: 40px; // When stacked, push apart
 			position: static;
@@ -74,7 +74,7 @@ body.login.index {
 			font-size: 75px;
 			line-height: .85em;
 			margin-top: 45px;
-			@media (max-width: $bootstrap_nav_break) {
+			@media (max-width: $main-break) {
 				margin-top: 0;
 			}
 			@media (max-width: $break-small) {
@@ -117,7 +117,7 @@ body.login.index {
 			}
 		}
 		
-		@media (max-width: $bootstrap_nav_break) {
+		@media (max-width: $main-break) {
 			position: static;
 			width: 100%;
 			margin: 0 auto;

@@ -9,7 +9,7 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 // To tweak the path to images and where the nav switches to
 // the responsive layout, I had to hack it with the following
 // variables
-$bootstrap_nav_break: 767px;
+$main-break: 767px;
 @import "plugins/bootstrap";
 @import "plugins/bootstrap-theme";
 

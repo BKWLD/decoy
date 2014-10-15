@@ -61,7 +61,7 @@
 		}
 		
 		// The labels (label tags and selectors are used by bootstrap)
-		@media (max-width: $bootstrap_nav_break) {
+		@media (max-width: $main-break) {
 			.intro {
 				display: none;
 			}
@@ -125,7 +125,7 @@
 			
 			// After the first break, remove the left margin on the first item to make
 			// the rows horiztonally center better
-			@media (max-width: $bootstrap_nav_break) {
+			@media (max-width: $main-break) {
 				&.fields {
 					margin-left: 0;
 				}

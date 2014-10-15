@@ -34,7 +34,7 @@
 	}
 
 	// Reset BS's extra padding on form-groups found on horinztonal forms
-	@media(max-width: $bootstrap_nav_break) {
+	@media(max-width: $main-break) {
 		.form-horizontal & {
 			margin-left: -$form-group-pad;
 			margin-right: -$form-group-pad;
