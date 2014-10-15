@@ -66,7 +66,7 @@
 
 							-if(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
 								%li
-									-#%a(href=DecoyURL::action('Bkwld\Decoy\Controllers\Admins@index')) Admins
+									%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) Admins
 								%li
 									%a(href=$auth->userUrl()) Your account
 								%li.divider
@@ -75,12 +75,12 @@
 							-if($auth->developer())
 								-$divider = true
 								%li
-									-#%a(href=route('decoy\commands')) Commands
+									%a(href=route('decoy\\commands')) Commands
 
 							-if(count(Bkwld\Decoy\Models\Worker::all()))
 								-$divider = true
 								%li
-									-#%a(href=route('decoy\workers')) Workers
+									%a(href=route('decoy\\workers')) Workers
 
 							-if($divider)
 								%li.divider
