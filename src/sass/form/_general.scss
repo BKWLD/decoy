@@ -45,12 +45,6 @@
 	}
 }
 
-// The actions btns should have a bottom margin so they wrap to multiple
-// lines nicer
-.form-actions .btn {
-	margin-bottom: 5px;
-}
-
 // Toning down the required icons
 .glyphicon.required {
 	@include opacity($light-opacity);
@@ -62,4 +56,9 @@
 // Make the Bootstrap tooltips not inherit text shadow
 .tooltip {
 	@include text-shadow(none);
+}
+
+// Change the margins on the help block
+.help-block {
+	margin-bottom: 0;
 }

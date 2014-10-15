@@ -78,14 +78,6 @@ label i {
 	top: 1px;
 }
 
-// Change the margins on the help block.  The specificity here is because Bootstrap
-// has it's own styles for horizontal forms
-.help-block,
-.form-horizontal input + .help-block, 
-.form-horizontal select + .help-block, 
-.form-horizontal textarea + .help-block {
-	margin-bottom: 0;
-}
 
 // Fix spacing amongst linline radio fields
 .radio.inline, .checkbox.inline {
