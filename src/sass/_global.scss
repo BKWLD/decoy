@@ -15,3 +15,8 @@ body {
 	// Make the text look a lil more v-centered
 	padding-bottom: .25em;
 }
+
+// All dropdowns should look interactive
+.dropdown {
+	cursor: pointer;
+}
