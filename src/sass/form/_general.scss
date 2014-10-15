@@ -22,10 +22,6 @@
 	padding: $form-group-pad;
 	margin: -$form-group-pad;
 	@include border-radius(4px);
-	margin-bottom: 15px;
-	input, textarea, select {
-		margin-bottom: 0;
-	}
 	&:hover {
 		background-color: $light-grey;
 	}
@@ -34,15 +30,19 @@
 	}
 
 	// Reset BS's extra padding on form-groups found on horinztonal forms
-	@media(max-width: $main-break) {
-		.form-horizontal & {
-			margin-left: -$form-group-pad;
-			margin-right: -$form-group-pad;
+	.form-horizontal & {
+		margin-left: -$form-group-pad;
+		margin-right: -$form-group-pad;
+		@media(max-width: $main-break) {
 			> [class*="col-"] {
 				padding: 0; 
 			}
 		}
 	}
+
+	// Add bottom spacing
+	margin-bottom: 15px;
+
 }
 
 // Required field icons
