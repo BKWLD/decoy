@@ -7,16 +7,13 @@
 	
 	// Make the font size a little smaller
 	font-size: 12px;
-	i {
-		margin-top: 0;
-	}
 	
 	// Container gives the breadcrumbs the proper bounds, matching the page
 	.container {
 		
 		// Center the contents better
 		margin-top: 1px;
-		margin-bottom: -1px;
+		margin-bottom: -3px;
 		
 		// Make the links and icons softer
 		a {
@@ -31,10 +28,14 @@
 		
 		// Some breadcrumb titles make include thumbnails
 		img {
-			height: 13px;
+			height: 12px;
 
 			// Push label off of it
 			margin-right: 4px;
+
+			// Vertical centering
+			position: relative;
+			top: -2px;
 		}
 		
 		// The back button
