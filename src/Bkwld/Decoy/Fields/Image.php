@@ -111,10 +111,10 @@ class Image extends Upload {
 	protected function renderCropper() {
 
 		// Open container
-		$html = '<span class="image-upload-cropper">';
+		$html = '<div class="image-upload-cropper">';
 			
 		// Add the tabs
-		$html .= '<span class="tabs" data-js-view="crop-styles">';
+		$html .= '<div class="tabs" data-js-view="crop-styles">';
 		$active = 'active';
 		foreach($this->crops as $key => $val) {
 			$label = is_numeric($key) ? $val : $key;
@@ -123,13 +123,13 @@ class Image extends Upload {
 				.'</span>';
 			$active = null;
 		}
-		$html .= '</span>';
+		$html .= '</div>';
 		
 		// Add fullscreen button
 		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
 		
 		// Add the images
-		$html .= '<span class="imgs">';
+		$html .= '<div class="imgs">';
 		foreach($this->crops as $key => $val) {
 			
 			// Figure out the raio and crop name
@@ -153,7 +153,7 @@ class Image extends Upload {
 		}
 
 		// Close
-		$html .= '</span></span>';
+		$html .= '</div></div>';
 
 		// Add hidden field to store cropping choices
 		$html .= Former::hidden($this->name.'_crops');

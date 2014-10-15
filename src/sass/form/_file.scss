@@ -1,13 +1,3 @@
-// Chrome currently is screwing up the display of the label
-// when line height is set: http://cl.ly/image/1o2W1V2y0d21
-// .form-group input[type="file"] {
-// 	line-height: inherit;
-// 	position: relative;
-// 	top: 4px;
-// 	height: inherit;
-// 	margin-bottom: 5px;
-// }
-
 // These are the image upload control groups.  The 10px margins here just seemd to
 // look better than the 5px that is generally the spacing on the help block.
 .form-group.upload {
@@ -15,6 +5,9 @@
 	// Don't make it block because it pushes max off it
 	input[type="file"] {
 		display: inline;
+
+		// Fixes positioning of text label on Chrome
+		line-height: 0;
 	}
 	
 	// This the styling for generic file uploads
@@ -28,6 +21,11 @@
 	.download, .upload-delete, .status {
 		display: block;
 		margin-top: 5px;
+
+		// Override a padding added by BS on horzontal forms
+		.form-horizontal & {
+			padding-top: 0;
+		}
 
 		// The icon
 		.glyphicon {
@@ -50,6 +48,7 @@
 
 		// Fade it to match block help
 		@include opacity(.6);
+		display: inline;
 
 		// Push it off the file field a bit
 		margin-left: 10px;

@@ -1,4 +1,4 @@
-// Stls related to there being no croper
+// Styles related to there being no cropper
 .image-upload {
 
 	.img-thumbnail { 
@@ -18,7 +18,12 @@
 .image-upload-cropper {
 	position: relative;
 	display: block;
-	margin-top: -5px;
+	padding-top: 10px;
+
+	// If it follows a block help, reduce the spacing
+	.help-block + & {
+		padding-top: 5px;
+	}
 
 	// Show a checkered background behind the image
 	.jcrop-tracker {
