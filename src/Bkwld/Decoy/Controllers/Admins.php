@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use Bkwld\Decoy\Fields\Listing;
 use DecoyURL;
 use Input;
 use Former;
@@ -35,14 +36,8 @@ class Admins extends Base {
 		}
 
 		// Bind to view
-		$this->layout->nest('content', 'decoy::shared.list._standard', array(
-			'title'            => $this->title,
-			'controller'       => $this->controller,
-			'description'      => $this->description,
-			'count'            => Model::count(),
-			'listing'          => $results,
-			'columns'          => $this->columns,
-		));
+		$this->layout->content = Listing::createFromController($this, $results);
+
 	}
 	
 	/**

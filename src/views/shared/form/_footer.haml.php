@@ -8,6 +8,8 @@
 			
 		- item (optional) : The data that is being edited
 
+		- actions (optional) : HTML for additional buttons
+
 -use Bkwld\Decoy\Breadcrumbs
 
 %hr
@@ -25,6 +27,9 @@
 			%button.btn.btn-success.save_new(name="_save" value="new" type="submit") &amp; New
 		-if (app('decoy.auth')->can('update', $controller))
 			%button.btn.btn-success.save_back(name="_save" value="back" type="submit") &amp; Back
+
+	-# Additional buttons
+	-if (isset($actions)) echo $actions
 		
 	-# Delete
 	-if (!empty($item) && app('decoy.auth')->can('destroy', $controller))
