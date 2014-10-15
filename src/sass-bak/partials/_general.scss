@@ -11,21 +11,6 @@
 	top: 60px;
 }
 
-// The negative margin compensates for the left margin
-// on the leftest column and allows the full grid to be flush
-// with the edges of the page.  Additionally, bootstrap has
-// different margins based on the media query.
-@mixin flush-child-spans {
-	@include clearfix;
-	margin-bottom: -20px;
-	@media (min-width: $bootstrap_nav_break + 1px) {
-	  & { margin-left: -20px; }
-	}
-	@media (min-width: 1200px) {
-		& { margin-left: -30px; }
-	}
-}
-
 // Make a striped background.  From: https://gist.github.com/1947254
 @mixin striped-background($stripe1, $stripe2, $angle: -45deg, $size: 40px, $other-backgrounds: false) {
 	@include background-image(linear-gradient($angle, $stripe1 25%, $stripe2 25%, $stripe2 50%, $stripe1 50%, $stripe1 75%, $stripe2 75%, $stripe2), $other-backgrounds);

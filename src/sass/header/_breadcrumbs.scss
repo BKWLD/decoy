@@ -2,7 +2,7 @@
 // The page breadcrumbs
 .breadcrumbs {
 	background: $light-grey;
-	padding: 5px 15px;
+	padding: 5px 0;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	
 	// Make the font size a little smaller
@@ -57,12 +57,5 @@
 	}
 	.navbar-fixed-top {
 		margin-bottom:0px;
-	}
-	.breadcrumbs {
-		margin-right: -20px;
-		margin-left: -20px;
-		.container {
-			margin-left: 5px;
-		}
 	}
 }

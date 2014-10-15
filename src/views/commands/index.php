@@ -2,15 +2,15 @@
 	<small>Trigger any command for this site.  Note: these may take awhile to execute.</small>
 </h1>
 
-<div id="commands" js-view="mason">
+<div id="commands">
 	<? foreach($commands as $namespace => $subcommands): ?>
-		<div class='span6'>
+		<div class='col-sm-6 col-lg-4'>
 			<legend><?=$namespace?></legend>
 			<table>
 				<? foreach($subcommands as $name => $command): ?>
 					<tr data-js-view="task-method">
 						<td>
-							<a href="<?=route('decoy\commands@execute', $command->getName())?>" class="btn">Execute</a>
+							<a href="<?=route('decoy\commands@execute', $command->getName())?>" class="btn btn-default">Execute</a>
 						</td>
 						<td>
 							<p>

@@ -1,0 +1,46 @@
+// The list of seed tasks
+#commands {
+	@include flush-cols;
+	
+	// Make the table span the whole block
+	table {
+		width: 100%;
+		margin-bottom: 20px;
+	}
+	
+	// These are the execute buttons
+	td:first-child {
+		padding-right: 10px;
+		width:1px;
+	}
+	
+	// These are the method names
+	td:last-child {
+		font-weight: bold;
+		
+		// No spacing between name and description
+		p {
+			margin: 0;
+		}
+		
+		// Command description
+		small {
+			font-weight: normal;
+		}
+	}
+	
+	// Increase line spacing over the default
+	td {
+		padding-top: 3px;
+		padding-bottom: 3px;
+	}
+	
+	// Spinner
+	td img {
+		width: 18px;
+		height: 18px;
+		margin-left: 5px;
+		display: none;
+	}
+
+}

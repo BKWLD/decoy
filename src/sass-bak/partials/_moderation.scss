@@ -1,5 +1,5 @@
 .moderation .listing {
-	@include flush-child-spans;
+	@include flush-cols;
 	min-height: 1px; // Makes it so the pagination isn't flush wiith the tabs when all photos are approved
 	
 	// One of the cells
