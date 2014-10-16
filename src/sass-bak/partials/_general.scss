@@ -6,22 +6,3 @@
 	z-index: 9999;
 	top: 60px;
 }
-
-// Make a striped background.  From: https://gist.github.com/1947254
-@mixin striped-background($stripe1, $stripe2, $angle: -45deg, $size: 40px, $other-backgrounds: false) {
-	@include background-image(linear-gradient($angle, $stripe1 25%, $stripe2 25%, $stripe2 50%, $stripe1 50%, $stripe1 75%, $stripe2 75%, $stripe2), $other-backgrounds);
-	background-repeat: repeat;
-	@include background-size(unquote("#{$size} #{$size}"));
-}
-
-// Make pulldown menus that are being floated right, also be
-// justified right.  I grabbed this from: 
-// https://github.com/twitter/bootstrap/issues/2045
-.pull-right .dropdown-menu {
-	right: 0;
-	
-	// The JS for typeahead sets a left so we need to do
-	// important to override
-	left: auto !important;
-	
-}

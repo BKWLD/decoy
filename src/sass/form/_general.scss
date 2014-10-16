@@ -7,7 +7,7 @@
 
 // ... however, if a control group is set to form-inline, respect it
 .form-vertical .form-inline .control-label {
-	display: inline;
+	display: inline-block;
 	margin-right: 10px;
 }
 

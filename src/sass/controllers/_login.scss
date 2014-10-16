@@ -55,7 +55,7 @@ body.login.index {
 			max-width: 380px;
 			margin: 0 auto;
 		}
-		@media (max-width: $break-small) {
+		@media (max-width: $screen-xs) {
 			padding-bottom: 20px;
 		}
 
@@ -77,7 +77,7 @@ body.login.index {
 			@media (max-width: $main-break) {
 				margin-top: 0;
 			}
-			@media (max-width: $break-small) {
+			@media (max-width: $screen-xs) {
 				margin: 0;
 				font-size: 70px;
 			}
@@ -100,35 +100,109 @@ body.login.index {
 		@include border-radius(6px);
 		@include box-sizing(border-box);
 		
-		@media (max-width: $break-small) {
+		@media (max-width: $screen-sm) {
 			padding: 15px;
 		}
 		
-		// Clean up form spacing
-		form { margin: 0; }
-		.form-group { margin-bottom: 10px; }
-		.control-label { width: 90px; }
-		.controls {
-			margin-left: 110px;
-			input[type="email"], input[type="password"] {
-				width: 100%;
-				@include box-sizing(border-box);
-				height: 30px;
-			}
+		// Reduce gaps
+		.form-group {
+			margin-bottom: 10px;
+		}
+
+		// Align the labels
+		.control-label { 
+			width: 100px; 
+			text-align: right;
+		}
+
+		// Make the inputs wider
+		.form-control {
+			width: 200px;
+		}
+
+		// Push label off of checkbox
+		.checkbox input { margin-right: 5px; }
+
+		// The submit buttons
+		.form-actions {
+			margin-bottom: 0;
+			.buttons { display: inline-block; }
+			.btn { margin-bottom: 0; }
 		}
 		
+		// Stack
 		@media (max-width: $main-break) {
 			position: static;
 			width: 100%;
 			margin: 0 auto;
+
+			// Left align labels
 			.control-label {
-				width: 100%;
 				text-align: left;
 			}
-			.controls {
-				margin-left: auto;
+
+			// Span the width
+			.form-control {
+				width: 100%;
+			}
+
+			// Hide labels with no content
+			.fake-label .control-label {
+				display: none;
+			}
+
+			// Fix extra padidng on checkbox
+			.checkbox {
+				margin: 0;
+			}
+
+		}
+	}
+}
+
+// The login page - theme
+body.login.index {
+	background: $theme-color;
+	@include background(linear-gradient(top, $theme-color, darken($theme-color, 10%)));
+	background-position: center center;
+
+	// Bkgd image
+	@if ($theme-bkgd) {
+		.bkgd { background: $theme-bkgd; }
+	}
+
+	// Left side
+	.branding {
+		
+		h1 {
+			color: $theme-text;
+			@include text-shadow(1px 2px 0 darken($theme-color, 15%));
+		}
+		h4, h4 a {
+			color: $theme-text;
+			color: rgba($theme-text, .5);
+			& a:hover {
+				text-decoration: none;
+				color: rgba($theme-text, .7);
 			}
 		}
-		
+	}
+	
+	// Right side
+	.form {
+		background: $theme-text;
+		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
+		border: 1px solid darken($theme-color, 10%);
+
+		// Make the hovers fit better
+		.form-group:hover {
+			background: lighten($theme-text, 5%);
+		}
+
+		// Disable the autofill bkgd color
+		// http://stackoverflow.com/a/14205994/59160
+		input:-webkit-autofill {
+			-webkit-box-shadow: 0 0 0 1000px white inset;
+		}
 	}
 }

@@ -5,6 +5,11 @@ $grey-border: #ddd;
 $light-opacity: .3;
 $near-black: $gray-dark;
 
+// Theme
+$theme-color: #67bfb6 !default;
+$theme-text: white !default;
+$theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
+
 // Break points
 $main-break: $screen-sm; // This should be deprecated
 
