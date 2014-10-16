@@ -25,7 +25,7 @@ define(function (require) {
 			app = options.app;
 			
 			// Shared vars
-			this.$bar = this.$('.bar');
+			this.$bar = this.$('.progress-bar');
 			
 			// Listen for start and complete
 			$doc.ajaxSend(this.send);
