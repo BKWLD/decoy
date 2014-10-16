@@ -35,10 +35,10 @@ define(function (require) {
 		// Toggle the log open and close
 		log_toggle: function(e) {
 			e.preventDefault();
-			this.$log.toggleClass('hide');
+			this.$log.toggleClass('closed');
 			
 			// Load new data if the log is visible
-			if (this.$log.hasClass('hide')) clearTimeout(this.timeout);
+			if (this.$log.hasClass('closed')) clearTimeout(this.timeout);
 			else this.render();
 		},
 		
