@@ -1,7 +1,3 @@
-// Tweak the look of disabled buttons
-.btn.disabled {
-	@include opacity($light-opacity);
-}
 
 // Container for the Growl style notifications
 .notifications {

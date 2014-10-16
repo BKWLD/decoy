@@ -51,6 +51,11 @@
 	.max-size { display: none; }
 	&:hover .max-size { 
 
+		// Don't show on mobile
+		@media(max-width: $screen-sm) {
+			display: none;
+		}
+
 		// Fade it to match block help
 		@include opacity(.6);
 		display: inline;

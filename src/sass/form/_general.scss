@@ -5,6 +5,12 @@
 	display: block;
 }
 
+// ... however, if a control group is set to form-inline, respect it
+.form-vertical .form-inline .control-label {
+	display: inline;
+	margin-right: 10px;
+}
+
 // Former is setting a class of "radio" on inline
 // radio elements.  It should ONLY have radio-inline.  As
 // a result, an incorrect margin-top is being added.  This
@@ -74,4 +80,10 @@
 // Make textareas 4 lines long
 textarea.form-control {
 	height: 6.8em;
+}
+
+// Parapraphs inside of the form are for larger description blocks.  Given
+// them more padding
+form > p {
+	margin-bottom: 20px;
 }
