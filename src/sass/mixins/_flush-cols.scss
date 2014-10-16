@@ -1,8 +1,14 @@
 // The negative margin compensates for the left margin
 // on the leftest column and allows the full grid to be flush
 // with the edges of the page.
-@mixin flush-cols {
+@mixin flush-cols($enable:true) {
 	@include clearfix;
-	margin-left: -$grid-gutter-width/2;
-	margin-right: -$grid-gutter-width/2;
+	@if($enable) {
+		margin-left: -$grid-gutter-width/2;
+		margin-right: -$grid-gutter-width/2;
+	} @else {
+		margin-left: 0;
+		margin-right: 0;
+	}
+	
 }

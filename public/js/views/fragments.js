@@ -8,6 +8,7 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, _ = require('underscore')
 		, $win = $(window)
+		, Affixable = require('decoy/modules/affixable')
 	;
 	
 	// Create view
@@ -22,16 +23,15 @@ define(function (require) {
 		// Cache
 		this.$nav = $('.fragments-nav').find('a');
 
-		//define router class 
+		// Define router class 
 		this.router = new (Backbone.Router.extend({
 			routes: {
 				'admin/fragments/:id': 'frag',
 				'admin/fragments': 'default'
 			},
 
+			// Go through each a, and if there is a match then simulate that button click
 			frag: function (id) {
-
-				// go through each a, and if there is a match then simulate that button click
 				$('.fragments-nav').find('a').each(function(i, el) {
 					if($(el).data('slug') == id) {
 						$(el).tab('show');
@@ -41,6 +41,7 @@ define(function (require) {
 				});
 			},
 
+			// Select the first tab
 			default: _.bind(function () {
 				var slug = this.$nav.first().data('slug');
 				this.router.navigate('/admin/fragments/' + slug);
@@ -48,10 +49,14 @@ define(function (require) {
 			}, this)
 		}));
 
+		// Begin routing
 		Backbone.history.start({pushState: true});
 
-		// click on the nav a tags to update the route
+		// Register click listeners
 		this.$nav.on('click', this.updateRoute);
+
+		// Make the sidebar affixable
+		this.$('.affixable').views(Affixable);
 
 	};
 

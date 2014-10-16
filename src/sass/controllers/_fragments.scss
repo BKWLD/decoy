@@ -3,11 +3,19 @@ body.fragments {
 	// This was creating scrollbars
 	.tab-content {
 		overflow: visible;
+
+		// Increase the padding a bit
+		@media(min-width: $main-break + 1px) {
+			padding-left: $grid-gutter-width;
+		}
 	}
 	
 	// Make it flush
 	.tab-pane {
-		@include flush-child-spans;
+		@include flush-cols;
+		@media(max-width: $main-break) {
+			@include flush-cols(false)
+		}
 		
 		// Space sections
 		> div {
@@ -34,11 +42,20 @@ body.fragments {
 		margin-left: 0;
 	}
 	
-	// Make the pills float on mobile
-	@include respond-to($bootstrap_nav_break, down) {
+	// Breaking changes
+	@media(max-width: $main-break) {
+
+		// Turn off fixed nav
+		.affixable {
+			position: static;
+			margin-bottom: 30px;
+		}
+
+		// Make the pills float on mobile
 		.nav-pills li {
 			float:left;
 			margin-right: 4px;
+			margin-top: 4px;
 		}
 	}
 	

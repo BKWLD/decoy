@@ -96,8 +96,8 @@ define(function (require) {
 		
 		// Enable affix globally
 		$('.affixable').each(function() {
-			var $el = $(this);
-			$el.affix({ offset: $el.offset().top - 65 }); // 65 is the top value in general.scss
+			var $el = $(this), offset = 80;
+			$el.affix({ offset: $el.offset().top - offset }).css('top', offset);
 		});
 		
 	});
