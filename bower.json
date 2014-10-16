@@ -17,6 +17,7 @@
     "jquery": "~1",
     "jquery-hammerjs": "~1",
     "lodash": "~2",
+    "notifyjs": "~0",
     "requirejs": "~2",
     "requirejs-text": "~2",
     "typeahead.js": "~0"
