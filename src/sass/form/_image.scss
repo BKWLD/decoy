@@ -5,9 +5,7 @@
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
-		&.no-help { // There is no help text, so we don't need to push away from it
-			margin-top: 5px;
-		}
+		margin-top: 5px;
 	}
 
 }
