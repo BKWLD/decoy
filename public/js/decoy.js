@@ -11,7 +11,7 @@ define(function (require) {
 	require('bootstrap');
 	
 	// Modules that add mojo globally
-	// require('decoy/modules/ajax-error'); // Standard handling of AJAX errors
+	require('decoy/modules/ajax-error'); // Standard handling of AJAX errors
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()

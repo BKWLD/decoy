@@ -20,9 +20,6 @@
 		
 		<?// If breadcrumbs haven't been nested, manually render now  ?>
 		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
-	
-		<?// Container for notifications ?>
-		<div class='notifications top-right'></div>
 		
 		<?// The main page content ?>
 		<div id="main" class="container">
