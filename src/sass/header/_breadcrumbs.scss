@@ -1,61 +1,59 @@
-
-// The page breadcrumbs
 .breadcrumbs {
-	background: $light-grey;
-	padding: 5px 0;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
+
+	a {
+		color: #444;
+	}
+
+}
+
+// // The page breadcrumbs
+// .breadcrumbs {
+// 	background: $light-grey;
+// 	padding: 5px 0;
+// 	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	
-	// Make the font size a little smaller
-	font-size: 12px;
+// 	// Make the font size a little smaller
+// 	font-size: 12px;
 	
-	// Container gives the breadcrumbs the proper bounds, matching the page
-	.container {
+// 	// Container gives the breadcrumbs the proper bounds, matching the page
+// 	.container {
+	
 		
-		// Center the contents better
-		margin-top: 1px;
-		margin-bottom: -3px;
+// 		// Make the links and icons softer
+// 		a {
+// 			color: black;
+// 		}
+// 		& > * {
+// 			@include opacity($light-opacity);
+// 		}
+// 		a:hover {
+// 			@include opacity(1);
+// 		}
 		
-		// Make the links and icons softer
-		a {
-			color: black;
-		}
-		& > * {
-			@include opacity($light-opacity);
-		}
-		a:hover {
-			@include opacity(1);
-		}
-		
-		// Some breadcrumb titles make include thumbnails
-		img {
-			height: 12px;
+// 		// Some breadcrumb titles make include thumbnails
+// 		img {
+// 			height: 12px;
 
-			// Push label off of it
-			margin-right: 4px;
+// 			// Push label off of it
+// 			margin-right: 4px;
 
-			// Vertical centering
-			position: relative;
-			top: -2px;
-		}
+// 			// Vertical centering
+// 			position: relative;
+// 			top: -2px;
+// 		}
 		
-		// The back button
-		.back {
-			float: right;
-		}
-	}
-}
+// 		// The back button
+// 		.back {
+// 			float: right;
+// 		}
+// 	}
+// }
 
-// Make the breadcrumbs flush with the bottom of the nav
-@media (min-width: $bootstrap_nav_break + 1px) {
- body {
-		margin-top:50px;
-	}
-}
-@media (max-width: $bootstrap_nav_break) {
-	.navbar {
-		position: relative; // Ajax Progress needed this
-	}
-	.navbar-fixed-top {
-		margin-bottom:0px;
-	}
-}
+// @media (max-width: $bootstrap_nav_break) {
+// 	.navbar {
+// 		position: relative; // Ajax Progress needed this
+// 	}
+// 	.navbar-fixed-top {
+// 		margin-bottom:0px;
+// 	}
+// }

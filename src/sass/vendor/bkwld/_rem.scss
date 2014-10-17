@@ -1,0 +1,78 @@
+// --------------------------------------------------
+// Rem units with fallback to px for older browsers
+// Simplified version of: https://github.com/ry5n/rem
+//
+// Examples:
+// These will output the same thing:
+//   @include rem(font-size, 60px);
+//   @include rem(font-size, 3.75rem);
+//
+// Can also use shorthand properties:
+//   @include rem(margin, 20px 10px 0 5%);
+// Above will output the following:
+//   margin: 20px 10px 0 5%;
+//   margin: 1.25rem 0.625rem 0 5%;
+//
+// Note: This overrides Susy's rem mixin,to convert px grids to rem.
+// --------------------------------------------------
+
+// Base font size in pixels, if not already defined.
+// Should be the same as the font-size of the html element.
+$base-font-size: 16px !default;
+$rem-ratio: ($base-font-size / 1px) / 1rem;
+
+// Whether to output fallback values in px when outputting rems.
+$rem-with-px-fallback: true !default;
+
+// For the given property, use rem units with px as a fallback.
+//
+// $property - The css property name.
+// $values - The value (or space-separated list of values) for the property.
+//
+@mixin rem($property, $values) {
+	// Create a couple of empty lists as output buffers.
+	$px-values: ();
+	$rem-values: ();
+
+	// Ensure $values is a list.
+	@if type-of($values) != 'list' {
+		$values: join((), $values);
+	}
+
+	// Loop through the $values list
+	@each $value in $values {
+		// For each property value, if it's in rem or px, derive both rem and
+		// px values for it and add those to the end of the appropriate buffer.
+		// Ensure all pixel values are rounded to the nearest pixel.
+		@if type-of($value) == number and not unitless($value) and (unit($value) == px or unit($value) == rem) {
+			// unit is px
+			@if unit($value) == px {
+				$px-values: join($px-values, round($value));
+				$rem-values: join($rem-values, $value / $base-font-size + rem);
+			}
+			// unit is rem
+			@else {
+				$px-values: join($px-values, round($value * $rem-ratio) + px);
+				$rem-values: join($rem-values, $value);
+			}
+		}
+		// Otherwise, pass non-px/rem values along to both outputs.
+		@else {
+			$px-values: join($px-values, $value);
+			$rem-values: join($rem-values, $value);
+		}
+	}
+
+	// Use pixel fallback for browsers that don't understand rem units.
+	@if $rem-with-px-fallback {
+		#{$property}: $px-values;
+	}
+
+	// Use rem values for everyone else (overrides pixel values).
+	#{$property}: $rem-values;
+}
+
+// Override Susy's if-rem() mixin so it uses this simplified rem() mixin instead.
+@mixin if-rem($property, $values) {
+	@include rem($property, $values);
+}

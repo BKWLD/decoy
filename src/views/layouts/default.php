@@ -17,15 +17,18 @@
 		
 		<?// Nav ?>
 		<?= View::make('decoy::layouts._nav') ?>
-		
-		<?// If breadcrumbs haven't been nested, manually render now  ?>
-		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
 	
+		<div class="header">
+			<h1>CLIF BAR</h1>
+			<?// If breadcrumbs haven't been nested, manually render now  ?>
+			<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
+		</div>
+
 		<?// Container for notifications ?>
 		<div class='notifications top-right'></div>
 		
 		<?// The main page content ?>
-		<div id="main" class="container">
+		<div id="main">
 			<?= $content?>
 		</div>
 	

@@ -1,13 +1,18 @@
 // Contains the top navbar
-.navbar-default {
-	
-	// Add a shadow
-	@include box-shadow(rgba(black,.2) 0 2px 2px);
-	
-	// Gravatar sizing
-	.gravatar {
-		width: auto;
-		height: 24px;
+.nav {
+	position: fixed;
+	top: 0;
+	left: 0;
+	height: 100%;
+	width: $nav-width-open;
+	background-color: $gray-dark;
+	color: lighten($gray-light, 20%);
+
+	.box.box-admin {
+		background-color: $teal;
+		color: $gray-dark;
+		text-align: center;
+		padding: 10px;
 	}
 	
 	// Switch to using line height instead of padding so that that the gravatar
