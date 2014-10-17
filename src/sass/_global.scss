@@ -3,11 +3,6 @@ html {
 	min-height: 100%;
 }
 
-// Add a little breathing room to bottom of the page
-body {
-	padding-bottom: 40px;
-}
-
 // Make the label font size bigger again
 .label {
 	font-size: 12px;
@@ -36,7 +31,13 @@ a, .btn { outline: none !important; }
 
 // The main container
 #main {
-	padding: 15px 30px;
+
+	// Push it off the nav
 	margin-left: $nav-width-open;
-	background-color: #efefef;
+
+	// Add padding
+	padding: $form-group-margin*2;
+	
+	// Make the bkgd slightly yellow
+	background-color: $light-grey;
 }

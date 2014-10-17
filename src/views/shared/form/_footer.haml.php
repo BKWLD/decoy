@@ -12,8 +12,6 @@
 
 -use Bkwld\Decoy\Breadcrumbs
 
-%hr
-
 -# Push over for horizontal forms
 .form-actions.col-lg-offset-2.col-lg-10.col-sm-offset-3.col-sm-9
 

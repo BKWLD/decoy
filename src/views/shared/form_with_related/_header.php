@@ -37,6 +37,6 @@ This partial is used to open forms that have a related data sidebar
 <?=View::make('decoy::shared.form._errors')?>
 
 <div class="row">
-	<div class="col-md-6 related-left-col">
+	<div class="col-md-7 related-left-col">
 		<?= Former::vertical_open_for_files() ?>
 			<?= Form::token() ?>

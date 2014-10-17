@@ -1,0 +1,65 @@
+/**
+ * Fieldset group blocks of fields with a legend for a title
+ */
+form fieldset, .related .standard-list {
+
+	// Surround sections in a white box
+	$pad: 15px;
+	background: white;
+	border: 1px solid $grey-border;
+	@include box-shadow(0 2px 0px #dddddd);
+	@include border-radius(4px);
+	padding: 0 $pad; // No vertical pad cause of legend and form-group padding
+
+	// Push them vertically apart
+	margin-bottom: $form-group-margin*2;
+
+	// Don't use an actual legend because it inherits weird positioning
+	// from the browser when put in a fieldset
+	.legend {
+
+		// Bring in bootstrap's legend styling
+		@extend legend;
+
+		// Give it a background
+		background: $grey-border;
+		margin: 0 (-$pad);
+		padding: 0 $pad;
+		width: auto;
+
+		// Set the color so links get it too
+		&, a { color: $gray; }
+
+		// Push the first form-group or p down a bit
+		+ .form-group, + p {
+			margin-top: 10px;
+		}
+	}
+
+	// Add form-group's hover, a little border on the left
+	.form-group {
+		$border-stroke: 2px;
+		border-left: $border-stroke solid transparent;
+		padding-left: ($pad - $border-stroke);
+		margin-left: -$pad;
+		&:hover {
+			border-left-color: $grey-border;
+		}
+	}
+
+	// Make the related tables flush
+	&.standard-list {
+		padding: 0;
+		.legend { margin: 0; }
+		.listing { margin-bottom: 0;}
+
+		// Put padding on the cells so that the normal fieldset padding looks
+		// maintained
+		th:first-child, td:first-child { padding-left: $pad; }
+		th[class*='actions'], td[class*='actions'] { padding-right: $pad; }
+
+		// Remove the last row border
+		tr:last-child td { border-bottom: none; }
+	}
+
+}

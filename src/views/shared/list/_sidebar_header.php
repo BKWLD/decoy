@@ -1,6 +1,6 @@
 <?// The header above a list that is rendered into a sidebar ?>
 
-<legend class="sidebar-header"><a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>"><?=$title?></a> <span class="badge"><?=$count?></span> 
+<div class="legend sidebar-header"><a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>"><?=$title?></a> <span class="badge"><?=$count?></span> 
 	
 	<div class="btn-toolbar pull-right">
 	
@@ -16,4 +16,4 @@
 	<? endif ?>
 	
 	</div>
-</legend>
+</div>

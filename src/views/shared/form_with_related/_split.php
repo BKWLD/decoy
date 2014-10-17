@@ -3,4 +3,4 @@
 </div>
 
 <?// Related data container?>
-<div class="col-md-5 col-md-offset-1 related">
+<div class="col-md-5 related">
