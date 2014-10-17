@@ -23,17 +23,32 @@
 			font-weight: $headings-font-weight;
 		}
 	}
-	
-	// Switch to using line height instead of padding so that that the gravatar
-	// can be bigger without pushing the page down
-	.navbar-nav > li > a {
-		padding-top: 0;
-		padding-bottom: 0;
-		line-height: $navbar-height;
-		.gravatar { margin-top: -2px; }
-	}
-	.navbar-nav .dropdown-toggle .caret {
-		vertical-align: middle;
-		margin-top: -2px;
+
+	.top-level-nav {
+		padding: 0;
+		margin: 0;
+
+
+		a {
+			display: block;
+			height: 40px;
+			@include vertical-align;
+			text-align: center;
+			border-bottom: 1px solid lighten($gray-dark, 15%);
+
+			.text {
+				display: inline-block;
+				vertical-align: middle;
+				color: lighten($gray-dark, 35%);
+				text-transform: uppercase;
+				font-weight: 500;
+				font-size: 12px;
+			}
+
+			&:hover {
+				background-color: lighten($gray-dark, 15%);
+				a { color: lighten($gray-dark, 45%); text-decoration: none;}
+			}
+		}
 	}
 }

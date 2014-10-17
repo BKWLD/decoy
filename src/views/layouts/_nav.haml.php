@@ -4,7 +4,7 @@
 	.box.box-admin
 		%span ADMIN
 
-	%ul
+	.top-level-nav
 		-foreach($pages as $page)
 		
 			-if (!empty($page->children))
@@ -15,20 +15,21 @@
 				-$child_added = false
 		
 				-# The pulldown
-				%li.dropdown(class=$page->active?'active':null)
+				.dropdown(class=$page->active?'active':null)
 					%a.dropdown-toggle(href='#' data-toggle='dropdown')
-						!=$page->label
-						%span.caret
+						%span.text
+							!=$page->label
+							%span.caret
 		
 					-# The options
-					%ul.dropdown-menu(role="menu")
+					.dropdown-menu(role="menu")
 						-foreach($page->children as $child)
 							-if (!empty($child->divider))
-								%li.divider
+								.divider
 							-elseif($auth->can('read', $child->url))
 								-$child_added = true
-								%li(class=$child->active?'active':null)
-									%a(href=$child->url)=$child->label
+								-#%li(class=$child->active?'active':null)
+								%a(href=$child->url)=$child->label
 		
 				-# Only show the dropdown if a child was added
 				-if ($child_added) 
@@ -37,8 +38,8 @@
 					-ob_end_clean()
 		
 			-else if($auth->can('read', $page->url))
-				%li(class=$page->active?'active':null)
-					%a(href=$page->url)=$page->label
+				-#%li(class=$page->active?'active':null)
+				%a(href=$page->url)=$page->label
 
 -#	-# Add AJAX progress indicator
 -#	!= View::make('decoy::layouts._ajax_progress')-#
