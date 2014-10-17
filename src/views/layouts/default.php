@@ -15,17 +15,12 @@
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
-		<?// Nav ?>
 		<?= View::make('decoy::layouts._nav') ?>
-	
-		<div class="header">
-			<h1>CLIF BAR</h1>
-			<?// If breadcrumbs haven't been nested, manually render now  ?>
-			<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs') : $breadcrumbs ?>
-		</div>
+		<?= View::make('decoy::layouts._header', $__data) ?>
 
 		<?// The main page content ?>
 		<div id="main">
+			<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
 			<?= $content?>
 		</div>
 	

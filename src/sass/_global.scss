@@ -1,6 +1,21 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+  box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 // Allow for things to be 100% height
 html {
 	min-height: 100%;
+}
+
+// Add a little breathing room to bottom of the page
+body {
+	padding-bottom: 40px;
+	background-color: #efefef;
+	overflow-x: hidden;
 }
 
 // Make the label font size bigger again
@@ -24,20 +39,15 @@ html {
 	}
 }
 
-
 // Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
 a, .btn { outline: none !important; }
 
 
 // The main container
 #main {
-
-	// Push it off the nav
+	position: relative;
+	padding: 15px 30px;
 	margin-left: $nav-width-open;
-
-	// Add padding
-	padding: $form-group-margin*2;
-	
-	// Make the bkgd slightly yellow
-	background-color: $light-grey;
+	padding-top: $header-height+10;
+	overflow: hidden;
 }
