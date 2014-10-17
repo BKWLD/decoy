@@ -13,7 +13,7 @@
 	}
 
 	&.affix {
-		@include rgba-background-inline(rgba(#fff, .95));
+		@include rgba-background-inline(rgba(#fff, .93));
 		position: fixed;
 		margin-left: $nav-width-open;
 	}
