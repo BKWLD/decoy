@@ -18,21 +18,40 @@ form fieldset, .related .standard-list {
 	// from the browser when put in a fieldset
 	.legend {
 
-		// Bring in bootstrap's legend styling
-		@extend legend;
-
-		// Give it a background
-		background: $grey-border;
-		margin: 0 (-$pad);
-		padding: 0 $pad;
-		width: auto;
+		// Style the text
+		font-weight: 300;
+		font-size: 16px;
 
 		// Set the color so links get it too
-		&, a { color: $gray; }
+		&, > a { color: $grey-border; }
 
-		// Push the first form-group or p down a bit
+		// Give it a background
+		background: $near-black;
+		margin: 0 (-$pad);
+		padding: 7px $pad; // 7px makes it about as high as table th's
+		width: auto;
+
+		// Push the first form-group or p down a bit (but not tables)
 		+ .form-group, + p {
 			margin-top: 10px;
+		}
+
+		// Push badges over a tad
+		.badge {
+			margin-left: 5px;
+		}
+
+		// If something is pulled-right, give it a max width.  This is designed to
+		// constrain the autocomplete form on many to manys but may of other,
+		// useful, ramifications
+		> .pull-right {
+			max-width: 50%;
+
+			// Also, nudge it up a bit to make it vertically centered
+			margin-top: -2px;
+
+			// And, move it right so the right gap is the same as the top-bottom one
+			margin-right: -10px;
 		}
 	}
 
