@@ -12,7 +12,16 @@
 		background-color: $teal;
 		color: $gray-dark;
 		text-align: center;
-		padding: 10px;
+		height: $header-height;
+		@include vertical-align;
+
+		span {
+			width: 90%;
+			margin: 0 auto;
+			display: inline-block;
+			vertical-align: middle;
+			font-weight: $headings-font-weight;
+		}
 	}
 	
 	// Switch to using line height instead of padding so that that the gravatar

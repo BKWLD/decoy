@@ -8,7 +8,6 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, _ = require('underscore')
 		, $win = $(window)
-		, Affixable = require('decoy/modules/affixable')
 	;
 	
 	// Create view
@@ -54,9 +53,6 @@ define(function (require) {
 
 		// Register click listeners
 		this.$nav.on('click', this.updateRoute);
-
-		// Make the sidebar affixable
-		this.$('.affixable').views(Affixable);
 
 	};
 

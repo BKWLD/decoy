@@ -2,7 +2,7 @@
 -$auth = App::make('decoy.auth')
 .nav
 	.box.box-admin
-		ADMIN
+		%span ADMIN
 
 -#	.container
 -#

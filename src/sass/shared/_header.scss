@@ -5,13 +5,22 @@
 // within it vertically centered
 .header {
 	margin-left: $nav-width-open;
-	@include rgba-background-inline(rgba(#fff, .9));
+	@include rgba-background-inline(rgba(#fff, .98));
 	padding: 10px;
-	border-bottom: 1px solid #eee;
+	height: $header-height;
+	@include vertical-align;
+	
+	.inner {
+		display: inline-block;
+		vertical-align: middle;
+	}
 
 	h1 {
 		padding: 0;
 		margin: 0;
+		font-weight: 900;
+		font-size: 20px;
+		text-transform: uppercase;
 	}
 
 	// Gravatar sizing

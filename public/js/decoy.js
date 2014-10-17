@@ -7,6 +7,7 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone'),
+		Affixable = require('decoy/modules/affixable'),
 		manifest = require('decoy/modules/manifest');
 	require('bootstrap');
 	
@@ -95,10 +96,7 @@ define(function (require) {
 		wysiwyg.replace('textarea.wysiwyg');	
 		
 		// Enable affix globally
-		$('.affixable').each(function() {
-			var $el = $(this), offset = 80;
-			$el.affix({ offset: $el.offset().top - offset }).css('top', offset);
-		});
+		$('.affixable').views(Affixable);
 		
 	});
 	

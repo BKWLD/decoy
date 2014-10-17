@@ -24,7 +24,9 @@ define(function (require) {
 		
 		// Cache
 		this.fixed = false;
-		this.top = 80 // How far down to place it while affixed
+
+		// How far down to place it while affixed
+		this.top = this.$el.data('top') || 0;
 
 		// Listen to resizing to keep track of settings
 		$win.on('orientationchange resize', _.throttle(this.onResize, 200));
@@ -83,7 +85,7 @@ define(function (require) {
 	// Set the dimenions of the fixable
 	View.setLayout = function() {
 		this.$el.css({
-			width: this.width, 
+			//width: this.width, 
 			top: this.top
 		});
 	};
@@ -91,7 +93,7 @@ define(function (require) {
 	// Clear the layout
 	View.clearLayout = function() {
 		this.$el.css({
-			width: '', 
+			//width: '', 
 			top: '',
 			position: ''
 		});

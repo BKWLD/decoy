@@ -5,7 +5,7 @@
 if (empty($breadcrumbs)) return;
 ?>
 
-<div class="breadcrumbs">
+<div class="breadcrumbs affixable" data-top="0">
 	<?// The breadcrumbs ?>
 	<a href="/admin"><span class="glyphicon glyphicon-home"></span></a>
 	<? foreach($breadcrumbs as $url => $name): ?>

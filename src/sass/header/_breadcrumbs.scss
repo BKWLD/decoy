@@ -1,55 +1,75 @@
-
-// The page breadcrumbs
 .breadcrumbs {
-	background: $light-grey;
-	padding: 5px 0;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
-	
-	// Make the font size a little smaller
+	background-color: #e9e9e9;
+	padding: 5px 10px;
+	position: absolute;
+	width: 100%;
+	left: 0;
+	top: 0;
+	z-index: 100;
 	font-size: 12px;
+
+	a {
+		color: #666;
+	}
+
+	&.affix {
+		@include rgba-background-inline(rgba(#fff, .95));
+		position: fixed;
+		margin-left: $nav-width-open;
+	}
+}
+
+// // The page breadcrumbs
+// .breadcrumbs {
+// 	background: $light-grey;
+// 	padding: 5px 0;
+// 	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	
-	// Container gives the breadcrumbs the proper bounds, matching the page
-	.container {
+// 	// Make the font size a little smaller
+// 	font-size: 12px;
+	
+// 	// Container gives the breadcrumbs the proper bounds, matching the page
+// 	.container {
 		
-		// Center the contents better
-		margin-top: 1px;
-		margin-bottom: -3px;
+// 		// Center the contents better
+// 		margin-top: 1px;
+// 		margin-bottom: -3px;
 		
-		// Make the links and icons softer
-		a {
-			color: black;
-		}
-		& > * {
-			@include opacity($light-opacity);
-		}
-		a:hover {
-			@include opacity(1);
-		}
+// 		// Make the links and icons softer
+// 		a {
+// 			color: black;
+// 		}
+// 		& > * {
+// 			@include opacity($light-opacity);
+// 		}
+// 		a:hover {
+// 			@include opacity(1);
+// 		}
 		
-		// Some breadcrumb titles make include thumbnails
-		img {
-			height: 12px;
+// 		// Some breadcrumb titles make include thumbnails
+// 		img {
+// 			height: 12px;
 
-			// Push label off of it
-			margin-right: 4px;
+// 			// Push label off of it
+// 			margin-right: 4px;
 
-			// Vertical centering
-			position: relative;
-			top: -2px;
-		}
+// 			// Vertical centering
+// 			position: relative;
+// 			top: -2px;
+// 		}
 		
-		// The back button
-		.back {
-			float: right;
-		}
-	}
-}
+// 		// The back button
+// 		.back {
+// 			float: right;
+// 		}
+// 	}
+// }
 
-@media (max-width: $main-break) {
-	.navbar {
-		position: relative; // Ajax Progress needed this
-	}
-	.navbar-fixed-top {
-		margin-bottom:0px;
-	}
-}
+// @media (max-width: $main-break) {
+// 	.navbar {
+// 		position: relative; // Ajax Progress needed this
+// 	}
+// 	.navbar-fixed-top {
+// 		margin-bottom:0px;
+// 	}
+// }
