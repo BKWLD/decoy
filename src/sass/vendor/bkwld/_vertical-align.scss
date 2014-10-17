@@ -1,0 +1,15 @@
+/**
+ * Vertical align using psuedo elements
+ * See: http://css-tricks.com/centering-in-the-unknown/
+ */
+@mixin vertical-align() {
+	&:before {
+		content: '';
+		display: inline-block;
+		height: 100%;
+		vertical-align: middle;
+
+		// Not sure this is needed
+		// margin-right: -0.25em; /* Adjusts for spacing */
+	}
+}

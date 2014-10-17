@@ -1,0 +1,55 @@
+/**
+ * A base set of styles designed to be applied to containers
+ * of database driven content that was populated through
+ * CKEditor (or, convievably, another WYSIWYG editor)
+ */
+@mixin wysiwyg {
+	
+	// Add standard double line break for these
+	ul, ol {
+		margin: 1em auto;
+	}
+
+	// Make bold work
+	b, strong {
+		font-weight: 800;
+	}
+
+	// Make italic work
+	i, em {
+		font-style: italic;
+	}
+
+	// Make lists work again
+	// Based on http://stackoverflow.com/a/11737351/59160
+	$margin: 2.3em;
+	ul { 
+		list-style-type: disc; 
+		list-style-position: outside;
+		margin-left: $margin;
+	}
+	ol { 
+		list-style-type: decimal; 
+		list-style-position: outside;
+		margin-left: $margin;
+	}
+	ul ul, ol ul { 
+		list-style-type: circle; 
+		list-style-position: outside;
+		margin: 0 auto 0 $margin;
+	}
+	ol ol, ul ol { 
+		list-style-type: decimal; // Another option might be "lower-latin" 
+		list-style-position: outside; 
+		margin: 0 auto 0 $margin;
+	}
+
+	// Blockquote styles
+	// These are as generic as possible here. Any specific
+	// blockquote styles will be in the project's sass
+	blockquote {
+		width: 80%;
+		margin: 20px auto;
+		display: block;
+	}
+}

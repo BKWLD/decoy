@@ -62,6 +62,7 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Use Bootstrap 3
 		Config::set('former::framework', 'TwitterBootstrap3');
+		\Former::framework('TwitterBootstrap3');
 
 		// Reduce the horizontal form's label width
 		Config::set('former::TwitterBootstrap3.labelWidths.small', 3);

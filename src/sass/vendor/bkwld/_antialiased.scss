@@ -1,0 +1,10 @@
+/**
+ * Enable antialiasing
+ */
+@mixin antialiased($state: true) {
+  $value: subpixel-antialiased;
+  @if $state == true {
+    $value: antialiased;
+  }
+  -webkit-font-smoothing: $value;
+}

@@ -29,5 +29,14 @@ body {
 	}
 }
 
+
 // Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
 a, .btn { outline: none !important; }
+
+
+// The main container
+#main {
+	padding: 15px 30px;
+	margin-left: $nav-width-open;
+	background-color: #efefef;
+}

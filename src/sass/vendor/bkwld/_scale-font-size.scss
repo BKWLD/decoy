@@ -1,0 +1,10 @@
+/**
+ * Set font sizes on HTML that make rem values scale with the width
+ */
+@mixin scale-font-size($max-width: 960px, $min-break: 400px, $max: 6) {
+	html {
+		@for $i from 2 to $max {
+			@media(max-width: $max-width - ($max-width - $min-break)/($max - $i)) { font-size: 100% - ($i - 1)*6%; }
+		}
+	}
+}

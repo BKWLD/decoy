@@ -45,12 +45,6 @@
 	}
 }
 
-// Make the breadcrumbs flush with the bottom of the nav
-@media (min-width: $main-break + 1px) {
- body {
-		margin-top:50px;
-	}
-}
 @media (max-width: $main-break) {
 	.navbar {
 		position: relative; // Ajax Progress needed this

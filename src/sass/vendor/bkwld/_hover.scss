@@ -1,0 +1,30 @@
+/**
+ * Helps with active and hovers on mobile devices
+ * - Hovers are disabled
+ * - If $active is true, the standard hover effect is used for active
+ *
+ * Requires Modernizr to set the no-touch class on html
+ * 
+ * Ex:
+ * 	 @include hover { color: red }
+ * 	 @include hover(true) { color: blue; }
+ */
+@mixin hover($active: false) {
+	.no-touch &:hover {
+		@content;
+	}
+	@if $active {
+		@include active {
+			@content;
+		}
+	}
+}
+
+// Apply active to both touch and non-touch
+@mixin active {
+	.no-touch &:active,
+	&:active,
+	&.active {
+		@content;
+	}
+}

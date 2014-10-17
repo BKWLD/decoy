@@ -1,0 +1,22 @@
+// The header is designed to have both the title and breadcrumbs
+// stacked, then on scroll the headline block goes away, but the
+// breadgrumbs stay fixed with a semi-transparent white bg
+// In addition, the header will have a fixed height with the content
+// within it vertically centered
+.header {
+	margin-left: $nav-width-open;
+	@include rgba-background-inline(rgba(#fff, .9));
+	padding: 10px;
+	border-bottom: 1px solid #eee;
+
+	h1 {
+		padding: 0;
+		margin: 0;
+	}
+
+	// Gravatar sizing
+	.gravatar {
+		width: auto;
+		height: 24px;
+	}
+}
