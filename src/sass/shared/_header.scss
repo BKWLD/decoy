@@ -24,6 +24,19 @@
 	}
 
 	// Gravatar sizing
+	$profile-size: 35px;
+	.gravatar-wrap {
+		width: $profile-size;
+		height: $profile-size;
+		@include border-radius($profile-size);
+		border: 1px solid #999;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
 	.gravatar {
 		width: auto;
 		height: 24px;
@@ -31,7 +44,13 @@
 
 	.user {
 		position: absolute;
-		top: 10px;
+		top: 8px;
 		right: 20px;
+
+		.dropdown-menu {
+			float: none;
+			left: -120px;
+			top: 50px;
+		}
 	}
 }

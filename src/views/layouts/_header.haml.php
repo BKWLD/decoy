@@ -9,8 +9,8 @@
 				
 				-# Dropdown menu
 				%a.dropdown-toggle(data-toggle='dropdown')
-					%span Hi, #{$auth->userName()}
-					%img.gravatar(src=$auth->userPhoto())
+					.gravatar-wrap
+						%img.gravatar(src=$auth->userPhoto())
 					%span.caret
 		
 				-# Options
