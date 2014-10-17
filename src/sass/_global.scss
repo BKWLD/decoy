@@ -13,9 +13,7 @@ html {
 
 // Add a little breathing room to bottom of the page
 body {
-	padding-bottom: 40px;
 	background-color: #efefef;
-	overflow-x: hidden;
 }
 
 // Make the label font size bigger again
@@ -49,5 +47,4 @@ a, .btn { outline: none !important; }
 	padding: 15px 30px;
 	margin-left: $nav-width-open;
 	padding-top: $header-height+10;
-	overflow: hidden;
 }
