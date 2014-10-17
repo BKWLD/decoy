@@ -69,9 +69,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
 
-		// Tell Former to include unchecked checkboxes in the post
-		// Config::set('former::push_checkboxes', true);
-
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');
