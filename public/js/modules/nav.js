@@ -1,7 +1,5 @@
-// --------------------------------------------------
-// Used in generic autocompletes and designed to be
-// extended by other views that need extended feature
-// --------------------------------------------------
+// This class handles the state of the navigation when 
+// you go down to mobile widths, so it can toggle on and off
 define(function (require) {
 	
 	// dependencies
