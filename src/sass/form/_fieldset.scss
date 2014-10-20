@@ -7,7 +7,7 @@ form fieldset, .related .standard-list {
 	$pad: 15px;
 	background: white;
 	border: 1px solid $grey-border;
-	@include box-shadow(0 2px 0px #dddddd);
+	@include box-shadow($common-shadow);
 	@include border-radius(4px);
 	padding: 0 $pad; // No vertical pad cause of legend and form-group padding
 

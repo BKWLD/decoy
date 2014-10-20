@@ -50,7 +50,9 @@ a, a:hover {
 	position: relative;
 	padding: $main-padding;
 	margin-left: $nav-width-open;
-	padding-top: $header-height + $form-group-margin*2;
+
+	// Breadcrumbs are abs/fixed position, so compensate for their height
+	padding-top: $main-padding + $breadcrumb-height;
 
 	// On mobile widths, have main span the entire width of the screen
 	@media(max-width:$mobile) {
