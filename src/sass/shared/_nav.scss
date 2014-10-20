@@ -9,6 +9,7 @@
 	color: lighten($gray-light, 20%);
 	z-index: 200; // to clear the breadcrumbs and the main content
 	@include transition(all 200ms ease-out);
+	border-top: 4px solid $theme-color;
 
 	// when the nav has the class of 'show', it's triggered
 	// by the mobile grabber icon, so it needs to be left: 0
@@ -24,48 +25,6 @@
 
 	a, a:hover {
 		text-decoration: none !important;
-	}
-
-	.box.box-admin {
-		background-color: $teal;
-		color: $gray-dark;
-		text-align: center;
-		height: $header-height;
-		position: relative;
-		@include vertical-align;
-
-		span {
-			width: 90%;
-			margin: 0 auto;
-			display: inline-block;
-			vertical-align: middle;
-			font-weight: 900;
-			font-size: 20px;
-			text-transform: uppercase;
-			color: darken($teal, 25%);
-		}
-
-		.glyphicon {
-			top: 50%;
-			position: absolute;
-			font-size: 18px;
-			margin-top: -9px;
-			right: 10px;
-			cursor: pointer;
-			width: auto;
-			display: none;
-			@include opacity(1);
-			@include text-shadow(0 0 0 rgba(#000, 0));
-
-			&:hover {
-				color: #333;
-			}
-
-			// on mobile, show the close button
-			@media(max-width:$mobile) {
-				display: block;
-			}
-		}
 	}
 
 	.top-level-nav {

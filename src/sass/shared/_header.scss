@@ -5,10 +5,10 @@
 // within it vertically centered
 .header {
 	margin-left: $nav-width-open;
-	@include rgba-background-inline(rgba(#fff, .98));
+	background-color: $theme-color;
 	padding: 10px;
-	height: $header-height;
-	@include vertical-align;
+	// height: $header-height;
+	// @include vertical-align;
 	
 	.inner {
 		display: inline-block;
@@ -19,9 +19,11 @@
 		padding: 0;
 		margin: 0;
 		font-weight: 900;
-		font-size: 20px;
+		font-size: 40px;
+		font-weight: 300;
 		text-transform: uppercase;
 		display: inline-block;
+		color: $theme-text
 	}
 
 	.glyphicon {
@@ -46,6 +48,7 @@
 		height: $profile-size;
 		@include border-radius($profile-size);
 		overflow: hidden;
+		border: 1px solid #999;
 
 		img {
 			width: 100%;

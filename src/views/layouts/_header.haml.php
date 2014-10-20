@@ -3,6 +3,7 @@
 	.inner
 		.titles
 			%span.glyphicon.glyphicon-th-list
+			%span.glyphicon.close.glyphicon-remove
 			%h1 !=Config::get('decoy::site_name')
 
 		-# The account menu
