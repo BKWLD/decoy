@@ -18,6 +18,7 @@
 				.dropdown(class=$page->active?'active':null)
 					%a.dropdown-toggle(href='#' data-toggle='dropdown')
 						%span.text
+							%span(class="glyphicon glyphicon-star")
 							!=$page->label
 							%span.caret
 		

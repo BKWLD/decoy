@@ -8,6 +8,10 @@
 	background-color: $gray-dark;
 	color: lighten($gray-light, 20%);
 
+	a, a:hover {
+		text-decoration: none !important;
+	}
+
 	.box.box-admin {
 		background-color: $teal;
 		color: $gray-dark;
@@ -20,7 +24,10 @@
 			margin: 0 auto;
 			display: inline-block;
 			vertical-align: middle;
-			font-weight: $headings-font-weight;
+			font-weight: 900;
+			font-size: 20px;
+			text-transform: uppercase;
+			color: darken($teal, 25%);
 		}
 	}
 
@@ -34,20 +41,20 @@
 			height: 40px;
 			@include vertical-align;
 			text-align: center;
-			border-bottom: 1px solid lighten($gray-dark, 15%);
+			border-bottom: 1px solid lighten($gray-dark, 3%);
 
 			.text {
 				display: inline-block;
 				vertical-align: middle;
 				color: lighten($gray-dark, 35%);
-				text-transform: uppercase;
+				font-weight: $headings-font-weight;
 				font-weight: 500;
 				font-size: 12px;
 			}
 
 			&:hover {
-				background-color: lighten($gray-dark, 15%);
-				a { color: lighten($gray-dark, 45%); text-decoration: none;}
+				background-color: lighten($gray-dark, 5%);
+				.text { color: lighten($gray-dark, 55%); }
 			}
 		}
 	}

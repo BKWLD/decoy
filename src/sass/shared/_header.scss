@@ -29,7 +29,6 @@
 		width: $profile-size;
 		height: $profile-size;
 		@include border-radius($profile-size);
-		border: 1px solid #999;
 		overflow: hidden;
 
 		img {
