@@ -18,6 +18,8 @@
 				.dropdown(class=$page->active?'active':null)
 					%a.dropdown-toggle(href='#' data-toggle='dropdown')
 						%span.text
+							-if($page->icon)
+								%span.glyphicon(class="glyphicon-#{$page->icon}")
 							!=$page->label
 							%span.caret
 		
@@ -29,7 +31,10 @@
 							-elseif($auth->can('read', $child->url))
 								-$child_added = true
 								-#%li(class=$child->active?'active':null)
-								%a(href=$child->url)=$child->label
+								%a(href=$child->url)
+									-if($child->icon)
+										%span.glyphicon(class="glyphicon-#{$child->icon}")
+									=$child->label
 		
 				-# Only show the dropdown if a child was added
 				-if ($child_added) 
