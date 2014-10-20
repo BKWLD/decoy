@@ -24,10 +24,10 @@
 			margin: 0 auto;
 			display: inline-block;
 			vertical-align: middle;
-			font-weight: 900;
 			font-size: 20px;
-			text-transform: uppercase;
 			color: darken($teal, 25%);
+			font-weight: $headings-font-weight;
+			font-family: $headings-font-family;
 		}
 	}
 

@@ -50,5 +50,5 @@ a, a:hover {
 	position: relative;
 	padding: $form-group-margin*2;
 	margin-left: $nav-width-open;
-	padding-top: $header-height+10;
+	padding-top: $header-height + $form-group-margin*2;
 }

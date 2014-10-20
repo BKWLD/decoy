@@ -16,14 +16,15 @@ form fieldset, .related .standard-list {
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
-	.legend {
+	.legend {		
 
-		// Style the text
-		font-weight: 300;
-		font-size: 16px;
-
-		// Set the color so links get it too
-		&, > a { color: $grey-border; }
+		// Set the font so links get it too
+		&, > a { 
+			color: $grey-border;
+			font-weight: $headings-font-weight;
+			font-family: $headings-font-family;
+			font-size: 16px;
+		}
 
 		// Give it a background
 		background: $near-black;
@@ -51,6 +52,9 @@ form fieldset, .related .standard-list {
 
 			// And, move it right so the right gap is the same as the top-bottom one
 			margin-right: -10px;
+
+			// Reset the font
+			font-family: $font-family-sans-serif;
 		}
 	}
 

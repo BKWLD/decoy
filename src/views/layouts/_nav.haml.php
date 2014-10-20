@@ -2,7 +2,7 @@
 -$auth = App::make('decoy.auth')
 .nav
 	.box.box-admin
-		%span ADMIN
+		%span Admin
 
 	.top-level-nav
 		-foreach($pages as $page)
