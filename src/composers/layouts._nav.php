@@ -7,8 +7,15 @@ View::composer('decoy::layouts._nav', function($view) {
 	// Get the navigation pages from the config
 	$pages = Config::get('decoy::nav');
 	
+	// Break the icon out of the label, returning an arary of label and icon
+	function makeIcon($label_and_icon) {
+		$parts = explode(',', $label_and_icon);
+		if (count($parts) == 2) return ['label' => $parts[0], 'icon' => $parts[1]];
+		else return ['label' => $parts[0], 'icon' => 'default'];
+	};
+
 	// Make a "page" object
-	$make_page = function($key, $val) {
+	function makePage($key, $val) {
 		
 		// Check if it's a divider
 		if ($val === '-') {
@@ -16,12 +23,8 @@ View::composer('decoy::layouts._nav', function($view) {
 		}
 		
 		// Create a new page
-		$page = array('url' => $val, 'divider' => false);
-		
-		// If key is a number, create a title for it.  Otherwise,
-		// use the key's value
-		if (is_int($key)) $page['label'] = ucwords(basename($val));
-		else $page['label'] = $key;
+		$page = ['url' => $val, 'divider' => false];
+		$page = array_merge($page, makeIcon($key));
 		
 		// Check if this item is the currently selected one
 		$page['active'] = false;
@@ -42,13 +45,15 @@ View::composer('decoy::layouts._nav', function($view) {
 		if (is_array($val)) {
 			
 			// Create a new page instance that represents the dropdown menu
-			$page = array('label' => $key, 'active' => false);
-			$page['children'] = array();
+			$page = ['active' => false];
+			$page = array_merge($page, makeIcon($key));
+			$page['children'] = [];
+
 			
 			// Loop through children (we only support one level deep) and
 			// add each as a child
 			foreach($val as $child_key => $child_val) {
-				$page['children'][] = $make_page($child_key, $child_val);
+				$page['children'][] = makePage($child_key, $child_val);
 			}
 			
 			// See if any of the children are active and set the pulldown to active
@@ -64,7 +69,7 @@ View::composer('decoy::layouts._nav', function($view) {
 		
 		// The page is a simple (non pulldown) link
 		} else {
-			$massaged[] = $make_page($key, $val);
+			$massaged[] = makePage($key, $val);
 		}
 	}
 	

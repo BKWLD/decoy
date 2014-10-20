@@ -29,7 +29,6 @@ form fieldset, .related .standard-list {
 		background: $near-black;
 		margin: 0 (-$pad);
 		padding: 7px $pad; // 7px makes it about as high as table th's
-		width: auto;
 
 		// Push the first form-group or p down a bit (but not tables)
 		+ .form-group, + p {
