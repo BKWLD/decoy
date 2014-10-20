@@ -1,12 +1,31 @@
--$auth = App::make('decoy.auth')
 .header
-	.inner
-		.titles
-			%span.glyphicon.glyphicon-th-list
-			%span.glyphicon.close.glyphicon-remove
-			%h1 !=Config::get('decoy::site_name')
 
-		-# The account menu
+	-# Mobile controls
+	-#
+		%span.glyphicon.glyphicon-th-list
+		%span.glyphicon.close.glyphicon-remove
+
+	%h1.title
+
+		-# The page title
+		%span.site #{Config::get('decoy::site_name')} / 
+		%span.controller!=$title
+
+		-# Controller actions
+		-if(app('decoy.auth')->can('create', $controller))
+			.pull-right.btn-toolbar
+				.btn-group
+					%a.btn.outline.new(href=URL::to(DecoyURL::relative('create')))
+						%span.glyphicon.glyphicon-plus 
+						New
+
+	-# Description of the controller
+	-if($description)
+		%h2.description!=$description
+
+	-# The account menu
+	-# Disabled for now, will be migrated into the nav
+		-$auth = App::make('decoy.auth')
 		%ul.user
 			%li.dropdown
 				

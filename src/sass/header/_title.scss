@@ -1,6 +1,29 @@
-// Title
-h1 {
-	margin: 0 auto $form-group-margin*4;
+// The header is designed to have both the title and breadcrumbs
+// stacked, then on scroll the headline block goes away, but the
+// breadgrumbs stay fixed with a semi-transparent white bg
+// In addition, the header will have a fixed height with the content
+// within it vertically centered
+.header {
+	background-color: $theme-color;
+	margin-left: $nav-width-open;
+	padding: $main-padding;
+
+	// The site and controller
+	.title {
+		font-size: 46px;
+		color: $theme-text;
+		margin: 0; // Reset BS
+
+		// The site name
+		.site {
+			font-weight: 400;
+		}
+
+		// The controller title
+		.controller {
+			font-weight: 200;
+		}
+	}
 
 	// Count of posts
 	.badge {
@@ -8,19 +31,19 @@ h1 {
 		top: -5px;
 		background-color: $gray-dark;
 	}
-	
-	// Elements in the title area
-	.btn-toolbar {
 
-		// Reset font
-		font-family: $font-family-sans-serif;
+	// Buttons on the far right right should be vertically
+	// justified with the title
+	.pull-right {
+		margin-top: 10px;
+	}
 
-		// Push the h1 description away from it so it can't but up against it
-		margin-left: 20px;
+	// Description
+	.description {
+		font-size: 22px;
+		color: rgba($theme-text, .5);
+		margin: 0; // Reset BS
+		margin-top: 5px;
+	}
 
-		// Tweak vertical positioning, this looks better
-		margin-top: 6px;
-		
-	}	
 }
-

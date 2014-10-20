@@ -403,10 +403,11 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Return view
+		$this->layout->title = $this->title;
+		$this->layout->description = $this->description;
+		$this->layout->controller = $this->controller;
 		$this->layout->nest('content', $this->show_view, array(
-			'title'            => $this->title,
 			'controller'       => $this->controller,
-			'description'      => $this->description,
 			
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
@@ -469,10 +470,13 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Render the view
+		$this->layout->title = $this->title;
+		$this->layout->description = $this->description;
+		$this->layout->controller = $this->controller;
 		$this->layout->nest('content', $this->show_view, array(
 			'title'            => $this->title,
-			'controller'       => $this->controller,
 			'description'      => $this->description,
+			'controller'       => $this->controller,
 			'item'             => $item,
 			'crops'            => (object) Model::$crops,
 		));

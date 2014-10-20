@@ -18,6 +18,7 @@ This partial is used to open forms that have a related data sidebar
 ?>
 
 <?// Page title ?>
+<?/*
 <div class-"page-header form-header related-form">
 	<h1><?=$title?>
 		<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
@@ -32,6 +33,7 @@ This partial is used to open forms that have a related data sidebar
 		<? endif ?>
 	</h1>
 </div>
+*/?>
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>

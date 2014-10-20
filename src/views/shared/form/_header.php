@@ -19,6 +19,7 @@ It expects:
 ?>
 
 <?// Page title ?>
+<?/*
 <div class-"page-header form-header">
 	<h1><?=$title?>
 		<? if(!empty($item) && app('decoy.auth')->can('create', $controller)): ?>
@@ -33,6 +34,7 @@ It expects:
 		<? endif ?>
 	</h1>
 </div>
+*/?>
 
 <?// Show validation errors?>
 <?=View::make('decoy::shared.form._errors')?>
