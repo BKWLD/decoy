@@ -5,10 +5,8 @@
 // within it vertically centered
 .header {
 	margin-left: $nav-width-open;
-	@include rgba-background-inline(rgba(#fff, .98));
+	background-color: $theme-color;
 	padding: 10px;
-	height: $header-height;
-	@include vertical-align;
 	
 	.inner {
 		display: inline-block;
@@ -20,7 +18,26 @@
 		margin: 0;
 		font-weight: 900;
 		font-size: 20px;
+		font-weight: 300;
+		text-transform: uppercase;
+		display: inline-block;
+		color: $theme-text
 	}
+
+	.glyphicon {
+		display: none;
+		font-size: 17px;
+		padding-right: 5px;
+		cursor: pointer;
+		position: relative;
+		color: lighten($gray-dark, 15%);
+
+		&:hover {
+			color: $gray-dark;
+		}
+	}
+
+
 
 	// Gravatar sizing
 	$profile-size: 35px;
@@ -29,6 +46,7 @@
 		height: $profile-size;
 		@include border-radius($profile-size);
 		overflow: hidden;
+		border: 1px solid #999;
 
 		img {
 			width: 100%;
@@ -49,6 +67,16 @@
 			float: none;
 			left: -120px;
 			top: 50px;
+		}
+	}
+
+	// On mobile widths, have header span the entire width of the screen
+	// and show the grabber glyphicon
+	@media(max-width:$mobile) {
+		margin-left: 0;
+
+		.glyphicon-th-list {
+			display: inline-block;
 		}
 	}
 }

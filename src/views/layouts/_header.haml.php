@@ -1,7 +1,10 @@
 -$auth = App::make('decoy.auth')
 .header
 	.inner
-		%h1 !=Config::get('decoy::site_name')
+		.titles
+			%span.glyphicon.glyphicon-th-list
+			%span.glyphicon.close.glyphicon-remove
+			%h1 !=Config::get('decoy::site_name')
 
 		-# The account menu
 		%ul.user

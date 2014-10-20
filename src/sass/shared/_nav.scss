@@ -7,28 +7,25 @@
 	width: $nav-width-open;
 	background-color: $gray-dark;
 	color: lighten($gray-light, 20%);
+	z-index: 200; // to clear the breadcrumbs and the main content
+	@include transition(all 200ms ease-out);
+	border-top: 4px solid $theme-color;
+
+	// when the nav has the class of 'show', it's triggered
+	// by the mobile grabber icon, so it needs to be left: 0
+	// and get a small box shadow
+	&.show {
+		left: 0;
+	
+		// only show the box shadow if you're on mobile
+		@media(max-width:$mobile) {
+			@include box-shadow(0 0 25px rgba(#333, .4));
+		}
+	}
+
 
 	a, a:hover {
 		text-decoration: none !important;
-	}
-
-	.box.box-admin {
-		background-color: $teal;
-		color: $gray-dark;
-		text-align: center;
-		height: $header-height;
-		@include vertical-align;
-
-		span {
-			width: 90%;
-			margin: 0 auto;
-			display: inline-block;
-			vertical-align: middle;
-			font-size: 20px;
-			color: darken($teal, 25%);
-			font-weight: $headings-font-weight;
-			font-family: $headings-font-family;
-		}
 	}
 
 	.top-level-nav {
@@ -62,5 +59,10 @@
 				.text { color: lighten($gray-dark, 55%); }
 			}
 		}
+	}
+
+	// hide the nav when you're on mobile widths
+	@media(max-width:$mobile) {
+		left: -200px;
 	}
 }

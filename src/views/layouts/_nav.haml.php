@@ -1,9 +1,6 @@
 -# This patial is populated from a view composer
 -$auth = App::make('decoy.auth')
 .nav
-	.box.box-admin
-		%span Admin
-
 	.top-level-nav
 		-foreach($pages as $page)
 		

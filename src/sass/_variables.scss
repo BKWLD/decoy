@@ -4,7 +4,6 @@ $light-grey: whiteSmoke;
 $grey-border: #ddd;
 $light-opacity: .3;
 $near-black: $gray-dark;
-$teal: #76c4bb;
 
 // Theme
 $theme-color: #67bfb6 !default;
@@ -13,6 +12,7 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Break points
 $main-break: $screen-sm; // This should be deprecated
+$mobile: 650px;
 
 // Sizing
 $form-group-margin: 15px !default;
