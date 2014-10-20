@@ -57,7 +57,7 @@
 		}
 
 		// Fade it to match block help
-		@include opacity(.6);
+		background: $grey-border;
 		display: inline;
 
 		// Push it off the file field a bit

@@ -44,7 +44,7 @@ a, .btn { outline: none !important; }
 // The main container
 #main {
 	position: relative;
-	padding: 15px 30px;
+	padding: $form-group-margin*2;
 	margin-left: $nav-width-open;
 	padding-top: $header-height+10;
 }

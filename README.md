@@ -149,6 +149,16 @@ See the "Form fields" section of this README for more info in it's API.
 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
+### Grouping form fields
+
+Use a `fieldset` and a div of class `.legend` to contain groups of fields in box.  For instance:
+
+	!= View::make('decoy::shared.form._header', $__data)
+	%fieldset
+		.legend=empty($item)?'New':'Edit'
+		!= Former::text('title')
+		!= Former::textarea('body') 
+
 ### Overriding a Decoy partial
 
 You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at app/views/admin/articles/shared/_pagination.php you can customize the pagination partial JUST for the articles controller.

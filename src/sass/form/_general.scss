@@ -23,32 +23,9 @@
 	position: static;
 }
 
-// Highlight each control group on rollover
+// Seperate from one another
 .form-group {
-	padding: $form-group-pad;
-	margin: -$form-group-pad;
-	@include border-radius(4px);
-	&:hover {
-		background-color: $light-grey;
-	}
-	&.error:hover {
-		background-color: $state-danger-bg; // This is the Boostrap error bkgd red color
-	}
-
-	// Reset BS's extra padding on form-groups found on horinztonal forms
-	.form-horizontal & {
-		margin-left: -$form-group-pad;
-		margin-right: -$form-group-pad;
-		@media(max-width: $main-break) {
-			> [class*="col-"] {
-				padding: 0; 
-			}
-		}
-	}
-
-	// Add bottom spacing
-	margin-bottom: 15px;
-
+	margin-bottom: $form-group-margin;
 }
 
 // Required field icons
