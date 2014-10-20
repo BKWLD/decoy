@@ -33,8 +33,8 @@ define(function (require) {
 			this.$('h4').addClass('show');
 		}, this), 1000);
 
-		console.log($('body').css('background'))
-		// add decoy animation
+		
+		// add decoy login animation on screens greater than 1024 px
 		if( $win.width() > 1024 )
 			this.loginAnim = new LoginAnimation({
 				el: '#main',
