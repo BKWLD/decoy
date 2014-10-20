@@ -21,7 +21,23 @@
 		font-weight: 900;
 		font-size: 20px;
 		text-transform: uppercase;
+		display: inline-block;
 	}
+
+	.glyphicon {
+		display: none;
+		font-size: 17px;
+		padding-right: 5px;
+		cursor: pointer;
+		position: relative;
+		color: lighten($gray-dark, 15%);
+
+		&:hover {
+			color: $gray-dark;
+		}
+	}
+
+
 
 	// Gravatar sizing
 	$profile-size: 35px;
@@ -50,6 +66,16 @@
 			float: none;
 			left: -120px;
 			top: 50px;
+		}
+	}
+
+	// On mobile widths, have header span the entire width of the screen
+	// and show the grabber glyphicon
+	@media(max-width:$mobile) {
+		margin-left: 0;
+
+		.glyphicon-th-list {
+			display: inline-block;
 		}
 	}
 }

@@ -51,4 +51,9 @@ a, a:hover {
 	padding: $form-group-margin*2;
 	margin-left: $nav-width-open;
 	padding-top: $header-height+10;
+
+	// On mobile widths, have main span the entire width of the screen
+	@media(max-width:$mobile) {
+		margin-left: 0;
+	}
 }

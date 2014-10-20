@@ -13,6 +13,7 @@ $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Break points
 $main-break: $screen-sm; // This should be deprecated
+$mobile: 650px;
 
 // Sizing
 $form-group-pad: 8px !default;

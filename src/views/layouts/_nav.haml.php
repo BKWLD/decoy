@@ -3,6 +3,7 @@
 .nav
 	.box.box-admin
 		%span ADMIN
+		%span.glyphicon.close.glyphicon-remove
 
 	.top-level-nav
 		-foreach($pages as $page)

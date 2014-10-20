@@ -8,6 +8,7 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone'),
 		Affixable = require('decoy/modules/affixable'),
+		Nav = require('decoy/modules/nav')
 		manifest = require('decoy/modules/manifest');
 	require('bootstrap');
 	
@@ -97,6 +98,9 @@ define(function (require) {
 		
 		// Enable affix globally
 		$('.affixable').views(Affixable);
+
+		// The nav
+		$('.nav').views(Nav);
 		
 	});
 	

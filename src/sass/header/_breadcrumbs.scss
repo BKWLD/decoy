@@ -5,7 +5,7 @@
 	width: 100%;
 	left: 0;
 	top: 0;
-	z-index: 100;
+	z-index: 150; // this is to clear the crop image UI
 	font-size: 12px;
 
 	a, span {
@@ -35,5 +35,10 @@
 		@include rgba-background-inline(rgba(#fff, .93));
 		position: fixed;
 		margin-left: $nav-width-open;
+
+		// on mobile, I need to make the margin 0, so the crumbs span the whole width
+		@media(max-width:$mobile) {
+			margin-left: 0;
+		}
 	}
 }

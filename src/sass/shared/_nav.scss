@@ -7,6 +7,20 @@
 	width: $nav-width-open;
 	background-color: $gray-dark;
 	color: lighten($gray-light, 20%);
+	z-index: 200; // to clear the breadcrumbs and the main content
+	@include transition(all 200ms ease-out);
+
+	// when the nav has the class of 'show', it's triggered
+	// by the mobile grabber icon, so it needs to be left: 0
+	// and get a small box shadow
+	&.show {
+		left: 0;
+	
+		// only show the box shadow if you're on mobile
+		@media(max-width:$mobile) {
+			@include box-shadow(0 0 25px rgba(#333, .4));
+		}
+	}
 
 	a, a:hover {
 		text-decoration: none !important;
@@ -17,6 +31,7 @@
 		color: $gray-dark;
 		text-align: center;
 		height: $header-height;
+		position: relative;
 		@include vertical-align;
 
 		span {
@@ -28,6 +43,28 @@
 			font-size: 20px;
 			text-transform: uppercase;
 			color: darken($teal, 25%);
+		}
+
+		.glyphicon {
+			top: 50%;
+			position: absolute;
+			font-size: 18px;
+			margin-top: -9px;
+			right: 10px;
+			cursor: pointer;
+			width: auto;
+			display: none;
+			@include opacity(1);
+			@include text-shadow(0 0 0 rgba(#000, 0));
+
+			&:hover {
+				color: #333;
+			}
+
+			// on mobile, show the close button
+			@media(max-width:$mobile) {
+				display: block;
+			}
 		}
 	}
 
@@ -62,5 +99,10 @@
 				.text { color: lighten($gray-dark, 55%); }
 			}
 		}
+	}
+
+	// hide the nav when you're on mobile widths
+	@media(max-width:$mobile) {
+		left: -200px;
 	}
 }
