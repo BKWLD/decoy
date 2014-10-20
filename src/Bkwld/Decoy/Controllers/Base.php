@@ -386,6 +386,9 @@ class Base extends Controller {
 		$listing = Listing::createFromController($this, $results);
 		if ($this->parent) $listing->parent($this->parent);
 		$this->layout->content = $listing;
+		$this->layout->title = $this->title;
+		$this->layout->description = $this->description;
+		$this->layout->controller = $this->controller;
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
