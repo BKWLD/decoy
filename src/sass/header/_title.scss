@@ -12,6 +12,9 @@ h1 {
 	// Elements in the title area
 	.btn-toolbar {
 
+		// Reset font
+		font-family: $font-family-sans-serif;
+
 		// Push the h1 description away from it so it can't but up against it
 		margin-left: 20px;
 
