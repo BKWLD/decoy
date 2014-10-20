@@ -17,7 +17,8 @@ $mobile: 650px;
 // Sizing
 $form-group-margin: 15px !default;
 $main-padding: $form-group-margin*2;
-$breadcrumb-height: 24px;
+$nav-top-border-height: 4px;
+$breadcrumb-height: 24px + $nav-top-border-height;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd;

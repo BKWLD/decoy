@@ -9,9 +9,12 @@
 	@include box-shadow($common-shadow);
 	padding: 0 $main-padding;
 
+	// Add a border so that when it goes fixed, it lines up with the border on the nav
+	border-top: $nav-top-border-height solid $theme-color;
+
 	// Set a height and vertical center
 	height: $breadcrumb-height;
-	line-height: $breadcrumb-height;
+	line-height: $breadcrumb-height - $nav-top-border-height;
 
 	a, span {
 		color: #666;

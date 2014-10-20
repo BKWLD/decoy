@@ -8,6 +8,10 @@
 	margin-left: $nav-width-open;
 	padding: $main-padding;
 
+	// Reduce the bottom by the border on breadcrumbs which has
+	// the same bkgd
+	padding-bottom: $main-padding - $nav-top-border-height;
+
 	// The site and controller
 	.title {
 		font-size: 46px;
