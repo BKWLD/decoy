@@ -52,6 +52,11 @@
 				font-size: 12px;
 			}
 
+			.glyphicon {
+				display: inline-block;
+				padding-right: 5px;
+			}
+
 			&:hover {
 				background-color: lighten($gray-dark, 5%);
 				.text { color: lighten($gray-dark, 55%); }
