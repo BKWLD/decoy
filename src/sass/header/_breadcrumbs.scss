@@ -8,8 +8,27 @@
 	z-index: 100;
 	font-size: 12px;
 
-	a {
+	a, span {
 		color: #666;
+
+		.glyphicon { display: inline-block; padding: 0 2px; }
+	}
+
+	// Some breadcrumb titles make include thumbnails
+	img {
+		height: 12px;
+
+		// Push label off of it
+		margin-right: 4px;
+
+		// Vertical centering
+		position: relative;
+		top: -2px;
+	}
+
+	// The back button
+	.back {
+		float: right;
 	}
 
 	&.affix {
