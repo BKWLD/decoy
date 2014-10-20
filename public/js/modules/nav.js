@@ -19,10 +19,14 @@ define(function (require) {
 		this.$win = $(window);
 		this.$grabber = $('.glyphicon-th-list');
 		this.$close = this.$('.close');
+		this.$mainnav = this.$('.main-nav');
 
 		// events
 		this.$grabber.on('click', this.openNav);
 		this.$close.on('click', this.closeNav);
+		
+		// for each top-level nav, toggle the active state
+		this.$mainnav.find('.top-level').on('click', this.toggleSubnav);
 
 	};
 
@@ -32,6 +36,14 @@ define(function (require) {
 
 	View.closeNav = function() {
 		this.$el.removeClass('show');
+	};
+
+	// open and close the subnav drawers
+	View.toggleSubnav = function(e) {
+		var cur = $(e.currentTarget).parent();
+
+		if(cur.hasClass('active')) cur.removeClass('active');
+		else cur.addClass('active');
 	};
 	
 	// Return the view

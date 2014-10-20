@@ -12,23 +12,21 @@
 				-$child_added = false
 		
 				-# The pulldown
-				.dropdown(class=$page->active?'active':null)
-					%a.dropdown-toggle(href='#' data-toggle='dropdown')
-						%span.text
-							-if($page->icon)
-								%span.glyphicon(class="glyphicon-#{$page->icon}")
-							!=$page->label
-							%span.caret
-		
+				.main-nav(class=$page->active?'active':null)
+					%a.top-level
+						-if($page->icon)
+							%span.glyphicon(class="glyphicon-#{$page->icon}")
+						!=$page->label
+
 					-# The options
-					.dropdown-menu(role="menu")
+					.subnav
 						-foreach($page->children as $child)
 							-if (!empty($child->divider))
 								.divider
 							-elseif($auth->can('read', $child->url))
 								-$child_added = true
 								-#%li(class=$child->active?'active':null)
-								%a(href=$child->url)
+								%a(href=$child->url class=$child->active?'active':null)
 									-if($child->icon)
 										%span.glyphicon(class="glyphicon-#{$child->icon}")
 									=$child->label
