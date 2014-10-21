@@ -12,6 +12,8 @@
 	overflow-x: hidden;
 	@include gpu-cache;
 
+	@include transition( left 250ms 0ms ceaser($easeInQuad));
+
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
 	}
@@ -33,4 +35,22 @@
 		text-decoration: none !important;
 	}
 
+	// toggle to close nav on <= tablet screens
+	.close-nav {
+		display:none;
+
+		@media(max-width:$screen-sm) {
+			display: block;
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			
+			.close {
+				@include opacity(1);
+				color: white;
+				font-size: 14px;
+				padding: 2px 0 3px 2px;
+			}
+		}
+	}
 }

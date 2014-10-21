@@ -20,7 +20,6 @@
 				.btn-group
 					%a.btn.outline.new(href=URL::to(DecoyURL::relative('create')))
 						%span.glyphicon.glyphicon-plus 
-						New
 
 	-# Description of the controller
 	-if($description)

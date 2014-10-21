@@ -8,6 +8,9 @@
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
 	@include gpu-cache;
 	@include vertical-align;
+	@include transition( left 250ms 0ms ceaser($easeInQuad));
+	
+	// Give it a fixed height
 	height: $footer-height;
 
 	@media(max-width:$screen-sm) {
