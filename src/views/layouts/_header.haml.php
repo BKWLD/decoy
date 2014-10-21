@@ -8,7 +8,9 @@
 	%h1.title
 
 		-# The page title
-		%span.site #{Config::get('decoy::site_name')} / 
+		%span.site 
+			#{Config::get('decoy::site_name')} / 
+			%br.mobile 
 		%span.controller!=$title
 
 		-# Controller actions

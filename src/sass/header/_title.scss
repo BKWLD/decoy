@@ -18,6 +18,11 @@
 		color: $theme-primary-inverse;
 		margin: 0; // Reset BS
 
+		// line break for mobile header is hidden by default
+		br.mobile-break {
+			display: none;
+		}
+
 		// The site name
 		.site {
 			font-weight: 400;
@@ -51,10 +56,29 @@
 		line-height: 1.4em;
 	}
 
-	// on mobile, kill the margin-left so the header
-	// spans the full width of the window
 	@media(max-width:$screen-sm) {
+		// on mobile, kill the margin-left so the header
+		// spans the full width of the window
 		margin-left: 0;
-	}
 
+		padding-top: 0;
+
+		.title {
+			.site {
+				font-size: 20px;
+			}
+			.controller {
+				font-size: 50px;
+			}
+
+			// display line break for mobile header
+			br.mobile-break {
+				display: block;
+			}
+		}
+
+		.description {
+			font-size: 18px;
+		}
+	}
 }
