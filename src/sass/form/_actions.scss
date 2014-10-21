@@ -19,4 +19,16 @@
 // lines nicer
 .form-actions .btn {
 	margin-bottom: 5px;
+
+	// on mobile, extend the btn-sm class so the buttons are smaller
+	@media(max-width:$screen-xs) {
+
+		// since I can't seem to make use of @extend
+		// I am mimicking the styles for .btn-sm of bootstrap
+		// Not ideal, but it works great
+		padding: 3px 7px;
+		font-size: 12px;
+		line-height: 1.5;
+		@include border-radius(3px);
+	}
 }
