@@ -3,7 +3,7 @@
 	
 	// Remove the rounding so it's flush with edges and reduce the height
 	@include border-radius(0);
-	height: 3px;
+	height: 6px;
 	margin: 0;
 	
 	// Make the background invisible
@@ -11,8 +11,12 @@
 	@include box-shadow(none);
 	
 	// Pin it to the bottom of the nav var
-	position: absolute;
-	bottom: -3px;
+	position: relative;
 	width: 100%;
+
+	// make the progress bar be the theme color
+	.progress-bar-info {
+		background-color: $theme-primary-color;
+	}
 	
 }

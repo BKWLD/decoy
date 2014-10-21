@@ -2,7 +2,8 @@
 	position: fixed;
 	bottom: 0;
 	width: $sidebar-width;
-	padding: 15px;
+	padding: 10px;
+	padding-bottom: 15px; // to account for the height of the ajax progress
 	@include rgba-background-inline(rgba($gray-dark, .8));
 	border-top: 1px solid darken($gray-dark, 5%);
 	overflow: hidden;
