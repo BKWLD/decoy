@@ -49,6 +49,12 @@
 	// justified with the title
 	.pull-right {
 		margin-top: 10px;
+
+		.new {
+			&:after {
+				content: 'New';
+			}
+		}
 	}
 
 	// Description
@@ -98,7 +104,11 @@
 				top: 0px;
 				right:30px;
 				
-				
+				.new {
+					&:after {
+						content: '';
+					}
+				}
 			}
 
 			// display line break for mobile header
