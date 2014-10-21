@@ -7,23 +7,23 @@ $theme-secondary-inverse: darken($theme-secondary-color, 50%) !default;
 $theme-login-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Colors
-$light-grey: whiteSmoke;
-$grey-border: #ddd;
-$light-opacity: .3;
+$light-grey: whiteSmoke !default;
+$grey-border: #ddd !default;
+$light-opacity: .3 !default;
 
 // Break points
 $mobile: 650px;
 
 // Sizing
 $form-group-margin: 15px !default;
-$main-padding: $form-group-margin*2;
-$nav-top-border-height: 4px;
-$breadcrumb-height: 24px + $nav-top-border-height;
+$main-padding: $form-group-margin*2 !default;
+$nav-top-border-height: 4px !default;
+$breadcrumb-height: 24px + $nav-top-border-height !default;
 $nav-width-open: 200px !default;
 $nav-width-closed: 50px !default;
 
 // UI
-$common-shadow: 0 2px 0px #dddddd;
+$common-shadow: 0 2px 0px #dddddd !default;
 
 /**
  * Bootstrap variables
@@ -31,17 +31,19 @@ $common-shadow: 0 2px 0px #dddddd;
  */
 
 // Customize the path to the font
-$icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/';
+$icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/' !default;
 
 // Make small items a little smaller, yet bigger than xs
 $padding-small-vertical: 3px !default;
 $padding-small-horizontal: 7px !default;
 
 // Reduce cell padding
-$table-cell-padding: 8px 6px !default;
+$table-cell-padding-horizontal: 6px !default;
+$table-cell-padding-vertical: 8px !default;
+$table-cell-padding: $table-cell-padding-vertical $table-cell-padding-horizontal !default;
 
 // Fonts
-@import url(http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700);
+$fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700' !default;
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;

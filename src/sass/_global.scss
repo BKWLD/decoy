@@ -72,10 +72,11 @@ a, a:hover {
 	}
 
 	// Make it secondarily colored
-	.legend &, {
+	.legend &, .search & {
 		color: rgba($theme-secondary-inverse, .85);
 		border-color: rgba($theme-secondary-inverse, .85);
 		&:hover { 
+			background: rgba($theme-secondary-inverse, .15);
 			color: $theme-secondary-inverse;
 			border-color: $theme-secondary-inverse; 
 		}
