@@ -19,7 +19,7 @@
 	// Remove the .pull-right's right margin because
 	// it looks better justified to the actions
 	body.index & > .pull-right.btn-toolbar {
-		margin-right: 0;
+		margin-right: -1px;
 	}
 
 }

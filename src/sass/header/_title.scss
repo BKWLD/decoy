@@ -60,6 +60,11 @@
 		line-height: 1.4em;
 	}
 
+	// nav hamburger hidden on desktop sizes
+	.nav-hamburger {
+		display: none;
+	}
+
 	// tablet-portrait styles
 	@media(max-width:$screen-sm) {
 		// on mobile, kill the margin-left so the header
@@ -69,8 +74,12 @@
 		padding-top: 0;
 
 		.title {
+			line-height: 0.8;
+			text-align: center;
+
 			.site {
 				font-size: 20px;
+				font-weight: 200;
 
 				&:after {
 					content: none;
@@ -78,6 +87,18 @@
 			}
 			.controller {
 				font-size: 40px;
+				font-weight: 400;
+				font-size: 30px;
+				margin-bottom:10px;
+			}
+
+			// + New button in header sit in top right 
+			.pull-right {
+				position: absolute;
+				top: 0px;
+				right:30px;
+				
+				
 			}
 
 			// display line break for mobile header
@@ -86,24 +107,27 @@
 			}
 		}
 
+		// nav hamburger displayed on mobile
+		.nav-hamburger {
+			display: block;
+			position: absolute;
+			left: 30px; 
+			top: 10px;
+		}
+
 		.description {
 			font-size: 18px;
+			margin:15px 10% 0;
+			line-height: 1em;
+			text-align: center;
 		}
 	}
 
-	// mobile styles
 	@media(max-width: $screen-xs) {
-		.title {
-			line-height: 0.8;
-			
-			.controller {
-				font-size: 30px;
-				margin-bottom:10px;
-			}
-		}
-		.description {
-			margin-top:15px;
-			line-height: 1em;
-		}
+		// smaller new button in header
+		// .pull-right .new {
+		// 	font-size: 12px;
+		// 	padding: 4px;
+		// }
 	}
 }

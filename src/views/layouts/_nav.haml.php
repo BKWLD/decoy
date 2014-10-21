@@ -7,9 +7,9 @@
 			.gravatar-wrap
 				%img.gravatar(src=$auth->userPhoto())
 			%span.name
-				Hey
+				Hi,
 				-if($auth->userName() == "Default")
-					BKWLD
+					there!
 				-else
 					!=$auth->userName()
 

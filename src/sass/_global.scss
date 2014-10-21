@@ -11,9 +11,9 @@ html {
 	min-height: 100%;
 }
 
-// Add a little breathing room to bottom of the page
+// Set body color
 body {
-	background-color: #efefef;
+	background-color: $body-color;
 }
 
 // Make the label font size bigger again

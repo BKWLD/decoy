@@ -7,20 +7,20 @@ $theme-secondary-inverse: darken($theme-secondary-color, 50%) !default;
 $theme-login-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Colors
+$body-color: #efefef;
 $light-grey: whiteSmoke !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
 
-// Sizing
+// Sizes
 $form-group-margin: 15px !default;
-$main-padding: $form-group-margin*2;
-$nav-top-border-height: 4px;
-$breadcrumb-height: 24px + $nav-top-border-height;
-$sidebar-width: 200px !default;
 $main-padding: $form-group-margin*2 !default;
-$nav-top-border-height: 4px !default;
+$nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height !default;
+$sidebar-width: 200px !default;
+$nav-top-border-height: 4px !default;
 $nav-width-closed: 50px !default;
+$footer-height: 60px;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd !default;
