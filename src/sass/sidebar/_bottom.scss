@@ -1,0 +1,37 @@
+.bottom-nav {
+	position: fixed;
+	bottom: 0;
+	width: $sidebar-width;
+	padding: 15px;
+	@include rgba-background-inline(rgba($gray-dark, .8));
+	border-top: 1px solid darken($gray-dark, 5%);
+	overflow: hidden;
+	z-index: 201; // to bump the bottom area above the sidebar by 1 index
+	@include gpu-cache;
+
+	@media(max-width:$screen-sm) {
+		left: -$sidebar-width;
+	}
+
+	&.show {
+		left: 0;
+	}
+
+	a {
+		color: #ddd;
+		font-weight: 300;
+		font-size: 12px;
+
+		&.public-site {
+			float: right;
+			font-size: 15px;
+			position: relative;
+			top: 4px;
+		}
+
+		&:hover {
+			color: #fff;
+		}
+
+	}
+}

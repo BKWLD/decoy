@@ -524,10 +524,12 @@ define(function (require) {
 					$icon.addClass(visibleIconClass);
 					$icon.removeClass(hiddenIconClass);
 					$icon.attr('title', 'Make hidden');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make hidden');
 				} else {
 					$icon.removeClass(visibleIconClass);
 					$icon.addClass(hiddenIconClass);
 					$icon.attr('title', 'Make visible');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make visible');
 				}
 			}
 			

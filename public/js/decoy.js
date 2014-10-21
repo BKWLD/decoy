@@ -8,7 +8,7 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone'),
 		Affixable = require('decoy/modules/affixable'),
-		Nav = require('decoy/modules/nav')
+		Sidebar = require('decoy/modules/sidebar')
 		manifest = require('decoy/modules/manifest');
 	require('bootstrap');
 	
@@ -100,7 +100,7 @@ define(function (require) {
 		$('.affixable').views(Affixable);
 
 		// The nav
-		$('.nav').views(Nav);
+		$('.sidebar').views(Sidebar);
 		
 	});
 	
