@@ -36,13 +36,6 @@ form fieldset, .related .standard-list, body.index .standard-list {
 			margin-top: 10px;
 		}
 
-		// Push badges over a tad
-		.badge {
-			margin-left: 5px;
-			background: rgba($theme-secondary-inverse, .7);
-			color: $theme-secondary-color;
-		}
-
 		// If something is pulled-right, give it a max width.  This is designed to
 		// constrain the autocomplete form on many to manys but may of other,
 		// useful, ramifications
