@@ -17,7 +17,7 @@ define(function (require) {
 
 		// Selectors
 		this.$win = $(window);
-		this.$grabber = $('.glyphicon-th-list');
+		this.$grabber = $('.nav-hamburger');
 		this.$close = this.$('.close');
 		this.$mainnav = this.$('.main-nav');
 		this.$bottom = $('.bottom-nav');
