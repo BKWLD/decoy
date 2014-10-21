@@ -18,7 +18,8 @@ define(function (require) {
 	// Static vars
 	var app,
 		dataId = 'data-model-id',
-		visibleIconClass = 'glyphicon-eye-open';
+		visibleIconClass = 'glyphicon-eye-open',
+		hiddenIconClass = 'glyphicon-eye-close';
 
 	// View
 	var StandardList = Backbone.View.extend({
@@ -521,9 +522,11 @@ define(function (require) {
 				// Toggle icon
 				if (model.get('visible')) {
 					$icon.addClass(visibleIconClass);
+					$icon.removeClass(hiddenIconClass);
 					$icon.attr('title', 'Make hidden');
 				} else {
 					$icon.removeClass(visibleIconClass);
+					$icon.addClass(hiddenIconClass);
 					$icon.attr('title', 'Make visible');
 				}
 			}
