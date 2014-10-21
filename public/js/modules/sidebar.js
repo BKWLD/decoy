@@ -18,7 +18,7 @@ define(function (require) {
 		// Selectors
 		this.$win = $(window);
 		this.$grabber = $('.nav-hamburger');
-		this.$close = this.$('.close');
+		this.$close = this.$('.close-nav');
 		this.$mainnav = this.$('.main-nav');
 		this.$bottom = $('.bottom-nav');
 
@@ -37,6 +37,7 @@ define(function (require) {
 	};
 
 	View.closeNav = function() {
+		console.log( "clicked close" );
 		this.$el.removeClass('show');
 		this.$bottom.removeClass('show');
 	};
