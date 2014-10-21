@@ -55,7 +55,7 @@ a, a:hover {
 	padding-top: $main-padding + $breadcrumb-height;
 
 	// On mobile widths, have main span the entire width of the screen
-	@media(max-width:$mobile) {
+	@media(max-width:$screen-sm) {
 		margin-left: 0;
 	}
 }
