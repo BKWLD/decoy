@@ -68,6 +68,8 @@ a {
 	// Breadcrumbs are abs/fixed position, so compensate for their height
 	padding-top: $main-padding + $breadcrumb-height;
 
+	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
+	
 	// On mobile widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
 		margin-left: 0;

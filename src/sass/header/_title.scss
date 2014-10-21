@@ -12,6 +12,8 @@
 	// the same bkgd
 	padding-bottom: $main-padding - $nav-top-border-height;
 
+	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
+
 	// The site and controller
 	.title {
 		font-size: 46px;
