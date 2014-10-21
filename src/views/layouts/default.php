@@ -16,6 +16,7 @@
 	<body class="<?=Decoy::bodyClass()?>">
 		
 		<?= View::make('decoy::layouts._nav') ?>
+		<?= View::make('decoy::layouts._bottom_nav', $__data) ?>
 		<?= View::make('decoy::layouts._header', $__data) ?>
 
 		<?// The main page content ?>

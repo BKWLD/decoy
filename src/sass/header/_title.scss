@@ -5,7 +5,7 @@
 // within it vertically centered
 .header {
 	background-color: $theme-primary-color;
-	margin-left: $nav-width-open;
+	margin-left: $sidebar-width;
 	padding: $main-padding;
 
 	// Reduce the bottom by the border on breadcrumbs which has

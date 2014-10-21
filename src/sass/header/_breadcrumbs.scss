@@ -42,7 +42,7 @@
 	&.affix {
 		@include rgba-background-inline(rgba(#fff, .93));
 		position: fixed;
-		margin-left: $nav-width-open;
+		margin-left: $sidebar-width;
 
 		// on mobile, I need to make the margin 0, so the crumbs span the whole width
 		@media(max-width:$screen-sm) {

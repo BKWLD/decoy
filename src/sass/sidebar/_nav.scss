@@ -1,37 +1,10 @@
 // Contains the top navbar
 .nav {
-	position: fixed;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: $nav-width-open;
-	background-color: $gray-dark;
-	color: lighten($gray-light, 20%);
-	z-index: 200; // to clear the breadcrumbs and the main content
-	@include transition(all 200ms ease-out);
-	border-top: $nav-top-border-height solid $theme-primary-color;
-	overflow-y: auto;
-
-	// when the nav has the class of 'show', it's triggered
-	// by the mobile grabber icon, so it needs to be left: 0
-	// and get a small box shadow
-	&.show {
-		left: 0;
 	
-		// only show the box shadow if you're on mobile
-		@media(max-width:$screen-sm) {
-			@include box-shadow(0 0 25px rgba(#333, .4));
-		}
-	}
-
-
-	a, a:hover {
-		text-decoration: none !important;
-	}
-
 	.top-level-nav {
 		padding: 0;
 		margin: 0;
+		margin-bottom: 50px;
 
 		// the top level nav items (usually contain a subnav)
 		.main-nav {

@@ -1,45 +1,56 @@
 -# This patial is populated from a view composer
 -$auth = App::make('decoy.auth')
-.nav
-	.top-level-nav
-		-foreach($pages as $page)
+.sidebar
+	
+	.top
 		
-			-if (!empty($page->children))
-		
-				-# Buffer the output so that it is only shown if children were added.  There
-				-# could be none if they were hidden by permissions rules
-				-ob_start()
-				-$child_added = false
-		
-				-# The pulldown
-				.main-nav(class=$page->active?'active':null)
+		-# Dropdown menu
+		%a(href=$auth->userUrl())
+			%span
+				Hey
+				!=$auth->userName()
+			.gravatar-wrap
+				%img.gravatar(src=$auth->userPhoto())
+
+
+	.nav
+		.top-level-nav
+			-foreach($pages as $page)
+			
+				-if (!empty($page->children))
+					.main-nav(class=$page->active?'active':null)
+						%a.top-level
+							-if($page->icon)
+								%span.glyphicon(class="glyphicon-#{$page->icon}")
+							!=$page->label
+	
+						.subnav
+							-foreach($page->children as $child)
+								-if (!empty($child->divider))
+								-elseif($auth->can('read', $child->url))
+									%a(href=$child->url class=$child->active?'active':null)
+										-if($child->icon)
+											%span.glyphicon(class="glyphicon-#{$child->icon}")
+										=$child->label
+			
+				-else if($auth->can('read', $page->url))
+					%a(href=$page->url)=$page->label
+
+			-if($auth->developer())
+				.main-nav
 					%a.top-level
-						-if($page->icon)
-							%span.glyphicon(class="glyphicon-#{$page->icon}")
-						!=$page->label
+						%span.glyphicon.glyphicon-cog
+						Admin
 
-					-# The options
 					.subnav
-						-foreach($page->children as $child)
-							-if (!empty($child->divider))
-								.divider
-							-elseif($auth->can('read', $child->url))
-								-$child_added = true
-								-#%li(class=$child->active?'active':null)
-								%a(href=$child->url class=$child->active?'active':null)
-									-if($child->icon)
-										%span.glyphicon(class="glyphicon-#{$child->icon}")
-									=$child->label
-		
-				-# Only show the dropdown if a child was added
-				-if ($child_added) 
-					-ob_end_flush()
-				-else 
-					-ob_end_clean()
-		
-			-else if($auth->can('read', $page->url))
-				-#%li(class=$page->active?'active':null)
-				%a(href=$page->url)=$page->label
+						%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) Admins
+						%a(href=route('decoy\\commands')) Commands
+						-if(count(Bkwld\Decoy\Models\Worker::all()))
+							%a(href=route('decoy\\workers')) Workers
 
--#	-# Add AJAX progress indicator
--#	!= View::make('decoy::layouts._ajax_progress')-#
+			-else if(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
+				.main-nav
+					%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
+						%span.glyphicon.glyphicon-user
+						Admins
+				
