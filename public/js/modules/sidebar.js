@@ -29,9 +29,6 @@ define(function (require) {
 		// for each top-level nav, toggle the active state
 		this.$mainnav.find('.top-level').on('click', this.toggleSubnav);
 
-		//this.$el.on('mouseenter', this.haltOtherScroll);
-		//this.$el.on('mouseleave', this.resumeOtherScroll);
-
 	};
 
 	View.openNav = function() {
@@ -51,15 +48,7 @@ define(function (require) {
 		if(cur.hasClass('active')) cur.removeClass('active');
 		else cur.addClass('active');
 	};
-
-	View.haltOtherScroll = function(e) {
-		$('body').css('overflow', 'hidden');
-	};
-
-	View.resumeOtherScroll = function(e) {
-		$('body').css('overflow', 'auto');
-	};
-
+	
 	// Return the view
 	return Backbone.View.extend(View);
 });

@@ -130,3 +130,8 @@
 	}
 	
 }
+
+.control-group.upload .img-polaroid {
+	background-color: transparent !important;
+	background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+}

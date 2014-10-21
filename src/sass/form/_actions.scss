@@ -2,17 +2,22 @@
  * The submit buttons on form pages
  */
 
-// On vertical forms, don't push actions over
-.form-vertical .form-actions {
+// Fix the controls above everything so you can save from the top of the page
+.form-actions {
 	position: fixed;
 	bottom: 0;
-	left: 0;
-	z-index: 150; // goes above the content but UNDER the sidebar
+	left: $sidebar-width;
+	z-index: 300; // clear everything (including jCrop)
 	width: 100%;
-	padding: 10px 10px 5px 10px;
-	@include rgba-background-inline(rgba(#fff, .7));
-	margin-left: 0;
-	text-align: right;
+	padding: 0 $main-padding;
+	text-align: left;
+
+	// Give it a fixed height
+	height: $footer-height;
+	line-height: $footer-height + 2px; // Vertical center
+
+	// Eyeballed this to make it the same effective color as bkgd when overlapping
+	background: rgba(darken($body-color, .05%), .7);
 }
 
 // The actions btns should have a bottom margin so they wrap to multiple
