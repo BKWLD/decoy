@@ -30,6 +30,7 @@
 				&:hover {
 					background-color: lighten($gray-dark, 10%);
 					color: #eee;
+					.glyphicon { color: #eee; }
 				}
 			}
 
