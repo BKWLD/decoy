@@ -26,6 +26,10 @@
 		// The site name
 		.site {
 			font-weight: 400;
+
+			&:after {
+				content: '/';
+			}
 		}
 
 		// The controller title
@@ -56,6 +60,7 @@
 		line-height: 1.4em;
 	}
 
+	// tablet-portrait styles
 	@media(max-width:$screen-sm) {
 		// on mobile, kill the margin-left so the header
 		// spans the full width of the window
@@ -66,9 +71,13 @@
 		.title {
 			.site {
 				font-size: 20px;
+
+				&:after {
+					content: none;
+				}
 			}
 			.controller {
-				font-size: 50px;
+				font-size: 40px;
 			}
 
 			// display line break for mobile header
@@ -79,6 +88,22 @@
 
 		.description {
 			font-size: 18px;
+		}
+	}
+
+	// mobile styles
+	@media(max-width: $screen-xs) {
+		.title {
+			line-height: 0.8;
+			
+			.controller {
+				font-size: 30px;
+				margin-bottom:10px;
+			}
+		}
+		.description {
+			margin-top:15px;
+			line-height: 1em;
 		}
 	}
 }

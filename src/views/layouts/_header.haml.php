@@ -9,8 +9,8 @@
 
 		-# The page title
 		%span.site 
-			#{Config::get('decoy::site_name')} / 
-			%br.mobile 
+			#{Config::get('decoy::site_name')}
+		%br.mobile-break
 		%span.controller!=$title
 
 		-# Controller actions
