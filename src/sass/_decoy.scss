@@ -7,6 +7,7 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 
 // Add vars before bootstrap so they can override
 @import "variables";
+@import url($fonts-url); // Fonts
 
 // Plugins
 @import "vendor/bootstrap/bootstrap";

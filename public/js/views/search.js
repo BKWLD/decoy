@@ -30,11 +30,11 @@ define(function (require) {
 			this.schema = this.$el.data('schema');
 			this.$conditions = this.$('.conditions');
 			this.$submit = this.$conditions.find('button[type="submit"]');
-			this.$search_actions = $('h1 .search-toggle').closest('.btn-group');
+			this.$search_actions = $('.search-controls');
 			
 			// Make the add and substract buttons
-			this.$add = $('<button type="button" class="btn btn-default add"><span class="glyphicon glyphicon-plus">');
-			this.$subtract = $('<button type="button" class="btn btn-default subtract"><span class="glyphicon glyphicon-minus">');
+			this.$add = $('<button type="button" class="btn btn-sm outline add"><span class="glyphicon glyphicon-plus">');
+			this.$subtract = $('<button type="button" class="btn btn-sm outline subtract"><span class="glyphicon glyphicon-minus">');
 			
 			// Listen for the clicks on the open/close and clear buttons
 			this.$search_actions.find('.search-toggle').click(this.toggle);

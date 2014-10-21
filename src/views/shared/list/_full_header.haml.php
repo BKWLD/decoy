@@ -1,47 +1,38 @@
 
 -# Disabling while porting
-	<div class="full-header">
-		<h1>
-			<?=$title?> <span class="badge"><?=$count?></span>
-			
-			<div class="btn-toolbar pull-right">
-					
-				<?// Button to open the search form ?>
-				<? if (!empty($search)): ?>
-					<div class="btn-group animated-clear closed search-controls">
-						<a class="btn btn-default search-toggle"><span class="glyphicon glyphicon-search"></span></a>
 
-						<?// Change the default container to fix a Chrome issue https://github.com/BKWLD/decoy/issues/239 ?>
-						<a class="btn btn-default search-clear js-tooltip" data-container=".full-header .btn-toolbar" title="Reset search"><span class="glyphicon glyphicon-ban-circle"></span></a>
-					</div>
-				<? endif ?>
-				
-				<?// If we've declared this relationship a many to many one, show the autocomplete ?>
-				<? if (!empty($many_to_many) && app('decoy.auth')->can('update', $controller)): ?>
-					<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
-				
-				<?// Else it's a regular one to many, so show a link to create a new item ?>
-				<? elseif (app('decoy.auth')->can('create', $controller)): ?>
-					<div class="btn-group">
-						<a href="<?=URL::to(DecoyURL::relative('create'))?>" class="btn btn-info new" ><span class="glyphicon glyphicon-plus"></span> New</a>
-					</div>
-				<? endif ?>
+	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
+	<? if (!empty($many_to_many) && app('decoy.auth')->can('update', $controller)): ?>
+		<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
 
-			</div>
-		
-	</div>
 
 -# Header of table
 .legend
+
+	-# Stats
 	%span.stat
 		Total
 		%span.badge=$count
 	%span.stat
 		Showing
 		%span.badge=$count
-	.pull-right.animated-clear.closed.search-controls
+	
+	-# Potentially contain other buttons
+	.pull-right.btn-toolbar
 
-	-# Search UI
-	!=View::make('decoy::shared.list._search', $__data)
+		-# Search togglers
+		-if (!empty($search))
+			.btn-group.search-controls.closed
+
+				-# Search toggle
+				%a.btn.btn-sm.outline.search-toggle
+					.glyphicon.glyphicon-search
+
+				-# Rest button, change the default container to fix a Chrome issue https://github.com/BKWLD/decoy/issues/239
+				%a.btn.btn-sm.outline.search-clear.js-tooltip(data-container=".full-header .btn-toolbar" title="Reset search")
+					.glyphicon.glyphicon-ban-circle
+
+-# Search UI
+!=View::make('decoy::shared.list._search', $__data)
 
 
