@@ -18,9 +18,18 @@
 		color: $theme-primary-inverse;
 		margin: 0; // Reset BS
 
+		// line break for mobile header is hidden by default
+		br.mobile-break {
+			display: none;
+		}
+
 		// The site name
 		.site {
 			font-weight: 400;
+
+			&:after {
+				content: '/';
+			}
 		}
 
 		// The controller title
@@ -51,4 +60,50 @@
 		line-height: 1.4em;
 	}
 
+	// tablet-portrait styles
+	@media(max-width:$screen-sm) {
+		// on mobile, kill the margin-left so the header
+		// spans the full width of the window
+		margin-left: 0;
+
+		padding-top: 0;
+
+		.title {
+			.site {
+				font-size: 20px;
+
+				&:after {
+					content: none;
+				}
+			}
+			.controller {
+				font-size: 40px;
+			}
+
+			// display line break for mobile header
+			br.mobile-break {
+				display: block;
+			}
+		}
+
+		.description {
+			font-size: 18px;
+		}
+	}
+
+	// mobile styles
+	@media(max-width: $screen-xs) {
+		.title {
+			line-height: 0.8;
+			
+			.controller {
+				font-size: 30px;
+				margin-bottom:10px;
+			}
+		}
+		.description {
+			margin-top:15px;
+			line-height: 1em;
+		}
+	}
 }

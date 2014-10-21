@@ -11,9 +11,6 @@ $light-grey: whiteSmoke !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
 
-// Break points
-$mobile: 650px;
-
 // Sizing
 $form-group-margin: 15px !default;
 $main-padding: $form-group-margin*2 !default;
@@ -41,6 +38,13 @@ $padding-small-horizontal: 7px !default;
 $table-cell-padding-horizontal: 6px !default;
 $table-cell-padding-vertical: 8px !default;
 $table-cell-padding: $table-cell-padding-vertical $table-cell-padding-horizontal !default;
+
+// Pagination - using the theme's primary color
+$pagination-color: $theme-secondary-inverse !default;
+$pagination-active-color: $theme-primary-inverse !default;
+$pagination-active-bg: $theme-primary-color !default;
+$pagination-active-border: $theme-primary-color !default;
+$pagination-hover-color: $theme-secondary-inverse !default;
 
 // Fonts
 $fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700' !default;

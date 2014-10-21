@@ -19,7 +19,7 @@
 		left: 0;
 	
 		// only show the box shadow if you're on mobile
-		@media(max-width:$mobile) {
+		@media(max-width:$screen-sm) {
 			@include box-shadow(0 0 25px rgba(#333, .4));
 		}
 	}
@@ -105,7 +105,7 @@
 	}
 
 	// hide the nav when you're on mobile widths
-	@media(max-width:$mobile) {
+	@media(max-width:$screen-sm) {
 		left: -200px;
 	}
 }

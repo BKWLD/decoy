@@ -118,7 +118,7 @@ if ($listing->count()) {
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><span class="glyphicon glyphicon-eye-open"></span></a>
 						<? else: ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><span class="glyphicon"></span></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><span class="glyphicon glyphicon-eye-close"></span></a>
 						<? endif ?>
 						<span class="visible-edit-seperator">|</span>
 					<? endif ?>

@@ -44,6 +44,19 @@ a, a:hover {
 	text-decoration: none;
 }
 
+// override the bootstrap link colors
+a {	
+	color: $theme-secondary-inverse;
+	
+	p & {
+		border-bottom: dotted 1px #ccc;
+	}
+	&:hover,
+	// also include links with bootstrap icons
+	&:hover span {
+		color: $theme-primary-color;
+	}
+}
 
 // The main container
 #main {
@@ -55,7 +68,7 @@ a, a:hover {
 	padding-top: $main-padding + $breadcrumb-height;
 
 	// On mobile widths, have main span the entire width of the screen
-	@media(max-width:$mobile) {
+	@media(max-width:$screen-sm) {
 		margin-left: 0;
 	}
 }
@@ -69,6 +82,11 @@ a, a:hover {
 		background: rgba($theme-primary-inverse, .15);
 		border-color: $theme-primary-inverse;
 		color: $theme-primary-inverse;
+
+		// override glyphs in links getting the primary color
+		span{
+			color: $theme-primary-inverse;
+		}
 	}
 
 	// Make it secondarily colored
@@ -79,6 +97,11 @@ a, a:hover {
 			background: rgba($theme-secondary-inverse, .15);
 			color: $theme-secondary-inverse;
 			border-color: $theme-secondary-inverse; 
+
+			// override glyphs in links getting the primary color
+			span{
+				color: $theme-secondary-inverse;
+			}
 		}
 	}
 }
