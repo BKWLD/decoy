@@ -198,7 +198,7 @@
 		right: 0;
 	}
 	&.closed {
-		.search-toggle { margin-right: -1px;}
+		.search-toggle { margin-right: 0;}
 
 		// When closed, don't look like a button group
 		.btn { 
