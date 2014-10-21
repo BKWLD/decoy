@@ -1,3 +1,26 @@
 .sidebar .top {
-	
+	padding: 10px 20px;
+	overflow: hidden;
+	position: relative;
+	background-color: mix(#333, $theme-primary-color, 85%);
+
+	.name {
+		display: inline-block;
+		color: #dedede;
+		padding-left: 4px;
+	}
+
+	$profile-size: 20px;
+	.gravatar-wrap {
+		position: relative;
+		top: 3px;
+		display: inline-block;
+		width: $profile-size;
+		height: $profile-size;
+		overflow: hidden;
+		
+		img {
+			width: 100%;
+		}
+	}
 }

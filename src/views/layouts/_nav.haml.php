@@ -3,15 +3,15 @@
 .sidebar
 	
 	.top
-		
-		-# Dropdown menu
 		%a(href=$auth->userUrl())
-			%span
-				Hey
-				!=$auth->userName()
 			.gravatar-wrap
 				%img.gravatar(src=$auth->userPhoto())
-
+			%span.name
+				Hey
+				-if($auth->userName() == "Default")
+					BKWLD
+				-else
+					!=$auth->userName()
 
 	.nav
 		.top-level-nav
@@ -48,7 +48,7 @@
 						-if(count(Bkwld\Decoy\Models\Worker::all()))
 							%a(href=route('decoy\\workers')) Workers
 
-			-else if(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
+			-elseif(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
 				.main-nav
 					%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
 						%span.glyphicon.glyphicon-user
