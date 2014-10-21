@@ -18,22 +18,18 @@
 
 	// Eyeballed this to make it the same effective color as bkgd when overlapping
 	background: rgba(darken($body-color, .05%), .7);
-}
 
-// The actions btns should have a bottom margin so they wrap to multiple
-// lines nicer
-.form-actions .btn {
-	margin-bottom: 5px;
+	// Adjust for the sidebar going away
+	@media(max-width:$screen-sm) {
+		left: 0;
+	}
 
-	// on mobile, extend the btn-sm class so the buttons are smaller
+	// Make them fit on one line mobile
 	@media(max-width:$screen-xs) {
 
-		// since I can't seem to make use of @extend
-		// I am mimicking the styles for .btn-sm of bootstrap
-		// Not ideal, but it works great
-		padding: 3px 7px;
-		font-size: 12px;
-		line-height: 1.5;
-		@include border-radius(3px);
+		// Apply Bootstrap's btn-sm styling
+		.btn { 
+			@include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+		}
 	}
 }
