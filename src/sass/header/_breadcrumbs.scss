@@ -48,5 +48,12 @@
 		@media(max-width:$screen-sm) {
 			margin-left: 0;
 		}
+
+		// above mobile, abjust for the nav only when docked 
+		@media(min-width:$screen-sm + 1) {
+			.back {
+				margin-right: 200px;
+			}
+		}
 	}
 }
