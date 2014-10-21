@@ -1,9 +1,10 @@
 .header
 
 	-# Mobile controls
-	-#
-		%span.glyphicon.glyphicon-th-list
-		%span.glyphicon.close.glyphicon-remove
+	.btn-group.nav-hamburger
+		%a.btn.outline
+			%span.glyphicon.glyphicon-th-list
+	-# %span.glyphicon.close.glyphicon-remove
 
 	%h1.title
 
