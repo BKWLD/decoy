@@ -1,7 +1,7 @@
 /**
  * Fieldset group blocks of fields with a legend for a title
  */
-form fieldset, .related .standard-list {
+form fieldset, .related .standard-list, body.index .standard-list {
 
 	// Surround sections in a white box
 	$pad: 15px;
@@ -27,7 +27,7 @@ form fieldset, .related .standard-list {
 		}
 
 		// Give it a background
-		background: $near-black;
+		background: $gray-dark;
 		margin: 0 (-$pad);
 		padding: 7px $pad; // 7px makes it about as high as table th's
 

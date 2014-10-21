@@ -1,17 +1,15 @@
 
-// Colors
-$light-grey: whiteSmoke;
-$grey-border: #ddd;
-$light-opacity: .3;
-$near-black: $gray-dark;
-
 // Theme
 $theme-color: #67bfb6 !default;
 $theme-text: white !default;
 $theme-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
+// Colors
+$light-grey: whiteSmoke;
+$grey-border: #ddd;
+$light-opacity: .3;
+
 // Break points
-$main-break: $screen-sm; // This should be deprecated
 $mobile: 650px;
 
 // Sizing
@@ -19,6 +17,30 @@ $form-group-margin: 15px !default;
 $main-padding: $form-group-margin*2;
 $nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height;
+$nav-width-open: 200px !default;
+$nav-width-closed: 50px !default;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd;
+
+/**
+ * Bootstrap variables
+ * Aka, the variable name is significant
+ */
+
+// Customize the path to the font
+$icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/';
+
+// Make small items a little smaller, yet bigger than xs
+$padding-small-vertical: 3px !default;
+$padding-small-horizontal: 7px !default;
+
+// Reduce cell padding
+$table-cell-padding: 8px 6px !default;
+
+// Fonts
+@import url(http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700);
+$font-family-sans-serif: 'Lato' !default;
+$headings-font-family: 'Roboto Slab' !default;
+$headings-font-weight: 300 !default;
+$bootstrap_nav_break: 400px;

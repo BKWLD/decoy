@@ -110,7 +110,7 @@
 }
 
 // On small browsers, only show the second and last columns in tables
-@media (max-width: $main-break) {
+@media (max-width: $screen-sm) {
 	.table {
 		th, td {
 			display: none;

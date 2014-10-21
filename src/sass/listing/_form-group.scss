@@ -14,7 +14,7 @@
 		}
 
 		// If mobile layout, make it flush to right side
-		@media(max-width: $main-break) {
+		@media(max-width: $screen-sm) {
 			
 			// Make the label span full width
 			display: block;

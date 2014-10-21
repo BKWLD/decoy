@@ -5,7 +5,7 @@ body.fragments {
 		overflow: visible;
 
 		// Increase the padding a bit
-		@media(min-width: $main-break + 1px) {
+		@media(min-width: $screen-sm + 1px) {
 			padding-left: $grid-gutter-width;
 		}
 	}
@@ -13,7 +13,7 @@ body.fragments {
 	// Make it flush
 	.tab-pane {
 		@include flush-cols;
-		@media(max-width: $main-break) {
+		@media(max-width: $screen-sm) {
 			@include flush-cols(false)
 		}
 		
@@ -25,7 +25,7 @@ body.fragments {
 	
 	// Make the pills grey scale
 	.nav-pills a {
-		color: $near-black;
+		color: $gray-dark;
 		background: $light-grey;
 		&:hover {
 			color: black;
@@ -34,7 +34,7 @@ body.fragments {
 	}
 	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
 		color: white;
-		background: $near-black;
+		background: $gray-dark;
 	}
 	
 	// Fix positioning at all breakpoints.  Bootstrap span rules tweak this.
@@ -43,7 +43,7 @@ body.fragments {
 	}
 	
 	// Breaking changes
-	@media(max-width: $main-break) {
+	@media(max-width: $screen-sm) {
 
 		// Turn off fixed nav
 		.affixable {

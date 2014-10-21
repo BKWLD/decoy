@@ -5,11 +5,11 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
 
-// Add overrides for bootstrap before
-@import "theme";
+// Add vars before bootstrap so they can override
+@import "variables";
 
 // Plugins
-@import "vendor/bootstrap/init";
+@import "vendor/bootstrap/bootstrap";
 @import "vendor/*";
 
 // Config
