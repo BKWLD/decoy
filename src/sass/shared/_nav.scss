@@ -9,7 +9,7 @@
 	color: lighten($gray-light, 20%);
 	z-index: 200; // to clear the breadcrumbs and the main content
 	@include transition(all 200ms ease-out);
-	border-top: $nav-top-border-height solid $theme-color;
+	border-top: $nav-top-border-height solid $theme-primary-color;
 	overflow-y: auto;
 
 	// when the nav has the class of 'show', it's triggered
@@ -87,8 +87,8 @@
 
 					// highlight the active page
 					&.active {
-						color: $theme-color;
-						border-left: 3px solid $theme-color;
+						color: $theme-primary-color;
+						border-left: 3px solid $theme-primary-color;
 						background-color: darken($gray-dark, 2%);
 					}
 				}

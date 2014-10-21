@@ -4,7 +4,7 @@
 // In addition, the header will have a fixed height with the content
 // within it vertically centered
 .header {
-	background-color: $theme-color;
+	background-color: $theme-primary-color;
 	margin-left: $nav-width-open;
 	padding: $main-padding;
 
@@ -15,7 +15,7 @@
 	// The site and controller
 	.title {
 		font-size: 46px;
-		color: $theme-text;
+		color: $theme-primary-inverse;
 		margin: 0; // Reset BS
 
 		// The site name
@@ -45,7 +45,7 @@
 	// Description
 	.description {
 		font-size: 22px;
-		color: rgba($theme-text, .5);
+		color: rgba($theme-primary-inverse, .5);
 		margin: 0; // Reset BS
 		margin-top: 3px;
 		line-height: 1.4em;

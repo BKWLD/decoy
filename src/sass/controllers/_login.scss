@@ -164,41 +164,41 @@ body.login.index {
 
 // The login page - theme
 body.login.index {
-	background: $theme-color;
-	@include background(linear-gradient(top, $theme-color, darken($theme-color, 10%)));
+	background: $theme-primary-color;
+	@include background(linear-gradient(top, $theme-primary-color, darken($theme-primary-color, 10%)));
 	background-position: center center;
 
 	// Bkgd image
-	@if ($theme-bkgd) {
-		.bkgd { background: $theme-bkgd; }
+	@if ($theme-login-bkgd) {
+		.bkgd { background: $theme-login-bkgd; }
 	}
 
 	// Left side
 	.branding {
 		
 		h1 {
-			color: $theme-text;
-			@include text-shadow(1px 2px 0 darken($theme-color, 15%));
+			color: $theme-primary-inverse;
+			@include text-shadow(1px 2px 0 darken($theme-primary-color, 15%));
 		}
 		h4, h4 a {
-			color: $theme-text;
-			color: rgba($theme-text, .5);
+			color: $theme-primary-inverse;
+			color: rgba($theme-primary-inverse, .5);
 			& a:hover {
 				text-decoration: none;
-				color: rgba($theme-text, .7);
+				color: rgba($theme-primary-inverse, .7);
 			}
 		}
 	}
 	
 	// Right side
 	.form {
-		background: $theme-text;
+		background: $theme-primary-inverse;
 		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
-		border: 1px solid darken($theme-color, 10%);
+		border: 1px solid darken($theme-primary-color, 10%);
 
 		// Make the hovers fit better
 		.form-group:hover {
-			background: lighten($theme-text, 5%);
+			background: lighten($theme-primary-inverse, 5%);
 		}
 
 		// Disable the autofill bkgd color

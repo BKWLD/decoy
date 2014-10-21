@@ -20,14 +20,14 @@ form fieldset, .related .standard-list, body.index .standard-list {
 
 		// Set the font so links get it too
 		&, > a { 
-			color: $grey-border;
+			color: $theme-secondary-inverse;
 			font-weight: $headings-font-weight;
 			font-family: $headings-font-family;
 			font-size: 16px;
 		}
 
 		// Give it a background
-		background: $gray-dark;
+		background: $theme-secondary-color;
 		margin: 0 (-$pad);
 		padding: 7px $pad; // 7px makes it about as high as table th's
 
@@ -39,6 +39,8 @@ form fieldset, .related .standard-list, body.index .standard-list {
 		// Push badges over a tad
 		.badge {
 			margin-left: 5px;
+			background: rgba($theme-secondary-inverse, .7);
+			color: $theme-secondary-color;
 		}
 
 		// If something is pulled-right, give it a max width.  This is designed to

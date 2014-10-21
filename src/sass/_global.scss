@@ -63,12 +63,22 @@ a, a:hover {
 // An outline button has no fill but has a stroke
 .btn.outline {
 	background: none;
-	border: 1px solid rgba($theme-text, .85);
-	color: rgba($theme-text, .85);
+	border: 1px solid rgba($theme-primary-inverse, .85);
+	color: rgba($theme-primary-inverse, .85);
 	&:hover {
-		background: rgba($theme-text, .15);
-		border-color: $theme-text;
-		color: $theme-text;
+		background: rgba($theme-primary-inverse, .15);
+		border-color: $theme-primary-inverse;
+		color: $theme-primary-inverse;
+	}
+
+	// Make it secondarily colored
+	.legend &, {
+		color: rgba($theme-secondary-inverse, .85);
+		border-color: rgba($theme-secondary-inverse, .85);
+		&:hover { 
+			color: $theme-secondary-inverse;
+			border-color: $theme-secondary-inverse; 
+		}
 	}
 }
 
