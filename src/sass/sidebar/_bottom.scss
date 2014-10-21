@@ -7,7 +7,8 @@
 	border-top: 1px solid darken($gray-dark, 5%);
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
 	@include gpu-cache;
-
+	@include transition( left 250ms 0ms ceaser($easeInQuad));
+	
 	// Give it a fixed height
 	height: $footer-height;
 	line-height: $footer-height; // Vertical center
