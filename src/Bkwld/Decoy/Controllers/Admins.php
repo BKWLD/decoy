@@ -36,7 +36,7 @@ class Admins extends Base {
 		}
 
 		// Bind to view
-		$this->layout->content = Listing::createFromController($this, $results);
+		$this->populateView(Listing::createFromController($this, $results));
 
 	}
 	

@@ -18,9 +18,9 @@ class Commands extends Base {
 	 * List all the tasks in the admin
 	 */
 	public function index() {
-		$this->layout->nest('content', 'decoy::commands.index', array(
-			'commands' => Command::all()
-		));
+		$this->populateView('decoy::commands.index', [
+			'commands' => Command::all(),
+		]);
 	}
 	
 	/**
