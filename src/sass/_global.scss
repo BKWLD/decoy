@@ -44,6 +44,17 @@ a, a:hover {
 	text-decoration: none;
 }
 
+// override the bootstrap link colors
+a {	
+	color: $theme-secondary-inverse;
+	
+	p & {
+		border-bottom: dotted 1px #ccc;
+	}
+	&:hover {
+		color: $theme-primary-color;
+	}
+}
 
 // The main container
 #main {
