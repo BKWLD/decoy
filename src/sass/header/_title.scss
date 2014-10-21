@@ -51,4 +51,10 @@
 		line-height: 1.4em;
 	}
 
+	// on mobile, kill the margin-left so the header
+	// spans the full width of the window
+	@media(max-width:$screen-sm) {
+		margin-left: 0;
+	}
+
 }
