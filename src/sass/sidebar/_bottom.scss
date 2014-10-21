@@ -2,11 +2,15 @@
 	position: fixed;
 	bottom: 0;
 	width: $sidebar-width;
-	padding: 10px;
+	padding: 0 10px;
 	background-color: darken($gray-dark, 6%);
 	border-top: 1px solid darken($gray-dark, 5%);
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
 	@include gpu-cache;
+
+	// Give it a fixed height
+	height: $footer-height;
+	line-height: $footer-height; // Vertical center
 
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
@@ -20,12 +24,15 @@
 		color: #ddd;
 		font-weight: 300;
 		font-size: 12px;
+		display: inline;
+		float: left;
 
 		&.public-site {
-			float: right;
-			font-size: 15px;
+			font-size: 14px;
 			position: relative;
-			top: 4px;
+			float: right;
+			top: 22px;
+			right: 10px;
 		}
 
 		&:hover {

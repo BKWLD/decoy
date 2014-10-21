@@ -5,6 +5,5 @@
 	-# Add AJAX progress indicator
 	!= View::make('decoy::layouts._ajax_progress')
 
-	.controls
-		%a.logout(href=$auth->logoutUrl()) Logout
-		%a.public-site.glyphicon.glyphicon-new-window(href="/" title="View Public Site")	
+	%a.logout(href=$auth->logoutUrl()) Logout
+	%a.public-site.glyphicon.glyphicon-new-window(href="/" title="View Public Site")	
