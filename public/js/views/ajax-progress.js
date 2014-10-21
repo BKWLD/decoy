@@ -52,7 +52,7 @@ define(function (require) {
 			
 			// Show and hide the bar
 			if (total > 0) this.$bar.stop(true).css('opacity', 1);
-			else if (total === 0) this.$bar.stop(true).delay(300).animate({opacity:0}, function() {
+			else if (total === 0) this.$bar.stop(true).delay(800).animate({opacity:0}, function() {
 				$(this).css('width', 0);
 			});
 			

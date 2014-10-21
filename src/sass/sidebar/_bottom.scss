@@ -3,10 +3,8 @@
 	bottom: 0;
 	width: $sidebar-width;
 	padding: 10px;
-	padding-bottom: 15px; // to account for the height of the ajax progress
-	@include rgba-background-inline(rgba($gray-dark, .8));
+	background-color: darken($gray-dark, 6%);
 	border-top: 1px solid darken($gray-dark, 5%);
-	overflow: hidden;
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
 	@include gpu-cache;
 
