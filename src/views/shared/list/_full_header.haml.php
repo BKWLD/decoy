@@ -33,11 +33,11 @@
 
 -# Header of table
 .legend
-	%span.total
-		Total:
+	%span.stat
+		Total
 		%span.badge=$count
-	%span.showing
-		Showing:
+	%span.stat
+		Showing
 		%span.badge=$count
 	.pull-right.animated-clear.closed.search-controls
 
