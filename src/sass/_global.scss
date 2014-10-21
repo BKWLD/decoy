@@ -51,7 +51,9 @@ a {
 	p & {
 		border-bottom: dotted 1px #ccc;
 	}
-	&:hover {
+	&:hover,
+	// also include links with bootstrap icons
+	&:hover span {
 		color: $theme-primary-color;
 	}
 }
