@@ -11,10 +11,14 @@
 		height: 18px;
 		padding: 1px;
 		display: inline-block;
-		border: 1px inset #EEE;
 		line-height: 0;
 		font-size: 13px;
 		vertical-align: middle;
+
+		// hidden list items will show the closed eye icon that's greyed out
+		.glyphicon-eye-close {
+			color: #ccc;
+		}
 	}
 
 }

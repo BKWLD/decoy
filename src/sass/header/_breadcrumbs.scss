@@ -13,7 +13,7 @@
 	border-top: $nav-top-border-height solid $theme-primary-color;
 
 	// Set a height and vertical center
-	height: $breadcrumb-height;
+	//height: $breadcrumb-height;
 	line-height: $breadcrumb-height - $nav-top-border-height;
 
 	a, span {
@@ -47,6 +47,13 @@
 		// on mobile, I need to make the margin 0, so the crumbs span the whole width
 		@media(max-width:$screen-sm) {
 			margin-left: 0;
+		}
+
+		// above mobile, abjust for the nav only when docked 
+		@media(min-width:$screen-sm + 1) {
+			.back {
+				margin-right: 200px;
+			}
 		}
 	}
 }

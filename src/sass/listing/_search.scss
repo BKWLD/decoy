@@ -3,21 +3,12 @@
 
 	// Set a breakpoint optimized for the search bar to fit on mobile
 	$break-search: 585px;
-	$search-bkgd: darken($light-grey, 3%);
-	$search-shadow: darken($search-bkgd, 5%);
 
 	// The container for the form
-	margin: 0;
-	background: $light-grey;
-	@include border-radius(4px 4px 0 0);
+	background: mix($theme-secondary-color, $theme-secondary-inverse, 93%);
 	text-align: center;
-	background: $search-bkgd;
-	@include box-shadow(darken(white, 20) 0px 1px 3px 0 inset);
 	overflow: hidden;
-	color: darken(white, 50);
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 1);
 	display: none;
-	width: 100%; // Need for mobile sizes for some reason
 	
 	// Specifying padding an inside container so it doesn't animate
 	.conditions {
@@ -43,7 +34,7 @@
 		 
 		// Line spacing
 		.condition { 
-			margin: 5px;
+			margin: 6px;
 
 			// Push contents off the right side of the container to make room
 			// for the add buttons.  And do alternating colors for each row
@@ -69,7 +60,7 @@
 		
 		// The add/minus buttons
 		.add, .subtract {
-			$radius: 15px;
+			$radius: 13px;
 			@include border-radius($radius);
 			width: $radius*2;
 			height: $radius*2;
@@ -82,12 +73,15 @@
 				top: 26%;
 			}
 		}
+
+		// Tweak centering
+		.subtract .glyphicon { top: 2px; }
 		
 		// The search button
 		button[type="submit"] {
 			position: absolute;
-			bottom: 7px;
-			right: -85px; // Harcoded estimation of width ... wish i had a smarter approach
+			bottom: 11px;
+			right: -61px; // Harcoded estimation of width ... wish i had a smarter approach
 
 			// When the search fields expand on mobile, position the serach button below them
 			// and make it match the width of fields
@@ -109,6 +103,16 @@
 			@media (max-width: $break-search) {
 				width: 100%;
 			}
+
+			// Remove some BS3 styling that conflicts
+			border: none;
+			@include box-shadow(none);
+
+			// Remove stroke on input-group-btn
+			.btn { 
+				border: none;
+				line-height: 22px; // Required to make it fill out the space
+			}
 		}
 		
 		// Override BS which wants to break to block earlier than we want to
@@ -121,7 +125,7 @@
 
 		// Space out the inputs, which are butted right up to each other cause of JS
 		.condition > * {
-			margin: 0 2px;
+			margin: 0 3px;
 			
 			// After the first break, remove the left margin on the first item to make
 			// the rows horiztonally center better
@@ -174,13 +178,20 @@
 	}
 }
 
-// Special styles for animating the clear button.  Namespaced here so this could be removed
-// without much trouble
-.animated-clear {
+// The controls that open
+.search-controls {
+
+	// Search icon
 	.search-toggle {
 		z-index: 2;
-		margin-right: 39px;
+		margin-right: 27px;
+
+		// Give it a solid background so it will overlap the reset
+		background: $theme-secondary-color;
+		&.btn.outline:hover { background: mix($theme-secondary-color, $theme-secondary-inverse, 85%); }
 	}
+
+	// Reset icon
 	.search-clear {
 		z-index: 1;
 		position: absolute;
@@ -198,6 +209,11 @@
 	// Only animate after the initial page load
 	&.initialized .search-toggle {
 		@include transition(margin-right 400ms ease-out);
+	}
+
+	// Icons look better shifted down an extra px
+	.glyphicon {
+		top: 2px;
 	}
 }
 
