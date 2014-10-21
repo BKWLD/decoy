@@ -45,7 +45,7 @@
 		margin-left: $nav-width-open;
 
 		// on mobile, I need to make the margin 0, so the crumbs span the whole width
-		@media(max-width:$mobile) {
+		@media(max-width:$screen-sm) {
 			margin-left: 0;
 		}
 	}
