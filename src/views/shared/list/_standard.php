@@ -15,9 +15,12 @@
 	// Render the full table.  This could be broken up into smaller chunks but leaving
 	// it as is until the need arises
 	echo View::make('decoy::shared.list._table', $__data);
-	
-	// Render pagination
-	echo View::make('decoy::shared.list._pagination', $__data);
 	?>
 
 </div>
+
+<?
+// Render pagination
+echo View::make('decoy::shared.list._pagination', $__data);
+
+?>

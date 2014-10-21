@@ -1,0 +1,19 @@
+.standard-list .legend {
+
+	// Space out the stats in the legend
+	.stat {
+		margin-right: 10px;
+	}
+
+	// Push badges over a tad
+	.badge {
+		margin-left: 3px;
+		background: rgba($theme-secondary-inverse, .7);
+		color: $theme-secondary-color;
+
+		// Nudge it up a bit
+		position: relative;
+		top: -1px;
+	}
+
+}

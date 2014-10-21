@@ -40,9 +40,15 @@ $padding-small-horizontal: 7px !default;
 // Reduce cell padding
 $table-cell-padding: 8px 6px !default;
 
+// Pagination - using the theme's primary color
+$pagination-color: $theme-primary-color !default;
+$pagination-active-color: $theme-primary-inverse !default;
+$pagination-active-bg: $theme-primary-color !default;
+$pagination-active-border: $theme-primary-color !default;
+$pagination-hover-color: $theme-secondary-inverse !default;
+
 // Fonts
 @import url(http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700);
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
-$bootstrap_nav_break: 400px;
