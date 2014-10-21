@@ -12,7 +12,9 @@
 					there!
 				-else
 					!=$auth->userName()
-
+		.btn-group.close-nav
+			%a.btn.outline
+				%span.glyphicon.close.glyphicon-remove
 	.nav
 		.top-level-nav
 			-foreach($pages as $page)
