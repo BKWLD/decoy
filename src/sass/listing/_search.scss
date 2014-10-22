@@ -46,13 +46,13 @@
 				// Adding background color on every other condition to make it more
 				// noticeable where the sections are
 				&:nth-child(even) {
-					background: #e3e3e3;
+					background: mix($theme-secondary-color, $theme-secondary-inverse, 98%);
 				}
 			}
 		}
 		
 		// The labels (label tags and selectors are used by bootstrap)
-		@media (max-width: $screen-sm) {
+		@media (max-width: $screen-md) {
 			.intro {
 				display: none;
 			}
@@ -70,7 +70,7 @@
 			@media (max-width: $break-search) {
 				position: absolute;
 				right: 5px;
-				top: 26%;
+				top: 29px;
 			}
 		}
 
@@ -100,6 +100,12 @@
 		input, select, .input-group {
 			@include box-sizing(border-box);
 			width: $width;
+			@media (min-width: $screen-sm) and (max-width: 825px) {
+				width: 100px;
+			}
+			@media (max-width: $screen-sm) {
+				width: 135px;
+			}
 			@media (max-width: $break-search) {
 				width: 100%;
 			}
@@ -129,7 +135,7 @@
 			
 			// After the first break, remove the left margin on the first item to make
 			// the rows horiztonally center better
-			@media (max-width: $screen-sm) {
+			@media (max-width: $screen-md) {
 				&.fields {
 					margin-left: 0;
 				}
