@@ -50,10 +50,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
-		
+
 		// Use Bootstrap 3
 		Config::set('former::framework', 'TwitterBootstrap3');
-		\Former::framework('TwitterBootstrap3');
 
 		// Reduce the horizontal form's label width
 		Config::set('former::TwitterBootstrap3.labelWidths', []);
