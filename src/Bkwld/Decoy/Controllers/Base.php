@@ -405,12 +405,10 @@ class Base extends Controller {
 		
 		// Return view
 		$this->populateView($this->show_view, [
-			'crops' => (object) Model::$crops,
-
-			// Will never be used in a "new" view, but will keep errors from being thrown 
-			// about "undefined property"
 			'item' => null,
-		]);
+			'crops' => (object) Model::$crops,
+			'sidebar' => new Sidebar,
+		], true);
 		
 		// Pass parent_id
 		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
@@ -470,15 +468,9 @@ class Base extends Controller {
 		$this->populateView($this->show_view, [
 			'item' => $item,
 			'crops' => (object) Model::$crops,
-		]);
+			'sidebar' => new Sidebar($item),
+		], true);
 
-		// If the subclass implements the sidebar no-op, use it's response for
-		// the related data.
-		if ($listings = $this->sidebar($item)) {
-			$sidebar = new Sidebar($listings, $item);
-			$this->layout->content->related = $sidebar->render();
-		}
-		
 		// Figure out the parent_id
 		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
 
@@ -759,15 +751,6 @@ class Base extends Controller {
 	}
 
 	/**
-	 * A no-op that can be used to generate the sidebar on an edit page without subclassing
-	 * the edit() method.
-	 * @param  Illuminate\Database\Eloquent\Model $item The model instance the edit page
-	 *         is currently acting upon.
-	 * @return Bkwld\Decoy\Fields\Listing | string
-	 */
-	protected function sidebar($item) {}
-
-	/**
 	 * Get all the foreign keys and values on the relationship with the parent
 	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
 	 * @return array A list of key-val objects that have the column name and value for
@@ -841,15 +824,12 @@ class Base extends Controller {
 		if (is_string($content)) $this->layout->content = View::make($content);
 		else $this->layout->content = $content;
 
-		// Common vars
+		// Set vars
 		$this->layout->title = $this->title;
 		$this->layout->description = $this->description;
 		View::share('controller', $this->controller);
+		$this->layout->content->with($vars);
 
-		// Passed vars
-		foreach($vars as $key => $val) {
-			$this->layout->content->$key = $val;
-		}
 	}
 
 }

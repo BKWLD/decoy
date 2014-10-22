@@ -10,11 +10,11 @@
 class Sidebar {
 
 	/**
-	 * The array of listings
+	 * The array of items to show in the sidebar
 	 *
-	 * @var array An array of Former::listing() objects
+	 * @var array
 	 */
-	private $listings;
+	private $items = [];
 
 	/**
 	 * The model instance currently being worked on by Decoy 
@@ -26,14 +26,31 @@ class Sidebar {
 	/**
 	 * Inject dependencies
 	 *
-	 * @param array $listings An array of Former::listing() objects
 	 * @param Illuminate\Database\Eloquent\Model $parent The model instance 
 	 *        currently being worked on by Decoy
 	 */
-	public function __construct($listings, $parent) {
-		if (!is_array($listings)) $listings = array($listings);
-		$this->listings = $listings;
+	public function __construct($parent = null) {
 		$this->parent = $parent;
+	}
+
+	/**
+	 * Add an item to the sidebar
+	 *
+	 * @param mixed Generally an Bkwld\Decoy\Fields\Listing object or a string
+	 * @return Bkwld\Decoy\Input\Sidebar Support chaining
+	 */
+	public function add($item) {
+		$this->items[] = $item;
+		return $this;
+	}
+
+	/**
+	 * Return whether the sidebar is empty or not
+	 *
+	 * @return boolean 
+	 */
+	public function isEmpty() {
+		return empty($this->items);
 	}
 
 	/**
@@ -44,18 +61,19 @@ class Sidebar {
 	public function render() {
 
 		// Massage the response from base controller subclassings of sidebar
-		$listings = array_map(function($listing) {
+		$items = array_map(function($item) {
 
 			// If a listing instance, apply defaults common to all sidebar instances
-			if (is_a($listing, 'Bkwld\Decoy\Fields\Listing')) {
-				return $listing->layout('sidebar')->parent($this->parent);
+			if (is_a($item, 'Bkwld\Decoy\Fields\Listing')) {
+				return $item->layout('sidebar')->parent($this->parent);
 
-			// Allow string to be passed
-			} else return $listing;
-		}, $this->listings);
+			// Anything else will be converted to a string in the next step
+			} else return $item;
+
+		}, $this->items);
 
 		// Combine all listing items into a single string and return
-		return array_reduce($listings, function($carry, $item) {
+		return array_reduce($items, function($carry, $item) {
 			return $carry.$item;
 		}, '');
 

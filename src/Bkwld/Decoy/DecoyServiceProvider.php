@@ -64,9 +64,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
 
-		// Tell Former to include unchecked checkboxes in the post
-		// Config::set('former::push_checkboxes', true);
-
 		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
 		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
 			return App::make('decoy.acl_fail');

@@ -1,15 +1,3 @@
--#
-	This partial is used to generate all of the HTML and layout that comes
-	after most CRUD forms.  It is used in conjunction with _form_header.
-	It expects:
-
-		- controller : A string depicting the controller.  This is used in
-			generating links.  I.e. 'admin.news'
-			
-		- item (optional) : The data that is being edited
-
-		- actions (optional) : HTML for additional buttons
-
 -use Bkwld\Decoy\Breadcrumbs
 
 -# Push over for horizontal forms
@@ -39,3 +27,9 @@
 	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Back
 
 !=Former::close()
+
+-# Close first column, show sidebar, and then close the row
+-if(!$sidebar->isEmpty())
+	!='</div><div class="col-md-5 related">'
+	!=$sidebar->render()
+	!='</div></div>'
