@@ -104,7 +104,7 @@
 			.pull-right {
 				position: absolute;
 				top: 0px;
-				right:30px;
+				right: $main-padding-mobile;
 				
 				.new {
 					&:after {
@@ -123,7 +123,7 @@
 		.nav-hamburger {
 			display: block;
 			position: absolute;
-			left: 30px; 
+			left: $main-padding-mobile;
 			top: 10px;
 		}
 
