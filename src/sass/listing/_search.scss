@@ -70,7 +70,8 @@
 			@media (max-width: $break-search) {
 				position: absolute;
 				right: 5px;
-				top: 29px;
+				top: 50%;
+				margin-top: -$radius !important; // this is important to override a margin on all elements in the conditions element
 			}
 		}
 
