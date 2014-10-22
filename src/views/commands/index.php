@@ -3,7 +3,7 @@
 		<div class='col-sm-6 col-lg-4'>
 			<div class="standard-list">
 				<div class="legend sidebar-header"><?=$namespace?></div>
-				<table class="">
+				<table>
 					<? foreach($subcommands as $name => $command): ?>
 						<tr data-js-view="task-method">
 							<td>
