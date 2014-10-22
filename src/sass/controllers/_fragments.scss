@@ -1,5 +1,20 @@
 body.fragments {
 	
+	.fragments-wrap {
+		position: relative;
+	}
+
+	.frag-main-col {
+		margin-right: $frag-sidebar-width+60;
+	}
+
+	.frag-sidebar {
+		width: $frag-sidebar-width;
+		position: absolute;
+		right: 0;
+		top: 0;
+	}
+
 	// This was creating scrollbars
 	.tab-content {
 		overflow: visible;
@@ -48,12 +63,25 @@ body.fragments {
 	
 	// Breaking changes
 	@media(max-width: $screen-sm) {
+		.frag-main-col {
+			width: 100%;
+			padding: 30px;
+			padding-bottom: 100px;
+		}
 
 		// Make the pills float on mobile
 		.nav-pills li {
 			float:left;
 			margin-right: 4px;
 			margin-top: 4px;
+		}
+
+		.frag-sidebar {
+			width: 100%;
+			padding: 10px 30px 0 30px;
+			position: relative;
+			right: 0;
+			top: 0;
 		}
 	}
 	
