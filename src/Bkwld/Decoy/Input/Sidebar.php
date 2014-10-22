@@ -37,9 +37,11 @@ class Sidebar {
 	 * Add an item to the sidebar
 	 *
 	 * @param mixed Generally an Bkwld\Decoy\Fields\Listing object or a string
+	 * @return Bkwld\Decoy\Input\Sidebar Support chaining
 	 */
 	public function add($item) {
 		$this->items[] = $item;
+		return $this;
 	}
 
 	/**

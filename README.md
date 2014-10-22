@@ -132,22 +132,11 @@ The following properties are only relevant if a controller is a parent or child 
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
 
-### Setting up relational data
-
-To pass the data needed to show related data on an edit page, you need to override the sidebar() no-op method in your controller.  Passing it instances of `Former::listing`.  For instance:
-
-	protected function sidebar($item) {
-		return array(
-			Former::listing('Block')->take(30),
-			Former::listing('Contributor')->take(30),
-		);
-	}
-
-See the "Form fields" section of this README for more info in it's API.
 
 ## Views
 
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
+
 
 ### Grouping form fields
 
@@ -159,24 +148,23 @@ Use a `fieldset` and a div of class `.legend` to contain groups of fields in box
 		!= Former::text('title')
 		!= Former::textarea('body') 
 
+
 ### Overriding a Decoy partial
 
 You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at app/views/admin/articles/shared/_pagination.php you can customize the pagination partial JUST for the articles controller.
 
 In addition, you can override a partial for ALL controllers through built in [Laravel functionality](http://laravel.com/docs/packages#package-views).
 
-### Related sidebar
 
-The View file might look like this:
+### Sidebar
 
-	<?=View::make('decoy::shared.form_with_related._header', $__data)?>
-		
-		<?= Former::text('title')->class('span6') ?>
-		<?= Former::textarea('body')->class('span6 wysiwyg') ?>
+The sidebar is primarily designed to house related model listings but you can actually store anything in it.  Add items to the Sidebar by calling `$sidebar->add('Content')` from the view.  For instance:
 
-	<?=View::make('decoy::shared.form_with_related._footer', $__data)?>
+	- $sidebar->add(Former::listing('Contributor')->take(30))
+	- $sidebar->add('<p>A paragraph</p>')
+	
+Note: This must be run **before** the include of the `decoy::shared.form._header` partial.
 
-The related data gets passed to the footer partial and rendered automatically.  Note that the form elements are set to span6 rather than span9.
 
 ### Embeded / inline relationship list
 
@@ -430,11 +418,11 @@ The following additional fields come with Decoy.  They are implemented through F
 	- Creates an table of model instances like shown in Decoy's index view.  The `name` for the field should be the model class that is being rendered.  Like `Article`.
 	- `controller()` specifies the controller name if it can't be automatically determined.  You may also pass it an instance of a controller class.
 	- `items()` stores a collection of model instances to display in the list.  This is optional, `listing()` will try and make a query using the model name to form a query.
-	- `layout()` allows you to specify the layout.  This is automatically set when subclassing the base controller's `sidebar` no-op.
+	- `layout()` allows you to specify the layout.  This is automatically set when passing a `Listing` instance to `$sidebar->add()` from a view.
 		- `full` - A full width view like shown on Decoy's index view.
 		- `sidebar` - A narrow view like shown in an edit view's related column.
 		- `form` - A full width view designed to be show in a horizontal form.
-	- `parent()` - Pass an instance of the field being edited if this listing is meant to show children of the parent.  Like in the related sidebar on the edit page.  This is automatically set when subclassing the base controller's `sidebar` no-op.
+	- `parent()` - Pass an instance of the field being edited if this listing is meant to show children of the parent.  Like in the sidebar on the edit page.  This is automatically set when subclassing the base controller's `sidebar` no-op.
 	- `take()` - A integer; how many rows to display.
 	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
 
