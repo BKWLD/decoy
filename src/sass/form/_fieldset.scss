@@ -1,7 +1,7 @@
 /**
  * Fieldset group blocks of fields with a legend for a title
  */
-form fieldset, .related .standard-list, body.index .standard-list {
+fieldset, .related .standard-list, body.index .standard-list {
 
 	// Surround sections in a white box
 	$pad: 15px;
@@ -13,10 +13,13 @@ form fieldset, .related .standard-list, body.index .standard-list {
 
 	// Push them vertically apart
 	margin-bottom: $form-group-margin*2;
-
 	@media(max-width:$screen-sm) {
 		margin-bottom: $main-padding-mobile;
 	}
+
+	// Make sure long words (like filenames on mobile) to bust outside the
+	// container
+	word-wrap: break-word;
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
@@ -94,6 +97,22 @@ form fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
+	}
+
+	// A disabled fieldset is used, for instance, for sidebar listings before
+	// the parent is saved
+	&.disabled {
+		@include opacity(.7);
+		.legend { background: grayscale($theme-secondary-color); }
+
+		// This is the message
+		p {
+			text-align: center;
+			padding: 50px 0;
+
+			// Clear the important icon, it made the text centering feel weird
+			.glyphicon { display: none; }
+		}
 	}
 
 }
