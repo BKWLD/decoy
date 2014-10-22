@@ -22,6 +22,7 @@
 	// Adjust for the sidebar going away
 	@media(max-width:$screen-sm) {
 		left: 0;
+		padding: 0 $main-padding-mobile;
 	}
 
 	// Make them fit on one line mobile

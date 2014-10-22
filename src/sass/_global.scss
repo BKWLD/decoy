@@ -76,6 +76,8 @@ a {
 	// On mobile widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
 		margin-left: 0;
+		padding-left: $main-padding-mobile;
+		padding-right: $main-padding-mobile;
 	}
 }
 
