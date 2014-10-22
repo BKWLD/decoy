@@ -6,8 +6,15 @@
 	-# Form tag
 	!=Former::open_vertical_for_files()->addClass('row')
 
+	-# Create navigation
+	.col.frag-sidebar
+		%ul.nav.nav-stacked.nav-pills.fragments-nav(role="tablist")
+			-foreach(array_keys($fragments) as $i => $title)
+				%li(class=$i===0?'active':null)
+					%a(href='#'.Str::slug($title) data-slug=Str::slug($title) data-toggle="tab" role="tab")=$title
+
 	-# Create pages
-	.col-sm-10.tab-content
+	.col.tab-content.frag-main-col
 		-foreach($fragments as $title => $sections)
 			.tab-pane(class=$title==current(array_keys($fragments))?'active':null id=Str::slug($title))
 				
@@ -42,14 +49,6 @@
 										echo Former::belongsTo($value->key, $label)->route($value->value);
 										break;
 								}
-	
-	-# Create navigation
-	.col-sm-2
-		%ul.nav.nav-stacked.nav-pills.fragments-nav(role="tablist")
-			-foreach(array_keys($fragments) as $i => $title)
-				%li(class=$i===0?'active':null)
-					%a(href='#'.Str::slug($title) data-slug=Str::slug($title) data-toggle="tab" role="tab")=$title
-
 
 	.controls.form-actions
 		%button.btn.btn-success.save(type="submit")
