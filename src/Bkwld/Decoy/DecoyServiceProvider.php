@@ -51,24 +51,19 @@ class DecoyServiceProvider extends ServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 		
-		// Instantiate a new instance of Former so that I can subclass the MethodDispatcher.
-		// When https://github.com/Anahkiasen/former/pull/359 get accepted and tagged, I can
-		// call add() on the existing methodDispatcher().
-		$this->app->singleton('former', function ($app) {
-			return new Former($app, new MethodDispatcher($app, array(
-				'Bkwld\Decoy\Fields\\', Former::FIELDSPACE
-			)));
-		});
-
 		// Use Bootstrap 3
 		Config::set('former::framework', 'TwitterBootstrap3');
 		\Former::framework('TwitterBootstrap3');
 
 		// Reduce the horizontal form's label width
-		Config::set('former::TwitterBootstrap3.labelWidths.small', 3);
+		Config::set('former::TwitterBootstrap3.labelWidths', []);
 
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
+
+		// Add Decoy's custom Fields to Former so they can be invoked using the "Former::"
+		// namespace and so we can take advantage of sublassing Former's Field class.
+		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
 
 		// Tell Former to include unchecked checkboxes in the post
 		// Config::set('former::push_checkboxes', true);

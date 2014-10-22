@@ -16,16 +16,10 @@
 			"email": "info@bkwld.com"
 		}
 	],
-	"repositories": [
-		{
-			"type": "vcs",
-			"url": "https://github.com/weotch/former"
-		}
-	],
 	"require": {
 		"php": ">=5.3.0",
 		"illuminate/support": "<4.3,>=4.0",
-		"anahkiasen/former": "dev-master",
+		"anahkiasen/former": "<4,>=3.5.2",
 		"anahkiasen/html-object": "1.*",
 		"cartalyst/sentry": "2.0.*",
 		"bkwld/croppa": "~3.0",
