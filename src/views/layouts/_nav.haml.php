@@ -7,10 +7,11 @@
 			.gravatar-wrap
 				%img.gravatar(src=$auth->userPhoto())
 			%span.name
-				Hi,
+				Hi
 				-if($auth->userName() == "Default")
 					there!
 				-else
+					,
 					!=$auth->userName()
 		.btn-group.close-nav
 			%a.btn.outline
@@ -39,16 +40,16 @@
 					%a(href=$page->url)=$page->label
 
 			-if($auth->developer())
-				.main-nav
+				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active':null)
 					%a.top-level
 						%span.glyphicon.glyphicon-cog
 						Admin
 
 					.subnav
-						%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) Admins
-						%a(href=route('decoy\\commands')) Commands
+						%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
+						%a(href=route('decoy\\commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
 						-if(count(Bkwld\Decoy\Models\Worker::all()))
-							%a(href=route('decoy\\workers')) Workers
+							%a(href=route('decoy\\workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
 
 			-elseif(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
 				.main-nav

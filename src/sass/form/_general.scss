@@ -11,9 +11,53 @@
 	margin-right: 10px;
 }
 
+// give fragments wrap a max width, cause on wide screens it
+// looks way too long, and apply this to form horizontal
+.fragments-wrap, .form-horizontal, .standard-list, .row {
+	max-width: $max-width;
+}
+
+// Former is setting a class of "radio" on inline
+// radio elements.  It should ONLY have radio-inline.  As
+// a result, an incorrect margin-top is being added.  This
+// rule clears it and other settings
+// http://yo.bkwld.com/image/0D3a1q1T1q1z
+// https://github.com/Anahkiasen/former/pull/375
+.form-vertical .radio-inline {
+	margin-top: 0;
+	min-height: 0;
+	position: static;
+}
+
 // Seperate from one another
 .form-group {
 	margin-bottom: $form-group-margin;
+}
+
+// Set fixed width to horizontal form label widths 
+.form-horizontal .control-label {
+	width: $horizontal-label-width;
+	float: left;
+	@media (max-width: $screen-sm) {
+		width: $horizontal-label-width - 50px;
+	}
+	@media (max-width: $screen-xs) {
+		width: $horizontal-label-width - 75px;
+	}
+}
+
+// Set the margin on the div that follows the horizontal 
+// control label to 15px
+.form-horizontal .control-label + div {
+	margin-left: $horizontal-label-margin;
+	margin-right: $form-group-margin;
+	@media (max-width: $screen-sm) {
+		margin-left: $horizontal-label-margin - 50px;
+	}
+
+	@media (max-width: $screen-xs) {
+		margin-left: $horizontal-label-margin - 75px;
+	}
 }
 
 // Required field icons

@@ -7,38 +7,63 @@
 	border-top: 1px solid darken($gray-dark, 5%);
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
 	@include gpu-cache;
+	@include vertical-align;
 	@include transition( left 250ms 0ms ceaser($easeInQuad));
 	
 	// Give it a fixed height
 	height: $footer-height;
-	line-height: $footer-height; // Vertical center
 
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
 	}
 
-	&.show {
-		left: 0;
+	.controls {
+		display: inline-block;
+		vertical-align: middle;
 	}
 
-	a {
+	.logout, .public-site {
 		color: #ddd;
 		font-weight: 300;
 		font-size: 12px;
-		display: inline;
-		float: left;
 
 		&.public-site {
 			font-size: 14px;
-			position: relative;
-			float: right;
+			position: absolute;
 			top: 22px;
-			right: 10px;
+			right: 15px;
 		}
 
 		&:hover {
 			color: #fff;
 		}
-
 	}
+
+	.tagline {
+		font-size: 11px;
+		color: #555;
+		font-weight: 500;
+
+		a {
+			color: #555;
+			text-decoration: none;
+
+			&:hover {
+				color: #888;
+			}
+		}
+	}
+
+	&.show {
+		left: 0;
+	}	
+
+	// on xtra small screens, make this area smaller
+	// and more minimal, and kill the BKWLD cta
+	@media(max-width:$screen-xs) {
+		height: $footer-height/2;
+		.tagline { display: none; }
+		.public-site { top: 8px !important; }
+	}
+
 }

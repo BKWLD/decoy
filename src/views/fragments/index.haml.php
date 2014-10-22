@@ -1,10 +1,5 @@
 .fragments-wrap(data-js-view="fragments")
 
-	-# Page title
-	%h1.form-header 
-		Fragments
-		%small Special case text, images, and files.
-
 	-# Show validation errors
 	!=View::make('decoy::shared.form._errors')
 
@@ -12,21 +7,21 @@
 	!=Former::open_vertical_for_files()->addClass('row')
 
 	-# Create navigation
-	.col-sm-3
-		%ul.nav.nav-stacked.nav-pills.affixable.fragments-nav(role="tablist")
+	.col.frag-sidebar
+		%ul.nav.nav-stacked.nav-pills.fragments-nav(role="tablist")
 			-foreach(array_keys($fragments) as $i => $title)
 				%li(class=$i===0?'active':null)
 					%a(href='#'.Str::slug($title) data-slug=Str::slug($title) data-toggle="tab" role="tab")=$title
 
 	-# Create pages
-	.col-sm-9.tab-content
+	.col.tab-content.frag-main-col
 		-foreach($fragments as $title => $sections)
 			.tab-pane(class=$title==current(array_keys($fragments))?'active':null id=Str::slug($title))
 				
 				-# Create sections
 				-foreach($sections as $title => $pairs)
-					%div
-						%legend=$title
+					%fieldset
+						.legend =$title
 						
 						-# Create pairs
 						-foreach($pairs as $label => $value)
@@ -54,11 +49,10 @@
 										echo Former::belongsTo($value->key, $label)->route($value->value);
 										break;
 								}
-	
-		%hr
-		.controls.actions
-			%button.btn.btn-success.save(type="submit")
-				%span.glyphicon.glyphicon-file
-				Save all tabs
+
+	.controls.form-actions
+		%button.btn.btn-success.save(type="submit")
+			%span.glyphicon.glyphicon-file
+			Save all tabs
 
 	!=Former::close() 

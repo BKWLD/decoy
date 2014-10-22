@@ -5,5 +5,9 @@
 	-# Add AJAX progress indicator
 	!= View::make('decoy::layouts._ajax_progress')
 
-	%a.logout(href=$auth->logoutUrl()) Logout
-	%a.public-site.glyphicon.glyphicon-new-window(href="/" title="View Public Site")	
+	.controls
+		%a.logout(href=$auth->logoutUrl()) Logout
+		%a.public-site.glyphicon.glyphicon-new-window(href="/" title="View Public Site")
+		.tagline
+			%span Decoy	4.0 by
+			%a(href="http://bkwld.com" target="_blank") BKWLD
