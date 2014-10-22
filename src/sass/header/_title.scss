@@ -19,6 +19,7 @@
 		font-size: 46px;
 		color: $theme-primary-inverse;
 		margin: 0; // Reset BS
+		max-width: $max-width;
 
 		// line break for mobile header is hidden by default
 		br.mobile-break {
@@ -66,6 +67,7 @@
 		margin: 0; // Reset BS
 		margin-top: 3px;
 		line-height: 1.4em;
+		max-width: $max-width;
 	}
 
 	// nav hamburger hidden on desktop sizes

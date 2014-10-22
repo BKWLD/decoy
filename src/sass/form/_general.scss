@@ -11,6 +11,12 @@
 	margin-right: 10px;
 }
 
+// give fragments wrap a max width, cause on wide screens it
+// looks way too long, and apply this to form horizontal
+.fragments-wrap, .form-horizontal, .standard-list, .row {
+	max-width: $max-width;
+}
+
 // Former is setting a class of "radio" on inline
 // radio elements.  It should ONLY have radio-inline.  As
 // a result, an incorrect margin-top is being added.  This
