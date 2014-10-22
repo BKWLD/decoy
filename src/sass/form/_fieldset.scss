@@ -9,7 +9,7 @@ form fieldset, .related .standard-list, body.index .standard-list {
 	border: 1px solid $grey-border;
 	@include box-shadow($common-shadow);
 	@include border-radius(4px);
-	padding: $pad; 
+	padding: 0 $pad $pad; // No top pad cause of legend and form-group padding
 
 	// Push them vertically apart
 	margin-bottom: $form-group-margin*2;
@@ -32,11 +32,11 @@ form fieldset, .related .standard-list, body.index .standard-list {
 
 		// Give it a background
 		background: $theme-secondary-color;
-		margin: 0 (-$pad);
+		margin: 0 (-$pad) 10px;
 		padding: 7px $pad; // 7px makes it about as high as table th's
 
 		// Push the first form-group or p down a bit (but not tables)
-		+ .form-group, + p {
+		.form-group, + p {
 			margin-top: 10px;
 		}
 
