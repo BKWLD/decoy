@@ -7,10 +7,11 @@
 			.gravatar-wrap
 				%img.gravatar(src=$auth->userPhoto())
 			%span.name
-				Hi,
+				Hi
 				-if($auth->userName() == "Default")
 					there!
 				-else
+					,
 					!=$auth->userName()
 		.btn-group.close-nav
 			%a.btn.outline
