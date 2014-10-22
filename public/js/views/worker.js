@@ -24,7 +24,6 @@ define(function (require) {
 			if (!this.rate) this.rate = 5;
 			else this.rate = Math.max(5, this.rate);
 			this.rate *= 1000; // Convert to ms from s
-			
 		},
 		
 		// Events

@@ -2,14 +2,16 @@
 	<ul id="workers" class="list-unstyled">
 		
 		<? foreach($workers as $worker): ?>
-			<div class="standard-list">
-				<div class="legend sidebar-header"><?=ucwords(str_replace(':', ' : ', $worker->getName())) ?></div>
-				<li class="worker-entry" data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower(urlencode($worker->getName())))?> data-interval="<?=$worker->currentInterval('raw')?>">
-					
+			<div class="standard-list" data-js-view="worker" data-log-url=<?=route('decoy\workers@tail', strtolower(urlencode($worker->getName())))?> data-interval="<?=$worker->currentInterval('raw')?>">
+				<div class="legend sidebar-header"><?=ucwords(str_replace(':', ' : ', $worker->getName())) ?>
+
 					<div class="pull-right actions">
 						<span class="status <?=$worker->isRunning()?'ok':'fail'?>">Rate: <strong><?=$worker->currentInterval('abbreviated')?></strong></span>
 						<a class="btn btn-default">Logs</a>
 					</div>
+
+				</div>
+				<li class="worker-entry">
 					
 					<?=HTML::tag($worker->getDescription())?>
 					
