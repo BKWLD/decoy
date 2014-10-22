@@ -59,6 +59,15 @@ fieldset, .related .standard-list, body.index .standard-list {
 			font-family: $font-family-sans-serif;
 		}
 
+		.btn {
+			height: 30px;
+			line-height: 20px;
+			padding: 3px 6px;
+			font-size: 14px;
+			margin-top: -4px;
+			margin-right: -12px;
+		}
+
 		@media(max-width: $screen-sm) {
 			padding-left: 8px;
 		}
