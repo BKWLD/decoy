@@ -5,6 +5,8 @@
  */
 class Workers extends Base {
 	
+	public $description = "Monitor whether workers are running or not. The logic of a failed worker is still executed regularly, just at a slower interval.";
+
 	// Display all the workers
 	public function index() {
 		$this->populateView('decoy::workers.index', [

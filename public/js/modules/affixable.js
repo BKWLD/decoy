@@ -24,6 +24,12 @@ define(function (require) {
 		
 		// Cache
 		this.fixed = false;
+		this.$main = $('#main');
+		this.mainTopPadding = this.$main.css('paddingTop').replace(/[^-\d\.]/g, '');
+		
+		// update the main container's padding based on the size of the affixable nav
+		// needed because the breadcrumbs can be multilined and start to cover the main
+		this.updateMainPadding();
 
 		// How far down to place it while affixed
 		this.top = this.$el.data('top') || 0;
@@ -55,8 +61,18 @@ define(function (require) {
 		// Calculate sizes for when it later becomes fixed
 		} else this.measureLayout();
 
+		this.updateMainPadding();
+
 		// Re-set affix plugin's offset
 		this.enablePlugin();
+	};
+
+	// update the main container's padding based on the size of the affixable nav
+	// needed because the breadcrumbs can be multilined and start to cover the main
+	View.updateMainPadding = function() {
+		if( !this.$el.hasClass('breadcrumbs') ) return;
+		var extra = ( $win.width() <= 768 ) ? 10 : 30;
+		this.$main.css('paddingTop', parseInt(this.$el.outerHeight()) + extra );
 	};
 
 	// Enable affixing
