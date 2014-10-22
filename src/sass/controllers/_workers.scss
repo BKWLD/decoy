@@ -3,12 +3,9 @@
 	$red: #ff1a00;
 	
 	// Each worker
-	> li {
+	li.worker-entry {
 		margin-bottom: 30px;
-		padding-bottom: 10px;
-		border: 1px solid #e5e5e5;
-		border-radius: 10px;
-		padding: 10px 12px 0;
+		padding: 0px $main-padding;
 		margin: 20px -10px;
 		
 		// The title
