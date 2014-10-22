@@ -8,8 +8,8 @@
 
 	// The right justifed actions
 	.actions {
-		margin-right:-14px;
-		margin-top: -6px;
+		margin-right: 0px;
+		margin-top:-4px;
 
 		// The status display
 		.status {
@@ -28,7 +28,7 @@
 			
 			// Some trick of the eye requires this
 			position: relative;
-			top: 1px;
+			// top: 1px;
 			
 			// Success
 			&.ok {
