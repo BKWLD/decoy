@@ -7,9 +7,9 @@ class Workers extends Base {
 	
 	// Display all the workers
 	public function index() {
-		$this->layout->nest('content', 'decoy::workers.index', array(
+		$this->populateView('decoy::workers.index', [
 			'workers' => Model::all(),
-		));
+		]);
 	}
 	
 	// Ajax service that tails the log file for the selected worker

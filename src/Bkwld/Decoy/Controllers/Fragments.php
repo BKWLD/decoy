@@ -30,9 +30,9 @@ class Fragments extends Base {
 		// Render the view
 		Former::withRules(Model::rules());
 		Former::populate(Model::values());
-		$this->layout->nest('content', 'decoy::fragments.index', array(
+		$this->populateView('decoy::fragments.index', [
 			'fragments' => $data,
-		));
+		]);
 	}
 	
 	/**

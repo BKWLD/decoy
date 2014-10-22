@@ -27,6 +27,7 @@ use Route;
 use stdClass;
 use URL;
 use Validator;
+use View;
 
 /**
  * The base controller is gives Decoy most of the magic/for-free mojo
@@ -385,10 +386,7 @@ class Base extends Controller {
 		// Render the view using the `listing` builder.
 		$listing = Listing::createFromController($this, $results);
 		if ($this->parent) $listing->parent($this->parent);
-		$this->layout->content = $listing;
-		$this->layout->title = $this->title;
-		$this->layout->description = $this->description;
-		$this->layout->controller = $this->controller;
+		$this->populateView($listing);
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
@@ -406,17 +404,13 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Return view
-		$this->layout->title = $this->title;
-		$this->layout->description = $this->description;
-		$this->layout->controller = $this->controller;
-		$this->layout->nest('content', $this->show_view, array(
-			'controller'       => $this->controller,
-			
+		$this->populateView($this->show_view, [
+			'crops' => (object) Model::$crops,
+
 			// Will never be used in a "new" view, but will keep errors from being thrown 
 			// about "undefined property"
-			'item'             => null,
-			'crops'            => (object) Model::$crops,
-		));
+			'item' => null,
+		]);
 		
 		// Pass parent_id
 		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
@@ -473,16 +467,10 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 		
 		// Render the view
-		$this->layout->title = $this->title;
-		$this->layout->description = $this->description;
-		$this->layout->controller = $this->controller;
-		$this->layout->nest('content', $this->show_view, array(
-			'title'            => $this->title,
-			'description'      => $this->description,
-			'controller'       => $this->controller,
-			'item'             => $item,
-			'crops'            => (object) Model::$crops,
-		));
+		$this->populateView($this->show_view, [
+			'item' => $item,
+			'crops' => (object) Model::$crops,
+		]);
 
 		// If the subclass implements the sidebar no-op, use it's response for
 		// the related data.
@@ -837,6 +825,31 @@ class Base extends Controller {
 			.'/views/admin/'
 			.Str::snake($this->controllerName())
 		);
+	}
+
+	/**
+	 * Pass controller properties that are used by the layout and views through
+	 * to the view layer
+	 *
+	 * @param mixed $content string view name or an HtmlObject / View object
+	 * @param array $vars Key value pairs passed to the content view
+	 * @return void 
+	 */
+	protected function populateView($content, $vars = []) {
+
+		// The view
+		if (is_string($content)) $this->layout->content = View::make($content);
+		else $this->layout->content = $content;
+
+		// Common vars
+		$this->layout->title = $this->title;
+		$this->layout->description = $this->description;
+		View::share('controller', $this->controller);
+
+		// Passed vars
+		foreach($vars as $key => $val) {
+			$this->layout->content->$key = $val;
+		}
 	}
 
 }

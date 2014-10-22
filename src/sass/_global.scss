@@ -36,6 +36,9 @@ body {
 		top: 1px;
 	}
 }
+fieldset {
+	word-break: break-all;
+}
 
 // Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
 a, .btn { outline: none !important; }
@@ -69,10 +72,12 @@ a {
 	padding-top: $main-padding + $breadcrumb-height;
 
 	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
-	
+
 	// On mobile widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
 		margin-left: 0;
+		padding-left: $main-padding-mobile;
+		padding-right: $main-padding-mobile;
 	}
 }
 
