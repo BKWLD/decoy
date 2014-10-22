@@ -13,10 +13,13 @@ form fieldset, .related .standard-list, body.index .standard-list {
 
 	// Push them vertically apart
 	margin-bottom: $form-group-margin*2;
-
 	@media(max-width:$screen-sm) {
 		margin-bottom: $main-padding-mobile;
 	}
+
+	// Make sure long words (like filenames on mobile) to bust outside the
+	// container
+	word-wrap: break-word;
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
