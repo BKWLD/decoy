@@ -251,9 +251,7 @@ class Listing extends Field {
 		// Show no results if there is no parent specified
 		if (empty($this->parent_item)) {
 			$this->addGroupClass('note');
-			return $this->group->wrapField(Former::note($this->label_text, '
-				<span class="glyphicon glyphicon-info-sign"></span> You must save before you can add <b>'.$this->label_text.'</b>.
-			'));
+			return $this->group->wrapField(Former::note($this->label_text, trans('decoy::form.listing.pending_save', ['model' => $this->label_text])));
 		}
 
 		// Add create button if we have permission and if there is a parent item
@@ -274,7 +272,14 @@ class Listing extends Field {
 	public function getContent() {
 
 		// Check that the current user has permission to access this controller
-		if (!app('decoy.auth')->can('read', $this->controller)) continue;
+		if (!app('decoy.auth')->can('read', $this->controller)) return;
+
+		// If in a sidebar and there is no parent (like if you are on a create page)
+		// then don't show a special message
+		if ($this->layout == 'sidebar' && !$this->parent_item) return View::make('decoy::shared.list._pending', [
+			'title' => $this->label_text,
+			'description' => $this->controller->description(),
+		]);
 
 		// Get the listing of items
 		$items = $this->getItems();
