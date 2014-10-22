@@ -70,6 +70,7 @@ define(function (require) {
 	// update the main container's padding based on the size of the affixable nav
 	// needed because the breadcrumbs can be multilined and start to cover the main
 	View.updateMainPadding = function() {
+		if( !this.$el.hasClass('breadcrumbs') ) return;
 		var extra = ( $win.width() <= 768 ) ? 10 : 30;
 		this.$main.css('paddingTop', parseInt(this.$el.outerHeight()) + extra );
 	};
