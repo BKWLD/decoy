@@ -4,7 +4,7 @@
 	.legend=empty($item)?'New':'Edit'
 		
 	!= Former::text('email')
-	-if (Config::get('decoy::obscure_admin_password'))
+	-if (Config::get('decoy::core.obscure_admin_password'))
 		!= Former::password('password')
 		!= Former::password('confirm_password')
 	-else
@@ -13,7 +13,7 @@
 	!= Former::text('first_name')
 	!= Former::text('last_name')
 
-	-if (($roles = Config::get('decoy::roles')) && !empty($roles))
+	-if (($roles = Config::get('decoy::site.roles')) && !empty($roles))
 		!= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles))
 
 	!= Former::checkbox('send_email', ' ')->value(1)->text(empty($item)?'Send welcome email, including password':'Email '.$item->first_name.' with login changes')

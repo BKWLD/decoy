@@ -11,11 +11,11 @@ class DefaultAdmin extends Migration {
 	private function validate() {
 		
 		// Make sure we're using Sentry as the admin
-		if (Config::get('decoy::auth_class') != '\Bkwld\Decoy\Auth\Sentry') return false;
+		if (Config::get('decoy::core.auth_class') != '\Bkwld\Decoy\Auth\Sentry') return false;
 		
 		// Do nothing if no creds were defined in the config file.  It' assumed that the 
 		// site doesn't want to use Sentry in this case
-		if (!Config::get('decoy::default_login') || !Config::get('decoy::default_password')) {
+		if (!Config::get('decoy::core.default_login') || !Config::get('decoy::core.default_password')) {
 			echo 'There were no creds defined in the configuration file.'.PHP_EOL;
 			return false;
 		}
@@ -37,7 +37,7 @@ class DefaultAdmin extends Migration {
 		
 		// Make sure the user doesn't already exist
 		try {
-			if (Sentry::getUserProvider()->findByLogin(Config::get('decoy::default_login'))) {
+			if (Sentry::getUserProvider()->findByLogin(Config::get('decoy::core.default_login'))) {
 				echo 'The default admin user already exists.'.PHP_EOL;
 				return;
 			}
@@ -45,8 +45,8 @@ class DefaultAdmin extends Migration {
 		
 		// Create the login user
 		$user = Sentry::getUserProvider()->create(array(
-			'email'    => Config::get('decoy::default_login'),
-			'password' => Config::get('decoy::default_password'),
+			'email'    => Config::get('decoy::core.default_login'),
+			'password' => Config::get('decoy::core.default_password'),
 			'first_name' => 'Default',
 			'last_name'  => 'Admin',
 			'activated' => true,
@@ -83,7 +83,7 @@ class DefaultAdmin extends Migration {
 		if (!$this->validate()) return;
 		
 		// Remove user
-		$user = Sentry::getUserProvider()->findByLogin(Config::get('decoy::default_login'));
+		$user = Sentry::getUserProvider()->findByLogin(Config::get('decoy::core.default_login'));
 		if (!$user->delete()) {
 			echo 'There was an error deleting the user'.PHP_EOL;
 			return;

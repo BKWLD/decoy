@@ -8,7 +8,7 @@
 	<?=Former::token()?>
 
 	<legend>Reset</legend>
-	<p>Enter your email address and we'll email you a link to reset your password.  The email will come from <?=Config::get('decoy::mail_from_address')?>.</p>
+	<p>Enter your email address and we'll email you a link to reset your password.  The email will come from <?=Config::get('decoy::core.mail_from_address')?>.</p>
 	
 	<?=Former::text('email') ?>
 

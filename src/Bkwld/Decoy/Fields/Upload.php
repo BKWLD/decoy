@@ -103,7 +103,7 @@ class Upload extends File {
 	 * @return boolean
 	 */
 	protected function isInUploads() {
-		$upload_dir = Utils\File::publicPath(Config::get('decoy::upload_dir'));
+		$upload_dir = Utils\File::publicPath(Config::get('decoy::core.upload_dir'));
 		return Str::is($upload_dir.'*', $this->value);
 	}
 

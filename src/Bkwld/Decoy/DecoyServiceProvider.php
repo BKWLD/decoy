@@ -25,7 +25,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 		
 		// Filters is a dependency of router and it's used elsewhere
-		$dir = Config::get('decoy::dir');
+		$dir = Config::get('decoy::core.dir');
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
@@ -92,7 +92,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->singleton('decoy.wildcard', function($app) {
 			$request = $app->make('request');
 			return new Routing\Wildcard(
-				Config::get('decoy::dir'),
+				Config::get('decoy::core.dir'),
 				$request->getMethod(), 
 				$request->path()
 			);
@@ -114,7 +114,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->singleton('decoy.auth', function($app) {
 
 			// Build an instance of the specified auth class if it's a valid class path
-			$auth_class = $app->make('config')->get('decoy::auth_class');
+			$auth_class = $app->make('config')->get('decoy::core.auth_class');
 			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
 			$instance = new $auth_class;
 			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);

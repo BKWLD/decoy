@@ -29,7 +29,7 @@ class Helpers {
 		if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
 		
 		// Get the site name
-		$site = Config::get('decoy::site_name');
+		$site = Config::get('decoy::site.name');
 
 		// Set the title
 		return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
@@ -153,7 +153,7 @@ class Helpers {
 	private $is_handling;
 	public function handling() {
 		if (!is_null($this->is_handling)) return $this->is_handling;
-		$this->is_handling = preg_match('#^'.Config::get('decoy::dir').'($|/)'.'#i', Request::path());
+		$this->is_handling = preg_match('#^'.Config::get('decoy::core.dir').'($|/)'.'#i', Request::path());
 		return $this->is_handling;
 	}
 
