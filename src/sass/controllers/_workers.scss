@@ -46,6 +46,11 @@
 			}
 		}
 		
+		@media(max-width: $screen-xs) {
+			max-width: none;
+			float: none !important;
+			margin-top: 10px;
+		}
 	}
 	
 	// Each worker
