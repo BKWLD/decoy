@@ -3,6 +3,10 @@
 	// Space out the stats in the legend
 	.stat {
 		margin-right: $table-cell-padding-horizontal;
+
+		@media(max-width: $screen-sm) {
+			font-size: 13px;
+		}
 	}
 
 	// Push badges over a tad
@@ -20,6 +24,11 @@
 	// it looks better justified to the actions
 	body.index & > .pull-right.btn-toolbar {
 		margin-right: -1px;
+
+		@media(max-width: $screen-sm) {
+			margin-right: -10px;
+		}
+		
 	}
 
 }

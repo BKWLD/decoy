@@ -51,6 +51,10 @@ form fieldset, .related .standard-list, body.index .standard-list {
 			// Reset the font
 			font-family: $font-family-sans-serif;
 		}
+
+		@media(max-width: $screen-sm) {
+			padding-left: 8px;
+		}
 	}
 
 	// Add form-group's hover, a little border on the left
