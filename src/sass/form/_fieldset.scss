@@ -9,7 +9,7 @@ form fieldset, .related .standard-list, body.index .standard-list {
 	border: 1px solid $grey-border;
 	@include box-shadow($common-shadow);
 	@include border-radius(4px);
-	padding: 0 $pad; // No vertical pad cause of legend and form-group padding
+	padding: 0 $pad $pad; // No top pad cause of legend and form-group padding
 
 	// Push them vertically apart
 	margin-bottom: $form-group-margin*2;
