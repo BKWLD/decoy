@@ -27,9 +27,13 @@ body.fragments {
 	.nav-pills a {
 		color: $gray-dark;
 		background: $light-grey;
+		font-size: 12px;
+		padding: 7px 9px;
+		@include border-radius(2px);
+
 		&:hover {
-			color: black;
-			background: #eee;
+			color: white;
+			background: $gray-dark;
 		}
 	}
 	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
@@ -44,12 +48,6 @@ body.fragments {
 	
 	// Breaking changes
 	@media(max-width: $screen-sm) {
-
-		// Turn off fixed nav
-		.affixable {
-			position: static;
-			margin-bottom: 30px;
-		}
 
 		// Make the pills float on mobile
 		.nav-pills li {

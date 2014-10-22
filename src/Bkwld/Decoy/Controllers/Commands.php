@@ -14,6 +14,8 @@ class Commands extends Base {
 	// Props
 	const MAX_EXECUTION_TIME = 600; // How long to allow a command to run for
 	
+	public $description = "Trigger any command for this site.  Note: these may take awhile to execute.";
+
 	/**
 	 * List all the tasks in the admin
 	 */
