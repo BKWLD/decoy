@@ -71,7 +71,7 @@
 		// Treat the whole right as a single button
 		@include link-transitions;
 		&:hover {
-			background: $gray-dark;
+			background: darken($gray-dark, 3%);
 			&, * { color: $nav-text-active; }
 		}
 		&:active, &:focus {
