@@ -1,6 +1,10 @@
 // Center the pagination on the page
 .pagination-wrapper {
-	margin-bottom: $main-padding;
+	margin: $main-padding 0;
+
+	@media(max-width: $screen-sm) {
+		margin: $main-padding-mobile 0;
+	}
 
 	text-align: center;
 
