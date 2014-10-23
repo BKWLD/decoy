@@ -96,6 +96,15 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
+
+		// make the even rows a little darker
+		tr:nth-child(even) {
+			background-color: #f6f6f6;
+			
+			//darken the hover color slightly 
+			&:hover { background-color: #f0f0f0; }
+		}
+
 	}
 
 	// A disabled fieldset is used, for instance, for sidebar listings before
