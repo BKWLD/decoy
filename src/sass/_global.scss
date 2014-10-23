@@ -98,7 +98,7 @@ p a {
 	}
 
 	// Make it secondarily colored
-	.legend &, .search & {
+	.legend &, .search &, &.secondary {
 		color: rgba($theme-secondary-inverse, .85);
 		border-color: rgba($theme-secondary-inverse, .85);
 		&:hover { 
@@ -111,6 +111,11 @@ p a {
 				color: $theme-secondary-inverse;
 			}
 		}
+	}
+
+	// input group end buttons will be above the input field to show the outline border
+	.input-group-btn & {
+		z-index:2;
 	}
 }
 
