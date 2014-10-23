@@ -32,9 +32,17 @@
 			.top-level {
 				background-color: lighten($gray-dark, 3%);
 				
+				@include transition(background 300ms, color 300ms);
+				
 				&:hover {
 					color: $nav-text-active;
+					@include transition(background 100ms, color 100ms);
 					.glyphicon { color: $nav-text-active; }
+				}
+
+				&:active {
+					background: $theme-primary-color;
+					@include transition(background 100ms, color 100ms);
 				}
 			}
 
@@ -49,7 +57,7 @@
 				background-color: darken($gray-dark, 6%);
 				overflow: hidden;
 				max-height: 0;
-				@include transition(all 300ms ease-out);
+				@include transition(max-height 300ms);
 
 				a {
 					font-size: 12px;
@@ -59,8 +67,16 @@
 					padding-left: 19px; // adjusted for the transparent left border
 					border-left: 3px solid transparent;
 
+					@include transition(background 300ms, color 300ms);
 					&:hover {
 						background-color: $sub-hover-bkgd;
+						color: $nav-text-active;
+						@include transition(background 100ms, color 100ms);
+					}
+
+					&:active {
+						background: $theme-primary-color;
+						@include transition(background 100ms, color 100ms);
 					}
 
 					// highlight the active page
