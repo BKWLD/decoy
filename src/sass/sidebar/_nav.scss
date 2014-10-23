@@ -65,8 +65,14 @@
 					font-weight: 300;
 					padding: 8px;
 					border-bottom: 1px solid darken($gray-dark, 4%);
-					padding-left: 19px; // adjusted for the transparent left border
+					padding-left: 28px; // adjusted for the transparent left border
 					border-left: 3px solid transparent;
+
+					// if there's a glyphicon, give it a negative left margin
+					// so that the subnavs line up better
+					.glyphicon {
+						margin-left: -20px;
+					}
 
 					&:hover {
 						background-color: $sub-hover-bkgd;
