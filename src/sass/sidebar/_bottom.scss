@@ -63,6 +63,11 @@
 		padding: $top-pad $nav-pad 0;
 		text-align: center;
 
+		// Tweak vertical position of globe
+		.glyphicon-globe {
+			top: 2px;
+		}
+
 		// Treat the whole right as a single button
 		@include link-transitions;
 		&:hover {
@@ -78,9 +83,8 @@
 	// on xtra small screens, make this area smaller
 	// and more minimal, and kill the BKWLD cta
 	@media(max-width: $screen-xs) {
-		height: auto;
-		// .tagline { display: none; }
-		// .public-site { top: 8px !important; }
+		height: $nav-bottom-height-mobile;
+		.subtitle { display: none; }
 	}
 
 }

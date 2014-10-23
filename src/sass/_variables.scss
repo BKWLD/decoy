@@ -17,13 +17,14 @@ $nav-text-active: #eee;
 // Sizes
 $form-group-margin: 15px !default;
 $main-padding: $form-group-margin*2 !default;
+$main-padding-mobile: 10px;
 $nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height !default;
 $sidebar-width: 200px !default;
 $nav-top-border-height: 4px !default;
 $nav-width-closed: 50px !default;
 $footer-height: 60px;
-$main-padding-mobile: 10px;
+$nav-bottom-height-mobile: 45px;
 $horizontal-label-width: 150px;
 $horizontal-label-margin: $horizontal-label-width + $form-group-margin;
 $max-width: 1400px;

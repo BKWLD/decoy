@@ -8,8 +8,13 @@
 	.top-level-nav {
 		padding: 0;
 		margin: 0;
-		margin-bottom: 50px;
 		border-top: $border;
+
+		// Make room for the bottom
+		margin-bottom: $footer-height;
+		@media(max-width: $screen-sm) {
+			margin-bottom: $nav-bottom-height-mobile;
+		}
 
 		// the top level nav items (usually contain a subnav)
 		.main-nav {
