@@ -39,7 +39,7 @@ class Account extends Base {
 		if (Session::has('login_redirect')) Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (App::make('decoy.auth')->check()) return Redirect::to(Config::get('decoy::post_login_redirect'));
+		if (App::make('decoy.auth')->check()) return Redirect::to(Config::get('decoy::site.post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(
@@ -107,7 +107,7 @@ class Account extends Base {
 		try { 
 			return Redirect::back();
 		} catch(Exception $e) {
-			return Redirect::to('/'.Config::get('decoy::dir'));
+			return Redirect::to('/'.Config::get('decoy::core.dir'));
 		}
 	}
 	
@@ -153,8 +153,8 @@ class Account extends Base {
 		// Send an email to the user with the reset token
 		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
 			$m->to(Input::get('email'));
-			$m->subject('Recover access to the '.Config::get('decoy::site_name'));
-			$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+			$m->subject('Recover access to the '.Config::get('decoy::site.name'));
+			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
 		
 		// Redirect back to login page
@@ -217,7 +217,7 @@ class Account extends Base {
 		Sentry::login($user, false);
 		
 		// Redirect
-		return Redirect::to(Config::get('decoy::post_login_redirect'));
+		return Redirect::to(Config::get('decoy::site.post_login_redirect'));
 	
 	}
 

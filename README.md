@@ -125,7 +125,7 @@ The following protected proprties allow you to customize how Decoy works from th
 	);
 	```
 
-The following properties are only relevant if a controller is a parent or child of another, as in `hasMany()`, `belongsToMany()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `routes` Config property).
+The following properties are only relevant if a controller is a parent or child of another, as in `hasMany()`, `belongsToMany()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `nav` Config property).
 
 * `PARENT_MODEL` - The model used by the parent controller (i.e. "Project").
 * `PARENT_CONTROLLER` - The parent controller (i.e. "admin.projects").

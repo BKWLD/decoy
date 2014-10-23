@@ -4,13 +4,12 @@
 	.btn-group.nav-hamburger
 		%a.btn.outline
 			%span.glyphicon.glyphicon-th-list
-	-# %span.glyphicon.close.glyphicon-remove
 
 	%h1.title
 
 		-# The page title
 		%span.site 
-			#{Config::get('decoy::site_name')}
+			#{Config::get('decoy::site.name')}
 		%br.mobile-break
 		%span.controller!=$title
 

@@ -156,7 +156,7 @@ class Base extends Controller {
 	private function init($class = null) {
 		
 		// Set the layout from the Config file
-		$this->layout = $this->config->get('decoy::layout');
+		$this->layout = $this->config->get('decoy::core.layout');
 		
 		// Store the controller class for routing
 		if ($class) $this->controller = $class;
@@ -201,7 +201,7 @@ class Base extends Controller {
 	 * @param string $verb i.e. GET,POST
 	 */
 	public function simulate($path, $verb = 'GET') {
-		$wildcard = new Wildcard($this->config->get('decoy::dir'), $verb, $path);
+		$wildcard = new Wildcard($this->config->get('decoy::core.dir'), $verb, $path);
 		$class = $wildcard->detectController();
 		$this->init($class);
 	}

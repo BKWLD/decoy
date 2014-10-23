@@ -122,7 +122,7 @@ class Admin extends Base {
 	 * names that are explicitly in the `roles` config
 	 */
 	public function getRoleName() {
-		$keys = array_keys(Config::get('decoy::roles'));
+		$keys = array_keys(Config::get('decoy::site.roles'));
 		$group = array_first($this->sentryUser()->getGroups(), function($i, $group) use ($keys) {
 			return in_array($group->getName(), $keys);
 		});
@@ -163,7 +163,7 @@ class Admin extends Base {
 			$email = array(
 				'first_name' => $admin->first_name,
 				'last_name' => $admin->last_name,
-				'url' => Request::root().'/'.Config::get('decoy::dir'),
+				'url' => Request::root().'/'.Config::get('decoy::core.dir'),
 				'root' => Request::root(),
 				'password' => $input->password,
 			);
@@ -171,8 +171,8 @@ class Admin extends Base {
 			// Send the email
 			Mail::send('decoy::emails.create', $email, function($m) use ($input) {
 				$m->to($input->email, $input->first_name.' '.$input->last_name);
-				$m->subject('Welcome to the '.Config::get('decoy::site_name').' admin site');
-				$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+				$m->subject('Welcome to the '.Config::get('decoy::site.name').' admin site');
+				$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 			});
 		}
 		
@@ -203,7 +203,7 @@ class Admin extends Base {
 			// Remove the old group IF it is one of the onese that are listed
 			// in the config.  Aka, one of the ones that was actually selectable
 			// in the admin.  This keeps, for instance, the developer group attached.
-			$keys = array_keys(Config::get('decoy::roles'));
+			$keys = array_keys(Config::get('decoy::site.roles'));
 			foreach($user->getGroups() as $group) {
 				if (!in_array($group->getName(), $keys)) continue;
 				$user->removeGroup($group);
@@ -225,15 +225,15 @@ class Admin extends Base {
 				'last_name' => $input->last_name,
 				'email' => $input->email,
 				'password' => $input->password,
-				'url' => Request::root().'/'.Config::get('decoy::dir'),
+				'url' => Request::root().'/'.Config::get('decoy::core.dir'),
 				'root' => Request::root(),
 			);
 			
 			// Send the email
 			Mail::send('decoy::emails.update', $email, function($m) use ($input) {
 				$m->to($input->email, $input->first_name.' '.$input->last_name);
-				$m->subject('Your '.Config::get('decoy::site_name').' admin account info has been updated');
-				$m->from(Config::get('decoy::mail_from_address'), Config::get('decoy::mail_from_name'));
+				$m->subject('Your '.Config::get('decoy::site.name').' admin account info has been updated');
+				$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 			});
 		}
 	}

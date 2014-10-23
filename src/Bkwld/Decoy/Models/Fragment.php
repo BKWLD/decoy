@@ -204,7 +204,7 @@ class Fragment extends Base {
 		if (!Str::is('/img/*', $value)) return $value;
 		
 		// Check if the image already exists in the uploads directory
-		$uploads = File::publicPath(Config::get('decoy::upload_dir'));
+		$uploads = File::publicPath(Config::get('decoy::core.upload_dir'));
 		$dst = str_replace('/img/', $uploads.'/fragments/', $value);
 		$dst_full_path = public_path().$dst;
 		if (file_exists($dst_full_path)) return $dst;
@@ -258,7 +258,7 @@ class Fragment extends Base {
 		
 		// Save out a file if there was one
 		if ($has_file = Input::hasFile($input_name)) {
-			$value = File::publicPath(File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::upload_dir')));
+			$value = File::publicPath(File::organizeUploadedFile(Input::file($input_name), Config::get('decoy::core.upload_dir')));
 
 			// Remove it from the input so any sub models (like Encoding) don't
 			// try and handle it

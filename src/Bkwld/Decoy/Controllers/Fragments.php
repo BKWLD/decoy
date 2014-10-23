@@ -13,7 +13,7 @@ use URL;
  */
 class Fragments extends Base {
 	
-	protected $description = 'Special case text, images, and files.';
+	protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
 
 	/**
 	 * All fragments view

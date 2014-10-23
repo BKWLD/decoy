@@ -199,7 +199,7 @@ abstract class Base extends Eloquent {
 	 */
 	public function saveImage($field = 'image') { return $this->saveFile($field); }
 	public function saveFile($field = 'file') {
-		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::upload_dir'));
+		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::core.upload_dir'));
 		$path = File::publicPath($path);
 		return $path;
 	}
@@ -377,7 +377,7 @@ abstract class Base extends Eloquent {
 	 * @return string ex: Admin\ArticlesController
 	 */
 	static public function adminControllerClass() {
-		return ucfirst(Config::get('decoy::dir')).'\\'.Str::plural(get_called_class()).'Controller';
+		return ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural(get_called_class()).'Controller';
 	}
 	
 	/**
