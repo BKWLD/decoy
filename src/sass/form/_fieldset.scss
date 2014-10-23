@@ -99,10 +99,10 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// make the even rows a little darker
 		tr:nth-child(even) {
-			background-color: #f6f6f6;
+			background-color: #fdfdfd;
 			
 			//darken the hover color slightly 
-			&:hover { background-color: #f0f0f0; }
+			&:hover { background-color: #f6f6f6; }
 		}
 
 	}
