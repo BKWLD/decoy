@@ -48,7 +48,7 @@ fieldset, .related .standard-list, body.index .standard-list {
 			padding-left: 8px;
 		}
 	}
-	
+
 	// Make the related tables flush
 	&.standard-list {
 		padding: 0;
@@ -62,6 +62,16 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
+
+		// Give the controller name a hover effect
+		.legend > a {
+			border-bottom: dotted 1px $theme-secondary-inverse;
+			&:hover, &:focus { 
+				$color: mix($theme-secondary-inverse, $theme-secondary-color, 60%);
+				color:  $color;
+				border-bottom-color: $color;
+			}
+		}
 
 	}
 

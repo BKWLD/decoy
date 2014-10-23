@@ -86,7 +86,7 @@ p a {
 	background: none;
 	border: 1px solid rgba($theme-primary-inverse, .85);
 	color: rgba($theme-primary-inverse, .85);
-	&:hover {
+	&:hover, &:focus {
 		background: rgba($theme-primary-inverse, .15);
 		border-color: $theme-primary-inverse;
 		color: $theme-primary-inverse;
@@ -97,14 +97,24 @@ p a {
 		}
 	}
 
+	// Scale up the icon on depress
+	&:active {
+		@include box-shadow(none);
+		@include transition(transform 300ms);
+		.glyphicon {
+			@include transition(transform 100ms);
+			@include scale(1.2);
+		}
+	}
+
 	// Make it secondarily colored
 	.legend &, .search &, &.secondary {
 		color: rgba($theme-secondary-inverse, .85);
 		border-color: rgba($theme-secondary-inverse, .85);
-		&:hover { 
+		&:hover, &:focus { 
 			background: rgba($theme-secondary-inverse, .15);
 			color: $theme-secondary-inverse;
-			border-color: $theme-secondary-inverse; 
+			border-color: $theme-secondary-inverse;
 
 			// override glyphs in links getting the primary color
 			span{

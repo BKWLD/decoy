@@ -1,0 +1,20 @@
+/**
+ * This is the form that appears in a sidebar .legend
+ */
+.many-to-many-form {
+
+	// Fade out the button even more
+	.btn.outline[disabled] {
+		@include opacity($light-opacity);
+	}
+
+	// Simplify the styling the input more outline-y
+	.form-control {
+		@include box-shadow(none);
+		outline: none;
+		border-color: rgba($theme-secondary-inverse, .85);
+		color: $theme-secondary-inverse;
+		background: none;
+	}
+
+}
