@@ -49,20 +49,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 		}
 	}
 
-	// Add form-group's hover, a little border on the left
-	.form-group {
-		$border-stroke: 2px;
-		border-bottom: 1px solid #f1f1f1;
-		padding: 10px $pad 20px;
-		margin-bottom: 0;
-		&:last-child {
-			border-bottom: none;	
-		}
-		&:hover {
-			background-color: #f6f6f6;
-		}
-	}
-
 	// Make the related tables flush
 	&.standard-list {
 		padding: 0;
@@ -76,14 +62,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
-
-		// make the even rows a little darker
-		tr:nth-child(even) {
-			background-color: #fdfdfd;
-			
-			//darken the hover color slightly 
-			&:hover { background-color: #f6f6f6; }
-		}
 
 	}
 
