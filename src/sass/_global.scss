@@ -119,3 +119,7 @@ p a {
 	}
 }
 
+// Fix popover inheriting form-actions line height
+.popover {
+	line-height: 1;
+}
