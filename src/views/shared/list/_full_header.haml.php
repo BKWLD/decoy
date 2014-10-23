@@ -13,9 +13,6 @@
 	%span.stat
 		Total
 		%span.badge=$count
-	%span.stat
-		Showing
-		%span.badge=count($listing)
 	
 	-# Potentially contain other buttons
 	.pull-right.btn-toolbar
