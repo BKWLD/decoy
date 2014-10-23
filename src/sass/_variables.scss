@@ -11,21 +11,25 @@ $body-color: #efefef;
 $light-grey: whiteSmoke !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
+$nav-text: #8c8c8c;
+$nav-text-active: #eee;
 
 // Sizes
 $form-group-margin: 15px !default;
 $main-padding: $form-group-margin*2 !default;
+$main-padding-mobile: 10px;
 $nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height !default;
 $sidebar-width: 200px !default;
 $nav-top-border-height: 4px !default;
 $nav-width-closed: 50px !default;
 $footer-height: 60px;
-$main-padding-mobile: 10px;
+$nav-bottom-height-mobile: 45px;
 $horizontal-label-width: 150px;
 $horizontal-label-margin: $horizontal-label-width + $form-group-margin;
 $max-width: 1400px;
 $frag-sidebar-width: 200px;
+$nav-pad: 10px;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd !default;
@@ -59,3 +63,8 @@ $fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
+
+// Overide colors
+$link-color: #333 !default;
+$link-hover-color: $theme-primary-color;
+
