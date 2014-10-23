@@ -27,24 +27,17 @@ Decoy 2.x adds some unit tests.  To run them, first do a composer install in the
 
 
 
-## Routing
+### Config
 
-Decoy uses custom routing logic to translate it's heirachially path structure into an admin namespaced controller.  Here are some examples of the types of requests that are supported.
+On the average project, the only config file that would need changing is the `site.php` file.  All sites will need to customize at least the `nav` and `post_login_redirect` properties.
 
-*Index*
 
-* GET admin/articles -> Admin\ArticlesController@index
-* GET admin/articles/2/article-slides  -> Admin\ArticleSlidesController@index
-* GET admin/articles/2/article-slides/5/assets  -> Admin\AssetsController@index
 
-*Create*
+### Generators
 
-* GET admin/articles/create -> Admin\ArticlesController@create
-* GET admin/articles/2/article-slides/create  -> Admin\ArticleSlidesController@create
+The Decoy workflow begins with generating a migration for a database table using the [standard Laravel approach](http://laravel.com/docs/migrations).  Then, Decoy provides a generator that creates the controller, model, and view for that table.  Run `php artisan decoy:generate Model` where "Model" is the name of the Model class you intend to create.  This should be the singular form of the table you created.
 
-TODO Add more examples
-
-For more info, check out the tests/Routing/TestWildcard.php unit tests.
+You will now be able to access the index view for the new model by going to "/admin/{plural model name}".  For instance, "/admin/articles".  The generated files will contain commented out, boilerplate code that you can customize for your particular needs.
 
 
 
@@ -131,6 +124,7 @@ The following properties are only relevant if a controller is a parent or child 
 * `PARENT_CONTROLLER` - The parent controller (i.e. "admin.projects").
 * `PARENT_TO_SELF` - The name of the relationship on the parent controller's model that refers to it's child (AKA the *current* controller's model, i.e. for "admin.projects" it would be "projects").
 * `SELF_TO_PARENT` - The name of the relationship on the controller's model that refers to it's parent (i.e. for "admin.projects" it would be "client").
+
 
 
 ## Views
