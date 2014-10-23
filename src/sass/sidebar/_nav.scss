@@ -1,18 +1,22 @@
 // Contains the top navbar
 .nav {
-	
+
+	// Common settings
+	$sub-hover-bkgd: darken($gray-dark, 2%);
+	$border: 1px solid $sub-hover-bkgd;
+
 	.top-level-nav {
 		padding: 0;
 		margin: 0;
 		margin-bottom: 50px;
-		border-top: 1px solid darken($gray-dark, 2%);
+		border-top: $border;
 
 		// the top level nav items (usually contain a subnav)
 		.main-nav {
 			a {
 				display: block;
-				border-bottom: 1px solid darken($gray-dark, 2%);
-				color: lighten($gray-dark, 35%);
+				border-bottom: $border;
+				color: $nav-text;
 				font-weight: $headings-font-weight;
 				font-weight: 700;
 				font-size: 12px;
@@ -29,14 +33,14 @@
 				background-color: lighten($gray-dark, 3%);
 				
 				&:hover {
-					color: #eee;
-					.glyphicon { color: #eee; }
+					color: $nav-text-active;
+					.glyphicon { color: $nav-text-active; }
 				}
 			}
 
 			&.active {
 				.top-level {
-					color: #eee;
+					color: $nav-text-active;
 				}
 			}
 
@@ -56,14 +60,14 @@
 					border-left: 3px solid transparent;
 
 					&:hover {
-						background-color: darken($gray-dark, 2%);
+						background-color: $sub-hover-bkgd;
 					}
 
 					// highlight the active page
 					&.active {
 						color: $theme-primary-color;
 						border-left: 3px solid $theme-primary-color;
-						background-color: darken($gray-dark, 2%);
+						background-color: $sub-hover-bkgd;
 					}
 				}
 			}
