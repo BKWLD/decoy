@@ -60,11 +60,7 @@ fieldset, .related .standard-list, body.index .standard-list {
 		}
 
 		.btn {
-			height: 30px;
-			line-height: 20px;
-			padding: 3px 6px;
-			font-size: 14px;
-			margin-top:-2px;
+			
 		}
 
 		@media(max-width: $screen-sm) {
@@ -96,6 +92,15 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
+
+		// make the even rows a little darker
+		tr:nth-child(even) {
+			background-color: #fdfdfd;
+			
+			//darken the hover color slightly 
+			&:hover { background-color: #f6f6f6; }
+		}
+
 	}
 
 	// A disabled fieldset is used, for instance, for sidebar listings before

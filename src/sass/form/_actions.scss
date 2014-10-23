@@ -17,7 +17,7 @@
 	line-height: $footer-height + 2px; // Vertical center
 
 	// Eyeballed this to make it the same effective color as bkgd when overlapping
-	background: rgba(darken($body-color, .05%), .7);
+	background: rgba(darken($body-color, 5%), .7);
 
 	// Adjust for the sidebar going away
 	@media(max-width:$screen-sm) {

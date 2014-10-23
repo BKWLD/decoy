@@ -11,7 +11,7 @@
 		!= Former::password('password')->addGroupClass('form-inline')
 		!= Former::checkbox('is_remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
 
-		.form-group.form-inline.form-actions.fake-label
+		.form-group.form-inline.fake-label
 			.control-label
 			.buttons
 				%button.btn.btn-primary(type="submit") Login

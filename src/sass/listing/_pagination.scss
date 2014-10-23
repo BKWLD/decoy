@@ -1,5 +1,7 @@
 // Center the pagination on the page
 .pagination-wrapper {
+	margin-bottom: $main-padding;
+
 	text-align: center;
 
 	// Selector for the number to show per page

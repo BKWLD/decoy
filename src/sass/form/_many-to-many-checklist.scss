@@ -10,6 +10,7 @@
 	// Push the text of the image in titles
 	img {
 		padding-right: 8px;
+		width: 30px;
 	}
 
 	// Layout the items in two columns
@@ -22,8 +23,13 @@
 
 		// Make cols
 		.checkbox {
-			width: 50%;
 			display: inline-block;
+			background-color: #f9f9f9;
+			width: 45%;
+			@include border-radius(3px);
+			padding: 10px 10px 5px 10px;
+			margin-right: 7px;
+			
 			@media (max-width: $screen-xs) {
 				width: auto;
 				display: block;
