@@ -40,22 +40,19 @@ body {
 // Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
 a, .btn { outline: none !important; }
 
+// Don't underline on rollver
 a, a:hover {
 	text-decoration: none;
 }
 
-// override the bootstrap link colors
-a {	
-	color: $theme-secondary-inverse;
-	
-	p & {
-		border-bottom: dotted 1px #ccc;
-	}
-	&:hover,
-	// also include links with bootstrap icons
-	&:hover span {
-		color: $theme-primary-color;
-	}
+// Set the active state for links to be the active color
+a:active {
+	color: $theme-primary-color;
+}
+
+// Underline links in paragraphs
+p a {
+	border-bottom: dotted 1px #ccc;
 }
 
 // The main container

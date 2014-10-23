@@ -11,6 +11,8 @@ $body-color: #efefef;
 $light-grey: whiteSmoke !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
+$nav-text: #8c8c8c;
+$nav-text-active: #eee;
 
 // Sizes
 $form-group-margin: 15px !default;
@@ -60,3 +62,8 @@ $fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
+
+// Overide colors
+$link-color: #333 !default;
+$link-hover-color: $theme-primary-color;
+
