@@ -32,7 +32,7 @@
 								-if (!empty($child->divider))
 								-elseif($auth->can('read', $child->url))
 									%a(href=$child->url class=$child->active?'active':null)
-										-if($child->icon)
+										-if($child->icon != 'default')
 											%span.glyphicon(class="glyphicon-#{$child->icon}")
 										=$child->label
 			
