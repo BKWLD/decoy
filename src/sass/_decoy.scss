@@ -15,8 +15,8 @@ $decoy_img_dir: '/packages/bkwld/decoy/img/';
 
 // Config
 @import "variables";
-@import "global";
 @import "mixins/*";
+@import "global";
 
 // Partials
 @import "header/*";

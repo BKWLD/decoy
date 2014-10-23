@@ -45,6 +45,11 @@ a, a:hover {
 	text-decoration: none;
 }
 
+// Animate links
+a {
+	@include link-transitions;
+}
+
 // Set the active state for links to be the active color
 a:active {
 	color: $theme-primary-color;
