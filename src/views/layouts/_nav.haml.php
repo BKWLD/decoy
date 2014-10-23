@@ -3,19 +3,15 @@
 .sidebar
 	
 	.top
-		%a(href=$auth->userUrl())
-			.gravatar-wrap
-				%img.gravatar(src=$auth->userPhoto())
+		%a.dashboard(href=$auth->userUrl())
+			%img.gravatar(src=$auth->userPhoto())
 			%span.name
-				Hi
 				-if($auth->userName() == "Default")
-					there!
+					Hi there!
 				-else
-					,
-					!=$auth->userName()
-		.btn-group.close-nav
-			%a.btn.outline
-				%span.glyphicon.close.glyphicon-remove
+					!='Hi, '.$auth->userName()
+		%a.btn.outline.close-nav
+			%span.glyphicon.close.glyphicon-remove
 	.nav
 		.top-level-nav
 			-foreach($pages as $page)

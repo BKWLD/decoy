@@ -1,69 +1,90 @@
 .bottom-nav {
+	$top-pad: 12px;
+
+	// Put it on the bottom
 	position: fixed;
 	bottom: 0;
-	width: $sidebar-width;
-	padding: 0 10px;
 	background-color: darken($gray-dark, 6%);
-	border-top: 1px solid darken($gray-dark, 5%);
 	z-index: 311; // to bump the bottom area above the sidebar by 1 index
-	@include gpu-cache;
-	@include vertical-align;
-	@include transition( left 250ms 0ms ceaser($easeInQuad));
+
+	// Set a default color
+	font-size: 16px;
+	&, a { color: $nav-text; }
 	
-	// Give it a fixed height
+	// Give it a fixed size
+	width: $sidebar-width;
 	height: $footer-height;
 
+	// Animate in on mobile
+	@include transition( left 250ms 0ms ceaser($easeInQuad));
+	&.show { left: 0; }	
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
 	}
 
-	.controls {
-		display: inline-block;
-		vertical-align: middle;
-	}
-
-	.logout, .public-site {
-		color: #ddd;
-		font-weight: 300;
-		font-size: 12px;
-
-		&.public-site {
-			font-size: 14px;
-			position: absolute;
-			top: 22px;
-			right: 15px;
-		}
-
-		&:hover {
-			color: #fff;
-		}
-	}
-
-	.tagline {
-		font-size: 11px;
-		color: #555;
-		font-weight: 500;
-
+	// Subtitle text
+	.subtitle {
+		font-size: 10px;
+		&, a { color: #555; }
 		a {
-			color: #555;
-			text-decoration: none;
-
-			&:hover {
-				color: #888;
-			}
+			&:hover { color: $nav-text-active; }
+			&:active, &:focus { color: $theme-primary-color; }
 		}
 	}
 
-	&.show {
-		left: 0;
-	}	
+	// The logout button and tagline
+	.left {
+		padding: $top-pad $nav-pad 0;
+
+		// Logout link
+		.logout {
+			@include link-transitions;
+			&:hover { color: $nav-text-active; }
+			&:active, &:focus { color: $theme-primary-color; }
+		}
+
+		// Tweak positioning of icons
+		.glyphicon-log-out {
+			font-size: 12px;
+			top: 0;
+		}
+		.glyphicon-heart {
+			margin-right: 3px;
+		}
+	}
+
+	// The link to the full site
+	.right {
+		display: block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		padding: $top-pad $nav-pad 0;
+		text-align: center;
+
+		// Tweak vertical position of globe
+		.glyphicon-globe {
+			top: 2px;
+		}
+
+		// Treat the whole right as a single button
+		@include link-transitions;
+		&:hover {
+			background: darken($gray-dark, 3%);
+			&, * { color: $nav-text-active; }
+		}
+		&:active, &:focus {
+			background: $theme-primary-color;
+			&, * { color: $theme-primary-inverse; }
+		}
+	}
 
 	// on xtra small screens, make this area smaller
 	// and more minimal, and kill the BKWLD cta
-	@media(max-width:$screen-xs) {
-		height: $footer-height/2;
-		.tagline { display: none; }
-		.public-site { top: 8px !important; }
+	@media(max-width: $screen-xs) {
+		height: $nav-bottom-height-mobile;
+		.subtitle { display: none; }
 	}
 
 }

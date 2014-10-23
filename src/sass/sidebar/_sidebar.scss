@@ -40,10 +40,10 @@
 		display:none;
 
 		@media(max-width:$screen-sm) {
-			display: block;
+			display: inline-block;
 			position: absolute;
-			top: 5px;
-			right: 5px;
+			top: 7px;
+			right: 7px;
 			
 			.close {
 				@include opacity(1);

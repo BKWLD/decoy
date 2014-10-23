@@ -6,8 +6,16 @@
 	!= View::make('decoy::layouts._ajax_progress')
 
 	.controls
-		%a.logout(href=$auth->logoutUrl()) Logout
-		%a.public-site.glyphicon.glyphicon-new-window(href="/" title="View Public Site")
-		.tagline
-			%span Decoy	4.0 by
-			%a(href="http://bkwld.com" target="_blank") BKWLD
+		.left
+			%a.logout(href=$auth->logoutUrl()) 
+				%span.glyphicon.glyphicon-log-out
+				Logout
+			.subtitle
+				%span.glyphicon.glyphicon-heart
+				Decoy	4.0 by
+				%a(href="http://bkwld.com" target="_blank") BKWLD
+		%a.right(href="/")
+			.glyphicon.glyphicon-globe
+			.subtitle Open site
+
+		
