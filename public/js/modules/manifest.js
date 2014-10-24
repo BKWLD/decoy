@@ -13,7 +13,7 @@ define(function (require) {
 		'many-to-many': require('decoy/views/relationships/many-to-many'),
 		'many-to-many-tags': require('decoy/views/relationships/many-to-many-tags'),
 		'task-method': require('decoy/views/task-method'),
-		'ajax-progress': require('decoy/views/ajax-progress'),
+		'progress': require('decoy/views/progress'),
 		'search': require('decoy/views/search'),
 		'crop': require('decoy/views/image_upload/crop'),
 		'crop-styles': require('decoy/views/image_upload/crop-styles'),
