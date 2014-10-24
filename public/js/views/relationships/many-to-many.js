@@ -22,12 +22,6 @@ define(function (require) {
 			// Call init after the parent info is read
 			Autocomplete.prototype.initialize.apply(this, arguments);
 			
-			// Cache selectors
-			this.$submit = this.$('button[type="submit"]');
-			this.$icon = this.$submit.find('i');
-			
-			// Add extra events
-			this.$el.on('submit', this.attach);
 		},
 		
 		// Add the parent stuff to query
@@ -38,28 +32,10 @@ define(function (require) {
 			});
 		},
 		
-		// Overide the match function to toggle the state of the add button
+		// Overide the match function to attach on selection
 		match: function() {
-			var changed = Autocomplete.prototype.match.apply(this, arguments);
-			if (this.found) this.enable();
-			else this.disable();
-		},
-		
-		// Enable the form
-		enable: function() {
-			if (this.$submit.hasClass('btn-info')) return;
-			this.$submit.addClass('btn-info').prop('disabled', false);
-		},
-		
-		// Disable the form
-		disable: function() {
-			if (!this.$submit.hasClass('btn-info')) return;
-			this.$submit.removeClass('btn-info').prop('disabled', true);
-		},
-		
-		// Determine if the form should be disabled
-		disabled: function() {
-			return this.$submit.prop('disabled');
+			Autocomplete.prototype.match.apply(this, arguments);
+			if (this.found) this.attach();
 		},
 		
 		// Tell the server to attach the selected item
@@ -70,7 +46,13 @@ define(function (require) {
 			// because we don't want any UI logic now.
 			Autocomplete.prototype.match.apply(this, arguments);
 			if (!this.found) return;
-				
+			
+			// Switch input to communicate the adding phase
+			this.$input
+				.prop('disabled', true)
+				.typeahead('val', '')
+				.prop('placeholder', 'Adding...');
+
 			// Make the request
 			$.ajax(this.route+'/'+this.id+'/attach', {
 				data: {
@@ -89,9 +71,10 @@ define(function (require) {
 				
 				// Clear the input to add another.  Must use typeahead to clear or it will reset
 				// the value after you de-focus.
-				this.$input.typeahead('val', '')
-				.focus()
-				.prop('placeholder', 'Add another');
+				this.$input
+					.prop('disabled', false)
+					.focus()
+					.prop('placeholder', 'Search again');
 				this.match();
 				
 			}, this));
