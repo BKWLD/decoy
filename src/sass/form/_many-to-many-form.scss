@@ -28,22 +28,32 @@
 		}
 	}
 
-	// Wrapper for search input on contributors sidebar box
-	.add-contributor {
+	// container for search icon and input field
+	.add-contributors {
 		display: inline-block;
-		border: 1px solid rgba($theme-secondary-inverse, .85);
-		border-radius: 4px;
+		position: relative;
 
-		.twitter-typeahead input {
-			border: none;
-			width: 54px;
-			float: right;
-			@include transition(all .5s ease);
-			&:focus {
-				background-color: #fff;
-				width: 100%;
+		.glyphicon-search {
+			font-size: 14px;
+			position: absolute;
+			left: 5px;
+			top: 5px;
+		}
+		.twitter-typeahead {
+			width: auto;
+
+			input {
+				float: right;
+				@include transition(all .5s ease);
+				padding-left: 23px;
+				width: 54px;
+				&:focus {
+					width: 125px; // pixel width so the whole field can smoothly transition
+				}
+				&[disabled] {
+					background: none !important; // to override the bootstrap !important background
+				}
 			}
 		}
 	}
-
 }

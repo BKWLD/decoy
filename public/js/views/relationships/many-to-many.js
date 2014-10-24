@@ -74,7 +74,7 @@ define(function (require) {
 				this.$input
 					.prop('disabled', false)
 					.focus()
-					.prop('placeholder', 'Search again');
+					.prop('placeholder', 'Add');
 				this.match();
 				
 			}, this));
