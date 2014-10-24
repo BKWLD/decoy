@@ -26,10 +26,12 @@ define(function (require) {
 			
 			// Shared vars
 			this.$bar = this.$('.progress-bar');
+			this.$links = $('.subnav a, .breadcrumbs a');
 			
 			// Listen for start and complete
 			$doc.ajaxSend(this.send);
 			$doc.ajaxComplete(this.complete);
+			this.$links.on('click', this.showSpinner);
 		},
 		
 		// Add progress of a new ajax request, thus making the
@@ -44,6 +46,14 @@ define(function (require) {
 		complete: function() {
 			progress++;
 			if (progress == total) total = progress = 0; // Totally finished with all requests, so reset
+			this.render();
+		},
+
+		// when the loader is called from a link click, not an ajax request,
+		// show the loader while the sever is responding to the request
+		showSpinner: function() {
+			// hack to animate to a 99% loader width
+			total = 0;
 			this.render();
 		},
 		
