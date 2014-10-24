@@ -385,7 +385,14 @@ class Base extends Controller {
 		
 		// Render the view using the `listing` builder.
 		$listing = Listing::createFromController($this, $results);
-		if ($this->parent) $listing->parent($this->parent);
+		if ($this->parent) {
+			$listing->parent($this->parent);
+
+			// The layout header may have a many to many autocomplete
+			$this->layout->with($this->autocompleteViewVars());
+		}
+
+		// Render view
 		$this->populateView($listing);
 		
 		// Inform the breadcrumbs
@@ -535,7 +542,11 @@ class Base extends Controller {
 	// Many To Many CRUD
 	//---------------------------------------------------------------------------
 	
-	// List as JSON for autocomplete widgets
+	/**
+	 * List as JSON for autocomplete widgets
+	 * 
+	 * @return Illuminate\Http\Response JSON
+	 */
 	public function autocomplete() {
 		
 		// Do nothing if the query is too short
@@ -576,9 +587,29 @@ class Base extends Controller {
 		return Response::json($this->formatAutocompleteResponse($query->get()));
 		
 	}
+
+	/**
+	 * Return key-val pairs needed for view partials related to many to many
+	 * autocompletes
+	 *
+	 * @return array key-val pairs
+	 */
+	public function autocompleteViewVars() {
+		if (!$this->parent) return [];
+		return [
+			'parent_id' => $this->parent->getKey(),
+			'parent_controller' => $this->parent_controller,
+			'many_to_many' => $this->isChildInManyToMany(),
+		];
+	}
 	
-	// Attach a model to a parent_id, like with a many to many style
-	// autocomplete widget
+	/**
+	 * Attach a model to a parent_id, like with a many to many style
+	 * autocomplete widget
+	 * 
+	 * @param int $id The id of the parent model
+	 * @return Illuminate\Http\Response JSON
+	 */
 	public function attach($id) {
 		
 		// Require there to be a parent id and a valid id for the resource
@@ -594,8 +625,12 @@ class Base extends Controller {
 		
 	}
 	
-	// Remove a relationship.  Very similar to delete, except that we're
-	// not actually deleting from the database
+	/**
+	 * Remove a relationship.  Very similar to delete, except that we're
+	 * not actually deleting from the database
+	 * @param  mixed $id One or many (commaa delimited) parent ids
+	 * @return Illuminate\Http\Response Either a JSON or Redirect response
+	 */
 	public function remove($id) {
 
 		// Support removing many ids at once
@@ -616,10 +651,10 @@ class Base extends Controller {
 	// Utility methods
 	//---------------------------------------------------------------------------
 	
-	// All actions validate in basically the same way.  This is
-	// shared logic for that
+	// 
 	/**
-	 * Shared validation helper
+	 * All actions validate in basically the same way.  This is shared logic for that
+	 * 
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages

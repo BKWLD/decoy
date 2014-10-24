@@ -305,9 +305,7 @@ class Listing extends Field {
 
 		// If parent, add relationship ones
 		if ($this->parent_item) {
-			$vars['parent_id'] = $this->parent_item->getKey();
-			$vars['parent_controller'] = $this->controllerNameOfModel(get_class($this->parent_item));
-			$vars['many_to_many'] = $this->controller->isChildInManyToMany();
+			$vars = array_merge($vars, $this->controller->autocompleteViewVars());
 		}
 
 		// Return the view, passing in a bunch of variables

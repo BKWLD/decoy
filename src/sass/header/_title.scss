@@ -51,8 +51,10 @@
 	// Buttons on the far right right should be vertically
 	// justified with the title
 	.pull-right {
-		margin-top: 10px;
+		margin-top: 13px;
+		max-width: 25%;
 
+		// Add text label automatically
 		.new {
 			&:after {
 				content: 'New';
@@ -107,7 +109,13 @@
 				position: absolute;
 				top: 0px;
 				right: $main-padding-mobile;
+
+				// Hide many to many form altogther
+				.many-to-many-form {
+					display: none;
+				}
 				
+				// Remove label on new button
 				.new {
 					&:after {
 						content: '';

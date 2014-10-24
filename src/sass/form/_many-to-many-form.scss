@@ -12,9 +12,19 @@
 	.form-control {
 		@include box-shadow(none);
 		outline: none;
-		border-color: rgba($theme-secondary-inverse, .85);
-		color: $theme-secondary-inverse;
 		background: none;
+
+		// Apply colors based on where it's located
+		.legend & {
+			border-color: rgba($theme-secondary-inverse, .85);
+			color: $theme-secondary-inverse;
+			@include input-placeholder { color: mix($theme-secondary-color, $theme-secondary-inverse); }
+		}
+		.header & {
+			border-color: rgba($theme-primary-inverse, .85);
+			color: $theme-primary-inverse;
+			@include input-placeholder { color: mix($theme-primary-color, $theme-primary-inverse); }
+		}
 	}
 
 }

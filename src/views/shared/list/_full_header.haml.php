@@ -1,11 +1,3 @@
-
--# Disabling while porting
-
-	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
-	<? if (!empty($many_to_many) && app('decoy.auth')->can('update', $controller)): ?>
-		<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
-
-
 -# Header of table
 .legend
 

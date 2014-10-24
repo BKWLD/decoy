@@ -13,8 +13,13 @@
 		%br.mobile-break
 		%span.controller!=$title
 
-		-# Controller actions
-		-if(app('decoy.auth')->can('create', $controller))
+		-if(!empty($many_to_many) && app('decoy.auth')->can('update', $controller))
+			-# If we've declared this relationship a many to many one, show the autocomplete
+			.pull-right.btn-toolbar
+				!=View::make('decoy::shared.form.relationships._many_to_many', $__data)
+
+		-else if(app('decoy.auth')->can('create', $controller))
+			-# Controller actions
 			.pull-right.btn-toolbar
 				.btn-group
 					%a.btn.outline.new(href=URL::to(DecoyURL::relative('create')))
