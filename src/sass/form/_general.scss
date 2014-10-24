@@ -29,14 +29,11 @@
 	position: static;
 }
 
-// Seperate from one another
-.form-group {
-	margin-bottom: $form-group-margin;
-}
-
-.form-horizontal .form-group {
-	margin-right: 0;
-	margin-left: 0;
+// Add spacing after checkaxbles
+.form-vertical .form-inline {
+	input[type="checkbox"], input[type="radio"] {
+		margin-right: 5px;
+	}
 }
 
 // Set fixed width to horizontal form label widths 
