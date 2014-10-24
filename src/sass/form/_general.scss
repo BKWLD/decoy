@@ -34,6 +34,11 @@
 	margin-bottom: $form-group-margin;
 }
 
+.form-horizontal .form-group {
+	margin-right: 0;
+	margin-left: 0;
+}
+
 // Set fixed width to horizontal form label widths 
 .form-horizontal .control-label {
 	width: $horizontal-label-width;
@@ -42,7 +47,7 @@
 		width: $horizontal-label-width - 50px;
 	}
 	@media (max-width: $screen-xs) {
-		width: $horizontal-label-width - 75px;
+		width: $horizontal-label-width - 65px;
 	}
 }
 
@@ -56,7 +61,7 @@
 	}
 
 	@media (max-width: $screen-xs) {
-		margin-left: $horizontal-label-margin - 75px;
+		margin-left: $horizontal-label-margin - 70px;
 	}
 }
 
