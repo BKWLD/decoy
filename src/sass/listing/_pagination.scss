@@ -12,4 +12,18 @@
 	ul {
 		margin: 0 7px;
 	}
+
+	.pagination-mobile { 
+		display: none;
+	}
+
+	// hide large pagination on mobile
+	@media(max-width: $screen-sm) {
+		.pagination-desktop {
+			display: none;
+		}
+		.pagination-mobile { 
+			display: inline-block;
+		}
+	}
 }
