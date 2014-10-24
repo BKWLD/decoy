@@ -17,8 +17,17 @@ if ($paginator->getTotal() > $per_page): ?>
 	
 		<?// The list of pages ?>
 		<? if ($paginator->getLastPage() > 1): ?>
-			<ul class="pagination">
+			<ul class="pagination pagination-desktop">
 				<?=$presenter->render(); ?>
+			</ul>
+			<? // on mobile, just show first, prev, current, next, last pagination buttons ?>
+			<ul class="pagination pagination-mobile">
+				<?=str_replace('>1<', '>&laquo;<', $presenter->getLink(1)); ?>
+				<?=$presenter->getPrevious('&lsaquo;'); ?>
+				<? // to display the current active page ?>
+				<?=$presenter->getPageRange($paginator->getCurrentPage(),$paginator->getCurrentPage()); ?>
+				<?=$presenter->getNext('&rsaquo;'); ?>
+				<?=str_replace('>'.$paginator->getLastPage().'<', '>&raquo;<', $presenter->getLink($paginator->getLastPage())); ?>
 			</ul>
 		<? endif ?>
 	
