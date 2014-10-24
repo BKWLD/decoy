@@ -1,5 +1,6 @@
 .breadcrumbs {
-	background-color: darken(white, 3%); // Just a little off-white
+	$bkgd: darken(white, 3%); // Just a little off-white
+	background-color: $bkgd;
 	position: absolute;
 	width: 100%;
 	left: 0;
@@ -7,8 +8,9 @@
 	z-index: 150; // this is to clear the crop image UI
 	font-size: 12px;
 	@include box-shadow($common-shadow);
-	padding: 0 $main-padding;
 
+	// Sync padding with rest of page
+	padding: 0 $main-padding;
 	@media(max-width: $screen-sm) {
 		padding: 0 $main-padding-mobile;
 	}
@@ -23,12 +25,20 @@
 	// wrap the contents in this div so I can set a max-width
 	.inner {
 		max-width: $max-width;
+
+		// Keep it one line at all times
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 
 	a, span {
-		color: #666;
-
+		color: $gray-light;
 		.glyphicon { display: inline-block; padding: 0 2px; }
+	}
+	a {
+		&:hover, &:focus { color: $text-color; }
+		&:active { color: $theme-primary-color; }
 	}
 
 	// Some breadcrumb titles make include thumbnails
@@ -46,6 +56,13 @@
 	// The back button
 	.back {
 		float: right;
+
+		// Put it on top of the breadcrumbs and overlap the icons with
+		// a background color
+		background: $bkgd;
+		position: relative;
+		z-index: 1;
+		padding-left: $main-padding-mobile;
 	}
 
 	&.affix {
