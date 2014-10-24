@@ -36,7 +36,7 @@
 		color: $gray-light;
 		.glyphicon { display: inline-block; padding: 0 2px; }
 	}
-	a {
+	a, a span {
 		&:hover, &:focus { color: $text-color; }
 		&:active { color: $theme-primary-color; }
 	}
