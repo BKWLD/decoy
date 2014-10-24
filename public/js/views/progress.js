@@ -53,7 +53,7 @@ define(function (require) {
 		// show the loader while the sever is responding to the request
 		showSpinner: function() {
 			// hack to animate to a 99% loader width
-			total = 0.01;
+			total = 0;
 			this.render();
 		},
 		
