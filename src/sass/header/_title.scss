@@ -82,8 +82,8 @@
 		// on mobile, kill the margin-left so the header
 		// spans the full width of the window
 		margin-left: 0;
-
 		padding-top: 0;
+		padding-bottom: 12px;
 
 		.title {
 			line-height: 0.8;
@@ -92,7 +92,6 @@
 			.site {
 				font-size: 20px;
 				font-weight: 200;
-
 				&:after {
 					content: none;
 				}
@@ -101,7 +100,9 @@
 				font-size: 40px;
 				font-weight: 400;
 				font-size: 30px;
-				margin-bottom:10px;
+				padding-bottom: 6px;
+				display: block;
+				padding-top: 20px;
 			}
 
 			// + New button in header sit in top right 
@@ -139,8 +140,8 @@
 
 		.description {
 			font-size: 18px;
-			margin:15px 10% 0;
-			line-height: 1em;
+			margin: 8px 10% 0;
+			line-height: 1.2em;
 			text-align: center;
 		}
 	}
