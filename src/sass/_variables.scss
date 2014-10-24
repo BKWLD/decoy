@@ -7,12 +7,13 @@ $theme-secondary-inverse: darken($theme-secondary-color, 50%) !default;
 $theme-login-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
 
 // Colors
-$body-color: #efefef;
+$body-color: #efefef !default;
 $light-grey: whiteSmoke !default;
+$lightest-grey: #fdfdfd !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
-$nav-text: #8c8c8c;
-$nav-text-active: #eee;
+$nav-text: #8c8c8c !default;
+$nav-text-active: #eee !default;
 
 // Sizes
 $form-group-margin: 15px !default;

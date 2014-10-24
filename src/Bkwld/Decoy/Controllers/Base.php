@@ -408,7 +408,7 @@ class Base extends Controller {
 			'item' => null,
 			'crops' => (object) Model::$crops,
 			'sidebar' => new Sidebar,
-		], true);
+		]);
 		
 		// Pass parent_id
 		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
@@ -469,7 +469,7 @@ class Base extends Controller {
 			'item' => $item,
 			'crops' => (object) Model::$crops,
 			'sidebar' => new Sidebar($item),
-		], true);
+		]);
 
 		// Figure out the parent_id
 		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();

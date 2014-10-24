@@ -1,6 +1,9 @@
 // The tab ui
 .moderation .nav-tabs {
 
+	// Remove the bottom border because the panel gots it
+	border-bottom: none;
+
 	// Make the inactive text lighter
 	a { 
 		color: $gray-light; 
@@ -17,18 +20,22 @@
 
 // The listing
 .moderation .listing {
-	@include flush-cols;
-	min-height: 1px; // Makes it so the pagination isn't flush wiith the tabs when all photos are approved
 
-	// Push off of the nav-tabs
-	padding-top: $grid-gutter-width;
+	// Put it in a fieldset-type box
+	@include panel;
+	
+	// Customize the box
+	padding: $grid-gutter-width $grid-gutter-width/2 0;
+	@include border-radius(0 0 4px 4px);
+
+	// Makes it so the pagination isn't flush wiith the tabs when all photos are approved
+	min-height: 1px; 
 
 	// One of the cells
 	.item {
 		$pad: 8px;
-		background-color: $light-grey;
 		padding: $pad;
-		margin-bottom: 20px;
+		margin-bottom: $grid-gutter-width;
 		position: relative;
 		padding-bottom: 50px;
 		min-height: 100px;
@@ -37,7 +44,7 @@
 		word-wrap: break-word;
 
 		// Reserve space for borders
-		border: 2px solid transparent;
+		border: 2px solid $gray-lighter;
 		
 		// Title / caption text
 		.rollover {
@@ -105,7 +112,6 @@
 			bottom: 0px;
 			right: 0px;
 			padding: $pad;
-			background-color: $light-grey; // Give a bkgd color so it looks better if overlapping
 			text-align: center;
 			> .btn {
 				width: 49%;

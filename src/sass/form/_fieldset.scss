@@ -2,23 +2,10 @@
  * Fieldset group blocks of fields with a legend for a title
  */
 fieldset, .related .standard-list, body.index .standard-list {
+	$pad: 15px;
 
 	// Surround sections in a white box
-	$pad: 15px;
-	background: white;
-	border: 1px solid $grey-border;
-	@include box-shadow($common-shadow);
-	@include border-radius(4px);
-
-	// Push them vertically apart
-	margin-bottom: $form-group-margin*2;
-	@media(max-width:$screen-sm) {
-		margin-bottom: $main-padding-mobile;
-	}
-
-	// Make sure long words (like filenames on mobile) to bust outside the
-	// container
-	word-wrap: break-word;
+	@include panel;
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
@@ -57,29 +44,11 @@ fieldset, .related .standard-list, body.index .standard-list {
 			font-family: $font-family-sans-serif;
 		}
 
-		.btn {
-			
-		}
-
 		@media(max-width: $screen-sm) {
 			padding-left: 8px;
 		}
 	}
-
-	// Add form-group's hover, a little border on the left
-	.form-group {
-		$border-stroke: 2px;
-		border-bottom: 1px solid #f1f1f1;
-		padding: 10px $pad 20px;
-		margin-bottom: 0;
-		&:last-child {
-			border-bottom: none;	
-		}
-		&:hover {
-			background-color: #f6f6f6;
-		}
-	}
-
+	
 	// Make the related tables flush
 	&.standard-list {
 		padding: 0;
@@ -93,14 +62,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Remove the last row border
 		tr:last-child td { border-bottom: none; }
-
-		// make the even rows a little darker
-		tr:nth-child(even) {
-			background-color: #fdfdfd;
-			
-			//darken the hover color slightly 
-			&:hover { background-color: #f6f6f6; }
-		}
 
 	}
 

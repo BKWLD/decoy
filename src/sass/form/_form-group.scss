@@ -1,0 +1,19 @@
+
+.form-group {
+	
+	// Seperate from one another
+	padding: $form-group-margin;
+	border-bottom: 1px solid $grey-border;
+	&:last-child {
+		border-bottom: none;	
+	}
+
+	// Override bootstrap
+	margin-bottom: 0;
+
+	// Add a hover 
+	&:hover {
+		background-color: $lightest-grey;
+	}
+	
+}
