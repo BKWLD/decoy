@@ -28,4 +28,22 @@
 		}
 	}
 
+	// Wrapper for search input on contributors sidebar box
+	.add-contributor {
+		display: inline-block;
+		border: 1px solid rgba($theme-secondary-inverse, .85);
+		border-radius: 4px;
+
+		.twitter-typeahead input {
+			border: none;
+			width: 54px;
+			float: right;
+			@include transition(all .5s ease);
+			&:focus {
+				background-color: #fff;
+				width: 100%;
+			}
+		}
+	}
+
 }
