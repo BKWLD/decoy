@@ -9,14 +9,14 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
-	.legend {		
+	.legend {	
+		font-size: 16px;
+		font-weight: $headings-font-weight;
+		font-family: $headings-font-family;
 
-		// Set the font so links get it too
+		// Set the font color so links get it too
 		&, > a { 
 			color: $theme-secondary-inverse;
-			font-weight: $headings-font-weight;
-			font-family: $headings-font-family;
-			font-size: 16px;
 		}
 
 		// Give it a background
