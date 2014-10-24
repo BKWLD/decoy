@@ -1,11 +1,9 @@
-<form class="many-to-many-form" data-js-view="many-to-many<?=!empty($tags)?'-tags':null?>" data-controller-route="<?=DecoyURL::action($controller)?>" data-parent-id="<?=$parent_id?>" data-parent-controller="<?=$parent_controller?>">
+<form class="many-to-many-form" data-js-view="many-to-many" data-controller-route="<?=DecoyURL::action($controller)?>" data-parent-id="<?=$parent_id?>" data-parent-controller="<?=$parent_controller?>">
 	<div class="input-group">
-		<input type="text" class="form-control <?=isset($layout)&&$layout=='sidebar'?'input-sm':null?>" placeholder="Search<?=!empty($tags)?' or create':null?>">
+		<input type="text" class="form-control <?=isset($layout)&&$layout=='sidebar'?'input-sm':null?>" placeholder="Search">
 		<div class="input-group-btn">
 			<button class="btn <?=isset($layout)&&$layout=='sidebar'?'btn-sm':null?> outline" disabled type="submit">
-				<? if (empty($tags)): ?><span class="glyphicon glyphicon-tag"></span> Add
-				<? else: ?><span class="glyphicon glyphicon-plus"></span> New
-				<?endif?>
+				<span class="glyphicon glyphicon-tag"></span> Add
 			</button>
 		</div>
 	</div>
