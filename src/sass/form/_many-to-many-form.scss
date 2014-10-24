@@ -18,12 +18,13 @@
 		.legend & {
 			border-color: rgba($theme-secondary-inverse, .85);
 			color: $theme-secondary-inverse;
-			@include input-placeholder { color: mix($theme-secondary-color, $theme-secondary-inverse); }
+			// Could not use rgba, wasn't supported by browser
+			@include input-placeholder { color: $theme-secondary-inverse; }
 		}
 		.header & {
 			border-color: rgba($theme-primary-inverse, .85);
 			color: $theme-primary-inverse;
-			@include input-placeholder { color: mix($theme-primary-color, $theme-primary-inverse); }
+			@include input-placeholder { color: $theme-primary-inverse; }
 		}
 	}
 

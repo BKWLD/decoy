@@ -10,6 +10,10 @@
 
 	// Override bootstrap
 	margin-bottom: 0;
+	.form-horizontal & {
+		margin-right: 0;
+		margin-left: 0;
+	}
 
 	// Add a hover 
 	&:hover {
