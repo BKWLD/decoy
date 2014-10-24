@@ -297,7 +297,6 @@ class Listing extends Field {
 			'parent_id'         => null,
 			'parent_controller' => null,
 			'many_to_many'      => false,
-			'tags'              => is_a($this->name, 'Bkwld\Decoy\Models\Tag'),
 			'listing'           => $items,
 			'count'             => is_a($items, 'Illuminate\Pagination\Paginator') ? $items->getTotal() : $items->count(),
 			'paginator_from'    => (Input::get('page', 1)-1) * $this->perPage(),
