@@ -43,25 +43,12 @@
 .form-horizontal .control-label {
 	width: $horizontal-label-width;
 	float: left;
-	@media (max-width: $screen-sm) {
-		width: $horizontal-label-width - 50px;
-	}
-	@media (max-width: $screen-xs) {
-		width: $horizontal-label-width - 65px;
-	}
-}
-
-// Set the margin on the div that follows the horizontal 
-// control label to 15px
-.form-horizontal .control-label + div {
-	margin-left: $horizontal-label-margin;
-	margin-right: $form-group-margin;
-	@media (max-width: $screen-sm) {
-		margin-left: $horizontal-label-margin - 50px;
-	}
-
-	@media (max-width: $screen-xs) {
-		margin-left: $horizontal-label-margin - 70px;
+	+div {
+		margin-left: $horizontal-label-margin;
+		margin-right: $form-group-margin;
+		@media (max-width: $screen-sm) {
+			margin-left: 0;
+		}
 	}
 }
 
