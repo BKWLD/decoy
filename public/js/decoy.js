@@ -14,7 +14,6 @@ define(function (require) {
 		, console = require('bkwld/console')
 		, csrf = require('bkwld/csrf')
 		, jqv = require('bkwld/jquery-views')
-		, jqhammer = require('jquery-hammerjs')
 	;
 	
 	// Modules that add mojo globally
