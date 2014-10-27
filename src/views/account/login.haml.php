@@ -12,7 +12,6 @@
 		!= Former::checkbox('is_remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
 
 		.form-group.form-inline.fake-label
-			.control-label
 			.buttons
 				%button.btn.btn-primary(type="submit") Login
 				%a.btn.btn-default(href=action('Bkwld\\Decoy\\Controllers\\Account@forgot')) Forgot Password
