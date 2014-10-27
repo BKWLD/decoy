@@ -180,7 +180,10 @@ body.login.index {
 
 	// Bkgd image
 	@if ($theme-login-bkgd) {
-		.bkgd { background: $theme-login-bkgd; }
+		.bkgd { 
+			background-image: url("$theme-login-bkgd");
+			background-position: cover;
+		}
 	}
 
 	// Left side
