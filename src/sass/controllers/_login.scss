@@ -73,15 +73,16 @@ body.login.index {
 		}
 		
 		h1 {
+			font-variant: 400;
 			font-size: 75px;
 			line-height: .85em;
 			margin-top: 45px;
+			margin-bottom: 15px; // Put it a smidge of padding between h4 and descenders on h1
 			@media (max-width: $screen-sm) {
 				margin-top: 0;
 			}
 			@media (max-width: $screen-xs) {
-				margin: 0;
-				font-size: 70px;
+				font-size: 58px;
 			}
 			@include animate();
 
@@ -191,7 +192,7 @@ body.login.index {
 		
 		h1 {
 			color: $theme-primary-inverse;
-			@include text-shadow(1px 2px 0 darken($theme-primary-color, 15%));
+			@include text-shadow(1px 2px 1px darken($theme-primary-color, 15%));
 		}
 		h4, h4 a {
 			color: $theme-primary-inverse;
