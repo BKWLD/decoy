@@ -2,6 +2,8 @@
  * This is the form that appears in a sidebar .legend
  */
 .many-to-many-form {
+	display: inline-block;
+	position: relative;
 
 	// Fade out the button even more
 	.btn.outline[disabled] {
@@ -13,6 +15,8 @@
 		@include box-shadow(none);
 		outline: none;
 		background: none;
+		padding-left: 23px;
+		width: 54px;
 
 		// Apply colors based on where it's located
 		.legend & {
@@ -34,30 +38,26 @@
 	}
 
 	// container for search icon and input field
-	.add-contributors {
-		display: inline-block;
-		position: relative;
 
-		.glyphicon-search {
-			font-size: 14px;
-			position: absolute;
-			left: 5px;
-			top: 5px;
-		}
-		.twitter-typeahead {
-			width: auto;
+	.glyphicon-search {
+		font-size: 14px;
+		position: absolute;
+		left: 5px;
+		top: 5px;
+	}
+	.twitter-typeahead {
+		$input-width: 125px;
 
-			input {
-				float: right;
-				@include transition(all .5s ease);
-				padding-left: 23px;
-				width: 54px;
-				&:focus {
-					width: 125px; // pixel width so the whole field can smoothly transition
-				}
-				&[disabled] {
-					background: none !important; // to override the bootstrap !important background
-				}
+		input {
+			float: right;
+			@include transition(all .5s ease);
+			
+			&:focus {
+				width: $input-width; // pixel width so the whole field can smoothly transition
+			}
+			&[disabled] {
+				background: none !important; // to override the bootstrap !important background
+				width: $input-width;
 			}
 		}
 	}
