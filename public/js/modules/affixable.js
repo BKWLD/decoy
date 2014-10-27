@@ -61,8 +61,6 @@ define(function (require) {
 		// Calculate sizes for when it later becomes fixed
 		} else this.measureLayout();
 
-		this.updateMainPadding();
-
 		// Re-set affix plugin's offset
 		this.enablePlugin();
 	};
