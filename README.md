@@ -110,6 +110,10 @@ The following protected proprties allow you to customize how Decoy works from th
 				'video' => 'Video',
 			),
 		),
+		'category' => array( // Creates a pulldowon using static array on Post model
+			'type' => 'select',
+			'options' => 'Post::$categories'
+		),
 		'like_count' => array( // Numeric input field
 			'type' => 'number',
 			'label' => 'Like total',
