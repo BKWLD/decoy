@@ -1,9 +1,8 @@
-// Settings
-$decoy_img_dir: '/packages/bkwld/decoy/img/';
-
-// Compass
+// Vendor dependncies
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
+@import "ceaser-easing";
+@import "rgbapng";
 
 // Add vars before bootstrap so they can override
 @import "variables";

@@ -57,7 +57,6 @@
       	    build the stage and setup of the pixi renderer
        */
       this.stage = new PIXI.Stage(0xFFFFFF, true);
-      this.stage.setInteractive(true);
       this.graphics = new PIXI.Graphics();
       this.renderer = PIXI.autoDetectRenderer(this.$parent.width(), this.$parent.height(), null, true, true);
       this.renderer.view.id = "decoy-animation";

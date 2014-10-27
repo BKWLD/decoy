@@ -1,10 +1,12 @@
+// Paths
+$decoy_img_dir: '/packages/bkwld/decoy/img/';
 
 // Theme
 $theme-primary-color: #67bfb6 !default;
 $theme-primary-inverse: white !default;
 $theme-secondary-color: #ffd7b0 !default;
 $theme-secondary-inverse: darken($theme-secondary-color, 50%) !default;
-$theme-login-bkgd: url('/packages/bkwld/decoy/img/theme/bkgd.jpg') !default;
+$theme-login-bkgd: '/packages/bkwld/decoy/img/theme/bkgd.jpg' !default;
 
 // Colors
 $body-color: #efefef !default;
@@ -60,7 +62,7 @@ $pagination-active-border: $theme-primary-color !default;
 $pagination-hover-color: $theme-secondary-inverse !default;
 
 // Fonts
-$fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400,700' !default;
+$fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400' !default;
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
