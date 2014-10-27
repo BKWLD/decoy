@@ -4,13 +4,18 @@
 define(function (require) {
 	
 	// Dependencies
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		Backbone = require('backbone'),
-		Affixable = require('decoy/modules/affixable'),
-		Sidebar = require('decoy/modules/sidebar')
-		manifest = require('decoy/modules/manifest');
-	require('bootstrap');
+	var $ = require('jquery')
+		, _ = require('underscore')
+		, Backbone = require('backbone')
+		, Affixable = require('decoy/modules/affixable')
+		, Sidebar = require('decoy/modules/sidebar')
+		, manifest = require('decoy/modules/manifest')
+		, bootstrap = require('bootstrap')
+		, console = require('bkwld/console')
+		, csrf = require('bkwld/csrf')
+		, jqv = require('bkwld/jquery-views')
+		, jqhammer = require('jquery-hammerjs')
+	;
 	
 	// Modules that add mojo globally
 	require('decoy/modules/ajax-error'); // Standard handling of AJAX errors

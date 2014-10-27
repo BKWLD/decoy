@@ -108,7 +108,9 @@ body.login.index {
 		
 		// Reduce gaps
 		.form-group {
-			margin-bottom: 10px;
+			margin-bottom: 5px;
+			padding: 5px;
+			border-bottom: none;
 		}
 
 		// Align the labels
@@ -119,7 +121,7 @@ body.login.index {
 
 		// Make the inputs wider
 		.form-control {
-			width: 200px;
+			width: 190px;
 		}
 
 		// Push label off of checkbox
@@ -130,6 +132,10 @@ body.login.index {
 			margin-bottom: 0;
 			.buttons { display: inline-block; }
 			.btn { margin-bottom: 0; }
+		}
+
+		.buttons {
+			margin-left: 110px;
 		}
 		
 		// Stack
@@ -156,6 +162,10 @@ body.login.index {
 			// Fix extra padidng on checkbox
 			.checkbox {
 				margin: 0;
+			}
+
+			.buttons {
+				margin-left: 0;
 			}
 
 		}

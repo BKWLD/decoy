@@ -48,7 +48,7 @@ define(function(require) {
 		// Show the dialog
 		$el.popover({
 			trigger: 'manual',
-			content: '<p class="text-center">Are you sure?</p><div><a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-home"></span> Yes</a> <a href="#" class="btn btn-default">Cancel</a></div>',
+			content: '<p class="text-center">Are you sure?</p><div><a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Yes</a> <a href="#" class="btn btn-default">Cancel</a></div>',
 			html: true,
 
 			// If a butto, it's an edit button, so put the popup on top
