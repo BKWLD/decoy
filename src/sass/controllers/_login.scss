@@ -181,7 +181,7 @@ body.login.index {
 	// Bkgd image
 	@if ($theme-login-bkgd) {
 		.bkgd { 
-			background-image: url("$theme-login-bkgd");
+			background-image: url("#{$theme-login-bkgd}");
 			background-position: cover;
 		}
 	}
