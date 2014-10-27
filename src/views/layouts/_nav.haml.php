@@ -33,7 +33,11 @@
 										=$child->label
 			
 				-else if($auth->can('read', $page->url))
-					%a(href=$page->url)=$page->label
+					.main-nav(class=$page->active?'active':null)
+						%a.top-level(href=$page->url)
+							-if($page->icon)
+								%span.glyphicon(class="glyphicon-#{$page->icon}")
+							!=$page->label
 
 			-if($auth->developer())
 				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active':null)
