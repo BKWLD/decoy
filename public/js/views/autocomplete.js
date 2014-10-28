@@ -38,7 +38,7 @@ define(function (require) {
 
 			// Init Bloodhound instance that tells typeahead where to get data
 			this.bloodhound = new Bloodhound({
-				limit: 15,
+				limit: 15, // Note, this is also enforced in the base controller
 				remote: {
 					url: this.url(),
 					rateLimitWait: this.throttle
