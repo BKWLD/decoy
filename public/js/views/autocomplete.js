@@ -38,6 +38,7 @@ define(function (require) {
 
 			// Init Bloodhound instance that tells typeahead where to get data
 			this.bloodhound = new Bloodhound({
+				limit: 15,
 				remote: {
 					url: this.url(),
 					rateLimitWait: this.throttle

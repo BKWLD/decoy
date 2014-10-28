@@ -554,7 +554,7 @@ class Base extends Controller {
 		
 		// Get data matching the query
 		if (empty(Model::$title_column)) throw new Exception($this->model.'::$title_column must be defined');
-		$query = Model::ordered()->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%');
+		$query = Model::ordered()->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%')->take(15);
 		
 		// Don't return any rows already attached to the parent.  So make sure the id is not already
 		// in the pivot table for the parent
