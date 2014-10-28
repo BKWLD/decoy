@@ -23,11 +23,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 		background: $theme-secondary-color;
 		padding: 7px $pad; // 7px makes it about as high as table th's
 
-		// Push the first form-group or p down a bit (but not tables)
-		.form-group, + p {
-			margin-top: 10px;
-		}
-
 		// If something is pulled-right, give it a max width.  This is designed to
 		// constrain the autocomplete form on many to manys but may of other,
 		// useful, ramifications

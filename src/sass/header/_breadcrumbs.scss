@@ -67,7 +67,7 @@
 	&.affix {
 		@include rgba-background-inline(rgba(#fff, .93));
 		position: fixed;
-		margin-left: $sidebar-width;
+		@include adjust-for-sidebar();
 
 		// on mobile, I need to make the margin 0, so the crumbs span the whole width
 		@media(max-width:$screen-sm) {

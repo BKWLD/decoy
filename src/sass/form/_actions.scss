@@ -6,11 +6,11 @@
 .form-actions {
 	position: fixed;
 	bottom: 0;
-	left: $sidebar-width;
 	z-index: 300; // clear everything (including jCrop)
 	width: 100%;
 	padding: 0 $main-padding;
 	text-align: left;
+	@include adjust-for-sidebar(left);
 
 	// Give it a fixed height
 	height: $footer-height;

@@ -120,8 +120,9 @@ class Account extends Base {
 		Former::withRules($this->forgot_rules);
 
 		// Show the page
-		View::inject('title', 'Forgot Password');
-		$this->layout->nest('content', 'decoy::account.forgot');
+		$this->title = 'Forgot Password';
+		$this->description = 'You know the drill.';
+		$this->populateView('decoy::account.forgot');
 		
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
@@ -135,7 +136,7 @@ class Account extends Base {
 	 * Sent the user an email with a reset password link
 	 */
 	public function postForgot() {
-		
+
 		// Validate
 		if ($result = $this->validate(null, $this->forgot_rules)) return $result;
 
@@ -180,10 +181,11 @@ class Account extends Base {
 		Former::withRules($this->reset_rules, $this->reset_msgs);
 
 		// Show the page
-		View::inject('title', 'Reset Password');
-		$this->layout->nest('content', 'decoy::account.reset', array(
+		$this->title = 'Reset Password';
+		$this->description = 'Almost done.';
+		$this->populateView('decoy::account.reset', [
 			'user' => $user,
-		));
+		]);
 		
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(

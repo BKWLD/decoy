@@ -1,0 +1,9 @@
+/**
+ * Make room for the sidebar on certain pages
+ */
+@mixin adjust-for-sidebar($property: margin-left) {
+	#{$property}: $sidebar-width;
+	body.forgot &, body.reset & {
+		#{$property}: 0;
+	}
+}

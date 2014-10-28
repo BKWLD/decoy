@@ -15,8 +15,11 @@
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
-		<?= View::make('decoy::layouts._nav') ?>
-		<?= View::make('decoy::layouts._bottom_nav', $__data) ?>
+		<?// Sidebar and header ?>
+		<? if (App::make('decoy.auth')->check()): ?>
+			<?= View::make('decoy::layouts._nav') ?>
+			<?= View::make('decoy::layouts._bottom_nav', $__data) ?>
+		<? endif ?>
 		<?= View::make('decoy::layouts._header', $__data) ?>
 
 		<?// The main page content ?>

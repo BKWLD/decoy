@@ -1,5 +1,3 @@
--$auth = App::make('decoy.auth')
-
 -# Holder for the ajax bar, logout, and view public site
 .bottom-nav
 	-# Add AJAX progress indicator
@@ -7,7 +5,7 @@
 
 	.controls
 		.left
-			%a.logout(href=$auth->logoutUrl()) 
+			%a.logout(href=App::make('decoy.auth')->logoutUrl()) 
 				%span.glyphicon.glyphicon-log-out
 				Logout
 			.subtitle

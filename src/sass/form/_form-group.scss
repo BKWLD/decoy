@@ -1,5 +1,5 @@
-
-.form-group {
+// Treat paragraphs immediately inside a fieldset like a form-group
+.form-group, fieldset > p {
 	
 	// Seperate from one another
 	padding: $form-group-margin;

@@ -5,14 +5,15 @@
 // within it vertically centered
 .header {
 	background-color: $theme-primary-color;
-	margin-left: $sidebar-width;
 	padding: $main-padding;
+
+	// Apply left offset
+	@include adjust-for-sidebar();
+	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
 
 	// Reduce the bottom by the border on breadcrumbs which has
 	// the same bkgd
 	padding-bottom: $main-padding - $nav-top-border-height;
-
-	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
 
 	// The site and controller
 	.title {
