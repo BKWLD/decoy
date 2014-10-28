@@ -51,13 +51,14 @@
 				&.nav-arrow {
 					&:after {
 						color: darken($nav-text, 15%);
-						@include transition( transform 100ms 0ms ceaser($easeInSine) );
+						@include transition( all 250ms 0ms ceaser($easeInSine) );
 						content: '›';
 						display: block;
 						position: absolute;
-						font-size: 16px;
+						font-size: 24px;
+						font-weight: normal;
 						right: $nav-pad;
-						bottom: $nav-pad - 1;
+						bottom: 4px;
 					}
 				}
 			}
@@ -82,6 +83,7 @@
 					// rotate the arrow down when open
 					&.nav-arrow:after {
 						@include transform( rotate(90deg) ); 
+						bottom: 0;
 					}
 				}
 			}
@@ -90,8 +92,9 @@
 			.subnav {
 				background-color: darken($gray-dark, 6%);
 				overflow: hidden;
-				max-height: 0;
-				@include transition(max-height 300ms);
+				//height: 0;
+				max-height: 0px;
+				@include transition(max-height 450ms 0 ceaser($linear));
 
 				a {
 					font-size: 12px;
@@ -153,7 +156,7 @@
 				
 				// have the currently expanded subnav show
 				.subnav {
-					max-height: 900px;
+					max-height: 500px;
 				}
 			}
 		}
