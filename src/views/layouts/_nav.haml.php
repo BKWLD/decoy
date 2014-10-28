@@ -17,7 +17,7 @@
 			-foreach($pages as $page)
 			
 				-if (!empty($page->children))
-					.main-nav(class=$page->active?'active':null)
+					.main-nav(class=$page->active?'active open':null)
 						%a.top-level.nav-arrow
 							-if($page->icon)
 								%span.glyphicon(class="glyphicon-#{$page->icon}")

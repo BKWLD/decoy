@@ -37,7 +37,6 @@ define(function (require) {
 	};
 
 	View.closeNav = function() {
-		console.log( "clicked close" );
 		this.$el.removeClass('show');
 		this.$bottom.removeClass('show');
 	};
@@ -46,8 +45,8 @@ define(function (require) {
 	View.toggleSubnav = function(e) {
 		var cur = $(e.currentTarget).parent();
 
-		if(cur.hasClass('active')) cur.removeClass('active');
-		else cur.addClass('active');
+		if(cur.hasClass('open')) cur.removeClass('open');
+		else cur.addClass('open');
 	};
 	
 	// Return the view
