@@ -64,9 +64,9 @@
 					font-size: 12px;
 					font-weight: 300;
 					padding: 8px;
+					position:relative;
 					border-bottom: 1px solid darken($gray-dark, 4%);
-					padding-left: 28px; // adjusted for the transparent left border
-					border-left: 3px solid transparent;
+					padding-left: 31px;
 
 					// if there's a glyphicon, give it a negative left margin
 					// so that the subnavs line up better
@@ -74,9 +74,28 @@
 						margin-left: -20px;
 					}
 
+					// subnav dots
+					&:after {
+						content: '';
+						border:1px solid darken($nav-text, 30%);
+						background-color: darken($nav-text, 30%);
+						@include border-radius(50%);
+						height:8px;
+						width: 8px;
+						display: block;
+						position: absolute;
+						left: 12px;
+						bottom: $nav-pad + 1;
+					}
+
 					&:hover {
 						background-color: $sub-hover-bkgd;
 						color: $nav-text-active;
+
+						&:after {
+							border:1px solid $nav-text-active;
+							background-color: $nav-text-active;
+						}
 					}
 
 					&:active {
@@ -86,8 +105,12 @@
 					// highlight the active page
 					&.active {
 						color: $theme-primary-color;
-						border-left: 3px solid $theme-primary-color;
 						background-color: $sub-hover-bkgd;
+
+						&:after {
+							border:1px solid $theme-primary-color;
+							background-color: $theme-primary-color;
+						}
 					}
 				}
 			}
