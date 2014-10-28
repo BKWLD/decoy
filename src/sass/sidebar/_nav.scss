@@ -51,7 +51,7 @@
 				&.nav-arrow {
 					&:after {
 						color: darken($nav-text, 15%);
-						@include transition( all 450ms 0ms ceaser($easeInSine) );
+						@include transition( all 250ms 0ms ceaser($easeInSine) );
 						content: '›';
 						display: block;
 						position: absolute;
@@ -94,7 +94,7 @@
 				overflow: hidden;
 				//height: 0;
 				max-height: 0px;
-				@include transition(max-height 300ms 0 ceaser($linear));
+				@include transition(max-height 450ms 0 ceaser($linear));
 
 				a {
 					font-size: 12px;
