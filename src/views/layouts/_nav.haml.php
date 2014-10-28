@@ -40,7 +40,7 @@
 							!=$page->label
 
 			-if($auth->developer())
-				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active':null)
+				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active open':null)
 					%a.top-level.nav-arrow
 						%span.glyphicon.glyphicon-cog
 						Admin
