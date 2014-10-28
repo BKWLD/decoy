@@ -78,3 +78,8 @@
 textarea.form-control {
 	height: 6.8em;
 }
+
+// Reduce padding on autocomplete
+.tt-dropdown-menu .tt-suggestion {
+	padding: 4px 12px;
+}
