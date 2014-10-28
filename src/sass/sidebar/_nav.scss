@@ -50,6 +50,7 @@
 				// top level links with children show and arrow indicating children
 				&.nav-arrow {
 					&:after {
+						color: darken($nav-text, 15%);
 						@include transition( transform 100ms 0ms ceaser($easeInSine) );
 						content: '›';
 						display: block;
@@ -73,8 +74,11 @@
 							color: $theme-primary-color;
 						}
 					}
+				}
+			}
 
-
+			&.open {
+				.top-level {
 					// rotate the arrow down when open
 					&.nav-arrow:after {
 						@include transform( rotate(90deg) ); 
@@ -95,7 +99,7 @@
 					padding: 8px;
 					position:relative;
 					border-bottom: 1px solid darken($gray-dark, 4%);
-					padding-left: 31px;
+					padding-left: 29px;
 
 					// if there's a glyphicon, give it a negative left margin
 					// so that the subnavs line up better
@@ -109,12 +113,12 @@
 						border:1px solid darken($nav-text, 30%);
 						background-color: darken($nav-text, 30%);
 						@include border-radius(50%);
-						height:8px;
-						width: 8px;
+						height:6px;
+						width: 6px;
 						display: block;
 						position: absolute;
-						left: 12px;
-						bottom: $nav-pad + 1;
+						left: 13px;
+						bottom: $nav-pad + 2;
 					}
 
 					&:hover {
