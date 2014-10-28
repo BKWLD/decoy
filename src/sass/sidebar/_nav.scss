@@ -35,6 +35,7 @@
 			}
 
 			.top-level {
+				position: relative;
 				background-color: lighten($gray-dark, 3%);
 				
 				&:hover {
@@ -45,11 +46,29 @@
 				&:active {
 					background: $theme-primary-color;
 				}
+
+				// top level links with children show and arrow indicating children
+				&.nav-arrow {
+					&:after {
+						@include transition( transform 100ms 0ms ceaser($easeInSine) );
+						content: '›';
+						display: block;
+						position: absolute;
+						font-size: 16px;
+						right: $nav-pad;
+						bottom: $nav-pad - 1;
+					}
+				}
 			}
 
 			&.active {
 				.top-level {
 					color: $nav-text-active;
+
+					// rotate the arrow down when open
+					&.nav-arrow:after {
+						@include transform( rotate(90deg) ); 
+					}
 				}
 			}
 
@@ -74,7 +93,7 @@
 						margin-left: -20px;
 					}
 
-					// subnav dots
+					// subnav dots 
 					&:after {
 						content: '';
 						border:1px solid darken($nav-text, 30%);
@@ -107,6 +126,7 @@
 						color: $theme-primary-color;
 						background-color: $sub-hover-bkgd;
 
+						// set nav dots to the active color
 						&:after {
 							border:1px solid $theme-primary-color;
 							background-color: $theme-primary-color;
