@@ -206,14 +206,9 @@ body.login.index {
 	
 	// Right side
 	.form {
-		background: $theme-primary-inverse;
+		background: #fff;
 		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
 		border: 1px solid darken($theme-primary-color, 10%);
-
-		// Make the hovers fit better
-		.form-group:hover {
-			background: lighten($theme-primary-inverse, 5%);
-		}
 
 		// Disable the autofill bkgd color
 		// http://stackoverflow.com/a/14205994/59160

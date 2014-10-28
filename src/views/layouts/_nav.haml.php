@@ -17,8 +17,8 @@
 			-foreach($pages as $page)
 			
 				-if (!empty($page->children))
-					.main-nav(class=$page->active?'active':null)
-						%a.top-level
+					.main-nav(class=$page->active?'active open':null)
+						%a.top-level.nav-arrow
 							-if($page->icon)
 								%span.glyphicon(class="glyphicon-#{$page->icon}")
 							!=$page->label
@@ -33,11 +33,15 @@
 										=$child->label
 			
 				-else if($auth->can('read', $page->url))
-					%a(href=$page->url)=$page->label
+					.main-nav(class=$page->active?'active':null)
+						%a.top-level(href=$page->url)
+							-if($page->icon)
+								%span.glyphicon(class="glyphicon-#{$page->icon}")
+							!=$page->label
 
 			-if($auth->developer())
 				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active':null)
-					%a.top-level
+					%a.top-level.nav-arrow
 						%span.glyphicon.glyphicon-cog
 						Admin
 
