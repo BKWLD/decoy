@@ -214,6 +214,9 @@ define(function (require) {
 					
 					// Decrement the counter
 					this.$total.text(parseInt(this.$total.first().text(),10) - 1);
+
+					// Notify listeners that there was a change
+					this.$el.trigger('change');
 					
 				},this),
 				
@@ -255,6 +258,10 @@ define(function (require) {
 				
 				// Decrement the counter
 				this.$total.text(parseInt(this.$total.first().text(),10) - 1);
+
+				// Notify listeners that there was a change
+				this.$el.trigger('change');
+
 			}, this))
 			
 			// Show error on failure
@@ -332,6 +339,10 @@ define(function (require) {
 					}
 				});
 			}, this);
+
+			// Notify listeners that there was a change.  Out here rather than on success
+			// callback so that it doesn't get invoked once for each delete.
+			this.$el.trigger('change');
 	
 		},
 		
@@ -377,6 +388,10 @@ define(function (require) {
 				
 				// Decrement the counter
 				this.$total.text(parseInt(this.$total.first().text(),10) - ids.length);
+
+				// Notify listeners that there was a change
+				this.$el.trigger('change');
+
 			}, this))
 			
 			// Show error on failure
@@ -501,6 +516,9 @@ define(function (require) {
 			
 			// Enable tooltips
 			$row.find('.js-tooltip').tooltip({ animation: false });
+
+			// Notify listeners that there was a change
+			this.$el.trigger('change');
 
 		},
 		
