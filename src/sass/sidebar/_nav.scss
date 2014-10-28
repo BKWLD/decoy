@@ -73,8 +73,11 @@
 							color: $theme-primary-color;
 						}
 					}
+				}
+			}
 
-
+			&.open {
+				.top-level {
 					// rotate the arrow down when open
 					&.nav-arrow:after {
 						@include transform( rotate(90deg) ); 
