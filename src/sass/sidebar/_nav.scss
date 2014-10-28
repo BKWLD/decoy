@@ -51,7 +51,7 @@
 				&.nav-arrow {
 					&:after {
 						color: darken($nav-text, 15%);
-						@include transition( all 200ms 0ms ceaser($easeInSine) );
+						@include transition( all 450ms 0ms ceaser($easeInSine) );
 						content: '›';
 						display: block;
 						position: absolute;
@@ -92,8 +92,9 @@
 			.subnav {
 				background-color: darken($gray-dark, 6%);
 				overflow: hidden;
-				max-height: 0;
-				@include transition(max-height 300ms);
+				//height: 0;
+				max-height: 0px;
+				@include transition(max-height 300ms 0 ceaser($linear));
 
 				a {
 					font-size: 12px;
@@ -155,7 +156,7 @@
 				
 				// have the currently expanded subnav show
 				.subnav {
-					max-height: 900px;
+					max-height: 500px;
 				}
 			}
 		}

@@ -21,13 +21,14 @@ define(function (require) {
 		this.$close = this.$('.close-nav');
 		this.$mainnav = this.$('.main-nav');
 		this.$bottom = $('.bottom-nav');
+		this.$topLevelLinks = this.$mainnav.find('.top-level');
 
 		// events
 		this.$grabber.on('click', this.openNav);
 		this.$close.on('click', this.closeNav);
 		
 		// for each top-level nav, toggle the active state
-		this.$mainnav.find('.top-level').on('click', this.toggleSubnav);
+		this.$topLevelLinks.on('click', this.toggleSubnav);
 
 	};
 
@@ -44,9 +45,13 @@ define(function (require) {
 	// open and close the subnav drawers
 	View.toggleSubnav = function(e) {
 		var cur = $(e.currentTarget).parent();
-
-		if(cur.hasClass('open')) cur.removeClass('open');
-		else cur.addClass('open');
+		if(cur.hasClass('open')) {
+			cur.removeClass('open');
+			this.$mainnav.removeClass('open');
+		} else {
+			this.$mainnav.removeClass('open');
+			cur.addClass('open');
+		}
 	};
 	
 	// Return the view
