@@ -21,7 +21,7 @@ define(function (require) {
 		this.$close = this.$('.close-nav');
 		this.$mainnav = this.$('.main-nav');
 		this.$bottom = $('.bottom-nav');
-		this.$topLevelLinks = this.$mainnav.find('.top-level');
+		this.$topLevelLinks = this.$mainnav.find('.top-level.parent');
 
 		// events
 		this.$grabber.on('click', this.openNav);
