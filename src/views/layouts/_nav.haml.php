@@ -18,7 +18,7 @@
 			
 				-if (!empty($page->children))
 					.main-nav(class=$page->active?'active open':null)
-						%a.top-level.nav-arrow
+						%a.top-level.parent
 							-if($page->icon)
 								%span.glyphicon(class="glyphicon-#{$page->icon}")
 							!=$page->label
@@ -41,7 +41,7 @@
 
 			-if($auth->developer())
 				.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active open':null)
-					%a.top-level.nav-arrow
+					%a.top-level.parent
 						%span.glyphicon.glyphicon-cog
 						Admin
 
