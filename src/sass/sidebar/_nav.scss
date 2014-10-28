@@ -63,7 +63,17 @@
 
 			&.active {
 				.top-level {
-					color: $nav-text-active;
+					color: $theme-primary-color;
+
+					// on parent links, just keep the active color, not theme primary
+					&.nav-arrow {
+						color: $nav-text-active;
+
+						span.glyphicon {
+							color: $theme-primary-color;
+						}
+					}
+
 
 					// rotate the arrow down when open
 					&.nav-arrow:after {
@@ -123,7 +133,7 @@
 
 					// highlight the active page
 					&.active {
-						color: $theme-primary-color;
+						color: $nav-text-active;
 						background-color: $sub-hover-bkgd;
 
 						// set nav dots to the active color
