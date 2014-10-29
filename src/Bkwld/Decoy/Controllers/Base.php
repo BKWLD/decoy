@@ -453,7 +453,7 @@ class Base extends Controller {
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to($this->url->relative('edit', $item->id));
+		else return Redirect::to($this->url->relative('edit', $item->id))->with('success', $this->successMessage($item, 'created') );
 	}
 	
 	/**
@@ -520,7 +520,7 @@ class Base extends Controller {
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to(URL::current());
+		else return Redirect::to(URL::current())->with('success', $this->successMessage($item) );
 		
 	}
 	
@@ -535,7 +535,7 @@ class Base extends Controller {
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to($this->url->relative('index'));
+		else return Redirect::to($this->url->relative('index'))->with('success', $this->successMessage($item, 'deleted') );;
 	}
 	
 	//---------------------------------------------------------------------------
@@ -869,4 +869,14 @@ class Base extends Controller {
 
 	}
 
+	/**
+	 * Creates a success message for CRUD commands
+	 * 
+	 * @param  Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
+	 * @return  string The CRUD success message string
+	 */
+	protected function successMessage($model, $verb = 'saved') {
+		return "The <strong>".str_singular($this->title)."</strong> ".$model->titleText()." was successfully ".$verb.".";
+	}
 }
