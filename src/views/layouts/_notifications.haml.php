@@ -10,9 +10,13 @@
 
 			-else
 				The field in conflict is highlighted below.
+		.close
+			%span.glyphicon.glyphicon-remove-circle
 
 -else if (Session::has('success'))
 	.notification-area.alert.alert-success
+		.close
+			%span.glyphicon.glyphicon-remove-circle
 		%p
 			%span.glyphicon.glyphicon-ok
 			!=Session::get('success')

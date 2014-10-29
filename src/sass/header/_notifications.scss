@@ -29,6 +29,10 @@
 		margin-right: 5px;
 	}
 
+	.close {
+		margin-top: $main-padding/2;
+	}
+
 	// default display
 	max-height:0;
 	@include transition(max-height 350ms 150ms ceaser($easeInOutSine));
