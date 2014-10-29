@@ -9,6 +9,7 @@
 @import url($fonts-url); // Fonts
 
 // Plugins
+@import "vendor/bkwld/*"; // Loaded from /app/sass/vendor
 @import "vendor/bootstrap/bootstrap";
 @import "vendor/*";
 
