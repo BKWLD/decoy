@@ -35,6 +35,12 @@
 	// Customize the menu further
 	.tt-dropdown-menu {
 		font-size: 12px;
+
+		// Reduce edge padding
+		.tt-suggestion {
+			padding-left: 8px;
+			padding-right: 8px;
+		}
 	}
 
 	// container for search icon and input field

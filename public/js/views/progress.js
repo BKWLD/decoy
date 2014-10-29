@@ -26,7 +26,7 @@ define(function (require) {
 			
 			// Shared vars
 			this.$bar = this.$('.progress-bar');
-			this.$links = $('.subnav a, .breadcrumbs a');
+			this.$links = $('.main-nav a[href], .breadcrumbs a, .standard-list a[href*="http://"]');
 			
 			// Listen for start and complete
 			$doc.ajaxSend(this.send);

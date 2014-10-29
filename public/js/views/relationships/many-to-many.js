@@ -21,6 +21,17 @@ define(function (require) {
 
 			// Call init after the parent info is read
 			Autocomplete.prototype.initialize.apply(this, arguments);
+
+			// On blur, clear the field so the placeholder shows again
+			this.$input.on('blur', _.bind(function() {
+				this.$input.val('');
+			}, this));
+
+			// Listen for changes to the list, which should Clear the autocomplete cache, 
+			// so that the typeahead won't offer the item that was just attached again
+			this.$el.closest('.standard-list').on('change', _.bind(function() {
+				this.bloodhound.clearRemoteCache();
+			}, this));
 			
 		},
 		
@@ -64,7 +75,7 @@ define(function (require) {
 			
 			// Success
 			.done(_.bind(function(data) {
-				
+
 				// Tell the editable list to add the new entry
 				var payload = { id: this.id, parent_id: this.parent_id, columns: this.selection.columns };
 				this.$el.trigger('insert', payload);
