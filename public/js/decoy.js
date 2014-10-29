@@ -106,6 +106,8 @@ define(function (require) {
 		// The nav
 		$('.sidebar').views(Sidebar);
 		
+		// Display the CRUD notifcation area
+		$('.notification-area').addClass('show');
 	});
 	
 	// Return public module

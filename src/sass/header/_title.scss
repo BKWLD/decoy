@@ -6,6 +6,9 @@
 .header {
 	background-color: $theme-primary-color;
 	padding: $main-padding;
+	@include gpu-cache();
+	position: relative;
+	z-index:2;
 
 	// Apply left offset
 	@include adjust-for-sidebar();
