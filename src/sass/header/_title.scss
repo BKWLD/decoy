@@ -61,6 +61,35 @@
 				content: 'New';
 			}
 		}
+
+		// the many to many form in the header
+		.many-to-many-form {
+			z-index: 160; // this is to be on top of the breadcrumbs bar
+
+			.twitter-typeahead {
+				vertical-align: top; // prevents the field from jumping after page loads
+				top: 10px;
+			}
+
+			.form-control {
+				padding-left: 28px;
+				width: 70px;
+				display: inline-block;
+				float: right;
+
+				&:focus {
+					width: 200px; // pixel width so the whole field can smoothly transition
+				}
+				&[disabled] {
+					width: 200px;
+				}
+			}
+
+			.glyphicon-search {
+				left: 9px;
+				top: 9px;
+			}
+		}
 	}
 
 	// Description
