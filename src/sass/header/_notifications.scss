@@ -1,0 +1,21 @@
+// Notification message area on CRUD operations, at the top of main, below breadcrumbs 
+#main .notification-area {
+	padding: ($main-padding/2) $main-padding;
+	border: transparent;
+	border-bottom: $state-success-border 1px solid;
+	border-radius: 0;
+
+	// stretch the whole with of the main, and go back up toward the breadcrumbs
+	margin: -$main-padding;
+	margin-bottom: $main-padding;
+
+	@media(max-width: $screen-sm) {
+		padding: ($main-padding-mobile/2) $main-padding-mobile;
+		margin: -$main-padding-mobile;
+		margin-bottom: $main-padding-mobile;
+	}
+
+	span.glyphicon {
+		margin-right: 5px;
+	}
+}

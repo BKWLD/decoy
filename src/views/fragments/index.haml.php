@@ -1,8 +1,5 @@
 .fragments-wrap(data-js-view="fragments")
 
-	-# Show validation errors
-	!=View::make('decoy::shared.form._errors')
-
 	-# Form tag
 	!=Former::open_vertical_for_files()->addClass('row')
 
