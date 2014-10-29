@@ -60,7 +60,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Give the controller name a hover effect
 		.legend > a {
-			border-bottom: dotted 1px $theme-secondary-inverse;
 			&:hover, &:focus { 
 				$color: mix($theme-secondary-inverse, $theme-secondary-color, 60%);
 				color:  $color;
