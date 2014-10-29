@@ -68,7 +68,6 @@
 
 			.twitter-typeahead {
 				vertical-align: top; // prevents the field from jumping after page loads
-				top: 10px;
 			}
 
 			.form-control {
@@ -88,6 +87,7 @@
 			.glyphicon-search {
 				left: 9px;
 				top: 9px;
+				vertical-align: top;
 			}
 		}
 	}
