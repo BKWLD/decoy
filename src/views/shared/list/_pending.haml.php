@@ -1,3 +1,4 @@
 %fieldset.disabled
-	.legend!=$title
-	%p!=trans('decoy::form.listing.pending_save', ['model' => $title])
+	.legend
+		%span(class="js-tooltip" title=$description)!=$title
+	%p!=trans('decoy::form.listing.pending_save', ['model' => $title, 'description' => $description])

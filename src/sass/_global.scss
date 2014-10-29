@@ -133,3 +133,9 @@ p a {
 .popover {
 	line-height: 1;
 }
+
+// Clear inherited styles on tool-tips
+.tooltip {
+	font-weight: normal;
+	font-family: $font-family-base;
+}

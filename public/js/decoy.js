@@ -95,7 +95,10 @@ define(function (require) {
 		// $('.help-block').prepend('<i class="icon-question-sign"></i> ');
 		
 		// Enable bootstrap tooltips
-		$body.find('.js-tooltip').tooltip({ animation: false });
+		$body.find('.js-tooltip').tooltip({ 
+			animation: false, 
+			container: '#main' // Add them out here to prevent some z-index issues
+		});
 		
 		// Turn WYSIWYGs on.
 		wysiwyg.replace('textarea.wysiwyg');	
