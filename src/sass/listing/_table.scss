@@ -119,6 +119,13 @@
 // On small browsers, only show the second and last columns in tables
 @media (max-width: $screen-sm) {
 	.table {
+
+		// Make title column wide again
+		&[class*='columns-'] th:first-child + th {
+			width: 100%;
+		}
+
+		// Toggle visiblilty
 		th, td {
 			display: none;
 		}
