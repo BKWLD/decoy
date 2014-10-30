@@ -8,7 +8,7 @@
 	padding: $main-padding;
 	@include gpu-cache();
 	position: relative;
-	z-index:2;
+	z-index: $header-z + 1; // Put above breadcrumbs so autocomplete menu goes above
 
 	// Apply left offset
 	@include adjust-for-sidebar();
@@ -62,38 +62,6 @@
 		.new {
 			&:after {
 				content: 'New';
-			}
-		}
-
-		// the many to many form in the header
-		.many-to-many-form {
-			z-index: 160; // this is to be on top of the breadcrumbs bar
-			top: -10px; // this aligns the box with the title
-
-			.twitter-typeahead {
-				// these stop the box from jumping a bit after load
-				vertical-align: top;
-				display: block !important;
-			}
-
-			.form-control {
-				padding-left: 28px;
-				width: 70px;
-				display: inline-block;
-				float: right;
-
-				&:focus {
-					width: 200px; // pixel width so the whole field can smoothly transition
-				}
-				&[disabled] {
-					width: 200px;
-				}
-			}
-
-			.glyphicon-search {
-				left: 9px;
-				top: 9px;
-				vertical-align: top;
 			}
 		}
 	}

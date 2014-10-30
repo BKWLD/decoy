@@ -1,5 +1,5 @@
 /**
- * This is the form that appears in a sidebar .legend
+ * The autocomplete form for many to manys
  */
 .many-to-many-form {
 	display: inline-block;
@@ -66,6 +66,40 @@
 				width: $input-width;
 			}
 		}
+	}
+
+	// Tweaks to when it appears in the header
+	.header & {
+		z-index: $header-z + 1; // this is to be on top of the breadcrumbs bar
+		
+		// Search icon
+		.glyphicon-search {
+			left: 9px;
+			top: 9px;
+		}
+
+		// Twitter wraps the form field in a display-inline wrapper and that
+		// causes a weird shifting in stuff.  This compensates for that.
+		top: -21px; // this aligns the box with the title
+		.twitter-typeahead {
+			top: 12px;
+			+ .glyphicon-search {
+				top: 30px;
+			}
+		}
+
+		// Size the input and make space for hte search icon
+		.form-control {
+			padding-left: 28px;
+			width: 70px;
+
+			// Pixel width so the whole field can smoothly transition
+			&:focus, &[disabled] {
+				width: 200px; 
+			}
+		}
+
+		
 	}
 
 }
