@@ -1,0 +1,54 @@
+// Notification message area on CRUD operations, at the top of main, below breadcrumbs 
+#main .notification-area {
+	padding: 0 $main-padding;
+	border: transparent;
+	border-bottom: $state-success-border 1px solid;
+	border-radius: 0;
+
+	// update border for type of notifcations
+	&.alert-success {
+		border-bottom: $state-success-border 1px solid;
+	}
+
+	&.alert-danger {
+		border-bottom: $state-danger-border 1px solid;
+	}
+
+	// make sure it's below the header
+	z-index:0;
+	@include gpu-cache();
+
+	// stretch the whole with of the main, and go back up toward the breadcrumbs
+	margin: -$main-padding;
+	margin-bottom: $main-padding;
+
+	@media(max-width: $screen-sm) {
+		padding: 0 $main-padding-mobile;
+		margin: -$main-padding-mobile;
+		margin-bottom: $main-padding-mobile;
+	}
+
+	overflow: hidden; 
+
+	p {
+		padding: ($main-padding/2) 0;
+	}
+
+	span.glyphicon {
+		margin-right: 5px;
+	}
+
+	.close {
+		margin-top: $main-padding/2;
+	}
+
+	// default display
+	max-height:0;
+	@include transition(max-height 350ms 0ms ceaser($easeInOutSine)); // no delay on close
+
+	// animate the notifcation pane in
+	&.show {
+		@include transition(max-height 350ms 150ms ceaser($easeInOutSine)); // delay on open
+		max-height:120px;
+	}
+}

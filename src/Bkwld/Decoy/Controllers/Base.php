@@ -880,6 +880,6 @@ class Base extends Controller {
 	 * @return  string The CRUD success message string
 	 */
 	protected function successMessage($model, $verb = 'saved') {
-		return "The <strong>".str_singular($this->title)."</strong> ".$model->titleText()." was successfully ".$verb.".";
+		return "The <strong>".str_singular($this->title)."</strong> \"".$model->titleText()."\" was successfully ".$verb.".";
 	}
 }

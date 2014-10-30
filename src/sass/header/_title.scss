@@ -6,6 +6,9 @@
 .header {
 	background-color: $theme-primary-color;
 	padding: $main-padding;
+	@include gpu-cache();
+	position: relative;
+	z-index:2;
 
 	// Apply left offset
 	@include adjust-for-sidebar();
@@ -65,9 +68,12 @@
 		// the many to many form in the header
 		.many-to-many-form {
 			z-index: 160; // this is to be on top of the breadcrumbs bar
+			top: -10px; // this aligns the box with the title
 
 			.twitter-typeahead {
-				vertical-align: top; // prevents the field from jumping after page loads
+				// these stop the box from jumping a bit after load
+				vertical-align: top;
+				display: block !important;
 			}
 
 			.form-control {

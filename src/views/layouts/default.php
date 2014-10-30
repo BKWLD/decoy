@@ -25,6 +25,10 @@
 		<?// The main page content ?>
 		<div id="main">
 			<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
+
+			<? // CRUD notification area ?>
+			<?= Session::has('success') || $errors->any() ? View::make('decoy::layouts._notifications', $__data) : '' ?>
+
 			<?= $content?>
 		</div>
 	
