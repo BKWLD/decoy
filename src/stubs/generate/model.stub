@@ -24,8 +24,8 @@ class {{model}} extends Base {
 		return $query->positioned();
 	}
 	
-	// Create the deep link to this item
-	public function deepLink() {
+	// Return an absolute path or URL to this item
+	public function getUriAttribute() {
 		return route('article', $this->slug);
 	}
 		

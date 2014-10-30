@@ -773,8 +773,10 @@ class Base extends Controller {
 			$item->columns = array();
 			foreach($this->columns as $column) {
 				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
-				elseif (isset($row->$column)) $item->columns[$column] = $row->$column;
-				else $item->columns[$column] = null;
+				elseif (isset($row->$column)) {
+					if (is_a($row->$column, 'Carbon\Carbon')) $item->columns[$column] = $row->$column->format(FORMAT_DATE);
+					else $item->columns[$column] = $row->$column;
+				} else $item->columns[$column] = null;
 			}
 			
 			// Add the item to the output
