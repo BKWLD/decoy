@@ -15,6 +15,10 @@ define(function (require) {
 		// Init
 		initialize: function () {
 
+			// Find the related standard list.  It's in different placed on an
+			// edit page vs an index page.
+			this.$list = $('body').hasClass('index') ? $('.standard-list') : this.$el.closest('.standard-list');
+
 			// There must be a parent_id and parent_controller defined for the saving to work
 			this.parent_id = this.$el.data('parent-id');
 			this.parent_controller = this.$el.data('parent-controller');
@@ -29,7 +33,7 @@ define(function (require) {
 
 			// Listen for changes to the list, which should Clear the autocomplete cache, 
 			// so that the typeahead won't offer the item that was just attached again
-			this.$el.closest('.standard-list').on('change', _.bind(function() {
+			this.$list.on('change', _.bind(function() {
 				this.bloodhound.clearRemoteCache();
 			}, this));
 			
@@ -78,7 +82,7 @@ define(function (require) {
 
 				// Tell the editable list to add the new entry
 				var payload = { id: this.id, parent_id: this.parent_id, columns: this.selection.columns };
-				this.$el.trigger('insert', payload);
+				this.$list.trigger('insert', payload);
 				
 				// Clear the input to add another.  Must use typeahead to clear or it will reset
 				// the value after you de-focus.
