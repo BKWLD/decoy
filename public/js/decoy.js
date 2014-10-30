@@ -80,8 +80,6 @@ define(function (require) {
 	// DOM ready
 	app.on('ready', function () {
 
-		app.notification = { oi : 'OIIII' };
-
 		// Initalize views
 		app.initalizeViews(manifest);
 		
