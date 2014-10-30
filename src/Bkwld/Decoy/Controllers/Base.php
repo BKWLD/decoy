@@ -598,9 +598,12 @@ class Base extends Controller {
 	 */
 	public function autocompleteViewVars() {
 		if (!$this->parent) return [];
+		$parent_controller = new $this->parent_controller;
 		return [
 			'parent_id' => $this->parent->getKey(),
 			'parent_controller' => $this->parent_controller,
+			'parent_controller_title' => $parent_controller->title(),
+			'parent_controller_description' => $parent_controller->description(),
 			'many_to_many' => $this->isChildInManyToMany(),
 		];
 	}

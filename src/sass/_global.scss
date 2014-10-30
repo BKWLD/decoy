@@ -57,7 +57,7 @@ a:active {
 
 // Underline links in paragraphs
 p a {
-	border-bottom: dotted 1px #ccc;
+	border-bottom: $link-border;
 }
 
 // The main container

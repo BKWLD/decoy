@@ -2,7 +2,6 @@
  * Fieldset group blocks of fields with a legend for a title
  */
 fieldset, .related .standard-list, body.index .standard-list {
-	$pad: 15px;
 
 	// Surround sections in a white box
 	@include panel;
@@ -21,7 +20,7 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Give it a background
 		background: $theme-secondary-color;
-		padding: 7px $pad; // 7px makes it about as high as table th's
+		padding: 7px $form-group-margin; // 7px makes it about as high as table th's
 
 		// If something is pulled-right, give it a max width.  This is designed to
 		// constrain the autocomplete form on many to manys but may of other,
@@ -52,11 +51,8 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 		// Put padding on the cells so that the normal fieldset padding looks
 		// maintained
-		th:first-child, td:first-child { padding-left: $pad; }
-		th[class*='actions'], td[class*='actions'] { padding-right: $pad; }
-
-		// Remove the last row border
-		tr:last-child td { border-bottom: none; }
+		th:first-child, td:first-child { padding-left: $form-group-margin; }
+		th[class*='actions'], td[class*='actions'] { padding-right: $form-group-margin; }
 
 		// Give the controller name a hover effect
 		.legend > a {
@@ -78,7 +74,7 @@ fieldset, .related .standard-list, body.index .standard-list {
 		// This is the message
 		p {
 			text-align: center;
-			padding: 50px 0;
+			padding: 50px $form-group-margin;
 
 			// Clear the important icon, it made the text centering feel weird
 			.glyphicon { display: none; }

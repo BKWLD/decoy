@@ -144,11 +144,7 @@ if ($listing->count()) {
 		<? endforeach ?>
 		
 		<?// Maybe there were no results found ?>
-		<? if (!$listing->count()): ?>
-			<tr>
-				<td colspan="999" class="no-results">No results found</td>
-			</tr>
-		<? endif ?>
+		<?=View::make('decoy::shared.list._no_results', $__data)?>
 		
 	</tbody>
 </table>

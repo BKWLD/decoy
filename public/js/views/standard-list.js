@@ -44,6 +44,7 @@ define(function (require) {
 			this.$trs = this.$el.find('[' + dataId + ']');
 			this.parent_controller = this.$el.data('parent-controller');
 			this.position_offset = this.$el.data('position-offset');
+			this.$no_results = this.$('.no-results');
 			
 			// Create model collection from table rows.  The URL is fetched from
 			// the controller-route data attribute of the container.
@@ -55,6 +56,7 @@ define(function (require) {
 			// listen for collection changes and render view
 			this.collection.on('change', this.render, this);
 			this.collection.on('change:featured', this.updateFeatured, this);
+			this.collection.on('remove', this.onRemove);
 			
 			// Add drag and drop if there is position data on the first
 			// row.  It expects the current position of the a row to be stored
@@ -137,6 +139,9 @@ define(function (require) {
 				revert: 100,
 				containment: $sortable,
 
+				// Prevent no-results from being sortable
+				items: 'tr:not(.no-results, .bulk-actions)',
+
 				// Create the placeholder with the right column span
 				// http://stackoverflow.com/a/8707306
 				placeholder: 'placeholder',
@@ -170,7 +175,6 @@ define(function (require) {
 			this.collection.on('change:position', function(model, position) {
 				model.save();
 			}, this);
-			
 
 			// Return a reference to the sortable item
 			return $sortable;
@@ -262,6 +266,9 @@ define(function (require) {
 				// Notify listeners that there was a change
 				this.$el.trigger('change');
 
+				// Update collection
+				this.collection.remove(this.collection.get(model_id));
+
 			}, this))
 			
 			// Show error on failure
@@ -281,7 +288,7 @@ define(function (require) {
 				// Add a div inside the cell and animate the hight going to 0 if it
 				// (since we can't aniamte the row itself)
 				$(this).wrapInner("<div/>").children("div").animate({height: 0}, 300, function() {
-					$row.hide();
+					$row.remove();
 				});
 			});
 		},
@@ -501,12 +508,11 @@ define(function (require) {
 		// methods upon it.
 		addInsertedRow: function($row) {
 
-			// Add the template to the list, above the first row with a model id.  Or
-			// if there are no results, replace the last row, which will be the
-			// 'no results found' message
-			var $caret = this.$('tbody ['+dataId+']').first();
-			if ($caret.length) $caret.before($row);
-			else this.$('tbody tr').last().replaceWith($row);
+			// If there are no rows, there now will be, so hide the no-results message.
+			this.$no_results.addClass('remove');
+
+			// Add the template to the list above the no-results row.
+			this.$no_results.before($row);
 
 			// Add the backbone brains (it's not expecting a jquery object)
 			this.initRow($row[0]);
@@ -520,6 +526,11 @@ define(function (require) {
 			// Notify listeners that there was a change
 			this.$el.trigger('change');
 
+		},
+
+		// An item has been removed from the collection
+		onRemove: function(model, collection, status) {
+			if (!collection.length) this.$no_results.removeClass('remove');
 		},
 		
 		// render view from model changes
