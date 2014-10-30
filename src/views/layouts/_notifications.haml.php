@@ -1,6 +1,8 @@
 -# display errors or success messages after CRUD requests
 -if ($errors->any())
 	.notification-area.alert.alert-danger
+		.close
+			%span.glyphicon.glyphicon-remove-circle
 		%p
 			%span.glyphicon.glyphicon-remove
 			%strong Validation Error!
@@ -10,8 +12,6 @@
 
 			-else
 				The field in conflict is highlighted below.
-		.close
-			%span.glyphicon.glyphicon-remove-circle
 
 -else if (Session::has('success'))
 	.notification-area.alert.alert-success

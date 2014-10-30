@@ -5,6 +5,15 @@
 	border-bottom: $state-success-border 1px solid;
 	border-radius: 0;
 
+	// update border for type of notifcations
+	&.alert-success {
+		border-bottom: $state-success-border 1px solid;
+	}
+
+	&.alert-danger {
+		border-bottom: $state-danger-border 1px solid;
+	}
+
 	// make sure it's below the header
 	z-index:0;
 	@include gpu-cache();
