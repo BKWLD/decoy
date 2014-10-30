@@ -122,7 +122,10 @@ class Filters {
 	public function saveRedirect() {
 		
 		// Handle a redirect request
-		if (Session::has('save_redirect')) return Redirect::to(Session::get('save_redirect'));
+		if (Session::has('save_redirect')) {
+			Session::keep(['success', 'errors']);
+			return Redirect::to(Session::get('save_redirect'));
+		}
 		
 		// Only act on save values of 'back' or 'new'
 		if (!Input::has('_save') || Input::get('_save') == 'save') return;
