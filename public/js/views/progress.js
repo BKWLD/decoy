@@ -55,6 +55,7 @@ define(function (require) {
 		showSpinner: function() {
 			// hack to animate to a 99% loader width
 			total = 0;
+			this.persist = true // Show forever
 			this.render();
 		},
 		
@@ -62,7 +63,7 @@ define(function (require) {
 		render: function() {
 			
 			// Show and hide the bar
-			if (total > 0) this.$bar.stop(true).css('opacity', 1);
+			if (total > 0 || this.persist) this.$bar.stop(true).css('opacity', 1);
 			else if (total === 0) this.$bar.stop(true).delay(800).animate({opacity:0}, function() {
 				$(this).css('width', 0);
 			});
