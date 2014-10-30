@@ -15,9 +15,8 @@ define(function (require) {
 		, csrf = require('bkwld/csrf')
 		, jqv = require('bkwld/jquery-views')
 	;
-	
+
 	// Modules that add mojo globally
-	require('decoy/modules/ajax-error'); // Standard handling of AJAX errors
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
@@ -109,10 +108,6 @@ define(function (require) {
 		// The nav
 		$('.sidebar').views(Sidebar);
 		
-		// Display the CRUD notifcation area
-		$('.notification-area').addClass('show');
-		// handler for close event
-		$('.notification-area .close').on('click', function() { $('.notification-area').removeClass('show'); });
 	});
 	
 	// Return public module

@@ -1,24 +1,35 @@
--# display errors or success messages after CRUD requests
--if ($errors->any())
-	.notification-area.alert.alert-danger
-		.notification-wrap
-			.close
-				%span.glyphicon.glyphicon-remove-circle
-			%p
-				%span.glyphicon.glyphicon-remove
-				%strong Validation Error!
-		  
-				-if ($errors->has('slug'))
-					A unique slug could not be formed from the name or title.  You must use a different value.
+-# Building out the message strings, if any
+:php
+	$alert_type = '';
+	$message = ' ';
 
-				-else
-					The field in conflict is highlighted below.
+	// Determine the alert type and build any related copy 
+	// 
+	// ERROR
+	if($errors->any()) {
+		$alert_type = 'danger';
 
--else if (Session::has('success'))
-	.notification-area.alert.alert-success
-		.notification-wrap
-			.close
-				%span.glyphicon.glyphicon-remove-circle
-			%p
-				%span.glyphicon.glyphicon-ok
-				!=Session::get('success')
+		if($errors->has('slug')) 
+			$message = 'A unique slug could not be formed from the name or title.  You must use a different value.';
+		else 
+			$message = 'The field in conflict is highlighted below.';
+	}
+
+	//SUCCESS
+	else if(Session::has('success')) {
+		$alert_type = 'success';
+		$message = Session::get('success');
+	}
+
+	// NEUTRAL
+	else $alert_type = 'normal';
+
+-# Display notifications after CRUD requests, AJAX errors, etc
+-# If there's no message, data-display attribute will be false. Used in the JS to open up the pane.
+.notification-area.alert(data-js-view="notification" data-alert-type=$alert_type data-display=($message!=' ')?'true':'false')
+	.notification-wrap
+		.close
+			%span.glyphicon.glyphicon-remove-circle
+		%p
+			%span.glyphicon
+			%span.message=$message
