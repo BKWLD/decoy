@@ -18,30 +18,36 @@
 
 		// Account for the margins and pull the list up
 		.control-label {
-			margin-bottom: -5px;
+			margin-bottom: 0;
 		}
 
 		// Make cols
 		.checkbox {
+			clear: left;
 			display: inline-block;
-			background-color: #f9f9f9;
-			width: 45%;
-			@include border-radius(3px);
-			padding: 10px 10px 5px 10px;
-			margin-right: 7px;
+			width: 50%;
+			padding: 0 5px 0 0;
 			
+			// Break columns
 			@media (max-width: $screen-xs) {
 				width: auto;
 				display: block;
 			}
-		}
 
-		// Ellipsis long labels
-		label {
-			white-space: nowrap;
-			text-overflow: ellipsis;
-			overflow: hidden;
-			padding-right: 10px;
+			// Ellipsis long labels
+			label {
+
+				// Wrap in boxes
+				display: block;
+				background-color: #f9f9f9;
+				@include border-radius(3px);
+				padding: 7px 10px 7px 30px;
+
+				// Prevent text from wrapping
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				overflow: hidden;
+			}
 		}
 
 	}
