@@ -5,7 +5,7 @@
 	width: 100%;
 	left: 0;
 	top: 0;
-	z-index: 150; // this is to clear the crop image UI
+	z-index: $header-z;
 	font-size: 12px;
 	@include box-shadow($common-shadow);
 

@@ -86,6 +86,6 @@ textarea.form-control {
 	// The bold for this font is too big, this makes it look
 	// less jerky
 	.belongs-to & .tt-highlight {
-		font-size: 13px;
+		font-size: $font-size-base - 1px;
 	}
 }

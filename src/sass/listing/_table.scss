@@ -67,8 +67,8 @@
 	// Add border lines to the bottom rather than top of row.  The
 	// th selector is so explicit because that is what bootstrap had.
 	td, & > thead > tr > th {
-		border-bottom: 1px solid $grey-border;
-		border-top: none;
+		border-top: 1px solid $grey-border;
+		border-bottom: none;
 	}
 
 	// Add a slight rollover so it's easier to track with the eyes.  Not using

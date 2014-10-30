@@ -57,7 +57,7 @@ a:active {
 
 // Underline links in paragraphs
 p a {
-	border-bottom: dotted 1px #ccc;
+	border-bottom: $link-border;
 }
 
 // The main container
@@ -132,4 +132,10 @@ p a {
 // Fix popover inheriting form-actions line height
 .popover {
 	line-height: 1;
+}
+
+// Clear inherited styles on tool-tips
+.tooltip {
+	font-weight: normal;
+	font-family: $font-family-base;
 }
