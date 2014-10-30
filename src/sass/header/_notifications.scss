@@ -5,13 +5,35 @@
 	border-bottom: $state-success-border 1px solid;
 	border-radius: 0;
 
+	.notification-wrap {
+		max-width: 1400px;
+	}
+
+	// close button
+	.close {
+		margin-top: $main-padding/2;
+		@include opacity(0.5);
+
+		&:hover {
+			@include opacity(0.7);
+		}
+	}
+
 	// update border for type of notifcations
 	&.alert-success {
 		border-bottom: $state-success-border 1px solid;
+
+		.close {
+			color: $state-success-text;
+		}
 	}
 
 	&.alert-danger {
 		border-bottom: $state-danger-border 1px solid;
+
+		.close {
+			color: $state-danger-text;
+		}
 	}
 
 	// make sure it's below the header
@@ -32,15 +54,14 @@
 
 	p {
 		padding: ($main-padding/2) 0;
+		margin: 0;
 	}
 
 	span.glyphicon {
 		margin-right: 5px;
 	}
 
-	.close {
-		margin-top: $main-padding/2;
-	}
+	
 
 	// default display
 	max-height:0;
