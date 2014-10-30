@@ -163,7 +163,7 @@ abstract class Base extends Eloquent {
 
 		
 	//---------------------------------------------------------------------------
-	// Overrideable methods
+	// Accessors
 	//---------------------------------------------------------------------------
 	
 	/**
@@ -192,6 +192,15 @@ abstract class Base extends Eloquent {
 		else if (App::make('decoy.router')->action() == 'edit') return 'Edit';
 		else return '';
 	}
+
+	/**
+	 * A no-op that should return the URI (an absolute path or a fulL URL) to the record
+	 */
+	public function getUriAttribute() { }
+
+	//---------------------------------------------------------------------------
+	// File handling
+	//---------------------------------------------------------------------------
 
 	/**
 	 * Save out an image or file given the field name.  They are saved
@@ -278,12 +287,6 @@ abstract class Base extends Eloquent {
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
-	
-	/**
-	 * A no-op that should return the deep link to this content
-	 */
-	public function deepLink() {}
-	public function getDeepLinkAttribute() { return $this->deepLink(); }
 
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched
