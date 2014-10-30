@@ -1,8 +1,10 @@
 # Decoy
 
+[Release notes](https://github.com/BKWLD/decoy/releases)
+
 ## Installation
 
-1. Add `"bkwld/decoy": "~3.0",` to your composer.json and install.  This reflects the latest stable branch.
+1. Add `"bkwld/decoy": "~4.0",` to your composer.json and install.  This reflects the latest stable branch.
 2. Run `php artisan migrate --package=cartalyst/sentry`
 3. Run `php artisan migrate --package=bkwld/decoy`
 4. Run `php artisan config:publish bkwld/decoy`
