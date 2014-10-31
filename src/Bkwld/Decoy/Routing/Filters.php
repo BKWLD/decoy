@@ -14,6 +14,7 @@ use Route;
 use Session;
 use Str;
 use URL;
+use View;
 
 /**
  * Route filters for Decoy
@@ -36,7 +37,10 @@ class Filters {
 	 */
 	public function registerAll() {
 
-		// Dont' register anything if we're not in the admin.  These routes 
+		// Add Decoy's frontend tools
+		Route::after([$this, 'frontendTools']);
+
+		// Dont' register anything more if we're not in the admin.
 		if (!Decoy::handling()) return;
 
 		// Filters are added during a "before" handler via the Decoy service
@@ -60,6 +64,22 @@ class Filters {
 		Route::after(function($request, $response) {
 			$response->header('X-UA-Compatible', 'IE=Edge');
 		});
+	}
+
+	/**
+	 * Add markup needed for Decoy's frontend tools
+	 *
+	 * @param $request Illuminate\Http\Request
+	 * @param $response Illuminate\Http\Response
+	 */
+	public function frontendTools($request, $response) {
+		if (app('decoy.auth')->check() 
+			&& ($content = $response->getContent())
+			&& is_string($content)) {
+			$response->setContent(
+				str_replace('</body>', View::make('decoy::frontend._panel').'</body>', $content)
+			);
+		}
 	}
 	
 	/**
