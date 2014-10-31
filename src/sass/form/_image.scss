@@ -5,7 +5,12 @@
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
-		margin-top: 5px;
+
+		// Looks better with a lil extra.  I think because of line-height stuff
+		margin-top: 5px + 2px;
+
+		// Always put it on it's own line
+		display: block;
 	}
 
 }
