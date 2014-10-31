@@ -1,0 +1,12 @@
+/*
+	CRUD index pages
+ */
+body.index {
+	
+	// Remove the bottom padding because it doesn't need to make room
+	// for form actions
+	#main {
+		padding-bottom: 0;
+	}
+
+}

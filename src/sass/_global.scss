@@ -64,7 +64,7 @@ p a {
 #main {
 	position: relative;
 	padding: $main-padding;
-	padding-bottom: $main-padding*2; // this is to clear the fixed button controls
+	padding-bottom: $footer-height; // this is to clear the fixed button controls
 	@include adjust-for-sidebar();
 
 	// Breadcrumbs are abs/fixed position, so compensate for their height
