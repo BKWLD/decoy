@@ -31,9 +31,16 @@ define(function (require) {
 		this.icon = this.create();
 		this.$icon = this.icon.tip();
 		this.icon.show();
+		this.$icon.addClass('decoy-el-init');
+
+		// Cache some properties
+		this.closed = { 
+			left: parseInt(this.$icon.css('left'), 10), 
+			top: parseInt(this.$icon.css('top'), 10) 
+		};
 
 		// Events
-		this.$icon.on('click', this.onClick);
+		this.$icon.on('click', this.open);
 
 	};
 
@@ -45,7 +52,7 @@ define(function (require) {
 			trigger: 'manual',
 
 			// Replace template with our own
-			template: '<span class="decoy-element-icon glyphicon glyphicon-map-marker"></span>',
+			template: '<span class="decoy-el-icon"></span>',
 			
 			// Don't add the Bootstrap animation class to it
 			animation: false
@@ -53,8 +60,25 @@ define(function (require) {
 	};
 
 	// Open editor
-	View.onClick = function() {
-		console.log('as');
+	View.open = function() {
+		
+		// Get the initial width and height
+		var size = this.openSize();
+
+		// Open the editor
+		this.$icon.addClass('decoy-el-open');
+		this.$icon.css({
+			width: size.width,
+			height: size.height,
+			left: this.closed.left - size.width/2,
+			top: this.closed.top - size.height/2
+		});
+
+	};
+
+	// Return the initial size once opened
+	View.openSize = function() {
+		return { width: 400, height: 200 }
 	};
 	
 	// Return view class
