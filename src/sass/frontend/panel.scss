@@ -1,0 +1,24 @@
+
+// Dependencies
+@import "compass/css3";
+@import "compass/utilities/general/clearfix";
+
+// The icon the admin clicks on to open the elements editor
+.decoy-element-icon {
+	position: absolute;
+	display: block;
+	background: red;
+	$size: 20px;
+	width: $size;
+	height: $size;
+	@include border-radius($size/2);
+}
+
+// Elements testing styles
+#elements-tests {
+
+	.float-right {
+		float: right;
+	}
+
+}
