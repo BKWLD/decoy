@@ -1,17 +1,25 @@
 
+// Config
+@import "../variables";
+
 // Dependencies
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
+@import "../vendor/bootstrap/bootstrap/variables";
+@import "../vendor/bootstrap/bootstrap/glyphicons";
 
 // The icon the admin clicks on to open the elements editor
 .decoy-element-icon {
 	position: absolute;
-	display: block;
-	background: red;
-	$size: 20px;
-	width: $size;
-	height: $size;
-	@include border-radius($size/2);
+	cursor: pointer;
+
+	// Size the icon
+	font-size: 24px;
+
+	// Rotate based on orientation
+	&.bottom { @include rotate(180deg); }
+	&.left { @include rotate(90deg); }
+	&.right { @include rotate(270deg); }
 }
 
 // Elements testing styles

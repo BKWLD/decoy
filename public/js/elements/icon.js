@@ -29,11 +29,15 @@ define(function (require) {
 
 		// Render the element icon 
 		this.icon = this.create();
+		this.$icon = this.icon.tip();
 		this.icon.show();
+
+		// Events
+		this.$icon.on('click', this.onClick);
 
 	};
 
-	// Position the icon
+	// Create an Element editable icon
 	View.create = function() {
 		return new Icon(this.el, {
 
@@ -41,11 +45,16 @@ define(function (require) {
 			trigger: 'manual',
 
 			// Replace template with our own
-			template: '<div class="decoy-element-icon"></div>',
+			template: '<span class="decoy-element-icon glyphicon glyphicon-map-marker"></span>',
 			
 			// Don't add the Bootstrap animation class to it
 			animation: false
 		});
+	};
+
+	// Open editor
+	View.onClick = function() {
+		console.log('as');
 	};
 	
 	// Return view class
