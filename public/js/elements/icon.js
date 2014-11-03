@@ -6,6 +6,7 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, tooltip = require('admin/vendor/bootstrap/js/tooltip')
 		, $doc = $(document)
+		, editor_pad = 2 // Editor padding + borders 
 	;
 
 	// Get a reference to the Bootstrap Tooltip class
@@ -35,7 +36,7 @@ define(function (require) {
 		this.$icon.addClass('decoy-el-init');
 
 		// Cache some properties
-		this.element_key = this.$el.data('decoy-el');
+		this.key = this.$el.data('decoy-el');
 		this.closed = { 
 			left: parseInt(this.$icon.css('left'), 10), 
 			top: parseInt(this.$icon.css('top'), 10) 
@@ -43,6 +44,7 @@ define(function (require) {
 
 		// Events
 		this.$icon.on('click', this.open);
+		window.addEventListener('message', this.onPostMessage, false);
 
 	};
 
@@ -80,15 +82,28 @@ define(function (require) {
 			top: this.closed.top - size.height/2
 		});
 
-		// Build an iframe that will render the element field editor and
-		// transition in the iframe when it's done.
+		// Build an iframe that will render the element field editor
 		this.$iframe = $('<iframe>').appendTo(this.$icon).attr({
-			src: '/admin/elements/field/'+this.element_key
-		}).on('load', function() {
-			$(this).addClass('loaded');
+			src: '/admin/elements/field/'+this.key
 		});
 
 	};
+
+	// Handle iframe messages
+	View.onPostMessage = function(e) {
+
+		// Reject messages for other icons
+		if (e.data.key != this.key) return;
+
+		// The iframe has loaded and has a height
+		if (e.data.type == 'height') {
+			this.$iframe.addClass('loaded');
+			this.$icon.css('height', e.data.value + editor_pad);
+		}
+
+		// Close the iframe
+		if (e.data.type == 'close') this.close();
+	}
 
 	// Close on click outside of the editor
 	View.closeIfOutside = function(e) {

@@ -15,9 +15,6 @@
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
-		<?// Container for notifications ?>
-		<div class='notifications top-right'></div>
-		
 		<?// The main page content ?>
 		<div id="main">
 			<?= $content?>
