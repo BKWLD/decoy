@@ -21,6 +21,10 @@ fieldset, .related .standard-list, body.index .standard-list {
 		// Give it a background
 		background: $theme-secondary-color;
 		padding: 7px $form-group-margin; // 7px makes it about as high as table th's
+		@media(max-width: $screen-sm) {
+			padding-left: $form-group-margin-sm;
+			padding-right: $form-group-margin-sm;
+		}
 
 		// If something is pulled-right, give it a max width.  This is designed to
 		// constrain the autocomplete form on many to manys but may of other,
@@ -36,10 +40,6 @@ fieldset, .related .standard-list, body.index .standard-list {
 
 			// Reset the font
 			font-family: $font-family-sans-serif;
-		}
-
-		@media(max-width: $screen-sm) {
-			padding-left: 8px;
 		}
 	}
 

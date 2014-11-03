@@ -42,6 +42,9 @@ class Helpers {
 		$path = Request::path();
 		$classes = array();
 
+		// Special condition for the elements
+		if (strpos($path, '/elements/field/') !== false) return 'elements field';
+
 		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
 

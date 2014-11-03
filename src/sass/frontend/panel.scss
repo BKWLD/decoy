@@ -5,6 +5,7 @@
 // Dependencies
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
+@import "../mixins/*";
 @import "../vendor/bootstrap/bootstrap/variables";
 @import "../vendor/bootstrap/bootstrap/glyphicons";
 
@@ -43,17 +44,22 @@
 		@include rotate(0);
 		@include border-radius(4px);
 
-		// Panel styles, copy and pasted from panel mixin
-		background: white;
-		border: 1px solid $grey-border;
-		@include box-shadow($common-shadow);
-		@include border-radius(4px);
+		// Style it like a panel
+		@include panel;
+		margin: 0;
 	}
 
 	// Make iframes fill it
 	iframe {
 		width: 100%;
 		height: 100%;
+
+		// Hide by default
+		@include opacity(0);
+		@include transition(opacity 200ms);
+		&.loaded {
+			@include opacity(1);
+		}
 	}
 
 

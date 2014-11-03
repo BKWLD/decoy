@@ -19,6 +19,7 @@ $nav-text-active: #eee !default;
 
 // Sizes
 $form-group-margin: 15px !default;
+$form-group-margin-sm: round($form-group-margin/2) !default;
 $main-padding: $form-group-margin*2 !default;
 $main-padding-mobile: 10px;
 $nav-top-border-height: 4px;

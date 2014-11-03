@@ -73,9 +73,12 @@ class Filters {
 	 * @param $response Illuminate\Http\Response
 	 */
 	public function frontendTools($request, $response) {
-		if (app('decoy.auth')->check() 
-			&& ($content = $response->getContent())
-			&& is_string($content)) {
+		if (app('decoy.auth')->check() // Require an authed admin
+			&& !Decoy::handling() // Don't apply to the backend
+			&& ($content = $response->getContent()) // Get the whole response HTML
+			&& is_string($content)) { // Double check it's a string
+			
+			// Add the Decoy Frontend markup to the page right before the closing body tag
 			$response->setContent(
 				str_replace('</body>', View::make('decoy::frontend._panel').'</body>', $content)
 			);

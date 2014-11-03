@@ -35,6 +35,7 @@ define(function (require) {
 		this.$icon.addClass('decoy-el-init');
 
 		// Cache some properties
+		this.element_key = this.$el.data('decoy-el');
 		this.closed = { 
 			left: parseInt(this.$icon.css('left'), 10), 
 			top: parseInt(this.$icon.css('top'), 10) 
@@ -79,16 +80,18 @@ define(function (require) {
 			top: this.closed.top - size.height/2
 		});
 
-		// Request the form
+		// Build an iframe that will render the element field editor and
+		// transition in the iframe when it's done.
 		this.$iframe = $('<iframe>').appendTo(this.$icon).attr({
-			// src: '/admin/element/frontend'
+			src: '/admin/elements/field/'+this.element_key
+		}).on('load', function() {
+			$(this).addClass('loaded');
 		});
 
 	};
 
 	// Close on click outside of the editor
 	View.closeIfOutside = function(e) {
-		console.log('outside');
 		if (!this.$icon.is(e.target) && !this.$icon.has(e.target).length) {
 			this.close();
 		}
@@ -107,7 +110,7 @@ define(function (require) {
 		});
 
 		// Remove the iframe
-		this.$iframe.remove();
+		this.$iframe.removeClass('loaded').delay(200).remove();
 
 		// Remove mouse listeners
 		$doc.off('click', this.closeIfOutside);

@@ -1,0 +1,34 @@
+
+/**
+ * The frontend editor shown via iframe in the Element icon
+ */
+body.elements.field {
+
+	// Make the background the color of the element iframe
+	background: white;
+
+	// Remove padding so it's flush within the iframe
+	#main {
+		padding: 0;
+		margin: 0;
+
+		// Remove styling here because the iframe wrapper has the panel style
+		fieldset {
+			@include no-panel;
+		}
+	}
+
+	// Make the form-actions non-fixed
+	.form-actions {
+		position: static;
+		padding: $form-group-margin-sm;
+		line-height: inherit;
+		height: auto;
+
+		// Make the buttons, NON responsive sized
+		.btn {
+			@include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $border-radius-base);
+		}
+	}
+
+}

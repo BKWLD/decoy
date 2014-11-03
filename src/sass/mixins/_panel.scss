@@ -22,3 +22,13 @@
 	// container
 	word-wrap: break-word;
 }
+
+/**
+ * Remove panel styling
+ */
+@mixin no-panel {
+	background: none;
+	border: none;
+	margin: 0;
+	@include box-shadow(none);
+}

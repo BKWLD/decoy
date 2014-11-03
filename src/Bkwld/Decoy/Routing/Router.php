@@ -7,6 +7,7 @@ use Config;
 use Event;
 use Input;
 use Route;
+use View;
 
 /**
  * This class acts as a bootstrap for setting up
@@ -36,6 +37,7 @@ class Router {
 		$this->registerFragments();
 		$this->registerWorkers();
 		$this->registerEncode();
+		$this->registerElements();
 
 		// Register wildcard last
 		$this->registerWildcard();
@@ -134,6 +136,23 @@ class Router {
 		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
 			return Encoding::notify(Input::get());
 		}));
+	}
+
+	/**
+	 * Elements system
+	 */
+	public function registerElements() {
+
+		/**
+		 * Generate the content for frontend element tooltip iframes
+		 */
+		Route::get($this->dir.'/elements/field/{key}', function($key) {
+			return View::make('decoy::layouts.blank')
+				->nest('content', 'decoy::elements.field', [
+					'key' => $key,
+				]);
+		});
+
 	}
 	
 	/**
