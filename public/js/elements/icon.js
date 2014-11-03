@@ -5,6 +5,7 @@ define(function (require) {
 		, _ = require('lodash')
 		, Backbone = require('backbone')
 		, tooltip = require('admin/vendor/bootstrap/js/tooltip')
+		, $doc = $(document)
 	;
 
 	// Get a reference to the Bootstrap Tooltip class
@@ -60,12 +61,16 @@ define(function (require) {
 	};
 
 	// Open editor
-	View.open = function() {
+	View.open = function(e) {
+		
+		// Close on any click outside of it
+		e.stopPropagation(); // Prevents the following from handlin
+		$doc.on('click', this.closeIfOutside);
 		
 		// Get the initial width and height
 		var size = this.openSize();
 
-		// Open the editor
+		// Open up the dimensions of the icon
 		this.$icon.addClass('decoy-el-open');
 		this.$icon.css({
 			width: size.width,
@@ -74,6 +79,38 @@ define(function (require) {
 			top: this.closed.top - size.height/2
 		});
 
+		// Request the form
+		this.$iframe = $('<iframe>').appendTo(this.$icon).attr({
+			// src: '/admin/element/frontend'
+		});
+
+	};
+
+	// Close on click outside of the editor
+	View.closeIfOutside = function(e) {
+		console.log('outside');
+		if (!this.$icon.is(e.target) && !this.$icon.has(e.target).length) {
+			this.close();
+		}
+	};
+
+	// Close the editor
+	View.close = function(e) {
+
+		// Change display back to close
+		this.$icon.removeClass('decoy-el-open');
+		this.$icon.css({
+			width: '',
+			height: '',
+			left: this.closed.left,
+			top: this.closed.top
+		});
+
+		// Remove the iframe
+		this.$iframe.remove();
+
+		// Remove mouse listeners
+		$doc.off('click', this.closeIfOutside);
 	};
 
 	// Return the initial size once opened
