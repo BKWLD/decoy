@@ -9,55 +9,148 @@
 @import "../vendor/bootstrap/bootstrap/variables";
 @import "../vendor/bootstrap/bootstrap/glyphicons";
 
+// Spinning animatio
+@-webkit-keyframes spin {
+	0% { @include rotate(0deg); }
+	100% { @include rotate(360deg); }
+}
+
 // The icon the admin clicks on to open the elements editor
 .decoy-el-icon {
+	$color: $theme-primary-color;
+	$color-inverse: $theme-primary-inverse;
 	position: absolute;
 	cursor: pointer;
 	z-index: $zindex-tooltip;
 
-	// Make the icon
-	$size: 24px;
-	width: $size;
-	height: $size;
-	font-size: $size;
-	background: $theme-primary-color;
-	border: 1px solid transparent;
-	@include rotate(45deg);
+	// Make the round part of icon
+	$size: 20px;
+	.decoy-el-mask {
+		display: block;
+		width: $size;
+		height: $size;
+		background: $color;
+		border: 1px solid transparent;
+		@include border-radius($size);
+		overflow: hidden;
+		@include transition(all 200ms);
+	}
+
+	// Build the arrow part of icon
+	$arrow-size: 6px;
+	$arrow-offset: 2px - $arrow-size;
+	&:after {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 0;
+		border-color: transparent;
+		border-style: solid;
+	}
+
+	// Tweak position of icon position
+	&.top    { margin-top:  -$arrow-size; }
+	&.right  { margin-left:  $arrow-size; }
+	&.bottom { margin-top:   $arrow-size; }
+	&.left   { margin-left: -$arrow-size; }
 
 	// Handle different orientations
-	&.bottom { @include border-radius(0 $size/2 $size/2 $size/2); }
-	&.left { 
-		@include border-radius($size/2 0 $size/2 $size/2);
-		margin-top: -$size/4;
-		margin-left: -$size/2;
+	&.top:after {
+		bottom: $arrow-offset;
+		left: 50%;
+		margin-left: -$arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $color;
 	}
-	&.top { @include border-radius($size/2 $size/2 0 $size/2); }
-	&.right { @include border-radius($size/2 $size/2 $size/2 0); }
+	&.top-left:after {
+		bottom: $arrow-offset;
+		left: $arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $color;
+	}
+	&.top-right:after {
+		bottom: $arrow-offset;
+		right: $arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $color;
+	}
+	&.right:after {
+		top: 50%;
+		left: $arrow-offset;
+		margin-top: -$arrow-size;
+		border-width: $arrow-size $arrow-size $arrow-size 0;
+		border-right-color: $color;
+	}
+	&.left:after {
+		top: 50%;
+		right: $arrow-offset;
+		margin-top: -$arrow-size;
+		border-width: $arrow-size 0 $arrow-size $arrow-size;
+		border-left-color: $color;
+	}
+	&.bottom:after {
+		top: $arrow-offset;
+		left: 50%;
+		margin-left: -$arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $color;
+	}
+	&.bottom-left:after {
+		top: $arrow-offset;
+		left: $arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $color;
+	}
+	&.bottom-right:after {
+		top: $arrow-offset;
+		right: $arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $color;
+	}
 
-	// Only apply transitions after it's inited to prevent weird tween in
-	&.decoy-el-init {
-		@include transition(all 300ms);
+	// Make the spinner icon
+	.decoy-el-spinner {
+
+		// Style it
+		$size: 12px;
+		font-size: $size;
+		color: $color-inverse;
+
+		// Center it
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -$size/2;
+		margin-top: -$size/2;
+		
+		// Animate it
+		-webkit-animation: spin .75s infinite linear;
 	}
 
 	// Open it up
 	&.decoy-el-open {
-		@include rotate(0);
-		@include border-radius(4px);
+
+		// Hide the arrow
+		&:after {
+			content: none;
+		}
 
 		// Style it like a panel
-		@include panel;
-		margin: 0;
+		.decoy-el-mask {
+			border: 1px solid $grey-border;
+			@include box-shadow($common-shadow);
+			@include border-radius(4px);
+		}
 	}
 
-	// Make iframes fill it
+	// Give the iframe a fixed width so the height can be properly calculated
 	iframe {
-		width: 100%;
-		height: 100%;
+		width: 300px;
 
 		// Hide by default
 		@include opacity(0);
 		@include transition(opacity 200ms);
-		&.loaded {
+		&.display {
 			@include opacity(1);
 		}
 	}

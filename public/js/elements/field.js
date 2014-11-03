@@ -33,7 +33,7 @@ define(function (require) {
 
 	// Tell the iframe to close
 	View.close = function() {
-		this.message('close');
+		this.message('close')
 	};
 
 	// postMessage helper

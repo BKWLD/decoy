@@ -7,6 +7,10 @@ define(function (require) {
 		, tooltip = require('admin/vendor/bootstrap/js/tooltip')
 		, $doc = $(document)
 		, editor_pad = 2 // Editor padding + borders 
+		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span></span>'
+		, spinner_tpl = '<span class="glyphicon glyphicon-refresh decoy-el-spinner">'
+		, editor_width = 300 // How wide to make the revealed state
+		, tween_length = 200 // How long the tween lasts
 	;
 
 	// Get a reference to the Bootstrap Tooltip class
@@ -33,17 +37,14 @@ define(function (require) {
 		this.icon = this.create();
 		this.$icon = this.icon.tip();
 		this.icon.show();
-		this.$icon.addClass('decoy-el-init');
 
-		// Cache some properties
+		// Cache
+		this.open = false;
+		this.$mask = this.$icon.find('.decoy-el-mask');
 		this.key = this.$el.data('decoy-el');
-		this.closed = { 
-			left: parseInt(this.$icon.css('left'), 10), 
-			top: parseInt(this.$icon.css('top'), 10) 
-		};
 
 		// Events
-		this.$icon.on('click', this.open);
+		this.$icon.on('click', this.load);
 		window.addEventListener('message', this.onPostMessage, false);
 
 	};
@@ -56,34 +57,29 @@ define(function (require) {
 			trigger: 'manual',
 
 			// Replace template with our own
-			template: '<span class="decoy-el-icon"></span>',
+			template: icon_tpl,
 			
 			// Don't add the Bootstrap animation class to it
 			animation: false
 		});
 	};
 
-	// Open editor
-	View.open = function(e) {
-		
+	// Load the editor
+	View.load = function(e) {
+		e.stopPropagation(); // Prevent the outside click from handling it
+
+		// Disable double clicks
+		if (this.open) return;
+		this.open = true;
+
 		// Close on any click outside of it
-		e.stopPropagation(); // Prevents the following from handlin
 		$doc.on('click', this.closeIfOutside);
 		
-		// Get the initial width and height
-		var size = this.openSize();
-
-		// Open up the dimensions of the icon
-		this.$icon.addClass('decoy-el-open');
-		this.$icon.css({
-			width: size.width,
-			height: size.height,
-			left: this.closed.left - size.width/2,
-			top: this.closed.top - size.height/2
-		});
+		// Show loading progress
+		this.$spinner = $(spinner_tpl).appendTo(this.$icon);		
 
 		// Build an iframe that will render the element field editor
-		this.$iframe = $('<iframe>').appendTo(this.$icon).attr({
+		this.$iframe = $('<iframe>').appendTo(this.$mask).attr({
 			src: '/admin/elements/field/'+this.key
 		});
 
@@ -95,14 +91,31 @@ define(function (require) {
 		// Reject messages for other icons
 		if (e.data.key != this.key) return;
 
-		// The iframe has loaded and has a height
-		if (e.data.type == 'height') {
-			this.$iframe.addClass('loaded');
-			this.$icon.css('height', e.data.value + editor_pad);
+		// Delegate different types of messages
+		switch (e.data.type) {
+			case 'height': return this.reveal(e.data.value + editor_pad);
+			case 'close': return this.close();
 		}
+	}
 
-		// Close the iframe
-		if (e.data.type == 'close') this.close();
+	// Reveal the editor
+	View.reveal = function(height) {
+
+		// Remove the spinnner
+		this.$spinner.remove();
+
+		// Size the iframe and animate it in
+		this.$iframe.css({ height: height }).addClass('display');
+
+		// Open up the iframe's container
+		this.$icon.addClass('decoy-el-open')
+		this.$mask.css({
+				width: editor_width,
+				height: height,
+				marginLeft: -editor_width/2,
+				marginTop: -height/2
+			})
+		;
 	}
 
 	// Close on click outside of the editor
@@ -117,23 +130,23 @@ define(function (require) {
 
 		// Change display back to close
 		this.$icon.removeClass('decoy-el-open');
-		this.$icon.css({
+		this.$mask.css({
 			width: '',
 			height: '',
-			left: this.closed.left,
-			top: this.closed.top
+			marginLeft: '',
+			marginTop: ''
 		});
 
-		// Remove the iframe
-		this.$iframe.removeClass('loaded').delay(200).remove();
+		// Remove the iframe and loader
+		this.$iframe.removeClass('display');
+		_.delay(function(self) { self.$iframe.remove(); }, tween_length, this);
+		this.$spinner.remove();
 
 		// Remove mouse listeners
 		$doc.off('click', this.closeIfOutside);
-	};
 
-	// Return the initial size once opened
-	View.openSize = function() {
-		return { width: 400, height: 200 }
+		// Allow opening again
+		this.open = false;
 	};
 	
 	// Return view class
