@@ -136,7 +136,7 @@ class Elements extends Collection {
 	 */
 	protected function loadConfig() {
 		$file = app_path().'/config/packages/bkwld/decoy/elements.yaml';
-		if (!is_readable($file)) throw new Exception("Elements.yaml isn't readable");
+		if (!is_readable($file)) throw new Exception("Elements.yaml doesn't exist or isn't readable");
 		$this->config = $this->yaml_parser->parse(file_get_contents($file));
 	}
 

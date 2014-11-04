@@ -19,21 +19,47 @@
 .decoy-el-icon {
 	$color: $theme-primary-color;
 	$color-inverse: $theme-primary-inverse;
+	$color-active: $grey-border;
+	$tween-length: 200ms;
 	position: absolute;
 	cursor: pointer;
 	z-index: $zindex-tooltip;
 
+	// Only apply transitions after it's inited to prevent weird tween in
+	&.decoy-el-init {
+		@include transition(left $tween-length, top $tween-length);
+		&:after {
+			@include transition(border $tween-length);
+		}
+	}
+
 	// Make the round part of icon
 	$size: 20px;
 	.decoy-el-mask {
+
+		// Style like circle
 		display: block;
 		width: $size;
 		height: $size;
 		background: $color;
-		border: 1px solid transparent;
 		@include border-radius($size);
+
+		// Hide the iframe
 		overflow: hidden;
-		@include transition(all 200ms);
+
+		// Put above the arrow
+		position: relative;
+		z-index: 1;
+
+		// Animate
+		border: 1px solid transparent;
+		@include transition(
+			border $tween-length, 
+			width $tween-length, 
+			height $tween-length, 
+			box-shadow $tween-length,
+			border-radius $tween-length
+		);
 	}
 
 	// Build the arrow part of icon
@@ -62,18 +88,21 @@
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $color;
 	}
+	&.decoy-el-open.top:after { border-top-color: $color-active }
 	&.top-left:after {
 		bottom: $arrow-offset;
 		left: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $color;
 	}
+	&.decoy-el-open.top:after { border-top-color: $color-active }
 	&.top-right:after {
 		bottom: $arrow-offset;
 		right: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $color;
 	}
+	&.decoy-el-open.top:after { border-top-color: $color-active }
 	&.right:after {
 		top: 50%;
 		left: $arrow-offset;
@@ -81,6 +110,7 @@
 		border-width: $arrow-size $arrow-size $arrow-size 0;
 		border-right-color: $color;
 	}
+	&.decoy-el-open.right:after { border-right-color: $color-active }
 	&.left:after {
 		top: 50%;
 		right: $arrow-offset;
@@ -88,6 +118,7 @@
 		border-width: $arrow-size 0 $arrow-size $arrow-size;
 		border-left-color: $color;
 	}
+	&.decoy-el-open.left:after { border-left-color: $color-active }
 	&.bottom:after {
 		top: $arrow-offset;
 		left: 50%;
@@ -95,18 +126,21 @@
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $color;
 	}
+	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
 	&.bottom-left:after {
 		top: $arrow-offset;
 		left: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $color;
 	}
+	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
 	&.bottom-right:after {
 		top: $arrow-offset;
 		right: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $color;
 	}
+	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
 
 	// Make the spinner icon
 	.decoy-el-spinner {
@@ -122,25 +156,19 @@
 		left: 50%;
 		margin-left: -$size/2;
 		margin-top: -$size/2;
+
+		// Put it on top of the mask
+		z-index: 2;
 		
 		// Animate it
 		-webkit-animation: spin .75s infinite linear;
 	}
 
 	// Open it up
-	&.decoy-el-open {
-
-		// Hide the arrow
-		&:after {
-			content: none;
-		}
-
-		// Style it like a panel
-		.decoy-el-mask {
-			border: 1px solid $grey-border;
-			@include box-shadow($common-shadow);
-			@include border-radius(4px);
-		}
+	&.decoy-el-open .decoy-el-mask {
+		border: 1px solid $grey-border;
+		@include box-shadow($common-shadow);
+		@include border-radius(4px);
 	}
 
 	// Give the iframe a fixed width so the height can be properly calculated
@@ -149,7 +177,7 @@
 
 		// Hide by default
 		@include opacity(0);
-		@include transition(opacity 200ms);
+		@include transition(opacity $tween-length);
 		&.display {
 			@include opacity(1);
 		}

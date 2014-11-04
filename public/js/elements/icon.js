@@ -1,5 +1,5 @@
 define(function (require) {
-  
+	
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('lodash')
@@ -10,6 +10,7 @@ define(function (require) {
 		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span></span>'
 		, spinner_tpl = '<span class="glyphicon glyphicon-refresh decoy-el-spinner">'
 		, editor_width = 300 // How wide to make the revealed state
+		, icon_size = 20 // The initial size of the icon, both width and height
 		, tween_length = 200 // How long the tween lasts
 	;
 
@@ -26,7 +27,13 @@ define(function (require) {
 	// Bypass the check for content, Icon's don't have titles.
 	Icon.prototype.hasContent = function() {
 		return true;
-	}
+	};
+
+	// Remember the initial placement
+	Icon.prototype.applyPlacement = function(offset, placement) {
+		if (!this.placement) this.placement = placement;
+		Tooltip.prototype.applyPlacement.apply(this, arguments);
+	};
 
 	// Setup view
 	var View = {};
@@ -37,6 +44,7 @@ define(function (require) {
 		this.icon = this.create();
 		this.$icon = this.icon.tip();
 		this.icon.show();
+		this.$icon.addClass('decoy-el-init');
 
 		// Cache
 		this.open = false;
@@ -107,15 +115,17 @@ define(function (require) {
 		// Size the iframe and animate it in
 		this.$iframe.css({ height: height }).addClass('display');
 
-		// Open up the iframe's container
+		// Open up the iframe's container and mask
 		this.$icon.addClass('decoy-el-open')
-		this.$mask.css({
-				width: editor_width,
-				height: height,
-				marginLeft: -editor_width/2,
-				marginTop: -height/2
-			})
-		;
+		this.$mask.css({ width: editor_width, height: height });
+		this.reposition(editor_width, height);
+	}
+
+	// Re apply position using inerhitted code
+	View.reposition = function(w, h) {
+		this.icon.applyPlacement(
+			this.icon.getCalculatedOffset(this.icon.placement, this.icon.getPosition(), w, h), 
+		this.icon.placement);
 	}
 
 	// Close on click outside of the editor
@@ -130,12 +140,8 @@ define(function (require) {
 
 		// Change display back to close
 		this.$icon.removeClass('decoy-el-open');
-		this.$mask.css({
-			width: '',
-			height: '',
-			marginLeft: '',
-			marginTop: ''
-		});
+		this.$mask.css({ width: '', height: ''});
+		this.reposition(icon_size, icon_size);
 
 		// Remove the iframe and loader
 		this.$iframe.removeClass('display');
