@@ -1,15 +1,5 @@
 
-// Config
-@import "../variables";
-
-// Dependencies
-@import "compass/css3";
-@import "compass/utilities/general/clearfix";
-@import "../mixins/*";
-@import "../vendor/bootstrap/bootstrap/variables";
-@import "../vendor/bootstrap/bootstrap/glyphicons";
-
-// Spinning animatio
+// Spinning animation
 @-webkit-keyframes spin {
 	0% { @include rotate(0deg); }
 	100% { @include rotate(360deg); }
@@ -164,6 +154,14 @@
 		-webkit-animation: spin .75s infinite linear;
 	}
 
+	// Make spinner bigger during the saving, spin moment
+	&.decoy-el-open .decoy-el-spinner {
+		$size: 20px;
+		font-size: $size;
+		margin-left: -$size/2;
+		margin-top: -$size/2;
+	}
+
 	// Open it up
 	&.decoy-el-open .decoy-el-mask {
 		border: 1px solid $grey-border;
@@ -178,12 +176,16 @@
 		// Hide by default
 		@include opacity(0);
 		@include transition(opacity $tween-length);
-		&.display {
+		&.decoy-el-show {
 			@include opacity(1);
 		}
+
+		// Fade it out while it's saving
+		&.decoy-el-disable {
+			@include transition(opacity 500);
+			@include opacity(.3);
+		}
 	}
-
-
 }
 
 // Elements testing styles

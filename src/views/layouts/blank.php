@@ -16,9 +16,11 @@
 	<body class="<?=Decoy::bodyClass()?>">
 		
 		<?// The main page content ?>
-		<div id="main">
-			<?= $content?>
-		</div>
+		<? if (isset($content)): ?>
+			<div id="main">
+				<?= $content?>
+			</div>
+		<? endif ?>
 		
 	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
 	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>

@@ -14,7 +14,13 @@ use Symfony\Component\Yaml\Parser;
 class Elements extends Collection {
 
 	/**
+	 * The cache key used for the Elements collection
+	 */
+	const CACHE_KEY = 'decoy.elements.data';
+
+	/**
 	 * The parse YAML contents
+	 * 
 	 * @var array
 	 */
 	protected $config;
@@ -47,7 +53,10 @@ class Elements extends Collection {
 		// exception if the key isn't valid
 		if (!$this->has($key)) {
 			if ($default) return $default;
-			else throw new Exception("Element key '{$Key}' is not declared in elements.yaml");
+			else {
+				\Log::debug('Keys are: ',$this->keys());
+				throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
+			}
 		} return new Element(array_merge($this->items[$key], ['key' => $key]));
 
 	}
@@ -58,11 +67,11 @@ class Elements extends Collection {
 	 * @return void 
 	 */
 	protected function hydrate() {
-		if ($data = $this->cache->get('decoy.elements.data')) {
+		if ($data = $this->cache->get(self::CACHE_KEY)) {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();
-			$this->cache->forever('decoy.elements.data', $this->items);
+			$this->cache->forever(self::CACHE_KEY, $this->items);
 		}
 	}
 

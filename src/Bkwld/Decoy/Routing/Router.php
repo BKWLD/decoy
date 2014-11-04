@@ -3,12 +3,8 @@
 // Dependencies
 use App;
 use Bkwld\Decoy\Models\Encoding;
-use Config;
-use Decoy;
-use Event;
 use Input;
 use Route;
-use View;
 
 /**
  * This class acts as a bootstrap for setting up
@@ -143,17 +139,8 @@ class Router {
 	 * Elements system
 	 */
 	public function registerElements() {
-
-		/**
-		 * Generate the content for frontend element tooltip iframes
-		 */
-		Route::get($this->dir.'/elements/field/{key}', function($key) {
-			return View::make('decoy::layouts.blank')
-				->nest('content', 'decoy::elements.field', [
-					'element' => Decoy::el($key),
-				]);
-		});
-
+		Route::get($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy\elements@field'));
+		Route::post($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy\elements@field-update'));
 	}
 	
 	/**

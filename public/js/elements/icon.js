@@ -24,7 +24,7 @@ define(function (require) {
 	Icon.prototype = Object.create(Tooltip.prototype);
 	Icon.prototype.constructor = Icon;
 
-	// Bypass the check for content, Icon's don't have titles.
+	// Bypass the check for content, these icon's don't have titles.
 	Icon.prototype.hasContent = function() {
 		return true;
 	};
@@ -80,17 +80,23 @@ define(function (require) {
 		if (this.open) return;
 		this.open = true;
 
+		// Reset the value
+		this.value = undefined;
+
 		// Close on any click outside of it
 		$doc.on('click', this.closeIfOutside);
-		
-		// Show loading progress
-		this.$spinner = $(spinner_tpl).appendTo(this.$icon);		
-
+				
 		// Build an iframe that will render the element field editor
+		this.spin();
 		this.$iframe = $('<iframe>').appendTo(this.$mask).attr({
 			src: '/admin/elements/field/'+this.key
 		});
 
+	};
+
+	// Show the spinner
+	View.spin = function() {
+		this.$spinner = $(spinner_tpl).appendTo(this.$icon);
 	};
 
 	// Handle iframe messages
@@ -102,9 +108,10 @@ define(function (require) {
 		// Delegate different types of messages
 		switch (e.data.type) {
 			case 'height': return this.reveal(e.data.value + editor_pad);
+			case 'saving': return this.saving(e.data.value);
 			case 'close': return this.close();
 		}
-	}
+	};
 
 	// Reveal the editor
 	View.reveal = function(height) {
@@ -112,21 +119,31 @@ define(function (require) {
 		// Remove the spinnner
 		this.$spinner.remove();
 
-		// Size the iframe and animate it in
-		this.$iframe.css({ height: height }).addClass('display');
-
-		// Open up the iframe's container and mask
+		// Resize and reposition elements
 		this.$icon.addClass('decoy-el-open')
+		this.$iframe.css({ height: height }).addClass('decoy-el-show');
 		this.$mask.css({ width: editor_width, height: height });
 		this.reposition(editor_width, height);
-	}
+
+		// Close the editor when the iframe submission is complete
+		this.$iframe.on('load', this.close);
+	};
 
 	// Re apply position using inerhitted code
 	View.reposition = function(w, h) {
 		this.icon.applyPlacement(
 			this.icon.getCalculatedOffset(this.icon.placement, this.icon.getPosition(), w, h), 
 		this.icon.placement);
-	}
+	};
+
+	// Put the editor in a pending state because the user has submitted
+	// the iframe form.  Also, preserve the value of the element for 
+	// replacing in the frontend DOM
+	View.saving = function(value) {
+		this.value = value;
+		this.$iframe.addClass('decoy-el-disable');
+		this.spin();
+	};
 
 	// Close on click outside of the editor
 	View.closeIfOutside = function(e) {
@@ -138,13 +155,17 @@ define(function (require) {
 	// Close the editor
 	View.close = function(e) {
 
-		// Change display back to close
+		// Update the DOM
+		if (this.value != undefined) this.updateDOM(this.value);
+
+		// Resize and reposition elements back to close state
 		this.$icon.removeClass('decoy-el-open');
+		this.$iframe.removeClass('decoy-el-show');
 		this.$mask.css({ width: '', height: ''});
 		this.reposition(icon_size, icon_size);
 
-		// Remove the iframe and loader
-		this.$iframe.removeClass('display');
+		// Remove the iframe and spinner (if it's still out there) from DOM
+		this.$iframe.off('load', this.close);
 		_.delay(function(self) { self.$iframe.remove(); }, tween_length, this);
 		this.$spinner.remove();
 
@@ -153,6 +174,25 @@ define(function (require) {
 
 		// Allow opening again
 		this.open = false;
+	};
+
+	// Live update the DOM with the change the user made
+	View.updateDOM = function(value) {
+
+		// If an image tag, put the value in the source
+		if (this.$el.is('img')) this.$el.attr('src', value);
+
+		// If this is an "a" tag and the key looks like a link, put it in href
+		else if (this.$el.is('a') && /(link|url)$/.test(this.key)) this.$el.attr('href', value);
+
+		// If the element has a style tag with a background and the key looks like 
+		// an image, set it as the background image
+		else if (this.$el.is('[style*="background"]') && /(image|background|marquee)$/.test(this.key))
+			this.$el.css('background-image', 'url("'+value+'")');
+
+		// Otherwise, the default behavior is to replace the text of the el
+		else this.$el.text(value);
+
 	};
 	
 	// Return view class

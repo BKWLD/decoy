@@ -21,20 +21,31 @@ define(function (require) {
 		
 		// Cache
 		this.key = this.$('input[name="key"]').val();
+		this.$value = this.$('input[name="value"]');
+		this.$submit = this.$('.btn.save');
 
 		// Measure the dimensions of the iframe and report back to the parent.  This
 		// is treated like a "ready" event
 		this.message('height', $body.height());
 
-		// Listen for closee / cancel events
+		// Listen for close / cancel events
 		this.$('.btn.back').on('click', this.close);
+
+		// Listen for form submits
+		this.$('form').on('submit', this.saving);
 
 	};
 
-	// Tell the iframe to close
+	// Tell the icon to close
 	View.close = function() {
 		this.message('close')
 	};
+
+	// Tell the icon that we're saving
+	View.saving = function() {
+		this.message('saving', this.$value.val());
+		this.$submit.prop('disabled', true);
+	}
 
 	// postMessage helper
 	View.message = function(type, value) {

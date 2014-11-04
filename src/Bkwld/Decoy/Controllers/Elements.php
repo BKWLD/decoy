@@ -1,0 +1,59 @@
+<?php namespace Bkwld\Decoy\Controllers;
+
+// Dependencies
+use Bkwld\Decoy\Models\Element;
+use Bkwld\Decoy\Collections\Elements as ElementsCollection;
+use Cache;
+use Decoy;
+use Input;
+use View;
+
+/**
+ * Render a form that allows admins to override language files
+ */
+class Elements extends Base {
+	
+
+	/**
+	 * Show the field editor form that will appear in an iframe on
+	 * the frontend
+	 * 
+	 * @param  string $key A full Element key
+	 * @return Illuminate\Http\Response
+	 */
+	public function field($key) {
+		return View::make('decoy::layouts.blank')
+			->nest('content', 'decoy::elements.field', [
+				'element' => Decoy::el($key),
+			]);
+	}
+
+	/**
+	 * Update a single field because of a frontend Element editor
+	 * iframe post
+	 * 
+	 * @param  string $key A full Element key
+	 * @return Illuminate\Http\Response
+	 */
+	public function fieldUpdate($key) {
+
+		// If the value has changed, update or an insert a record in the database.
+		$element = Decoy::el($key);
+		if (Input::get('value') != $element->value) {
+
+			// Making use of the model's exists property to trigger Laravel's
+			// internal logic.
+			$element->exists = !empty(Element::find($key));
+			$element->value = Input::get('value');
+			$element->save();
+
+			// Clear the cache
+			Cache::forget(ElementsCollection::CACHE_KEY);
+		}
+		
+		// Return an empty page
+		return '';
+	}
+	
+	
+}
