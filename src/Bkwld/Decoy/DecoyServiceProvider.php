@@ -3,11 +3,12 @@
 use App;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
+use Former\Former;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
-use Former\Former;
+use Symfony\Component\Yaml\Parser;
 
 class DecoyServiceProvider extends ServiceProvider {
 
@@ -135,6 +136,15 @@ class DecoyServiceProvider extends ServiceProvider {
 			return $instance;
 		});
 		
+		// Build the Elements collection
+		$this->app->singleton('decoy.elements', function($app) {
+			return new Collections\Elements(
+				new Parser, 
+				new Models\Element, 
+				$this->app->make('cache')->driver()
+			);
+		});
+
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
 		$this->commands(array('command.decoy.generate'));
@@ -176,15 +186,16 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	public function provides() {
 		return array(
+			'command.decoy.generate',
 			'decoy', 
-			'decoy.url', 
-			'decoy.router', 
-			'decoy.slug', 
-			'decoy.wildcard', 
 			'decoy.acl_fail', 
 			'decoy.auth',
+			'decoy.elements',
 			'decoy.filters',
-			'command.decoy.generate',
+			'decoy.router', 
+			'decoy.slug', 
+			'decoy.url', 
+			'decoy.wildcard', 
 		);
 	}
 

@@ -149,6 +149,16 @@ class Helpers {
 	}
 
 	/**
+	 * Get the value of an Element given it's key
+	 *
+	 * @param  string $key 
+	 * @return mixed
+	 */
+	public function el($key) {
+		return app('decoy.elements')->get($key);
+	}
+
+	/**
 	 * Is Decoy handling the request?  Check if the current path is exactly "admin" or if
 	 * it contains admin/*
 	 * @return boolean 
