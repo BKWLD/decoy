@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Models\Element;
+use Bkwld\Library\Utils;
 use Illuminate\Cache\Repository;
 use Illuminate\Support\Collection;
 use Symfony\Component\Yaml\Parser;
@@ -47,7 +48,7 @@ class Elements extends Collection {
 		if (!$this->has($key)) {
 			if ($default) return $default;
 			else throw new Exception("Element key '{$Key}' is not declared in elements.yaml");
-		} return new Element($this->items[$key]);
+		} return new Element(array_merge($this->items[$key], ['key' => $key]));
 
 	}
 
@@ -76,10 +77,11 @@ class Elements extends Collection {
 
 	/**
 	 * Massage the YAML config file into a single, flat associative array 
-	 * 
+	 *
+	 * @param boolean $include_extra Include attibutes that are only needed by Admin UIs
 	 * @return array
 	 */
-	protected function assocConfig() {
+	public function assocConfig($include_extra = false) {
 
 		// Load the config data if it isn't already
 		if (!$this->config) $this->loadConfig();
@@ -103,8 +105,15 @@ class Elements extends Collection {
 					if (is_array($field_data) && array_key_exists('value', $field_data)) $value = $field_data['value'];
 					else $value = $field_data;
 
+					// Build the value array
+					$el = ['type' => $type, 'value' => $value];
+					if ($include_extra) {
+						$el['label'] = isset($field_data['label']) ? $field_data['label'] : Utils\String::titleFromKey($field);
+						if (isset($field_data['help'])) $el['help'] = $field_data['help'];
+					}
+
 					// Add the config
-					$config["{$page}.{$section}.{$field}"] = ['type' => $type, 'value' => $value];
+					$config["{$page}.{$section}.{$field}"] = $el;
 				}
 			}
 		}

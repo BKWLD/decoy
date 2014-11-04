@@ -1,7 +1,14 @@
 <?php namespace Bkwld\Decoy\Models;
 
+// Dependencies
+use Illuminate\Support\Collection;
+
+/**
+ * Represents an indivudal Element instance, hydrated with the merge of
+ * YAML and DB Element sources
+ */
 class Element extends Base {
-	
+
 	/**
 	 * The primary key for the model.
 	 *
@@ -15,6 +22,54 @@ class Element extends Base {
 	 * @var bool
 	 */
 	public $timestamps = false;
+
+	/**
+	 * Get the label for the element
+	 *
+	 * @return string 
+	 */
+	public function getLabelAttribute() {
+		$this->applyExtraConfig();
+		return $this->getOriginal('label');
+	}
+
+	/**
+	 * Get the help text for the element
+	 *
+	 * @return string 
+	 */
+	public function getHelpAttribute() {
+		$this->applyExtraConfig();
+		return $this->getOriginal('help');
+	}
+
+	/**
+	 * Hydrate with additional config options.  Also, make sure to only
+	 * store once to reduce lookups.
+	 *
+	 * @return void 
+	 */
+	protected function applyExtraConfig() {
+
+		// If a label attribute is set, then we've already applied extra configs
+		if (array_key_exists('label', $this->attributes)) return;
+
+		// ... Else, lookup additional attributes from the YAML and apply them
+		$this->setRawAttributes(
+
+			// Parse the YAML, get this element, and merge it's fields with the current key
+			array_merge(
+				Collection::make(app('decoy.elements')
+				->assocConfig(true))
+				->get($this->key),
+
+				// Preserve the key and value.  We don't want to replace the value from DB
+				// with one from YAML
+				['key' => $this->key, 'value' => $this->value])
+
+		// Sync attributes, meaning, the model doesn't think it needs to save
+		, true);
+	}
 
 	/**
 	 * Switch between different formats when rendering to a view

@@ -1,9 +1,13 @@
 %fieldset
 	.legend Element
 
+	-# Inform Former
+	-Former::populate($element)
+
+	-# Display form
 	!=Former::vertical_open_for_files()
-	!=Former::hidden('key', $key)
-	!=Former::text('title', 'Marquee title')->blockHelp('Only make the title super sweet.');
+	!=Former::hidden('key')
+	!=Former::text('value', $element->label)->blockHelp($element->help);
 
 	.form-actions
 		%button.btn.btn-success.save(name="_save" value="save" type="submit")

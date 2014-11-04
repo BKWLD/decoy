@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Models\Encoding;
 use Config;
+use Decoy;
 use Event;
 use Input;
 use Route;
@@ -149,7 +150,7 @@ class Router {
 		Route::get($this->dir.'/elements/field/{key}', function($key) {
 			return View::make('decoy::layouts.blank')
 				->nest('content', 'decoy::elements.field', [
-					'key' => $key,
+					'element' => Decoy::el($key),
 				]);
 		});
 
