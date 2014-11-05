@@ -166,10 +166,6 @@
 		// Hide by default
 		@include opacity(0);
 		@include transition(opacity $tween-length*2);
-		&.decoy-el-show {
-			@include transition(opacity $tween-length);
-			@include opacity(1);
-		}
 	}
 
 	// Opened styles
@@ -186,11 +182,22 @@
 			margin-top: -$size/2;
 		}
 
-		// Style the icon like a Decoy @panel
+		// Style the icon like a Decoy @panel when the iframe
+		// is open
 		.decoy-el-mask {
-			border: 1px solid $grey-border;
-			@include box-shadow($common-shadow);
 			@include border-radius(4px);
+			@include box-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+
+			// Style it like Decoy panel when the iframe is open
+			&.decoy-el-show {
+				border: 1px solid $grey-border;
+
+				// Show the iframe up
+				iframe {
+					@include transition(opacity $tween-length);
+					@include opacity(1);
+				}
+			}
 		}
 	}
 	

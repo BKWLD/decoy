@@ -82,6 +82,11 @@ class Element extends Base {
 	 * @return string 
 	 */
 	public function format() {
+		
+		// Must return a string
+		if (empty($this->value)) return '';
+
+		// Different outputs depending on type
 		switch($this->type) {
 			case 'image': return $this->copyImage();
 			default: return $this->value;

@@ -119,8 +119,8 @@ define(function (require) {
 		// Resize and reposition elements
 		var iframe_width = this.$iframe.width();
 		this.$icon.addClass('decoy-el-open')
-		this.$iframe.css({ height: height }).addClass('decoy-el-show');
-		this.$mask.css({ width: iframe_width, height: height });
+		this.$iframe.css({ height: height });
+		this.$mask.addClass('decoy-el-show').css({ width: iframe_width, height: height });
 		this.reposition(iframe_width, height);
 	};
 
@@ -134,7 +134,7 @@ define(function (require) {
 	// Put the editor in a pending state because the user has submitted
 	// the iframe form. 
 	View.saving = function() {
-		this.$iframe.removeClass('decoy-el-show');
+		this.$mask.removeClass('decoy-el-show');
 		this.spin();
 	};
 
@@ -157,8 +157,7 @@ define(function (require) {
 
 		// Resize and reposition elements back to close state
 		this.$icon.removeClass('decoy-el-open');
-		this.$iframe.removeClass('decoy-el-show');
-		this.$mask.css({ width: '', height: ''});
+		this.$mask.removeClass('decoy-el-show').css({ width: '', height: ''});
 		this.reposition(icon_size, icon_size);
 
 		// Remove the iframe and spinner (if it's still out there) from DOM
@@ -180,7 +179,7 @@ define(function (require) {
 		if (this.$el.is('img')) this.$el.attr('src', value);
 
 		// If this is an "a" tag and the key looks like a link, put it in href
-		else if (this.$el.is('a') && /(link|url)$/.test(this.key)) this.$el.attr('href', value);
+		else if (this.$el.is('a') && /(link|url|file|pdf)$/.test(this.key)) this.$el.attr('href', value);
 
 		// If the element has a style tag with a background and the key looks like 
 		// an image, set it as the background image

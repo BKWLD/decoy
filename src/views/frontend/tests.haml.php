@@ -5,4 +5,10 @@
 	.float-right(data-decoy-el='homepage.marquee.title' data-placement='left')!=Decoy::el('homepage.marquee.title')
 	.clearfix
 
-	%img(src=Decoy::el('other.body.image') data-placement='bottom' data-decoy-el='other.body.image')
+	%p
+		%a(href=Decoy::el('other.body.link') data-decoy-el='other.body.link' data-placement='right') An example of a link
+
+	%p
+		%a(href=Decoy::el('other.body.pdf') data-decoy-el='other.body.pdf' data-placement='bottom') A downloadable file
+
+	%img(src=Decoy::el('other.body.image') data-decoy-el='other.body.image' data-placement='bottom')

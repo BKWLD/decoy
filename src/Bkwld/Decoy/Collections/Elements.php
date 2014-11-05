@@ -115,7 +115,8 @@ class Elements extends Collection {
 
 					// Determine the value
 					if (is_array($field_data) && array_key_exists('value', $field_data)) $value = $field_data['value'];
-					else $value = $field_data;
+					elseif (is_string($field_data)) $value = $field_data;
+					else $value = null;
 
 					// Build the value array
 					$el = ['type' => $type, 'value' => $value];

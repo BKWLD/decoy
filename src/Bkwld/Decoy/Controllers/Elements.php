@@ -59,7 +59,7 @@ class Elements extends Base {
 		// Return the layout with JUST a script variable with the element value
 		// after saving.  Thus, post any saving callback operations.
 		return View::make('decoy::layouts.blank', [
-			'content' => "<div id='response' data-key='{$element->key}'>{$element->value}</div>"
+			'content' => "<div id='response' data-key='{$key}'>{$element->value}</div>"
 		]);
 	}
 	
