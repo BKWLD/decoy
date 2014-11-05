@@ -24,32 +24,12 @@ class Element extends Base {
 	public $timestamps = false;
 
 	/**
-	 * Get the label for the element
-	 *
-	 * @return string 
-	 */
-	public function getLabelAttribute() {
-		$this->applyExtraConfig();
-		return $this->getOriginal('label');
-	}
-
-	/**
-	 * Get the help text for the element
-	 *
-	 * @return string 
-	 */
-	public function getHelpAttribute() {
-		$this->applyExtraConfig();
-		return $this->getOriginal('help');
-	}
-
-	/**
 	 * Hydrate with additional config options.  Also, make sure to only
 	 * store once to reduce lookups.
 	 *
 	 * @return void 
 	 */
-	protected function applyExtraConfig() {
+	public function applyExtraConfig() {
 
 		// If a label attribute is set, then we've already applied extra configs
 		if (array_key_exists('label', $this->attributes)) return;
@@ -69,6 +49,9 @@ class Element extends Base {
 
 		// Sync attributes, meaning, the model doesn't think it needs to save
 		, true);
+
+		// Enable chaining
+		return $this;
 	}
 
 	/**

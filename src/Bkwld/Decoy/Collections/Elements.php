@@ -117,8 +117,9 @@ class Elements extends Collection {
 					// Build the value array
 					$el = ['type' => $type, 'value' => $value];
 					if ($include_extra) {
-						$el['label'] = isset($field_data['label']) ? $field_data['label'] : Utils\String::titleFromKey($field);
-						if (isset($field_data['help'])) $el['help'] = $field_data['help'];
+						$this->mergeExtra($el, $field, $field_data);
+						$this->mergeExtra($el, $section, $section_data, 'section_');
+						$this->mergeExtra($el, $page, $page_data, 'page_');
 					}
 
 					// Add the config
@@ -129,6 +130,18 @@ class Elements extends Collection {
 
 		// Return the flattened config
 		return $config;
+	}
+
+	/**
+	 * Add label and help to the element data for one of the levels
+	 *
+	 * @param array $el The element data that is being merged into, passed by reference
+	 * @param mixed $data The data for a level in the Elements YAML config
+	 * @param string $prefix A prefix to append to the beginning of the key being set on $el
+	 */
+	protected function mergeExtra(&$el, $key, $data, $prefix = null) {
+		$el[$prefix.'label'] = isset($data['label']) ? $data['label'] : Utils\String::titleFromKey($key);
+		if (isset($data['help'])) $el[$prefix.'help'] = $data['help'];
 	}
 
 	/**

@@ -1,5 +1,9 @@
 %fieldset
-	.legend Element
+	.legend=$element->section_label
+
+	-# Section description
+	-if ($element->section_help)
+		%p!=$element->section_help
 
 	-# Inform Former
 	-Former::populate($element)

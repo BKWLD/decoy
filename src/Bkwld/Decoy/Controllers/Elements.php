@@ -24,7 +24,7 @@ class Elements extends Base {
 	public function field($key) {
 		return View::make('decoy::layouts.blank')
 			->nest('content', 'decoy::elements.field', [
-				'element' => Decoy::el($key),
+				'element' => Decoy::el($key)->applyExtraConfig(),
 			]);
 	}
 
