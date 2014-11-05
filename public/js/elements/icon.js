@@ -79,9 +79,6 @@ define(function (require) {
 		if (this.open) return;
 		this.open = true;
 
-		// Reset the value
-		this.value = undefined;
-
 		// Close on any click outside of it
 		$doc.on('click', this.closeIfOutside);
 				
@@ -107,7 +104,8 @@ define(function (require) {
 		// Delegate different types of messages
 		switch (e.data.type) {
 			case 'height': return this.reveal(e.data.value + editor_pad);
-			case 'saving': return this.saving(e.data.value);
+			case 'saving': return this.saving();
+			case 'saved': return this.saved(e.data.value);
 			case 'close': return this.close();
 		}
 	};
@@ -124,9 +122,6 @@ define(function (require) {
 		this.$iframe.css({ height: height }).addClass('decoy-el-show');
 		this.$mask.css({ width: iframe_width, height: height });
 		this.reposition(iframe_width, height);
-
-		// Close the editor when the iframe submission is complete
-		this.$iframe.on('load', this.close);
 	};
 
 	// Re apply position using inerhitted code
@@ -137,13 +132,18 @@ define(function (require) {
 	};
 
 	// Put the editor in a pending state because the user has submitted
-	// the iframe form.  Also, preserve the value of the element for 
-	// replacing in the frontend DOM
-	View.saving = function(value) {
-		this.value = value;
-		this.$iframe.addClass('decoy-el-disable');
+	// the iframe form. 
+	View.saving = function() {
+		this.$iframe.removeClass('decoy-el-show');
 		this.spin();
 	};
+
+	// The iframe has finished saving, so update the DOM with the new value
+	// and then close it
+	View.saved = function(value) {
+		this.updateDOM(value);
+		this.close();
+	}
 
 	// Close on click outside of the editor
 	View.closeIfOutside = function(e) {
@@ -154,9 +154,6 @@ define(function (require) {
 
 	// Close the editor
 	View.close = function(e) {
-
-		// Update the DOM
-		if (this.value != undefined) this.updateDOM(this.value);
 
 		// Resize and reposition elements back to close state
 		this.$icon.removeClass('decoy-el-open');
@@ -191,7 +188,7 @@ define(function (require) {
 			this.$el.css('background-image', 'url("'+value+'")');
 
 		// Otherwise, the default behavior is to replace the text of the el
-		else this.$el.text(value);
+		else this.$el.html(value);
 
 	};
 	

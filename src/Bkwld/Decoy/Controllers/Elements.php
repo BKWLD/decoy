@@ -1,9 +1,12 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
+use App;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Collections\Elements as ElementsCollection;
+use Bkwld\Library\Utils\File;
 use Cache;
+use Config;
 use Decoy;
 use Input;
 use View;
@@ -39,11 +42,13 @@ class Elements extends Base {
 
 		// If the value has changed, update or an insert a record in the database.
 		$element = Decoy::el($key);
-		if (Input::get('value') != $element->value) {
+		if (Input::get('value') != $element->value || Input::hasFile('value')) {
 
 			// Making use of the model's exists property to trigger Laravel's
 			// internal logic.
 			$element->exists = !empty(Element::find($key));
+
+			// Save it.  Files will be automatically attached via model callbacks
 			$element->value = Input::get('value');
 			$element->save();
 
@@ -51,8 +56,11 @@ class Elements extends Base {
 			Cache::forget(ElementsCollection::CACHE_KEY);
 		}
 		
-		// Return an empty page
-		return '';
+		// Return the layout with JUST a script variable with the element value
+		// after saving.  Thus, post any saving callback operations.
+		return View::make('decoy::layouts.blank', [
+			'content' => "<div id='response' data-key='{$element->key}'>{$element->value}</div>"
+		]);
 	}
 	
 	

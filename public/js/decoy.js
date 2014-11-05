@@ -75,7 +75,7 @@ define(function (require) {
 			});
 		});
 	};
-	$('body.elements.field fieldset').views(require('decoy/elements/field'));
+	$('body.elements.field #main').views(require('decoy/elements/field'));
 	
 	// --------------------------------------------------
 	// DOM ready

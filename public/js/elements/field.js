@@ -21,14 +21,20 @@ define(function (require) {
 		_.bindAll(this);
 		
 		// Cache
-		this.key = this.$('[name="key"]').val();
+		this.$response = this.$('#response');
+		this.key = this.$response.data('key') || this.$('[name="key"]').val();
 		this.$value = this.$('[name="value"]');
 		this.$submit = this.$('.btn.save');
 
+		// If we're handling the saved condition, immediatly send message and stop
+		if (this.$response.length) return this.saved();
+
 		// Measure the dimensions of the iframe and report back to the parent.  This
 		// is treated like a "ready" event.  If this is field is a WYSIWYG, wait till
-		// CKEditor as initialized because it affects the height measurement.
+		// CKEditor as initialized because it affects the height measurement.  If it's an image, 
+		// wait for image to load
 		if (this.$value.hasClass('wysiwyg')) CKEditor.on('instanceReady', this.ready);
+		else if (this.$('.image-upload').length) this.$('.img-thumbnail').imagesLoaded(this.ready);
 		else this.ready();
 
 		// Listen for close / cancel events
@@ -51,8 +57,13 @@ define(function (require) {
 
 	// Tell the icon that we're saving
 	View.saving = function() {
-		this.message('saving', this.$value.val());
+		this.message('saving');
 		this.$submit.prop('disabled', true);
+	}
+
+	// Tell the icon that saving has finished and pass the new value
+	View.saved = function() {
+		this.message('saved', this.$response.html());
 	}
 
 	// postMessage helper

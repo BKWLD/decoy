@@ -74,7 +74,7 @@ class Elements extends Collection {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();
-			$this->cache->forever(self::CACHE_KEY, $this->items);
+			if (!App::isLocal()) $this->cache->forever(self::CACHE_KEY, $this->items);
 		}
 	}
 

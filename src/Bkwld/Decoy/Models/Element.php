@@ -1,7 +1,10 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use Config;
+use Bkwld\Library\Utils\File;
 use Illuminate\Support\Collection;
+use Str;
 
 /**
  * Represents an indivudal Element instance, hydrated with the merge of
@@ -24,10 +27,29 @@ class Element extends Base {
 	public $timestamps = false;
 
 	/**
+	 * Subclass setAttribute so that we can automatically set validation
+	 * rules based on the Element type
+	 * 
+	 * @param  string  $key
+	 * @param  mixed   $value
+	 * @return void
+	 */
+	public function setAttribute($key, $value) {
+		if ($key == 'type') { switch($value) {
+			case 'image': self::$rules['value'] = 'image'; break;
+			case 'file': self::$rules['value'] = 'file'; break;
+			case 'video-encoder': self::$rules['value'] = 'video'; break;
+		}}
+
+		// Continue
+		return parent::setAttribute($key, $value);
+	}
+
+	/**
 	 * Hydrate with additional config options.  Also, make sure to only
 	 * store once to reduce lookups.
 	 *
-	 * @return void 
+	 * @return $this 
 	 */
 	public function applyExtraConfig() {
 
@@ -35,7 +57,7 @@ class Element extends Base {
 		if (array_key_exists('label', $this->attributes)) return;
 
 		// ... Else, lookup additional attributes from the YAML and apply them
-		$this->setRawAttributes(
+		$this->fill(
 
 			// Parse the YAML, get this element, and merge it's fields with the current key
 			array_merge(
@@ -47,8 +69,8 @@ class Element extends Base {
 				// with one from YAML
 				['key' => $this->key, 'value' => $this->value])
 
-		// Sync attributes, meaning, the model doesn't think it needs to save
-		, true);
+		// Sync original so the model doesn't think it's dirty
+		)->syncOriginal();
 
 		// Enable chaining
 		return $this;
@@ -61,8 +83,40 @@ class Element extends Base {
 	 */
 	public function format() {
 		switch($this->type) {
+			case 'image': return $this->copyImage();
 			default: return $this->value;
 		}
+	}
+
+	/**
+	 * Check if the value looks like an image.  If it does, copy it to the uploads dir
+	 * so Croppa can work on it and return the modified path
+	 *
+	 * @return string The new path (relative to uploads dir)
+	 */
+	protected function copyImage() {
+
+		// Return nothing if empty
+		if (!$this->value) return '';
+		
+		// All images must live in the /img (relative) directory.  I'm not throwing an exception
+		// here because Laravel's view exception handler doesn't display the message.
+		if (Str::is('/uploads/*', $this->value)) return $this->value;
+		if (!Str::is('/img/*', $this->value)) return 'All fragment images must be stored in the public/img directory';
+		
+		// Check if the image already exists in the uploads directory
+		$uploads = File::publicPath(Config::get('decoy::core.upload_dir'));
+		$dst = str_replace('/img/', $uploads.'/fragments/', $this->value);
+		$dst_full_path = public_path().$dst;
+		if (file_exists($dst_full_path)) return $dst;
+		
+		// Copy it to the uploads dir
+		$dir = dirname($dst_full_path);
+		if (!file_exists($dir)) mkdir($dir, 0775, true);
+		copy(public_path().$this->value, $dst_full_path);
+
+		// Return the new, non-full- path
+		return $dst;
 	}
 
 	/**

@@ -165,15 +165,10 @@
 
 		// Hide by default
 		@include opacity(0);
-		@include transition(opacity $tween-length);
+		@include transition(opacity $tween-length*2);
 		&.decoy-el-show {
+			@include transition(opacity $tween-length);
 			@include opacity(1);
-		}
-
-		// Fade it out while it's saving
-		&.decoy-el-disable {
-			@include transition(opacity 500);
-			@include opacity(.3);
 		}
 	}
 
