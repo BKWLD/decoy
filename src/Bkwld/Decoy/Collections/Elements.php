@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Collections;
 
 // Dependencies
+use App;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Library\Utils;
@@ -62,12 +63,14 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Populate the Collection from the Cache or build the cache if it isn't set yet
+	 * Populate the Collection from the Cache or build the cache if it isn't set yet.
+	 * But only if not on a local environment (as new Elements are added, you would have
+	 * to keep re-clearing the cache)
 	 *
 	 * @return void 
 	 */
 	protected function hydrate() {
-		if ($data = $this->cache->get(self::CACHE_KEY)) {
+		if (!App::isLocal() && $data = $this->cache->get(self::CACHE_KEY)) {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();

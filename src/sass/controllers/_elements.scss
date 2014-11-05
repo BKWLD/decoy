@@ -18,6 +18,13 @@ body.elements.field {
 		}
 	}
 
+	// Make the chevrons in the legends smaller
+	.legend .glyphicon-chevron-right {
+		font-size: 7px;
+		top: -2px;
+		margin: 0 3px;
+	}
+
 	// Make the form-actions non-fixed
 	.form-actions {
 		position: static;

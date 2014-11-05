@@ -4,6 +4,7 @@ define(function (require) {
 	var $ = require('jquery')
 		, _ = require('lodash')
 		, Backbone = require('backbone')
+		, CKEditor = window.CKEDITOR
 		, $body = $('body')
 	;
 
@@ -20,13 +21,15 @@ define(function (require) {
 		_.bindAll(this);
 		
 		// Cache
-		this.key = this.$('input[name="key"]').val();
-		this.$value = this.$('input[name="value"]');
+		this.key = this.$('[name="key"]').val();
+		this.$value = this.$('[name="value"]');
 		this.$submit = this.$('.btn.save');
 
 		// Measure the dimensions of the iframe and report back to the parent.  This
-		// is treated like a "ready" event
-		this.message('height', $body.height());
+		// is treated like a "ready" event.  If this is field is a WYSIWYG, wait till
+		// CKEditor as initialized because it affects the height measurement.
+		if (this.$value.hasClass('wysiwyg')) CKEditor.on('instanceReady', this.ready);
+		else this.ready();
 
 		// Listen for close / cancel events
 		this.$('.btn.back').on('click', this.close);
@@ -34,6 +37,11 @@ define(function (require) {
 		// Listen for form submits
 		this.$('form').on('submit', this.saving);
 
+	};
+
+	// Tell the parent that the iframe is ready
+	View.ready = function() {
+		this.message('height', $body.height());
 	};
 
 	// Tell the icon to close

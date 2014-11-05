@@ -9,7 +9,6 @@ define(function (require) {
 		, editor_pad = 2 // Editor padding + borders 
 		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span></span>'
 		, spinner_tpl = '<span class="glyphicon glyphicon-refresh decoy-el-spinner">'
-		, editor_width = 300 // How wide to make the revealed state
 		, icon_size = 20 // The initial size of the icon, both width and height
 		, tween_length = 200 // How long the tween lasts
 	;
@@ -23,6 +22,16 @@ define(function (require) {
 	var Icon = function() { Tooltip.apply(this, arguments); };
 	Icon.prototype = Object.create(Tooltip.prototype);
 	Icon.prototype.constructor = Icon;
+
+	// Tweak defaults
+	Icon.prototype.getDefaults = function() {
+		var defaults = Tooltip.DEFAULTS;
+		defaults.placement = 'auto';
+		defaults.animation = false; // Don't add the Bootstrap animation class
+		defaults.template = icon_tpl; // Replace template with our own
+		defaults.trigger = 'manual'; // We're going to open them only via API
+		return defaults;
+	};
 
 	// Bypass the check for content, these icon's don't have titles.
 	Icon.prototype.hasContent = function() {
@@ -59,17 +68,7 @@ define(function (require) {
 
 	// Create an Element editable icon
 	View.create = function() {
-		return new Icon(this.el, {
-
-			// We're going to open them only via API
-			trigger: 'manual',
-
-			// Replace template with our own
-			template: icon_tpl,
-			
-			// Don't add the Bootstrap animation class to it
-			animation: false
-		});
+		return new Icon(this.el);
 	};
 
 	// Load the editor
@@ -120,10 +119,11 @@ define(function (require) {
 		this.$spinner.remove();
 
 		// Resize and reposition elements
+		var iframe_width = this.$iframe.width();
 		this.$icon.addClass('decoy-el-open')
 		this.$iframe.css({ height: height }).addClass('decoy-el-show');
-		this.$mask.css({ width: editor_width, height: height });
-		this.reposition(editor_width, height);
+		this.$mask.css({ width: iframe_width, height: height });
+		this.reposition(iframe_width, height);
 
 		// Close the editor when the iframe submission is complete
 		this.$iframe.on('load', this.close);

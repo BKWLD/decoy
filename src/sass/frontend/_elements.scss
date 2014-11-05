@@ -11,6 +11,8 @@
 	$color-inverse: $theme-primary-inverse;
 	$color-active: $grey-border;
 	$tween-length: 200ms;
+
+	// Positioning
 	position: absolute;
 	cursor: pointer;
 	z-index: $zindex-tooltip;
@@ -154,24 +156,12 @@
 		-webkit-animation: spin .75s infinite linear;
 	}
 
-	// Make spinner bigger during the saving, spin moment
-	&.decoy-el-open .decoy-el-spinner {
-		$size: 20px;
-		font-size: $size;
-		margin-left: -$size/2;
-		margin-top: -$size/2;
-	}
-
-	// Open it up
-	&.decoy-el-open .decoy-el-mask {
-		border: 1px solid $grey-border;
-		@include box-shadow($common-shadow);
-		@include border-radius(4px);
-	}
-
 	// Give the iframe a fixed width so the height can be properly calculated
 	iframe {
-		width: 300px;
+		width: 450px;
+		@media (max-width: $screen-xs) {
+			width: 300px;
+		}
 
 		// Hide by default
 		@include opacity(0);
@@ -186,6 +176,29 @@
 			@include opacity(.3);
 		}
 	}
+
+	// Opened styles
+	&.decoy-el-open {
+
+		// Put it over closed icons
+		z-index: $zindex-tooltip + 1;
+
+		// Make spinner bigger during the saving, spin moment
+		.decoy-el-spinner {
+			$size: 20px;
+			font-size: $size;
+			margin-left: -$size/2;
+			margin-top: -$size/2;
+		}
+
+		// Style the icon like a Decoy @panel
+		.decoy-el-mask {
+			border: 1px solid $grey-border;
+			@include box-shadow($common-shadow);
+			@include border-radius(4px);
+		}
+	}
+	
 }
 
 // Elements testing styles
