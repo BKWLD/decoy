@@ -24,9 +24,9 @@ define(function (require) {
 		},
 
 		// Events
-		events: {
-			'click .fullscreen-toggle': 'toggle'
-		},
+		// events: {
+		// 	'click .fullscreen-toggle': 'toggle'
+		// },
 		
 		// On click
 		toggle: function(e) {
