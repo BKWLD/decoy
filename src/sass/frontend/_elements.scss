@@ -135,10 +135,10 @@
 	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
 
 	// Make the spinner icon
-	.decoy-el-spinner {
+	.glyphicon {
 
 		// Style it
-		$size: 12px;
+		$size: 10px;
 		font-size: $size;
 		color: $color-inverse;
 
@@ -153,7 +153,9 @@
 		z-index: 2;
 		
 		// Animate it
-		-webkit-animation: spin .75s infinite linear;
+		&.glyphicon-refresh {
+			-webkit-animation: spin .6s infinite linear;
+		}
 	}
 
 	// Give the iframe a fixed width so the height can be properly calculated
@@ -175,7 +177,7 @@
 		z-index: $zindex-tooltip + 1;
 
 		// Make spinner bigger during the saving, spin moment
-		.decoy-el-spinner {
+		.glyphicon {
 			$size: 20px;
 			font-size: $size;
 			margin-left: -$size/2;
@@ -192,11 +194,14 @@
 			&.decoy-el-show {
 				border: 1px solid $grey-border;
 
-				// Show the iframe up
+				// Show the iframe.
 				iframe {
 					@include transition(opacity $tween-length);
 					@include opacity(1);
 				}
+
+				// Hide the glyphicon
+				& + .glyphicon { display: none; }
 			}
 		}
 	}

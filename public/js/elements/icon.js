@@ -7,8 +7,7 @@ define(function (require) {
 		, tooltip = require('admin/vendor/bootstrap/js/tooltip')
 		, $doc = $(document)
 		, editor_pad = 2 // Editor padding + borders 
-		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span></span>'
-		, spinner_tpl = '<span class="glyphicon glyphicon-refresh decoy-el-spinner">'
+		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span><span class="glyphicon glyphicon-pencil"></span></span>'
 		, icon_size = 20 // The initial size of the icon, both width and height
 		, tween_length = 200 // How long the tween lasts
 	;
@@ -59,6 +58,7 @@ define(function (require) {
 		this.open = false;
 		this.$mask = this.$icon.find('.decoy-el-mask');
 		this.key = this.$el.data('decoy-el');
+		this.$glyph = this.$icon.find('.glyphicon');
 
 		// Events
 		this.$icon.on('click', this.load);
@@ -73,7 +73,6 @@ define(function (require) {
 
 	// Load the editor
 	View.load = function(e) {
-		e.stopPropagation(); // Prevent the outside click from handling it
 
 		// Disable double clicks
 		if (this.open) return;
@@ -92,7 +91,12 @@ define(function (require) {
 
 	// Show the spinner
 	View.spin = function() {
-		this.$spinner = $(spinner_tpl).appendTo(this.$icon);
+		this.$glyph.addClass('glyphicon-refresh').removeClass('glyphicon-pencil');
+	};
+
+	// Remove spinner
+	View.stopSpin = function() {
+		this.$glyph.addClass('glyphicon-pencil').removeClass('glyphicon-refresh');
 	};
 
 	// Handle iframe messages
@@ -113,8 +117,8 @@ define(function (require) {
 	// Reveal the editor
 	View.reveal = function(height) {
 
-		// Remove the spinnner
-		this.$spinner.remove();
+		// Remove the spinnner after transition is complete
+		_.delay(this.stopSpin, tween_length);
 
 		// Resize and reposition elements
 		var iframe_width = this.$iframe.width();
@@ -163,7 +167,7 @@ define(function (require) {
 		// Remove the iframe and spinner (if it's still out there) from DOM
 		this.$iframe.off('load', this.close);
 		_.delay(function(self) { self.$iframe.remove(); }, tween_length, this);
-		this.$spinner.remove();
+		this.stopSpin();
 
 		// Remove mouse listeners
 		$doc.off('click', this.closeIfOutside);
