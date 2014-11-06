@@ -27,6 +27,13 @@ class Elements extends Collection {
 	protected $config;
 
 	/**
+	 * Store whether this collection includes extra config from the YAML
+	 *
+	 * @var boolean
+	 */
+	protected $has_extra = false;
+
+	/**
 	 * Dependency injection
 	 * 
 	 * @param Symfony\Component\Yaml\Parser $yaml_parser 
@@ -46,9 +53,7 @@ class Elements extends Collection {
 	 * @return Bkwld\Decoy\Models\Element
 	 */
 	public function get($key, $default = null) {
-
-		// Build the colletion if isn't already defined
-		if ($this->isEmpty()) $this->hydrate();
+		$this->hydrate();
 
 		// Build an element from the item in the collection or throw an
 		// exception if the key isn't valid
@@ -58,7 +63,7 @@ class Elements extends Collection {
 				\Log::debug('Keys are: ',$this->keys());
 				throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
 			}
-		} return new Element(array_merge($this->items[$key], ['key' => $key]));
+		} else return new Element(array_merge($this->items[$key], ['key' => $key]));
 
 	}
 
@@ -67,15 +72,35 @@ class Elements extends Collection {
 	 * But only if not on a local environment (as new Elements are added, you would have
 	 * to keep re-clearing the cache)
 	 *
-	 * @return void 
+	 * @return $this 
 	 */
-	protected function hydrate() {
-		if (!App::isLocal() && $data = $this->cache->get(self::CACHE_KEY)) {
+	public function hydrate($include_extra = false) {
+		
+		// If including extra YAML config vars, neither use the cache NOR allow the cache
+		// to be saved with it
+		if ($include_extra && !$this->has_extra) {
+			$this->has_extra = true;
+			$this->items = $this->mergeSources();
+			return $this;
+		}
+
+		// If already hydrated, do nothing
+		if (!$this->isEmpty()) return $this;
+
+		// If running locally, don't use or store the cache
+		if (App::isLocal()) {
+			$this->items = $this->mergeSources();
+			return $this;
+		}
+
+		// Else, use the cache if it exists or generate the cache
+		if ($data = $this->cache->get(self::CACHE_KEY)) {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();
-			if (!App::isLocal()) $this->cache->forever(self::CACHE_KEY, $this->items);
+			$this->cache->forever(self::CACHE_KEY, $this->items);
 		}
+		return $this;
 	}
 
 	/**
@@ -84,7 +109,7 @@ class Elements extends Collection {
 	 * @return void 
 	 */
 	protected function mergeSources() {
-		return array_merge($this->assocConfig(), $this->assocAdminChoices());
+		return array_replace_recursive($this->assocConfig(), $this->assocAdminChoices());
 	}
 
 	/**
@@ -93,7 +118,7 @@ class Elements extends Collection {
 	 * @param boolean $include_extra Include attibutes that are only needed by Admin UIs
 	 * @return array
 	 */
-	public function assocConfig($include_extra = false) {
+	protected function assocConfig($include_extra = false) {
 
 		// Load the config data if it isn't already
 		if (!$this->config) $this->loadConfig();
@@ -120,7 +145,7 @@ class Elements extends Collection {
 
 					// Build the value array
 					$el = ['type' => $type, 'value' => $value];
-					if ($include_extra) {
+					if ($this->has_extra) {
 						$this->mergeExtra($el, $field, $field_data);
 						$this->mergeExtra($el, $section, $section_data, 'section_');
 						$this->mergeExtra($el, $page, $page_data, 'page_');

@@ -46,37 +46,6 @@ class Element extends Base {
 	}
 
 	/**
-	 * Hydrate with additional config options.  Also, make sure to only
-	 * store once to reduce lookups.
-	 *
-	 * @return $this 
-	 */
-	public function applyExtraConfig() {
-
-		// If a label attribute is set, then we've already applied extra configs
-		if (array_key_exists('label', $this->attributes)) return;
-
-		// ... Else, lookup additional attributes from the YAML and apply them
-		$this->fill(
-
-			// Parse the YAML, get this element, and merge it's fields with the current key
-			array_merge(
-				Collection::make(app('decoy.elements')
-				->assocConfig(true))
-				->get($this->key),
-
-				// Preserve the key and value.  We don't want to replace the value from DB
-				// with one from YAML
-				['key' => $this->key, 'value' => $this->value])
-
-		// Sync original so the model doesn't think it's dirty
-		)->syncOriginal();
-
-		// Enable chaining
-		return $this;
-	}
-
-	/**
 	 * Switch between different formats when rendering to a view
 	 *
 	 * @return string 
