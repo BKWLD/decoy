@@ -20,7 +20,6 @@ define(function (require) {
 		'worker': require('decoy/views/worker'),
 		'login': require('decoy/views/login'),
 		'redirect-select': require('decoy/views/redirect-select'),
-		'fragments': require('decoy/views/fragments'),
 		'video-encoder': require('decoy/views/video-encoder'),
 		'notification' : require('decoy/views/notification')
 	};

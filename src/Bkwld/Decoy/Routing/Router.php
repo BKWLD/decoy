@@ -139,6 +139,8 @@ class Router {
 	 * Elements system
 	 */
 	public function registerElements() {
+		Route::get($this->dir.'/elements/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy\elements'));
+		Route::post($this->dir.'/elements/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy\elements@store'));
 		Route::get($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy\elements@field'));
 		Route::post($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy\elements@field-update'));
 	}

@@ -1,0 +1,96 @@
+/**
+ * A mixin for creating a page with a right aligned Bootstrap
+ * tab based sidebar
+ */
+@mixin tab-sidebar {
+	$width: 200px;
+
+	// Wraps the two cols
+	.row {
+		position: relative;
+	}
+
+	// The sidebar
+	.tab-sidebar {
+		width: $width;
+		position: absolute;
+		right: $grid-gutter-width/2;
+		top: 0;
+	}
+
+	// The main content
+	.tab-content {
+
+		// Give it deimnsions
+		margin-right: $width+60;
+
+		// Stop srollbars
+		overflow: visible;
+
+		// Increase the padding a bit
+		@media(min-width: $screen-sm + 1px) {
+			padding-left: $grid-gutter-width;
+		}
+	}
+
+	// Make it flush
+	.tab-pane {
+		@include flush-cols;
+		@media(max-width: $screen-sm) {
+			@include flush-cols(false)
+		}
+		
+		// Space sections
+		> div {
+			margin-bottom: 20px;
+		}
+	}
+	
+	// Make the pills grey scale
+	.nav-pills a {
+		color: $gray-dark;
+		background: #fff;
+		font-size: 12px;
+		padding: 7px 9px;
+		@include border-radius(2px);
+
+		&:hover {
+			color: $theme-primary-inverse;
+			background: $theme-primary-color;
+		}
+	}
+	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+		color: $theme-primary-inverse;
+		background: $theme-primary-color;
+	}
+	
+	// Fix positioning at all breakpoints.  Bootstrap span rules tweak this.
+	.nav-pills {
+		margin-left: 0;
+	}
+	
+	// Breaking changes
+	@media(max-width: $screen-sm) {
+		.frag-main-col {
+			width: 100%;
+			padding: 30px;
+			padding-bottom: 100px;
+		}
+
+		// Make the pills float on mobile
+		.nav-pills li {
+			float:left;
+			margin-right: 4px;
+			margin-top: 4px;
+		}
+
+		.tab-sidebar {
+			width: 100%;
+			padding: 10px 30px 0 30px;
+			position: relative;
+			right: 0;
+			top: 0;
+		}
+	}
+
+}

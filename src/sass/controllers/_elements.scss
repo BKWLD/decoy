@@ -39,3 +39,18 @@ body.elements.field {
 	}
 
 }
+
+/**
+ * The admin Elements management interface
+ */
+body.elements.index {
+	
+	// Make room for save buttons
+	#main {
+		padding-bottom: $footer-height;
+	}
+
+	// Add sidebar layout
+	@include tab-sidebar;
+	
+}

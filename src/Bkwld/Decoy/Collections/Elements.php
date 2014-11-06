@@ -6,6 +6,7 @@ use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Library\Utils;
 use Illuminate\Cache\Repository;
+use Illuminate\Database\Eloquent\Collection as ModelCollection;
 use Illuminate\Support\Collection;
 use Symfony\Component\Yaml\Parser;
 
@@ -44,6 +45,18 @@ class Elements extends Collection {
 		$this->yaml_parser = $yaml_parser;
 		$this->model = $model;
 		$this->cache = $cache;
+	}
+
+	/**
+	 * Get all of the Elements as models
+	 *
+	 * @return Bkwld\Decoy\Collections\Elements
+	 */
+	public function allModels() {
+		$this->hydrate();
+		return new ModelCollection(array_map(function($element, $key) {
+			return new Element(array_merge($element, ['key' => $key])); 
+		}, $this->all(), array_keys($this->items)));
 	}
 
 	/**

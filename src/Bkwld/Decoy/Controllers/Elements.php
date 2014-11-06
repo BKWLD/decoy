@@ -16,6 +16,68 @@ use View;
  */
 class Elements extends Base {
 	
+	protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
+
+	/**
+	 * All fragments view
+	 *
+	 * @param string $tab A deep link to a specific tab.  Will get processed by JS
+	 * @return Illuminate\Http\Response
+	 */
+	public function index($tab=null) {
+		
+		/*
+
+		// Get all of the fragment data organized by tab titles
+		$data = Model::organized();
+
+		// If handling a deep link to a tab, verify that the passed tab
+		// slug is a real key in the data.  Else 404.
+		if ($tab && !in_array($tab, array_map(function($title) {
+			return Str::slug($title);
+		}, array_keys($data)))) App::abort(404);
+
+		*/
+
+		// Render the view
+		// Former::withRules(Model::rules());
+		// Former::populate(Model::values());
+		$this->populateView('decoy::elements.index', [
+			'elements' => app('decoy.elements')->hydrate(true)->allModels(),
+		]);
+	}
+	
+	/**
+	 * Handle form post
+	 *
+	 * @return Illuminate\Http\Response
+	 */
+	public function store() {
+
+		/*
+
+		// Merge files into non-files input such that it's nested
+		// where you would expect the files to be.
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+		
+		// Loop through the input and check if the field is different from the language
+		// file version
+		foreach($input as $key => $val) {
+			
+			// Ignore any fields that lead with an underscore, like _token
+			if (Str::is('_*', $key)) continue;
+			
+			// Create, update, or delete row from DB
+			Model::store($key, $val);
+			
+		}
+		
+		*/
+
+		// Redirect back to index
+		return Redirect::to(URL::current());;
+		
+	}
 
 	/**
 	 * Show the field editor form that will appear in an iframe on

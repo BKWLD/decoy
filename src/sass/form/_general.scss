@@ -11,9 +11,9 @@
 	margin-right: 10px;
 }
 
-// give fragments wrap a max width, cause on wide screens it
+// Give site a max width, cause on wide screens it
 // looks way too long, and apply this to form horizontal
-.fragments-wrap, .form-horizontal, .standard-list, .row {
+.form-horizontal, .standard-list, .row {
 	max-width: $max-width;
 }
 
