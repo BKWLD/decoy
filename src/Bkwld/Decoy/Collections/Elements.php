@@ -162,6 +162,7 @@ class Elements extends Collection {
 						$this->mergeExtra($el, $field, $field_data);
 						$this->mergeExtra($el, $section, $section_data, 'section_');
 						$this->mergeExtra($el, $page, $page_data, 'page_');
+						$el['rules'] = isset($field_data['rules']) ? $field_data['rules'] : null;
 					}
 
 					// Add the config
@@ -183,7 +184,7 @@ class Elements extends Collection {
 	 */
 	protected function mergeExtra(&$el, $key, $data, $prefix = null) {
 		$el[$prefix.'label'] = isset($data['label']) ? $data['label'] : Utils\String::titleFromKey($key);
-		if (isset($data['help'])) $el[$prefix.'help'] = $data['help'];
+		$el[$prefix.'help'] = isset($data['help']) ? $data['help'] : null;
 	}
 
 	/**
@@ -211,6 +212,24 @@ class Elements extends Collection {
 		$file = app_path().'/config/packages/bkwld/decoy/elements.yaml';
 		if (!is_readable($file)) throw new Exception("Elements.yaml doesn't exist or isn't readable");
 		$this->config = $this->yaml_parser->parse(file_get_contents($file));
+	}
+
+	/**
+	 * Return the validation rules for the items
+	 *
+	 * @return array An array of validation rules, keyed to element keys
+	 */
+	public function rules() {
+		return array_combine($this->keys(), $this->lists('rules'));
+	}
+	
+	/**
+	 * Return key-value pairs for use by former to populat the fields
+	 *
+	 * @return array 
+	 */
+	public function populate() {
+		return array_combine($this->keys(), $this->lists('value'));
 	}
 
 }

@@ -7,11 +7,11 @@
 -# Create navigation
 .col.tab-sidebar
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
-		-foreach($elements->groupBy('page_label')->keys() as $i => $title)
-			-$slug = Str::slug($title)
-			%li(class=$i===0?'active':null)
-				%a(href='#'.$slug data-slug=$slug data-toggle="tab" role="tab")=$title
-
+		-$first = 1
+		-foreach($elements->groupBy('page_label') as $page => $sections)
+			-$slug = Str::slug($page)
+			%li(class=$first--?'active':null)
+				%a.js-tooltip(href='#'.$slug data-slug=$slug data-toggle="tab" role="tab" title=$sections[0]->page_help data-placement="left")=$page
 
 -# Create pages
 .col.tab-content
@@ -23,36 +23,37 @@
 			-# Create sections
 			-foreach($sections as $section => $fields)
 				%fieldset
-					.legend=$section
-					
+					.legend
+						%span.js-tooltip(title=$fields[0]->section_help)=$section
+
 					-# Create pairs
-					-foreach($fields as $element)
+					-foreach($fields as $el)
 						:php
-							switch($element->type) {
+							switch($el->type) {
 								case 'text': 
-									echo Former::text($element->key, $element->label);
+									echo Former::text($el->key, $el->label)->blockHelp($el->help);
 									break;
 								case 'textarea': 
-									echo Former::textarea($element->key, $element->label);
+									echo Former::textarea($el->key, $el->label)->blockHelp($el->help);
 									break;
 								case 'wysiwyg':
-									echo Former::textarea($element->key, $element->label)->addClass('wysiwyg');
+									echo Former::textarea($el->key, $el->label)->addClass('wysiwyg')->blockHelp($el->help);
 									break;
 								case 'image':
-									echo Former::image($element->key, $element->label);
+									echo Former::image($el->key, $el->label)->blockHelp($el->help);
 									break;
 								case 'file':
-									echo Former::upload($element->key, $element->label);
+									echo Former::upload($el->key, $el->label)->blockHelp($el->help);
 									break;
 
 								/**
 								 * Not ported yet from Frags:
 								 */
 								// case 'video-encoder':
-								// 	echo Former::videoEncoder($element->key, $element->label);
+								// 	echo Former::videoEncoder($el->key, $el->label)->blockHelp($el->help);
 								// 	breakl
 								// case 'belongs_to':
-								// 	echo Former::belongsTo($element->key, $element->label)->route($element->value);
+								// 	echo Former::belongsTo($el->key, $el->label)->route($el->value)->blockHelp($el->help);
 								// 	break;
 							}
 

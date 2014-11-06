@@ -8,7 +8,9 @@ use Bkwld\Library\Utils\File;
 use Cache;
 use Config;
 use Decoy;
+use Former;
 use Input;
+use Str;
 use View;
 
 /**
@@ -24,29 +26,27 @@ class Elements extends Base {
 	 * @param string $tab A deep link to a specific tab.  Will get processed by JS
 	 * @return Illuminate\Http\Response
 	 */
-	public function index($tab=null) {
+	public function index($tab = null) {
 		
-		/*
-
-		// Get all of the fragment data organized by tab titles
-		$data = Model::organized();
+		// Get all the elements
+		$elements = app('decoy.elements')->hydrate(true);
 
 		// If handling a deep link to a tab, verify that the passed tab
 		// slug is a real key in the data.  Else 404.
 		if ($tab && !in_array($tab, array_map(function($title) {
 			return Str::slug($title);
-		}, array_keys($data)))) App::abort(404);
+		}, $elements->lists('page_label')))) App::abort(404);
 
-		*/
+		// Populate form
+		Former::withRules($elements->rules());
+		Former::populate($elements->populate());
 
 		// Render the view
-		// Former::withRules(Model::rules());
-		// Former::populate(Model::values());
 		$this->populateView('decoy::elements.index', [
-			'elements' => app('decoy.elements')->hydrate(true)->allModels(),
+			'elements' => $elements->allModels(),
 		]);
 	}
-	
+
 	/**
 	 * Handle form post
 	 *

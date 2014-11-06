@@ -1,8 +1,8 @@
 %fieldset
 	.legend
-		%span(title=$element->page_help class="js-tooltip" data-placement="bottom")=$element->page_label
+		%span.js-tooltip(title=$element->page_help data-placement="bottom")=$element->page_label
 		%span.glyphicon.glyphicon-chevron-right
-		%span(title=$element->section_help class="js-tooltip" data-placement="bottom")=$element->section_label
+		%span.js-tooltip(title=$element->section_help data-placement="bottom")=$element->section_label
 
 	-# Inform Former
 	-Former::populate($element)
