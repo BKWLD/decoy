@@ -89,3 +89,9 @@ textarea.form-control {
 		font-size: $font-size-base - 1px;
 	}
 }
+
+// Remove glow on form control hovers and use default inner shadow
+// instead.  This is copied out of bootstrap
+.form-control:focus {
+	@include box-shadow(inset 0 1px 1px rgba(darken($input-border-focus, 30%), .075));
+}
