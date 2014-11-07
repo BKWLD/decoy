@@ -10,7 +10,9 @@ use Config;
 use Decoy;
 use Former;
 use Input;
+use Redirect;
 use Str;
+use URL;
 use View;
 
 /**
@@ -48,31 +50,62 @@ class Elements extends Base {
 	}
 
 	/**
+	 * A helper function for rendering the list of fields
+	 *
+	 * @param Bkwld\Decoy\Models\Element $el
+	 * @param string $key
+	 * @return Former\Traits\Object
+	 */
+	public static function renderField($el, $key = null) {
+		if (!$key) $key = $el->inputName();
+		switch($el->type) {
+			case 'text': return Former::text($key, $el->label)->blockHelp($el->help);
+			case 'textarea': return Former::textarea($key, $el->label)->blockHelp($el->help);
+			case 'wysiwyg': return Former::textarea($key, $el->label)->addClass('wysiwyg')->blockHelp($el->help);
+			case 'image': return Former::image($key, $el->label)->blockHelp($el->help);
+			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
+
+			/**
+			 * Not ported yet from Frags:
+			 */
+			// case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help);
+			// case 'belongs_to': return Former::belongsTo($key, $el->label)->route($el->value)->blockHelp($el->help);
+		}
+	}
+
+	/**
 	 * Handle form post
 	 *
 	 * @return Illuminate\Http\Response
 	 */
 	public function store() {
 
-		/*
+		// Get all the elements as models
+		$elements = app('decoy.elements')->hydrate()->allModels();
 
-		// Merge files into non-files input such that it's nested
-		// where you would expect the files to be.
-		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
-		
-		// Loop through the input and check if the field is different from the language
-		// file version
-		foreach($input as $key => $val) {
-			
-			// Ignore any fields that lead with an underscore, like _token
-			if (Str::is('_*', $key)) continue;
-			
-			// Create, update, or delete row from DB
-			Model::store($key, $val);
-			
-		}
-		
-		*/
+		// Merge the input into the elements and save them.  Key must be converted back
+		// from the | delimited format necessitated by PHP
+		$elements->each(function(Element $el) {
+
+			// Check if the model is dirty, manually.  Laravel's performInsert()
+			// doesn't do this, thus we must check ourselves.  We're removing the 
+			// carriage returns because YAML won't include them and all multiline YAML
+			// config values were incorrectly being returned as dirty.
+			$key = $el->inputName();
+			$value = str_replace("\r", '', Input::get($key));
+			if ($value == $el->value && !Input::hasFile($key)) return;
+
+			// Files are managed manually here, don't do the normal Decoy Base Model
+			// file handling.  It doesn't work here because Decoy expects the Input to
+			// contain fields for a single model instance.  Whereas Elements manages many
+			// model records at once.
+			$el->auto_manage_files = false;
+
+			// Save it
+			$el->exists = app('decoy.elements')->keyUpdated($el->key);
+			$el->value = $el->saveFile($key) ?: $value;
+			$el->save();
+		});
 
 		// Redirect back to index
 		return Redirect::to(URL::current());;
@@ -103,16 +136,17 @@ class Elements extends Base {
 	public function fieldUpdate($key) {
 
 		// If the value has changed, update or an insert a record in the database.
-		$element = Decoy::el($key);
-		if (Input::get('value') != $element->value || Input::hasFile('value')) {
+		$el = Decoy::el($key);
+		$value = Input::get('value');
+		if ($value != $el->value || Input::hasFile('value')) {
 
 			// Making use of the model's exists property to trigger Laravel's
 			// internal logic.
-			$element->exists = !empty(Element::find($key));
+			$el->exists = app('decoy.elements')->keyUpdated($el->key);
 
 			// Save it.  Files will be automatically attached via model callbacks
-			$element->value = Input::get('value');
-			$element->save();
+			$el->value = $value;
+			$el->save();
 
 			// Clear the cache
 			Cache::forget(ElementsCollection::CACHE_KEY);
@@ -121,7 +155,7 @@ class Elements extends Base {
 		// Return the layout with JUST a script variable with the element value
 		// after saving.  Thus, post any saving callback operations.
 		return View::make('decoy::layouts.blank', [
-			'content' => "<div id='response' data-key='{$key}'>{$element->value}</div>"
+			'content' => "<div id='response' data-key='{$key}'>{$el}</div>"
 		]);
 	}
 	

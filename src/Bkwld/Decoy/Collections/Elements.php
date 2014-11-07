@@ -28,6 +28,13 @@ class Elements extends Collection {
 	protected $config;
 
 	/**
+	 * An array of Element keys that have been persisted in the DB
+	 *
+	 * @var null | array
+	 */
+	protected $updated_items = null;
+
+	/**
 	 * Store whether this collection includes extra config from the YAML
 	 *
 	 * @var boolean
@@ -55,7 +62,7 @@ class Elements extends Collection {
 	public function allModels() {
 		$this->hydrate();
 		return new ModelCollection(array_map(function($element, $key) {
-			return new Element(array_merge($element, ['key' => $key])); 
+			return new Element(array_merge($element, ['key' => $key])); // Add the key as an attribute
 		}, $this->all(), array_keys($this->items)));
 	}
 
@@ -76,7 +83,9 @@ class Elements extends Collection {
 				\Log::debug('Keys are: ',$this->keys());
 				throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
 			}
-		} else return new Element(array_merge($this->items[$key], ['key' => $key]));
+
+		// Add the key as an attribute
+		} else return new Element(array_merge($this->items[$key], ['key' => $key])); 
 
 	}
 
@@ -195,12 +204,19 @@ class Elements extends Collection {
 	protected function assocAdminChoices() {
 
 		// Convert models to simple arrays with the type and value
-		return array_map(function(Element $element) {
+		$elements = array_map(function(Element $element) {
 			$element->setVisible(['type', 'value']);
 			return $element->toArray();
 
 		// .. from a dictionary of ALL elements
 		}, Element::all()->getDictionary());
+
+		// Store the keys of all these elements so we can keep track of which
+		// Elements "exist"
+		$this->updated_items = array_keys($elements);
+
+		// Return the elements
+		return $elements;
 	}
 
 	/**
@@ -215,6 +231,17 @@ class Elements extends Collection {
 	}
 
 	/**
+	 * Check if a key has been stored in the database
+	 *
+	 * @param string $key The key of an element
+	 * @return boolean 
+	 */
+	public function keyUpdated($key) {
+		if ($this->updated_items === null) $this->assocAdminChoices();
+		return in_array($key, $this->updated_items);
+	}
+
+	/**
 	 * Return the validation rules for the items
 	 *
 	 * @return array An array of validation rules, keyed to element keys
@@ -224,12 +251,15 @@ class Elements extends Collection {
 	}
 	
 	/**
-	 * Return key-value pairs for use by former to populat the fields
+	 * Return key-value pairs for use by former to populate the fields.  The
+	 * keys must be converted to the Input safe variant.
 	 *
 	 * @return array 
 	 */
 	public function populate() {
-		return array_combine($this->keys(), $this->lists('value'));
+		return array_combine(array_map(function($key) {
+			return str_replace('.', '|', $key);
+		}, $this->keys()), $this->lists('value'));
 	}
 
 }

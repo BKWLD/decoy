@@ -58,6 +58,8 @@ class Element extends Base {
 		// Different outputs depending on type
 		switch($this->type) {
 			case 'image': return $this->copyImage();
+			case 'textarea': return nl2br($this->value);
+			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
 			default: return $this->value;
 		}
 	}
@@ -91,6 +93,15 @@ class Element extends Base {
 
 		// Return the new, non-full- path
 		return $dst;
+	}
+
+	/**
+	 * Make the input name for the admin index editor.  Periods are converted
+	 * to | because the period isn't allowed in input names in PHP.
+	 * See: http://stackoverflow.com/a/68742/59160
+	 */
+	public function inputName() {
+		return str_replace('.', '|', $this->key);
 	}
 
 	/**

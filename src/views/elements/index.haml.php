@@ -1,4 +1,5 @@
 -# Dependencies
+-use Bkwld\Decoy\Controllers\Elements
 -use Illuminate\Support\Collection
 
 -# Form tag
@@ -28,34 +29,7 @@
 
 					-# Create pairs
 					-foreach($fields as $el)
-						:php
-							switch($el->type) {
-								case 'text': 
-									echo Former::text($el->key, $el->label)->blockHelp($el->help);
-									break;
-								case 'textarea': 
-									echo Former::textarea($el->key, $el->label)->blockHelp($el->help);
-									break;
-								case 'wysiwyg':
-									echo Former::textarea($el->key, $el->label)->addClass('wysiwyg')->blockHelp($el->help);
-									break;
-								case 'image':
-									echo Former::image($el->key, $el->label)->blockHelp($el->help);
-									break;
-								case 'file':
-									echo Former::upload($el->key, $el->label)->blockHelp($el->help);
-									break;
-
-								/**
-								 * Not ported yet from Frags:
-								 */
-								// case 'video-encoder':
-								// 	echo Former::videoEncoder($el->key, $el->label)->blockHelp($el->help);
-								// 	breakl
-								// case 'belongs_to':
-								// 	echo Former::belongsTo($el->key, $el->label)->route($el->value)->blockHelp($el->help);
-								// 	break;
-							}
+						!= Elements::renderField($el)
 
 .controls.form-actions
 	%button.btn.btn-success.save(type="submit")
