@@ -1,3 +1,5 @@
+// Settings
+$decoy-el-tween-length: 200ms;
 
 // Spinning animation
 @-webkit-keyframes spin {
@@ -7,10 +9,6 @@
 
 // The icon the admin clicks on to open the elements editor
 .decoy-el-icon {
-	$color: $theme-primary-color;
-	$color-inverse: $theme-primary-inverse;
-	$color-active: $grey-border;
-	$tween-length: 200ms;
 
 	// Positioning
 	position: absolute;
@@ -19,9 +17,9 @@
 
 	// Only apply transitions after it's inited to prevent weird tween in
 	&.decoy-el-init {
-		@include transition(left $tween-length, top $tween-length);
+		@include transition(left $decoy-el-tween-length, top $decoy-el-tween-length);
 		&:after {
-			@include transition(border $tween-length);
+			@include transition(border $decoy-el-tween-length);
 		}
 	}
 
@@ -33,7 +31,7 @@
 		display: block;
 		width: $size;
 		height: $size;
-		background: $color;
+		background: $element-icon-color;
 		@include border-radius($size);
 
 		// Hide the iframe
@@ -46,11 +44,11 @@
 		// Animate
 		border: 1px solid transparent;
 		@include transition(
-			border $tween-length, 
-			width $tween-length, 
-			height $tween-length, 
-			box-shadow $tween-length,
-			border-radius $tween-length
+			border $decoy-el-tween-length, 
+			width $decoy-el-tween-length, 
+			height $decoy-el-tween-length, 
+			box-shadow $decoy-el-tween-length,
+			border-radius $decoy-el-tween-length
 		);
 	}
 
@@ -78,61 +76,61 @@
 		left: 50%;
 		margin-left: -$arrow-size;
 		border-width: $arrow-size $arrow-size 0;
-		border-top-color: $color;
+		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $color-active }
+	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
 	&.top-left:after {
 		bottom: $arrow-offset;
 		left: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
-		border-top-color: $color;
+		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $color-active }
+	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
 	&.top-right:after {
 		bottom: $arrow-offset;
 		right: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
-		border-top-color: $color;
+		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $color-active }
+	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
 	&.right:after {
 		top: 50%;
 		left: $arrow-offset;
 		margin-top: -$arrow-size;
 		border-width: $arrow-size $arrow-size $arrow-size 0;
-		border-right-color: $color;
+		border-right-color: $element-icon-color;
 	}
-	&.decoy-el-open.right:after { border-right-color: $color-active }
+	&.decoy-el-open.right:after { border-right-color: $element-icon-active }
 	&.left:after {
 		top: 50%;
 		right: $arrow-offset;
 		margin-top: -$arrow-size;
 		border-width: $arrow-size 0 $arrow-size $arrow-size;
-		border-left-color: $color;
+		border-left-color: $element-icon-color;
 	}
-	&.decoy-el-open.left:after { border-left-color: $color-active }
+	&.decoy-el-open.left:after { border-left-color: $element-icon-active }
 	&.bottom:after {
 		top: $arrow-offset;
 		left: 50%;
 		margin-left: -$arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
-		border-bottom-color: $color;
+		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
+	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
 	&.bottom-left:after {
 		top: $arrow-offset;
 		left: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
-		border-bottom-color: $color;
+		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
+	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
 	&.bottom-right:after {
 		top: $arrow-offset;
 		right: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
-		border-bottom-color: $color;
+		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $color-active }
+	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
 
 	// Make the spinner icon
 	.glyphicon {
@@ -140,7 +138,7 @@
 		// Style it
 		$size: 10px;
 		font-size: $size;
-		color: $color-inverse;
+		color: $element-icon-inverse;
 
 		// Center it
 		position: absolute;
@@ -167,7 +165,7 @@
 
 		// Hide by default
 		@include opacity(0);
-		@include transition(opacity $tween-length*2);
+		@include transition(opacity $decoy-el-tween-length*2);
 	}
 
 	// Opened styles
@@ -196,7 +194,7 @@
 
 				// Show the iframe.
 				iframe {
-					@include transition(opacity $tween-length);
+					@include transition(opacity $decoy-el-tween-length);
 					@include opacity(1);
 				}
 
@@ -205,7 +203,20 @@
 			}
 		}
 	}
-	
+}
+
+// The box that highlights the target of the element editor
+.decoy-el-highlight {
+	position: absolute;
+	background: rgba($element-icon-color, .2);
+	border: 1px dashed rgba($element-icon-color, .4);
+	z-index: $zindex-tooltip - 1;
+
+	// Hide it
+	&.decoy-el-hide {
+		@include transition(opacity $decoy-el-tween-length);
+		@include opacity(0);
+	}
 }
 
 // Elements testing styles

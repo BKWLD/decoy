@@ -6,11 +6,17 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, tooltip = require('admin/vendor/bootstrap/js/tooltip')
 		, $doc = $(document)
+		, $body = $('body')
 		, editor_pad = 2 // Editor padding + borders 
 		, icon_tpl = '<span class="decoy-el-icon"><span class="decoy-el-mask"></span><span class="glyphicon glyphicon-pencil"></span></span>'
+		, highlight_tpl = '<div class="decoy-el-highlight"></div>'
 		, icon_size = 20 // The initial size of the icon, both width and height
 		, tween_length = 200 // How long the tween lasts
 	;
+
+	/**
+	 * Subclass Bootstrap's Tooltip to leverage their placement logic
+	 */
 
 	// Get a reference to the Bootstrap Tooltip class
 	var Tooltip = $.fn.tooltip.Constructor;
@@ -43,6 +49,10 @@ define(function (require) {
 		Tooltip.prototype.applyPlacement.apply(this, arguments);
 	};
 
+	/**
+	 * Define the custom icon and it's behavior
+	 */
+
 	// Setup view
 	var View = {};
 	View.initialize = function() {
@@ -62,13 +72,35 @@ define(function (require) {
 
 		// Events
 		this.$icon.on('click', this.load);
+		this.$icon.on('mouseenter', this.over);
+		this.$icon.on('mouseleave', this.out);
 		window.addEventListener('message', this.onPostMessage, false);
-
 	};
 
 	// Create an Element editable icon
 	View.create = function() {
 		return new Icon(this.el);
+	};
+
+	// Show a hightlight bounding box around the element when the icon
+	// is hovered
+	View.over = function(e) {
+		if (this.$highlight) return;
+		var pos = this.$el.offset();
+		this.$highlight = $(highlight_tpl).appendTo($body).css({
+			top: pos.top,
+			left: pos.left,
+			width: this.$el.outerWidth(),
+			height: this.$el.outerHeight(),
+		});
+	};
+	
+	// Remove the bounding box on mouseout but not when the dialog is open
+	View.out = function(e) {
+		if (!this.$highlight || this.open) return;
+		this.$highlight = this.$highlight.addClass('decoy-el-hide')
+		_.delay(function($highlight) { $highlight.remove(); }, tween_length, this.$highlight);
+		this.$highlight = null;
 	};
 
 	// Load the editor
@@ -159,6 +191,9 @@ define(function (require) {
 	// Close the editor
 	View.close = function(e) {
 
+		// Allow opening again
+		this.open = false;
+
 		// Resize and reposition elements back to close state
 		this.$icon.removeClass('decoy-el-open');
 		this.$mask.removeClass('decoy-el-show').css({ width: '', height: ''});
@@ -169,11 +204,12 @@ define(function (require) {
 		_.delay(function(self) { self.$iframe.remove(); }, tween_length, this);
 		this.stopSpin();
 
+		// Hide the higlight
+		this.out();
+
 		// Remove mouse listeners
 		$doc.off('click', this.closeIfOutside);
 
-		// Allow opening again
-		this.open = false;
 	};
 
 	// Live update the DOM with the change the user made
