@@ -16,7 +16,7 @@ $decoy-el-tween-length: 200ms;
 	z-index: $zindex-tooltip;
 
 	// Only apply transitions after it's inited to prevent weird tween in
-	&.decoy-el-init {
+	&.decoy-el-pos-tween {
 		@include transition(left $decoy-el-tween-length, top $decoy-el-tween-length);
 		&:after {
 			@include transition(border $decoy-el-tween-length);
@@ -78,21 +78,21 @@ $decoy-el-tween-length: 200ms;
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
 	&.top-left:after {
 		bottom: $arrow-offset;
 		left: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
 	&.top-right:after {
 		bottom: $arrow-offset;
 		right: $arrow-size;
 		border-width: $arrow-size $arrow-size 0;
 		border-top-color: $element-icon-color;
 	}
-	&.decoy-el-open.top:after { border-top-color: $element-icon-active }
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
 	&.right:after {
 		top: 50%;
 		left: $arrow-offset;
@@ -100,7 +100,7 @@ $decoy-el-tween-length: 200ms;
 		border-width: $arrow-size $arrow-size $arrow-size 0;
 		border-right-color: $element-icon-color;
 	}
-	&.decoy-el-open.right:after { border-right-color: $element-icon-active }
+	&.decoy-el-show.right:after { border-right-color: $element-icon-active }
 	&.left:after {
 		top: 50%;
 		right: $arrow-offset;
@@ -108,7 +108,7 @@ $decoy-el-tween-length: 200ms;
 		border-width: $arrow-size 0 $arrow-size $arrow-size;
 		border-left-color: $element-icon-color;
 	}
-	&.decoy-el-open.left:after { border-left-color: $element-icon-active }
+	&.decoy-el-show.left:after { border-left-color: $element-icon-active }
 	&.bottom:after {
 		top: $arrow-offset;
 		left: 50%;
@@ -116,21 +116,21 @@ $decoy-el-tween-length: 200ms;
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
 	&.bottom-left:after {
 		top: $arrow-offset;
 		left: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
 	&.bottom-right:after {
 		top: $arrow-offset;
 		right: $arrow-size;
 		border-width: 0 $arrow-size $arrow-size;
 		border-bottom-color: $element-icon-color;
 	}
-	&.decoy-el-open.bottom:after { border-bottom-color: $element-icon-active }
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
 
 	// Make the spinner icon
 	.glyphicon {
@@ -187,20 +187,24 @@ $decoy-el-tween-length: 200ms;
 		.decoy-el-mask {
 			@include border-radius(4px);
 			@include box-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+		}
+	}
 
-			// Style it like Decoy panel when the iframe is open
-			&.decoy-el-show {
-				border: 1px solid $grey-border;
+	// Show the iframe
+	&.decoy-el-show {
 
-				// Show the iframe.
-				iframe {
-					@include transition(opacity $decoy-el-tween-length);
-					@include opacity(1);
-				}
+		// Make the border grey
+		.decoy-el-mask {
+			border: 1px solid $grey-border;
 
-				// Hide the glyphicon
-				& + .glyphicon { display: none; }
-			}
+			// Hide the glyphicon
+			& + .glyphicon { display: none; }
+		}
+
+		// Show the iframe
+		iframe {
+			@include transition(opacity $decoy-el-tween-length);
+			@include opacity(1);
 		}
 	}
 }
@@ -223,7 +227,11 @@ $decoy-el-tween-length: 200ms;
 #elements-tests {
 
 	.float-right {
-		float: right;
+		@include clearfix;
+		div {
+			float: right;
+		}
+		
 	}
 
 }

@@ -12,7 +12,16 @@ define(function (require) {
 		, highlight_tpl = '<div class="decoy-el-highlight"></div>'
 		, icon_size = 20 // The initial size of the icon, both width and height
 		, tween_length = 200 // How long the tween lasts
+		, all = [] // Will contain all the icons on the page
 	;
+
+	// Reposition all elements on a window resize
+	$(window).on('orientationchange resize', _.debounce(function() {
+		_.each(all, function(icon) { 
+			icon.reposition(null, null, true);
+			icon.layoutHighlight();
+		});
+	}, 50));
 
 	/**
 	 * Subclass Bootstrap's Tooltip to leverage their placement logic
@@ -35,6 +44,7 @@ define(function (require) {
 		defaults.animation = false; // Don't add the Bootstrap animation class
 		defaults.template = icon_tpl; // Replace template with our own
 		defaults.trigger = 'manual'; // We're going to open them only via API
+		defaults.viewport = { selector: 'body', padding: 5 }; // Increase padding
 		return defaults;
 	};
 
@@ -62,7 +72,7 @@ define(function (require) {
 		this.icon = this.create();
 		this.$icon = this.icon.tip();
 		this.icon.show();
-		this.$icon.addClass('decoy-el-init');
+		this.$icon.addClass('decoy-el-pos-tween');
 
 		// Cache
 		this.open = false;
@@ -75,6 +85,9 @@ define(function (require) {
 		this.$icon.on('mouseenter', this.over);
 		this.$icon.on('mouseleave', this.out);
 		window.addEventListener('message', this.onPostMessage, false);
+
+		// Add to the collection
+		all.push(this);
 	};
 
 	// Create an Element editable icon
@@ -86,8 +99,15 @@ define(function (require) {
 	// is hovered
 	View.over = function(e) {
 		if (this.$highlight) return;
+		this.$highlight = $(highlight_tpl).appendTo($body);
+		this.layoutHighlight();
+	};
+
+	// Size the highlight box
+	View.layoutHighlight = function() {
+		if (!this.$highlight) return;
 		var pos = this.$el.offset();
-		this.$highlight = $(highlight_tpl).appendTo($body).css({
+		this.$highlight.css({
 			top: pos.top,
 			left: pos.left,
 			width: this.$el.outerWidth(),
@@ -154,23 +174,47 @@ define(function (require) {
 
 		// Resize and reposition elements
 		var iframe_width = this.$iframe.width();
-		this.$icon.addClass('decoy-el-open')
+		this.$icon.addClass('decoy-el-open decoy-el-show')
 		this.$iframe.css({ height: height });
-		this.$mask.addClass('decoy-el-show').css({ width: iframe_width, height: height });
+		this.$mask.css({ width: iframe_width, height: height });
 		this.reposition(iframe_width, height);
 	};
 
-	// Re apply position using inerhitted code
-	View.reposition = function(w, h) {
+	// Re-apply position using inerhitted code
+	View.reposition = function(w, h, immediate) {
+
+		// If no width or height, use the last values
+		if (!w) w = this.last_w;
+		if (!h) h = this.last_h;
+		this.last_w = w;
+		this.last_h = h;
+
+		// Don't tween the change in position and clear the viewport so bootstrap doesn't try
+		// to keep the icons in the viewport.
+		if (immediate) {
+			this.$icon.removeClass('decoy-el-pos-tween');
+			this.icon.$viewport = null;
+		}
+
+		// Calculate and apply to left and top
 		this.icon.applyPlacement(
 			this.icon.getCalculatedOffset(this.icon.placement, this.icon.getPosition(), w, h), 
 		this.icon.placement);
+
+		// Restore tweening
+		if (immediate) {
+			this.$icon.addClass('decoy-el-pos-tween');
+			this.icon.$viewport = $body;
+		}
 	};
 
 	// Put the editor in a pending state because the user has submitted
 	// the iframe form. 
 	View.saving = function() {
-		this.$mask.removeClass('decoy-el-show');
+		this.$icon.removeClass('decoy-el-show');
+		var size = 60;
+		this.$mask.css({ height: size, width: size });
+		this.reposition(size, size);
 		this.spin();
 	};
 
@@ -195,9 +239,13 @@ define(function (require) {
 		this.open = false;
 
 		// Resize and reposition elements back to close state
-		this.$icon.removeClass('decoy-el-open');
-		this.$mask.removeClass('decoy-el-show').css({ width: '', height: ''});
-		this.reposition(icon_size, icon_size);
+		this.$icon.removeClass('decoy-el-open decoy-el-show');
+		this.$mask.css({ width: '', height: ''});
+
+		// Reposition all icons on the page
+		_.each(all, function(icon) { 
+			icon.reposition(icon_size, icon_size, icon.el != this.el); 
+		}, this);
 
 		// Remove the iframe and spinner (if it's still out there) from DOM
 		this.$iframe.off('load', this.close);
@@ -216,7 +264,16 @@ define(function (require) {
 	View.updateDOM = function(value) {
 
 		// If an image tag, put the value in the source
-		if (this.$el.is('img')) this.$el.attr('src', value);
+		if (this.$el.is('img')) {
+			this.$el.attr('src', value);
+
+			// When the image finishes loading, reposition again
+			this.$el.on('load', _.bind(function() {
+				_.each(all, function(icon) { 
+					icon.reposition(null, null, icon.el != this.el); 
+				}, this);
+			}, this));
+		}
 
 		// If this is an "a" tag and the key looks like a link, put it in href
 		else if (this.$el.is('a') && /(link|url|file|pdf)$/.test(this.key)) this.$el.attr('href', value);
