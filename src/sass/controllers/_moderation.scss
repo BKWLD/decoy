@@ -171,16 +171,25 @@
 }
 
 // A select meny for filtering by category
-.moderation .categories {
+.moderation  {
+	position: relative;
 
 	// Override BS 100% width
 	width: auto;
 
-	// Stops a gap from appearing in the nav-tabs
-	margin-bottom: 0;
-}
+	// Select menu for filtering gallery
+	.categories {
+		position: absolute;
+		right: 0;
 
-// Reload message
-.moderation .reload {
-	text-align: center;
+		// Put above tabs on break
+		@media(max-width: $bootstrap_nav_break) {
+			position: static;
+		}
+	}
+
+	// Reload message
+	.reload {
+		text-align: center;
+	}
 }
