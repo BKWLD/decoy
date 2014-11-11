@@ -4,12 +4,14 @@
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
+use Str;
 
 /**
  * Create an autocomplete field that populates a foreign key in a 
  * belongs to relationship
  */
 class BelongsTo extends Field {
+	use Traits\Helpers;
 
 	/**
 	 * Preserve the route
@@ -106,8 +108,37 @@ class BelongsTo extends Field {
 		// Always add this class
 		$this->addClass('autocomplete');
 
+		// Make the hidden field.  Render it before we (might) set the value to
+		// the title of the parent.
+		$hidden = $this->renderHidden();
+
+		// If there is a value and the field name matches a relationship on function
+		// on the current item, then get and display the title text for the related record
+		if ($parent = $this->parent()) $this->value = $parent->titleText();
+
 		// Add the hidden field and return
-		return parent::render().$this->renderHidden();
+		return parent::render().$hidden;
+	}
+
+	/**
+	 * Get the parent record of the form instance
+	 *
+	 * @return Illuminate\Database\Eloquent\Model
+	 */
+	public function parent() {
+		if ($this->value
+			&& ($relation = $this->guessRelation())
+			&& ($model = $this->model())
+			&& method_exists($model, $relation)) return $model->$relation;
+	}
+
+/**
+	 * Guess at the relationship name by removing id from the name and camel casing
+	 *
+	 * @return string 
+	 */
+	protected function guessRelation() {
+		return Str::camel(str_replace('_id', '', $this->name));
 	}
 
 	/**
