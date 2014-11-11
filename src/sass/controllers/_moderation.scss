@@ -183,7 +183,7 @@
 		right: 0;
 
 		// Put above tabs on break
-		@media(max-width: $bootstrap_nav_break) {
+		@media(max-width: $screen-sm) {
 			position: static;
 		}
 	}
