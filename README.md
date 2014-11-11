@@ -4,7 +4,11 @@
 
 ## Installation
 
-1. Add `"bkwld/decoy": "~4.0",` to your composer.json and install.  This reflects the latest stable branch.
+Decoy expects to be installed ontop of [Camo](https://github.com/BKWLD/camo).  In particular, Decoy has dependencies that are part of Camo's dependency list.  For instance, there are some expectating on the version of Compass that is used.
+
+If you **are** installing outside of Camo, here are some steps to get you started.
+
+1. Add `"bkwld/decoy": "~4.1",` to your composer.json and install.  This reflects the latest stable branch.
 2. Run `php artisan migrate --package=cartalyst/sentry`
 3. Run `php artisan migrate --package=bkwld/decoy`
 4. Run `php artisan config:publish bkwld/decoy`
@@ -222,7 +226,7 @@ By default, CKFinder is turned off because a new license must be purchased for e
 		});
 		
 
-### Fragments
+### Fragments *(To be deprecated in 5.0)*
 
 One off strings, images, and files can be managed in Decoy through the Fragments feature.  Fragments work by reading language files and producing a tabbed form from their key value pairs.  The values from the language file are treated as the default for the key; admins can override that default with Decoy.  The frontend developer pulls the fragment value through the `Decoy::frag($key)` helper.
 
@@ -249,6 +253,66 @@ Thus:
 - Keys can have a bullet that delimits sections and will be used to break up the page into sections in the admin.  This is optional.
 - The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
 - Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::frag() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
+
+
+### Elements
+
+Copy, images, and files that aren't managed as part of an item in a list.  If content needs to be managed and a model doesn't make sense, use Elements.  Elements are managed from both the frontend of the site:
+
+![](http://yo.bkwld.com/image/0f2t150O380B/Image%202014-11-11%20at%202.10.37%20PM.png)
+
+... and the backend:
+
+![](http://yo.bkwld.com/image/3X3C0r1H2g1D/Image%202014-11-11%20at%202.21.23%20PM.png)
+
+##### Setup
+
+Begin by customizing the `app/config/packages/bkwld/decoy/elements.yaml` file that will have been published during the Decoy installation.  Roughly speaking, there are 3 nested layers of hashes that configure elements:
+
+- A page
+	- A section
+		- A field
+		
+The syntax has a terse form:
+
+	homepage:
+		marquee:
+			image,image: /img/temp/home-marquee.jpg
+
+And an expanded form:
+
+	homepage:
+		label: The homepage
+		help: This is the site homepage
+		sections:
+			marquee:
+				label: Home marquee
+				help: The featured image section on the top of homepage
+				fields:
+					image:
+						type: image
+						label: An image
+						value: /img/temp/home-marquee.jpg
+
+The two forms can be intermixed. Check out the `elements.yaml` file for more examples.
+
+##### Usage
+
+Call `Decoy::el('key')` in your frontend views to return the value for an Element.  They key is the `.` concatented keys for the three heirachies: `page.section.field`.  The value will be massaged in different ways depending on the element type:
+
+- Texteareas will have `nl2br()` applied
+- WYSIWYG will be wrapped in a `<p>` if there is no containing HTML element
+- Images will be copied out of the /img directory and into /uploads
+
+To enable frontend ending of an Element, add a `data-decoy-el` attribute to the containing HTML element with a value equal to the Element key.  It is positioned using [Bootstrap Tooltips](http://getbootstrap.com/javascript/#tooltips) and many of its data attribute configs are supported.  For instance `data-placement` will specify on which side of the container the droplet icon is placed.  Here's a HAML example:
+
+	.title(data-decoy-el='homepage.marquee.title') !=Decoy::el('homepage.marquee.title')
+	%img(src=Decoy::el('homepage.marquee.image') data-decoy-el='homepage.marquee.image' data-placement='bottom') 
+
+##### Additional notes
+
+- The default format for a field in the admin is a text input
+- Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::el() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
 
 
 ### Workers
