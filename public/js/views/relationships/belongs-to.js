@@ -23,6 +23,10 @@ define(function (require) {
 			this.$icon = this.$status.find('i');
 			this.$hidden = this.$('input[type="hidden"]');
 			this.edit_route = null; // Allows the edit_route to be updated externally
+
+			// Make the cache key from the field name plus the path of the page (to make it
+			// unique to this record)
+			this.cache_key = this.$input.attr('name')+'-'+window.location.pathname;
 			
 			// Add extra events
 			this.events = _.clone(this.events);
@@ -38,7 +42,7 @@ define(function (require) {
 			// the value of the input with the one that we cached during
 			// the edit
 			if (this.$hidden.val() && this.$hidden.val() == this.$input.val()) {
-				this.$input.val(storage.get(this.$input.attr('name')));
+				this.$input.val(storage.get(this.cache_key));
 				this.id = this.$hidden.val();
 				this.found = true;
 				this.renderMatch();
@@ -54,7 +58,7 @@ define(function (require) {
 			
 			// Store the current title value so it could be used to repopulate the field if the form
 			// does not validate and Former sets the input to the id of the selection.
-			storage.set(this.$input.attr('name'), this.$input.val());
+			storage.set(this.cache_key, this.$input.val());
 		},
 		
 		// Make the UI indicate a match
