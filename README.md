@@ -313,6 +313,7 @@ To enable frontend ending of an Element, add a `data-decoy-el` attribute to the 
 
 - The default format for a field in the admin is a text input
 - Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::el() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
+- YAML only allows whitespace indenting, no tabs
 
 
 ### Workers
