@@ -148,8 +148,16 @@
 }
 
 // A select meny for filtering by category
-.moderation .categories {
+.moderation  {
+	position: relative;
 
-	// Stops a gap from appearing in the nav-tabs
-	margin-bottom: 0;
+	.categories {
+		position: absolute;
+		right: 0;
+
+		// Put above tabs on break
+		@media(max-width: $bootstrap_nav_break) {
+			position: static;
+		}
+	}
 }
