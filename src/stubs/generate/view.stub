@@ -1,7 +1,7 @@
 -#
 
-	- $sidebar->add(Former::listing(Video'))
-	- $sidebar->add(Former::listing(Photo')->take(30))
+	- $sidebar->add(Former::listing('Video'))
+	- $sidebar->add(Former::listing('Photo')->take(30))
 
 	!= View::make('decoy::shared.form._header', $__data)
 
