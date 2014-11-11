@@ -59,6 +59,36 @@ define(function (require) {
 		Tooltip.prototype.applyPlacement.apply(this, arguments);
 	};
 
+	// Override to check both all sizes when placing  This should be the same as it's
+	// counterpart in the parent class but missing the main if/else condition
+	Icon.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
+		var delta = { top: 0, left: 0 }
+		if (!this.$viewport) return delta
+
+		var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
+		var viewportDimensions = this.getPosition(this.$viewport)
+
+		// Top / bottom
+		var topEdgeOffset    = pos.top - viewportPadding - viewportDimensions.scroll
+		var bottomEdgeOffset = pos.top + viewportPadding - viewportDimensions.scroll + actualHeight
+		if (topEdgeOffset < viewportDimensions.top) { // top overflow
+			delta.top = viewportDimensions.top - topEdgeOffset
+		} else if (bottomEdgeOffset > viewportDimensions.top + viewportDimensions.height) { // bottom overflow
+			delta.top = viewportDimensions.top + viewportDimensions.height - bottomEdgeOffset
+		}
+
+		// Left / right
+		var leftEdgeOffset  = pos.left - viewportPadding
+		var rightEdgeOffset = pos.left + viewportPadding + actualWidth
+		if (leftEdgeOffset < viewportDimensions.left) { // left overflow
+			delta.left = viewportDimensions.left - leftEdgeOffset
+		} else if (rightEdgeOffset > viewportDimensions.width) { // right overflow
+			delta.left = viewportDimensions.left + viewportDimensions.width - rightEdgeOffset
+		}
+
+		return delta;
+	}
+
 	/**
 	 * Define the custom icon and it's behavior
 	 */
