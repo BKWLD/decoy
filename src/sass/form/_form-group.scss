@@ -3,6 +3,9 @@
 	
 	// Seperate from one another
 	padding: $form-group-margin;
+	@media(max-width: $screen-sm) {
+		padding: $form-group-margin-sm;
+	}
 	border-bottom: 1px solid $grey-border;
 	&:last-child {
 		border-bottom: none;	

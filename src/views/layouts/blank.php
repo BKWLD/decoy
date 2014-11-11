@@ -15,13 +15,12 @@
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
-		<?// Container for notifications ?>
-		<div class='notifications top-right'></div>
-		
 		<?// The main page content ?>
-		<div id="main">
-			<?= $content?>
-		</div>
+		<? if (isset($content)): ?>
+			<div id="main">
+				<?= $content?>
+			</div>
+		<? endif ?>
 		
 	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
 	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>

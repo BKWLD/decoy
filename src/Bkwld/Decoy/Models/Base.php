@@ -208,9 +208,12 @@ abstract class Base extends Eloquent {
 	 */
 	public function saveImage($field = 'image') { return $this->saveFile($field); }
 	public function saveFile($field = 'file') {
-		$path = File::organizeUploadedFile(Input::file($field), Config::get('decoy::core.upload_dir'));
-		$path = File::publicPath($path);
-		return $path;
+		if (!Input::hasFile($field)) return;
+		return File::publicPath(
+			File::organizeUploadedFile(
+				Input::file($field), Config::get('decoy::core.upload_dir')
+			)
+		);
 	}
 	
 	/**

@@ -75,6 +75,8 @@ define(function (require) {
 			});
 		});
 	};
+	$('body.elements.field #main').views(require('decoy/elements/field'));
+	$('body.elements.index form, body.fragments.index form').views(require('decoy/views/tab-sidebar'));
 	
 	// --------------------------------------------------
 	// DOM ready

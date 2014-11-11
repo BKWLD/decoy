@@ -1,0 +1,22 @@
+%fieldset
+	.legend
+		%span.js-tooltip(title=$element->page_help data-placement="bottom")=$element->page_label
+		%span.glyphicon.glyphicon-chevron-right
+		%span.js-tooltip(title=$element->section_help data-placement="bottom")=$element->section_label
+
+	-# Inform Former
+	-Former::populate($element)
+
+	-# Display form
+	!= Former::vertical_open_for_files()
+	!= Former::hidden('key')
+	!= \Bkwld\Decoy\Controllers\Elements::renderField($element, 'value')
+
+	.form-actions
+		%button.btn.btn-success.save(name="_save" value="save" type="submit")
+			%span.glyphicon.glyphicon-file.glyphicon
+			Save
+		%span.btn.btn-default.back Cancel
+
+	!= Former::close()
+

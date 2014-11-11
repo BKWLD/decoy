@@ -200,7 +200,7 @@ class Fragment extends Base {
 		
 		// All images must live in the /img (relative) directory.  I'm not throwing an exception
 		// here because Laravel's view exception handler doesn't display the message.
-		if (Str::is('/uploads/*', $value)) $value = 'All fragment images must be stored in the img directory';
+		if (Str::is('/uploads/*', $value)) $value = 'All fragment images must be stored in the public/img directory';
 		if (!Str::is('/img/*', $value)) return $value;
 		
 		// Check if the image already exists in the uploads directory

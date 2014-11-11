@@ -42,13 +42,16 @@ class Helpers {
 		$path = Request::path();
 		$classes = array();
 
+		// Special condition for the elements
+		if (strpos($path, '/elements/field/') !== false) return 'elements field';
+
 		// Special condition for the reset page, which passes the token in as part of the route
 		if (strpos($path, '/reset/') !== false) return 'login reset';
 
-		// Since fragments support deep links, the deep linked slug was being added to the
-		// body class instead of "fragments" and breaking styles.  All fragments sub pages
-		// should have the same body class.
+		// Tab-sidebar views support deep links that would normally affect the
+		// class of the page.
 		if (strpos($path, '/fragments/') !== false) return 'fragments index';
+		if (strpos($path, '/elements/') !== false) return 'elements index';
 
 		// Get the controller and action from the URL
 		preg_match('#/([a-z-]+)(?:/\d+)?(?:/(create|edit))?$#i', $path, $matches);
@@ -143,6 +146,16 @@ class Helpers {
 	public function frag($key) {
 		if (is_string($val = Fragment::value($key))) return trim($val);
 		return $val;
+	}
+
+	/**
+	 * Get the value of an Element given it's key
+	 *
+	 * @param  string $key 
+	 * @return mixed
+	 */
+	public function el($key) {
+		return app('decoy.elements')->get($key);
 	}
 
 	/**

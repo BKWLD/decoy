@@ -3,8 +3,6 @@
 // Dependencies
 use App;
 use Bkwld\Decoy\Models\Encoding;
-use Config;
-use Event;
 use Input;
 use Route;
 
@@ -36,6 +34,7 @@ class Router {
 		$this->registerFragments();
 		$this->registerWorkers();
 		$this->registerEncode();
+		$this->registerElements();
 
 		// Register wildcard last
 		$this->registerWildcard();
@@ -134,6 +133,16 @@ class Router {
 		Route::post($this->dir.'/encode/notify', array('as' => 'decoy\encode@notify', function() {
 			return Encoding::notify(Input::get());
 		}));
+	}
+
+	/**
+	 * Elements system
+	 */
+	public function registerElements() {
+		Route::get($this->dir.'/elements/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy\elements'));
+		Route::post($this->dir.'/elements/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy\elements@store'));
+		Route::get($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy\elements@field'));
+		Route::post($this->dir.'/elements/field/{key}', array('uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy\elements@field-update'));
 	}
 	
 	/**
