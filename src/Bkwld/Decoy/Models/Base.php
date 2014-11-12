@@ -51,6 +51,14 @@ abstract class Base extends Eloquent {
 	static public $crops = [];
 
 	/**
+	 * Should this model be localizable in the admin.  If not undefined, will override
+	 * the site config "auto_localize_root_models"
+	 *
+	 * @var boolean
+	 */
+	static public $localizable;
+
+	/**
 	 * If true, process file handling updates via Decoy's Input\Files class during
 	 * model callbacks
 	 *
