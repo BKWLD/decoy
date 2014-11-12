@@ -453,7 +453,8 @@ class Base extends Controller {
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to($this->url->relative('edit', $item->id))->with('success', $this->successMessage($item, 'created') );
+		else return Redirect::to($this->url->relative('edit', $item->id))
+			->with('success', $this->successMessage($item, 'created') );
 	}
 	
 	/**
@@ -520,7 +521,8 @@ class Base extends Controller {
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to(URL::current())->with('success', $this->successMessage($item) );
+		else return Redirect::to(URL::current())
+			->with('success', $this->successMessage($item) );
 		
 	}
 	
@@ -877,11 +879,18 @@ class Base extends Controller {
 	/**
 	 * Creates a success message for CRUD commands
 	 * 
-	 * @param  Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is being worked on 
+	 *                                              or a string containing the title
 	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
 	 * @return  string The CRUD success message string
 	 */
-	protected function successMessage($model, $verb = 'saved') {
-		return "The <strong>".str_singular($this->title)."</strong> \"".$model->titleText()."\" was successfully ".$verb.".";
+	protected function successMessage($title = '', $verb = 'saved') {
+
+		// Figure out the title and wrap it in quotes
+		if (is_a($title, '\Bkwld\Decoy\Models\Base')) $title = $title->titleText();
+		if ($title && is_string($title)) $title =  '"'.$title.'"';
+
+		// Render the message
+		return "The <strong>".Str::singular($this->title)."</strong> {$title} was successfully {$verb}.";
 	}
 }

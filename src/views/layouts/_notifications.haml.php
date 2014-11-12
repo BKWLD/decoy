@@ -32,4 +32,4 @@
 			%span.glyphicon.glyphicon-remove-circle
 		%p
 			%span.glyphicon
-			%span.message=$message
+			%span.message!=$message
