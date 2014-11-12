@@ -54,13 +54,18 @@
 		// Dim the color on the header content and
 		// make the text smaller
 		th {
-			color: rgba($theme-secondary-inverse, $light-opacity);
+			color: rgba($theme-secondary-inverse, .4);
 			font-size: 12px;
 
 			// Bulk action rollover
 			&.select-all:hover {
-				@include opacity(1);
+				color: $theme-secondary-inverse;
 			}
+		}
+
+		// Make more readable on hover
+		&:hover th {
+			color: rgba($theme-secondary-inverse, .7);
 		}
 	}
 
