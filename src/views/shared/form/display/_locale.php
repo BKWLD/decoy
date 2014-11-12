@@ -1,10 +1,10 @@
 <?php
 
-// Only show if more than one locale
-if (($locales = Config::get('decoy::site.locales')) && is_array($locales) && count($locales) <= 1) return;
+// Check whether the UI should be displayed
+if (!$localize || $localize->hidden()) return;
 
 // Create radios config
-$config = Bkwld\Library\Laravel\Former::radioArray($locales);
+$config = Bkwld\Library\Laravel\Former::radioArray(Config::get('decoy::site.locales'));
 
 // Look for other localizations of this record
 if ($item && ($localizations = $item->other_localizations)) {
@@ -19,7 +19,7 @@ if ($item && ($localizations = $item->other_localizations)) {
 		if ($sibling = $localizations->get($options['value'])) {
 			$sibling = $sibling[0]; // The groupBy makes an array for its value
 			$options['disabled'] = true;
-			$label = "<span class='locale-label'>{$label} - In use by <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->title().'</a></span>';
+			$label = "<span class='locale-label'>{$label} - Localized as <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->title().'</a></span>';
 			$config[$label] = $options;
 
 		// Else, don't touch
@@ -27,7 +27,13 @@ if ($item && ($localizations = $item->other_localizations)) {
 	}
 }
 
+// Make the help
+if (!isset($help)) $help = 'This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.';
+if (!isset($title)) $title = 'Locale';
+
+// Render the locale menu
 echo Former::radios('locale')
+	->label($title)
 	->radios($config)
 	->addGroupClass('locale')
-	->blockHelp('This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.');
+	->blockHelp($help);

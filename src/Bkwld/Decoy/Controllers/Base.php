@@ -6,6 +6,7 @@ use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exception;
 use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Files;
+use Bkwld\Decoy\Input\Localize;
 use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
@@ -409,12 +410,21 @@ class Base extends Controller {
 
 		// Pass validation through
 		Former::withRules(Model::$rules);
-		
+
+		// Initialize localization
+		$localize = new Localize;
+		$localize->model($this->model);
+
+		// Make the sidebar
+		$sidebar = new Sidebar($item);
+		$sidebar->addToEnd($localize);
+
 		// Return view
 		$this->populateView($this->show_view, [
 			'item' => null,
 			'crops' => (object) Model::$crops,
-			'sidebar' => new Sidebar,
+			'localize' => $localize,
+			'sidebar' => $sidebar,
 		]);
 		
 		// Pass parent_id
@@ -471,12 +481,21 @@ class Base extends Controller {
 		// Populate form
 		Former::populate($item);
 		Former::withRules(Model::$rules);
-		
+
+		// Initialize localization
+		$localize = new Localize;
+		$localize->item($item);
+
+		// Make the sidebar
+		$sidebar = new Sidebar($item);
+		$sidebar->addToEnd($localize);
+
 		// Render the view
 		$this->populateView($this->show_view, [
 			'item' => $item,
 			'crops' => (object) Model::$crops,
-			'sidebar' => new Sidebar($item),
+			'localize' => $localize,
+			'sidebar' => $sidebar,
 		]);
 
 		// Figure out the parent_id

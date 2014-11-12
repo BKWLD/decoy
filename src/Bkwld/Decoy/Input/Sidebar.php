@@ -1,7 +1,5 @@
 <?php namespace Bkwld\Decoy\Input;
 
-// Dependencies
-
 
 /**
  * Utilities that the Decoy base controller can use to generate
@@ -15,6 +13,13 @@ class Sidebar {
 	 * @var array
 	 */
 	private $items = [];
+
+	/**
+	 * Items that should be added to the end of the sidebar
+	 *
+	 * @var array
+	 */
+	private $ending_items = [];
 
 	/**
 	 * The model instance currently being worked on by Decoy 
@@ -36,11 +41,23 @@ class Sidebar {
 	/**
 	 * Add an item to the sidebar
 	 *
-	 * @param mixed Generally an Bkwld\Decoy\Fields\Listing object or a string
-	 * @return Bkwld\Decoy\Input\Sidebar Support chaining
+	 * @param mixed Generally an Bkwld\Decoy\Fields\Listing object or stringable
+	 * @return $this
 	 */
 	public function add($item) {
 		$this->items[] = $item;
+		return $this;
+	}
+
+	/**
+	 * Add an item to the END of the sidebar, regardless of when it was added
+	 * in the logic flow
+	 *
+	 * @param mixed Generally an Bkwld\Decoy\Fields\Listing object or stringable
+	 * @return $this
+	 */
+	public function addToEnd($item) {
+		$this->ending_items[] = $item;
 		return $this;
 	}
 
@@ -50,7 +67,7 @@ class Sidebar {
 	 * @return boolean 
 	 */
 	public function isEmpty() {
-		return empty($this->items);
+		return empty($this->items) && empty($this->ending_items);
 	}
 
 	/**
@@ -70,7 +87,7 @@ class Sidebar {
 			// Anything else will be converted to a string in the next step
 			} else return $item;
 
-		}, $this->items);
+		}, array_merge($this->items, $this->ending_items));
 
 		// Combine all listing items into a single string and return
 		return array_reduce($items, function($carry, $item) {

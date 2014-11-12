@@ -26,10 +26,10 @@
 	-# Cancel
 	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Back
 
-!=Former::close()
-
 -# Close first column, show sidebar, and then close the row
 -if(isset($sidebar) && !$sidebar->isEmpty())
 	!='</div><div class="col-md-5 related">'
 	!=$sidebar->render()
 	!='</div></div>'
+
+!=Former::close()

@@ -22,3 +22,15 @@
 	}
 
 }
+
+/**
+ * The sidebar localization UI
+ */
+fieldset.localize {
+
+	// Give the submit buttons a bkgd color
+	.actions {
+		background: $form-container-bkgd;
+	}
+
+}
