@@ -1,0 +1,24 @@
+
+/**
+ * The locale field in the edit form
+ */
+.form-group.locale {
+
+	// Make the whole label for a disabled radio look disabled
+	.radio input[disabled] + .locale-label {
+		color: rgba($text-color, $light-opacity);
+
+		// Make the link more legible
+		a {
+			color: rgba($text-color, $light-opacity*2);
+			border-bottom: $link-border;
+			&:hover {
+				color: $text-color;
+			}
+			&:active {
+				color: $theme-primary-color;
+			}
+		}
+	}
+
+}
