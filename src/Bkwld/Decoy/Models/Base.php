@@ -84,8 +84,20 @@ abstract class Base extends Eloquent {
 	// callbacks. These listeners are created when the first instance of a model
 	// is created.
 	
-	// Listen for model events and execute no-op callbacks on the model instance
-	static private $models_registered_for_events = array();
+	/**
+	 * This array is used so we can make sure that a model event callbacks only
+	 * get registered once for a class.  Since the Laravel model listening happens 
+	 * at the class level, not at the model level.
+	 *
+	 * @var array 
+	 */
+	static private $models_registered_for_events = [];
+
+	/**
+	 * Listen for model events and execute no-op callbacks on the model instance
+	 * 
+	 * @return void
+	 */
 	static private function registerModelEvents() {
 		
 		// Only run once per class.  Having to store in an array like this because
@@ -112,7 +124,8 @@ abstract class Base extends Eloquent {
 				$files->delete($model);
 				$files->save($model);
 			}
-			return $model->onSaving(); 
+			if ($model->onSaving() === false) return false;
+			$model->setLocaleGroup(); 
 		});
 		self::saved    (function($model) use ($many_to_many_checklist) { 
 			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
@@ -144,8 +157,10 @@ abstract class Base extends Eloquent {
 		
 	}
 	
-	// The no-op callbacks.  They have to be defined as public because they are invoked 
-	// from anonymous functions.
+	/**
+	 * The no-op callbacks.  They have to be defined as public because they are invoked 
+	 * from anonymous functions.
+	 */
 	public function onSaving() {}
 	public function onSaved() {}
 	public function onValidating() {} // input is passed in first arg
@@ -161,6 +176,17 @@ abstract class Base extends Eloquent {
 	public function onRemoving() {} // ids are passed in first arg
 	public function onRemoved() {} // ids are passed in first arg
 
+	/**
+	 * Create a locale group key if a localized model doesn't have one
+	 *
+	 * @return void 
+	 */
+	public function setLocaleGroup() {
+		if (!empty($this->locale)
+			&& empty($this->locale_group)) {
+			$this->locale_group = Str::random();
+		}
+	}
 		
 	//---------------------------------------------------------------------------
 	// Accessors
@@ -170,6 +196,8 @@ abstract class Base extends Eloquent {
 	 * Return the title for the row for the purpose of displaying
 	 * in admin list views and breadcrumbs.  It looks for columns
 	 * that are named like common things that would be titles
+	 *
+	 * @return string 
 	 */
 	public function title() {
 		return $this->croppaTag(40, 40).$this->titleText();
@@ -177,6 +205,7 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Deduce the source for the title of the model and return that title
+	 * 
 	 * @return string 
 	 */
 	public function titleText() {
@@ -195,8 +224,21 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * A no-op that should return the URI (an absolute path or a fulL URL) to the record
+	 *
+	 * @return string 
 	 */
 	public function getUriAttribute() { }
+
+	/**
+	 * Get localized siblings of this model
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection 
+	 */
+	public function getOtherLocalizationsAttribute() {
+		return self::where('locale_group', $this->locale_group)
+			->where($this->getKeyName(), '!=', $this->getKey())
+			->get();
+	}
 
 	//---------------------------------------------------------------------------
 	// File handling
