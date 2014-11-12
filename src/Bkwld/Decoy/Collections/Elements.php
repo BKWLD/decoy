@@ -126,12 +126,18 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Merge database records and config file into a single, flat associative array 
+	 * Merge database records and config file into a single, flat associative array.
 	 *
 	 * @return void 
 	 */
 	protected function mergeSources() {
-		return array_replace_recursive($this->assocConfig(), $this->assocAdminChoices());
+		$assoc = $this->assocConfig();
+		return array_replace_recursive($assoc, 
+
+			// Get only the databse records whose keys are present in the YAML.  This removes
+			// entries that may be from older YAML configs.
+			array_intersect_key($this->assocAdminChoices(), $assoc)
+		);
 	}
 
 	/**
