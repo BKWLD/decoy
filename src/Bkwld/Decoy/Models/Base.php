@@ -24,25 +24,39 @@ abstract class Base extends Eloquent {
 	// Overrideable properties
 	//---------------------------------------------------------------------------
 	
-	// This should be overridden by Models to store the array of their 
-	// Laravel validation rules
-	static public $rules = array();
+	/**
+	 * This should be overridden by Models to store the array of their 
+	 * Laravel validation rules
+	 *
+	 * @var array
+	 */
+	static public $rules = [];
 	
-	// This is designed to be overridden to store the DB column name that
-	// should be used as the source for titles.  Used in the title() function
-	// and in autocompletes.
+	/**
+	 * This is designed to be overridden to store the DB column name that
+	 * should be used as the source for titles.  Used in the title() function
+	 * and in autocompletes.
+	 *
+	 * @var string
+	 */
 	static public $title_column;
-	
-	// This is should be overriden like so to specify crops that the image cropping
-	// widget should make UI for
-	// array('image' => array('marquee' => '4:3', 'feature'))
-	static public $crops = array();
+
+	/**
+	 * This is should be overriden like so to specify crops that the image cropping
+	 * widget should make UI for
+	 * array('image' => array('marquee' => '4:3', 'feature'))
+	 *
+	 * @var array
+	 */
+	static public $crops = [];
 
 	/**
 	 * If true, process file handling updates via Decoy's Input\Files class during
 	 * model callbacks
+	 *
+	 * @var boolean
 	 */
-	public $auto_manage_files = true;
+	public $auto_manage_files;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
