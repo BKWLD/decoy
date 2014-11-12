@@ -7,8 +7,8 @@
 
 	%fieldset
 		.legend=empty($item)?'New':'Edit'
-		!= Former::text('title')->class('span9') 
-		!= Former::textarea('body')->class('span9 wysiwyg')->blockHelp('If adding images within the body, it is recommended to size them using percentage values.  A good rule of thumb for full width images is to set the width to 100% and the height to empty.  And for right or left aligned images, set the width to 50% and the vspace and hspace to 10.') 
+		!= Former::text('title') 
+		!= Former::textarea('body')->class('wysiwyg')->blockHelp('If adding images within the body, it is recommended to size them using percentage values.  A good rule of thumb for full width images is to set the width to 100% and the height to empty.  And for right or left aligned images, set the width to 50% and the vspace and hspace to 10.') 
 		!= Former::image('image')->crops($crops->image) 
 
 	%fieldset
@@ -17,7 +17,7 @@
 		!= Former::select('category_id', 'Categories')->addOption(null)->fromQuery(Category::ordered()->get(), 'name')
 		!= Former::date('date')->value('now')
 		!= Former::date('date_end') 
-		!= Former::text('url', "URL")->class('span9')->blockHelp('An external link to the article.')
+		!= Former::text('url', "URL")->blockHelp('An external link to the article.')
 
 	%fieldset
 		!= View::make('decoy::shared.form._display_module', $__data)
