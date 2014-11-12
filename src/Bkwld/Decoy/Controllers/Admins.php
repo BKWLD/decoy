@@ -52,7 +52,8 @@ class Admins extends Base {
 		$id = Model::create(Input::get());
 		
 		// Redirect to edit view
-		return Redirect::to(DecoyURL::relative('edit', $id));
+		return Redirect::to(DecoyURL::relative('edit', $id))
+			->with('success', $this->successMessage(Input::get('first_name').' '.Input::get('last_name')));
 	}
 
 	/**
@@ -89,7 +90,8 @@ class Admins extends Base {
 		$admin->update(Input::get());
 		
 		// Redirect to the edit view
-		return Redirect::to(URL::current());
+		return Redirect::to(URL::current())
+			->with('success', $this->successMessage(Input::get('first_name').' '.Input::get('last_name')));
 	
 	}
 	

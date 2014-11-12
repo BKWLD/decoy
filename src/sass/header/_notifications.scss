@@ -55,13 +55,12 @@
 	p {
 		padding: ($main-padding/2) 0;
 		margin: 0;
-	}
 
-	span.glyphicon {
-		margin-right: 5px;
+		// Push text off the glyph
+		.glyphicon {
+			margin-right: 5px;
+		}
 	}
-
-	
 
 	// default display
 	max-height:0;
