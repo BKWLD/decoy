@@ -45,11 +45,10 @@
 				-# Help
 				%p.help-block Creating a new localization of the current <b>#{$title}</b> will create a copy of <i>this</i> <b>#{$title}</b> using the selected locale.  The new <b>#{$title}</b> will be set to "Hidden".
 
-			-# Submit
-			.form-group.actions
-				%button.btn.btn-success(name='localize')
-					%span.glyphicon.glyphicon-file.glyphicon
-					Create
+				-# Submit
+				%button.btn.btn-default(name='localize')
+					%span.glyphicon.glyphicon-plus.glyphicon
+					Create				
 
 		-else
 			-# Not possible to localize

@@ -33,9 +33,9 @@ fieldset.localize {
 		border-bottom: $link-border;
 	}
 
-	// Give the submit buttons a bkgd color
-	.actions {
-		background: $form-container-bkgd;
+	// Push the submit button away from the help text
+	.create .btn {
+		margin-top: 10px;
 	}
 
 }
