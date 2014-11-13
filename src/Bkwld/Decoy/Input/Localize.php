@@ -11,6 +11,11 @@ use View;
 class Localize {
 
 	/**
+	 * The model instance being localized
+	 */
+	protected $item;
+
+	/**
 	 * The model class being localized
 	 *
 	 * @var string
@@ -18,9 +23,28 @@ class Localize {
 	protected $model;
 
 	/**
-	 * The model instance being localized
+	 * Other localizations for the `$item`
 	 */
-	protected $item;
+	protected $other_localizations;
+
+	/**
+	 * The title of this model, from the controller
+	 *
+	 * @var string
+	 */
+	protected $title;
+
+	/**
+	 * Store a model instance
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $item 
+	 * @return $this 
+	 */
+	public function item($item) {
+		if (!$this->model) $this->model = get_class($item);
+		$this->item = $item;
+		return $this;
+	}
 
 	/**
 	 * Store the model class name
@@ -34,14 +58,13 @@ class Localize {
 	}
 
 	/**
-	 * Store a model instance
+	 * The title of this model, from the controller
 	 *
-	 * @param Illuminate\Database\Eloquent\Model $item 
+	 * @param string $title 
 	 * @return $this 
 	 */
-	public function item($item) {
-		if (!$this->model) $this->model = get_class($item);
-		$this->item = $item;
+	public function title($title) {
+		$this->title = $title;
 		return $this;
 	}
 
@@ -60,6 +83,31 @@ class Localize {
 	}
 
 	/**
+	 * Get a hash of locales that are available for the item
+	 *
+	 * @return array 
+	 */
+	public function localizableLocales() {
+		return array_diff_key( // Keep only locales that don't exist in
+			Config::get('decoy::site.locales'),
+			array_flip($this->other()->lists('locale')), // ... the locales of other localizations
+			[$this->item->locale => null] // ... and this locale
+		); 
+	}
+
+	/**
+	 * Get other localizations, storing them internally for use in multiple places
+	 *
+	 * @return Illuminate\Database\Eloquent\Collection
+	 */
+	public function other() {
+		if ($this->other_localizations === null) {
+			$this->other_localizations = $this->item->otherLocalizations()->get();
+		}
+		return $this->other_localizations;
+	}
+
+	/**
 	 * Render the sidebar, "Localize" UI
 	 * 
 	 * @return string
@@ -68,6 +116,7 @@ class Localize {
 		return (string) View::make('decoy::shared.form.relationships._localize', [
 			'model' => $this->model,
 			'item' => $this->item,
+			'title' => $this->title,
 			'localize' => $this,
 		]);
 	}

@@ -72,6 +72,11 @@
 // Change the margins on the help block
 .help-block {
 	margin-bottom: 0;
+
+	// The bold text is a BIT too big
+	b {
+		font-size: $font-size-base - 1px;
+	}
 }
 
 // Make textareas 4 lines long
@@ -94,4 +99,10 @@ textarea.form-control {
 // instead.  This is copied out of bootstrap
 .form-control:focus {
 	@include box-shadow(inset 0 1px 1px rgba(darken($input-border-focus, 30%), .075));
+}
+
+// Reduce bootstrap's vertical margins
+.radio, .checkbox {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }

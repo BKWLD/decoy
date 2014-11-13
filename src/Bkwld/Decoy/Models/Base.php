@@ -251,17 +251,6 @@ abstract class Base extends Eloquent {
 	 */
 	public function getUriAttribute() { }
 
-	/**
-	 * Get localized siblings of this model
-	 *
-	 * @return Illuminate\Database\Eloquent\Collection 
-	 */
-	public function getOtherLocalizationsAttribute() {
-		return self::where('locale_group', $this->locale_group)
-			->where($this->getKeyName(), '!=', $this->getKey())
-			->get();
-	}
-
 	//---------------------------------------------------------------------------
 	// File handling
 	//---------------------------------------------------------------------------
@@ -336,6 +325,15 @@ abstract class Base extends Eloquent {
 	public function scopeRandomize($query) {
 		return $query->orderBy(DB::raw('RAND()'));
 	}
+
+	/**
+	 * Get localized siblings of this model
+	 */
+	public function scopeOtherLocalizations($query) {
+		return $query->where('locale_group', $this->locale_group)
+			->where($this->getKeyName(), '!=', $this->getKey());
+	}
+
 	
 	/**
 	 * Find by the slug.  Like "find()" but use the slug column instead

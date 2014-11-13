@@ -28,6 +28,11 @@
  */
 fieldset.localize {
 
+	// Put a link on the compare model reference
+	.compare .radio a {
+		border-bottom: $link-border;
+	}
+
 	// Give the submit buttons a bkgd color
 	.actions {
 		background: $form-container-bkgd;

@@ -413,10 +413,10 @@ class Base extends Controller {
 
 		// Initialize localization
 		$localize = new Localize;
-		$localize->model($this->model);
+		$localize->model($this->model)->title(Str::singular($this->title));
 
 		// Make the sidebar
-		$sidebar = new Sidebar($item);
+		$sidebar = new Sidebar;
 		$sidebar->addToEnd($localize);
 
 		// Return view
@@ -483,8 +483,8 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 
 		// Initialize localization
-		$localize = new Localize;
-		$localize->item($item);
+		$localize = new Localize();
+		$localize->item($item)->title(Str::singular($this->title));
 
 		// Make the sidebar
 		$sidebar = new Sidebar($item);

@@ -22,5 +22,11 @@
 	&:hover {
 		background-color: $lightest-grey;
 	}
+
+	// Allow whole field groups to be disabled
+	&.disabled {
+		@include opacity(.7);
+		background: mix(white, $body-color, 70%); // This matches disabled fielset backg
+	}
 	
 }

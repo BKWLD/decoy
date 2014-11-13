@@ -7,7 +7,7 @@ if (!$localize || $localize->hidden()) return;
 $config = Bkwld\Library\Laravel\Former::radioArray(Config::get('decoy::site.locales'));
 
 // Look for other localizations of this record
-if ($item && ($localizations = $item->other_localizations)) {
+if ($item && ($localizations = $localize->other())) {
 	$original = $config;
 	$config = [];
 
@@ -27,13 +27,8 @@ if ($item && ($localizations = $item->other_localizations)) {
 	}
 }
 
-// Make the help
-if (!isset($help)) $help = 'This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.';
-if (!isset($title)) $title = 'Locale';
-
 // Render the locale menu
 echo Former::radios('locale')
-	->label($title)
 	->radios($config)
 	->addGroupClass('locale')
-	->blockHelp($help);
+	->blockHelp('This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.');
