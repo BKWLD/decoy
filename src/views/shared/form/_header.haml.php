@@ -1,7 +1,7 @@
 -if(isset($sidebar) && !$sidebar->isEmpty())
 	-# Open form and setup for columns
-	!=Former::vertical_open_for_files()
 	!='<div class="row"><div class="col-md-7 related-left-col">'
+	!=Former::vertical_open_for_files()
 	
 -else
 	-# Open a horizontal, non-sidebar form
