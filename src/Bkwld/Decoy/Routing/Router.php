@@ -13,6 +13,13 @@ use Route;
 class Router {
 	
 	/**
+	 * Action for current wildcard request
+	 *
+	 * @var string 
+	 */
+	private $action;
+
+	/**
 	 * Constructor
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
 	 * @param Bkwld\Decoy\Routing\Filters
@@ -149,10 +156,9 @@ class Router {
 	 * Set and get the action for this request
 	 * @return string 'Bkwld\Decoy\Controllers\Account@forgot'
 	 */
-	private $_action;
 	public function action($name = null) {
-		if ($name) $this->_action = $name;
-		if ($this->_action) return $this->_action; // Wildcard
+		if ($name) $this->action = $name;
+		if ($this->action) return $this->action; // Wildcard
 		else return Route::currentRouteAction();
 	}
 }
