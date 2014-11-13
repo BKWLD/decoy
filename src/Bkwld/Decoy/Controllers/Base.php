@@ -370,7 +370,11 @@ class Base extends Controller {
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
 	
-	// Listing page
+	/**
+	 * Show an index, listing page.  Sets view via the layout.
+	 * 
+	 * @return void
+	 */
 	public function index() {
 
 		// Look for overriden views
@@ -401,7 +405,9 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Create form
+	 * Show the create form.  Sets view via the layout.
+	 * 
+	 * @return void
 	 */
 	public function create() {
 
@@ -435,7 +441,9 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Store a new submission
+	 * Store a new record
+	 * 
+	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function store() {
 		
@@ -468,7 +476,10 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Edit form
+	 * Show the edit form.  Sets view via the layout.
+	 * 
+	 * @param  int $id Model key
+	 * @return void
 	 */
 	public function edit($id) {
 
@@ -506,7 +517,12 @@ class Base extends Controller {
 
 	}
 	
-	// Update an item
+	/**
+	 * Update a record
+	 * 
+	 * @param  int $id Model key
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
 	public function update($id) {
 
 		// Load the entry
@@ -545,7 +561,12 @@ class Base extends Controller {
 		
 	}
 	
-	// Delete a record
+	/**
+	 * Destroy a record
+	 * 
+	 * @param  int $id Model key
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
 	public function destroy($id) {
 		
 		// Find the item
@@ -558,6 +579,8 @@ class Base extends Controller {
 		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::to($this->url->relative('index'))->with('success', $this->successMessage($item, 'deleted') );;
 	}
+
+
 	
 	//---------------------------------------------------------------------------
 	// Many To Many CRUD
