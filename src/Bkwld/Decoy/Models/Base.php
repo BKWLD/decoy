@@ -251,6 +251,17 @@ abstract class Base extends Eloquent {
 	 */
 	public function getUriAttribute() { }
 
+	/**
+	 * Get all file fields by looking at validation rules
+	 *
+	 * @return array The keys of all the attributes that store file references
+	 */
+	public function getFileAttributesAttribute() {
+		return array_keys(array_filter(static::$rules, function($rules) {
+			return preg_match('#'.Files::RULES.'#i', $rules);
+		}));
+	}
+
 	//---------------------------------------------------------------------------
 	// File handling
 	//---------------------------------------------------------------------------

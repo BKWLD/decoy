@@ -17,7 +17,7 @@ class UrlGenerator {
 	private $path;
 	
 	// Possible actions in path that would process a view that would be generating URLs
-	private $actions = array('edit', 'create', 'destroy', 'clone');
+	private $actions = array('edit', 'create', 'destroy', 'duplicate');
 	
 	/**
 	 * Inject dependencies

@@ -418,12 +418,12 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 
 		// Initialize localization
-		$localize = new Localize;
-		$localize->model($this->model)->title(Str::singular($this->title));
+		with($localize = new Localize)
+			->model($this->model)
+			->title(Str::singular($this->title));
 
 		// Make the sidebar
-		$sidebar = new Sidebar;
-		$sidebar->addToEnd($localize);
+		with($sidebar = new Sidebar)->addToEnd($localize);
 
 		// Return view
 		$this->populateView($this->show_view, [
@@ -443,7 +443,7 @@ class Base extends Controller {
 	/**
 	 * Store a new record
 	 * 
-	 * @return Symfony\Component\HttpFoundation\Response
+	 * @return Symfony\Component\HttpFoundation\Response Redirect to edit view
 	 */
 	public function store() {
 		
@@ -494,12 +494,12 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 
 		// Initialize localization
-		$localize = new Localize();
-		$localize->item($item)->title(Str::singular($this->title));
+		with($localize = new Localize())
+			->item($item)
+			->title(Str::singular($this->title));
 
 		// Make the sidebar
-		$sidebar = new Sidebar($item);
-		$sidebar->addToEnd($localize);
+		with($sidebar = new Sidebar($item))->addToEnd($localize);
 
 		// Render the view
 		$this->populateView($this->show_view, [
@@ -521,7 +521,7 @@ class Base extends Controller {
 	 * Update a record
 	 * 
 	 * @param  int $id Model key
-	 * @return Symfony\Component\HttpFoundation\Response
+	 * @return Symfony\Component\HttpFoundation\Response Redirect to edit view
 	 */
 	public function update($id) {
 
@@ -565,7 +565,7 @@ class Base extends Controller {
 	 * Destroy a record
 	 * 
 	 * @param  int $id Model key
-	 * @return Symfony\Component\HttpFoundation\Response
+	 * @return Symfony\Component\HttpFoundation\Response Redirect to listing
 	 */
 	public function destroy($id) {
 		
@@ -580,7 +580,60 @@ class Base extends Controller {
 		else return Redirect::to($this->url->relative('index'))->with('success', $this->successMessage($item, 'deleted') );;
 	}
 
+	/**
+	 * Duplicate a record
+	 *
+	 * @param  int $id Model key
+	 * @return Symfony\Component\HttpFoundation\Response Redirect to new record
+	 */
+	public function duplicate($id) {
 
+		// Find the source item
+		if (!($src = Model::find($id))) return App::abort(404);
+		$file_attributes = $src->file_attributes;
+
+		// Get the options
+		$options = Input::get('options') ?: [];
+
+		// If inlcuding text, start by cloning the model.  A number of columns are
+		// excepted by the duplciate, including all of the file attributes.
+		if (in_array('text', $options)) {
+			$new = $src->replicate(array_merge([
+				$src->getKeyName(),
+				$src->getCreatedAtColumn(),
+				$src->getUpdatedAtColumn(),
+				'visible',
+			], $file_attributes));
+		
+		// Otherwise, create a blank instance of the model
+		} else $new = $src->newInstance();
+
+		// Duplicate all files and associate new paths
+		if (in_array('files', $options)) {
+			$uploads_dir = Config::get('decoy::core.upload_dir');
+			foreach ($file_attributes as $field) {
+				if (empty($src->$field)) continue;
+
+				// Copy the file
+				$tmp = $uploads_dir.'/'.basename($src->$field);
+				$copy = copy(public_path().$src->$field, $tmp);
+
+				// Move it save the new path
+				$new->$field = File::publicPath(File::organizeFile($tmp, $uploads_dir));
+			}
+		}
+
+		// Set localization options on new instance
+		if ($locale = Input::get('locale')) {
+			$new->locale = $locale;
+			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
+		}
+
+		// Save the new record and redirect to its edit view
+		$new->save();
+		return Redirect::to($this->url->relative('edit', $new->getKey()))
+			->with('success', $this->successMessage($new, 'created') );
+	}
 	
 	//---------------------------------------------------------------------------
 	// Many To Many CRUD
@@ -926,13 +979,22 @@ class Base extends Controller {
 	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
 	 * @return  string The CRUD success message string
 	 */
-	protected function successMessage($title = '', $verb = 'saved') {
+	protected function successMessage($input = '', $verb = 'saved') {
 
 		// Figure out the title and wrap it in quotes
-		if (is_a($title, '\Bkwld\Decoy\Models\Base')) $title = $title->titleText();
+		$title = $input;
+		if (is_a($input, '\Bkwld\Decoy\Models\Base')) $title = $input->titleText();
 		if ($title && is_string($title)) $title =  '"'.$title.'"';
 
 		// Render the message
-		return "The <strong>".Str::singular($this->title)."</strong> {$title} was successfully {$verb}.";
+		$message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
+
+		// Add extra messaging if the creation was begun from the localize UI
+		if (is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
+			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
+		}
+
+		// Return message
+		return $message;
 	}
 }

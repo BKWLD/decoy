@@ -24,7 +24,7 @@
 		-# Create a new localization.
 		-$locales = $localize->localizableLocales()
 		-if(count($locales))
-			!=Former::vertical_open(DecoyURL::relative('clone', $item->getKey()))
+			!=Former::vertical_open(DecoyURL::relative('duplicate', $item->getKey()))
 			.form-group.create
 				%label.control-label Create
 
@@ -35,7 +35,7 @@
 						.check
 				
 				-# Additional options
-				%input(type="hidden" name='options[]' value='')
+				%input(type="hidden" name='options')
 				.checkbox
 					%label
 						%input(type="checkbox" name='options[]' value='text' checked)
@@ -49,7 +49,7 @@
 				%p.help-block Creating a new localization of the current <b>#{$title}</b> will create a copy of <i>this</i> <b>#{$title}</b> using the selected locale.  The new <b>#{$title}</b> will be set to "Hidden".
 
 				-# Submit
-				%button.btn.btn-default(name='localize')
+				%button.btn.btn-default
 					%span.glyphicon.glyphicon-plus.glyphicon
 					Create				
 			!=Former::close()

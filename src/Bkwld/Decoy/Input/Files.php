@@ -15,6 +15,11 @@ use Str;
 class Files {
 	
 	/**
+	 * The different rules that all imply files
+	 */
+	const RULES = 'file|image|mimes|video';
+
+	/**
 	 * Massage validation rules when editing a file
 	 */
 	public function preValidate($item) {
@@ -26,7 +31,7 @@ class Files {
 			// re-saving the page with no image changes.  Since the incoming value for the
 			// field is a simple string, remove the mime validations
 			if (Input::has($field) && !Input::hasFile($field)) {
-				$item::$rules[$field] = preg_replace('#(image|mimes|video)[^|]*#', '', $item::$rules[$field]);
+				$item::$rules[$field] = preg_replace('#('.self::RULES.')[^|]*#i', '', $item::$rules[$field]);
 
 				// Cleanup extra pipes
 				$item::$rules[$field] = preg_replace('#\|{2,}#', '|', $item::$rules[$field]);
@@ -109,7 +114,7 @@ class Files {
 	private function fields($item) {
 		$fields = array();
 		foreach($item::$rules as $field => $rules) {
-			if (preg_match('#file|image|mimes|video#i', $rules)) $fields[] = $field;
+			if (preg_match('#'.self::RULES.'#i', $rules)) $fields[] = $field;
 		}
 		return $fields;
 	}

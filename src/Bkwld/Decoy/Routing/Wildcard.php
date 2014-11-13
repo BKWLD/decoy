@@ -20,7 +20,7 @@ class Wildcard {
 	private $path;
 	
 	// These are action suffixes on paths
-	private $actions = array('create', 'edit', 'destroy', 'attach', 'remove', 'autocomplete', 'clone');
+	private $actions = array('create', 'edit', 'destroy', 'attach', 'remove', 'autocomplete', 'duplicate');
 	
 	/**
 	 * Constructor
