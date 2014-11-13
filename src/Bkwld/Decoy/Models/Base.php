@@ -186,11 +186,10 @@ abstract class Base extends Eloquent {
 		$row = $this->getAttributes();
 
 		// Deduce and return
-		if (!empty(static::$title_column)) return $row[static::$title_column];
+		if (!empty(static::$title_column) && !empty($row[static::$title_column])) return $row[static::$title_column];
 		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
 		else if (isset($row['title'])) return $row['title'];
-		else if (App::make('decoy.router')->action() == 'edit') return 'Edit';
-		else return '';
+		else return 'Untitled';
 	}
 
 	/**
