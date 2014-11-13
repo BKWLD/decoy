@@ -40,11 +40,12 @@
 					%label
 						%input(type="checkbox" name='options[]' value='text' checked)
 						Include text and settings
-				.checkbox
-					%label
-						%input(type="checkbox" name='options[]' value='files' checked)
-						Include images and files
-				
+				-if(!empty($item->file_attributes))
+					.checkbox
+						%label
+							%input(type="checkbox" name='options[]' value='files' checked)
+							Include images and files
+					
 				-# Help
 				%p.help-block Creating a new localization of the current <b>#{$title}</b> will create a copy of <i>this</i> <b>#{$title}</b> using the selected locale.  The new <b>#{$title}</b> will be set to "Hidden".
 
