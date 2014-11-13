@@ -69,7 +69,10 @@ fieldset, .related .standard-list, body.index .standard-list {
 	// the parent is saved
 	&.disabled {
 		@include opacity(.7);
-		.legend { background: grayscale($theme-secondary-color); }
+		.legend { 
+			background: grayscale($theme-secondary-color);
+			&, > a { color: grayscale($theme-secondary-inverse); }
+		}
 
 		// This is the message
 		p {
