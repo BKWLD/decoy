@@ -21,18 +21,24 @@
 							%a(href=DecoyURL::relative('edit', $model->getKey()))!=$model->title()
 				%p.help-block Choose an existing localization for this <b>#{$title}</b> to compare against.  Rollover form element to view the content in the selected localization.
 
-		-# Create a new localization.
+		-# Create a new localization menu if there are un-assigned locales
 		-$locales = $localize->localizableLocales()
 		-if(count($locales))
 			!=Former::vertical_open(DecoyURL::relative('duplicate', $item->getKey()))
 			.form-group.create
 				%label.control-label Create
 
-				-# The select menu
-				%select.form-control(name='locale')
-					-foreach($locales as $locale => $label)
-						%option(value=$locale) A #{$label} localization
-						.check
+				-# Show a locale select menu or an un-editable text menu if there is only one
+				-if (count($locales) > 1)
+					%select.form-control(name='locale')
+						-foreach($locales as $locale => $label)
+							%option(value=$locale) A #{$label} localization
+							.check
+				-else
+					-$label = reset($locales)
+					-$locale = key($locales)
+					%input(type='hidden' value=$locale)
+					.form-control A #{$label} localization
 				
 				-# Additional options
 				%input(type="hidden" name='options')
