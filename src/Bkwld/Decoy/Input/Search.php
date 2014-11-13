@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Exception;
+use Config;
 use Input;
 use Log;
 
@@ -70,8 +71,16 @@ class Search {
 		$search = array();
 		foreach($config as $key => $val) {
 			
+			// Make locale menu
+			if ($val == 'locale') {
+				$search['locale'] = [
+					'type' => 'select',
+					'label' => 'Locale',
+					'options' => Config::get('decoy::site.locales'),
+				];
+
 			// Not associative assume it's a text field
-			if (is_numeric($key)) {
+			} else if (is_numeric($key)) {
 				$search[$val] = array('type' => 'text', 'label' => str_replace('_', ' ', ucwords($val)));
 			
 			// If value isn't an array, make a default label

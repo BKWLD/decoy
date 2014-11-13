@@ -990,7 +990,7 @@ class Base extends Controller {
 		$message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
 
 		// Add extra messaging if the creation was begun from the localize UI
-		if (is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
+		if ($verb == 'created' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
 			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
 		}
 

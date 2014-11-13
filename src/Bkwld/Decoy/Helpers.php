@@ -91,17 +91,22 @@ class Helpers {
 		);
 		
 		// Convert the item to an array so I can test for values
-		$test_row = $item->getAttributes();
+		$attributes = $item->getAttributes();
 
 		// Get values needed for static array test
 		$class = get_class($item);
 
+		// If the column is named, locale, convert it to its label
+		if ($column == 'locale') {
+			$locales = Config::get('decoy::site.locales');
+			if (isset($locales[$item->locale])) return $locales[$item->locale];
+
 		// If the object has a method defined with the column value, use it
-		if (method_exists($item, $column)) {
+		} elseif (method_exists($item, $column)) {
 			return call_user_func(array($item, $column));
 		
 		// Else if the column is a property, echo it
-		} elseif (array_key_exists($column, $test_row)) {
+		} elseif (array_key_exists($column, $attributes)) {
 
 			// Format date if appropriate
 			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', $item->$column)) {
@@ -127,11 +132,10 @@ class Helpers {
 			} else {
 				return $item->$column;
 			}
-		
-		// Else, just display it as a string
-		} else {
-			return $column;
 		}
+
+		// Else, just display it as a string
+		return $column;
 		
 	}
 	
