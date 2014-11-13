@@ -1,3 +1,4 @@
+-# Require a model to act on
 -if($item)
 	%fieldset.form-vertical.localize
 		.legend Localize
@@ -23,23 +24,25 @@
 		-# Create a new localization.
 		-$locales = $localize->localizableLocales()
 		-if(count($locales))
+			!=Former::vertical_open(DecoyURL::relative('clone', $item->getKey()))
 			.form-group.create
 				%label.control-label Create
 
 				-# The select menu
-				%select.form-control
+				%select.form-control(name='locale')
 					-foreach($locales as $locale => $label)
 						%option(value=$locale) A #{$label} localization
 						.check
 				
 				-# Additional options
+				%input(type="hidden" name='options[]' value='')
 				.checkbox
 					%label
-						%input(type="checkbox" checked)
-						Include text
+						%input(type="checkbox" name='options[]' value='text' checked)
+						Include text and settings
 				.checkbox
 					%label
-						%input(type="checkbox" checked)
+						%input(type="checkbox" name='options[]' value='files' checked)
 						Include images and files
 				
 				-# Help
@@ -49,6 +52,7 @@
 				%button.btn.btn-default(name='localize')
 					%span.glyphicon.glyphicon-plus.glyphicon
 					Create				
+			!=Former::close()
 
 		-else
 			-# Not possible to localize
