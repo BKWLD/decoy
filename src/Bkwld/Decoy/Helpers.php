@@ -8,6 +8,7 @@ use Config;
 use Croppa;
 use Former;
 use Request;
+use Session;
 use Str;
 use View;
 
@@ -181,6 +182,24 @@ class Helpers {
 	 */
 	public function forceHandling($bool) {
 		$this->is_handling = $bool;
+	}
+
+	/**
+	 * Set or return the current locale.  Default to the first key from 
+	 * `decoy::site.locale`.
+	 *
+	 * @param string $locale A key from the `decoy::site.locale` array
+	 * @return string 
+	 */
+	public function locale($locale = null) {
+
+		// Set the locale if a valid local is passed
+		$locales = Config::get('decoy::site.locales');
+		if ($locale && isset($locales[$locale])) return Session::set('locale', $locale);
+
+		// Return the current locale or default to first one
+		reset($locales); // Needed for `key` to work properly
+		return Session::get('locale', key($locales));
 	}
 
 }
