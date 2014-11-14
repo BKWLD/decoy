@@ -310,7 +310,7 @@ abstract class Base extends Eloquent {
 	 * Get visible items
 	 */
 	public function scopeVisible($query) {
-		return $query->where($this->getTable().'.visible', '=', '1');
+		return $query->where($this->getTable().'.visible', '1');
 	}
 	
 	/**
@@ -343,20 +343,19 @@ abstract class Base extends Eloquent {
 		return $query->where('locale_group', $this->locale_group)
 			->where($this->getKeyName(), '!=', $this->getKey());
 	}
-
 	
 	/**
 	 * Find by the slug.  Like "find()" but use the slug column instead
 	 */
 	static public function findBySlug($slug) {
-		return static::where('slug', '=', $slug)->first();
+		return static::where('slug', $slug)->first();
 	}
 
 	/**
 	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
 	 */
 	static public function findBySlugOrFail($slug) {
-		return static::where('slug', '=', $slug)->firstOrFail();
+		return static::where('slug', $slug)->firstOrFail();
 	}
 	
 	//---------------------------------------------------------------------------
