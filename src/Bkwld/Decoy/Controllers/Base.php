@@ -629,6 +629,19 @@ class Base extends Controller {
 			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
 		}
 
+		// If there was a slug, append the new locale to it so it stays unique
+		if (isset($src->slug)) {
+
+			// If we're copying text and settings, first remove any existing locale suffix
+			// from the slug before adding the new locale slug to it.
+			if (in_array('text', $options)) {
+				$pattern = '#\-('.implode('|', array_keys(Config::get('decoy::site.locales'))).')$#i';
+				$new->slug = preg_replace($pattern, '', $src->slug).'-'.$locale;
+
+			// Else, if blank, use a random key
+			} else $new->slug = Str::random(6);
+		}
+
 		// Save the new record and redirect to its edit view
 		$new->save();
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
