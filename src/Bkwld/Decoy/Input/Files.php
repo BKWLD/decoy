@@ -25,7 +25,7 @@ class Files {
 	public function preValidate($item) {
 
 		// Get all the fields for this model instance that should have files
-		foreach($this->fields($item) as $field) {
+		foreach($item->file_attributes as $field) {
 			
 			// If the field has a value but not a file, then we can assume that we're
 			// re-saving the page with no image changes.  Since the incoming value for the
@@ -50,7 +50,7 @@ class Files {
 	 */
 	public function delete($item, $force = false) {
 		$all = Input::all();
-		foreach($this->fields($item) as $field) {
+		foreach($item->file_attributes as $field) {
 			$old = $item->getOriginal($field);
 
 			// Nothing to delete found
@@ -77,7 +77,7 @@ class Files {
 	 * Loop through all the files in the input and save out the files.
 	 */
 	public function save($item) {
-		$fields = $this->fields($item);
+		$fields = $item->file_attributes;
 		$files = App::make('request')->files;
 		foreach($files->all() as $field => $file) {
 			
@@ -106,16 +106,5 @@ class Files {
 				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
 			
 		}	
-	}
-	
-	/**
-	 * Get a list of the fields that have files by looking at validation rules
-	 */
-	private function fields($item) {
-		$fields = array();
-		foreach($item::$rules as $field => $rules) {
-			if (preg_match('#'.self::RULES.'#i', $rules)) $fields[] = $field;
-		}
-		return $fields;
 	}
 }
