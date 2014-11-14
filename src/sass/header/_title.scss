@@ -74,6 +74,18 @@
 		margin-top: 3px;
 		line-height: 1.5em;
 		max-width: $max-width;
+
+		// Links in the description
+		a {
+			color: rgba($theme-primary-inverse, .5);
+			border-bottom: $link-border;
+			&:hover {
+				color: rgba($theme-primary-inverse, .7);
+			}
+			&:active {
+				color: $theme-primary-inverse;
+			}
+		}
 	}
 
 	// nav hamburger hidden on desktop sizes
