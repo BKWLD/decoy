@@ -12,6 +12,7 @@ use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
+use Bkwld\Library\Utils\File;
 use Config;
 use Croppa;
 use DB;
