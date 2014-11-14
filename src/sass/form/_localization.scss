@@ -39,3 +39,22 @@ fieldset.localize {
 	}
 
 }
+
+/**
+ * Styles common to both UIs
+ */
+.form-group.locale, fieldset.localize {
+
+	// Tweak images that are part of titles to other articles
+	.radio label img {
+		width: 15px;
+
+		// Looks better with this little margin
+		margin-left: 2px;
+
+		// Push text over to the right with a border so that it
+		// overlappes the dotted line that indicates the link
+		border-right: 4px solid white;
+		@include box-sizing(content-box);
+	}
+}
