@@ -37,7 +37,7 @@
 				-else
 					-$label = reset($locales)
 					-$locale = key($locales)
-					%input(type='hidden' value=$locale)
+					%input(type='hidden' name='locale' value=$locale)
 					.form-control A #{$label} localization
 				
 				-# Additional options
