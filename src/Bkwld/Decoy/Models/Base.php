@@ -64,7 +64,7 @@ abstract class Base extends Eloquent {
 	 *
 	 * @var boolean
 	 */
-	public $auto_manage_files;
+	public $auto_manage_files = true;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
