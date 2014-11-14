@@ -12,6 +12,7 @@
 	<? elseif (app('decoy.auth')->can('create', $controller)): ?>
 		<div class="btn-group">
 			<a href="<?=URL::to(DecoyURL::relative('create', null, $controller))?>" class="btn outline btn-sm new progress-link"><span class="glyphicon glyphicon-plus"></span> New</a>
+			<?=View::make('decoy::shared.form._create-locales', ['title' => $title, 'small' => true]) ?>
 		</div>
 	<? endif ?>
 	

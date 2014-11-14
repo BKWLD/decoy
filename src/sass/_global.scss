@@ -139,3 +139,9 @@ p a {
 	font-weight: normal;
 	font-family: $font-family-base;
 }
+
+// Make dropdowns inside of pull-right be justified right
+.pull-right .dropdown-menu {
+	left: auto;
+	right: 0;
+}
