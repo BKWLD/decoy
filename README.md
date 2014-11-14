@@ -207,6 +207,17 @@ Furthermore, you can use this array for searching the list view by referencing i
 Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
 
 
+### Toggleable fields
+
+The `auto-toggleable` JS module applies some JS to forms that will allow you to define fields that hide and show based on clicks on "trigger" elements.  For example:
+
+	!= Former::radios('type')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$types))->dataToggleable('type')
+	!= Former::text('title')
+	!= Former::textarea('body')->addClass('wysiwyg')->dataShowWhenType('internal')
+	!= Former::image('image')->dataShowWhenType('internal')
+	!= Former::text('url', "URL")->dataShowWhenType('external')
+
+
 ## Features
 
 ### Authentication
