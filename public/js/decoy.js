@@ -9,6 +9,7 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, Affixable = require('decoy/modules/affixable')
 		, Sidebar = require('decoy/modules/sidebar')
+		, LocalizeCompare = require('decoy/localize/compare')
 		, manifest = require('decoy/modules/manifest')
 		, bootstrap = require('bootstrap')
 		, console = require('bkwld/console')
@@ -76,8 +77,13 @@ define(function (require) {
 			});
 		});
 	};
+
+	// Newer style view declaration
 	$('body.elements.field #main').views(require('decoy/elements/field'));
 	$('body.elements.index form, body.fragments.index form').views(require('decoy/views/tab-sidebar'));
+	$('body > .sidebar').views(Sidebar); // The nav
+	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
+
 	
 	// --------------------------------------------------
 	// DOM ready
@@ -106,10 +112,7 @@ define(function (require) {
 		wysiwyg.replace('textarea.wysiwyg');	
 		
 		// Enable affix globally
-		$('.affixable').views(Affixable);
-
-		// The nav
-		$('.sidebar').views(Sidebar);
+		$('.affixable').views(Affixable);		
 		
 	});
 	

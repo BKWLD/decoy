@@ -10,13 +10,13 @@
 				%label.control-label Compare
 				.radio
 					%label
-						%input(type="radio" name="compare" checked)
+						%input(type="radio" name="compare" value='' checked)
 						None
 				-foreach($localizations as $model)
 					.radio
 						%label
-							%input(type="radio" name="compare")
-							%strong=Config::get('decoy::site.locales')[$model->locale]
+							%input(type="radio" name="compare" value=$model->locale data-model=$model)
+							%strong.locale=Config::get('decoy::site.locales')[$model->locale]
 							=' - '
 							%a(href=DecoyURL::relative('edit', $model->getKey()))!=$model->title()
 				%p.help-block Choose an existing localization for this <b>#{$title}</b> to compare against.  Rollover form element to view the content in the selected localization.

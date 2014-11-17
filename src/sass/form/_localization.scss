@@ -58,3 +58,30 @@ fieldset.localize {
 		@include box-sizing(content-box);
 	}
 }
+
+/**
+ * The localization compare tooltip
+ */
+.popover.localize-compare {
+
+	// The title
+	.popover-title {
+		font-weight: bold;
+	}
+
+	// The body
+	.popover-content {
+		line-height: $line-height-base;
+		color: $input-color;
+
+		// Litle hard coded tweaks to make it look like the editor
+		.wysiwyg {
+			p { margin: 0; }
+		}
+
+		// Make images fit
+		img {
+			max-width: 100%;
+		}
+	}
+}
