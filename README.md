@@ -307,6 +307,8 @@ And an expanded form:
 
 The two forms can be intermixed. Check out the `elements.yaml` file for more examples.
 
+Alternatively, you can create a directory at `app/config/packages/bkwld/decoy/elements` and create many different *.yaml files within there. They all share the same syntax as the main `elements.yaml` and get merged into recursively merged into one another.
+
 ##### Usage
 
 Call `Decoy::el('key')` in your frontend views to return the value for an Element.  They key is the `.` concatented keys for the three heirachies: `page.section.field`.  The value will be massaged in different ways depending on the element type:

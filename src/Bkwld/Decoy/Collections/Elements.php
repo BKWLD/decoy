@@ -231,9 +231,26 @@ class Elements extends Collection {
 	 * @return void 
 	 */
 	protected function loadConfig() {
-		$file = app_path().'/config/packages/bkwld/decoy/elements.yaml';
-		if (!is_readable($file)) throw new Exception("Elements.yaml doesn't exist or isn't readable");
-		$this->config = $this->yaml_parser->parse(file_get_contents($file));
+
+		// Build a lit of all the paths
+		$dir = app_path().'/config/packages/bkwld/decoy/';
+		$files = [];
+		if (is_readable($dir.'elements.yaml')) $files[] = $dir.'elements.yaml';
+		if (is_dir($dir.'elements')) $files = array_merge($files, glob($dir.'elements/*.yaml'));
+		if (!count($files)) throw new Exception("No readable elements yaml files found");
+
+		// Loop though config files and merge them together
+		$this->config = [];
+		foreach($files as $file) {
+
+			// If an array found ...
+			if (($config = $this->yaml_parser->parse(file_get_contents($file)))
+				&& is_array($config)) {
+
+				// Merge it in
+				$this->config = array_replace_recursive($this->config, $config);
+			}
+		}
 	}
 
 	/**
