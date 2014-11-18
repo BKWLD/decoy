@@ -56,6 +56,9 @@ class Elements extends Base {
 			'locale' => $locale ?: Decoy::defaultLocale(),
 			'tab' => $tab,
 		]);
+
+		// Set the breadcrumbs NOT include the locale/tab
+		$this->breadcrumbs([route('decoy::elements') => 'Elements']);
 	}
 
 	/**
