@@ -146,9 +146,11 @@ p a {
 	right: 0;
 }
 
-// Reduce the left-right padding in all dropdowns.  Like the many to many
-// typeahead styling
-.dropdown-menu li a {
-	padding-left: 10px;
-	padding-right: 10px;
+// Support putting check marks in pulldowns
+.dropdown-menu {
+	.glyphicon-ok {
+		margin-left: -15px;
+		font-size: 12px;
+		left: -1px;
+	}
 }
