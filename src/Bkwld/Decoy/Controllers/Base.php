@@ -424,7 +424,8 @@ class Base extends Controller {
 			->title(Str::singular($this->title));
 
 		// Make the sidebar
-		with($sidebar = new Sidebar)->addToEnd($localize);
+		$sidebar = new Sidebar($item);
+		if (!$localize->hidden()) $sidebar->addToEnd($localize);
 
 		// Return view
 		$this->populateView($this->show_view, [
@@ -495,12 +496,13 @@ class Base extends Controller {
 		Former::withRules(Model::$rules);
 
 		// Initialize localization
-		with($localize = new Localize())
+		with($localize = new Localize)
 			->item($item)
 			->title(Str::singular($this->title));
 
 		// Make the sidebar
-		with($sidebar = new Sidebar($item))->addToEnd($localize);
+		$sidebar = new Sidebar($item);
+		if (!$localize->hidden()) $sidebar->addToEnd($localize);
 
 		// Render the view
 		$this->populateView($this->show_view, [
