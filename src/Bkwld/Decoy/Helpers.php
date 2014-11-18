@@ -20,6 +20,13 @@ use View;
 class Helpers {
 	
 	/**
+	 * The current locale, cached in memory
+	 *
+	 * @var string 
+	 */
+	private $locale;
+
+	/**
 	 * Generate title tags based on section content
 	 */
 	public function title() {
@@ -160,7 +167,7 @@ class Helpers {
 	 * @return mixed
 	 */
 	public function el($key) {
-		return app('decoy.elements')->get($key);
+		return app('decoy.elements')->localize($this->locale())->get($key);
 	}
 
 	/**
@@ -194,11 +201,16 @@ class Helpers {
 	public function locale($locale = null) {
 
 		// Set the locale if a valid local is passed
-		$locales = Config::get('decoy::site.locales');
-		if ($locale && isset($locales[$locale])) return Session::set('locale', $locale);
+		if ($locale 
+			&& ($locales = Config::get('decoy::site.locales'))
+			&& is_array($locales)
+			&& isset($locales[$locale])) return Session::set('locale', $locale);
 
-		// Return the current locale or default to first one
-		return Session::get('locale', $this->defaultLocale());
+		// Return the current locale or default to first one.  Store it in a local var
+		// so that multiple calls don't have to do any complicated work.  We're assuming
+		// the locale won't change within a single request.
+		if (!$this->locale) $this->locale = Session::get('locale', $this->defaultLocale());
+		return $this->locale;
 	}
 
 	/**
