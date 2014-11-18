@@ -117,7 +117,7 @@ class Filters {
 	public function isPublic() {
 		$path = '/'.Request::path();
 		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
-			|| $path === parse_url(route('decoy\account@forgot'), PHP_URL_PATH)  // Forgot
+			|| $path === parse_url(route('decoy/account@forgot'), PHP_URL_PATH)  // Forgot
 			|| Str::startsWith($path, '/'.$this->dir.'/reset/')                  // Reset
 			|| Route::is('decoy\encode@notify')                                  // Notification handler from encoder
 		;

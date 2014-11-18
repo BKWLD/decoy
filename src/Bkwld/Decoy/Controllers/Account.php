@@ -149,7 +149,7 @@ class Account extends Base {
 		}
 
 		// Form the link
-		$url = route('decoy\account@reset', $code);
+		$url = route('decoy/account@reset', $code);
 
 		// Send an email to the user with the reset token
 		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
@@ -159,7 +159,7 @@ class Account extends Base {
 		});
 		
 		// Redirect back to login page
-		return Redirect::route('decoy\account@forgot')
+		return Redirect::route('decoy/account@forgot')
 			->with('login_notice', 'An email with a link to reset your password has been sent.');
 		
 	}
@@ -174,7 +174,7 @@ class Account extends Base {
 		try {
 			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
 		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy\account@forgot'));
+			return $this->loginError('The reset password code is not valid', route('decoy/account@forgot'));
 		}
 		
 		// Pass validation rules
@@ -190,7 +190,7 @@ class Account extends Base {
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
 			route('decoy') => 'Login',
-			route('decoy\account@forgot') => 'Forgot Password',
+			route('decoy/account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));
 		
@@ -206,7 +206,7 @@ class Account extends Base {
 		try {
 			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
 		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy\account@forgot'));
+			return $this->loginError('The reset password code is not valid', route('decoy/account@forgot'));
 		}
 		
 		// Validate

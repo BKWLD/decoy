@@ -7,7 +7,7 @@
 					<? foreach($subcommands as $name => $command): ?>
 						<tr data-js-view="task-method">
 							<td>
-								<a href="<?=route('decoy\commands@execute', $command->getName())?>" class="btn btn-default">Execute</a>
+								<a href="<?=route('decoy/commands@execute', $command->getName())?>" class="btn btn-default">Execute</a>
 							</td>
 							<td>
 								<p>
