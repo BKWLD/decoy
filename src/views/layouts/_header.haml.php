@@ -18,7 +18,7 @@
 			.pull-right.btn-toolbar
 				!=View::make('decoy::shared.form.relationships._many_to_many', $__data)
 
-		-else if(app('decoy.auth')->can('create', $controller) && !Route::is('decoy/elements', 'decoy/workers', 'decoy/commands', 'decoy/fragments'))
+		-else if(app('decoy.auth')->can('create', $controller) && !Route::is('decoy::elements', 'decoy::workers', 'decoy::commands', 'decoy::fragments'))
 			-# Controller actions
 			.pull-right.btn-toolbar
 				.btn-group

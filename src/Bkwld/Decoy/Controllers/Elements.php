@@ -25,11 +25,10 @@ class Elements extends Base {
 	/**
 	 * All fragments view
 	 *
-	 * @param string $locale The locale selected locale
 	 * @param string $tab A deep link to a specific tab.  Will get processed by JS
 	 * @return Illuminate\Http\Response
 	 */
-	public function index($locale = null, $tab = null) {
+	public function index($tab = null) {
 		
 		// Get all the elements
 		$elements = app('decoy.elements')->hydrate(true);

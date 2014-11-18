@@ -19,7 +19,7 @@ trait Helpers {
 
 		// If a Fragment, build a model instance using the name of the field.  The input
 		// field uses pipes instead of the dots that are in the DB.
-		if (Route::is('decoy/fragments')) {
+		if (Route::is('decoy::fragments')) {
 			return Fragment::where('key', '=', str_replace('|', '.', $this->name))->first();
 
 		// Otherwise, just use the model that was passed to populator

@@ -120,11 +120,11 @@ abstract class EncodingProvider {
 
 		// Produce the route, passing in the host explicitly.  This allows CLI invocations to
 		// be supported.
-		if (!App::runningInConsole()) return route('decoy\encode@notify');
+		if (!App::runningInConsole()) return route('decoy::encode@notify');
 		else {
 			$generator = app('url');
 			$generator->forceRootUrl('http://'.$host);
-			$url = $generator->route('decoy\encode@notify');
+			$url = $generator->route('decoy::encode@notify');
 			$generator->forceRootUrl(null);
 			return $url;
 		}

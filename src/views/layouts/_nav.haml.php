@@ -47,9 +47,9 @@
 
 					.subnav
 						%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
-						%a(href=route('decoy\\commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
+						%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
 						-if(count(Bkwld\Decoy\Models\Worker::all()))
-							%a(href=route('decoy\\workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
+							%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
 
 			-elseif(is_a($auth, 'Bkwld\Decoy\Auth\Sentry') && $auth->can('read', 'admins'))
 				.main-nav
