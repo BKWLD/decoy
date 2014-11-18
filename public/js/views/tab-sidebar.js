@@ -23,35 +23,13 @@ define(function (require) {
 		this.$nav = $('.nav').find('a');
 
 		// Define router class 
-		this.router = new (Backbone.Router.extend({
-			routes: {
-				':id': 'frag',
-				'': 'default'
-			},
-
-			// Go through each a, and if there is a match then simulate that button click
-			frag: function (id) {
-				$('.nav').find('a').each(function(i, el) {
-					if($(el).data('slug') == id) {
-						$(el).tab('show');
-						this.page = $(el).data('slug');
-						return false;
-					}
-				});
-			},
-
-			// Select the first tab
-			default: _.bind(function () {
-				var slug = this.$nav.first().data('slug');
-				this.router.navigate(slug);
-				this.page = slug;
-			}, this)
-		}));
+		this.router = new (Backbone.Router.extend());
 
 		// Begin routing
 		Backbone.history.start({
 			pushState: true,
-			root: window.location.href.match(/\/admin\/[^\/]+/)[0]
+			root: window.location.href.match(/\/admin\/[^\/]+/)[0],
+			silent: true
 		});
 
 		// Register click listeners
@@ -61,7 +39,7 @@ define(function (require) {
 
 	View.updateRoute = function(e) {
 		var cur = $(e.currentTarget);
-		this.router.navigate(cur.data('slug'), {trigger: true});
+		this.router.navigate(cur.data('slug'), {trigger: false});
 		this.page = cur.data('slug');
 	};
 

@@ -5,13 +5,18 @@
 .col.tab-sidebar
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
 		-foreach(array_keys($fragments) as $i => $title)
-			%li(class=$i===0?'active':null)
-				%a(href='#'.Str::slug($title) data-slug=Str::slug($title) data-toggle="tab" role="tab")=$title
+			-$slug = Str::slug($title)
+			-$active = (empty($tab) && $i === 0 ) || $slug == $tab
+			%li(class=$active?'active':null)
+				%a(href='#'.$slug data-slug=$slug data-toggle="tab" role="tab")=$title
 
 -# Create pages
 .col.tab-content
+	-$first = 0
 	-foreach($fragments as $title => $sections)
-		.tab-pane(class=$title==current(array_keys($fragments))?'active':null id=Str::slug($title))
+		-$slug = Str::slug($title)
+		-$active = (empty($tab) && $first++ == 0 ) || $slug == $tab
+		.tab-pane(class=$active?'active':null id=$slug)
 			
 			-# Create sections
 			-foreach($sections as $title => $pairs)

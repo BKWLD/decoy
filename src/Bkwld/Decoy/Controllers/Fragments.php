@@ -34,6 +34,7 @@ class Fragments extends Base {
 		Former::populate(Model::values());
 		$this->populateView('decoy::fragments.index', [
 			'fragments' => $data,
+			'tab' => $tab,
 		]);
 	}
 	
