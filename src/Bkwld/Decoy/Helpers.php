@@ -198,8 +198,20 @@ class Helpers {
 		if ($locale && isset($locales[$locale])) return Session::set('locale', $locale);
 
 		// Return the current locale or default to first one
-		reset($locales); // Needed for `key` to work properly
-		return Session::get('locale', key($locales));
+		return Session::get('locale', $this->defaultLocale());
+	}
+
+	/**
+	 * Get the default locale, aka, the first locales array key
+	 *
+	 * @return string 
+	 */
+	public function defaultLocale() {
+		if (($locales = Config::get('decoy::site.locales'))
+			&& is_array($locales)) {
+			reset($locales);
+			return key($locales);
+		}
 	}
 
 }
