@@ -28,18 +28,23 @@ class Elements extends Collection {
 	protected $config;
 
 	/**
-	 * An array of Element keys that have been persisted in the DB
-	 *
-	 * @var null | array
-	 */
-	protected $updated_items = null;
-
-	/**
 	 * Store whether this collection includes extra config from the YAML
 	 *
 	 * @var boolean
 	 */
 	protected $has_extra = false;
+
+	/**
+	 * Store the locale that was used to hydrate the collection
+	 */
+	protected $locale;
+
+	/**
+	 * An array of Element keys that have been persisted in the DB
+	 *
+	 * @var null | array
+	 */
+	protected $updated_items = null;
 
 	/**
 	 * Dependency injection
@@ -55,7 +60,7 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Get all of the Elements as models
+	 * Map the items into a collection of Element instances
 	 *
 	 * @return Bkwld\Decoy\Collections\Elements
 	 */
@@ -87,6 +92,17 @@ class Elements extends Collection {
 		// Add the key as an attribute
 		} else return new Element(array_merge($this->items[$key], ['key' => $key])); 
 
+	}
+
+	/**
+	 * Set the locale that should be used for this collection
+	 *
+	 * @param string $locale 
+	 * @return $this
+	 */
+	public function localize($locale) {
+		$this->locale = $locale;
+		return $this;
 	}
 
 	/**
@@ -209,13 +225,17 @@ class Elements extends Collection {
 	 */
 	protected function assocAdminChoices() {
 
+		// Build the query
+		$elements = Element::query();
+		if ($this->locale) $elements->localize($this->locale);
+
 		// Convert models to simple arrays with the type and value
 		$elements = array_map(function(Element $element) {
 			$element->setVisible(['type', 'value']);
 			return $element->toArray();
 
-		// .. from a dictionary of ALL elements
-		}, Element::all()->getDictionary());
+		// .. from a dictionary of ALL elements for the locale
+		}, $elements->get()->getDictionary());
 
 		// Store the keys of all these elements so we can keep track of which
 		// Elements "exist"

@@ -35,10 +35,12 @@ class Elements extends Base {
 		if (empty(Config::get('decoy::site.locales'))) {
 			$tab = $locale;
 			$locale = null;
-		}
+		
+		// Otherwise, set a default locale if none was specified
+		} elseif (!$locale) $locale = Decoy::defaultLocale();
 
-		// Get all the elements
-		$elements = app('decoy.elements')->hydrate(true);
+		// Get all the elements for the current locale
+		$elements = app('decoy.elements')->localize($locale)->hydrate(true);
 
 		// If handling a deep link to a tab, verify that the passed tab
 		// slug is a real key in the data.  Else 404.
@@ -53,7 +55,7 @@ class Elements extends Base {
 		// Render the view
 		$this->populateView('decoy::elements.index', [
 			'elements' => $elements->allModels(),
-			'locale' => $locale ?: Decoy::defaultLocale(),
+			'locale' => $locale,
 			'tab' => $tab,
 		]);
 

@@ -339,8 +339,8 @@ abstract class Base extends Eloquent {
 	/**
 	 * Filter by the current locale
 	 */
-	public function scopeLocalize($query) {
-		return $query->where('locale', Decoy::locale());
+	public function scopeLocalize($query, $locale = null) {
+		return $query->where('locale', $locale ?: Decoy::locale());
 	}
 
 	/**
