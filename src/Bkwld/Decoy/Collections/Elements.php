@@ -64,7 +64,7 @@ class Elements extends Collection {
 	 *
 	 * @return Bkwld\Decoy\Collections\Elements
 	 */
-	public function allModels() {
+	public function asModels() {
 		$this->hydrate();
 		return new ModelCollection(array_map(function($element, $key) {
 			return new Element(array_merge($element, ['key' => $key])); // Add the key as an attribute

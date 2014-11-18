@@ -54,7 +54,7 @@ class Elements extends Base {
 
 		// Render the view
 		$this->populateView('decoy::elements.index', [
-			'elements' => $elements->allModels(),
+			'elements' => $elements->asModels(),
 			'locale' => $locale,
 			'tab' => $tab,
 		]);
@@ -95,8 +95,14 @@ class Elements extends Base {
 	 */
 	public function store($locale = null) {
 
+		// Get the default locale
+		if (!$locale) $locale = Decoy::defaultLocale();
+
 		// Get all the elements as models
-		$elements = app('decoy.elements')->hydrate()->allModels();
+		$elements = app('decoy.elements')
+			->localize($locale)
+			->hydrate()
+			->asModels();
 
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
