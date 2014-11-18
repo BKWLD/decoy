@@ -39,18 +39,13 @@
 		@media(max-width: $screen-sm) {
 			@include flush-cols(false)
 		}
-		
-		// Space sections
-		> div {
-			margin-bottom: 20px;
-		}
 	}
 	
-	// Make the pills grey scale
+	// Make the nav pills grey scale
 	.nav-pills a {
-		color: $gray-dark;
+		color: $gray-light; // Same color as breadcrumbs
 		background: #fff;
-		font-size: 12px;
+		font-size: 13px;
 		padding: 7px 9px;
 		@include border-radius(2px);
 
