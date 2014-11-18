@@ -1,0 +1,41 @@
+/**
+ * Dryed up styles for outline btns
+ */
+@mixin outline-btn($text-color) {
+
+	background: none;
+	border: 1px solid rgba($text-color, .85);
+	color: rgba($text-color, .85);
+	&:hover, &:focus {
+		background: rgba($text-color, .15);
+		border-color: $text-color;
+		color: $text-color;
+
+		// override glyphs in links getting the primary color
+		span{
+			color: $text-color;
+		}
+	}
+
+	// Make the dropdown open state not have a dark inset box shadow
+	&.dropdown-toggle[aria-expanded="true"] {
+		@include box-shadow(none);
+		background: rgba($text-color, .25);
+	}
+
+	// Scale up the icon on depress
+	&:active {
+		@include box-shadow(none);
+		@include transition(transform 300ms);
+		.glyphicon {
+			@include transition(transform 100ms);
+			@include scale(1.2);
+		}
+	}
+
+	// Input group end buttons will be above the input field to show the outline border
+	.input-group-btn & {
+		z-index:2;
+	}	
+
+}

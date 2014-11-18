@@ -83,60 +83,12 @@ p a {
 
 // An outline button has no fill but has a stroke
 .btn.outline {
-	background: none;
-	border: 1px solid rgba($theme-primary-inverse, .85);
-	color: rgba($theme-primary-inverse, .85);
-	&:hover, &:focus {
-		background: rgba($theme-primary-inverse, .15);
-		border-color: $theme-primary-inverse;
-		color: $theme-primary-inverse;
-
-		// override glyphs in links getting the primary color
-		span{
-			color: $theme-primary-inverse;
-		}
-	}
-
-	// Scale up the icon on depress
-	&:active {
-		@include box-shadow(none);
-		@include transition(transform 300ms);
-		.glyphicon {
-			@include transition(transform 100ms);
-			@include scale(1.2);
-		}
-	}
-
-	// Make the dropdown open state not have a dark inset box shadow
-	.btn-group.open &.dropdown-toggle {
-		@include box-shadow(none);
-		background: rgba($theme-primary-inverse, .25);
-	}
-
+	@include outline-btn($theme-primary-inverse);
+	
 	// Make it secondarily colored
 	.legend &, .search &, &.secondary {
-		color: rgba($theme-secondary-inverse, .85);
-		border-color: rgba($theme-secondary-inverse, .85);
-		&:hover, &:focus { 
-			background: rgba($theme-secondary-inverse, .15);
-			color: $theme-secondary-inverse;
-			border-color: $theme-secondary-inverse;
-
-			// override glyphs in links getting the primary color
-			span{
-				color: $theme-secondary-inverse;
-			}
-		}
-		.btn-group.open &.dropdown-toggle {
-			background: rgba($theme-secondary-inverse, .25);
-		}
+		@include outline-btn($theme-secondary-inverse);
 	}
-
-	// Input group end buttons will be above the input field to show the outline border
-	.input-group-btn & {
-		z-index:2;
-	}
-	
 }
 
 // Fix popover inheriting form-actions line height

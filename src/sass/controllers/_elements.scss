@@ -61,16 +61,7 @@ body.elements.index {
 			color: $theme-primary-inverse;
 			background: $theme-primary-color;
 			.btn.outline {
-				border: 1px solid rgba($theme-primary-inverse, .85);
-				color: rgba($theme-primary-inverse, .85);
-				&:hover, &:focus {
-					background: rgba($theme-primary-inverse, .15);
-					border-color: $theme-primary-inverse;
-					color: $theme-primary-inverse;
-				}
-			}
-			.btn-group.open .btn.outline.dropdown-toggle {
-				background: rgba($theme-primary-inverse, .25);
+				@include outline-btn($theme-primary-inverse);
 			}
 		}
 
