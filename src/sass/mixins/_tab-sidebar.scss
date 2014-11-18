@@ -44,17 +44,25 @@
 	// Make the nav pills grey scale
 	.nav-pills a {
 		color: $gray-light; // Same color as breadcrumbs
-		background: #fff;
+		background: white;
+		margin: 4px 0;
 		font-size: 13px;
-		padding: 7px 9px;
-		@include border-radius(2px);
+
+		// Style text similar to fieldset legends
+		font-weight: $headings-font-weight;
+		font-family: $headings-font-family;
+		padding: 7px $form-group-margin; // 7px makes it about as high as table th's
+		@media(max-width: $screen-sm) {
+			padding-left: $form-group-margin-sm;
+			padding-right: $form-group-margin-sm;
+		}
 
 		&:hover {
-			color: $theme-primary-inverse;
-			background: $theme-primary-color;
+			color: darken($gray-light, 5%);
+			background: darken(white, 2%);
 		}
 	}
-	.nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
+	.nav-pills a:active, .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
 		color: $theme-primary-inverse;
 		background: $theme-primary-color;
 	}

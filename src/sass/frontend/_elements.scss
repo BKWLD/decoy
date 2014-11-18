@@ -223,16 +223,3 @@ $decoy-el-tween-length: 200ms;
 		@include opacity(0);
 	}
 }
-
-// Elements testing styles
-#elements-tests {
-
-	.float-right {
-		@include clearfix;
-		div {
-			float: right;
-		}
-		
-	}
-
-}

@@ -52,5 +52,26 @@ body.elements.index {
 
 	// Add sidebar layout
 	@include tab-sidebar;
+
+	// Style the localization selector
+	fieldset.locale {
+		
+		// Style the legend like the header, instead of like the fieldset
+		.legend {
+			color: $theme-primary-inverse;
+			background: $theme-primary-color;
+			.btn.outline {
+				border: 1px solid rgba($theme-primary-inverse, .85);
+				color: rgba($theme-primary-inverse, .85);
+				&:hover, &:focus {
+					background: rgba($theme-primary-inverse, .15);
+					border-color: $theme-primary-inverse;
+					color: $theme-primary-inverse;
+				}
+			}
+		}
+
+	}
+
 	
 }

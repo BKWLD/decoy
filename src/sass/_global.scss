@@ -145,3 +145,10 @@ p a {
 	left: auto;
 	right: 0;
 }
+
+// Reduce the left-right padding in all dropdowns.  Like the many to many
+// typeahead styling
+.dropdown-menu li a {
+	padding-left: 10px;
+	padding-right: 10px;
+}
