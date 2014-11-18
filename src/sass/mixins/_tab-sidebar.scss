@@ -57,11 +57,19 @@
 			padding-right: $form-group-margin-sm;
 		}
 
+		// Make the bkgd a little darker on hover
 		&:hover {
 			color: darken($gray-light, 5%);
 			background: darken(white, 2%);
 		}
 	}
+
+	// Remove the top margin of the first pill so it's flush with the form fieldsets
+	.nav-pills li:first-child a {
+		margin-top: 0;
+	}
+
+	// Set the active state of the pills, overriding bootstrap
 	.nav-pills a:active, .nav-pills > .active > a, .nav-pills > .active > a:hover, .nav-pills > .active > a:focus {
 		color: $theme-primary-inverse;
 		background: $theme-primary-color;

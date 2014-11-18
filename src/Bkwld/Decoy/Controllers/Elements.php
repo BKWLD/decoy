@@ -25,11 +25,18 @@ class Elements extends Base {
 	/**
 	 * All fragments view
 	 *
+	 * @param string $locale The locale to load from the DB
 	 * @param string $tab A deep link to a specific tab.  Will get processed by JS
 	 * @return Illuminate\Http\Response
 	 */
-	public function index($tab = null) {
-		
+	public function index($locale = null, $tab = null) {
+
+		// If there are no locales, treat the first argument as the tab
+		if (empty(Config::get('decoy::site.locales'))) {
+			$tab = $locale;
+			$locale = null;
+		}
+
 		// Get all the elements
 		$elements = app('decoy.elements')->hydrate(true);
 
@@ -46,6 +53,8 @@ class Elements extends Base {
 		// Render the view
 		$this->populateView('decoy::elements.index', [
 			'elements' => $elements->allModels(),
+			'locale' => $locale ?: Decoy::defaultLocale(),
+			'tab' => $tab,
 		]);
 	}
 
@@ -76,16 +85,17 @@ class Elements extends Base {
 	/**
 	 * Handle form post
 	 *
+	 * @param string $locale The locale to assign to it
 	 * @return Illuminate\Http\Response
 	 */
-	public function store() {
+	public function store($locale = null) {
 
 		// Get all the elements as models
 		$elements = app('decoy.elements')->hydrate()->allModels();
 
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
-		$elements->each(function(Element $el) {
+		$elements->each(function(Element $el) use ($locale) {
 
 			// Check if the model is dirty, manually.  Laravel's performInsert()
 			// doesn't do this, thus we must check ourselves.  We're removing the 
@@ -100,6 +110,10 @@ class Elements extends Base {
 			// contain fields for a single model instance.  Whereas Elements manages many
 			// model records at once.
 			$el->auto_manage_files = false;
+
+			// Set the locale to the passed one or, if none were paseed, the first 
+			// locale from the config
+			$el->locale = $locale ?: Decoy::defaultLocale();
 
 			// Save it
 			$el->exists = app('decoy.elements')->keyUpdated($el->key);

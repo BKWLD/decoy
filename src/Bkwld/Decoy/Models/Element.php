@@ -99,10 +99,20 @@ class Element extends Base {
 	 * Make the input name for the admin index editor.  Periods are converted
 	 * to | because the period isn't allowed in input names in PHP.
 	 * See: http://stackoverflow.com/a/68742/59160
+	 *
+	 * @return string
 	 */
 	public function inputName() {
 		return str_replace('.', '|', $this->key);
 	}
+
+	/**
+	 * Prevent locale group from being set by overriding the method and making it
+	 * a no-op
+	 *
+	 * @return void 
+	 */
+	public function setLocaleGroup() { }
 
 	/**
 	 * Render the element in a view

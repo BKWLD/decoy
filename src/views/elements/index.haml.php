@@ -7,19 +7,45 @@
 
 -# Create navigation
 .col.tab-sidebar
+
+	-if(($locales = Config::get('decoy::site.locales')) && count($locales) > 1)
+		%fieldset.locale
+			.legend
+				Locale
+				.btn-group.pull-right
+					%button.btn.btn-sm.outline.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
+						=Config::get('decoy::site.locales')[$locale]
+						%spen.caret
+					%ul.dropdown-menu(role="menu")
+						-foreach($locales as $slug => $label)
+							%li(class=$slug==$locale?'disabled':null)
+								%a(href=route('decoy::elements', $slug))
+									-if($slug==$locale)
+										%span.glyphicon.glyphicon-ok
+									=$label
+
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
 		-$first = 0
 		-foreach($elements->groupBy('page_label') as $page => $sections)
 			-$slug = Str::slug($page)
-			%li(class=$first++==0?'active':null)
-				%a.js-tooltip(href='#'.$slug data-slug=$locale.'/'.$slug data-toggle="tab" role="tab" title=$sections[0]->page_help data-placement="left")=$page
+			-$path = $locale ? $locale.'/'.$slug : $slug
+			-$active = (empty($tab) && $first++==0 ) || $slug == $tab
+			%li(class=$active?'active':null)
+				%a.js-tooltip(href='#'.$slug 
+					data-slug=$path 
+					data-toggle="tab" 
+					role="tab" 
+					title=$sections[0]->page_help 
+					data-placement="left")=$page
 
 -# Create pages
 .col.tab-content
 	-$first = 0
 	-foreach($elements->groupBy('page_label') as $page => $sections)
+		-$slug = Str::slug($page)
 		-$sections = Collection::make($sections)->groupBy('section_label')
-		.tab-pane(class=$first++==0?'active':null id=Str::slug($page))
+		-$active = (empty($tab) && $first++==0 ) || $slug == $tab
+		.tab-pane(class=$active?'active':null id=$slug)
 			
 			-# Create sections
 			-foreach($sections as $section => $fields)
