@@ -69,6 +69,14 @@ body.elements.index {
 					color: $theme-primary-inverse;
 				}
 			}
+			.btn-group.open .btn.outline.dropdown-toggle {
+				background: rgba($theme-primary-inverse, .25);
+			}
+		}
+
+		// Make the fieldset rounded
+		.legend {
+			@include border-radius(4px);
 		}
 
 	}

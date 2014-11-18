@@ -107,6 +107,12 @@ p a {
 		}
 	}
 
+	// Make the dropdown open state not have a dark inset box shadow
+	.btn-group.open &.dropdown-toggle {
+		@include box-shadow(none);
+		background: rgba($theme-primary-inverse, .25);
+	}
+
 	// Make it secondarily colored
 	.legend &, .search &, &.secondary {
 		color: rgba($theme-secondary-inverse, .85);
@@ -121,12 +127,16 @@ p a {
 				color: $theme-secondary-inverse;
 			}
 		}
+		.btn-group.open &.dropdown-toggle {
+			background: rgba($theme-secondary-inverse, .25);
+		}
 	}
 
-	// input group end buttons will be above the input field to show the outline border
+	// Input group end buttons will be above the input field to show the outline border
 	.input-group-btn & {
 		z-index:2;
 	}
+	
 }
 
 // Fix popover inheriting form-actions line height
