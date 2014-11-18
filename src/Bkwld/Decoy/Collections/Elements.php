@@ -132,13 +132,23 @@ class Elements extends Collection {
 		}
 
 		// Else, use the cache if it exists or generate the cache
-		if ($data = $this->cache->get(self::CACHE_KEY)) {
+		if ($data = $this->cache->get($this->cacheKey())) {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();
-			$this->cache->forever(self::CACHE_KEY, $this->items);
+			$this->cache->forever($this->cacheKey(), $this->items);
 		}
 		return $this;
+	}
+
+	/**
+	 * Build the cache key using the locale
+	 *
+	 * @return string 
+	 */
+	protected function cacheKey() {
+		if ($this->locale) return self::CACHE_KEY.'.'.$this->locale;
+		else return self::CACHE_KEY;
 	}
 
 	/**
