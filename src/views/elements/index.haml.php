@@ -8,18 +8,18 @@
 -# Create navigation
 .col.tab-sidebar
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
-		-$first = 1
+		-$first = 0
 		-foreach($elements->groupBy('page_label') as $page => $sections)
 			-$slug = Str::slug($page)
-			%li(class=$first--?'active':null)
-				%a.js-tooltip(href='#'.$slug data-slug=$slug data-toggle="tab" role="tab" title=$sections[0]->page_help data-placement="left")=$page
+			%li(class=$first++==0?'active':null)
+				%a.js-tooltip(href='#'.$slug data-slug=$locale.'/'.$slug data-toggle="tab" role="tab" title=$sections[0]->page_help data-placement="left")=$page
 
 -# Create pages
 .col.tab-content
-	-$first = 1
+	-$first = 0
 	-foreach($elements->groupBy('page_label') as $page => $sections)
 		-$sections = Collection::make($sections)->groupBy('section_label')
-		.tab-pane(class=$first--?'active':null id=Str::slug($page))
+		.tab-pane(class=$first++==0?'active':null id=Str::slug($page))
 			
 			-# Create sections
 			-foreach($sections as $section => $fields)
