@@ -35,11 +35,14 @@ fieldset, .related .standard-list, body.index .standard-list {
 			// Also, nudge it up a bit to make it vertically centered
 			margin-top: -2px;
 
-			// And, move it right so the right gap is the same as the top-bottom one
-			margin-right: -10px;
-
 			// Reset the font
 			font-family: $font-family-sans-serif;
+
+			// And, move it right so the right gap is the same as the top-bottom one
+			margin-right: -10px;
+			@media(max-width: $screen-sm) {
+				margin-right: -3px;
+			}
 		}
 	}
 

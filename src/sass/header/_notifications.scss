@@ -2,7 +2,7 @@
 #main .notification-area {
 	padding: 0 $main-padding;
 	border: transparent;
-	border-bottom: $state-success-border 1px solid;
+	border-bottom-color: $state-success-border;
 	border-radius: 0;
 
 	.notification-wrap {
@@ -21,7 +21,7 @@
 
 	// update border for type of notifcations
 	&.alert-success {
-		border-bottom: $state-success-border 1px solid;
+		border-bottom-color: $state-success-border;
 
 		.close {
 			color: $state-success-text;
@@ -29,7 +29,7 @@
 	}
 
 	&.alert-danger {
-		border-bottom: $state-danger-border 1px solid;
+		border-bottom-color: $state-danger-border;
 
 		.close {
 			color: $state-danger-text;
@@ -70,5 +70,7 @@
 	&.show {
 		@include transition(max-height 350ms 150ms ceaser($easeInOutSine)); // delay on open
 		max-height:300px;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
 	}
 }

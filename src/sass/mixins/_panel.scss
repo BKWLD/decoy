@@ -13,8 +13,11 @@
 	@include clearfix;
 
 	// Push them vertically apart
-	margin-bottom: $form-group-margin*2;
+	margin-bottom: $main-padding;
 	@media(max-width:$screen-sm) {
+		margin-bottom: $main-padding/2;
+	}
+	@media(max-width:$screen-xs) {
 		margin-bottom: $main-padding-mobile;
 	}
 

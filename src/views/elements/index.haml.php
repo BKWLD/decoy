@@ -6,7 +6,7 @@
 !=Former::open_vertical_for_files()->addClass('row')
 
 -# Create navigation
-.col.tab-sidebar
+.padded-col.tab-sidebar
 
 	-if(($locales = Config::get('decoy::site.locales')) && count($locales) > 1)
 		%fieldset.locale
@@ -39,7 +39,7 @@
 					data-placement="left")=$page
 
 -# Create pages
-.col.tab-content
+.padded-col.tab-content
 	-$first = 0
 	-foreach($elements->groupBy('page_label') as $page => $sections)
 		-$slug = Str::slug($page)

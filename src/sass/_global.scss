@@ -72,12 +72,30 @@ p a {
 
 	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
 
-	// On mobile widths, have main span the entire width of the screen
+	// On tablet widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
 		margin-left: 0;
+		padding-left: $main-padding/2;
+		padding-right: $main-padding/2;
+		padding-top: $main-padding/2 + $breadcrumb-height;
+	}
+
+	// On phone, make it even tighter
+	@media(max-width:$screen-xs) {
 		padding-left: $main-padding-mobile;
 		padding-right: $main-padding-mobile;
-		padding-top: $main-padding-mobile + $main-padding;
+		padding-top: $main-padding-mobile + $breadcrumb-height;
+
+		// Without this, horizontall scrolling is introduced.  This is assumed to be
+		// workig on the main columns of the edit view
+		.row {
+			margin-left: -$main-padding-mobile;
+			margin-right: -$main-padding-mobile;
+			[class*='col-'], .padded-col {
+				padding-left: $main-padding-mobile;
+				padding-right: $main-padding-mobile;
+			}
+		}
 	}
 }
 

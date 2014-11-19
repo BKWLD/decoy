@@ -22,10 +22,10 @@ $element-icon-active: $grey-border !default;
 $form-container-bkgd: #F5F5F5 !default;
 
 // Sizes
-$form-group-margin: 15px !default;
-$form-group-margin-sm: round($form-group-margin/2) !default;
-$main-padding: $form-group-margin*2 !default;
+$main-padding: 30px !default; // Same as $grid-gutter-width
 $main-padding-mobile: 10px;
+$form-group-margin: $main-padding/2 !default; // 15px
+$form-group-margin-sm: round($form-group-margin/2) !default;
 $nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height !default;
 $sidebar-width: 200px !default;
