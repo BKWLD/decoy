@@ -12,7 +12,7 @@
 					!='Hi, '.$auth->userName()
 		%a.btn.outline.close-nav
 			%span.glyphicon.close.glyphicon-remove
-	.nav
+	.navigation
 		.top-level-nav
 			-foreach($pages as $page)
 			
