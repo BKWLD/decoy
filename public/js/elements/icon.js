@@ -60,10 +60,17 @@ define(function (require) {
 	};
 
 	// Override to check both all sizes when placing  This should be the same as it's
-	// counterpart in the parent class but missing the main if/else condition
+	// counterpart in the parent class but missing the main if/else condition.  Also,
+	// the subclassing allows the viewport restriction to be overriden when the icons
+	// are initially placed.  We don't want icons for DOM elements that are below the 
+	// fold to be kept within the viewport.
 	Icon.prototype.getViewportAdjustedDelta = function (placement, pos, actualWidth, actualHeight) {
 		var delta = { top: 0, left: 0 }
-		if (!this.$viewport) return delta
+		if (!this.$viewport) return delta;
+
+		// Don't apply viewport restrictions until the icon is shown.  At that point, it's used
+		// to restrict the expanded view.
+		if (!this.shown) return delta;
 
 		var viewportPadding = this.options.viewport && this.options.viewport.padding || 0
 		var viewportDimensions = this.getPosition(this.$viewport)
@@ -102,6 +109,7 @@ define(function (require) {
 		this.icon = this.create();
 		this.$icon = this.icon.tip();
 		this.icon.show();
+		this.icon.shown = true;
 		this.$icon.addClass('decoy-el-pos-tween');
 
 		// Cache
