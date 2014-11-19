@@ -3,6 +3,7 @@
 // Dependencies
 use Config;
 use Bkwld\Library\Utils\File;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Str;
 
@@ -25,6 +26,20 @@ class Element extends Base {
 	 * @var bool
 	 */
 	public $timestamps = false;
+
+	/**
+	 * Enforce the composite key while saving. Element has a composite primary
+	 * key accross `key` and `locale`
+	 * https://github.com/laravel/framework/issues/5355
+	 *
+	 * @param  Illuminate\Database\Eloquent\Builder  $query
+	 * @return Illuminate\Database\Eloquent\Builder
+	 */
+	protected function setKeysForSaveQuery(Builder $query) {
+		parent::setKeysForSaveQuery($query);
+		$query->where('locale', '=', $this->locale);
+		return $query;
+	}
 
 	/**
 	 * Subclass setAttribute so that we can automatically set validation

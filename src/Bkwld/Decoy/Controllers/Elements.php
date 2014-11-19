@@ -122,13 +122,10 @@ class Elements extends Base {
 			// model records at once.
 			$el->auto_manage_files = false;
 
-			// Set the locale to the passed one or, if none were paseed, the first 
-			// locale from the config
-			$el->locale = $locale ?: Decoy::defaultLocale();
-
 			// Save it
 			$el->exists = app('decoy.elements')->keyUpdated($el->key);
 			$el->value = $el->saveFile($key) ?: $value;
+			$el->locale = $locale;
 			$el->save();
 		});
 
@@ -147,7 +144,10 @@ class Elements extends Base {
 	public function field($key) {
 		return View::make('decoy::layouts.blank')
 			->nest('content', 'decoy::elements.field', [
-				'element' => app('decoy.elements')->hydrate(true)->get($key),
+				'element' => app('decoy.elements')
+					->localize(Decoy::locale())
+					->hydrate(true)
+					->get($key),
 			]);
 	}
 
@@ -171,6 +171,7 @@ class Elements extends Base {
 
 			// Save it.  Files will be automatically attached via model callbacks
 			$el->value = $value;
+			$el->locale = Decoy::locale();
 			$el->save();
 
 			// Clear the cache

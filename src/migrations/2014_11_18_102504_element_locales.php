@@ -14,6 +14,9 @@ class ElementLocales extends Migration {
 	{
 		Schema::table('elements', function($t) {
 			$t->string('locale')->nullable();
+			$t->dropPrimary('elements_key_primary');
+			$t->primary(['key', 'locale']);
+			$t->index(['locale', 'key']);
 		});
 	}
 
