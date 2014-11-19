@@ -6,7 +6,7 @@
 !=Former::open_vertical_for_files()->addClass('row')
 
 -# Create navigation
-.padded-col.tab-sidebar
+.padded-col.tab-sidebar.affixable(data-top="58")
 
 	-if(($locales = Config::get('decoy::site.locales')) && count($locales) > 1)
 		%fieldset.locale

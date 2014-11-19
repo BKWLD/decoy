@@ -1,11 +1,15 @@
 /**
- * This module calculates the size of an affixable element so that it's width
- * doesn't change when it's fixed.  A number of fixable elements will be in %
- * width containers which will change the width when fixed.  In particular, this
- * was designed for the fragment's sidebar.
+ * This module dynamically calculates the offset of the element for the BS affix 
+ * plugin.  You can also opt into it setting the width of the element when it's
+ * affixed.  All is controlled via class and data attribtues:
  *
- * Another feature of this module is dynamic calculation of the offset for the BS
- * affix plugin.
+ * <div class="affixable" data-top="0" data-set-width="true"></div>
+ *
+ * Note: `padding-top` is used to do the offset rather than `top` because when the
+ * element goes fixed, BS reads it's offset different, because it may actually
+ * change because of the `top`.  On the otherhand, `padding-top` keeps the actual
+ * offset of the element in the same place when fixed, but pushes the content
+ * down to where you'd expect. This was something I observed on the Elements sidebar.
  */
 define(function (require) {
   
@@ -26,6 +30,7 @@ define(function (require) {
 		this.fixed = false;
 		this.$main = $('#main');
 		this.mainTopPadding = this.$main.css('paddingTop').replace(/[^-\d\.]/g, '');
+		this.auto_set_width = this.$el.data('set-width');
 
 		// How far down to place it while affixed
 		this.top = this.$el.data('top') || 0;
@@ -63,7 +68,8 @@ define(function (require) {
 
 	// Enable affixing
 	View.enablePlugin = function() {
-		this.$el.affix({ offset: this.offset - this.top });
+		// this.$el.affix({ offset: {top: this.offset - this.top }});
+		this.$el.affix({ offset: {top: this.offset - this.top }});
 	};
 
 	// Meaasure with the width and offset right before they get set  
@@ -80,23 +86,22 @@ define(function (require) {
 
 	// Store the dimensions
 	View.measureLayout = function() {
-		this.width = this.$el.width();
+		if (this.auto_set_width) this.width = this.$el.outerWidth();
 		this.offset = this.$el.offset().top;
 	};
 
 	// Set the dimenions of the fixable
 	View.setLayout = function() {
-		this.$el.css({
-			//width: this.width, 
-			top: this.top
-		});
+		var css = { paddingTop: this.top };
+		if (this.width) css.width = this.width;
+		this.$el.css(css);
 	};
 
 	// Clear the layout
 	View.clearLayout = function() {
 		this.$el.css({
-			//width: '', 
-			top: '',
+			width: '', 
+			paddingTop: '',
 			position: ''
 		});
 	};

@@ -16,6 +16,12 @@
 		position: absolute;
 		right: $main-padding/2;
 		top: 0;
+
+		// Otherwise, fixed position never takes
+		&.affix {
+			position: fixed;
+			right: $main-padding; // The padding of the row no longer affects it
+		}
 	}
 
 	// The main content
