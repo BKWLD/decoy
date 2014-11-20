@@ -33,7 +33,6 @@
 		text-align: right;
 
 		// Many non-Chrome browsers need these to be a little wider than normal.  I gave it 4px extra
-		&[class*='actions-'] { overflow: auto; }
 		&.actions-2 { width: 46px; } 
 		&.actions-3 { width: 62px; }
 	}
@@ -45,9 +44,11 @@
 	td:last-child {
 		text-align: right;
 		padding-left: 0;
+		overflow: visible; // Don't show ellipsis
 	}
 	td:first-child { // When there is only one row, this will supercede the above
 		text-align: left;
+		overflow: visible; // Don't show ellipsis
 	}
 
 	// Style the header
