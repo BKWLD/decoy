@@ -59,6 +59,7 @@ define(function (require) {
 			// Get $ ref and the value
 			var $trigger = $(trigger)
 				, val = $trigger.val()
+				, $rule = $('[data-show-when-'+key+'="'+val+'"]')
 			;
 
 			// If the trigger is a radio, assume it is wrapped by a label
@@ -66,15 +67,16 @@ define(function (require) {
 
 			// Add a mapping to toggleable that shows all .form-groups that
 			// contain an element with a data element that looks like, for example:
-			// data-show-when-type="internal"
+			// data-show-when-type="internal".  Also add form groups INSIDE the element
+			// with the rule
 			return {
 				on: $trigger,
-				show: $('[data-show-when-'+key+'="'+val+'"]').closest('.form-group')
+				show: $rule.closest('.form-group').add($rule.find($rule.find('.form-group')))
 			};
 		}));
 
-		// Enable the selected item.  Assuming all triggers are the same type of
-		// element here.
+		// Enable the selected item on page load.  Assuming all triggers are the same 
+		// type of element here.
 		if ($triggers.is(':radio')) $triggers.filter(':checked').trigger('click');
 
 	});
