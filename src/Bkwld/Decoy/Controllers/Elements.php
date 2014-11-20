@@ -32,7 +32,7 @@ class Elements extends Base {
 	public function index($locale = null, $tab = null) {
 
 		// If there are no locales, treat the first argument as the tab
-		if (empty(Config::get('decoy::site.locales'))) {
+		if (!($locales = Config::get('decoy::site.locales')) || empty($locales)) {
 			$tab = $locale;
 			$locale = null;
 		
