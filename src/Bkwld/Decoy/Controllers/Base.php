@@ -424,7 +424,7 @@ class Base extends Controller {
 			->title(Str::singular($this->title));
 
 		// Make the sidebar
-		$sidebar = new Sidebar($item);
+		$sidebar = new Sidebar;
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
 
 		// Return view
