@@ -31,8 +31,11 @@
 	th:last-child {
 		padding-right: 10px;
 		text-align: right;
-		&.actions-2 { width: 42px; } 
-		&.actions-3 { width: 58px; }
+
+		// Many non-Chrome browsers need these to be a little wider than normal.  I gave it 4px extra
+		&[class*='actions-'] { overflow: auto; }
+		&.actions-2 { width: 46px; } 
+		&.actions-3 { width: 62px; }
 	}
 	td { // All cells are told to consume the full available width and ellipsis any leftover
 		width: 100%;
