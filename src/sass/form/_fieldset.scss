@@ -55,7 +55,12 @@ fieldset, .fieldset {
 		// Put padding on the cells so that the normal fieldset padding looks
 		// maintained
 		th:first-child, td:first-child { padding-left: $form-group-margin; }
-		th[class*='actions'], td[class*='actions'] { padding-right: $form-group-margin; }
+		th[class*='actions'], td[class*='actions'] { 
+			padding-right: $form-group-margin;
+			@media (max-width: $screen-sm) {
+				padding-right: $table-cell-padding-horizontal;
+			}
+		}
 
 		// Give the controller name a hover effect
 		.legend > a {
