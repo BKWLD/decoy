@@ -1,7 +1,7 @@
 /**
  * Fieldset group blocks of fields with a legend for a title
  */
-fieldset, .related .standard-list, body.index .standard-list {
+fieldset, .fieldset {
 
 	// Surround sections in a white box
 	@include panel;

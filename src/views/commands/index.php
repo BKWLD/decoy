@@ -1,7 +1,7 @@
 <div id="commands">
 	<? foreach($commands as $namespace => $subcommands): ?>
 		<div class='col-sm-6 col-lg-4'>
-			<div class="standard-list">
+			<div class="standard-list fieldset">
 				<div class="legend sidebar-header"><?=$namespace?></div>
 				<table>
 					<? foreach($subcommands as $name => $command): ?>

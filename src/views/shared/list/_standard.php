@@ -1,4 +1,4 @@
-<div class="standard-list" 
+<div class="standard-list fieldset" 
 	data-js-view="standard-list" 
 	data-controller-route="<?=URL::to(DecoyURL::action($controller))?>" 
 	data-position-offset="<?=$paginator_from?>"
