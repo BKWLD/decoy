@@ -95,12 +95,20 @@
 	}
 
 	// Give images a border
-	tr img {
+	img {
+		$border: 1px;
+		$size: 40px + $border * 2;
 		border: 1px solid $grey-border;
-		@include box-sizing(border-box);
 
 		// Pushes subsequent text off the edge of the image, usually a thumbnail
 		margin-right: 5px;
+
+		// Animated gifs won't be cropped by croppa, so give them a default width / height.  Same
+		// with gravtars in admin.
+		&[src*=".gif"], &.gravatar {
+			max-width: $size;
+			max-height: $size;
+		}
 	}
 
 	// Vertically center align all cells, for rows with image thumbnails in there.
@@ -110,12 +118,6 @@
 		input[type="radio"], input[type="checkbox"] {
 			margin: 0;
 		}
-	}
-	
-	// Make gravatar images a good size (for the admins view)
-	.gravatar {
-		width: 40px;
-		height: 40px;
 	}
 
 	// If there are multiple badges in a row, give them a little breathing roomt
