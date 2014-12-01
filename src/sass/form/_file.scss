@@ -6,9 +6,6 @@
 	input[type="file"] {
 		display: inline;
 
-		// Fixes positioning of text label on Chrome
-		line-height: 0;
-
 		// On horizontal forms, needs a little push down
 		.form-horizontal & {
 			margin-top: $padding-base-vertical + 2px;
