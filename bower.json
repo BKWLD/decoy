@@ -17,6 +17,7 @@
     "imagesloaded": "~3",
     "jcrop": "master",
     "jquery": "~1",
+    "jquery-ui-touch-punch-amd": "~0",
     "lodash": "~2",
     "notifyjs": "~0",
     "pixi.js": "~2",
