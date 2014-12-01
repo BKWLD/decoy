@@ -50,5 +50,23 @@
 		// 	],
 		// ],
 	],
+
+	/**
+	 * A hash of localization slugs and readable labels for all the locales for this
+	 * site.  Localization UI will only appear if the count > 1.
+	 */
+	'locales' => [
+		'english' => 'English',
+		// 'spanish' => 'Spanish',
+		// 'italian' => 'Italian',
+	],
+
+	/**
+	 * Automatically apply localization options to all models that at the root
+	 * level in the nav.  The thinking is that a site that is localized should
+	 * have everything localized but that children will inherit the localization
+	 * preference from a parent.
+	 */
+	'auto_localize_root_models' => true,
 	
 );
