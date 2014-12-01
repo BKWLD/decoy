@@ -13,6 +13,7 @@
 	// Simplify the styling the input more outline-y
 	.form-control {
 		@include box-shadow(none);
+		-webkit-appearance: none; // Needed for iOS to remove box shadow
 		outline: none;
 		background: none;
 		padding-left: 23px;
