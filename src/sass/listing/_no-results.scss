@@ -1,5 +1,5 @@
 // High specifity to override stuff
-.listing tbody .no-results {
+.listing.table tbody .no-results {
 
 	// Remove the hover
 	&:hover, &:nth-child(even):hover {
@@ -10,7 +10,7 @@
 	cursor: auto;
 
 	// Remove inheritted padding
-	td {
+	td:first-child {
 		padding: 0;
 	}
 
