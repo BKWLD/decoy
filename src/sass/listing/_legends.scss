@@ -21,15 +21,9 @@
 		top: -1px;
 	}
 
-	// Remove the .pull-right's right margin because
-	// it looks better justified to the actions
+	// Slightly tweak placement
 	body.index & > .pull-right.btn-toolbar {
 		margin-right: -1px;
-
-		@media(max-width: $screen-sm) {
-			margin-right: -10px;
-		}
-		
 	}
 
 }
