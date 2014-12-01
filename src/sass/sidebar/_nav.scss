@@ -16,7 +16,7 @@
 			margin-bottom: $nav-bottom-height-mobile;
 		}
 
-		// the top level nav items (usually contain a subnav)
+		// Contains both top-level links and optional sub-nav container
 		.main-nav {
 			a {
 				display: block;
@@ -67,17 +67,14 @@
 				}
 			}
 
+			// Active main-navs
 			&.active {
 				.top-level {
-					color: $theme-primary-color;
-
-					// on parent links, just keep the active color, not theme primary
-					&.parent {
-						color: $nav-text-active;
-
-						span.glyphicon {
-							color: $theme-primary-color;
-						}
+					color: $nav-text-active;
+					.glyphicon { color: $theme-primary-color; }
+					&:active .glyphicon { 
+						color: $nav-text-active; 
+						@include transition(color 100ms);
 					}
 				}
 			}
