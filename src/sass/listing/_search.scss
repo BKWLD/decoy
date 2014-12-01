@@ -190,7 +190,7 @@
 .search-controls {
 
 	// Search icon
-	.search-toggle {
+	.search-toggle.btn {
 		z-index: 2;
 		margin-right: 27px;
 
@@ -200,13 +200,13 @@
 	}
 
 	// Reset icon
-	.search-clear {
+	.search-clear.btn {
 		z-index: 1;
 		position: absolute;
 		right: 0;
 	}
 	&.closed {
-		.search-toggle { margin-right: 0;}
+		.search-toggle.btn { margin-right: 0;}
 
 		// When closed, don't look like a button group
 		.btn { 
@@ -215,7 +215,7 @@
 	}
 	
 	// Only animate after the initial page load
-	&.initialized .search-toggle {
+	&.initialized .search-toggle.btn {
 		@include transition(margin-right 400ms ease-out);
 	}
 
