@@ -1,13 +1,12 @@
-$image-max-height: 400px;
-
-// Styles related to there being no cropper
+// Styles for cropper and not cropper images
 .image-upload {
-
 	.img-thumbnail { 
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
-		max-height: $image-max-height;
+
+		// Don't allow images to get crazy big
+		max-height: 400px;
 
 		// Looks better with a lil extra.  I think because of line-height stuff
 		margin-top: 5px + 2px;
@@ -15,9 +14,7 @@ $image-max-height: 400px;
 		// Always put it on it's own line
 		display: block;
 	}
-
 }
-
 
 // This container contains multiple instances of images that get turned
 // into jcrop instances.
@@ -43,7 +40,6 @@ $image-max-height: 400px;
 	// Remove the margin that we want when no crops are present
 	.img-thumbnail {
 		margin: 0;
-		max-height: $image-max-height;
 
 		// Remove the rounded corner in the uppwer left
 		@include border-corner-radius(top, left, 0);
