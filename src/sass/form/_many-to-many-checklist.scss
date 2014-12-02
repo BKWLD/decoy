@@ -42,11 +42,18 @@
 				background-color: #f9f9f9;
 				@include border-radius(3px);
 				padding: 7px 10px 7px 30px;
-
-				// Prevent text from wrapping
 				white-space: nowrap;
-				text-overflow: ellipsis;
-				overflow: hidden;
+
+				// Prevent text from wrapping.  Need to assign to the a tag because
+				// FF was hiding the checkbox
+				// https://github.com/BKWLD/decoy/issues/371
+				a {
+					display: inline-block;
+					text-overflow: ellipsis;
+					overflow: hidden;
+					vertical-align: middle;
+					width: 100%;
+				}
 			}
 		}
 
