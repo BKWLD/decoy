@@ -5,6 +5,9 @@
 		z-index: 100;
 		@include box-sizing(border-box);
 
+		// Don't break out of box on FF
+		width: 100%;
+
 		// Don't allow images to get crazy big
 		max-height: 400px;
 
