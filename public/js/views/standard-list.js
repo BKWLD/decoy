@@ -10,6 +10,7 @@ define(function (require) {
 		
 	// Bring in just enough jQuery UI for drag and drop
 	require('decoy/plugins/jquery-ui');
+	require('jquery-ui-touch-punch-amd');
 	
 	// Bring in the template for new rows.  Currently, the only need to do this
 	// is for many-to-many row insertion
