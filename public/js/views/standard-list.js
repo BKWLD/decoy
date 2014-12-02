@@ -148,21 +148,20 @@ define(function (require) {
 				placeholder: 'placeholder',
 				forcePlaceholderSize: true,
 				start: function(event, ui) {
-					ui.placeholder.html("<td colspan='999'></td>");
-					
-					// For some reason, this always gets created 1px to tall.
-					ui.placeholder.height(ui.helper.height()-1);
-
+					ui.placeholder
+						.html("<td colspan='999'></td>")
+						.placeholder.height(ui.helper.height())
+					;
 				},
 
 				// Preserve the widths of columns during dragging by freezing them
 				// in place
 				// From http://cl.ly/170d0h291V10
-				helper: function(e, tr) {
-					tr.children().each(function(index) {
+				helper: function(e, $tr) {
+					$tr.children().each(function(index) {
 						$(this).width($(this).width());
 					});
-					return tr;
+					return $tr;
 				},
 				
 				// Callback function after sorting happens.
