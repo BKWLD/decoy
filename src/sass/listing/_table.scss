@@ -83,15 +83,12 @@
 	// Add a slight rollover so it's easier to track with the eyes.  Not using
 	// Bootstrap's .table-hover because it is too dark
 	tbody tr:hover {
-		background-color: #f6f6f6;
+		background-color: $table-row-hover;
 	}
 
 	// Make the even rows a little darker
 	tr:nth-child(even) {
 		background-color: $lightest-grey;
-		
-		// Darken the hover color slightly 
-		&:hover { background-color: #f6f6f6; }
 	}
 
 	// Give images a border

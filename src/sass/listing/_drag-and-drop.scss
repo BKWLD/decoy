@@ -1,47 +1,57 @@
-.table {
-
-	// Styles related to drag and drop.
-	// Note: I've noticed that table rows tend have a decremented height after being
-	// interacted with.  Which causes elements that are lower on the page to move slightly.
-	// It's a little irritant that I've found no solution for.
+// Styles related to drag and drop.
+.listing {
 
 	.ui-sortable {
 		
 		// This is the drop box
 		.placeholder { 
-			background: $light-grey;
-		}
-		
-		// This is the unit that gets dragged around
-		.ui-sortable-helper {
-			background: rgba(255,255,255,.9);
-			border: 1px dashed $grey-border;
-			
-			// Compensate for the left and top border on the row being added
-			td { 
-				border: none;
-				position: relative; 
-				left: -1px; 
-				top: -1px;
+			background: darken($body-color, 5%);
+
+			// Prevent the new dotted border from having a double border
+			// look with the normal row
+			& + tr td {
+				border-top-color: white;
 			}
-			
-			// Fix for long cells not looking right 
-			// https://github.com/BKWLD/decoy/issues/53
-			display: block !important;
-			white-space: nowrap;
-			@include box-sizing(border-box);
-			font-size: 0; // Remove the whitespace between tds
-			td {
-				display: inline-block;
-				font-size: 14px; // Put the font size back
-			}
-			
 		}
+
+		// Show the move curosr
 		tr {
 			cursor: move;
 		}
+
+		// Don't show move cursor on disabled rows
 		&.ui-sortable-disabled tr {
 			cursor: auto;
+		}
+	}
+		
+	// This is the unit that gets dragged around
+	.ui-sortable-helper {
+		background: darken($table-row-hover, 1%) !important;
+		border: 1px dashed $grey-border;
+
+		// The popover box-shadow
+		@include box-shadow(0 5px 10px rgba(0,0,0,.2));
+
+		// Remove borders on the sides so there is no shift
+		border-left: none;
+		border-right: none;
+		
+		// Fix for long cells not looking right 
+		// https://github.com/BKWLD/decoy/issues/53
+		display: block !important;
+		white-space: nowrap;
+		font-size: 0; // Remove the whitespace between tds
+		td {
+			display: inline-block;
+			font-size: $font-size-base; // Put the font size back
+			border: none;
+
+			// Hide columns on break as defined in listing._table.scss
+			@media (max-width: $screen-sm) {
+				display: none;
+				&:first-child + td, &:last-child { display: inline-block; }	
+			}
 		}
 	}
 
