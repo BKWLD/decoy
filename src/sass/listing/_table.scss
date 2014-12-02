@@ -5,6 +5,7 @@
 	// the first row sets the widths of all subsequent rows
 	table-layout: fixed;
 	td,th {
+		word-wrap: normal;
 		white-space: nowrap;
 	}
 
