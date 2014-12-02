@@ -42,6 +42,8 @@
 		display: block !important;
 		white-space: nowrap;
 		font-size: 0; // Remove the whitespace between tds
+
+		// Prepare for fixed width cells via JS
 		td {
 			display: inline-block;
 			font-size: $font-size-base; // Put the font size back
@@ -52,7 +54,28 @@
 				display: none;
 				&:first-child + td, &:last-child { display: inline-block; }	
 			}
+
+			// IE9 doesn't support the inline block on td.  Using float looks
+			// slightly better but vertical alignment is off.
+			// http://stackoverflow.com/a/6490732/59160
+			.lt-ie10 & {
+				float: left;
+
+				// Fixing vertical alignment
+				// http://stackoverflow.com/a/23899254/59160
+				height: 100%;
+				vertical-align: middle;
+				&:before {
+					content: '';
+					display: inline-block;
+					height: 100%;
+					vertical-align: middle;
+				}
+			}
 		}
+
+		// For the IE9 fix
+		@include clearfix; 
 	}
 
 }
