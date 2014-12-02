@@ -23,10 +23,10 @@
 
 		// Make cols
 		.checkbox {
-			clear: left;
 			display: inline-block;
 			width: 50%;
 			padding: 0 5px 0 0;
+			margin-bottom: 10px; // Extra tall to work around the -5px margin-top
 			
 			// Break columns
 			@media (max-width: $screen-xs) {
