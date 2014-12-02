@@ -158,9 +158,24 @@ define(function (require) {
 				// in place
 				// From http://cl.ly/170d0h291V10
 				helper: function(e, $tr) {
+
+					// Measure the height of the row, without the padding 
+					var h = $tr.children().first().height();
+
+					// Set the width of the of each cell to the width pre-float
 					$tr.children().each(function(index) {
 						$(this).width($(this).width());
 					});
+
+					// After the float has taken affect, measure the height and use
+					// it to vertically center the content
+					_.defer(function() {
+						$tr.children().each(function(index) {
+							$(this).css('top', (h - $(this).height()) / 2);
+						});
+					});
+
+					// JQ requires this
 					return $tr;
 				},
 				

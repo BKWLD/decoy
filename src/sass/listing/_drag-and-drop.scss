@@ -42,16 +42,16 @@
 		display: block !important;
 		white-space: nowrap;
 		font-size: 0; // Remove the whitespace between tds
+
+		// Position the cells using block and float instead of inline-block
+		// so that it works in IE9 as well
+		// http://stackoverflow.com/a/6490732/59160
+		@include clearfix;
 		td {
-			display: inline-block;
+			float: left;
+			position: relative; // Gonna apply vertical centering poisitioning via JS
 			font-size: $font-size-base; // Put the font size back
 			border: none;
-
-			// Hide columns on break as defined in listing._table.scss
-			@media (max-width: $screen-sm) {
-				display: none;
-				&:first-child + td, &:last-child { display: inline-block; }	
-			}
 		}
 	}
 
