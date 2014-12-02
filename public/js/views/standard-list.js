@@ -150,7 +150,7 @@ define(function (require) {
 				start: function(event, ui) {
 					ui.placeholder
 						.html("<td colspan='999'></td>")
-						.placeholder.height(ui.helper.height())
+						.height(ui.helper.height())
 					;
 				},
 
