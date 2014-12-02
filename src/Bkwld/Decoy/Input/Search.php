@@ -5,6 +5,7 @@ use Bkwld\Decoy\Exception;
 use Config;
 use Input;
 use Log;
+use Bkwld\Library\Utils\String;
 
 /**
  * This class contains logic related to searching from controller
@@ -81,17 +82,17 @@ class Search {
 
 			// Not associative assume it's a text field
 			} else if (is_numeric($key)) {
-				$search[$val] = array('type' => 'text', 'label' => str_replace('_', ' ', ucwords($val)));
+				$search[$val] = array('type' => 'text', 'label' => String::titleFromKey($val));
 			
 			// If value isn't an array, make a default label
 			} else if (!is_array($val)) {
-				$search[$key] = array('type' => $val, 'label' => str_replace('_', ' ', ucwords($key)));
+				$search[$key] = array('type' => $val, 'label' => String::titleFromKey($key));
 			
 			// Add the meta array
 			} else {
 
 				// Make a default label
-				if (empty($val['label'])) $val['label'] = str_replace('_', ' ', ucwords($key));
+				if (empty($val['label'])) $val['label'] = String::titleFromKey($key);
 
 				// Support class static method or variable as options for a select
 				if (!empty($val['type']) 
