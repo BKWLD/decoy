@@ -1,3 +1,5 @@
+$image-max-height: 400px;
+
 // Styles related to there being no cropper
 .image-upload {
 
@@ -5,6 +7,7 @@
 		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
+		max-height: $image-max-height;
 
 		// Looks better with a lil extra.  I think because of line-height stuff
 		margin-top: 5px + 2px;
@@ -40,6 +43,7 @@
 	// Remove the margin that we want when no crops are present
 	.img-thumbnail {
 		margin: 0;
+		max-height: $image-max-height;
 
 		// Remove the rounded corner in the uppwer left
 		@include border-corner-radius(top, left, 0);
