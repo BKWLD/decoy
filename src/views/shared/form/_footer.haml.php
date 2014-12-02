@@ -10,9 +10,9 @@
 				%span.glyphicon.glyphicon-file.glyphicon
 				Save
 		-if (app('decoy.auth')->can('update', $controller) && app('decoy.auth')->can('create', $controller))
-			%button.btn.btn-success.save_new(name="_save" value="new" type="submit") &amp; New
+			%button.btn.btn-success.js-tooltip.save_new(name="_save" value="new" type="submit" title="Go to create form after saving") &amp; New
 		-if (app('decoy.auth')->can('update', $controller))
-			%button.btn.btn-success.save_back(name="_save" value="back" type="submit") &amp; Back
+			%button.btn.btn-success.js-tooltip.save_back(name="_save" value="back" type="submit" title="Return to listing after saving") &amp; Back
 
 	-# Additional buttons
 	-if (isset($actions)) echo $actions
@@ -24,7 +24,7 @@
 			Delete
 	
 	-# Cancel
-	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Back
+	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Cancel
 
 // CLose the form
 !=Former::close()
