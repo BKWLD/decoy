@@ -10,7 +10,7 @@
 
 	.form-actions
 		%button(type="submit" class="btn btn-primary") Submit
-		%a.btn.btn-default(href=route('decoy::account@forgot')) Cancel
+		%a.btn.btn-default(href=route('decoy')) Cancel
 
 !=Former::close()
 	
