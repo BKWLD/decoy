@@ -67,14 +67,8 @@ p a {
 	padding-bottom: $footer-height; // this is to clear the fixed button controls
 	@include adjust-for-sidebar();
 
-	// Breadcrumbs are abs/fixed position, so compensate for their height
-	padding-top: $main-padding + $breadcrumb-height;
-
-	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
-
 	// On tablet widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
-		margin-left: 0;
 		padding-left: $main-padding/2;
 		padding-right: $main-padding/2;
 		padding-top: $main-padding/2 + $breadcrumb-height;

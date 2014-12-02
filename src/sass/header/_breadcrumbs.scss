@@ -1,15 +1,15 @@
 .breadcrumbs {
-	$bkgd: darken(white, 3%); // Just a little off-white
-	background-color: $bkgd;
-	position: absolute;
-	width: 100%;
+	@include rgba-background-inline(rgba(#fff, .93));
+	position: relative;
 	left: 0;
+	right: 0;
 	top: 0;
 	z-index: $header-z;
 	font-size: 12px;
 	@include box-shadow($common-shadow);
 
 	// Sync padding with rest of page
+	@include adjust-for-sidebar;
 	padding: 0 $main-padding;
 	@media(max-width: $screen-sm) {
 		padding: 0 $main-padding-mobile;
@@ -59,26 +59,18 @@
 
 		// Put it on top of the breadcrumbs and overlap the icons with
 		// a background color
-		background: $bkgd;
+		background: darken(white, 2%);
 		position: relative;
 		z-index: 1;
 	}
 
 	&.affix {
-		@include rgba-background-inline(rgba(#fff, .93));
 		position: fixed;
-		@include adjust-for-sidebar();
 
-		// on mobile, I need to make the margin 0, so the crumbs span the whole width
-		@media(max-width:$screen-sm) {
-			margin-left: 0;
+		// Push content down now that it's out of the flow
+		+ #main {
+			margin-top: $breadcrumb-height;
 		}
 
-		// above mobile, abjust for the nav only when docked 
-		@media(min-width:$screen-sm + 1) {
-			.back {
-				margin-right: 200px;
-			}
-		}
 	}
 }

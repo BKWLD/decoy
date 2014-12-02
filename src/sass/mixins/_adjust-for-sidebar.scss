@@ -6,4 +6,10 @@
 	body.forgot &, body.reset & {
 		#{$property}: 0;
 	}
+
+	// Sidebar goes away at break
+	@include transition( #{$property} 250ms 0ms ceaser($easeInQuad));
+	@media(max-width:$screen-sm) {
+		#{$property}: 0;
+	}
 }

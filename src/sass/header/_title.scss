@@ -12,7 +12,6 @@
 
 	// Apply left offset
 	@include adjust-for-sidebar();
-	@include transition( margin-left 250ms 0ms ceaser($easeInQuad));
 
 	// Reduce the bottom by the border on breadcrumbs which has
 	// the same bkgd
@@ -95,9 +94,6 @@
 
 	// tablet-portrait styles
 	@media(max-width:$screen-sm) {
-		// on mobile, kill the margin-left so the header
-		// spans the full width of the window
-		margin-left: 0;
 		padding-top: 0;
 		padding-bottom: 12px;
 

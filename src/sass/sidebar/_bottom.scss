@@ -16,6 +16,7 @@
 	height: $footer-height;
 
 	// Animate in on mobile
+	left: 0;
 	@include transition( left 250ms 0ms ceaser($easeInQuad));
 	&.show { left: 0; }	
 	@media(max-width:$screen-sm) {

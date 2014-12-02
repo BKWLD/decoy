@@ -16,20 +16,19 @@
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
-		<?// Sidebar and header ?>
+		<?// Sidebar ?>
 		<? if (App::make('decoy.auth')->check()): ?>
 			<?= View::make('decoy::layouts._nav') ?>
 			<?= View::make('decoy::layouts._bottom_nav', $__data) ?>
 		<? endif ?>
+
+		<?// Header ?>
 		<?= View::make('decoy::layouts._header', $__data) ?>
+		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
 
 		<?// The main page content ?>
 		<div id="main">
-			<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
-
-			<? // CRUD notification area ?>
 			<?= View::make('decoy::layouts._notifications', $__data)?>
-
 			<?= $content?>
 		</div>
 	
