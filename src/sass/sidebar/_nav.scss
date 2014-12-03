@@ -32,13 +32,14 @@
 				position: relative;
 				background-color: lighten($gray-dark, 3%);
 				
+				&:active {
+					color: $nav-text-active;
+					background: $theme-primary-color;
+				}
+
 				&:hover {
 					color: $nav-text-active;
 					.glyphicon { color: $nav-text-active; }
-				}
-
-				&:active {
-					background: $theme-primary-color;
 				}
 
 				// top level links with children show and arrow indicating children

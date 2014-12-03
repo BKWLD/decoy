@@ -6,7 +6,7 @@
 	background: none;
 	border: 1px solid rgba($text-color, .85);
 	color: rgba($text-color, .85);
-	&:hover, &:focus {
+	&:hover, &:focus, &:active {
 		background: rgba($text-color, .15);
 		border-color: $text-color;
 		color: $text-color;
