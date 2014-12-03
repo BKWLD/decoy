@@ -124,7 +124,7 @@ if ($listing->count()) {
 					<? endif ?>
 					
 					<?// Edit link?>
-					<a href="<?=$edit?>" title="Edit"><span class="glyphicon glyphicon-pencil"></span></a>
+					<a href="<?=$edit?>"><span class="glyphicon glyphicon-pencil"></span></a>
 
 					<?// Delete or remove ?>
 					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
