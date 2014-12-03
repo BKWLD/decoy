@@ -41,7 +41,7 @@ define(function (require) {
 			this.$deleteBtn = this.$('.delete-selected');
 			this.$deleteAlert = this.$('.delete-alert');
 			this.$bulkActions = this.$('.bulk-actions');
-			this.$total = this.$('legend .badge, h1 .badge');
+			this.$total = this.$('.legend .badge');
 			this.$trs = this.$el.find('[' + dataId + ']');
 			this.parent_controller = this.$el.data('parent-controller');
 			this.position_offset = this.$el.data('position-offset');
