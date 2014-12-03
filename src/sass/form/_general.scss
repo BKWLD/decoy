@@ -26,9 +26,9 @@
 .glyphicon.required {
 
 	// Toning down the required icons
-	@include opacity($light-opacity);
+	color: lighten($tooltip-bg, 30%);
 	&:hover {
-		@include opacity(1);
+		color: $tooltip-bg;
 	}
 
 	// Fix the tooltips on horizontal forms which were wrapping
