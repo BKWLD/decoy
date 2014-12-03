@@ -104,6 +104,7 @@
 		.title {
 			line-height: 0.8;
 			text-align: center;
+			position: static; // Don't influence .pull-right anymore
 
 			.site {
 				font-size: 20px;
@@ -123,8 +124,7 @@
 
 			// + New button in header sit in top right 
 			.pull-right {
-				position: absolute;
-				top: 0px;
+				top: 10px;
 				right: $main-padding-mobile;
 
 				// Hide many to many form altogther
