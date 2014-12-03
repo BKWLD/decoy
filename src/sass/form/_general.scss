@@ -11,12 +11,6 @@
 	margin-right: 10px;
 }
 
-// Give site a max width, cause on wide screens it
-// looks way too long, and apply this to form horizontal
-.form-horizontal, .standard-list, .row {
-	max-width: $max-width;
-}
-
 // Set fixed width to horizontal form label widths 
 .form-horizontal .control-label {
 	width: $horizontal-label-width;

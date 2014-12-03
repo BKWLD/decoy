@@ -67,6 +67,9 @@ p a {
 	padding-bottom: $footer-height; // this is to clear the fixed button controls
 	@include adjust-for-sidebar();
 
+	// Max width
+	max-width: $max-width + $main-padding * 2;
+
 	// On tablet widths, have main span the entire width of the screen
 	@media(max-width:$screen-sm) {
 		padding-left: $main-padding/2;
@@ -81,7 +84,7 @@ p a {
 		padding-top: $main-padding-mobile + $breadcrumb-height;
 
 		// Without this, horizontall scrolling is introduced.  This is assumed to be
-		// workig on the main columns of the edit view
+		// workign on the main columns of the edit view
 		.row {
 			margin-left: -$main-padding-mobile;
 			margin-right: -$main-padding-mobile;
