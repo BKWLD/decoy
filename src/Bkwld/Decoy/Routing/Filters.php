@@ -144,8 +144,8 @@ class Filters {
 	 */
 	public function saveRedirect() {
 		
-		// Handle a redirect request
-		if (Session::has('save_redirect')) {
+		// Handle a redirect request.  But only if there were no validation errors
+		if (Session::has('save_redirect') && !Session::has('errors')) {
 			Session::keep(['success', 'errors']);
 			return Redirect::to(Session::get('save_redirect'));
 		}
