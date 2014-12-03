@@ -20,3 +20,15 @@
 	margin-right: 10px; 
 	&:last-child { margin-right: 0; }
 }
+
+// Remove unnecessary Bootstrap top padding after break
+@media (max-width: $screen-sm) {
+	.form-horizontal {
+		.radio,
+		.checkbox,
+		.radio-inline,
+		.checkbox-inline {
+		  padding-top: 0;
+		}
+	}
+}
