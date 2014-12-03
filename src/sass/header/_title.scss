@@ -23,6 +23,7 @@
 		color: $theme-primary-inverse;
 		margin: 0; // Reset BS
 		max-width: $max-width;
+		position: relative; // For the pull-right pos:absolute
 
 		// line break for mobile header is hidden by default
 		br.mobile-break {
@@ -52,16 +53,19 @@
 	}
 
 	// Buttons on the far right right should be vertically
-	// justified with the title
+	// justified with the title.  And positioned absolutely, rather than
+	// float, so that they overlap when the page is too narrow
 	.pull-right {
-		margin-top: 13px;
-		max-width: 25%;
+		float: none !important; // Override BS
+		position: absolute;
+		right: 0;
+		top: 11px;
+		background: rgba($theme-primary-color, .9);
+		@include box-shadow(-5px 0 10px rgba($theme-primary-color, .7));
 
 		// Add text label automatically
-		.new {
-			&:after {
-				content: 'New';
-			}
+		.new &:after {
+			content: 'New';
 		}
 	}
 
