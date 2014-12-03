@@ -105,6 +105,7 @@ define(function (require) {
 		// Enable bootstrap tooltips
 		$body.find('.js-tooltip').tooltip({ 
 			animation: false, 
+			html: true,
 			container: '#main' // Add them out here to prevent some z-index issues
 		});
 		
