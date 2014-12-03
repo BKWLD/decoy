@@ -177,7 +177,6 @@ body.login.index {
 // The login page - theme
 body.login.index {
 	background: $theme-primary-color;
-	@include background(linear-gradient(top, $theme-primary-color, darken($theme-primary-color, 10%)));
 	background-position: center center;
 
 	// Bkgd image

@@ -38,7 +38,7 @@ define(function (require) {
 		if( $win.width() > 1024 )
 			this.loginAnim = new LoginAnimation({
 				el: '#main',
-				color: $('body').css('background'),
+				color: rgb2hex($('body').css('background-color')),
 				size: 25,
 				spawnRate: 1,
 				cellRate: 1,
@@ -55,6 +55,15 @@ define(function (require) {
 		this.$branding.css('top', (this.$form.outerHeight() - this.$branding.height())/2 );
 
 	};
+
+	// Utility function for converting rgb() values to hexes
+	// http://stackoverflow.com/a/3627747
+	function rgb2hex(rgb) {
+		if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
+		rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+		function hex(x) { return ("0" + parseInt(x).toString(16)).slice(-2); }
+		return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
+	}
 
 	// Return it
 	return Backbone.View.extend(View);
