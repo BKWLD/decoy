@@ -28,6 +28,10 @@ class Upload extends File {
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
 		$this->addGroupClass('upload');
+
+		// Add the max upload info
+		$this->addClass('js-tooltip');
+		$this->title('Max upload size: '.Utils\String::humanSize(Utils\File::maxUpload(), 1));
 	}
 
 	/**
@@ -60,10 +64,10 @@ class Upload extends File {
 			if ($this->isRequired()) $this->setAttribute('required', null);
 
 			// Add hidden field and return
-			return $this->renderHidden().parent::render().$this->renderMaxUpload();
+			return $this->renderHidden().parent::render();
 		
 		// The field is empty
-		} else return parent::render().$this->renderMaxUpload();
+		} else return parent::render();
 	}
 
 	/**
@@ -84,15 +88,6 @@ class Upload extends File {
 		if (!$this->value) return;
 		else if (!$this->isRequired() && $this->isInUploads()) return $this->renderDestuctableReview();
 		else return $this->renderIndestructibleReview();
-	}
-
-	/**
-	 * Display the max upload size supported
-	 *
-	 * @return string HTML for a tooltip
-	 */
-	protected function renderMaxUpload() {
-		return '<span class="label label-default max-size">Max: '.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</span>';
 	}
 
 	/**

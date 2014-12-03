@@ -44,21 +44,4 @@
 		font-size: 12px;
 	}
 
-	// Show the max upload size only on hover
-	.max-size { display: none; }
-	&:hover .max-size { 
-
-		// Don't show on mobile
-		@media(max-width: $screen-sm) {
-			display: none;
-		}
-
-		// Fade it to match block help
-		background: $grey-border;
-		display: inline;
-
-		// Push it off the file field a bit
-		margin-left: 10px;
-	}
-
 }
