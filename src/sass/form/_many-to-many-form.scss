@@ -60,7 +60,7 @@
 		$input-width: 125px;
 
 		input {
-			@include transition(width .5s ease);
+			@include transition(all .5s ease);
 			
 			&:focus {
 				width: $input-width; // pixel width so the whole field can smoothly transition
@@ -90,10 +90,16 @@
 
 			// Pixel width so the whole field can smoothly transition
 			&:focus, &[disabled] {
+				padding-left: 28px;
 				width: 200px; 
 			}
-		}
 
+			// Hide the placeholder text on mobile
+			@media (max-width: $screen-sm) {
+				width: 37px; // Small enough to center the question mark and hide placeholder
+				padding-left: 23px;
+			}
+		}
 		
 	}
 
