@@ -5,7 +5,7 @@
 	position: fixed;
 	bottom: 0;
 	background-color: darken($gray-dark, 6%);
-	z-index: 311; // to bump the bottom area above the sidebar by 1 index
+	z-index: $header-z + 2; // to bump the bottom area above the sidebar by 1 index
 
 	// Set a default color
 	font-size: 16px;
