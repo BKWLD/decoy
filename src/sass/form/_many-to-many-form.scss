@@ -47,10 +47,10 @@
 	// container for search icon and input field
 
 	.glyphicon-search {
-		font-size: 14px;
+		font-size: 12px;
 		position: absolute;
-		left: 5px;
-		top: 5px;
+		left: 7px;
+		top: 7px;
 	}
 	.twitter-typeahead {
 		$input-width: 125px;
@@ -77,6 +77,7 @@
 		.glyphicon-search {
 			left: 9px;
 			top: 9px;
+			font-size: 14px;
 		}
 
 		// Twitter wraps the form field in a display-inline wrapper and that
@@ -85,7 +86,7 @@
 		.twitter-typeahead {
 			top: 12px;
 			+ .glyphicon-search {
-				top: 30px;
+				top: 31px;
 			}
 		}
 

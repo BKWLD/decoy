@@ -131,3 +131,13 @@ p a {
 		left: -1px;
 	}
 }
+
+// Tweak button padding to better center text
+.btn, .form-control {
+	padding-top: $padding-base-vertical + 1px;
+	padding-bottom: $padding-base-vertical -1px;
+}
+.btn-sm, .input-sm {
+	padding-top: $padding-small-vertical + 1px;
+	padding-bottom: $padding-small-vertical - 1px;
+}
