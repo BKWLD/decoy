@@ -129,7 +129,7 @@ class Image extends Upload {
 		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
 		
 		// Add the images
-		$html .= '<div class="imgs">';
+		$html .= '<div class="imgs js-tooltip" title="Click and drag on the image to create cropping bounds.">';
 		foreach($this->crops as $key => $val) {
 			
 			// Figure out the raio and crop name
