@@ -177,15 +177,14 @@ body.login.index {
 // The login page - theme
 body.login.index {
 	background: $theme-primary-color;
-	background-position: center center;
-
-	// Bkgd image
-	@if ($theme-login-bkgd) {
+	
+	// Bkgd image is shown on break, when the animation goes away
+	@media (max-width: $screen-sm) {
+		@include background(linear-gradient(top, $theme-primary-color, darken($theme-primary-color, 10%)));
 		.bkgd { 
-
-			// Disabling for now, I think the JS sparkles look better on their own
-			// background-image: url("#{$theme-login-bkgd}");
+			background-image: url("#{$theme-login-bkgd}");
 			background-position: cover;
+			background-position: center center;
 		}
 	}
 

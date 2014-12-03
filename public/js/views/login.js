@@ -34,8 +34,8 @@ define(function (require) {
 		}, this), 1000);
 
 		
-		// add decoy login animation on screens greater than 1024 px
-		if( $win.width() > 1024 )
+		//Aadd decoy login animation on screens greater than screen-sm
+		if( $win.width() >= 768 )
 			this.loginAnim = new LoginAnimation({
 				el: '#main',
 				color: rgb2hex($('body').css('background-color')),
