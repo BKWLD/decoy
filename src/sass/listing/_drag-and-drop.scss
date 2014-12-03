@@ -17,6 +17,9 @@
 		// Show the move curosr
 		tr {
 			cursor: move;
+			[type="checkbox"] {
+				cursor: pointer;
+			}
 		}
 
 		// Don't show move cursor on disabled rows
