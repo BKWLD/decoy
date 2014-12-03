@@ -7,6 +7,7 @@ define(function (require) {
 	var $ = require('jquery')
 		, _ = require('underscore')
 		, Backbone = require('backbone')
+		, FastClick = require('fastclick')
 		, Affixable = require('decoy/modules/affixable')
 		, Sidebar = require('decoy/modules/sidebar')
 		, LocalizeCompare = require('decoy/localize/compare')
@@ -34,6 +35,9 @@ define(function (require) {
 	
 	// Disable # links because they're not links silly
 	$doc.on('click', '[href="#"]', false);
+
+	// Enable fast click
+	FastClick.attach(document.body);
 	
 	// --------------------------------------------------
 	// Configure Backbone
