@@ -59,9 +59,11 @@
 
 		// Put it on top of the breadcrumbs and overlap the icons with
 		// a background color
-		background: darken(white, 2%);
+		$color: darken(white, 2%);
+		background: $color;
 		position: relative;
 		z-index: 1;
+		@include box-shadow(-6px 0 12px $color);
 	}
 
 	&.affix {
