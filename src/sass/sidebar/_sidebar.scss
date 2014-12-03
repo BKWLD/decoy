@@ -2,7 +2,6 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	height: 100%;
 	width: $sidebar-width;
 	background-color: $gray-dark;
 	color: lighten($gray-light, 20%);
@@ -11,6 +10,16 @@
 	overflow-y: auto;
 	overflow-x: hidden;
 	@include gpu-cache;
+
+	// Make room for the sidebar footer
+	bottom: $footer-height;
+	@media(max-width: $screen-sm) {
+		bottom: $nav-bottom-height-mobile;
+	}
+
+	// IE 9 requires this or it puts the scrollbar in the wrong place
+	// https://github.com/BKWLD/decoy/issues/395
+	@include box-sizing(content-box);
 
 	@include transition( left 250ms 0ms ceaser($easeInQuad));
 

@@ -9,13 +9,7 @@
 		padding: 0;
 		margin: 0;
 		border-top: $border;
-
-		// Make room for the bottom
-		margin-bottom: $footer-height;
-		@media(max-width: $screen-sm) {
-			margin-bottom: $nav-bottom-height-mobile;
-		}
-
+		
 		// Contains both top-level links and optional sub-nav container
 		.main-nav {
 			a {
