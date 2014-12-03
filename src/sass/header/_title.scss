@@ -25,6 +25,11 @@
 		max-width: $max-width;
 		position: relative; // For the pull-right pos:absolute
 
+		// Reduce font size a little so there is less pull-right overlap
+		@media(max-width: $screen-md) {
+			font-size: 39px;
+		}
+
 		// line break for mobile header is hidden by default
 		br.mobile-break {
 			display: none;
@@ -62,7 +67,7 @@
 		line-height: 0; // Clear the title's line height
 		bottom: 4px;
 		background: rgba($theme-primary-color, .9);
-		@include box-shadow(-5px 0 10px rgba($theme-primary-color, .7));
+		@include box-shadow(-6px 0 12px $theme-primary-color);
 
 		// Add text label automatically
 		.new:after {
@@ -78,6 +83,11 @@
 		margin-top: 3px;
 		line-height: 1.5em;
 		max-width: $max-width;
+
+		// Reduce font size a little so there is less pull-right overlap
+		@media(max-width: $screen-md) {
+			font-size: 18px;
+		}
 
 		// Links in the description
 		a {
