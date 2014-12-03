@@ -26,7 +26,7 @@
 .glyphicon.required {
 
 	// Toning down the required icons
-	color: lighten($tooltip-bg, 30%);
+	color: #bbb;
 	&:hover {
 		color: $tooltip-bg;
 	}
