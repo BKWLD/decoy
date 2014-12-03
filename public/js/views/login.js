@@ -51,9 +51,7 @@ define(function (require) {
 
 	// Fix the size of the branding piece
 	View.resize = function() {
-		this.$branding.width(this.$container.width() - this.$form.outerWidth());
 		this.$branding.css('top', (this.$form.outerHeight() - this.$branding.height())/2 );
-
 	};
 
 	// Utility function for converting rgb() values to hexes
