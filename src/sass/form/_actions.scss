@@ -6,7 +6,7 @@
 .form-actions {
 	position: fixed;
 	bottom: 0;
-	z-index: 300; // clear everything (including jCrop)
+	z-index: $header-z;
 	width: 100%;
 	padding: 0 $main-padding;
 	text-align: left;
