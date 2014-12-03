@@ -5,6 +5,9 @@
 	display: inline-block;
 	position: relative;
 
+	// Reset the line height so it doesn't ineherit something weird
+	line-height: 0;
+
 	// Fade out the button even more
 	.btn.outline[disabled] {
 		@include opacity($light-opacity);
@@ -36,6 +39,7 @@
 	// Customize the menu further
 	.tt-dropdown-menu {
 		font-size: 12px;
+		text-align: left;
 
 		// Reduce edge padding
 		.tt-suggestion {
@@ -56,8 +60,7 @@
 		$input-width: 125px;
 
 		input {
-			float: right;
-			@include transition(all .5s ease);
+			@include transition(width .5s ease);
 			
 			&:focus {
 				width: $input-width; // pixel width so the whole field can smoothly transition
@@ -72,22 +75,12 @@
 	// Tweaks to when it appears in the header
 	.header & {
 		z-index: $header-z + 1; // this is to be on top of the breadcrumbs bar
-		
+
 		// Search icon
 		.glyphicon-search {
-			left: 9px;
-			top: 9px;
+			left: 10px;
+			top: 10px;
 			font-size: 14px;
-		}
-
-		// Twitter wraps the form field in a display-inline wrapper and that
-		// causes a weird shifting in stuff.  This compensates for that.
-		top: -21px; // this aligns the box with the title
-		.twitter-typeahead {
-			top: 12px;
-			+ .glyphicon-search {
-				top: 31px;
-			}
 		}
 
 		// Size the input and make space for hte search icon
