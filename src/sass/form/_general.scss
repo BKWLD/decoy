@@ -15,11 +15,10 @@
 .form-horizontal .control-label {
 	width: $horizontal-label-width;
 	float: left;
-	+div {
+	@media (max-width: $screen-sm) { float: none; }
+	+ div {
 		margin-left: $horizontal-label-margin;
-		@media (max-width: $screen-sm) {
-			margin-left: 0;
-		}
+		@media (max-width: $screen-sm) { margin-left: 0; }
 	}
 }
 
