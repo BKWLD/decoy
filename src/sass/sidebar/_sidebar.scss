@@ -21,12 +21,12 @@
 	// https://github.com/BKWLD/decoy/issues/395
 	@include box-sizing(content-box);
 
+	// Start out hidden.  Couldn't use translate in iOS.  I think the fixed
+	// positioning ruled that out.
 	@include transition( left 250ms 0ms ceaser($easeInQuad));
-
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
 	}
-
 
 	// when the nav has the class of 'show', it's triggered
 	// by the mobile grabber icon, so it needs to be left: 0
