@@ -137,7 +137,7 @@
 		.pull-right {
 			top: $main-padding-mobile;
 			bottom: auto;
-			right: -$main-padding + $main-padding-mobile; // Compensate for padding affecting the title
+			right: -$main-padding + $main-padding/2; // Compensate for padding affecting the title
 			
 			// Remove label on new button
 			.new:after {
@@ -154,7 +154,7 @@
 		.nav-hamburger {
 			display: block;
 			position: absolute;
-			left: $main-padding-mobile;
+			left: $main-padding/2;
 			top: 10px;
 			z-index: 1;
 		}
@@ -166,4 +166,15 @@
 			text-align: center;
 		}
 	}
+
+	// Mobile
+	@media(max-width:$screen-xs) {
+		.nav-hamburger {
+			left: $main-padding-mobile;
+		}
+		.pull-right {
+			right: -$main-padding + $main-padding-mobile;
+		}
+	}
+
 }

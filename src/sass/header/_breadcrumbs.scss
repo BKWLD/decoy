@@ -12,7 +12,10 @@
 	@include adjust-for-sidebar;
 	padding: 0 $main-padding;
 	@media(max-width: $screen-sm) {
-		padding: 0 $main-padding-mobile;
+		padding: 0 $main-padding/2;
+	}
+	@media(max-width:$screen-xs) {
+		padding-left: 0 $main-padding-mobile;
 	}
 
 	// Add a border so that when it goes fixed, it lines up with the border on the nav
