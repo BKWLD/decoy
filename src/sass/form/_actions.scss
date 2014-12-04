@@ -14,7 +14,7 @@
 
 	// Give it a fixed height
 	height: $footer-height;
-	line-height: $footer-height + 2px; // Vertical center
+	line-height: $footer-height; // Vertical center
 
 	// Eyeballed this to make it the same effective color as bkgd when overlapping
 	background: rgba(darken($body-color, 5%), .7);
@@ -24,12 +24,14 @@
 		padding: 0 $main-padding-mobile;
 	}
 
-	// Make them fit on one line mobile
+	// Make them fit on one line mobile by getting rid of the save and back button
 	@media(max-width:$screen-xs) {
-
-		// Apply Bootstrap's btn-sm styling
-		.btn { 
-			@include button-size($padding-small-vertical, $padding-small-horizontal, $font-size-small, $line-height-small, $border-radius-small);
+		.save-back {
+			display: none;
+		}
+		.save-new {
+			border-bottom-right-radius: $border-radius-base !important;
+			border-top-right-radius: $border-radius-base !important;
 		}
 	}
 }
