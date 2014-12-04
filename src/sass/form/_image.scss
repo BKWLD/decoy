@@ -35,6 +35,13 @@
 	.jcrop-holder {
 		background-color: transparent !important;
 		background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+
+		max-height: 300px;
+		overflow: hidden;
+		@include transition(max-height 300ms);
+		&:hover {
+			max-height: 1080px;
+		}
 	}
 	
 	// Remove the margin that we want when no crops are present
