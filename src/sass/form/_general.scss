@@ -11,14 +11,24 @@
 	margin-right: 10px;
 }
 
-// Set fixed width to horizontal form label widths 
+// Stack horizontal forms earlier
 .form-horizontal .control-label {
 	width: $horizontal-label-width;
 	float: left;
-	@media (max-width: $screen-sm) { float: none; }
+	@media (max-width: $screen-md) { 
+		float: none; 
+
+		// Override BS that has a min-width at $screen-sm
+		text-align: left;
+		margin-bottom: 5px;
+		padding-top: 0;
+		
+	}
+
+	// This contains the form elements
 	+ div {
 		margin-left: $horizontal-label-margin;
-		@media (max-width: $screen-sm) { margin-left: 0; }
+		@media (max-width: $screen-md) { margin-left: 0; }
 	}
 }
 
