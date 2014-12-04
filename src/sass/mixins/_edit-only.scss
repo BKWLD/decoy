@@ -9,7 +9,7 @@
  * 
  */
 @mixin edit-only {
-  .btn.new, .btn.save_new, .btn.delete, .delete-now, .edit-delete-seperator {
+  .btn.new, .btn.save-new, .btn.delete, .delete-now, .edit-delete-seperator {
 	  display: none;
 	}
 }
