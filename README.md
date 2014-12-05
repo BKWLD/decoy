@@ -1,6 +1,18 @@
 # Decoy
 
-[Release notes](https://github.com/BKWLD/decoy/releases)
+#### Compatibility
+
+Decoy is tested to support:
+
+- Latest Chrome (recommended)
+- Latest Firefox
+- Latest Safari
+- IE 9-11
+- iOS 8 on iPhone and iPad
+
+#### Version history
+
+See the [Github "Releases"](https://github.com/BKWLD/decoy/releases) history
 
 ## Installation
 

@@ -13,6 +13,12 @@ use Illuminate\Container\Container;
 class Image extends Upload {
 
 	/**
+	 * The maximum width images are presented as in Decoy.  This is 820x2.  820 is max width
+	 * of a horizontal layout with the a site wide max width of 1280.
+	 */
+	const MAX_WIDTH = 1640;
+
+	/**
 	 * Preserve crop data
 	 *
 	 * @var array
@@ -143,7 +149,7 @@ class Image extends Upload {
 			
 			// Create the HTML
 			$html .= '<a href="'.$this->value.'">
-				<img src="'.Croppa::url($this->value, 570).'" 
+				<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
 					class="'.$this->imgTag().'" 
 					data-ratio="'.$ratio.'" 
 					data-style="'.$style.'" 
@@ -169,7 +175,7 @@ class Image extends Upload {
 	 */
 	protected function renderImageWithCroppa() {
 		return '<a href="'.$this->value.'">
-			<img src="'.Croppa::url($this->value, 570).'" 
+			<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
 				class="'.$this->imgTag().' fullscreen-toggle">
 			</a>';
 	}
