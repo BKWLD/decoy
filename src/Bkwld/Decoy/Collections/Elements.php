@@ -194,7 +194,7 @@ class Elements extends Collection {
 
 					// Determine the value
 					if (is_array($field_data) && array_key_exists('value', $field_data)) $value = $field_data['value'];
-					elseif (is_string($field_data)) $value = $field_data;
+					elseif (is_scalar($field_data)) $value = $field_data; // String, boolean, int, etc
 					else $value = null;
 
 					// Build the value array
