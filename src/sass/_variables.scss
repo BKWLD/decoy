@@ -26,7 +26,7 @@ $table-row-hover: #f6f6f6;
 $main-padding: 30px !default; // Same as $grid-gutter-width
 $main-padding-mobile: 10px;
 $form-group-margin: $main-padding/2 !default; // 15px
-$form-group-margin-sm: round($form-group-margin/2) !default;
+$form-group-margin-sm: round($form-group-margin/2) !default; // 8px;
 $nav-top-border-height: 4px;
 $breadcrumb-height: 24px + $nav-top-border-height !default;
 $sidebar-width: 200px !default;
@@ -56,8 +56,8 @@ $icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/' !default;
 $padding-small-vertical: 3px !default;
 $padding-small-horizontal: 7px !default;
 
-// Reduce cell padding
-$table-cell-padding-horizontal: 6px !default;
+// Breaking padding into 2 variables that can be changed
+$table-cell-padding-horizontal: $form-group-margin-sm !default; // So that they match up on break
 $table-cell-padding-vertical: 8px !default;
 $table-cell-padding: $table-cell-padding-vertical $table-cell-padding-horizontal !default;
 
