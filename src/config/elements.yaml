@@ -60,3 +60,13 @@ other:
           type: file
           label: A PDF
           rules: mimes:pdf # You can add validation rules
+
+        # Checkboxes with initial values set
+        checkbox_1:
+          label: checkbox_1
+          value: 1
+          type: checkbox
+        checkbox_2:
+          label: checkbox_2
+          value: 0
+          type: checkbox
