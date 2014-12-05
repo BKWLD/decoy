@@ -112,7 +112,6 @@
 			&, &[src*=".gif"], &.gravatar {
 				max-width: 22px;
 				max-height: 22px;
-				margin-top: -2px; // Improves vertical centering
 			}
 		}
 	}
