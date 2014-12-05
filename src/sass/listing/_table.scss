@@ -106,6 +106,15 @@
 			max-width: $size;
 			max-height: $size;
 		}
+
+		// Make images smaller on mobile
+		@media (max-width: $screen-xs) {
+			&, &[src*=".gif"], &.gravatar {
+				max-width: 22px;
+				max-height: 22px;
+				margin-top: -2px; // Improves vertical centering
+			}
+		}
 	}
 
 	// Vertically center align all cells, for rows with image thumbnails in there.
