@@ -8,7 +8,8 @@ Decoy is tested to support:
 - Latest Firefox
 - Latest Safari
 - IE 9-11
-- iOS 8 on iPhone and iPad
+- iOS 8 Safari on iPhone and iPad
+- Latest Android Chrome
 
 #### Version history
 
