@@ -110,8 +110,8 @@
 		// Make images smaller on mobile
 		@media (max-width: $screen-xs) {
 			&, &[src*=".gif"], &.gravatar {
-				max-width: 22px;
-				max-height: 22px;
+				max-width: none;
+				max-height: 22px; // As table as a label
 			}
 		}
 	}

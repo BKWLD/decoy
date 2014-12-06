@@ -1,6 +1,11 @@
 // Special settings for when listings are added to control groups
 .list-form-group {
 	
+	// Clear the margin
+	.fieldset {
+		margin-bottom: 0;
+	}
+
 	// Position new button under the label
 	label {
 		position: relative;
@@ -14,7 +19,7 @@
 		}
 
 		// If mobile layout, make it flush to right side
-		@media(max-width: $screen-sm) {
+		@media(max-width: $screen-md) {
 			
 			// Make the label span full width
 			display: block;
@@ -22,7 +27,7 @@
 			// Pull button (and listing) up
 			.btn-group {
 				margin-top: -2px;
-				margin-left: 0; // Clear the previous margin left
+				margin-left: 10px;
 
 				// Make the button smaller
 				.btn {
@@ -40,6 +45,6 @@
 
 	// Move block help down
 	.help-block { 
-		margin-top: 10px;
+		margin-top: 5px;
 	}
 }

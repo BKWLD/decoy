@@ -22,7 +22,10 @@
 		text-align: left;
 		margin-bottom: 5px;
 		padding-top: 0;
-		
+
+		// Make their width collapse
+		display: inline-block;
+		width: auto;
 	}
 
 	// This contains the form elements
