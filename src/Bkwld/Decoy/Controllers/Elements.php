@@ -23,7 +23,7 @@ class Elements extends Base {
 	protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
 
 	/**
-	 * All fragments view
+	 * All elements view
 	 *
 	 * @param string $locale The locale to load from the DB
 	 * @param string $tab A deep link to a specific tab.  Will get processed by JS

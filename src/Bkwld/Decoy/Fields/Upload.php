@@ -92,7 +92,7 @@ class Upload extends File {
 
 	/**
 	 * Check if the file is in the uploads directory. The use case for this arose 
-	 * with the Fragments system where the default images would usually be in the 
+	 * with the Elements system where the default images would usually be in the 
 	 * img directory
 	 *
 	 * @return boolean

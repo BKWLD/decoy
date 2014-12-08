@@ -31,7 +31,7 @@ define(function(require) {
 		},
 		
 		// Don't add entities, trust the input.  This was added so that entities in the
-		// language conf file for fragments doesn't return `changed()` because CKEditor
+		// conf file for elements doesn't return `changed()` because CKEditor
 		// modified it.
 		entities: false, 
 		htmlEncodeOutput: false,

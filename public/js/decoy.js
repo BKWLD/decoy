@@ -84,7 +84,7 @@ define(function (require) {
 
 	// Newer style view declaration
 	$('body.elements.field #main').views(require('decoy/elements/field'));
-	$('body.elements.index form, body.fragments.index form').views(require('decoy/views/tab-sidebar'));
+	$('body.elements.index form').views(require('decoy/views/tab-sidebar'));
 	$('body > .sidebar').views(Sidebar); // The nav
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
 

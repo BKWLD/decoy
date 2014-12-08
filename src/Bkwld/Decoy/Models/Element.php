@@ -97,7 +97,7 @@ class Element extends Base {
 		
 		// Check if the image already exists in the uploads directory
 		$uploads = File::publicPath(Config::get('decoy::core.upload_dir'));
-		$dst = str_replace('/img/', $uploads.'/fragments/', $this->value);
+		$dst = str_replace('/img/', $uploads.'/elements/', $this->value);
 		$dst_full_path = public_path().$dst;
 		if (file_exists($dst_full_path)) return $dst;
 		

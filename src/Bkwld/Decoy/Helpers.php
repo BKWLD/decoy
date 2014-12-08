@@ -58,7 +58,6 @@ class Helpers {
 
 		// Tab-sidebar views support deep links that would normally affect the
 		// class of the page.
-		if (strpos($path, '/fragments/') !== false) return 'fragments index';
 		if (strpos($path, '/elements/') !== false) return 'elements index';
 
 		// Get the controller and action from the URL
@@ -145,19 +144,6 @@ class Helpers {
 		// Else, just display it as a string
 		return $column;
 		
-	}
-	
-	/**
-	 * Get the value of a Fragment given it's key then trim any whitespace from it.  The
-	 * trim is so that checks can be more easily made for `empty()`.  And it's done in this
-	 * helper rather than in the model so that the internal logic that handles "empty" database
-	 * records is unaffected.
-	 * @param string $key 
-	 * @return string The value
-	 */
-	public function frag($key) {
-		if (is_string($val = Fragment::value($key))) return trim($val);
-		return $val;
 	}
 
 	/**

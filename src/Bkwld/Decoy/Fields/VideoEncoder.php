@@ -38,7 +38,7 @@ class VideoEncoder extends Upload {
 
 		// Get the encoding row if it exists
 		if ($item = $this->model()) {
-			$attribute = Route::is('decoy::fragments') ? 'value' : $name;
+			$attribute = Route::is('decoy::elements') ? 'value' : $name;
 			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $attribute)->first();
 
 			// Add the data attributes for JS view

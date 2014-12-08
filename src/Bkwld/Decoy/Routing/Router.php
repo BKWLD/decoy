@@ -38,7 +38,6 @@ class Router {
 		$this->registerAccounts();
 		$this->registerAdmins();
 		$this->registerCommands();
-		$this->registerFragments();
 		$this->registerWorkers();
 		$this->registerEncode();
 		$this->registerElements();
@@ -108,15 +107,7 @@ class Router {
 		Route::get($this->dir.'/commands', array('uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy::commands'));
 		Route::post($this->dir.'/commands/{command}', array('uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy::commands@execute'));
 	}
-	
-	/**
-	 * Fragments
-	 */
-	public function registerFragments() {
-		Route::get($this->dir.'/fragments/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@index', 'as' => 'decoy::fragments'));
-		Route::post($this->dir.'/fragments/{tab?}', array('uses' => 'Bkwld\Decoy\Controllers\Fragments@store', 'as' => 'decoy::fragments@store'));
-	}
-	
+
 	/**
 	 * Workers
 	 */

@@ -250,35 +250,6 @@ By default, CKFinder is turned off because a new license must be purchased for e
 		});
 		
 
-### Fragments *(To be deprecated in 5.0)*
-
-One off strings, images, and files can be managed in Decoy through the Fragments feature.  Fragments work by reading language files and producing a tabbed form from their key value pairs.  The values from the language file are treated as the default for the key; admins can override that default with Decoy.  The frontend developer pulls the fragment value through the `Decoy::frag($key)` helper.
-
-Start by creating new language files in /app/lang/en.  There are some conventions to follow; an example should be suffient to explain:
-
-*/app/lang/en/home.php*
-	
-	<?php return array(
-		'marquee_title' => 'Welcome to the site',
-		'marquee.featured_article,belongs_to' => '/admin/articles',
-
-		'intro.title' => 'This is some great stuff',
-		'intro.body,textarea' => 'A paragraph of text goes on and on and on and ...',
-
-		'deep_dive.article,wysiwyg' => '<p>Folks often want some <strong>WYSIWYG</strong> tools</p>',
-		'deep_dive.headshot,image' => '/img/path/to/heashot',
-		'deep_dive.pdf,file' => '/files/path/to/file',
-		'deep_dive.video,video-encoder' => '',
-	);
-	
-Thus:
-
-- Different translation files are treated as virtual pages in the admin.
-- Keys can have a bullet that delimits sections and will be used to break up the page into sections in the admin.  This is optional.
-- The default format for a field in the admin is a text input.  This can be overidden by specifying a type following the key, delimited with a comma.  The view helper, howerver, may omit this.  In other words, this is valid: `<?=Decoy::frag('deep_dive.pdf')?>`.
-- Images **must** be stored in the /public/img directory.  Decoy will automatically make a copy in the uploads directory for Croppa to act on.  Decoy::frag() will then return the path to the uploads copy.  This is done because PagodaBox doesn't let you push things via git to shared writeable directories, so committing the image to the uploads dir would not work.
-
-
 ### Elements
 
 Copy, images, and files that aren't managed as part of an item in a list.  If content needs to be managed and a model doesn't make sense, use Elements.  Elements are managed from both the frontend of the site:
