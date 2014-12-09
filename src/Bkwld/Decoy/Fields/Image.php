@@ -68,17 +68,6 @@ class Image extends Upload {
 	}
 
 	/**
-	 * ** Deprecated function **
-	 *
-	 * @param  string $help       The help text
-	 * @return this 
-	 */
-	public function crops($crops) {
-		\Log::info('Image::crops() is deprecated.  The item is now fetched automatically from Former::populate');
-		return $this;
-	}
-
-	/**
 	 * Show the preview UI with a delete checkbox
 	 *
 	 * @return string HTML
