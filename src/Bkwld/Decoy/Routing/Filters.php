@@ -33,9 +33,11 @@ class Filters {
 	}
 	
 	/**
-	 * Register all filters
+	 * Register all filters during the `before` callback
+	 *
+	 * @param Illuminate\Http\Request $request 
 	 */
-	public function registerAll() {
+	public function onBefore($request) {
 
 		// Add Decoy's frontend tools
 		Route::after([$this, 'frontendTools']);
