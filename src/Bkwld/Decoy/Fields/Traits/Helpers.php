@@ -20,10 +20,13 @@ trait Helpers {
 		// If a Fragment, build a model instance using the name of the field.  The input
 		// field uses pipes instead of the dots that are in the DB.
 		if (Route::is('decoy::fragments')) {
-			return Fragment::where('key', '=', str_replace('|', '.', $this->name))->first();
+			$model = Fragment::where('key', '=', str_replace('|', '.', $this->name))->first();
 
 		// Otherwise, just use the model that was passed to populator
-		} else return app('former.populator')->all();
+		} else $model = app('former.populator')->all();
+
+		// Make sure it's a model instance
+		if (is_a($model, 'Illuminate\Database\Eloquent\Model')) return $model;
 	}
 
 	/**

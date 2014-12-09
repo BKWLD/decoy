@@ -1,12 +1,15 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
+use Agent; // Laravel-Agent package
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Config;
 use Decoy;
 use DecoyURL;
 use HTML;
+use Illuminate\Support\ViewErrorBag;
+use Illuminate\Support\MessageBag;
 use Input;
 use Redirect;
 use Request;
@@ -33,9 +36,11 @@ class Filters {
 	}
 	
 	/**
-	 * Register all filters
+	 * Register all filters during the `before` callback
+	 *
+	 * @param Illuminate\Http\Request $request 
 	 */
-	public function registerAll() {
+	public function onBefore($request) {
 
 		// Add Decoy's frontend tools
 		Route::after([$this, 'frontendTools']);
@@ -46,6 +51,7 @@ class Filters {
 		// Filters are added during a "before" handler via the Decoy service
 		// provider, so this can just be run directly.
 		$this->csrf();
+		$this->supportedBrowsers();
 		
 		// Access control
 		Route::filter('decoy.acl', array($this, 'acl'));
@@ -183,6 +189,32 @@ class Filters {
 		// Apply it
 		return \Bkwld\Library\Laravel\Filters::csrf();
 
+	}
+
+	/**
+	 * Enforce supported browsers restrictions
+	 */
+	public function supportedBrowsers() {
+
+		// No Android default browser
+		if (Agent::isAndroidOS() && !Agent::isChrome()) $this->addError('Your web browser is not 
+			supported, please install <a href="https://play.google.com/store/apps/details?id=com.android.chrome" 
+			class="alert-link">Chrome for Android</a>.');
+
+		// No IE < 9
+		else if (Agent::isIE() && Agent::version('IE', 'float') < 9) $this->addError('Your web browser is not 
+			supported, please <a href="http://whatbrowser.org/" class="alert-link">upgrade</a>.');
+	}
+
+	/**
+	 * Add an error to the session view errors
+	 *
+	 * @param string $message 
+	 */
+	protected function addError($message) {
+		View::shared('errors')->put('default', new MessageBag([
+			'error message' => $message,
+		]));
 	}
 	
 }

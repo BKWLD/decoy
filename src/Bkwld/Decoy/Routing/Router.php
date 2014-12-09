@@ -31,8 +31,10 @@ class Router {
 	
 	/**
 	 * Register all routes
+	 *
+	 * @param Illuminate\Http\Request $request 
 	 */
-	public function registerAll() {
+	public function registerAll($request) {
 		
 		// Register routes
 		$this->registerAccounts();
@@ -46,7 +48,7 @@ class Router {
 		$this->registerWildcard();
 		
 		// Setup filters
-		$this->filters->registerAll();
+		return $this->filters->onBefore($request);
 	}
 	
 	/**

@@ -11,6 +11,7 @@ use Illuminate\Container\Container;
  * images, setting crop bounds, and deleting them.
  */
 class Image extends Upload {
+	use Traits\Helpers;
 
 	/**
 	 * The maximum width images are presented as in Decoy.  This is 820x2.  820 is max width
@@ -33,7 +34,7 @@ class Image extends Upload {
 	private $has_blockhelp = false;
 
 	/**
-	 * Create a regular file type field
+	 * Create an image upload field
 	 *
 	 * @param Container $app        The Illuminate Container
 	 * @param string    $type       text
@@ -51,6 +52,10 @@ class Image extends Upload {
 
 		// Make it accept only images
 		$this->accept('image');
+
+		// Get the crop data from the model, if it exists
+		if (($item = $this->model()) && isset($item::$crops[$name])) $this->crops = $item::$crops[$name];
+		
 	}
 
 	/**
@@ -63,13 +68,13 @@ class Image extends Upload {
 	}
 
 	/**
-	 * Store the crop data so it can be used during rendering execution
+	 * ** Deprecated function **
 	 *
 	 * @param  string $help       The help text
-	 * @param  array  $attributes Facultative attributes
+	 * @return this 
 	 */
 	public function crops($crops) {
-		$this->crops = $crops;
+		\Log::info('Image::crops() is deprecated.  The item is now fetched automatically from Former::populate');
 		return $this;
 	}
 

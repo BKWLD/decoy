@@ -102,7 +102,7 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
 			return $app->make('redirect')->to($app->make('decoy.auth')->deniedUrl())
-				->with('login_error', 'You must login first.')
+				->withErrors([ 'error message' => 'You must login first'])
 				->with('login_redirect', $app->make('request')->fullUrl());
 		});
 		
@@ -176,6 +176,10 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// HAML
 		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
+
+		// BrowserDetect
+		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
+		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
 		
 	}
 	

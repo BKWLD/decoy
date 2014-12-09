@@ -444,9 +444,15 @@ The following additional fields come with Decoy.  They are implemented through F
 - `Former::image()` 
 
 	- Creates an [image upload field](http://cl.ly/image/1M03383E293b) with addtional UI for reviewing the last upload and deleting it.
-	- Chain `crops($crops->{image})` onto it to use the cropping tool, where `{image}` is the name of the field field.
 
-			!= Former::image('image', 'Profile image')->crops($crops->image)->blockHelp('Choose an image for the user')
+			!= Former::image('image', 'Profile image')->blockHelp('Choose an image for the user')
+
+	- To enable in-browser cropping, add a static `$crops` array to the model.  There should be a key for each field on the model that stores an image and should be corpped.  The values are a hash of different cropping styles for that image.  For instance, you could use the same image in two places where, in the first, it needs to be square and, in the second, it can be anything.  Here is an example of this config:
+
+			static public $crops = array(
+				'image' => array('default'),
+				'marquee_image' => array('default' => '16:9'),
+			);
 
 
 - `Former::video()` 

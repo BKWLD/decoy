@@ -228,7 +228,7 @@ class Account extends Base {
 	 */
 	private function loginError($msg, $url = null) {
 		return Redirect::to($url ? $url : URL::current())
-		->with('login_error', $msg)
+		->withErrors([ 'error message' => $msg])
 		->withInput();
 	}
 
