@@ -11,6 +11,8 @@
 
 		if($errors->has('slug')) 
 			$message = 'A unique slug could not be formed from the name or title.  You must use a different value.';
+		else if($errors->has('error message')) 
+			$message = $errors->first('error message');
 		else 
 			$message = 'The field in conflict is highlighted below.';
 	}
