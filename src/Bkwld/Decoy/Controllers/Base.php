@@ -430,7 +430,6 @@ class Base extends Controller {
 		// Return view
 		$this->populateView($this->show_view, [
 			'item' => null,
-			'crops' => (object) Model::$crops,
 			'localize' => $localize,
 			'sidebar' => $sidebar,
 		]);
@@ -507,7 +506,6 @@ class Base extends Controller {
 		// Render the view
 		$this->populateView($this->show_view, [
 			'item' => $item,
-			'crops' => (object) Model::$crops,
 			'localize' => $localize,
 			'sidebar' => $sidebar,
 		]);

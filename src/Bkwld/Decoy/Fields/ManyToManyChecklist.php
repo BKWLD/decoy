@@ -112,9 +112,7 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	protected function children() {
-		if (($item = $this->model())
-			&& is_a($item, 'Illuminate\Database\Eloquent\Model')
-			&& method_exists($item, $this->name)) return $item->{$this->name};
+		if (($item = $this->model()) && method_exists($item, $this->name)) return $item->{$this->name};
 	}
 
 }
