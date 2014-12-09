@@ -176,6 +176,10 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// HAML
 		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
+
+		// BrowserDetect
+		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
+		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
 		
 	}
 	
