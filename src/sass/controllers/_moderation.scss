@@ -181,6 +181,7 @@
 	.categories {
 		position: absolute;
 		right: 0;
+		width: auto;
 
 		// Put above tabs on break
 		@media(max-width: $screen-sm) {
