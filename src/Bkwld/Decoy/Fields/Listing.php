@@ -196,17 +196,6 @@ class Listing extends Field {
 	}
 
 	/**
-	 * Deprecated function
-	 *
-	 * @param  Illuminate\Database\Eloquent\Model $parent
-	 * @return this
-	 */
-	public function parent($parent) {
-		\Log::info('Listing::parent() is deprecated.  The item is now fetched automatically from Former::populate');
-		return $this;
-	}
-
-	/**
 	 * Store the number of items to fetch, the per_page
 	 *
 	 * @param  int $take
