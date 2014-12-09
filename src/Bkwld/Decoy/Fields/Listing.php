@@ -19,13 +19,12 @@ use URL;
  * be presented in different styles.  Example:
  *
  * echo Former::listing('{model class}') // IE. 'Article'
- * 	->parent($item)
  * 	->layout('sidebar')
  * 	->scope(function($query) { return $query->where('category' ,'=', 'example') })
  * 	->take(20)
  */
 class Listing extends Field {
-	use Traits\CaptureLabel, Traits\Scopable;
+	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
 
 	/**
 	 * Override Former Field and Tag properties to wrap the listing inside of
@@ -107,6 +106,10 @@ class Listing extends Field {
 
   	// Continue instantiation
     parent::__construct($app, $type, $model, $label, $value, $attributes);
+
+    // Get the parent item
+    $this->parent_item = $this->model();
+    
   }
 
   /**
@@ -193,14 +196,13 @@ class Listing extends Field {
 	}
 
 	/**
-	 * Store the parent model instance
+	 * Deprecated function
 	 *
 	 * @param  Illuminate\Database\Eloquent\Model $parent
-	 * @return Field This field
+	 * @return this
 	 */
 	public function parent($parent) {
-		$this->parent_item = $parent;
-		$this->controller->parent($parent);
+		\Log::info('Listing::parent() is deprecated.  The item is now fetched automatically from Former::populate');
 		return $this;
 	}
 

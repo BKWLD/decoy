@@ -187,7 +187,7 @@ Note: This must be run **before** the include of the `decoy::shared.form._header
 
 A standard list (like seen on index views) can be embedded in form like:
 
-	!= Former::listing('Faqs')->parent($item)->layout('form')->take(100)
+	!= Former::listing('Faqs')->layout('form')->take(100)
 
 See the documentation under Form Fields for the full API of `listing()`.
 
@@ -490,11 +490,10 @@ The following additional fields come with Decoy.  They are implemented through F
 		- `full` - A full width view like shown on Decoy's index view.
 		- `sidebar` - A narrow view like shown in an edit view's related column.
 		- `form` - A full width view designed to be show in a horizontal form.
-	- `parent()` - Pass an instance of the field being edited if this listing is meant to show children of the parent.  Like in the sidebar on the edit page.  This is automatically set when subclassing the base controller's `sidebar` no-op.
 	- `take()` - A integer; how many rows to display.
 	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
 
-			!= Former::listing('Author')->take(30)->layout('form')->parent($item)
+			!= Former::listing('Author')->take(30)->layout('form')
 
 
 ### Video encoding
