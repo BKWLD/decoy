@@ -432,6 +432,7 @@ class Base extends Controller {
 			'item' => null,
 			'localize' => $localize,
 			'sidebar' => $sidebar,
+			'crops' => (object) Model::$crops,
 		]);
 		
 		// Pass parent_id
@@ -508,6 +509,7 @@ class Base extends Controller {
 			'item' => $item,
 			'localize' => $localize,
 			'sidebar' => $sidebar,
+			'crops' => (object) Model::$crops,
 		]);
 
 		// Figure out the parent_id

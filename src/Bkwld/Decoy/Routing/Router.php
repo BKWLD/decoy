@@ -34,7 +34,7 @@ class Router {
 	 *
 	 * @param Illuminate\Http\Request $request 
 	 */
-	public function registerAll($request) {
+	public function registerAll($request = null) {
 		
 		// Register routes
 		$this->registerAccounts();
@@ -47,8 +47,9 @@ class Router {
 		// Register wildcard last
 		$this->registerWildcard();
 		
-		// Setup filters
-		return $this->filters->onBefore($request);
+		// Setup filters if there was a request.  There might not be
+		// if Decoy was invoked via CLI
+		if ($request) return $this->filters->onBefore($request);
 	}
 	
 	/**
