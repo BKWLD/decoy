@@ -129,6 +129,9 @@ class Elements extends Base {
 			$el->save();
 		});
 
+		// Clear the cache
+		$elements->clearCache();
+
 		// Redirect back to index
 		return Redirect::to(URL::current());;
 		
@@ -159,6 +162,7 @@ class Elements extends Base {
 	 * @return Illuminate\Http\Response
 	 */
 	public function fieldUpdate($key) {
+		$elements = app('decoy.elements')->localize(Decoy::locale());
 
 		// If the value has changed, update or an insert a record in the database.
 		$el = Decoy::el($key);
@@ -167,7 +171,7 @@ class Elements extends Base {
 
 			// Making use of the model's exists property to trigger Laravel's
 			// internal logic.
-			$el->exists = app('decoy.elements')->keyUpdated($el->key);
+			$el->exists = $elements->keyUpdated($el->key);
 
 			// Save it.  Files will be automatically attached via model callbacks
 			$el->value = $value;
@@ -175,7 +179,7 @@ class Elements extends Base {
 			$el->save();
 
 			// Clear the cache
-			Cache::forget(ElementsCollection::CACHE_KEY);
+			$elements->clearCache();
 		}
 		
 		// Return the layout with JUST a script variable with the element value

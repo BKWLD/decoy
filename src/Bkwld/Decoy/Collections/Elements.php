@@ -152,6 +152,16 @@ class Elements extends Collection {
 	}
 
 	/**
+	 * Clear the cache
+	 *
+	 * @return $this 
+	 */
+	public function clearCache() {
+		$this->cache->forget($this->cacheKey());
+		return $this;
+	}
+
+	/**
 	 * Merge database records and config file into a single, flat associative array.
 	 *
 	 * @return void 
