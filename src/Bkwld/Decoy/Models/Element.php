@@ -93,7 +93,7 @@ class Element extends Base {
 		// All images must live in the /img (relative) directory.  I'm not throwing an exception
 		// here because Laravel's view exception handler doesn't display the message.
 		if (Str::is('/uploads/*', $this->value)) return $this->value;
-		if (!Str::is('/img/*', $this->value)) return 'All fragment images must be stored in the public/img directory';
+		if (!Str::is('/img/*', $this->value)) return 'All Element images must be stored in the public/img directory';
 		
 		// Check if the image already exists in the uploads directory
 		$uploads = File::publicPath(Config::get('decoy::core.upload_dir'));
