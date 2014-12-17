@@ -98,15 +98,14 @@ class Elements extends Base {
 		// Get the default locale
 		if (!$locale) $locale = Decoy::defaultLocale();
 
-		// Get all the elements as models
+		// Hydrate the elements collection
 		$elements = app('decoy.elements')
 			->localize($locale)
-			->hydrate()
-			->asModels();
+			->hydrate();
 
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
-		$elements->each(function(Element $el) use ($locale) {
+		$elements->asModels()->each(function(Element $el) use ($locale, $elements) {
 
 			// Check if the model is dirty, manually.  Laravel's performInsert()
 			// doesn't do this, thus we must check ourselves.  We're removing the 
@@ -123,7 +122,7 @@ class Elements extends Base {
 			$el->auto_manage_files = false;
 
 			// Save it
-			$el->exists = app('decoy.elements')->keyUpdated($el->key);
+			$el->exists = $elements->keyUpdated($el->key);
 			$el->value = $el->saveFile($key) ?: $value;
 			$el->locale = $locale;
 			$el->save();
