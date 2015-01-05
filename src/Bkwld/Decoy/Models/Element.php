@@ -61,17 +61,25 @@ class Element extends Base {
 	}
 
 	/**
-	 * Switch between different formats when rendering to a view
+	 * Format has been deprecated
 	 *
 	 * @return string 
 	 */
-	public function format() {
+	public function format() { return value(); }
+
+	/**
+	 * Format the value before returning it based on the type
+	 *
+	 * @return string 
+	 */
+	public function value() {
 		
 		// Must return a string
 		if (empty($this->value)) return '';
 
 		// Different outputs depending on type
 		switch($this->type) {
+			case 'boolean': return !empty($this->value);
 			case 'image': return $this->copyImage();
 			case 'textarea': return nl2br($this->value);
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
@@ -135,7 +143,7 @@ class Element extends Base {
 	 * @return string 
 	 */
 	public function __toString() {
-		return $this->format();
+		return $this->value();
 
 	}
 
