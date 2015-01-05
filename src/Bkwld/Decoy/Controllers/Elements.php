@@ -78,7 +78,7 @@ class Elements extends Base {
 			case 'wysiwyg': return Former::textarea($key, $el->label)->addClass('wysiwyg')->blockHelp($el->help);
 			case 'image': return Former::image($key, $el->label)->blockHelp($el->help);
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
-			case 'checkbox': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);
+			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);
 			/**
 			 * Not ported yet from Frags:
 			 */
