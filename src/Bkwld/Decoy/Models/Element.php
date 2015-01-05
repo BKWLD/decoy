@@ -61,13 +61,6 @@ class Element extends Base {
 	}
 
 	/**
-	 * Format has been deprecated
-	 *
-	 * @return string 
-	 */
-	public function format() { return value(); }
-
-	/**
 	 * Format the value before returning it based on the type
 	 *
 	 * @return string 
