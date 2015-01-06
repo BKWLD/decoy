@@ -46,7 +46,7 @@
 					%label
 						%input(type="checkbox" name='options[]' value='text' checked)
 						Include text and settings
-				-if(!empty($item->file_attributes))
+				-if(count($item->file_attributes))
 					.checkbox
 						%label
 							%input(type="checkbox" name='options[]' value='files' checked)
