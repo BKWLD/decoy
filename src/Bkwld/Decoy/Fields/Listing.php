@@ -91,6 +91,9 @@ class Listing extends Field {
    */
   public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
 
+  	// Get the parent item
+    $this->parent_item = $this->model();
+
   	// Instantiate a controller given the model name
   	$this->controller(isset($config['controller'])
   		? $config['controller']
@@ -106,9 +109,6 @@ class Listing extends Field {
 
   	// Continue instantiation
     parent::__construct($app, $type, $model, $label, $value, $attributes);
-
-    // Get the parent item
-    $this->parent_item = $this->model();
     
   }
 
@@ -304,7 +304,7 @@ class Listing extends Field {
 			'paginator_from'    => (Input::get('page', 1)-1) * $this->perPage(),
 		);
 
-		// If parent, add relationship ones
+		// If the listing has a parent, add relationship vars
 		if ($this->parent_item) {
 			$vars = array_merge($vars, $this->controller->autocompleteViewVars());
 		}
