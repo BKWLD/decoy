@@ -6,10 +6,11 @@
 	}
 }
 
-// Reduce bootstrap's vertical margins
+// Reduce bootstrap's vertical margins.  It's 7 and not 5 so
+// that labels in the row have a 2px spacing in between.
 .radio, .checkbox {
-	margin-top: 5px;
-	margin-bottom: 5px;
+	margin-top: 7px;
+	margin-bottom: 7px;
 }
 
 // Put the margins on the right rather than the left
