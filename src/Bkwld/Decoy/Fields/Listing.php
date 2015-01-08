@@ -143,16 +143,16 @@ class Listing extends Field {
 			$this->controller_name = $controller;
 			$this->controller = new $controller;
 
+			// Apply the parent if one was set
+			if ($this->parent_item && $this->controller) {
+				$this->controller->parent($this->parent_item);
+			}
+
 		// Or, validate a passed controller instance
 		} elseif (is_object($controller)
 			&& is_a($controller, 'Bkwld\Decoy\Controllers\Base')) {
 			$this->controller_name = get_class($controller);
 			$this->controller = $controller;
-		}
-
-		// Re-apply the parent if one was set
-		if ($this->parent_item && $this->controller) {
-			$this->controller->parent($this->parent_item);
 		}
 		
 		// Chain
@@ -196,13 +196,13 @@ class Listing extends Field {
 	}
 
 	/**
-	 * Deprecated function
+	 * Store the parent model instance
 	 *
 	 * @param  Illuminate\Database\Eloquent\Model $parent
 	 * @return this
 	 */
 	public function parent($parent) {
-		\Log::info('Listing::parent() is deprecated.  The item is now fetched automatically from Former::populate');
+		$this->parent_item = $parent;
 		return $this;
 	}
 
