@@ -315,6 +315,7 @@ class Base extends Controller {
 	 * view a listing of just the children of the parent.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $parent
+	 * @return this 
 	 */
 	public function parent($parent) {
 
