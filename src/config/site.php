@@ -68,5 +68,11 @@
 	 * preference from a parent.
 	 */
 	'auto_localize_root_models' => true,
+
+	/**
+	 * Switch to show the front-end decoy tools or not. These include editing of
+	 * Elements, etc
+	 */
+	'show_frontend_tools' => false,
 	
 );

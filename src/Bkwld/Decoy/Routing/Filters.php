@@ -42,8 +42,8 @@ class Filters {
 	 */
 	public function onBefore($request) {
 
-		// Add Decoy's frontend tools
-		Route::after([$this, 'frontendTools']);
+		// Add Decoy's frontend tools if show_frontend_tools is set in the site config
+		if (Config::get('decoy::site.show_frontend_tools')) Route::after([$this, 'frontendTools']);
 
 		// Dont' register anything more if we're not in the admin.
 		if (!Decoy::handling()) return;
