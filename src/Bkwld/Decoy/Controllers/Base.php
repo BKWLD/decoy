@@ -984,7 +984,13 @@ class Base extends Controller {
 		$this->layout->title = $this->title;
 		$this->layout->description = $this->description;
 		View::share('controller', $this->controller);
-		$this->layout->content->with($vars);
+		
+		// Make sure that the content is a Laravel view before applying vars.  
+		// to it.  In the case of the index view, `content` is a Fields\Listing 
+		// instance, not a Laravel view
+		if (is_a($this->layout->content, 'Illuminate\View\View')) {
+			$this->layout->content->with($vars);
+		}
 
 	}
 
