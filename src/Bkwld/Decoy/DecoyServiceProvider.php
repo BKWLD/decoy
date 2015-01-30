@@ -61,6 +61,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
 
+		// Make pushed checkboxes have an empty string as their value
+		Config::set('former::unchecked_value', '');
+
 		// Add Decoy's custom Fields to Former so they can be invoked using the "Former::"
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
