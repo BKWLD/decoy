@@ -21,7 +21,7 @@
 
 	%fieldset
 		!= View::make('decoy::shared.form._display_module', $__data)
-		!= Former::checkbox('featured')->checkboxes(array('Yes' => array('name' => 'featured', 'value' => 1)))->blockHelp('Featured articles will show up in the ticker on the home page.') 
+		!= Former::checkbox('featured')->checkboxes(array('Yes' => array('name' => 'featured', 'value' => 1)))->push()->blockHelp('Featured articles will show up in the ticker on the home page.') 
 
 	!= View::make('decoy::shared.form._footer', $__data)
 
