@@ -387,13 +387,13 @@ abstract class Base extends Eloquent {
 	 * provides an easier way to inform the source crops
 	 * @param int $width 
 	 * @param int $height
-	 * @param string $crop_style A key from the $crops property of the model
 	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
 	 *                      string of the column name in the database
+	 * @param string $crop_style A key from the $crops property of the model
 	 * @param array $options Croppa-style options
 	 * @return string A croppa URL
 	 */
-	public function croppa($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
+	public function croppa($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
 		
 		// Get the image src path
 		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
@@ -444,14 +444,14 @@ abstract class Base extends Eloquent {
 	 * Return an image tag using croppa data
 	 * @param int $width 
 	 * @param int $height
-	 * @param string $crop_style A key from the $crops property of the model
 	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
 	 *                      string of the column name in the database
+	 * @param string $crop_style A key from the $crops property of the model
 	 * @param array $options Croppa-style options
 	 * @return string An image tag
 	 */
-	public function croppaTag($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
-		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+	public function croppaTag($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
+		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
 		return '<img src="'.$url.'"/>';
 	}
 	
