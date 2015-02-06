@@ -397,7 +397,7 @@ abstract class Base extends Eloquent {
 		
 		// Get the image src path
 		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
-		else $src = $this->$field;
+		else $src = $this->getOriginal($field); // Get un-mutated value
 		if (empty($src)) return;
 
 		// Check if the image field has crops
