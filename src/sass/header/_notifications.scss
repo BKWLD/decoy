@@ -9,6 +9,11 @@
 		max-width: 1400px;
 	}
 
+	// Fixing spacing around server error messages
+	.message pre {
+		margin: 10px 0 5px;
+	}
+
 	// close button
 	.close {
 		margin-top: $main-padding/2;
