@@ -25,10 +25,10 @@
 		<?// Header ?>
 		<?= View::make('decoy::layouts._header', $__data) ?>
 		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
+		<?= View::make('decoy::layouts._notifications', $__data)?>
 
 		<?// The main page content ?>
 		<div id="main">
-			<?= View::make('decoy::layouts._notifications', $__data)?>
 			<?= $content?>
 		</div>
 	

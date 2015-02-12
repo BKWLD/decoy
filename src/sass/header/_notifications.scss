@@ -1,17 +1,31 @@
 // Notification message area on CRUD operations, at the top of main, below breadcrumbs 
-#main .notification-area {
-	padding: 0 $main-padding;
+.notification-area {
 	border: transparent;
 	border-bottom-color: $state-success-border;
 	border-radius: 0;
 
+	// Match width of rest of page
+	@include adjust-for-sidebar();
 	.notification-wrap {
-		max-width: 1400px;
+		max-width: $max-width;
+	}
+
+	// Match main padding
+	padding: 0 $main-padding;
+	@media(max-width:$screen-sm) {
+		padding-left: $main-padding/2;
+		padding-right: $main-padding/2;
+	}
+
+	// On phone, make it even tighter
+	@media(max-width:$screen-xs) {
+		padding-left: $main-padding-mobile;
+		padding-right: $main-padding-mobile;
 	}
 
 	// Fixing spacing around server error messages
 	.message pre {
-		margin: 10px 0 5px;
+		margin: 10px 0 0;
 	}
 
 	// close button
@@ -43,19 +57,7 @@
 
 	// make sure it's below the header
 	z-index:0;
-	@include gpu-cache();
-
-	// stretch the whole with of the main, and go back up toward the breadcrumbs
-	margin: -$main-padding;
-	margin-bottom: $main-padding;
-
-	@media(max-width: $screen-sm) {
-		padding: 0 $main-padding-mobile;
-		margin: -$main-padding-mobile;
-		margin-bottom: $main-padding-mobile;
-	}
-
-	overflow: hidden; 
+	
 
 	p {
 		padding: ($main-padding/2) 0;
@@ -67,9 +69,13 @@
 		}
 	}
 
-	// default display
+	// Limit the height
+	overflow: hidden; 
 	max-height:0;
+
+	// Collapsed
 	@include transition(max-height 350ms 0ms ceaser($easeInOutSine)); // no delay on close
+	@include gpu-cache();
 
 	// animate the notifcation pane in
 	&.show {
