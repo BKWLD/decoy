@@ -456,7 +456,7 @@ class Base extends Controller {
 		$slugger = App::make('decoy.slug');
 		$slugger->merge($item);
 
-		// Add foreign keys to the model instance manually.  This is done
+		// Add foreign keys to the model instance manually.
 		// This was added so that the unique_with validator could test slugs that
 		// are unqiue across multiple columns.  Those other columns are typically
 		// foreign keys.
