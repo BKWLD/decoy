@@ -33,3 +33,11 @@
 		}
 	}
 }
+
+// If a radio immediately has a label, put a little padding to the right
+// to make subsequent text look better
+.radio, .checkbox {
+	input + .label {
+		margin-right: 3px;
+	}
+}
