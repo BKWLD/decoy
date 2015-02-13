@@ -22,7 +22,7 @@ define(function (require) {
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
-	require('decoy/modules/auto-toggleable');
+	require('decoy/modules/auto-toggleable'); // Scan make for attributes that enable toggling
 	var wysiwyg = require('decoy/modules/wysiwyg'); // CKeditor
 
 	// Private static vars
