@@ -1,8 +1,11 @@
 // Notification message area on CRUD operations, at the top of main, below breadcrumbs 
 .notification-area {
+
+	// Clear Bootstrap .alert styles
 	border: transparent;
 	border-bottom-color: $state-success-border;
 	border-radius: 0;
+	margin: 0;
 
 	// Match width of rest of page
 	@include adjust-for-sidebar();

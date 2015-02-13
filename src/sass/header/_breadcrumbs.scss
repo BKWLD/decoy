@@ -73,7 +73,7 @@
 		position: fixed;
 
 		// Push content down now that it's out of the flow
-		+ #main {
+		+ * {
 			margin-top: $breadcrumb-height;
 		}
 
