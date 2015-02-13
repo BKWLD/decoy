@@ -28,8 +28,6 @@ define(function (require) {
 		
 		// Cache
 		this.fixed = false;
-		this.$main = $('#main');
-		this.mainTopPadding = this.$main.css('paddingTop').replace(/[^-\d\.]/g, '');
 		this.auto_set_width = this.$el.data('set-width');
 
 		// How far down to place it while affixed
