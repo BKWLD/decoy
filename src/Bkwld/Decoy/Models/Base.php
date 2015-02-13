@@ -182,6 +182,8 @@ abstract class Base extends Eloquent {
 	/**
 	 * The no-op callbacks.  They have to be defined as public because they are invoked 
 	 * from anonymous functions.
+	 *
+	 * @return void 
 	 */
 	public function onSaving() {}
 	public function onSaved() {}
@@ -301,6 +303,9 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Default ordering by descending time, designed to be overridden
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrdered($query) {
 		return $query->orderBy($this->getTable().'.created_at', 'desc');
@@ -308,6 +313,9 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Get visible items
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeVisible($query) {
 		return $query->where($this->getTable().'.visible', '1');
@@ -315,6 +323,9 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Get all visible items by the default order
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrderedAndVisible($query) {
 		return $query->ordered()->visible();
@@ -322,6 +333,9 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Order a table that has a position value
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopePositioned($query) {
 		return $query->orderBy($this->getTable().'.position', 'asc')
@@ -331,6 +345,9 @@ abstract class Base extends Eloquent {
 	/**
 	 * Randomize the results in the DB.  This shouldn't be used for large datasets
 	 * cause it's not very performant
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeRandomize($query) {
 		return $query->orderBy(DB::raw('RAND()'));
@@ -338,6 +355,10 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Filter by the current locale
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  string  $locale
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeLocalize($query, $locale = null) {
 		return $query->where('locale', $locale ?: Decoy::locale());
@@ -345,6 +366,9 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Get localized siblings of this model
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOtherLocalizations($query) {
 		return $query->where('locale_group', $this->locale_group)
@@ -353,6 +377,9 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Find by the slug.  Like "find()" but use the slug column instead
+	 *
+	 * @param string $string 
+	 * @return Illuminate\Database\Eloquent\Model | false
 	 */
 	static public function findBySlug($slug) {
 		return static::where('slug', $slug)->first();
@@ -360,6 +387,10 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
+	 *
+	 * @param string $string 
+	 * @return Illuminate\Database\Eloquent\Model
+	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
 		return static::where('slug', $slug)->firstOrFail();
@@ -374,6 +405,7 @@ abstract class Base extends Eloquent {
 	 * through a relationship OR it may be named pivot_id out of convention (something
 	 * currently done in Decoy_Base_Controller->get_index_child()).  This function
 	 * checks for either
+	 * 
 	 * @return integer 
 	 */
 	public function pivotId() {
@@ -385,6 +417,7 @@ abstract class Base extends Eloquent {
 	/**
 	 * Form a croppa URL, taking advantage of being able to set more columns null.  Also,
 	 * provides an easier way to inform the source crops
+	 * 
 	 * @param int $width 
 	 * @param int $height
 	 * @param string $crop_style A key from the $crops property of the model
@@ -442,6 +475,7 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Return an image tag using croppa data
+	 * 
 	 * @param int $width 
 	 * @param int $height
 	 * @param string $crop_style A key from the $crops property of the model
@@ -458,6 +492,7 @@ abstract class Base extends Eloquent {
 	/**
 	 * Get the admin controller class for this model.  It's assumed to NOT be a decoy controller.
 	 * In other words, it's in app/controllers/admin/.
+	 * 
 	 * @return string ex: Admin\ArticlesController
 	 */
 	static public function adminControllerClass() {
@@ -466,6 +501,8 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Add a field to the blacklist
+	 *
+	 * @param string $field 
 	 */
 	public function blacklist($field) {
 		$this->guarded[] = $field;
