@@ -49,9 +49,10 @@ class Files {
 	 * @param boolean $force Bypass many of the checks and definitely delete if it's found
 	 */
 	public function delete($item, $force = false) {
-		$all = Input::all();
+		$all = array_dot(Input::all());
 		foreach($item->file_attributes as $field) {
-			$old = $item->getOriginal($field);
+			$column = $this->column($field);
+			$old = $item->getOriginal($column);
 
 			// Nothing to delete found
 			if (empty($old)) continue;
@@ -67,7 +68,7 @@ class Files {
 				$item->deleteFile($old);
 				
 				// Remove crop data if it exits
-				if (isset($item->{$field.'_crops'})) $item->{$field.'_crops'} = null;
+				if (isset($item->{$column.'_crops'})) $item->{$column.'_crops'} = null;
 				
 			}
 		}
@@ -79,8 +80,8 @@ class Files {
 	public function save($item) {
 		$fields = $item->file_attributes;
 		$files = App::make('request')->files;
-		foreach($files->all() as $field => $file) {
-			
+		foreach(array_dot($files->all()) as $field => $file) {
+
 			// If files isn't a file object, ignore it.  This may happen if there is a file input
 			// field that is labeled like an array, i.e. <input name="some[1][thing]>".  In this case,
 			// don't try to handle it.
@@ -93,8 +94,9 @@ class Files {
 			// Double check there is data and not just a key
 			if (!Input::hasFile($field)) continue; 
 			
-			// The base model has the logic that saves the file
-			$item->$field = $item->saveFile($field);
+			// Save the file and the path back.  The column is expected to be named
+			// as the last bit after the dot
+			$item->{$this->column($field)} = $item->saveFile($field);
 
 			// Remove this file from the input, it's already been processed.  This prevents
 			// other models that may be touched during the processing of this request (like because
@@ -105,6 +107,19 @@ class Files {
 			if (Str::contains($item::$rules[$field], 'video:encode') 
 				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
 			
-		}	
+		}
+	}
+
+	/**
+	 * Get the column in the db from the field name.  Generally they are the same
+	 * unless the image field is named within an array, like when one Decoy form is acting
+	 * on multiple models.
+	 *
+	 * @param string $field Ex: 'types.marquee.image'
+	 * @return string Ex: 'image'
+	 */
+	public function column($field) {
+		preg_match('#[^.]*$#', $field, $matches);
+		return $matches[0];
 	}
 }

@@ -270,6 +270,8 @@ abstract class Base extends Eloquent {
 	/**
 	 * Save out an image or file given the field name.  They are saved
 	 * to the directory specified in the bundle config
+	 *
+	 * @return string The abs path to the image relative to the public directory
 	 */
 	public function saveImage($field = 'image') { return $this->saveFile($field); }
 	public function saveFile($field = 'file') {
