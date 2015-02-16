@@ -75,7 +75,7 @@ class Elements extends Base {
 		switch($el->type) {
 			case 'text': return Former::text($key, $el->label)->blockHelp($el->help);
 			case 'textarea': return Former::textarea($key, $el->label)->blockHelp($el->help);
-			case 'wysiwyg': return Former::textarea($key, $el->label)->addClass('wysiwyg')->blockHelp($el->help);
+			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help);
 			case 'image': return Former::image($key, $el->label)->blockHelp($el->help);
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
 			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);

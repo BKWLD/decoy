@@ -226,7 +226,7 @@ The `auto-toggleable` JS module applies some JS to forms that will allow you to 
 
 	!= Former::radios('type')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$types))->dataToggleable('type')
 	!= Former::text('title')
-	!= Former::textarea('body')->addClass('wysiwyg')->dataShowWhenType('internal')
+	!= Former::wysiwyg('body')->dataShowWhenType('internal')
 	!= Former::image('image')->dataShowWhenType('internal')
 	!= Former::text('url', "URL")->dataShowWhenType('external')
 
@@ -461,6 +461,13 @@ The following additional fields come with Decoy.  They are implemented through F
 	- A note field has no actual input elements.  It's a control group with just the passed html value where the inputs would be.
 
 			!= Former::note('Creator', $author->name)
+
+
+- `Former::wysiwyg()`
+
+	- Create a textarea that will be wrapped in a WYSIWYG editor by Decoy JS.
+
+			!= Former::wysiwyg('body')
 
 
 - `Former::upload()`
