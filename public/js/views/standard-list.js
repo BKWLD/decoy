@@ -465,6 +465,9 @@ define(function (require) {
 		
 		// Insert a new row into the list.  This may be triggered by many-to-many
 		insertNew: function(e, data) {
+
+			// Get all of the column values as an array
+			var columns = _.values(data.columns);
 			
 			// Build the row.  Note, the id must be unique for each row.  This means
 			// that we can't insert multiple rows for the same join or the bulk
@@ -472,17 +475,14 @@ define(function (require) {
 			var $row = $(row_template({
 				id: data.id,
 				parent_id: data.parent_id,
-				label: data.columns.title,
+				label: columns.shift(),
 				controller: this.controllerRoute
 			}));
 			
-			// Add additional columns if that data exists and we're not in a related sidebar
-			if (_.size(data.columns) > 1 && !this.$el.closest('.related').length) {
-				_.each(data.columns, function(html, column) {
-					
-					// Title has already been added
-					if (column == 'title') return;
-					
+			// Add additional columns if we're not in a related sidebar
+			if (!this.$el.closest('.related').length) {
+				_.each(columns, function(html) {
+										
 					// Add a new cell before the last one (which is the actions cell)
 					if (!html) html = ''; // Handle NULL
 					$row.find('td:last').before('<td>'+html+'</td>');
