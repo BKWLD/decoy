@@ -488,7 +488,23 @@ abstract class Base extends Eloquent {
 	 */
 	public function croppaTag($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
 		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
-		return '<img src="'.$url.'"/>';
+		return "<img src='{$url}'/>";
+	}
+
+	/**
+	 * Return inline, background style elements using croppa data
+	 *
+	 * @param int $width 
+	 * @param int $height
+	 * @param string $crop_style A key from the $crops property of the model
+	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
+	 *                      string of the column name in the database
+	 * @param array $options Croppa-style options
+	 * @return string An image tag
+	 */
+	public function croppaBkgd($width = null, $height = null, $crop_style = null, $field = 'image', $options = null) {
+		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		return "background-image:url('{$url}')";
 	}
 	
 	/**
