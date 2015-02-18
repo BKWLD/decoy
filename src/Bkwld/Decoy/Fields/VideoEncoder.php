@@ -20,6 +20,13 @@ class VideoEncoder extends Upload {
 	protected $encoding;
 
 	/**
+	 * The model attribute to find the video source value
+	 * 
+	 * @var string
+	 */
+	protected $model_attribute;
+
+	/**
 	 * Create a regular file type field
 	 *
 	 * @param Container $app        The Illuminate Container
@@ -35,6 +42,21 @@ class VideoEncoder extends Upload {
 		// Add attributes for styling and JS views
 		$this->addGroupClass('video-encoder');
 		$this->group->data_js_view('video-encoder');
+
+		// Set the model_attribute for the encoding
+		$this->model_attribute = Route::is('decoy::fragments') ? 'value' : $this->name;
+	}
+
+	/**
+	 * Inform VideoEncoder of the attribtue name on the encodings to find the encode.  This is
+	 * necessary if the form field is named different than the db column.
+	 *
+	 * @param string $name 
+	 * @return this 
+	 */
+	public function setModelAttribute($name) {
+		$this->model_attribute = $name;
+		return $this;
 	}
 
 	/**
@@ -46,8 +68,9 @@ class VideoEncoder extends Upload {
 
 		// Get the encoding row if it exists
 		if ($item = $this->model()) {
-			$attribute = Route::is('decoy::fragments') ? 'value' : $this->name;
-			$this->encoding = $item->encodings()->where('encodable_attribute', $attribute)->first();
+			$this->encoding = $item->encodings()
+				->where('encodable_attribute', $this->model_attribute)
+				->first();
 
 			// Add the data attributes for JS view
 			if ($this->encoding) $this->group->data_encode($this->encoding->id);
