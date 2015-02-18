@@ -80,6 +80,31 @@ class Helpers {
 	}
 
 	/**
+	 * Convert a key named with array syntax (i.e 'types[marquee][video]') to one
+	 * named with dot syntax (i.e. 'types.marquee.video]').  The latter is how fields
+	 * will be stored in the db
+	 *
+	 * @param string $attribute 
+	 * @return string 
+	 */
+	public function convertToDotSyntax($key) {
+		return str_replace(['[', ']'], ['.', ''], $key);
+	}
+
+	/**
+	 * Do the reverse of convertKeyToDotSyntax()
+	 *
+	 * @param string $attribute 
+	 * @return string 
+	 */
+	public function convertToArraySyntax($key) {
+		if (strpos($key, '.') === false) return $key;
+		$key = str_replace('.', '][', $key);
+		$key = preg_replace('#\]#', '', $key, 1);
+		return $key.']';
+	}
+
+	/**
 	 * Formats the data in the standard list shared partial.
 	 * - $item - A row of data from a Model query
 	 * - $column - The field name that we're currently displaying

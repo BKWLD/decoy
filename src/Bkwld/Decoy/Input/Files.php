@@ -108,7 +108,9 @@ class Files {
 
 			// If the validation rules include a request to encode a video, add it to the encoding queue
 			if (Str::contains($item::$rules[$field], 'video:encode') 
-				&& method_exists($item, 'encodeOnSave')) $item->encodeOnSave($field);
+				&& method_exists($item, 'encodeOnSave')) {
+				$item->encodeOnSave(app('decoy')->convertToArraySyntax($field));
+			}
 			
 		}
 	}
