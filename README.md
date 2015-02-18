@@ -491,12 +491,12 @@ The following additional fields come with Decoy.  They are implemented through F
 			);
 
 
-- `Former::video()` 
+- `Former::videoEncoder()` 
 
 	- Creates a [video upload field](http://yo.bkwld.com/image/1R3V1T2o1R1P) with addtional UI for checking the progress of the encoding and then playing back the video.
 	- Review the feature on Encoding from this doc for more information on the setup of the video encoding feature of Decoy.
 
-			!= Former::video('video')
+			!= Former::videoEncoder('video')
 
 
 - `Former::belongsTo()`
@@ -534,11 +534,21 @@ The following additional fields come with Decoy.  They are implemented through F
 
 ### Video encoding
 
-The `Former::video` form field creates the upload field for a video in the admin.  However, there is additional setup that the developer must do to make video encoding work.  Currently, only one provider is supported for video encoding, [Zencoder](https://zencoder.com/), but it's implementation is relatively abstracted; other providers could be added in the future.
+The `Former::videoEncoder` form field creates the upload field for a video in the admin.  However, there is additional setup that the developer must do to make video encoding work.  Currently, only one provider is supported for video encoding, [Zencoder](https://zencoder.com/), but it's implementation is relatively abstracted; other providers could be added in the future.
 
 You'll need to edit the Decoy "encoding.php" config file.  It should be within your app/configs/packages directory.  The comments for each config parameter should be sufficient to explain how to use them.  Depending on where you are pushing the encoded videos to, you may need to spin up an S3 instance.  If you push to SFTP you can generate a key-pair locally (`ssh-keygen`), post the private key to [Zencoder](https://app.zencoder.com/account/credentials) and then add the public key to the server's authorized_keys.
 
 Note: by default, segmented files for [HTTP Live Streaming](http://en.wikipedia.org/wiki/HTTP_Live_Streaming) while be created.  This increases encoding cost and time but will create a better experience for mobile users.  To disable this, set the `outputs` config to have `'playlist' => false`.
+
+Then, models that support encoding should use the `Bkwld\Decoy\Models\Traits\Encodable` trait.  You also need to add a validator to the field of `video:encode`. You may want to add an accessor for building the video tag like:
+
+```php
+	public function getVideoTagAttribute() {
+		return (string) $this->encoding()->tag->preload();
+	}
+```
+
+You may want to use [Ngrok](https://ngrok.com/) to give your dev enviornment a public address so that Zencoder can pickup the files to convert.
 
 
 ### Localization

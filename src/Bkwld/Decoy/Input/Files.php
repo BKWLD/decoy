@@ -80,7 +80,8 @@ class Files {
 	public function save($item) {
 		$fields = $item->file_attributes;
 		$files = App::make('request')->files;
-		foreach(array_dot($files->all()) as $field => $file) {
+		$files_array = $files->all();
+		foreach(array_dot($files_array) as $field => $file) {
 
 			// If files isn't a file object, ignore it.  This may happen if there is a file input
 			// field that is labeled like an array, i.e. <input name="some[1][thing]>".  In this case,
@@ -100,8 +101,10 @@ class Files {
 
 			// Remove this file from the input, it's already been processed.  This prevents
 			// other models that may be touched during the processing of this request (like because
-			// of event handlers) from trying to act on this file
-			$files->remove($field);
+			// of event handlers) from trying to act on this file.  Using array_forget instead of
+			// $files->remove() so that dot notation on field names works.
+			array_forget($files_array, $field); // Acts on the array directly
+			$files->replace($files_array);
 
 			// If the validation rules include a request to encode a video, add it to the encoding queue
 			if (Str::contains($item::$rules[$field], 'video:encode') 

@@ -10,12 +10,33 @@ use Route;
 trait Helpers {
 
 	/**
+	 * Allow passing in of a model when inferring doesn't work
+	 * 
+	 * @var Illuminate\Database\Eloquent\Model
+	 */
+	private $model;
+
+	/**
+	 * Set the model
+	 *
+	 * @param Illuminate\Database\Eloquent\Model $model
+	 * @return this 
+	 */
+	public function setModel($model) {
+		$this->model = $model;
+		return $this;
+	}
+
+	/**
 	 * Get the model instance for the form from Former's populator.  This takes 
 	 * advantage of Populator extending from Collection
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
 	public function model() {
+
+		// Use explicilty set model
+		if ($this->model) return $this->model;
 
 		// If a Fragment, build a model instance using the name of the field.  The input
 		// field uses pipes instead of the dots that are in the DB.

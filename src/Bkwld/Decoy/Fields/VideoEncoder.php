@@ -35,15 +35,40 @@ class VideoEncoder extends Upload {
 		// Add attributes for styling and JS views
 		$this->addGroupClass('video-encoder');
 		$this->group->data_js_view('video-encoder');
+	}
+
+	/**
+	 * Prints out the field, wrapped in its group.
+	 * 
+	 * @return string
+	 */
+	public function wrapAndRender() {
 
 		// Get the encoding row if it exists
 		if ($item = $this->model()) {
-			$attribute = Route::is('decoy::fragments') ? 'value' : $name;
-			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $attribute)->first();
+			$attribute = Route::is('decoy::fragments') ? 'value' : $this->name;
+			$this->encoding = $item->encodings()
+				->where('encodable_attribute', $this->convertToDotSyntax($attribute))
+				->first();
 
 			// Add the data attributes for JS view
-			$this->group->data_encode($this->encoding->id);
+			if ($this->encoding) $this->group->data_encode($this->encoding->id);
 		}
+
+		// Continue rendering
+		return parent::wrapAndRender();
+	}
+
+	/**
+	 * Convert a field named with array syntax (i.e 'types[marquee][video]') to one
+	 * named with dot syntax (i.e. 'types.marquee.video]').  The latter is how fields
+	 * will be stored in the db
+	 *
+	 * @param string $attribute 
+	 * @return string 
+	 */
+	protected function convertToDotSyntax($attribute) {
+		return str_replace(['[', ']'], ['.', ''], $attribute);
 	}
 
 	/**
@@ -92,10 +117,10 @@ class VideoEncoder extends Upload {
 	}
 
 	/**
-	 * Ender error's the same way that normal errors are rendered.
+	 * Render error's the same way that normal errors are rendered.
 	 */
 	protected function renderError($message) {
-		$this->addGroupClass('error');
+		$this->addGroupClass('has-error');
 		$this->help('Encoding error: '.$message);
 	}
 
