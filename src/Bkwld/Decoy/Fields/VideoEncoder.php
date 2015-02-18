@@ -140,14 +140,13 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderProgress($status) {
-		return '<span class="status">
-				Encoding 
-				<span class="progress progress-striped active">
-					<span class="bar" style="width: '
+		return '<div class="status">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped active" style="width: '
 					.($this->encoding->getProgressAttribute())
-					.'%;">'.$status.'</span>
-				</span>
-			</span>';
+					.'%;">'.$status.'</div>
+				</div>
+			</div>';
 	}
 
 }
