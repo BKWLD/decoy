@@ -66,8 +66,11 @@ class VideoEncoder extends Upload {
 	 */
 	public function wrapAndRender() {
 
-		// Get the encoding row if it exists
-		if ($item = $this->model()) {
+		// Check if the model uses the encodable trait
+		if (($item = $this->model()) 
+			&& in_array('Bkwld\Decoy\Models\Traits\Encodable', class_uses($item))) {
+
+			// If so, get it's encoding model instance
 			$this->encoding = $item->encodings()
 				->where('encodable_attribute', $this->model_attribute)
 				->first();
