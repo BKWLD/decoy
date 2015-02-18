@@ -41,11 +41,11 @@ class Upload extends File {
 	 */
 	public function wrapAndRender() {
 
-		// Get the rendered control group
-		$html = parent::wrapAndRender();
+		// Get additional UI first so it can modify the normal form-group UI.
+		$html = $this->renderReview();
 
 		// Add extra markup
-		return $this->appendToGroup($html, $this->renderReview());
+		return $this->appendToGroup(parent::wrapAndRender(), $html);
 	}
 
 	/**
