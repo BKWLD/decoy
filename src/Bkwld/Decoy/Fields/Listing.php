@@ -24,7 +24,7 @@ use URL;
  * 	->take(20)
  */
 class Listing extends Field {
-	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
+	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers, Traits\CaptureHelp;
 
 	/**
 	 * Override Former Field and Tag properties to wrap the listing inside of
@@ -248,7 +248,7 @@ class Listing extends Field {
 		$this->addGroupClass('list-form-group');
 
 		// Use the controller description for blockhelp
-		$this->blockhelp($this->controller->description());
+		if (!$this->hasHelp()) $this->blockhelp($this->controller->description());
 
 		// Show no results if there is no parent specified
 		if (empty($this->parent_item)) {
