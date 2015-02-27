@@ -258,7 +258,12 @@ class Listing extends Field {
 
 		// Add create button if we have permission and if there is a parent item
 		if (app('decoy.auth')->can('create', $this->controller)) {
-			$this->group->setLabel($this->label_text.$this->makeCreateBtn());
+			$this->group->setLabel(
+				'<a href="'.$this->getIndexURL().'">'
+				.$this->label_text
+				.'</a>'
+				.$this->makeCreateBtn()
+			);
 		}
 
 		// Return the wrapped field
@@ -335,6 +340,17 @@ class Listing extends Field {
 			<a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
 			<span class="glyphicon glyphicon-plus"></span> New</a>
 			</div>';
+	}
+
+	/**
+	 * Get the index URL for this controller
+	 *
+	 * @return string URL
+	 */
+	protected function getIndexURL() {
+		return $this->controller->isChildInManyToMany() ? 
+			DecoyURL::action($this->controller_name.'@index') : 
+			DecoyURL::relative('index', null, $this->controller_name);
 	}
 
 	/**
