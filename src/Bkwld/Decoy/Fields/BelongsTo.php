@@ -14,6 +14,13 @@ class BelongsTo extends Field {
 	use Traits\Helpers;
 
 	/**
+	 * Preserve the relation
+	 *
+	 * @var string 
+	 */
+	private $relation;
+
+	/**
 	 * Preserve the route
 	 *
 	 * @var string
@@ -49,6 +56,16 @@ class BelongsTo extends Field {
 		// Create a text type field
 		parent::__construct($app, 'text', $name, $label, $value, $attributes);
 
+	}
+
+	/**
+	 * Allow the relation to be explicitly specified if guessing won't work.
+	 *
+	 * @param string $route 
+	 */
+	public function relation($relation) {
+		$this->relation = $relation;
+		return $this;
 	}
 
 	/**
@@ -138,6 +155,7 @@ class BelongsTo extends Field {
 	 * @return string 
 	 */
 	protected function guessRelation() {
+		if ($this->relation) return $this->relation;
 		return Str::camel(str_replace('_id', '', $this->name));
 	}
 
