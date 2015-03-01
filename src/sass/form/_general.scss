@@ -56,13 +56,21 @@
 	@include text-shadow(none);
 }
 
-// Change the margins on the help block
+// Help text config
 .help-block {
+
+	// Change the margins on the help block
 	margin-bottom: 0;
 
 	// The bold text is a BIT too big
 	b {
 		font-size: $font-size-base - 1px;
+	}
+
+	// Restore the color of manual help text during a validation error
+	.has-error & + .help-block {
+		color: lighten($text-color, 25%); // This is copied from BS3
+		margin-top: 0px; // Looks better with reduced spacing
 	}
 }
 
