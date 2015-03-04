@@ -7,22 +7,22 @@ class {{model}} extends Base {
 	 * 
 	 * @var array
 	 */
-	// public static $rules = array(
+	// public static $rules = [
 	// 	'title' => 'required',
 	// 	'slug' => 'alpha_dash|unique:articles',
 	// 	'image' => 'image',
 	// 	'date' => 'required',
 	// 	'url' => 'url',
-	// );
+	// ];
 	
 	/**
 	 * Admin cropping tool rules
 	 * 
 	 * @var array
 	 */
-	// static public $crops = array(
-	// 	'image' => array('default' => '1:1'),
-	// );
+	// static public $crops = [
+	// 	'image' => ['default' => '1:1'],
+	// ];
 	
 	/**
 	 * List of all relationships
@@ -45,10 +45,10 @@ class {{model}} extends Base {
 	 * to be used by public site implementation.
 	 * 
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	// public function scopeOrdered($query) {
-	// 	return $query->positioned();
+	// 	$query->positioned();
 	// }
 	
 	/**
