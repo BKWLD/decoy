@@ -15,7 +15,11 @@
 	// Render the full table.  This could be broken up into smaller chunks but leaving
 	// it as is until the need arises
 	echo View::make('decoy::shared.list._table', $__data);
-	?>
+
+	// Add sidebar pagination
+	if (!empty($layout) && $layout != 'full' && $count > count($listing)): ?>
+		<a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>" class="btn btn-default btn-sm btn-block full-list">See full list of related <b><?=Str::title($title)?></b></a>
+	<? endif ?>
 
 </div>
 
