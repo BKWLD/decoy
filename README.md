@@ -72,9 +72,24 @@ The autocomplete UI also expects you to define a `public static $title_column` p
 
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
-```
-public function users() { return $this->belongsToMany('User')->withTimestamps()->withPivot('position')->orderBy('prospect_user.position', 'asc'); }
-```
+	public function images() { return $this->belongsToMany('Image')->withTimestamps()->withPivot('position')->orderBy('article_image.position'); }
+
+Here is an example of how you can set the `position` column to the `MAX` value, putting the attached record at the end, by using an event callback on the Model that gets attached:
+
+	/**
+	 * When attached as a related set the position on the pivot column to the end
+	 * 
+	 * @param  Illuminate\Database\Eloquent\Model
+	 * @return void
+	 */
+	public function onAttached($parent) {
+		if (get_class($parent) == 'Article') {
+			$parent->images()->updateExistingPivot($this->id, [
+				'position' => $parent->images()->max('article_image.position') + 1,
+			]);
+		}		
+	}
+
 
 ### Many to Many to Self
 

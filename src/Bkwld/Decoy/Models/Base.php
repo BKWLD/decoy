@@ -195,10 +195,10 @@ abstract class Base extends Eloquent {
 	public function onUpdated() {}
 	public function onDeleting() {}
 	public function onDeleted() {}
-	public function onAttaching() {}
-	public function onAttached() {}
-	public function onRemoving() {} // ids are passed in first arg
-	public function onRemoved() {} // ids are passed in first arg
+	public function onAttaching($parent) {}
+	public function onAttached($parent) {}
+	public function onRemoving($ids) {}
+	public function onRemoved($ids) {}
 
 	/**
 	 * Create a locale group key if a localized model doesn't have one
