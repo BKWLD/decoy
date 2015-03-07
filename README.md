@@ -93,8 +93,8 @@ You must use the convention of suffixing polymorphic stuff with "able".  For ins
 
 Example:
 
-	public function services() { return $this->morphedByMany('Service', 'serviceable')->withTimestamps(); }
-	public function servicesAsChild() { return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')->withTimestamps(); }
+	public function services() { return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')->withTimestamps(); }
+	public function servicesAsChild() { return $this->morphedByMany('Service', 'serviceable')->withTimestamps(); }
 
 
 
