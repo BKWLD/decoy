@@ -208,7 +208,9 @@ abstract class Base extends Eloquent {
 	 */
 	public function setLocaleGroup() {
 		if (!empty($this->locale)
-			&& empty($this->locale_group)) {
+			&& empty($this->locale_group)
+			&& ($locales = Config::get('decoy::site.locales'))
+			&& count($locales) > 1) {
 			$this->locale_group = Str::random();
 		}
 	}
