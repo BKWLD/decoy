@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\Model as Eloquent;
 use Input;
 use Log;
 use Request;
+use Session;
 use Str;
 
 abstract class Base extends Eloquent {
@@ -349,10 +350,13 @@ abstract class Base extends Eloquent {
 	 * cause it's not very performant
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  mixed $seed Providing a seed keeps the order the same on subsequent queries
 	 * @return void
 	 */
 	public function scopeRandomize($query, $seed = null) {
-		$query->orderBy(DB::raw('RAND()'));
+		if ($seed === true) $seed = Session::getId();
+		if ($seed) $query->orderBy(DB::raw('RAND("'.$seed.'")'));
+		else $query->orderBy(DB::raw('RAND()'));
 	}
 
 	/**
