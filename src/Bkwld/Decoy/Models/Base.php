@@ -307,40 +307,40 @@ abstract class Base extends Eloquent {
 	 * Default ordering by descending time, designed to be overridden
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopeOrdered($query) {
-		return $query->orderBy($this->getTable().'.created_at', 'desc');
+		$query->orderBy($this->getTable().'.created_at', 'desc');
 	}
 	
 	/**
 	 * Get visible items
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopeVisible($query) {
-		return $query->where($this->getTable().'.visible', '1');
+		$query->where($this->getTable().'.visible', '1');
 	}
 	
 	/**
 	 * Get all visible items by the default order
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopeOrderedAndVisible($query) {
-		return $query->ordered()->visible();
+		$query->ordered()->visible();
 	}
 
 	/**
 	 * Order a table that has a position value
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopePositioned($query) {
-		return $query->orderBy($this->getTable().'.position', 'asc')
+		$query->orderBy($this->getTable().'.position', 'asc')
 			->orderBy($this->getTable().'.created_at', 'desc');
 	}
 	
@@ -349,10 +349,10 @@ abstract class Base extends Eloquent {
 	 * cause it's not very performant
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
-	public function scopeRandomize($query) {
-		return $query->orderBy(DB::raw('RAND()'));
+	public function scopeRandomize($query, $seed = null) {
+		$query->orderBy(DB::raw('RAND()'));
 	}
 
 	/**
@@ -360,20 +360,20 @@ abstract class Base extends Eloquent {
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  string  $locale
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopeLocalize($query, $locale = null) {
-		return $query->where('locale', $locale ?: Decoy::locale());
+		$query->where('locale', $locale ?: Decoy::locale());
 	}
 
 	/**
 	 * Get localized siblings of this model
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return Illuminate\Database\Query\Builder
+	 * @return void
 	 */
 	public function scopeOtherLocalizations($query) {
-		return $query->where('locale_group', $this->locale_group)
+		$query->where('locale_group', $this->locale_group)
 			->where($this->getKeyName(), '!=', $this->getKey());
 	}
 	
