@@ -310,40 +310,40 @@ abstract class Base extends Eloquent {
 	 * Default ordering by descending time, designed to be overridden
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrdered($query) {
-		$query->orderBy($this->getTable().'.created_at', 'desc');
+		return $query->orderBy($this->getTable().'.created_at', 'desc');
 	}
 	
 	/**
 	 * Get visible items
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeVisible($query) {
-		$query->where($this->getTable().'.visible', '1');
+		return $query->where($this->getTable().'.visible', '1');
 	}
 	
 	/**
 	 * Get all visible items by the default order
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrderedAndVisible($query) {
-		$query->ordered()->visible();
+		return $query->ordered()->visible();
 	}
 
 	/**
 	 * Order a table that has a position value
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopePositioned($query) {
-		$query->orderBy($this->getTable().'.position', 'asc')
+		return $query->orderBy($this->getTable().'.position', 'asc')
 			->orderBy($this->getTable().'.created_at', 'desc');
 	}
 	
@@ -353,12 +353,12 @@ abstract class Base extends Eloquent {
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  mixed $seed Providing a seed keeps the order the same on subsequent queries
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeRandomize($query, $seed = null) {
+	public function scopeRandomize($query) {
 		if ($seed === true) $seed = Session::getId();
-		if ($seed) $query->orderBy(DB::raw('RAND("'.$seed.'")'));
-		else $query->orderBy(DB::raw('RAND()'));
+		if ($seed) return $query->orderBy(DB::raw('RAND("'.$seed.'")'));
+		return $query->orderBy(DB::raw('RAND()'));
 	}
 
 	/**
@@ -366,20 +366,20 @@ abstract class Base extends Eloquent {
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  string  $locale
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeLocalize($query, $locale = null) {
-		$query->where('locale', $locale ?: Decoy::locale());
+		return $query->where('locale', $locale ?: Decoy::locale());
 	}
 
 	/**
 	 * Get localized siblings of this model
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOtherLocalizations($query) {
-		$query->where('locale_group', $this->locale_group)
+		return $query->where('locale_group', $this->locale_group)
 			->where($this->getKeyName(), '!=', $this->getKey());
 	}
 	
