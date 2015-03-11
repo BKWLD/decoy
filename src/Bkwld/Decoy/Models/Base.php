@@ -355,7 +355,7 @@ abstract class Base extends Eloquent {
 	 * @param  mixed $seed Providing a seed keeps the order the same on subsequent queries
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeRandomize($query) {
+	public function scopeRandomize($query, $seed = false) {
 		if ($seed === true) $seed = Session::getId();
 		if ($seed) return $query->orderBy(DB::raw('RAND("'.$seed.'")'));
 		return $query->orderBy(DB::raw('RAND()'));
