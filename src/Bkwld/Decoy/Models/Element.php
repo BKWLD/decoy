@@ -144,7 +144,6 @@ class Element extends Base {
 	 */
 	public function __toString() {
 		return $this->value();
-
 	}
 
 }
