@@ -72,7 +72,9 @@ define(function(require) {
 			$el.wrap('<div class="'+span+' wysiwyg-wrap">');
 		
 			// Init CK Editor	and CK Finder
-			var editor = CKEDITOR.replace(this, config);
+			var editor = CKEDITOR.replace(this, _.defaults(_.cloneDeep(config), {
+				height: $el.height() - 47 // This is the extra chrome that gets added
+			}));
 			if (allow_uploads) CKFINDER.setupCKEditor(editor, '/packages/bkwld/decoy/ckfinder/');
 			
 		});
