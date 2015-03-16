@@ -234,8 +234,15 @@ class Elements extends Collection {
 	 * @param string $prefix A prefix to append to the beginning of the key being set on $el
 	 */
 	protected function mergeExtra(&$el, $key, $data, $prefix = null) {
-		$el[$prefix.'label'] = isset($data['label']) ? $data['label'] : Utils\String::titleFromKey($key);
-		$el[$prefix.'help'] = isset($data['help']) ? $data['help'] : null;
+
+		// Don't add extra if this in the 1st or 2nd depth (which means there is a prefix)
+		// and there is no node for the children.  This prevents a FIELD named "label" to be
+		// treated as the the label for it's section.
+		$skip = $prefix && empty($data['sections']) && empty($data['fields']);
+
+		// Fields
+		$el[$prefix.'label'] = empty($data['label']) || $skip ? Utils\String::titleFromKey($key) : $data['label'];
+		$el[$prefix.'help'] = empty($data['help']) || $skip ? null : $data['help'];
 	}
 
 	/**
