@@ -33,7 +33,7 @@ define(function (require) {
 			
 			// Selectors
 			var $date_group = this.$('.date-field')
-				, $time = this.$('.time-field :text').parent()
+				, $time = this.$('.time-field .time:text').parent()
 				, $time_group = $time.closest('.time-field')
 				, $date_help = $date_group.find('.help-block')
 				, $time_help = $time_group.find('.help-block')
