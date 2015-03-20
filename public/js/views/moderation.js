@@ -30,9 +30,7 @@ define(function (require) {
 			}
 						
 			// Cache selectors
-			this.$pending_count = this.$('.pending-count');
-			this.$approved_count = this.$('.approved-count');
-			this.$denied_count = this.$('.denied-count');
+			this.$tabs = this.$('.nav-tabs li');
 			this.$pagination = $('.pagination-wrapper');
 			
 			// Create model collections from data in the DOM.  The URL is fetched from
@@ -43,6 +41,9 @@ define(function (require) {
 			
 			// Listen for collection changes and render view
 			this.collection.on('change', this.render, this);
+
+			// Listen for clicks on action buttons
+			this.$('.actions .btn').on('click', this.moderate);
 			
 		},
 		
@@ -55,7 +56,7 @@ define(function (require) {
 			// Create the model
 			var model = new Backbone.Model({
 				id: $item.data('model-id'),
-				status: this.status($item)
+				status: $item.data('status'),
 			});
 			this.collection.push(model);
 			
@@ -63,51 +64,12 @@ define(function (require) {
 			$item.data('model', model);
 		},
 		
-		// Register interaction events
-		events: {
-			'click .actions .approve': 'approve',
-			'click .actions .deny': 'deny',
-			'hide .item': 'hide',
-			'approve .item': 'approve',
-			'deny .item': 'deny'
-		},
-		
-		// Set item to approved
-		approve: function (e) {
-			var model = this.model(e),
-				$item = this.item(model);
-				
-			// Don't allow clicks if already denied
-			if ($item.hasClass('approved')) return;
-			
-			// Update the server
-			model.set('status', 'approved');
-			this.save(model);
-		},
-		
-		// Set item to denied
-		deny: function (e) {
-			var model = this.model(e),
-				$item = this.item(model);
-				
-			// Don't allow clicks if already denied
-			if ($item.hasClass('denied')) return;
-			
-			// Update the server
-			model.set('status', 'denied');
-			this.save(model);
-		},
-		
-		// Get the status of an item
-		status: function($item) {
-			if ($item.hasClass('approved')) return 'approved';
-			else if ($item.hasClass('denied')) return 'denied';
-			else return 'pending';
-		},
-		
-		// Get them model from an event
-		model: function(e) {
-			return $(e.target).closest('[data-model-id]').data('model');
+		// Set that new status on the model
+		moderate: function(e) {
+			var $target = $(e.currentTarget),
+				status = $target.data('status'),
+				model = $target.closest('[data-model-id]').data('model');
+			model.save({status:status});
 		},
 		
 		// Get the jquery item given a model
@@ -121,14 +83,13 @@ define(function (require) {
 		},
 		
 		// Increment of decrement one of the counts
-		update_count: function($el, change) {
+		updateCount: function($el, change) {
 			$el.text(parseInt($el.text(), 10) + change);
 		},
 		
 		// Swap the border color and fade out the element because it's been moved to
 		// another tab.  This is triggered by an event so other views can trigger it.
-		hide: function(e, status) {
-			var $item = $(e.target);
+		hide: function($item) {
 			$item.parent().fadeOut(300);
 			if (status && status != 'pending') $item.addClass(status+'-outro');
 		},
@@ -146,23 +107,17 @@ define(function (require) {
 				old = model.previousAttributes();
 						
 			// It's been moved to a new tab, so remove it
-			$item.trigger('hide', [status]);
+			this.hide($item);
 			
-			// Update the counts on the page
-			if (status == 'approved') {
-				this.update_count(this.$approved_count, 1);
-				if (old.status != 'pending') this.update_count(this.$denied_count, -1);
-			} else if (status == 'denied') {
-				this.update_count(this.$denied_count, 1);
-				if (old.status != 'pending') this.update_count(this.$approved_count, -1);
-			}
-			if (old.status == 'pending') this.update_count(this.$pending_count, -1);
+			// Update the statuses
+			this.updateCount(this.$tabs.filter('.'+status).find('.count'), 1);
+			this.updateCount(this.$tabs.filter('.'+old.status).find('.count'), -1);
 			
 			// After any change, replace pagination with the refresh button
 			if (this.$pagination && this.$pagination.length) {
-				this.$pagination.remove();
+				this.$pagination.empty();
+				this.$pagination.append('<a class="reload btn btn-default" href="'+window.location.href+'">Reload for more moderation options</a>');
 				this.$pagination = null;
-				this.$el.append('<div class="reload"><a href="'+window.location.href+'">Reload for more moderation options</a></div>');
 			}
 		}
 		
