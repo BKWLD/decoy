@@ -167,7 +167,8 @@
 
 // Make the none message be spaced down a bit
 .moderation .none {
-	margin-top: $grid-gutter-width;
+	padding-bottom: $grid-gutter-width;
+	text-align: center;
 }
 
 // A select meny for filtering by category
