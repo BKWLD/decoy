@@ -551,13 +551,13 @@ define(function (require) {
 				if (model.get('visible')) {
 					$icon.addClass(visibleIconClass);
 					$icon.removeClass(hiddenIconClass);
-					$icon.attr('title', 'Make hidden');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make hidden');
+					$icon.attr('title', 'Make draft');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make draft');
 				} else {
 					$icon.removeClass(visibleIconClass);
 					$icon.addClass(hiddenIconClass);
-					$icon.attr('title', 'Make visible');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make visible');
+					$icon.attr('title', 'Publish');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
 				}
 			}
 			

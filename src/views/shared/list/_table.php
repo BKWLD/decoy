@@ -116,9 +116,9 @@ if ($listing->count()) {
 					<?// Toggle visibility link.  This requires JS to work. ?>
 					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
 						<? if ($item->visible): ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><span class="glyphicon glyphicon-eye-open"></span></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make draft"><span class="glyphicon glyphicon-eye-open"></span></a>
 						<? else: ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><span class="glyphicon glyphicon-eye-close"></span></a>
+							<a href="#" class="visibility js-tooltip" data-placement='left' title="Publish"><span class="glyphicon glyphicon-eye-close"></span></a>
 						<? endif ?>
 						<span class="visible-edit-seperator">|</span>
 					<? endif ?>
