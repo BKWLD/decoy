@@ -27,6 +27,13 @@ class Admins extends Base {
 	 * Listing view
 	 */
 	public function index() {
+
+		// Add group column
+		$this->columns = array_merge(
+			array_slice($this->columns, 0, 1),
+			['Group' => 'getRoleName'],
+			array_slice($this->columns, 1)
+		);
 		
 		// Take the listing results and replace them with model instances
 		// so title() can be called on them to decorate the person's name
