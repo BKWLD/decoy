@@ -69,6 +69,12 @@ class Files {
 				
 				// Remove crop data if it exits
 				if (isset($item->{$column.'_crops'})) $item->{$column.'_crops'} = null;
+
+				// If the field was a video encode, delete the encoding
+				if (Str::contains($item::$rules[$field], 'video:encode') 
+					&& method_exists($item, 'encoding')) {
+					$item->encoding($this->column($field))->delete();
+				}
 				
 			}
 		}
