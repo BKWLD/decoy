@@ -63,20 +63,10 @@ class Upload extends File {
 			// a file uploaded after all
 			if ($this->isRequired()) $this->setAttribute('required', null);
 
-			// Add hidden field and return
-			return $this->renderHidden().parent::render();
-		
-		// The field is empty
-		} else return parent::render();
-	}
+		}
 
-	/**
-	 * Render the hidden field that contains the currently uploaded file
-	 *
-	 * @return string A hidden field
-	 */
-	protected function renderHidden() {
-		return HtmlInput::hidden($this->name, $this->value);
+		// Continue execution
+		return parent::render();
 	}
 
 	/**
