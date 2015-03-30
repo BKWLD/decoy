@@ -2,9 +2,7 @@
 
 // Imports
 use App;
-use Bkwld\Library\Utils\File;
 use Bkwld\Library\Utils\Collection;
-use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Config;
 use Croppa;
@@ -58,14 +56,6 @@ abstract class Base extends Eloquent {
 	 * @var boolean
 	 */
 	static public $localizable;
-
-	/**
-	 * If true, process file handling updates via Decoy's Input\Files class during
-	 * model callbacks
-	 *
-	 * @var boolean
-	 */
-	public $auto_manage_files = true;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
@@ -129,24 +119,16 @@ abstract class Base extends Eloquent {
 		$class = get_called_class();
 		if (in_array($class, self::$models_registered_for_events)) return;
 		self::$models_registered_for_events[] = $class;
-		
-		// Setup a Files instance for auto handling of file input
-		$files = new Files();
 
 		// Setup a ManyToManyChecklist to create pivot rows
 		$many_to_many_checklist = Decoy::handling() ? new ManyToManyChecklist() : null;
 
-		// Built in Laravel model events.  Note the special file handling that happens
-		// on save and delete
+		// Built in Laravel model events.  
 		self::creating (function($model){ return $model->onCreating(); });
 		self::created  (function($model){ return $model->onCreated(); });
 		self::updating (function($model){ return $model->onUpdating(); });
 		self::updated  (function($model){ return $model->onUpdated(); });
-		self::saving   (function($model) use ($files){ 
-			if ($model->auto_manage_files) {
-				$files->delete($model);
-				$files->save($model);
-			}
+		self::saving   (function($model){ 
 			if ($model->onSaving() === false) return false;
 			$model->setLocaleGroup(); 
 		});
@@ -154,8 +136,7 @@ abstract class Base extends Eloquent {
 			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
 			return $model->onSaved(); 
 		});
-		self::deleting (function($model) use ($files){ 
-			if ($model->auto_manage_files) $files->delete($model, true); 
+		self::deleting (function($model){ 
 			return $model->onDeleting(); 
 		});
 		self::deleted  (function($model){ return $model->onDeleted(); });
@@ -163,14 +144,11 @@ abstract class Base extends Eloquent {
 		// Decoy events
 		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
 		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model = null, $options = null) use ($event, $files) {
+			Event::listen('decoy.'.$event.': '.$class, function($model = null, $options = null) use ($event) {
 				
 				// It's possible a model wasn't defined
 				if (!$model) return;
-				
-				// Special files behavior
-				if ($event == 'validating' && $model->auto_manage_files) $files->preValidate($model);
-				
+								
 				// Call the appropriate model callback with all other arguments
 				$args = array_slice(func_get_args(), 1);
 				$callback = 'on'.ucfirst($event);
@@ -254,53 +232,6 @@ abstract class Base extends Eloquent {
 	 * @return string 
 	 */
 	public function getUriAttribute() { }
-
-	/**
-	 * Get all file fields by looking at validation rules
-	 *
-	 * @return array The keys of all the attributes that store file references
-	 */
-	public function getFileAttributesAttribute() {
-		return array_keys(array_filter(static::$rules, function($rules) {
-			return preg_match('#'.Files::RULES.'#i', $rules);
-		}));
-	}
-
-	//---------------------------------------------------------------------------
-	// File handling
-	//---------------------------------------------------------------------------
-
-	/**
-	 * Save out an image or file given the field name.  They are saved
-	 * to the directory specified in the bundle config
-	 *
-	 * @return string The abs path to the image relative to the public directory
-	 */
-	public function saveImage($field = 'image') { return $this->saveFile($field); }
-	public function saveFile($field = 'file') {
-		if (!Input::hasFile($field)) return;
-		return File::publicPath(
-			File::organizeUploadedFile(
-				Input::file($field), Config::get('decoy::core.upload_dir')
-			)
-		);
-	}
-	
-	/**
-	 * Delete the file referenced by the Frag
-	 *
-	 * @param string $file The path to the file relative to the doc root
-	 * @return void 
-	 */
-	public function deleteFile($file) {
-	
-		// If the file has an image suffix, use Croppa to delete
-		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
-
-		// Otherwise, do a normal delete
-		elseif (file_exists(public_path().$file)) unlink(public_path().$file);
-		
-	}
 
 	//---------------------------------------------------------------------------
 	// Scopes
