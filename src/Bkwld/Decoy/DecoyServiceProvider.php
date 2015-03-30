@@ -162,19 +162,19 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	private function registerPackages() {
 		
-		// Former
+		// Form field generation
 		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
 		$this->app->register('Former\FormerServiceProvider');
 		
-		// Sentry
+		// User auth
 		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
 		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
-		
-		// Croppa
+
+		// Image resizing
 		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 		
-		// BKWLD PHP Library
+		// PHP utils
 		$this->app->register('Bkwld\Library\LibraryServiceProvider');
 
 		// HAML
@@ -183,6 +183,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// BrowserDetect
 		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
 		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
+
+		// File uploading
+		$this->app->register('Bkwld\Upchuck\ServiceProvider');
 		
 	}
 	
