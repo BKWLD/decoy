@@ -11,6 +11,7 @@ use Decoy;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
+use Illuminate\Validation\Validator;
 use Input;
 use Log;
 use Request;
@@ -95,8 +96,8 @@ abstract class Base extends Eloquent {
 	 */
 	public function onSaving() {}
 	public function onSaved() {}
-	public function onValidating() {} // input is passed in first arg
-	public function onValidated() {} // input array is passed in first arg
+	public function onValidating(Validator $validation) {}
+	public function onValidated(Validator $validation) {}
 	public function onCreating() {}
 	public function onCreated() {}
 	public function onUpdating() {}
