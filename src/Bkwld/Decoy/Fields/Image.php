@@ -166,8 +166,11 @@ class Image extends Upload {
 		// Close
 		$html .= '</div></div>';
 
-		// Add hidden field to store cropping choices
+		// Add hidden field to store cropping choices.  After rendering a new
+		// Former field, the active former field must be reset for form validation
+		// errors to work.
 		$html .= Former::hidden($this->name.'_crops');
+		$this->app['former.field'] = $this;
 
 		// Return HTML
 		return $html;

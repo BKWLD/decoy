@@ -49,8 +49,7 @@ class Upload extends File {
 	}
 
 	/**
-	 * Prints out the current file upload field. The hidden field with the current upload is
-	 * prepended before the input so it can be overriden
+	 * Prints out the current file upload field.
 	 *
 	 * @return string An input tag
 	 */
