@@ -4,8 +4,8 @@
 use App;
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Fields\Listing;
-use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Localize;
 use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\Sidebar;
@@ -777,29 +777,19 @@ class Base extends Controller {
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
+	 * @throws Bkwld\Decoy\Exception\ValidationFail
+	 * @return Symfony\Component\HttpFoundation\Response|false
 	 */
 	protected function validate($model = null, $rules = null, $messages = array()) {
-		
-		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
-		// does a recursive merge which results in file fields containing BOTH the string version
-		// of the previous file plus the new File instance when the user is replacing a file during
-		// an update.  The array_filter() is there to strip out empties from the files array.  This
-		// prevents empty file fields from overriding the contents of the hidden field that stores
-		// the previous file name.
-		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
-		// Fire validating event
-		if ($model && ($response = $this->fireEvent('validating', array($model, $input), true))) {
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
-		}
+		// Inlcude files in the validation check
+		$input = Input::all();
 
-		// Pull the rules from the model instance.  This itentionally comes after the validating
-		// event is fired, so handlers of that event can modify the rules.
+		// Get the rules if they were not passed in
 		if ($model && empty($rules)) $rules = $model::$rules;
-
-		// If an AJAX update, don't require all fields to be present. Pass
-		// just the keys of the input to the array_only function to filter
-		// the rules list.
+		
+		// If an AJAX update, don't require all fields to be present. Pass just the 
+		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
@@ -814,28 +804,22 @@ class Base extends Controller {
 			$input = array_merge($model->getAttributes(), $input);
 		}
 
-		// Validate
+		// Build the validation instance and fire the intiating event.  If it returns 
+		// a response, use it.
 		$validation = Validator::make($input, $rules, $messages);
-		if ($validation->fails()) {
-			
-			// Log validation errors
-			if (Config::get('app.debug')) Log::debug(print_r($validation->messages(), true));
-			
-			// Respond
-			if (Request::ajax()) {
-				return Response::json($validation->messages(), 400);
-			} else {
-				return Redirect::to(Request::path())
-					->withInput()
-					->withErrors($validation);
-			}
+		if ($model && ($response = $this->fireEvent('validating', array($model, $validation), true))) {
+			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
 		}
+
+		// Run the validation.  If it fails, throw an exception that will get handled
+		// by Routing\Filters.
+		$validation = Validator::make($input, $rules, $messages);
+		if ($validation->fails()) throw new ValidationFail($validation);
 		
-		// Fire event
-		$this->fireEvent('validated', array($model, $input));
+		// Fire completion event
+		$this->fireEvent('validated', array($model, $validation));
 		
-		// If there were no errors, return false, which means
-		// that we don't need to redirect
+		// If there were no errors, return false, which means that we don't need to redirect
 		return false;
 	}
 	

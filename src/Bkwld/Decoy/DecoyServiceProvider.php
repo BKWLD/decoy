@@ -2,6 +2,8 @@
 
 use App;
 use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Decoy\Exceptions\ValidationFail as ValidationFailException;
+use Bkwld\Decoy\Observers\ValidationFail;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Former\Former;
@@ -83,6 +85,11 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app['events']->listen('eloquent.saved:*',  'Bkwld\Decoy\Observers\ManyToManyChecklist');
 		$this->app['events']->listen('eloquent.*',        'Bkwld\Decoy\Observers\ModelCallbacks');
 		$this->app['events']->listen('decoy::model.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
+
+		// Handle validation errors
+		$this->app->error(function(ValidationFailException $e) { 
+			return with(new ValidationFail)->handle($e);
+		});
 	}
 
 	/**
