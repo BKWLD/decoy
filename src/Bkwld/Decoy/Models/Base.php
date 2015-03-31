@@ -77,9 +77,6 @@ abstract class Base extends Eloquent {
 
 		// Continue Laravel construction
 		parent::__construct($attributes);
-		
-		// Register Laravel model events
-		// static::registerModelEvents();
 	}
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
