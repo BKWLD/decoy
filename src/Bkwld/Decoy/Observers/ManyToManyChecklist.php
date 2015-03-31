@@ -15,7 +15,8 @@ class ManyToManyChecklist {
 	const PREFIX = '_many_to_many_';
 
 	/**
-	 * Take input from a Many to Many Checklist and commit it to the db
+	 * Take input from a Many to Many Checklist and commit it to the db. Called
+	 * on model saved.
 	 * 
 	 * @param Bkwld\Decoy\Models\Base $model 
 	 */
