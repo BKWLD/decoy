@@ -233,6 +233,28 @@ abstract class Base extends Eloquent {
 	 */
 	public function getUriAttribute() { }
 
+	/**
+	 * Get all file fields by looking at Upchuck config and validation rules
+	 *
+	 * @return array The keys of all the attributes that store file references
+	 */
+	public function getFileAttributesAttribute() {
+
+		// Get all the file validation rule keys
+		$attributes = array_keys(array_filter(static::$rules, function($rules) {
+			return preg_match('#file|image|mimes|video#i', $rules);
+		}));
+
+		// Get all the model attributes from upchuck
+		if (in_array('Bkwld\Upchuck\SupportsUploads', class_uses($this))) {
+			$attributes = array_unique(array_merge($attributes, 
+				array_values($this->getUploadMap())));
+		}
+
+		// Return array of attributes
+		return $attributes;
+	}
+
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------
