@@ -16,24 +16,6 @@ use Response;
 class Validation {
 
 	/**
-	 * Called on model validating
-	 * 
-	 * @param Bkwld\Decoy\Models\Base $model 
-	 * @param Illuminate\Validation\Validator $validation 
-	 */
-	public function handle(Base $model, Validator $validation) {
-
-		// Get all the rules that mention files
-		
-
-		// Loop through all the r
-		foreach($validation->getRules() as $attribute => $rule) {
-
-		}
-
-	}
-
-	/**
 	 * Handle the validation failure exceptions
 	 * 
 	 * @param  Bkwld\Decoy\Exceptions\ValidationFail $e
