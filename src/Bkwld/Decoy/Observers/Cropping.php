@@ -1,8 +1,7 @@
 <?php namespace Bkwld\Decoy\Observers;
 
 /**
- * Cleanup old cropping data if an image is changed
- * or removed
+ * Cleanup old cropping data if an image is changed or removed
  */
 class Cropping {
 
