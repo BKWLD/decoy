@@ -75,6 +75,9 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
+
+		// Delegate events to Decoy observers
+		$this->app['events']->listen('eloquent.saved:*', 'Bkwld\Decoy\Observers\ManyToManyChecklist');
 	}
 
 	/**

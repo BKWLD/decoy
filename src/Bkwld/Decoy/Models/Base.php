@@ -120,9 +120,6 @@ abstract class Base extends Eloquent {
 		if (in_array($class, self::$models_registered_for_events)) return;
 		self::$models_registered_for_events[] = $class;
 
-		// Setup a ManyToManyChecklist to create pivot rows
-		$many_to_many_checklist = Decoy::handling() ? new ManyToManyChecklist() : null;
-
 		// Built in Laravel model events.  
 		self::creating (function($model){ return $model->onCreating(); });
 		self::created  (function($model){ return $model->onCreated(); });
@@ -132,8 +129,7 @@ abstract class Base extends Eloquent {
 			if ($model->onSaving() === false) return false;
 			$model->setLocaleGroup(); 
 		});
-		self::saved    (function($model) use ($many_to_many_checklist) { 
-			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
+		self::saved    (function($model) { 
 			return $model->onSaved(); 
 		});
 		self::deleting (function($model){ 

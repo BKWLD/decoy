@@ -1,30 +1,30 @@
-<?php namespace Bkwld\Decoy\Input;
+<?php namespace Bkwld\Decoy\Observers;
 
 // Dependencies
-use Bkwld\Library\Utils\String;
-use Decoy;
-use Former;
 use Input;
-use Str;
 
 /**
- * Render many to many checklists and process their submittal
+ * Take input from a Many to Many Checklist and commit it to the db,
+ * updating the relationshups
  */
 class ManyToManyChecklist {
 
-	// The form element prefix
+	/**
+	 * @var string The form element prefix
+	 */
 	const PREFIX = '_many_to_many_';
 
 	/**
 	 * Take input from a Many to Many Checklist and commit it to the db
-	 * @param Bkwld\Decoy\Models\Base $model A model instance
+	 * 
+	 * @param Bkwld\Decoy\Models\Base $model 
 	 */
-	public function update($item) {
+	public function handle($model) {
 
 		// Check for matching input elements
 		foreach(Input::get() as $key => $val) {
 			if (preg_match('#^'.self::PREFIX.'(.+)#', $key, $matches)) {
-				$this->updateRelationship($item, $matches[1]);
+				$this->updateRelationship($model, $matches[1]);
 			}
 		}
 
@@ -32,10 +32,11 @@ class ManyToManyChecklist {
 
 	/**
 	 * Process a particular input instance
+	 * 
 	 * @param Bkwld\Decoy\Models\Base $model A model instance
 	 * @param string $relationship The relationship name
 	 */
-	private function updateRelationship($item, $relationship) {
+	private function updateRelationship($model, $relationship) {
 
 		// Strip all the "0"s from the input.  These exist because push checkboxes is globally
 		// set for all of Decoy;
@@ -43,9 +44,8 @@ class ManyToManyChecklist {
 		$ids = array_filter($ids, function($id) { return $id > 0; });
 
 		// Attach just the ones mentioned in the input.  This blows away the previous joins
-		$item->$relationship()->sync($ids);
+		$model->$relationship()->sync($ids);
 
 	}
+
 }
-
-
