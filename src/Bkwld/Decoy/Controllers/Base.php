@@ -3,7 +3,7 @@
 // Dependencies
 use App;
 use Bkwld\Decoy\Breadcrumbs;
-use Bkwld\Decoy\Exception;
+use Bkwld\Decoy\Exception\Exception\Exception;
 use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Localize;
