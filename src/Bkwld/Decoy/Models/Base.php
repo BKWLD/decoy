@@ -127,7 +127,6 @@ abstract class Base extends Eloquent {
 		self::updated  (function($model){ return $model->onUpdated(); });
 		self::saving   (function($model){ 
 			if ($model->onSaving() === false) return false;
-			$model->setLocaleGroup(); 
 		});
 		self::saved    (function($model) { 
 			return $model->onSaved(); 
@@ -174,20 +173,6 @@ abstract class Base extends Eloquent {
 	public function onAttached($parent) {}
 	public function onRemoving($ids) {}
 	public function onRemoved($ids) {}
-
-	/**
-	 * Create a locale group key if a localized model doesn't have one
-	 *
-	 * @return void 
-	 */
-	public function setLocaleGroup() {
-		if (!empty($this->locale)
-			&& empty($this->locale_group)
-			&& ($locales = Config::get('decoy::site.locales'))
-			&& count($locales) > 1) {
-			$this->locale_group = Str::random();
-		}
-	}
 		
 	//---------------------------------------------------------------------------
 	// Accessors
