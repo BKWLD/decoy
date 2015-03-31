@@ -465,11 +465,9 @@ class Base extends Controller {
 			$slugger->addWhere($item, $pair->key, $pair->val);
 		}
 
-		// Validate
-		if ($result = $this->validate($item)) return $result;
-
 		// Save it.  We don't save through relations becaue the foreign keys were manually
 		// set previously.  And many to many relationships are not formed during a store().
+		$this->validate($item);
 		$item->save();
 		
 		// Redirect to edit view
@@ -552,10 +550,8 @@ class Base extends Controller {
 			}
 		}
 
-		// Validate data
-		if ($result = $this->validate($item)) return $result;
-
 		// Save the record
+		$this->validate($item);
 		$item->save();
 
 		// Redirect to the edit view
@@ -778,7 +774,7 @@ class Base extends Controller {
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
 	 * @throws Bkwld\Decoy\Exception\ValidationFail
-	 * @return Symfony\Component\HttpFoundation\Response|false
+	 * @return void
 	 */
 	protected function validate($model = null, $rules = null, $messages = array()) {
 
@@ -804,12 +800,9 @@ class Base extends Controller {
 			$input = array_merge($model->getAttributes(), $input);
 		}
 
-		// Build the validation instance and fire the intiating event.  If it returns 
-		// a response, use it.
+		// Build the validation instance and fire the intiating event.
 		$validation = Validator::make($input, $rules, $messages);
-		if ($model && ($response = $this->fireEvent('validating', array($model, $validation), true))) {
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
-		}
+		if ($model) $this->fireEvent('validating', array($model, $validation));
 
 		// Run the validation.  If it fails, throw an exception that will get handled
 		// by Routing\Filters.
@@ -818,9 +811,6 @@ class Base extends Controller {
 		
 		// Fire completion event
 		$this->fireEvent('validated', array($model, $validation));
-		
-		// If there were no errors, return false, which means that we don't need to redirect
-		return false;
 	}
 	
 	/**
