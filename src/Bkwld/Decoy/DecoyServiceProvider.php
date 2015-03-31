@@ -83,6 +83,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Localize');
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Cropping');
 		$this->app['events']->listen('eloquent.saved:*',  'Bkwld\Decoy\Observers\ManyToManyChecklist');
+		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Encoding@onSaving');
+		$this->app['events']->listen('eloquent.deleted:*','Bkwld\Decoy\Observers\Encoding@onDeleted');
 		$this->app['events']->listen('eloquent.*',        'Bkwld\Decoy\Observers\ModelCallbacks');
 		$this->app['events']->listen('decoy::model.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
 

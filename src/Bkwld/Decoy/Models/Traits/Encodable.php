@@ -73,18 +73,6 @@ trait Encodable {
 	}
 
 	/**
-	 * Tap into the deleted callback to delete this record if the parent is removed.  Note,
-	 * if a class using this trait defines it's own onDeleted() callback, this one will fail
-	 * to be fired.
-	 *
-	 * @return void 
-	 */
-	public function onDeleted() {
-		parent::onDeleted();
-		$this->deleteEncodings();
-	}
-
-	/**
 	 * Delete all the encodings individually so model callbacks can respond
 	 *
 	 * @return void 
