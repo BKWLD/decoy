@@ -79,6 +79,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Delegate events to Decoy observers
 		$this->app['events']->listen('eloquent.saved:*',  'Bkwld\Decoy\Observers\ManyToManyChecklist');
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Localize');
+		$this->app['events']->listen('eloquent.*',        'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
 	}
 
 	/**

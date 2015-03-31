@@ -79,7 +79,7 @@ abstract class Base extends Eloquent {
 		parent::__construct($attributes);
 		
 		// Register Laravel model events
-		static::registerModelEvents();
+		// static::registerModelEvents();
 	}
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
@@ -89,75 +89,12 @@ abstract class Base extends Eloquent {
 	public function hasSetMutator($key) { 
 		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasSetMutator($key);
 	}
-	
-	//---------------------------------------------------------------------------
-	// Model event callbacks
-	//---------------------------------------------------------------------------
-	// Setup listeners for all of Laravel's built in events that fire our no-op
-	// callbacks. These listeners are created when the first instance of a model
-	// is created.
-	
-	/**
-	 * This array is used so we can make sure that a model event callbacks only
-	 * get registered once for a class.  Since the Laravel model listening happens 
-	 * at the class level, not at the model level.
-	 *
-	 * @var array 
-	 */
-	static private $models_registered_for_events = [];
 
 	/**
-	 * Listen for model events and execute no-op callbacks on the model instance
-	 * 
-	 * @return void
-	 */
-	static private function registerModelEvents() {
-		
-		// Only run once per class.  Having to store in an array like this because
-		// setting a boolean on the class kept setting it to true for all models that
-		// inherit from Base.  I couldn't seem to set the boolean on the child only.
-		$class = get_called_class();
-		if (in_array($class, self::$models_registered_for_events)) return;
-		self::$models_registered_for_events[] = $class;
-
-		// Built in Laravel model events.  
-		self::creating (function($model){ return $model->onCreating(); });
-		self::created  (function($model){ return $model->onCreated(); });
-		self::updating (function($model){ return $model->onUpdating(); });
-		self::updated  (function($model){ return $model->onUpdated(); });
-		self::saving   (function($model){ 
-			if ($model->onSaving() === false) return false;
-		});
-		self::saved    (function($model) { 
-			return $model->onSaved(); 
-		});
-		self::deleting (function($model){ 
-			return $model->onDeleting(); 
-		});
-		self::deleted  (function($model){ return $model->onDeleted(); });
-		
-		// Decoy events
-		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
-		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model = null, $options = null) use ($event) {
-				
-				// It's possible a model wasn't defined
-				if (!$model) return;
-								
-				// Call the appropriate model callback with all other arguments
-				$args = array_slice(func_get_args(), 1);
-				$callback = 'on'.ucfirst($event);
-				return call_user_func_array(array($model, $callback), $args);
-			});
-		}
-		
-	}
-	
-	/**
-	 * The no-op callbacks.  They have to be defined as public because they are invoked 
-	 * from anonymous functions.
+	 * No-Op callbacks invoked by Observers\ModelCallbacks.  These allow quick handling
+	 * of model event states.
 	 *
-	 * @return void 
+	 * @return void|false 
 	 */
 	public function onSaving() {}
 	public function onSaved() {}

@@ -859,16 +859,13 @@ class Base extends Controller {
 	 */
 	protected function fireEvent($event, $args = null, $until = false) {
 		
-		// Setup both events
-		$events = array("decoy.{$event}");
-		if (!empty($this->model)) $events[] = "decoy.{$event}: ".$this->model;
+		// Create the event name
+		$event = "decoy::model.{$event}: ".$this->model;
 		
-		// Fire them
-		foreach($events as $event) {
-			if ($until) {
-				if ($response = Event::until($event, $args)) return $response;
-			} else Event::fire($event, $args, $until);
-		}
+		// Fire event
+		if ($until) {
+			if ($response = Event::until($event, $args)) return $response;
+		} else Event::fire($event, $args, $until);
 	}
 	
 	// Format the results of a query in the format needed for the autocomplete repsonses
