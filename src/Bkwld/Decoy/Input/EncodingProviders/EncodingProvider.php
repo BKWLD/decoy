@@ -2,7 +2,7 @@
 
 // Dependencies
 use App;
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Request;

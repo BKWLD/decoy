@@ -2,7 +2,7 @@
 
 // Dependencies
 use Bkwld\Library;
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;

@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Input\EncodingProviders;
 
 // Dependencies
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Services_Zencoder;

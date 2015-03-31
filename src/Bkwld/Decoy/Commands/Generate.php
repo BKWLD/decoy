@@ -3,7 +3,7 @@
 // Dependencies
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Str;
 
 class Generate extends Command {

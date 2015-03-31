@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Former\Former;

@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Input;
 
 // Dependencies
-use Bkwld\Decoy\Exception\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Config;
 use Input;
 use Log;
