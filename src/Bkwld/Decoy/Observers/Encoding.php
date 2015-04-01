@@ -13,7 +13,7 @@ class Encoding {
 	 */
 	public function onSaving($model) {
 		if (!$this->isEncodable($model)) return;
-		foreach($this->getDirtyEncodableAttributes() as $attribute) {
+		foreach($this->getDirtyEncodableAttributes($model) as $attribute) {
 
 			// If the attribute has a value, encode the attribute
 			if (isset($model->$attribute)) $item->encodeOnSave($attribute);
