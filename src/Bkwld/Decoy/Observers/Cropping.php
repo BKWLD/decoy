@@ -12,6 +12,9 @@ class Cropping {
 	 */
 	public function handle($model) {
 
+		// Don't act if no file attributes
+		if (empty($model->file_attributes)) return;
+
 		// Loop through all file attributes
 		foreach($model->file_attributes as $attribute) {
 			$crops = $attribute.'_crops';
