@@ -2,9 +2,9 @@
 
 // Dependencies
 use Config;
-use Request;
 use HtmlObject\Element as HtmlElement;
 use Bkwld\Library\Utils\File;
+use URL;
 
 /**
  * Stores the status of an encoding job and the converted outputs.
@@ -124,7 +124,7 @@ class Encoding extends Base {
 	public function source() {
 		$val = $this->encodable->{$this->encodable_attribute};
 		if (preg_match('#^http#', $val)) return $val;
-		else return Request::root().$val;
+		else return URL::asset($val);
 	}
 
 	/**
