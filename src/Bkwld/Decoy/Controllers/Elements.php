@@ -115,15 +115,9 @@ class Elements extends Base {
 			$value = str_replace("\r", '', Input::get($key));
 			if ($value == $el->value && !Input::hasFile($key)) return;
 
-			// Files are managed manually here, don't do the normal Decoy Base Model
-			// file handling.  It doesn't work here because Decoy expects the Input to
-			// contain fields for a single model instance.  Whereas Elements manages many
-			// model records at once.
-			$el->auto_manage_files = false;
-
 			// Save it
 			$el->exists = $elements->keyUpdated($el->key);
-			$el->value = $el->saveFile($key) ?: $value;
+			$el->value = Input::hasFile($key) ? app('upchuck.storage')->moveUpload(Input::file($key)) : $value;
 			$el->locale = $locale;
 			$el->save();
 		});
