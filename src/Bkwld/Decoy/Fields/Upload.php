@@ -87,7 +87,7 @@ class Upload extends File {
 	 * @return boolean
 	 */
 	protected function isInUploads() {
-		return Str::is(Config::get('upchuck::url_prefix').'*', $this->value);
+		return app('upchuck')->manages($this->value);
 	}
 
 	/**
