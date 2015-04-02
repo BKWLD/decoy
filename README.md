@@ -555,7 +555,19 @@ You'll need to edit the Decoy "encoding.php" config file.  It should be within y
 
 Note: by default, segmented files for [HTTP Live Streaming](http://en.wikipedia.org/wiki/HTTP_Live_Streaming) while be created.  This increases encoding cost and time but will create a better experience for mobile users.  To disable this, set the `outputs` config to have `'playlist' => false`.
 
-Then, models that support encoding should use the `Bkwld\Decoy\Models\Traits\Encodable` trait.  You also need to add a validator to the field of `video:encode`. You may want to add an accessor for building the video tag like:
+Then, models that support encoding should use the `Bkwld\Decoy\Models\Traits\Encodable` trait.  You also need to itemize each encodable attribute on the model by defining a `$encodable_attributes` property on the model.
+
+```php
+class Marquee extends Base {
+	use Bkwld\Decoy\Models\Traits\Encodable, Bkwld\Upchuck\SupportsUploads;
+	private $encodable_attributes = ['video'];
+	private $upload_attributes = [
+		'types.marquee.video' => 'video',
+	];
+}
+```
+
+You may want to add an accessor for building the video tag like:
 
 ```php
 	public function getVideoTagAttribute() {

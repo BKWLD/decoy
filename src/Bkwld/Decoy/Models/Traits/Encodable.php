@@ -10,6 +10,14 @@ use Bkwld\Decoy\Models\Encoding;
 trait Encodable {
 
 	/**
+	 * Define a `private $encodable_attributes` property like:
+	 *
+	 * 		private $encodable_attributes = [
+	 * 			'video',
+	 * 		];
+	 */
+
+	/**
 	 * Polymorphic relationship definition
 	 *
 	 * @return Illuminate\Database\Eloquent\Relations\MorphMany
@@ -26,6 +34,18 @@ trait Encodable {
 	 */
 	public function encoding($field = 'video') {
 		return $this->encodings()->where('encodable_attribute', '=', $field)->first();
+	}
+
+	/**
+	 * Get all the attributes on a model who support video encodes and are dirty
+	 *
+	 * @return array 
+	 */
+	public function getDirtyEncodableAttributes() {
+		if (empty($this->encodable_attributes)) return [];
+		return array_filter($this->encodable_attributes, function($attribute) {
+			return $this->isDirty($attribute);
+		});
 	}
 			
 	/**

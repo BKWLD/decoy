@@ -13,7 +13,7 @@ class Encoding {
 	 */
 	public function onSaving($model) {
 		if (!$this->isEncodable($model)) return;
-		foreach($this->getDirtyEncodableAttributes($model) as $attribute) {
+		foreach($model->getDirtyEncodableAttributes() as $attribute) {
 
 			// If the attribute has a value, encode the attribute
 			if (isset($model->$attribute)) $model->encodeOnSave($attribute);
@@ -32,23 +32,6 @@ class Encoding {
 	public function onDeleted($model) {
 		if (!$this->isEncodable($model)) return;
 		$model->deleteEncodings();
-	}
-
-	/**
-	 * Get all the attributes on a model who support video encodes
-	 * and are dirty
-	 *
-	 * @param Bkwld\Decoy\Models\Base $model 
-	 * @return array 
-	 */
-	public function getDirtyEncodableAttributes($model) {
-		$attributes = [];
-		foreach($model::$rules as $attribute => $rule) {
-			if (preg_match('#video:encode#i', $rule) && $model->isDirty($attribute)) {
-				$attributes[] = $attribute;
-			}
-		}
-		return $attributes;
 	}
 
 	/**
