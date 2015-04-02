@@ -16,7 +16,7 @@ class Encoding {
 		foreach($this->getDirtyEncodableAttributes($model) as $attribute) {
 
 			// If the attribute has a value, encode the attribute
-			if (isset($model->$attribute)) $item->encodeOnSave($attribute);
+			if (isset($model->$attribute)) $model->encodeOnSave($attribute);
 
 			// Otherwise delete encoding references
 			else $model->encoding($attribute)->delete();
