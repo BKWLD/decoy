@@ -1,24 +1,3 @@
-
-/**
- * CKEditor
- */
-
-// Change the bkgd color of ckeditor, making it lighter
-.cke_bottom, .cke_top, .cke_chrome {
-	background: $form-container-bkgd;
-}
-
-// There was a little bit too much pad bottom that resulted
-// in a bad wrap
-// http://yo.bkwld.com/image/2s2p1g0w3a2X
-.wysiwyg-wrap .cke_combo_button {
-	margin-bottom: 3px;
-}
-
-/**
- * Redactor
- */
-
 // Increase specifity to override vendor styles
 .form-group .redactor-box {
 
@@ -26,7 +5,7 @@
 	margin-bottom: 0;
 
 	// Add a border around the whole unit
-	border: 1px solid $input-group-addon-border-color;
+	border: 1px solid $input-border;
 	@include border-radius($input-border-radius);
 
 	// Prevent drop shadow on toolbar from overlapping
@@ -36,6 +15,10 @@
 	.redactor-toolbar {
 		background: $light-grey;
 		@include border-radius($input-border-radius $input-border-radius 0 0); // Match parent so no clipping
+
+		// Remove shadow and add a border
+		@include box-shadow(none);
+		border-bottom: 1px solid $input-border;
 
 		// Make the links use the theme colors
 		li a {
@@ -75,6 +58,15 @@
 		color: $code-editor-text;
 	}
 }	
+
+// Theme the hovers in the toolbar.  Need to increase specificity to counter
+// an important in their styles
+body .redactor-dropdown a {
+	&:hover {
+		background: $theme-primary-color !important;
+		color: $theme-primary-inverse !important;
+	}
+}
 
 // Fix file upload placement in redactor modal
 #redactor-droparea-placeholder input[type="file"] {

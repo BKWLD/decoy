@@ -23,7 +23,7 @@ define(function (require) {
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
 	require('decoy/modules/auto-toggleable'); // Scan make for attributes that enable toggling
-	var wysiwyg = require('decoy/modules/wysiwyg'); // CKeditor
+	var wysiwyg = require('decoy/wysiwyg/factory');
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
@@ -114,7 +114,7 @@ define(function (require) {
 		});
 		
 		// Turn WYSIWYGs on.
-		wysiwyg.replace('textarea.wysiwyg');	
+		wysiwyg.init('textarea.wysiwyg');
 		
 		// Enable affix globally
 		$('.affixable').views(Affixable);		

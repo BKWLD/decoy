@@ -1,0 +1,11 @@
+// Change the bkgd color of ckeditor, making it lighter
+.cke_bottom, .cke_top, .cke_chrome {
+	background: $form-container-bkgd;
+}
+
+// There was a little bit too much pad bottom that resulted
+// in a bad wrap
+// http://yo.bkwld.com/image/2s2p1g0w3a2X
+.wysiwyg-wrap .cke_combo_button {
+	margin-bottom: 3px;
+}

@@ -3,11 +3,14 @@ define(function(require) {
 	
 	// Dependencies
 	var $ = require('jquery')
-		, _ = require('underscore')
+		, _ = require('lodash')
 		, CKEDITOR = window.CKEDITOR // CK isn't currently loaded via requirejs
 		, CKFINDER = window.CKFinder // CK isn't currently loaded via requirejs
 	;
 	
+	// Abort if no CKEditor
+	if (!CKEDITOR) return;
+
 	// Default config
 	var config = {
 		customConfig: '', // Don't load external config js file
@@ -62,7 +65,7 @@ define(function(require) {
 	function replaceConfig(_config) { config = _config; }
 	
 	// Apply CKeditor to the selector
-	function replace(selector) {
+	function init(selector) {
 		$(selector).each(function() {
 			var $el = $(this);
 		
@@ -88,7 +91,7 @@ define(function(require) {
 			replace: replaceConfig,
 			allowUploads: allowUploads
 		},
-		replace: replace
+		init: init
 	};
 	
 });

@@ -253,16 +253,35 @@ The `auto-toggleable` JS module applies some JS to forms that will allow you to 
 [Sentry](http://docs.cartalyst.com/sentry-2), the pacakge that currently powers authentication, automatically logs out any users who may be logged in when someone logs in using the same creds from another computer.  This can be annoying, so admins should switch to using user specific accounts instead of the default redacted account.
 
 
-### Enabling CKFinder for file uploads
+### WYSIWYG
 
-By default, CKFinder is turned off because a new license must be purchased for every site using it.  Here's how to enable it:
+Decoy supports both [Redactor](http://imperavi.com/redactor/) and [CKEditor](http://ckeditor.com/) WYSIWYG editors.  Choose which you want to use in the [wysiwyg](https://github.com/BKWLD/decoy/blob/master/src/config/wysiwyg.php) config file.  To customize the editor, you can get a reference to the wysiwyg adapter from your /js/admin/start.js and customize their config like:
 
-1. Enter the `license_name` and `license_key` in your /app/config/packages/bkwld/decoy/wysiwyg.php config file
-2. Tell the wysiwyg.js module to turn on CKFinder.  The easiest way to do that is from your /public/js/admin/start.js like so:
+```js
+// Redactor - Enable uploads and add "format" options
+wysiwyg = require('decoy/wysiwyg/factory')
+wysiwyg.config.allowUploads();
+wysiwyg.config.merge({
+	buttons: ['formatting', 'bold', 'italic', 'link', 'image', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
+	formatting: ['p', 'h2']
+});
 
-		define(function (require) {
-			require('decoy/modules/wysiwyg').config.allowUploads();
-		});
+// CKeditor - Enable uploads and add "format" options
+wysiwyg = require('decoy/wysiwyg/factory')
+wysiwyg.config.allowUploads(); // You should populate the `license_name` and `license_name` in the php config
+wysiwyg.config.merge({
+	toolbar : [
+		{ name: 'styles', items: [ 'Format' ] },
+		{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
+		{ name: 'links', items : [ 'Link','Unlink'] },
+		{ name: 'insert', items : [ 'Image', 'HorizontalRule' ] },
+		{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+		{ name: 'clipboard', items : [ 'PasteText','PasteFromWord' ] },
+		{ name: 'source', items : [ 'Source' ] }
+	],
+	format_tags: 'h2;p'
+});
+```
 		
 
 ### Fragments *(To be deprecated in 5.0)*

@@ -11,8 +11,6 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
 		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
-		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
-		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
@@ -35,6 +33,7 @@
 	<?// Footer embeds ?>
 	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
 	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
+	<?= View::make('decoy::layouts._wysiwyg') ?>
 	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>
