@@ -47,6 +47,9 @@
 
 		// Most sites use a reset, so remove the margins on p tags to match
 		h1, h2, h3, h4, h5, h6, p { margin: 0; }
+
+		// Clear the decoy link styling
+		a { border: none; }
 	}
 
 	// Improve styling of code editor view
