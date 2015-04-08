@@ -1,7 +1,6 @@
 // Styles for cropper and not cropper images
 .image-upload {
 	.img-thumbnail { 
-		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
 
