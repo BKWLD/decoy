@@ -44,6 +44,7 @@ class Router {
 		$this->registerWorkers();
 		$this->registerEncode();
 		$this->registerElements();
+		$this->registerRedactor();
 
 		// Register wildcard last
 		$this->registerWildcard();
@@ -170,6 +171,17 @@ class Router {
 		Route::get($this->dir.'/elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy::elements']);
 		Route::post($this->dir.'/elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy::elements@store']);
 	}
+
+	/**
+	 * Upload handling for Redactor
+	 * http://imperavi.com/redactor/
+	 *
+	 * @return void 
+	 */
+	public function registerRedactor() {
+		Route::post($this->dir.'/redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
+	}
+	
 	
 	/**
 	 * Set and get the action for this request
