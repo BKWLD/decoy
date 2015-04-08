@@ -43,10 +43,6 @@
 				background: $theme-primary-color;
 				color: $theme-primary-inverse;
 			}
-			&.redactor-act, &.active {
-				background: rgba($theme-primary-color, .75);
-				color: $theme-primary-inverse;
-			}
 		}
 	}
 
@@ -78,5 +74,52 @@
 		background: $code-editor-bkgd;
 		color: $code-editor-text;
 	}
-
 }	
+
+// Fix file upload placement in redactor modal
+#redactor-droparea-placeholder input[type="file"] {
+	display: inline;
+}
+
+// Reorder modal forms to look like bootstrap
+#redactor-modal-box #redactor-modal {
+	@include clearfix;
+
+	// Use admin font
+	font-family: inherit;
+
+	// Fix inputs
+	input[type="text"], select { @extend .form-control; }
+	input[type="checkbox"], input[type="radio"] { margin-right: 5px; }
+
+	// The footer
+	footer {
+		@include clearfix;
+
+		// Position on left of element
+		float: left;
+
+		// Push buttons over the same as content
+		padding: 0 40px 40px;
+
+		// Put save on the left and style like bootstrap
+		button {
+			float: right;
+			width: auto !important;
+			@extend .btn;
+			font-family: inherit;
+			margin-right: 2px;
+		}
+
+		// Fix the button colors
+		.redactor-modal-action-btn { 
+			@extend .btn-success;
+		}
+		.redactor-modal-delete-btn { 
+			@extend .btn-danger;
+		}
+		.redactor-modal-close-btn { 
+			@extend .btn-default;
+		}
+	}
+}
