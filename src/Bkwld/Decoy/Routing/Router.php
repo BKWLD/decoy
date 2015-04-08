@@ -59,7 +59,7 @@ class Router {
 	 * @return void 
 	 */
 	public function registerAccounts() {
-		Route::get($this->dir, ['as' => 'decoy', 'uses' => App::make('decoy.auth']->loginAction()));
+		Route::get($this->dir, ['as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()]);
 		Route::post($this->dir, 'Bkwld\Decoy\Controllers\Account@post');
 		Route::get($this->dir.'/account', ['as' => 'decoy::account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get($this->dir.'/logout', ['as' => 'decoy::account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
