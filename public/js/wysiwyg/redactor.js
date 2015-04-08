@@ -15,7 +15,7 @@ define(function(require) {
 		config = {
 
 		// Toolbar options
-		buttons: ['bold', 'italic', 'link', 'image', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
+		buttons: ['bold', 'italic', 'link', 'image', 'file', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
 
 		// Don't fix the toolbar when scrolled off page
 		toolbarFixed: false,
