@@ -41,7 +41,7 @@ class Encoding {
 	 * @return boolean 
 	 */
 	public function isEncodable($model) {
-		return in_array('Bkwld\Decoy\Models\Traits\Encodable', class_uses($model));
+		return method_exists($model, 'getDirtyEncodableAttributes');
 	}
 
 }

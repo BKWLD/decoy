@@ -161,7 +161,7 @@ abstract class Base extends Eloquent {
 		}));
 
 		// Get all the model attributes from upchuck
-		if (in_array('Bkwld\Upchuck\SupportsUploads', class_uses($this))) {
+		if (method_exists($this, 'getUploadMap')) {
 			$attributes = array_unique(array_merge($attributes, 
 				array_values($this->getUploadMap())));
 		}
