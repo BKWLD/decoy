@@ -1,6 +1,7 @@
 <?php
 
 class {{model}} extends Base {
+	use Bkwld\Upchuck\SupportsUploads;
 
 	/**
 	 * Validation rules
@@ -14,6 +15,13 @@ class {{model}} extends Base {
 	// 	'date' => 'required',
 	// 	'url' => 'url',
 	// ];
+	
+	/**
+	 * Uploadable attributes
+	 * 
+	 * @var array
+	 */
+	// private $upload_attributes = ['image'];
 	
 	/**
 	 * Admin cropping tool rules
