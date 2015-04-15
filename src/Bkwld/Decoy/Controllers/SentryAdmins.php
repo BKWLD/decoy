@@ -6,16 +6,16 @@ use Bkwld\Decoy\Fields\Listing;
 use DecoyURL;
 use Input;
 use Former;
-use Sentry;
 use Redirect;
 use URL;
 
 /**
  * Admin management interface
  */
-class Admins extends Base {
+class SentryAdmins extends Base {
 	
 	// Shared settings
+	protected $title = 'Admins';
 	protected $description = 'Users who have access to this admin area.';
 	protected $columns = array(
 		'Name'          => 'title',

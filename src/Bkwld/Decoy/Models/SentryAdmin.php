@@ -18,7 +18,7 @@ use URL;
  * can instantiate Admin models and hydrate them.  Which is
  * done so that title() can be run to decorate the listing
  */
-class Admin extends Base {
+class SentryAdmin extends Base {
 	
 	// Validation rules
 	public static $rules = array(
