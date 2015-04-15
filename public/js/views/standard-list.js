@@ -119,7 +119,9 @@ define(function (require) {
 		initSortable: function() {
 			
 			// Cache some selectors
-			var $sortable = this.$el.find('tbody');
+			var $sortable = this.$el.find('tbody')
+				, $table = $sortable.parent('table')
+			;
 			
 			// Tell the server of the new sorting rules by looping through
 			// all rows, looking up the model for the id, and then updating
@@ -153,14 +155,25 @@ define(function (require) {
 					;
 				},
 
-				// Preserve the widths of columns during dragging by freezing them
-				// in place
+				// Preserve the widths of columns during dragging by freezing widths
 				// From http://cl.ly/170d0h291V10
 				helper: function(e, $tr) {
+					
+					// Take advantage of this being early in the call to fix the height of
+					// the table so that the containment measures the currect height of
+					// the table
+					$table.css('height', $table.height());
+
+					// Set the widths
 					$tr.children().each(function(index) {
 						$(this).width($(this).width());
 					});
 					return $tr;
+				},
+
+				// Clear the fixed height when sorting is finished
+				stop: function(event, ui) {
+					$table.css('height', '');
 				},
 				
 				// Callback function after sorting happens.
