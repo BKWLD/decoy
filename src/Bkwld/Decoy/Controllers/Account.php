@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use Auth;
 use Config;
 use Exception;
 use Former;
@@ -67,12 +68,19 @@ class Account extends Base {
 	 */
 	public function post() {
 
-		// On Success
-		// Redirect::to(Session::get('login_redirect', URL::current()));
+		// Test submission
+		if (Auth::attempt([
+			'email' => Input::get('email'), 
+			'password' => Input::get('password'),
+			], Input::get('remember'))) {
 
-		// On error
-		// $this->loginError($e->getMessage());
+			// On success, redirect where they intended to go
+			return Redirect::to(Session::get('login_redirect', URL::current()));
 
+		// On fail, redirect back and show error
+		} else {
+			return $this->loginError($e->getMessage());
+		}
 	}
 
 	/**

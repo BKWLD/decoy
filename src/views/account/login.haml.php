@@ -9,7 +9,7 @@
 		
 		!= Former::text('email')->addGroupClass('form-inline')
 		!= Former::password('password')->addGroupClass('form-inline')
-		!= Former::checkbox('is_remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
+		!= Former::checkbox('remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
 
 		.form-group.form-inline.fake-label
 			.buttons
