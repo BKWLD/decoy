@@ -75,7 +75,7 @@ class Account extends Base {
 			], Input::get('remember'))) {
 
 			// On success, redirect where they intended to go
-			return Redirect::to(Session::get('login_redirect', URL::current()));
+			return Redirect::intended(Session::get('login_redirect'));
 
 		// On fail, redirect back and show error
 		} else {
@@ -91,7 +91,8 @@ class Account extends Base {
 	public function logout() {
 
 		// Logout session
-		
+		Auth::logout();
+
 		// I've gotten errors when going directly to this route
 		try { 
 			return Redirect::back();

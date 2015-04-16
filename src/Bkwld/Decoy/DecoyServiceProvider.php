@@ -123,9 +123,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
-			return $app->make('redirect')->to($app->make('decoy.auth')->deniedUrl())
-				->withErrors([ 'error message' => 'You must login first'])
-				->with('login_redirect', $app->make('request')->fullUrl());
+			return $app->make('redirect')->guest($app->make('decoy.auth')->deniedUrl())
+				->withErrors([ 'error message' => 'You must login first']);
 		});
 		
 		// Register URL Generators as "DecoyURL".
