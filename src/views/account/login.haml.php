@@ -5,7 +5,18 @@
 			%h4 Powered by <a href="http://bkwld.com">Decoy</a>
 		
 		!=Former::open_vertical(action('Bkwld\Decoy\Controllers\Account@login'))->addClass('form')
-		!= View::make('decoy::account._error')
+		
+		-# Erorrs
+		-if($errors->any())
+			.alert.alert-danger
+				%button( type="button" class="close" data-dismiss="alert") x
+				=join(' ', $errors->all())
+
+		-# Notices
+		-if(Session::has('notice') || Session::has('login_notice'))
+			.alert.alert-danger
+				%button( type="button" class="close" data-dismiss="alert") x
+				=Session::get('notice') ?: Session::get('login_notice')
 		
 		!= Former::text('email')->addGroupClass('form-inline')
 		!= Former::password('password')->addGroupClass('form-inline')

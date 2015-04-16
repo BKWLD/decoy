@@ -81,6 +81,7 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Use own admin model
 		Config::set('auth.model', 'Bkwld\Decoy\Models\Admin');
+		Config::set('auth.reminder.email', 'decoy::emails.reset');
 
 		// Delegate events to Decoy observers
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Localize');

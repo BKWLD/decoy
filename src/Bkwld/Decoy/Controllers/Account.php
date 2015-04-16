@@ -3,14 +3,15 @@
 // Dependencies
 use App;
 use Auth;
+use Bkwld\Decoy\Models\Admin;
 use Config;
 use Exception;
 use Former;
+use Hash;
 use Input;
-use Mail;
+use Lang;
+use Password;
 use Redirect;
-use Section;
-use Sentry;
 use Session;
 use URL;
 use View;
@@ -19,11 +20,6 @@ use View;
  * This deals with the login / forgot password interfaces
  */
 class Account extends Base {
-	
-	// Validation rules for resetting password
-	private $forgot_rules = array('email' => 'required|email');
-	private $reset_rules = array('password' => 'required', 'password_repeat' => 'required|same:password');
-	private $reset_msgs = array('same' => 'The passwords do not match');
 	
 	/**
 	 * Redirect to a page where the user can manage their account
@@ -100,14 +96,18 @@ class Account extends Base {
 			return Redirect::to('/'.Config::get('decoy::core.dir'));
 		}
 	}
+
+	/**
+	 * ---------------------------------------------------------------------------
+	 * The following is based on:
+	 * /vendor/laravel/framework/src/Illuminate/Auth/Console/stubs/controller.stub
+	 * ---------------------------------------------------------------------------
+	 */
 	
 	/**
 	 * Display the form to begin the reset password process
 	 */
 	public function forgot() {
-		
-		// Pass validation rules
-		Former::withRules($this->forgot_rules);
 
 		// Show the page
 		$this->title = 'Forgot Password';
@@ -129,50 +129,41 @@ class Account extends Base {
 	 */
 	public function postForgot() {
 
-		// Validate
-		if ($result = $this->validate(null, $this->forgot_rules)) return $result;
+		// Send reminder
+		switch ($response = Password::remind(Input::only('email'), 
 
-		// Find the user using the user email address
-		// try {
-		// 	$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
-		// 	$code = $user->getResetPasswordCode();
-		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-		// 	return $this->loginError('That email could not be found.');
-		// }
+			// Add subject and from
+			function($m, $user, $token) {
+				$m->subject('Recover access to '.Config::get('decoy::site.name'));
+				$m->from(
+					Config::get('decoy::core.mail_from_address'), 
+					Config::get('decoy::core.mail_from_name')
+				);
+			})) {
 
-		// Form the link
-		$url = route('decoy::account@reset', $code);
-
-		// Send an email to the user with the reset token
-		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
-			$m->to(Input::get('email'));
-			$m->subject('Recover access to the '.Config::get('decoy::site.name'));
-			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
-		});
-		
-		// Redirect back to login page
-		return Redirect::route('decoy::account@forgot')
-			->with('login_notice', 'An email with a link to reset your password has been sent.');
+			// Failure
+			case Password::INVALID_USER:
+				return $this->loginError(Lang::get($response));
+			
+			// Success
+			case Password::REMINDER_SENT:
+				return Redirect::back()->with('success', Lang::get($response));
+		}
 		
 	}
 	
 	/**
 	 * Show the user the password reset form
 	 * 
-	 * @param $string code A reset password code
+	 * @param $string token A reset password token
 	 * @return void
 	 */
-	public function reset($code) {
+	public function reset($token) {
 		
-		// Look up the user
-		// try {
-		// 	$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-		// 	return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
-		// }
-		
-		// Pass validation rules
-		Former::withRules($this->reset_rules, $this->reset_msgs);
+		// Lookup the admin
+		$user = Admin::where('token', $token)
+			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
+			->first();
 
 		// Show the page
 		$this->title = 'Reset Password';
@@ -180,43 +171,43 @@ class Account extends Base {
 		$this->populateView('decoy::account.reset', [
 			'user' => $user,
 		]);
-		
+
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
 			route('decoy') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));
-		
 	}
 	
 	/**
 	 * Set a new password for a user and sign them in
 	 * 
-	 * @param $string code A reset password code
+	 * @param $string token A reset password token
 	 * @return Illuminate\Http\RedirectResponse
 	 */
-	public function postReset($code) {
-		
-		// Look up the user
-		// try {
-		// 	$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-		// 	return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
-		// }
-		
-		// Validate
-		if ($result = $this->validate(null, $this->reset_rules, $this->reset_msgs)) return $result;
-		
-		// Replace their password
-		$user->attemptResetPassword($code, Input::get('password'));
-		
-		// Log them in
-		// Sentry::login($user, false);
-		
-		// Redirect
-		return Redirect::to(Config::get('decoy::site.post_login_redirect'));
-	
+	public function postReset($token) {
+
+		// Gather input
+		$credentials = Input::only('email', 'password', 'password_confirmation');
+		$credentials['token'] = $token;
+
+		// Save their creds
+		$response = Password::reset($credentials, function($user, $password) {
+			$user->password = Hash::make($password);
+			$user->save();
+		});
+
+		// Respond
+		switch ($response) {
+			case Password::INVALID_PASSWORD:
+			case Password::INVALID_TOKEN:
+			case Password::INVALID_USER:
+				return $this->loginError(Lang::get($response));
+			case Password::PASSWORD_RESET:
+				Auth::login(Admin::where('email', Input::get('email'))->first());
+				return Redirect::to(Config::get('decoy::site.post_login_redirect'));
+		}
 	}
 
 	/**

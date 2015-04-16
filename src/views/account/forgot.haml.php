@@ -1,4 +1,3 @@
-!= View::make('decoy::account._error')
 != View::make('decoy::shared.form._header', $__data)
 
 %fieldset
