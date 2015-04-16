@@ -66,8 +66,9 @@ class Account extends Base {
 
 		// Test submission
 		if (Auth::attempt([
-			'email' => Input::get('email'), 
+			'email'    => Input::get('email'), 
 			'password' => Input::get('password'),
+			'active'   => 1,
 			], Input::get('remember'))) {
 
 			// On success, redirect where they intended to go
