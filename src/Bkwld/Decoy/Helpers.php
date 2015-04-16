@@ -68,8 +68,8 @@ class Helpers {
 		array_push($classes, $controller, $action);
 
 		// Add the admin roles
-		$roles = app('decoy.auth')->role();
-		if ($roles && (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
+		if (($roles = app('decoy.auth')->roles())
+			&& (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
 			foreach($roles as $role) {
 				array_push($classes, 'role-'.$role);
 			}

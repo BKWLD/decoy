@@ -6,9 +6,6 @@
 	// The layout to use
 	'layout' => 'decoy::layouts.default',
 	
-	// The auth class that should be used.  The default relies on Sentry
-	'auth_class' => '\Bkwld\Decoy\Auth\Sentry',
-	
 	// Default admin credentials
 	'default_login' => 'redacted',
 	'default_password' => 'redacted',

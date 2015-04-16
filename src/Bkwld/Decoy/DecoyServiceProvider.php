@@ -79,6 +79,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
 
+		// Use own admin model
+		Config::set('auth.model', 'Bkwld\Decoy\Models\Admin');
+
 		// Delegate events to Decoy observers
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Localize');
 		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Cropping@onSaving');
@@ -129,18 +132,10 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->singleton('decoy.url', function($app) {
 			return new Routing\UrlGenerator($app->make('request')->path());
 		});
-		
-		// Build the auth instance
+
+		// Build the default auth instance
 		$this->app->singleton('decoy.auth', function($app) {
-
-			// Build an instance of the specified auth class if it's a valid class path
-			$auth_class = $app->make('config')->get('decoy::core.auth_class');
-			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
-			$instance = new $auth_class;
-			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
-
-			// Return the auth class instance
-			return $instance;
+			return new Auth\Eloquent($app['auth']);
 		});
 		
 		// Build the Elements collection

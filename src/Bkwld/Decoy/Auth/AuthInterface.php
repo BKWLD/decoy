@@ -7,10 +7,10 @@ interface AuthInterface {
 	
 	/**
 	 * ---------------------------------------------------------------------------
-	 * Methods for inspecting properties of the user
+	 * Check perimssions
 	 * ---------------------------------------------------------------------------
 	 */
-
+	
 	/**
 	 * Boolean for whether the user is logged in and an admin
 	 * @return boolean
@@ -18,12 +18,38 @@ interface AuthInterface {
 	public function check();
 
 	/**
+	 * Get a list of all roles
+	 *
+	 * @return array 
+	 */
+	public function roles();
+
+	/**
 	 * Check if a user is in a specific role or return the list of all roles
 	 * 
 	 * @param  string $role
-	 * @return boolean | array
+	 * @return boolean
 	 */
-	public function role($role = null);
+	public function isRole($role);
+
+	/**
+	 * Check if the user has permission to do something
+	 * 
+	 * @param string $action ex: destroy
+	 * @param string $controller 
+	 *        - controller instance
+	 *        - controller name (Admin\ArticlesController)
+	 *        - URL (/admin/articles)
+	 *        - slug (articles)
+	 * @return boolean
+	 */
+	public function can($action, $controller);
+
+	/**
+	 * ---------------------------------------------------------------------------
+	 * Methods for inspecting properties of the user
+	 * ---------------------------------------------------------------------------
+	 */
 	
 	/**
 	 * Boolean as to whether the user has developer entitlements
@@ -32,6 +58,27 @@ interface AuthInterface {
 	 */
 	public function developer();
 	
+	/**
+	 * Avatar photo for the header
+	 * 
+	 * @return string
+	 */
+	public function userPhoto();
+
+	/**
+	 * Name to display in the header for the user
+	 * 
+	 * @return string
+	 */
+	public function userName();
+
+	/**
+	 * URL to the user's profile page in the admin
+	 * 
+	 * @return string
+	 */
+	public function userUrl();
+
 	/**
 	 * ---------------------------------------------------------------------------
 	 * Methods for inspecting properties of the user
@@ -59,30 +106,8 @@ interface AuthInterface {
 	 */
 	public function deniedUrl();
 
-	/**
-	 * ---------------------------------------------------------------------------
-	 * These return properites of the logged in user
-	 * ---------------------------------------------------------------------------
-	 */
+	
 
-	/**
-	 * Avatar photo for the header
-	 * 
-	 * @return string
-	 */
-	public function userPhoto();
+	
 
-	/**
-	 * Name to display in the header for the user
-	 * 
-	 * @return string
-	 */
-	public function userName();
-
-	/**
-	 * URL to the user's profile page in the admin
-	 * 
-	 * @return string
-	 */
-	public function userUrl();
 }
