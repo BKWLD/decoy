@@ -57,7 +57,7 @@ class Eloquent implements AuthInterface {
 	 * @return boolean | array
 	 */
 	public function isRole($role) {
-		$this->auth->user()->role == $role;
+		$this->user()->role == $role;
 	}
 
 	/**
@@ -113,12 +113,21 @@ class Eloquent implements AuthInterface {
 	 */
 	
 	/**
+	 * Return the authed Admin model
+	 *
+	 * @return Bkwld\Decoy\Models\Admin
+	 */
+	public function user() {
+		return $this->auth->user();
+	}
+
+	/**
 	 * Boolean as to whether the user has developer entitlements
 	 * 
 	 * @return boolean
 	 */
 	public function developer() {
-		$this->auth->user()->role == 'developer';
+		$this->user()->role == 'developer';
 	}
 
 	/**
@@ -127,7 +136,7 @@ class Eloquent implements AuthInterface {
 	 * @return string
 	 */
 	public function userPhoto() {
-		return $this->auth->user()->image ?: HTML::gravatar($this->auth->user()->email);
+		return $this->user()->image ?: HTML::gravatar($this->user()->email);
 	}
 
 	/**
@@ -136,7 +145,7 @@ class Eloquent implements AuthInterface {
 	 * @return string
 	 */
 	public function userName() {
-		return $this->auth->user()->first_name.' '.$this->auth->user()->last_name;
+		return $this->user()->first_name;
 	}
 
 	/**
@@ -150,7 +159,7 @@ class Eloquent implements AuthInterface {
 	
 	/**
 	 * ---------------------------------------------------------------------------
-	 * Methods for inspecting properties of the user
+	 * URLs & Routes related to authing
 	 * ---------------------------------------------------------------------------
 	 */
 

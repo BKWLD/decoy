@@ -81,7 +81,7 @@ interface AuthInterface {
 
 	/**
 	 * ---------------------------------------------------------------------------
-	 * Methods for inspecting properties of the user
+	 * URLs & Routes related to authing
 	 * ---------------------------------------------------------------------------
 	 */
 
