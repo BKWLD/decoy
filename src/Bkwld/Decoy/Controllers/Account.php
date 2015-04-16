@@ -14,7 +14,9 @@ use Session;
 use URL;
 use View;
 
-// The account controller deals with auth
+/**
+ * This deals with the login / forgot password interfaces
+ */
 class Account extends Base {
 	
 	// Validation rules for resetting password
@@ -24,6 +26,8 @@ class Account extends Base {
 	
 	/**
 	 * Redirect to a page where the user can manage their account
+	 *
+	 * @return Illuminate\View\View
 	 */
 	public function index() {
 		return Redirect::to(App::make('decoy.auth')->userUrl());
@@ -31,6 +35,8 @@ class Account extends Base {
 
 	/**
 	 * Display the login form
+	 *
+	 * @return Illuminate\View\View
 	 */
 	public function login() {
 
@@ -56,52 +62,27 @@ class Account extends Base {
 	
 	/**
 	 * Process a sign in from the main login form
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function post() {
-		try {
-			
-			// Tell Sentry to check throttling (which includes banning)
-			Sentry::getThrottleProvider()->enable();
-			
-			// Attempt to login
-			$user = Sentry::authenticate(array(
-				'email' => Input::get('email'),
-				'password' => Input::get('password'),
-			), Input::get('is_remember') == 1);
-			
-			// Check if they are banned. Sentry's authenticate SHOULD do this but isn't.
-			$throttle = Sentry::findThrottlerByUserId($user->getId());
-			if($banned = $throttle->isBanned()) {
-				return $this->loginError('You have been banned.');
-			}
 
-			// Login must have succeeded
-			return Redirect::to(Session::get('login_redirect', URL::current()));
+		// On Success
+		// Redirect::to(Session::get('login_redirect', URL::current()));
 
-		// Make more easily read errros
-		} catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
-			return $this->loginError('Email is required.');
-		} catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
-			return $this->loginError('Password is required.');
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('Those credentials could not be found.');
-		} catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e) {
-			return $this->loginError('Your ability to login has been suspended for '.Config::get('cartalyst/sentry::sentry.throttling.suspension_time').' minutes.');
-		} catch (Cartalyst\Sentry\Throttling\UserBannedException $e) {
-			return $this->loginError('You have been banned.');
-		
-		// Handle other errrors
-		} catch (Exception $e) {			
-			return $this->loginError($e->getMessage());
-		}
+		// On error
+		// $this->loginError($e->getMessage());
 
 	}
 
 	/**
 	 * Log a user out
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function logout() {
-		Sentry::logout();
+
+		// Logout session
 		
 		// I've gotten errors when going directly to this route
 		try { 
@@ -134,6 +115,8 @@ class Account extends Base {
 	
 	/**
 	 * Sent the user an email with a reset password link
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function postForgot() {
 
@@ -141,12 +124,12 @@ class Account extends Base {
 		if ($result = $this->validate(null, $this->forgot_rules)) return $result;
 
 		// Find the user using the user email address
-		try {
-			$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
-			$code = $user->getResetPasswordCode();
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('That email could not be found.');
-		}
+		// try {
+		// 	$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
+		// 	$code = $user->getResetPasswordCode();
+		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+		// 	return $this->loginError('That email could not be found.');
+		// }
 
 		// Form the link
 		$url = route('decoy::account@reset', $code);
@@ -166,16 +149,18 @@ class Account extends Base {
 	
 	/**
 	 * Show the user the password reset form
-	 * @param $string code A sentry reset password code
+	 * 
+	 * @param $string code A reset password code
+	 * @return void
 	 */
 	public function reset($code) {
 		
 		// Look up the user
-		try {
-			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
-		}
+		// try {
+		// 	$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
+		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+		// 	return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
+		// }
 		
 		// Pass validation rules
 		Former::withRules($this->reset_rules, $this->reset_msgs);
@@ -198,16 +183,18 @@ class Account extends Base {
 	
 	/**
 	 * Set a new password for a user and sign them in
-	 * @param $string code A sentry reset password code
+	 * 
+	 * @param $string code A reset password code
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function postReset($code) {
 		
 		// Look up the user
-		try {
-			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
-		}
+		// try {
+		// 	$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
+		// } catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
+		// 	return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
+		// }
 		
 		// Validate
 		if ($result = $this->validate(null, $this->reset_rules, $this->reset_msgs)) return $result;
@@ -216,7 +203,7 @@ class Account extends Base {
 		$user->attemptResetPassword($code, Input::get('password'));
 		
 		// Log them in
-		Sentry::login($user, false);
+		// Sentry::login($user, false);
 		
 		// Redirect
 		return Redirect::to(Config::get('decoy::site.post_login_redirect'));
@@ -225,6 +212,8 @@ class Account extends Base {
 
 	/**
 	 * Redirect with a login error
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	private function loginError($msg, $url = null) {
 		return Redirect::to($url ? $url : URL::current())

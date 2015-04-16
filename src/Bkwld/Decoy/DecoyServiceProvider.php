@@ -139,18 +139,6 @@ class DecoyServiceProvider extends ServiceProvider {
 			$instance = new $auth_class;
 			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
 
-			// If using Sentry, apply customizations.  Do this here so that requests that
-			// aren't handled by Decoy (like the requireDecoyAuthUntilLive() one) will benefit
-			// from the customizations.
-			if ($auth_class == '\Bkwld\Decoy\Auth\Sentry') {
-
-				// Disable the checkPersistCode() function when not on a live/prod site
-				$app->make('config')->set(
-					'cartalyst/sentry::users.model', 
-					'Bkwld\Decoy\Auth\SentryUser'
-				);
-			}
-			
 			// Return the auth class instance
 			return $instance;
 		});
@@ -181,10 +169,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Form field generation
 		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
 		$this->app->register('Former\FormerServiceProvider');
-		
-		// User auth
-		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
-		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
 
 		// Image resizing
 		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
