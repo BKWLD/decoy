@@ -46,7 +46,7 @@ class Account extends Base {
 		
 		// Pass validation rules
 		Former::withRules(array(
-			'email' => 'required|email',
+			'email'    => 'required|email',
 			'password' => 'required',
 		));
 		
@@ -110,6 +110,11 @@ class Account extends Base {
 	 */
 	public function forgot() {
 
+		// Pass validation rules
+		Former::withRules(array(
+			'email' => 'required|email',
+		));
+
 		// Show the page
 		$this->title = 'Forgot Password';
 		$this->description = 'You know the drill.';
@@ -161,6 +166,13 @@ class Account extends Base {
 	 */
 	public function reset($token) {
 		
+		// Pass validation rules
+		Former::withRules(array(
+			'email'                 => 'required|email',
+			'password'              => 'required',
+			'password_confirmation' => 'required|same:password',
+		));
+
 		// Lookup the admin
 		$user = Admin::where('token', $token)
 			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
