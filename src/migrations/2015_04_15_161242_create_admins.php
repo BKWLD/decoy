@@ -22,6 +22,7 @@ class CreateAdmins extends Migration {
 			$table->string('last_name');
 			$table->string('email');
 			$table->string('password');
+			$table->string('image')->nullable();
 			$table->string('remember_token')->nullable();
 			$table->string('role');
 			$table->boolean('active');
