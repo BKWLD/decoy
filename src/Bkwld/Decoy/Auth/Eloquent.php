@@ -127,7 +127,8 @@ class Eloquent implements AuthInterface {
 	 * @return boolean
 	 */
 	public function developer() {
-		$this->user()->role == 'developer';
+		return $this->user()->role == 'developer' 
+			|| strpos($this->user()->email, 'bkwld.com');
 	}
 
 	/**

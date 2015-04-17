@@ -53,7 +53,7 @@
 
 			-elseif(is_a($auth, 'Bkwld\Decoy\Auth\Eloquent') && $auth->can('read', 'admins'))
 				.main-nav
-					%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
+					%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) 
 						%span.glyphicon.glyphicon-user
 						Admins
 				
