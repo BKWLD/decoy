@@ -147,18 +147,10 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 * 
 	 * @return string
 	 */
-	public function title() {
-		$image = $this->croppa(40,40) ?: HTML::gravatar($this->email);
-		return "<img src='$image' class='gravatar'/> ".$this->titleText();
-	}
-
-	/**
-	 * Make single name from the two names
-	 *
-	 * @return string 
-	 */
-	public function titleText() {
-		return $this->first_name.' '.$this->last_name;
+	public function getAdminTitleHtmlAttribute() {
+		if (isset($this->image)) return parent::getAdminTitleHtmlAttribute();
+		return "<img src='".HTML::gravatar($this->email)."' class='gravatar'/> "
+			.$this->getAdminTitleAttribute();
 	}
 
 	/**
@@ -166,7 +158,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 * 
 	 * @return string
 	 */
-	public function statuses() {
+	public function getAdminStatusAttribute() {
 		$html ='';
 		
 		// If row is you

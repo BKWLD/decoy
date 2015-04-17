@@ -15,8 +15,8 @@ class Admins extends Base {
 	 */
 	protected $description = 'Users who have access to the admin.';
 	protected $columns = array(
-		'Name'          => 'title',
-		'Status'        => 'statuses',
+		'Name'          => 'getAdminTitleHtmlAttribute',
+		'Status'        => 'getAdminStatusAttribute',
 		'Email'         => 'email',
 	);
 

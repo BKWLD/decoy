@@ -662,29 +662,36 @@ class Base extends Controller {
 		// Do nothing if the query is too short
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
+		// Get an instance so the title attributes can be found.  If none are found,
+		// then there are no results, so bounce
+		if (!$model = Model::first()) {
+			return Response::json($this->formatAutocompleteResponse([]));
+		}
+
 		// Get data matching the query
-		if (empty(Model::$title_column)) throw new Exception($this->model.'::$title_column must be defined');
-		$query = Model::ordered()
-			->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%')
+		$query = Model::titleContains(Input::get('query'))
+			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
 		
-		// Don't return any rows already attached to the parent.  So make sure the id is not already
-		// in the pivot table for the parent
+		// Don't return any rows already attached to the parent.  So make sure the 
+		// id is not already in the pivot table for the parent
 		if ($this->isChildInManyToMany()) {
 			
-			// See if there is an exact match on what's been entered.  This is useful for many
-			// to manys with tags because we want to know if the reason that autocomplete
-			// returns no results on an exact match that is already attached is because it
-			// already exists.  Otherwise, it would allow the user to create the tag
+			// See if there is an exact match on what's been entered.  This is useful 
+			// for many to manys with tags because we want to know if the reason that 
+			// autocomplete returns no results on an exact match that is already 
+			// attached is because it already exists.  Otherwise, it would allow the 
+			// user to create the tag
 			if ($this->parentRelation()
-				->where(Model::$title_column, '=', Input::get('query'))
+				->titleContains(Input::get('query'))
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
 			
-			// Get the ids of already attached rows through the relationship function.  There
-			// are ways to do just in SQL but then we lose the ability for the relationship
-			// function to apply conditions, like is done in polymoprhic relationships.
+			// Get the ids of already attached rows through the relationship function.  
+			// There are ways to do just in SQL but then we lose the ability for the 
+			// relationship function to apply conditions, like is done in polymoprhic 
+			// relationships.
 			$siblings = $this->parentRelation()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
@@ -848,8 +855,8 @@ class Base extends Controller {
 			
 			// Only keep the id and title fields
 			$item = new stdClass;
-			$item->id = $row->id;
-			$item->title = $row->{Model::$title_column};
+			$item->id = $row->getKey();
+			$item->title = $row->getAdminTitleAttribute();
 			
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic
@@ -976,7 +983,7 @@ class Base extends Controller {
 
 		// Figure out the title and wrap it in quotes
 		$title = $input;
-		if (is_a($input, '\Bkwld\Decoy\Models\Base')) $title = $input->titleText();
+		if (is_a($input, '\Bkwld\Decoy\Models\Base')) $title = $input->getAdminTitleAttribute();
 		if ($title && is_string($title)) $title =  '"'.$title.'"';
 
 		// Render the message

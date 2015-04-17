@@ -73,7 +73,7 @@ class {{model}} extends Base {
 	 * 
 	 * @return string HTML
 	 */
-	// public function adminColFeaturedStatus() {
+	// public function getAdminFeaturedAttribute() {
 	// 	return $this->featured ? '<span class="badge">Featured</span>' : '';
 	// }
 	

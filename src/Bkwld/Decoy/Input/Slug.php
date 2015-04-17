@@ -44,16 +44,8 @@ class Slug {
 		// Model must have rules and they must have a slug
 		if (empty($model::$rules) || !in_array('slug', array_keys($model::$rules))) return;
 		
-		// Loop through source column names and use the first one that has a value
-		// as the source of the slug
-		$sources = array('name', 'title');
-		if (!empty($model::$title_column)) array_unshift($sources, $model::$title_column);
-		foreach($sources as $column) {
-			if (!empty($item->$column)) {
-				$item->slug = Str::slug(strip_tags($item->$column));
-				break;
-			}
-		}
+		// Determine the source of the slug
+		$item->slug = Str::slug(strip_tags($item->getAdminTitleAttribute()));
 	}
 
 	/**

@@ -8,8 +8,8 @@ class {{controller}} extends BaseController {
 	protected $title = 'News & Events';
 	protected $description = 'News and events yo!';
 	protected $columns = [
-		'Title' => 'title',
-		'Status' => 'adminColFeaturedStatus',
+		'Title' => 'getAdminTitleHtmlAttribute',
+		'Status' => 'getAdminFeaturedAttribute',
 		'Date' => 'created_at',
 	];
 	protected $search = [

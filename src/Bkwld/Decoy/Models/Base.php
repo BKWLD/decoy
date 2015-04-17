@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
+use Bkwld\Decoy\Exceptions\Exception;
 use Config;
 use Croppa;
 use DB;
@@ -30,15 +31,6 @@ abstract class Base extends Eloquent {
 	 * @var array
 	 */
 	static public $rules = [];
-	
-	/**
-	 * This is designed to be overridden to store the DB column name that
-	 * should be used as the source for titles.  Used in the title() function
-	 * and in autocompletes.
-	 *
-	 * @var string
-	 */
-	static public $title_column;
 
 	/**
 	 * This is should be overriden like so to specify crops that the image cropping
@@ -111,14 +103,32 @@ abstract class Base extends Eloquent {
 	//---------------------------------------------------------------------------
 	
 	/**
-	 * Return the title for the row for the purpose of displaying
-	 * in admin list views and breadcrumbs.  It looks for columns
-	 * that are named like common things that would be titles
+	 * Deprecated
 	 *
 	 * @return string 
 	 */
 	public function title() {
-		return $this->croppaTag(40, 40).$this->titleText();
+		return $this->getAdminTitleHtmlAttribute();
+	}
+
+	/**
+	 * Return the title for the row for the purpose of displaying in admin list 
+	 * views and breadcrumbs.  It looks for columns that are named like common 
+	 * things that would be titles.
+	 *
+	 * @return string 
+	 */
+	public function getAdminTitleHtmlAttribute() {
+		return $this->croppaTag(40, 40).$this->getAdminTitleAttribute();
+	}
+
+	/**
+	 * Deprecated
+	 * 
+	 * @return string 
+	 */
+	public function titleText() {
+		return $this->getAdminTitleAttribute();
 	}
 
 	/**
@@ -126,17 +136,10 @@ abstract class Base extends Eloquent {
 	 * 
 	 * @return string 
 	 */
-	public function titleText() {
-
-		// Convert to an array so I can test for the presence of values.
-		// As an object, it would throw exceptions
-		$row = $this->getAttributes();
-
-		// Deduce and return
-		if (!empty(static::$title_column) && !empty($row[static::$title_column])) return $row[static::$title_column];
-		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
-		else if (isset($row['title'])) return $row['title'];
-		else return 'Untitled';
+	public function getAdminTitleAttribute() {
+		return implode(' ', array_map(function($attribute) {
+			return $this->$attribute;
+		}, $this->titleAttributes())) ?: 'Untitled';
 	}
 
 	/**
@@ -172,6 +175,28 @@ abstract class Base extends Eloquent {
 	// Scopes
 	//---------------------------------------------------------------------------
 	
+	/**
+	 * Search the title (where "title" is the admin definiton of the title) for
+	 * the terms.  This is designed for the Decoy autocomplete
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  string $term 
+	 * @throws Bkwld\Decoy\Exceptions\Exception
+	 * @return Illuminate\Database\Query\Builder
+	 */
+	public function scopeTitleContains($query, $term) {
+
+		// Get an instance so the title attributes can be found.
+		if (!$model = static::first()) return;
+
+		// Get the title attributes
+		$attributes = $model->titleAttributes();
+		if (empty($attributes)) throw new Exception('No searchable attributes');
+
+		// Concatenate all the attributes with spaces and look for the term.
+		return $query->where(DB::raw('CONCAT('.implode('," ",',$attributes).')'), 'LIKE', "%$term%");
+	}
+
 	/**
 	 * Default ordering by descending time, designed to be overridden
 	 *
@@ -273,6 +298,24 @@ abstract class Base extends Eloquent {
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
+
+	/**
+	 * Deduce the source for the title of the model
+	 * 
+	 * @return array 
+	 */
+	public function titleAttributes() {
+
+		// Convert to an array so I can test for the presence of values. As an 
+		// object, it would throw exceptions
+		$row = $this->getAttributes();
+
+		 // Name before title to cover the case of people with job titles
+		if (isset($row['name'])) return ['name'];
+		else if (isset($row['first_name']) && isset($row['last_name'])) return ['first_name', 'last_name'];
+		else if (isset($row['title'])) return ['title'];
+		return [];
+	}
 
 	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched

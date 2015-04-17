@@ -131,7 +131,7 @@ class BelongsTo extends Field {
 
 		// If there is a value and the field name matches a relationship on function
 		// on the current item, then get and display the title text for the related record
-		if ($parent = $this->parent()) $this->value = $parent->titleText();
+		if ($parent = $this->parent()) $this->value = $parent->getAdminTitleAttribute();
 
 		// Add the hidden field and return
 		return parent::render().$hidden;
