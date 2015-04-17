@@ -535,8 +535,10 @@ The following additional fields come with Decoy.  They are implemented through F
 
 	- Creates an [autocomplete field](http://cl.ly/image/2e3D3E2o2U2K) that populates a foreign key in a belongs to relationship.
 	- You must chain `route($route)` to provide the route that can be AJAX GET requested to serve data to the autocomplete.  For example `/admin/products`.
+	- If you want to prepopulate, chain, for example, `->value(2)->title("Example")`.
 
 			!= Former::belongsTo('related_product_id', 'Related product')->route('/admin/products')
+			!= Former::belongsTo('author_id', 'Author')->route('/admin/admins')->value(app('decoy.auth')->user()->id)->title(app('decoy.auth')->user()->getAdminTitleAttribute())
 
 
 - `Former::manyToManyChecklist()` 
