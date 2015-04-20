@@ -29,7 +29,7 @@ class Admins extends Base {
 	 * @return void 
 	 */
 	public function edit($id) {
-		unset(Model::$rules['password']);
+		unset(Admin::$rules['password']);
 		parent::edit($id);
 	}
 
