@@ -45,7 +45,7 @@ class Eloquent implements AuthInterface {
 	 * @return array 
 	 */
 	public function roles() {
-		$roles = Config::has('decoy::site.permissions');
+		$roles = Config::get('decoy::site.permissions');
 		if (!is_array($roles)) return [];
 		return array_keys($roles);
 	}
