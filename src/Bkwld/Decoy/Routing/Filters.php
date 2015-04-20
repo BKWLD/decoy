@@ -104,7 +104,7 @@ class Filters {
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
 
 		// Always allow logout
-		if (Request::is('/admin/logout')) return;
+		if (Request::is('admin/logout')) return;
 
 		// If permissions were defined, see if the user has permission for the current action
 		if (Config::has('permissions')) {
