@@ -98,10 +98,13 @@ class Filters {
 		
 		// Do nothing if the current path contains any of the whitelisted urls
 		if ($this->isPublic()) return;
-		
+
 		// Everything else in admin requires a logged in user.  So redirect
 		// to login and pass along the current url so we can take the user there.
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
+
+		// Always allow logout
+		if (Request::is('/admin/logout')) return;
 
 		// If permissions were defined, see if the user has permission for the current action
 		if (Config::has('permissions')) {

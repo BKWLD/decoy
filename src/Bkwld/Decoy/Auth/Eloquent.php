@@ -90,9 +90,6 @@ class Eloquent implements AuthInterface {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
 
-		// Always allow logout
-		if ($controller == 'logout') return true;
-
 		// Always allow an admin to edit themselves for changing password.  Other
 		// features will be disabled from the view file.
 		if ($controller == 'admins' 
