@@ -99,8 +99,9 @@ class Eloquent implements AuthInterface {
 		}
 
 		// If there are "can" rules, then apply them as a whitelist.  Only those
-		// actions are allowed
+		// actions are allowed.
 		$can = Config::get('decoy::site.permissions.'.$this->user()->role.'.can');
+		if (is_callable($can)) $can = call_user_func($can, $action, $controller);
 		if (is_array($can) && !empty($can)) {
 			if (in_array($action.'.'.$controller, $can) || 
 				in_array('manage.'.$controller, $can))
@@ -111,6 +112,7 @@ class Eloquent implements AuthInterface {
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING
 		$cant = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
+		if (is_callable($cant)) $cant = call_user_func($cant, $action, $controller);
 		if (is_array($cant) && (
 			in_array($action.'.'.$controller, $cant) ||
 			in_array('manage.'.$controller, $cant))) return false;

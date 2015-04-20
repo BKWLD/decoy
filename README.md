@@ -447,6 +447,11 @@ Here is an example of a groups and permissions from the Decoy config:
 				'update.forms',
 			],
 		],
+		'forms' => [ // Demonstrating using a closure
+			'can' => function() {
+				return ['manage.forms'];
+			},
+		]
 	],
 
 The roles array generates the list of roles on the Admin edit screen. The permissions array defines what a user can and can't do. `Can` acts as a whitelist, `cant` as a blacklist.  You wouldn't use both as `can`s whitelist trumps the blacklist.  The full list of supported actions that can be denied are:
