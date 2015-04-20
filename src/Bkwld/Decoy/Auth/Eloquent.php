@@ -54,10 +54,10 @@ class Eloquent implements AuthInterface {
 	 * Check if a user is in a specific role or return the list of all roles
 	 * 
 	 * @param  string $role
-	 * @return boolean | array
+	 * @return boolean
 	 */
 	public function isRole($role) {
-		$this->user()->role == $role;
+		return $this->user()->role == $role;
 	}
 
 	/**
