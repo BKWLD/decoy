@@ -5,6 +5,7 @@ use Config;
 use DecoyURL;
 use HTML;
 use Illuminate\Auth\AuthManager;
+use Request;
 
 /**
  * Authentication using Eloquent queries. This is the Decoy default
@@ -76,7 +77,8 @@ class Eloquent implements AuthInterface {
 		// They must be logged in
 		if (!$this->check()) return false;
 
-		// If no permissions have been defined, do nothing.  Btw, only supporting "cant" for now.
+		// If no permissions have been defined, do nothing.  Btw, only supporting 
+		// "cant" for now.
 		if (!Config::has('decoy::site.permissions')) return true;
 
 		// Convert controller instance to it's name
@@ -89,11 +91,19 @@ class Eloquent implements AuthInterface {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
 
+		// Always allow an admin to edit themselves for changing password.  Other
+		// features will be disabled from the view file.
+		if ($controller == 'admins' 
+			&& ($action == 'read' 
+			|| ($action == 'update' && Request::segment(3) == $this->user()->id))) {
+			return true;
+		}
+
 		// Get the user's actions
 		$actions = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
 
-		 // If no permissions are defined in can't, they are good to go
-		if (empty($actions)) continue;
+		 // If no permissions are defined in "can't", they are good to go
+		if (empty($actions)) return true;
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING
