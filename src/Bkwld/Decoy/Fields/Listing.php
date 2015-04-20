@@ -326,6 +326,9 @@ class Listing extends Field {
 	 * @return string
 	 */
 	protected function controllerNameOfModel($model) {
+		if (strpos($model, 'Bkwld\Decoy\Models') === 0) {
+			return Str::plural(str_replace('\Models', '\Controllers', $model));
+		}
 		return 'Admin\\'.Str::plural($model).'Controller';
 	}
 

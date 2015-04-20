@@ -11,7 +11,8 @@ use Redirect;
 class Admins extends Base {
 
 	/**
-	 * Normal Decoy controller config
+	 * Normal Decoy controller config.  There is some increased specifity so that
+	 * subclassing controllers don't have to have to specify everything.
 	 */
 	protected $description = 'Users who have access to the admin.';
 	protected $columns = array(
@@ -19,6 +20,7 @@ class Admins extends Base {
 		'Status'        => 'getAdminStatusAttribute',
 		'Email'         => 'email',
 	);
+	protected $show_view = 'decoy::admins.edit';
 
 	/**
 	 * Make the password optional

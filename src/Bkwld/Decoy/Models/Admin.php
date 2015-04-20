@@ -18,6 +18,14 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	use UserTrait, RemindableTrait, SupportsUploads;
 
 	/**
+	 * The table associated with the model.  Explicitly declaring so that sub
+	 * classes can use it
+	 *
+	 * @var string
+	 */
+	protected $table = 'admins';
+
+	/**
 	 * Validation rules
 	 * 
 	 * @var array
@@ -140,6 +148,15 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 			$m->subject('Your '.Config::get('decoy::site.name').' admin account info has been updated');
 			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
+	}
+
+	/**
+	 * A shorthand for getting the admin name as a string
+	 *
+	 * @return string 
+	 */
+	public function getNameAttribute() {
+		return $this->getAdminTitleAttribute();
 	}
 
 	/**
