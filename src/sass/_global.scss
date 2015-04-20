@@ -141,3 +141,9 @@ p a {
 	padding-top: $padding-small-vertical + 1px;
 	padding-bottom: $padding-small-vertical - 1px;
 }
+
+// Shift close buttons up a bit so they look like they are on the same line as
+// the text in alert boxes
+button.close {
+	margin-top: -3px;
+}
