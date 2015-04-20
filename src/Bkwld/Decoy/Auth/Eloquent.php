@@ -45,7 +45,7 @@ class Eloquent implements AuthInterface {
 	 * @return array 
 	 */
 	public function roles() {
-		$roles = Config::has('decoy::site.permissions');
+		$roles = Config::get('decoy::site.permissions');
 		if (!is_array($roles)) return [];
 		return array_keys($roles);
 	}
@@ -54,10 +54,10 @@ class Eloquent implements AuthInterface {
 	 * Check if a user is in a specific role or return the list of all roles
 	 * 
 	 * @param  string $role
-	 * @return boolean | array
+	 * @return boolean
 	 */
 	public function isRole($role) {
-		$this->user()->role == $role;
+		return $this->user()->role == $role;
 	}
 
 	/**
@@ -89,18 +89,16 @@ class Eloquent implements AuthInterface {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
 
-		// Loop through the users roles
-		foreach($this->roles() as $role) {
-			$actions = Config::get('decoy::site.permissions.'.$role.'.cant');
+		// Get the user's actions
+		$actions = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
 
-			 // If no permissions are defined in can't, they are good to go
-			if (empty($actions)) continue;
+		 // If no permissions are defined in can't, they are good to go
+		if (empty($actions)) continue;
 
-			// If the action is listed as "can't" then immediately deny.  Also check for
-			// "manage" which means they can't do ANYTHING
-			if (in_array($action.'.'.$controller, $actions) 
-				|| in_array('manage.'.$controller, $actions)) return false;
-		}
+		// If the action is listed as "can't" then immediately deny.  Also check for
+		// "manage" which means they can't do ANYTHING
+		if (in_array($action.'.'.$controller, $actions) 
+			|| in_array('manage.'.$controller, $actions)) return false;
 
 		// I guess we're good to go
 		return true;
