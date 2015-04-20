@@ -3,6 +3,7 @@
 // Deps
 use App;
 use Bkwld\Decoy\Models\Admin;
+use Input;
 use Redirect;
 
 /**
@@ -33,11 +34,26 @@ class Admins extends Base {
 	}
 
 	/**
+	 * Don't let unauthorize folks update their role by passing in role values
+	 * in the GET
+	 *
+	 * @param  int $id Model key
+	 * @return Symfony\Component\HttpFoundation\Response
+	 */
+	public function update($id) {
+		if (!app('decoy.auth')->can('manage', 'admins') && Input::has('role')) {
+			return App::abort(401);
+		}
+		return parent::update($id);
+	}
+
+	/**
 	 * Disable the admin
 	 * 
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function disable($id) {
+		if (!app('decoy.auth')->can('manage', 'admins')) return App::abort(401);
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = null;
 		$admin->save();
@@ -50,6 +66,7 @@ class Admins extends Base {
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function enable($id) {
+		if (!app('decoy.auth')->can('manage', 'admins')) return App::abort(401);
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = 1;
 		$admin->save();
