@@ -72,6 +72,11 @@
 		color: lighten($text-color, 25%); // This is copied from BS3
 		margin-top: 0px; // Looks better with reduced spacing
 	}
+
+	// Push it up if following a `note` field
+	.form-control-static + & {
+		margin-top: -5px;
+	}
 }
 
 // Make textareas 4 lines long
