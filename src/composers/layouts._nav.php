@@ -6,6 +6,7 @@ View::composer('decoy::layouts._nav', function($view) {
 
 	// Get the navigation pages from the config
 	$pages = Config::get('decoy::site.nav');
+	if (is_callable($pages)) $pages = call_user_func($pages);
 	
 	// Break the icon out of the label, returning an arary of label and icon
 	function makeIcon($label_and_icon) {
