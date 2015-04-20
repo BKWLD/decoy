@@ -77,16 +77,15 @@ class Eloquent implements AuthInterface {
 		// They must be logged in
 		if (!$this->check()) return false;
 
-		// If no permissions have been defined, do nothing.  Btw, only supporting 
-		// "cant" for now.
+		// If no permissions have been defined, do nothing.
 		if (!Config::has('decoy::site.permissions')) return true;
 
 		// Convert controller instance to it's name
 		if (is_object($controller)) $controller = get_class($controller);
 
 		// Get the slug version of the controller.  Test if a URL was passed first
-		// and, if not, treat it like a full controller name.  URLs are used in the nav.
-		// Also, an already slugified controller name will work fine too.
+		// and, if not, treat it like a full controller name.  URLs are used in the 
+		// nav. Also, an already slugified controller name will work fine too.
 		if (preg_match('#/'.Config::get('decoy::core.dir').'/([^/]+)#', $controller, $matches)) {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
@@ -99,16 +98,22 @@ class Eloquent implements AuthInterface {
 			return true;
 		}
 
-		// Get the user's actions
-		$actions = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
-
-		 // If no permissions are defined in "can't", they are good to go
-		if (empty($actions)) return true;
+		// If there are "can" rules, then apply them as a whitelist.  Only those
+		// actions are allowed
+		$can = Config::get('decoy::site.permissions.'.$this->user()->role.'.can');
+		if (is_array($can) && !empty($can)) {
+			if (in_array($action.'.'.$controller, $can) || 
+				in_array('manage.'.$controller, $can))
+				return true;
+			else return false;
+		}
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING
-		if (in_array($action.'.'.$controller, $actions) 
-			|| in_array('manage.'.$controller, $actions)) return false;
+		$cant = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
+		if (is_array($cant) && (
+			in_array($action.'.'.$controller, $cant) ||
+			in_array('manage.'.$controller, $cant))) return false;
 
 		// I guess we're good to go
 		return true;

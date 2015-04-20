@@ -431,26 +431,25 @@ Here is an example of a groups and permissions from the Decoy config:
 		'super' => '<b>Super Admin</b> - Can manage everything.',
 	),
 
-	'permissions' => array(
-		'general' => array(
-			'cant' => array(
+	'permissions' => [
+		'general' => [
+			'cant' => [
 				'create.categories',
 				'destroy.categories',
 				'manage.slides',
 				'manage.sub-categories',
 				'manage.forms',
-			),
-		),
-	),
+			],
+		],
+		'forms' => [
+			'can' => [
+				'read.forms',
+				'update.forms',
+			],
+		],
+	],
 
-The roles array generates the list of roles on the Admin edit screen.  The keys of that array become Groups in Sentry.
-
-The permissions array defines what a user can and can't do.  This could have been run through Sentry but I chose my own approach for two reasons:
-
-1. I didn't like having to make database migrations everytime a group permissions configuration changed
-2. In many projects, most roles can do almost everything and I wanted to be able to blacklist actions.  Sentry operates from a whitelist-only perspective.
-
-In the example above, you can see that I've specified that the `general` role **cant't** use the `create` or `destroy` actions on the `categories`, `slides`, and `sub-categories` controllers.  The full list of supported actions that can be denied are:
+The roles array generates the list of roles on the Admin edit screen. The permissions array defines what a user can and can't do. `Can` acts as a whitelist, `cant` as a blacklist.  You wouldn't use both as `can`s whitelist trumps the blacklist.  The full list of supported actions that can be denied are:
 
 - create
 - read
