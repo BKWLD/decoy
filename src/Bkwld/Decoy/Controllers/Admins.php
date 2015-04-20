@@ -41,9 +41,18 @@ class Admins extends Base {
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function update($id) {
+
+		// Encorce permissions on updating ones own role
 		if (!app('decoy.auth')->can('manage', 'admins') && Input::has('role')) {
 			return App::abort(401);
 		}
+
+		// If the password is empty, remove the key from the input so it isn't cleared
+		if (!Input::has('password')) {
+			Input::replace(array_except(Input::get(), ['password']));
+		}
+
+		// Continue processing
 		return parent::update($id);
 	}
 

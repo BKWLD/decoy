@@ -103,7 +103,11 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 * @return void 
 	 */
 	public function onSaving() {
-		$this->password = Hash::make($this->password);
+
+		// If the password is changing, hash it
+		if ($this->isDirty('password')) {
+			$this->password = Hash::make($this->password);
+		}
 	}
 
 	/**
