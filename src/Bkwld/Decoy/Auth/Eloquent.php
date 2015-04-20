@@ -102,12 +102,9 @@ class Eloquent implements AuthInterface {
 		// actions are allowed.
 		$can = Config::get('decoy::site.permissions.'.$this->user()->role.'.can');
 		if (is_callable($can)) $can = call_user_func($can, $action, $controller);
-		if (is_array($can) && !empty($can)) {
-			if (in_array($action.'.'.$controller, $can) || 
-				in_array('manage.'.$controller, $can))
-				return true;
-			else return false;
-		}
+		if (is_array($can) &&
+			!in_array($action.'.'.$controller, $can) && 
+			!in_array('manage.'.$controller, $can)) return false;
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING

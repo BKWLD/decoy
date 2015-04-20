@@ -18,7 +18,7 @@ if ($listing->count()) {
 	$test_row = $listing[0]->toArray();
 
 	// Has visibilty toggle
-	$has_visible = array_key_exists('visible', $test_row);
+	$has_visible = app('decoy.auth')->can('publish', $controller) && array_key_exists('visible', $test_row);
 		
 	// Increment the actions count
 	if (!$many_to_many && $has_visible) $actions++;
