@@ -76,7 +76,7 @@ class Account extends Base {
 
 		// On fail, redirect back and show error
 		} else {
-			return $this->loginError($e->getMessage());
+			return $this->loginError('Your email or password could not be found.');
 		}
 	}
 
