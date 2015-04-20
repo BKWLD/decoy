@@ -24,13 +24,25 @@ class Admins extends Base {
 	protected $show_view = 'decoy::admins.edit';
 
 	/**
-	 * Make the password optional
+	 * If the user can't manage admins, bounce them to their profile page
+	 * 
+	 * @return Symfony\Component\HttpFoundation\Response | void
+	 */
+	public function index() {
+		if (!app('decoy.auth')->can('manage', 'admins')) {
+			return Redirect::to(app('decoy.auth')->userUrl());
+		}
+		return parent();
+	}
+
+	/**
+	 * Make password optional
 	 *
 	 * @return void 
 	 */
 	public function edit($id) {
 		unset(Admin::$rules['password']);
-		parent::edit($id);
+		return parent::edit($id);
 	}
 
 	/**
