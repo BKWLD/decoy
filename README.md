@@ -410,11 +410,11 @@ Decoy will automatically add ignore for the current id when submittng an UPDATE 
 
 If the slug is unique across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
 
-	$table->unique(array('slug', 'category_id'));
+	$table->unique(['slug', 'category_id']);
 
 In this example, this table has a one-to-many parent table called `categories`.  Specify a rule in the model like:
 
-	'slug' => 'alpha_dash|unique_with:services,category_id,slug',
+	'slug' => 'alpha_dash|unique_with:services,category_id;slug',
 
 That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
 
