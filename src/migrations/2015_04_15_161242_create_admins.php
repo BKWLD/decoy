@@ -87,7 +87,13 @@ class CreateAdmins extends Migration {
 	 * Make a default admin
 	 */
 	public function makeDefaultAdmin() {
-		// TODO
+		Bkwld\Decoy\Models\Admin::create([
+			'first_name' => 'Default',
+			'last_name' => 'Admin',
+			'email' => 'redacted',
+			'password' => 'password',
+			'role' => 'admin',
+		]);
 	}
 
 	/**
