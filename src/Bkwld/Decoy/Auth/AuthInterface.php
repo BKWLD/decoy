@@ -30,7 +30,7 @@ interface AuthInterface {
 	 * @param  string $role
 	 * @return boolean
 	 */
-	public function isRole($role);
+	public function is($role);
 
 	/**
 	 * Check if the user has permission to do something

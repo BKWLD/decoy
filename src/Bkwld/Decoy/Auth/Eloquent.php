@@ -57,7 +57,7 @@ class Eloquent implements AuthInterface {
 	 * @param  string $role
 	 * @return boolean
 	 */
-	public function isRole($role) {
+	public function is($role) {
 		return $this->user()->role == $role;
 	}
 
