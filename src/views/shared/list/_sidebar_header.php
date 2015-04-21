@@ -5,7 +5,8 @@
 	<div class="btn-toolbar pull-right">
 	
 	<?// If we've declared this relationship a many to many one, show the autocomplete ?>
-	<? if ($many_to_many && app('decoy.auth')->can('update', $controller)): ?>
+
+	<? if ($many_to_many && app('decoy.auth')->can('update', $parent_controller)): ?>
 		<?=View::make('decoy::shared.form.relationships._many_to_many', $__data)?>
 		
 	<?// Else it's a regular one to many, so show a link to create a new item ?>

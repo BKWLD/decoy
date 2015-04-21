@@ -109,11 +109,17 @@ class Filters {
 		// If permissions were defined, see if the user has permission for the current action
 		if (Config::has('permissions')) {
 			$wildcard = app('decoy.wildcard');
-			if (!app('decoy.auth')->can(
-				$this->mapActionToPermission($wildcard->detectAction()), 
-				$wildcard->detectControllerName())) {
 
-				// If they don't throw the appropriate arror
+			// Attach / detach are ACL-ed by the parent controller.  It's the one being touched
+			$action = $wildcard->detectAction();
+			if (in_array($action, ['attach', 'remove'])) {
+				$controller = Input::get('parent_controller');
+
+			// Otherwise, use the controller from the route
+			} else $controller = $wildcard->detectControllerName();
+
+			// If they don't hvae permission, throw an error
+			if (!app('decoy.auth')->can($this->mapActionToPermission($action), $controller)) {
 				return App::abort(401);
 			}
 		}
@@ -141,6 +147,7 @@ class Filters {
 			case 'new':
 			case 'store': return 'create';
 			case 'edit':
+			case 'autocomplete':
 			case 'index':
 			case 'indexChild': return 'read';
 			default: return $action;

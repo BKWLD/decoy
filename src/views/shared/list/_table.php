@@ -19,7 +19,11 @@ if ($listing->count()) {
 
 	// Has visibilty toggle
 	$has_visible = app('decoy.auth')->can('publish', $controller) && array_key_exists('visible', $test_row);
-		
+
+	// Can user delete this item or, if many to many, update the parent.
+	$can_delete = app('decoy.auth')->can('destroy', $controller) 
+		|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller));
+
 	// Increment the actions count
 	if (!$many_to_many && $has_visible) $actions++;
 }
@@ -30,7 +34,7 @@ if ($listing->count()) {
 	<thead>
 			<tr>
 
-				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+				<? if ($can_delete): ?>
 					<th class="select-all"><span class="glyphicon glyphicon-check"></span></th>
 				<? else: ?>
 					<th class="hide"></th>
@@ -86,7 +90,7 @@ if ($listing->count()) {
 			>
 				
 				<?// Checkboxes or bullets ?>
-				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+				<? if ($can_delete): ?>
 					<td><input type="checkbox" name="select-row"></td>
 				<? else: ?>
 					<td class="hide"></td>
@@ -114,7 +118,7 @@ if ($listing->count()) {
 				<td class="actions">
 					
 					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
+					<? if (!$many_to_many && $has_visible): ?>
 						<? if ($item->visible): ?>
 							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make draft"><span class="glyphicon glyphicon-eye-open"></span></a>
 						<? else: ?>
@@ -127,7 +131,7 @@ if ($listing->count()) {
 					<a href="<?=$edit?>"><span class="glyphicon glyphicon-pencil"></span></a>
 
 					<?// Delete or remove ?>
-					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+					<? if ($can_delete): ?>
 						<span class="edit-delete-seperator">|</span>
 						 
 						 <?// Many to many listings have remove icons instead of trash?>
