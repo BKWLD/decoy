@@ -20,13 +20,14 @@ if ($listing->count()) {
 	// Has visibilty toggle
 	$has_visible = app('decoy.auth')->can('publish', $controller) && array_key_exists('visible', $test_row);
 
-	// Can user delete this item or, if many to many, update the parent.
-	$can_delete = app('decoy.auth')->can('destroy', $controller) 
-		|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller));
-
 	// Increment the actions count
 	if (!$many_to_many && $has_visible) $actions++;
 }
+
+// Can user delete this item or, if many to many, update the parent.
+$can_delete = app('decoy.auth')->can('destroy', $controller) 
+	|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller));
+
 
 ?>
 
