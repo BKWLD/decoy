@@ -785,8 +785,14 @@ class Base extends Controller {
 	 */
 	protected function validate($model = null, $rules = null, $messages = array()) {
 
-		// Inlcude files in the validation check
-		$input = Input::all();
+		// Pull the input including files.  We manually merge files in because 
+		// Laravel's Input::all()	does a recursive merge which results in file 
+		// fields containing BOTH the string version of the previous file plus the 
+		// new File instance when the user is replacing a file during	an update.  
+		// The array_filter() is there to strip out empties from the files array.  
+		// This prevents empty file fields from overriding the contents of the 
+		// hidden field that stores	the previous file name.		
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
 		// Get the rules if they were not passed in
 		if ($model && empty($rules)) $rules = $model::$rules;

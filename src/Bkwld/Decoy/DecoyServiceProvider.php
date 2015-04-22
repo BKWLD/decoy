@@ -84,14 +84,15 @@ class DecoyServiceProvider extends ServiceProvider {
 		Config::set('auth.reminder.email', 'decoy::emails.reset');
 
 		// Delegate events to Decoy observers
-		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Localize');
-		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Cropping@onSaving');
-		$this->app['events']->listen('eloquent.deleted:*', 'Bkwld\Decoy\Observers\Cropping@onDeleted');
-		$this->app['events']->listen('eloquent.saved:*',  'Bkwld\Decoy\Observers\ManyToManyChecklist');
-		$this->app['events']->listen('eloquent.saving:*', 'Bkwld\Decoy\Observers\Encoding@onSaving');
-		$this->app['events']->listen('eloquent.deleted:*','Bkwld\Decoy\Observers\Encoding@onDeleted');
-		$this->app['events']->listen('eloquent.*',        'Bkwld\Decoy\Observers\ModelCallbacks');
-		$this->app['events']->listen('decoy::model.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Localize');
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Cropping@onSaving');
+		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Cropping@onDeleted');
+		$this->app['events']->listen('eloquent.saved:*',          'Bkwld\Decoy\Observers\ManyToManyChecklist');
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
+		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
+		$this->app['events']->listen('eloquent.*',                'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.*',            'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
 
 		// Handle form validation errors
 		$this->app->error(function(ValidationFail $e) { return with(new Validation)->onFail($e); });
