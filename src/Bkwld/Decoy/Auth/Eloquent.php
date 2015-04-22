@@ -23,6 +23,12 @@ class Eloquent implements AuthInterface {
 	 */
 	public function __construct(AuthManager $auth) {
 		$this->auth = $auth;
+
+		// Tell Laravel that we want to use a different admin model.  Putting this
+		// logic here so that Decoy\Auth usage from outside the admin (like the 
+		// disabling until live filter check) will use the right model.
+		Config::set('auth.model', 'Bkwld\Decoy\Models\Admin');
+		Config::set('auth.reminder.email', 'decoy::emails.reset');
 	}
 
 	/**
