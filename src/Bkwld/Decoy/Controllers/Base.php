@@ -797,12 +797,12 @@ class Base extends Controller {
 			$rules = array_only($rules, array_keys($input));
 		}
 
-		// If a model instance was passed, merge the input on top of that.  This allows
-		// data that may already be set on the model to be validated.  The input will override
-		// anything already set on the model.  In particular, this is done so that auto
-		// generated fields like the slug can be validated.  This intentionally comes after the
-		// AJAX conditional so that we still only validate fields that were present in
-		// the AJAX request.
+		// If a model instance was passed, merge the input on top of that.  This 
+		// allows data that may already be set on the model to be validated.  The 
+		// input will override anything already set on the model.  In particular, 
+		// this is done so that auto generated fields like the slug can be 
+		// validated.  This intentionally comes after the AJAX conditional so that 
+		// we still only validate fields that were present in the AJAX request.
 		if ($model && method_exists($model, 'getAttributes')) {
 			$input = array_merge($model->getAttributes(), $input);
 		}
@@ -831,8 +831,9 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Fire an event.  Actually, two are fired, one for the event and one that mentions
-	 * the model for this controller
+	 * Fire an event.  Actually, two are fired, one for the event and one that 
+	 * mentions the model for this controller
+	 * 
 	 * @param $string  event The name of this event
 	 * @param $array   args  An array of params that will be passed to the handler
 	 * @param $boolean until Whether to fire an "until" event or not
@@ -848,7 +849,13 @@ class Base extends Controller {
 		} else Event::fire($event, $args, $until);
 	}
 	
-	// Format the results of a query in the format needed for the autocomplete repsonses
+	/**
+	 * Format the results of a query in the format needed for the autocomplete 
+	 * responses
+	 * 
+	 * @param  array $results 
+	 * @return array
+	 */
 	public function formatAutocompleteResponse($results) {
 		$output = array();
 		foreach($results as $row) {
@@ -885,6 +892,7 @@ class Base extends Controller {
 
 	/**
 	 * Get all the foreign keys and values on the relationship with the parent
+	 * 
 	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
 	 * @return array A list of key-val objects that have the column name and value for
 	 * the active relationship
@@ -936,6 +944,8 @@ class Base extends Controller {
 	 * Tell Laravel to look for view files within the app admin views so that,
 	 * on a controller-level basis, the app can customize elements of an admin
 	 * view through it's partials.
+	 *
+	 * @return void 
 	 */
 	protected function overrideViews() {
 		app('view.finder')->prependNamespace('decoy', app_path()

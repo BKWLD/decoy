@@ -11,7 +11,7 @@ use Redirect;
 use Response;
 
 /**
- * Handle failed validations by redirecting or returning a special resposne
+ * Handle failed validations by redirecting or returning a special response
  */
 class Validation {
 

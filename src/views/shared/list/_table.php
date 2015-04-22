@@ -27,8 +27,6 @@ if ($listing->count()) {
 // Can user delete this item or, if many to many, update the parent.
 $can_delete = app('decoy.auth')->can('destroy', $controller) 
 	|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller));
-
-
 ?>
 
 <table class="table listing columns-<?=count($columns)?>">
