@@ -184,7 +184,7 @@ abstract class Base extends Eloquent {
 	 * @throws Bkwld\Decoy\Exceptions\Exception
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeTitleContains($query, $term) {
+	public function scopeTitleContains($query, $term, $exact = false) {
 
 		// Get an instance so the title attributes can be found.
 		if (!$model = static::first()) return;
@@ -194,7 +194,10 @@ abstract class Base extends Eloquent {
 		if (empty($attributes)) throw new Exception('No searchable attributes');
 
 		// Concatenate all the attributes with spaces and look for the term.
-		return $query->where(DB::raw('CONCAT('.implode('," ",',$attributes).')'), 'LIKE', "%$term%");
+		$source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
+		return $exact ? 
+			$query->where($source, '=', $term) :
+			$query->where($source, 'LIKE', "%$term%");
 	}
 
 	/**

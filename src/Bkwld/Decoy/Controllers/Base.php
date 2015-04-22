@@ -683,7 +683,7 @@ class Base extends Controller {
 			// attached is because it already exists.  Otherwise, it would allow the 
 			// user to create the tag
 			if ($this->parentRelation()
-				->titleContains(Input::get('query'))
+				->titleContains(Input::get('query'), true)
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
