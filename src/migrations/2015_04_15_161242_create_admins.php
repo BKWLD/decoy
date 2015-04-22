@@ -1,5 +1,6 @@
 <?php
 
+use Hash;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
@@ -91,7 +92,7 @@ class CreateAdmins extends Migration {
 			'first_name' => 'Default',
 			'last_name' => 'Admin',
 			'email' => 'redacted',
-			'password' => 'password',
+			'password' => Hash::make('redacted'),
 			'role' => 'admin',
 		]);
 	}
