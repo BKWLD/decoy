@@ -93,6 +93,7 @@ class CreateAdmins extends Migration {
 			'email' => 'redacted',
 			'password' => Hash::make('redacted'),
 			'role' => 'admin',
+			'active' => 1,
 		]);
 	}
 
