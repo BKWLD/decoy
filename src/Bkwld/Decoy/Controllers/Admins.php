@@ -32,7 +32,7 @@ class Admins extends Base {
 		if (!app('decoy.auth')->can('manage', 'admins')) {
 			return Redirect::to(app('decoy.auth')->userUrl());
 		}
-		return parent();
+		return parent::index();
 	}
 
 	/**
