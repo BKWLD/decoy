@@ -45,8 +45,9 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	static public $rules = [];
 
 	/**
-	 * This is should be overriden like so to specify crops that the image cropping
-	 * widget should make UI for
+	 * This is should be overriden like so to specify crops that the image 
+	 * cropping widget should make UI.  Example:
+	 * 
 	 * array('image' => array('marquee' => '4:3', 'feature'))
 	 *
 	 * @var array
@@ -54,8 +55,8 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	static public $crops = [];
 
 	/**
-	 * Should this model be localizable in the admin.  If not undefined, will override
-	 * the site config "auto_localize_root_models"
+	 * Should this model be localizable in the admin.  If not undefined, will 
+	 * override the site config "auto_localize_root_models"
 	 *
 	 * @var boolean
 	 */
