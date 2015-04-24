@@ -24,9 +24,8 @@ use Str;
 abstract class Base extends Eloquent implements SluggableInterface {
 
 	/**
-	 * Adding common traits.  I have some concern over unecessary memory usage if
-	 * a model doesn't need the trait, but I like that it keeps the model code
-	 * simpler.
+	 * Adding common traits.  The memory usage of adding additional methods is
+	 * negligible.
 	 */
 	use SupportsUploads, SluggableTrait {
 		needsSlugging as traitNeedsSlugging;
