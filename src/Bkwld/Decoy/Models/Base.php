@@ -2,9 +2,10 @@
 
 // Imports
 use App;
-use Bkwld\Library\Utils\Collection;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Library\Utils\Collection;
+use Bkwld\Upchuck\SupportsUploads;
 use Config;
 use Croppa;
 use Cviebrock\EloquentSluggable\SluggableInterface;
@@ -22,8 +23,12 @@ use Str;
 
 abstract class Base extends Eloquent implements SluggableInterface {
 
-	// Traits
-	use SluggableTrait {
+	/**
+	 * Adding common traits.  I have some concern over unecessary memory usage if
+	 * a model doesn't need the trait, but I like that it keeps the model code
+	 * simpler.
+	 */
+	use SupportsUploads, SluggableTrait {
 		needsSlugging as traitNeedsSlugging;
 	}
 	
