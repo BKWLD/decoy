@@ -308,26 +308,17 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return $query->where('locale_group', $this->locale_group)
 			->where($this->getKeyName(), '!=', $this->getKey());
 	}
-	
-	/**
-	 * Find by the slug.  Like "find()" but use the slug column instead
-	 *
-	 * @param string $string 
-	 * @return Illuminate\Database\Eloquent\Model | false
-	 */
-	static public function findBySlug($slug) {
-		return static::where('slug', $slug)->first();
-	}
 
 	/**
-	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
+	 * Find by the slug and fail if missing.  Invokes methods from the
+	 * Sluggable trait.
 	 *
 	 * @param string $string 
 	 * @return Illuminate\Database\Eloquent\Model
 	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
-		return static::where('slug', $slug)->firstOrFail();
+		return static::getBySlug($slug)->firstOrFail();
 	}
 	
 	//---------------------------------------------------------------------------
