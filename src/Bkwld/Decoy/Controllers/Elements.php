@@ -103,17 +103,26 @@ class Elements extends Base {
 			->localize($locale)
 			->hydrate();
 
+		// Get all the input such that empty file fields are removed from the input.
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
-		$elements->asModels()->each(function(Element $el) use ($locale, $elements) {
-
-			// Check if the model is dirty, manually.  Laravel's performInsert()
-			// doesn't do this, thus we must check ourselves.  We're removing the 
-			// carriage returns because YAML won't include them and all multiline YAML
-			// config values were incorrectly being returned as dirty.
+		$elements->asModels()->each(function(Element $el) use ($locale, $elements, $input) {
 			$key = $el->inputName();
-			$value = str_replace("\r", '', Input::get($key));
-			if ($value == $el->value && !Input::hasFile($key)) return;
+
+			// Empty file fields will have no key as a result of the above
+			// array_replace_recursive()
+			if (!array_key_exists($key, $input)) return; 
+			
+			// We're removing the carriage returns because YAML won't include them and 
+			// all multiline YAML config values were incorrectly being returned as 
+			// dirty.
+			$value = str_replace("\r", '', $input[$key]);
+			
+			// Check if the model is dirty, manually.  Laravel's performInsert()
+			// doesn't do this, thus we must check ourselves. 
+			if ($value == $el->value) return;
 
 			// Save it
 			$el->exists = $elements->keyUpdated($el->key);
