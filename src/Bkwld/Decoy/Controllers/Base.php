@@ -453,17 +453,6 @@ class Base extends Controller {
 		// Create a new object and hydrate
 		$item = new Model();
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		$slugger = App::make('decoy.slug');
-		$slugger->merge($item);
-
-		// Add foreign keys to the model instance manually.
-		// This was added so that the unique_with validator could test slugs that
-		// are unqiue across multiple columns.  Those other columns are typically
-		// foreign keys.
-		foreach ($this->allForeignKeyPairs() as $pair) {
-			$item->setAttribute($pair->key, $pair->val);
-			$slugger->addWhere($item, $pair->key, $pair->val);
-		}
 
 		// Save it.  We don't save through relations becaue the foreign keys were manually
 		// set previously.  And many to many relationships are not formed during a store().
@@ -541,12 +530,9 @@ class Base extends Controller {
 		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-			$slugger = App::make('decoy.slug');
-			$slugger->merge($item);
-
-			// If this is a child, add "where" conditions on the slug uniqueness
-			foreach ($this->allForeignKeyPairs() as $pair) {
-				$slugger->addWhere($item, $pair->key, $pair->val);
+			if (isset($item::$rules['slug'])) {
+				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
+				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
 			}
 		}
 
@@ -577,7 +563,8 @@ class Base extends Controller {
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to($this->url->relative('index'))->with('success', $this->successMessage($item, 'deleted') );;
+		else return Redirect::to($this->url->relative('index'))
+			->with('success', $this->successMessage($item, 'deleted') );
 	}
 
 	/**
@@ -627,19 +614,6 @@ class Base extends Controller {
 		if ($locale = Input::get('locale')) {
 			$new->locale = $locale;
 			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
-		}
-
-		// If there was a slug, append the new locale to it so it stays unique
-		if (isset($src->slug)) {
-
-			// If we're copying text and settings, first remove any existing locale suffix
-			// from the slug before adding the new locale slug to it.
-			if (in_array('text', $options)) {
-				$pattern = '#\-('.implode('|', array_keys(Config::get('decoy::site.locales'))).')$#i';
-				$new->slug = preg_replace($pattern, '', $src->slug).'-'.$locale;
-
-			// Else, if blank, use a random key
-			} else $new->slug = Str::random(6);
 		}
 
 		// Save the new record and redirect to its edit view

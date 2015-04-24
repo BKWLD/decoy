@@ -146,11 +146,7 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
-		$this->commands(array('command.decoy.generate'));
-
-		// Simple singletons
-		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
-		
+		$this->commands(array('command.decoy.generate'));		
 	}
 	
 	/**
@@ -178,6 +174,9 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// File uploading
 		$this->app->register('Bkwld\Upchuck\ServiceProvider');
+
+		// Creation of slugs
+		$this->app->register('Cviebrock\EloquentSluggable\SluggableServiceProvider');
 		
 	}
 	
@@ -195,7 +194,6 @@ class DecoyServiceProvider extends ServiceProvider {
 			'decoy.elements',
 			'decoy.filters',
 			'decoy.router', 
-			'decoy.slug', 
 			'decoy.url', 
 			'decoy.wildcard', 
 		);

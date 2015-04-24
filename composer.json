@@ -24,6 +24,7 @@
 		"bkwld/laravel-haml": "~2.0",
 		"bkwld/library": "~2.16",
 		"bkwld/upchuck": "~1.1",
+		"cviebrock/eloquent-sluggable": "~2.0",
 		"illuminate/support": "<4.3,>=4.0",
 		"symfony/yaml": "~2.5",
 		"zencoder/zencoder-php": "~2.2",

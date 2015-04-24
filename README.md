@@ -400,25 +400,11 @@ In addition, by subclassing `Bkwld\Decoy\Models\Worker`, the worker command will
 
 ### Slugs
 
-Slugs are auto created from columns returned by `Bkwld\Decoy\Model\Base::titleAttributes()`. Your model should have a validation rule like:
+Slugs are auto created from returned by `Bkwld\Decoy\Model\Base::getAdminTitleAttribute()`. Your model should have a validation rule like:
 
-	'slug' => 'alpha_dash|unique:services
+	'slug' => 'alpha_dash'
 
-Decoy will automatically add ignore for the current id when submittng an UPDATE request.
-
-##### Slugs unique across multiple columns
-
-If the slug is unique across multiple models, you should do a couple things.  Specify a multi column unqiue index in the schema like:
-
-	$table->unique(['slug', 'category_id']);
-
-In this example, this table has a one-to-many parent table called `categories`.  Specify a rule in the model like:
-
-	'slug' => 'alpha_dash|unique_with:services,category_id;slug',
-
-That uses the BKWLD library packages `unique_with` validator.  Lastly, you'll need to pass the id to `Input` on submit by adding this to your Decoy view (this is HAML):
-
-	!= Former::hidden('category_id', $parent_id)
+As long as there is a validation rule with a key of `slug`, Decoy will use cviebrock/eloquent-sluggable to create a slug using rules defined in the base model.
 
 
 ### Permissions

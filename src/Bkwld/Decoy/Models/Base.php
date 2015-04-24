@@ -7,6 +7,8 @@ use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
 use Config;
 use Croppa;
+use Cviebrock\EloquentSluggable\SluggableInterface;
+use Cviebrock\EloquentSluggable\SluggableTrait;
 use DB;
 use Decoy;
 use Event;
@@ -18,7 +20,12 @@ use Request;
 use Session;
 use Str;
 
-abstract class Base extends Eloquent {
+abstract class Base extends Eloquent implements SluggableInterface {
+
+	// Traits
+	use SluggableTrait {
+		needsSlugging as traitNeedsSlugging;
+	}
 	
 	//---------------------------------------------------------------------------
 	// Overrideable properties
@@ -97,7 +104,32 @@ abstract class Base extends Eloquent {
 	public function onAttached($parent) {}
 	public function onRemoving($ids) {}
 	public function onRemoved($ids) {}
-		
+	
+	//---------------------------------------------------------------------------
+	// Slug creation via cviebrock/eloquent-sluggable
+	//---------------------------------------------------------------------------
+
+	/**
+	 * Tell sluggable where to get the source for the slug and apply other
+	 * customizations.
+	 * 
+	 * @var array
+	 */
+	protected $sluggable = array(
+		'build_from' => 'admin_title',
+		'max_length' => 100,
+	);
+
+	/**
+	 * Check for a validation rule for a slug column
+	 * 
+	 * @return boolean 
+	 */
+	protected function needsSlugging() {
+		if (!array_key_exists('slug', static::$rules)) return false;
+		return $this->traitNeedsSlugging();
+	}
+
 	//---------------------------------------------------------------------------
 	// Accessors
 	//---------------------------------------------------------------------------
