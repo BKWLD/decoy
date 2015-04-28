@@ -323,7 +323,8 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
-		return static::getBySlug($slug)->firstOrFail();
+		if ($item = static::findBySlug($slug)) return $item;
+		throw (new ModelNotFoundException)->setModel(get_class($this));
 	}
 	
 	//---------------------------------------------------------------------------
