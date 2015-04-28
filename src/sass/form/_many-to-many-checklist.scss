@@ -16,17 +16,13 @@
 	// Layout the items in two columns
 	&.two-col {
 
-		// Account for the margins and pull the list up
-		.control-label {
-			margin-bottom: 0;
-		}
-
 		// Make cols
 		.checkbox {
 			display: inline-block;
 			width: 50%;
 			padding: 0 5px 0 0;
-			margin-bottom: 10px; // Extra tall to work around the -5px margin-top
+			margin-bottom: 5px;
+			margin-top: 0;
 			
 			// Break columns
 			@media (max-width: $screen-xs) {
