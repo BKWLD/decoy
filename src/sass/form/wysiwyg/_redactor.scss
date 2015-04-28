@@ -11,7 +11,7 @@
 	// Prevent drop shadow on toolbar from overlapping
 	overflow: hidden;
 
-	// Change bkgd color to the same one used by 
+	// Change bkgd color to the same one used by input groups
 	.redactor-toolbar {
 		background: $light-grey;
 		@include border-radius($input-border-radius $input-border-radius 0 0); // Match parent so no clipping

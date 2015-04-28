@@ -1,4 +1,4 @@
-<div class="standard-list fieldset" 
+<div class="standard-list <?=$layout!='form'?'fieldset':null?>"
 	data-js-view="standard-list" 
 	data-controller-route="<?=URL::to(DecoyURL::action($controller))?>" 
 	data-position-offset="<?=$paginator_from?>"
