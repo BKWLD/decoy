@@ -454,10 +454,10 @@ class Base extends Controller {
 		$item = new Model();
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 
-		// Save it.  We don't save through relations becaue the foreign keys were manually
-		// set previously.  And many to many relationships are not formed during a store().
+		// Validate and save.
 		$this->validate($item);
-		$item->save();
+		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
+		else $item->save();
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -868,43 +868,6 @@ class Base extends Controller {
 		$per_page = Input::get('count', static::$per_page);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
-	}
-
-	/**
-	 * Get all the foreign keys and values on the relationship with the parent
-	 * 
-	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
-	 * @return array A list of key-val objects that have the column name and value for
-	 * the active relationship
-	 */
-	private function allForeignKeyPairs($relation = null) {
-		$pairs = array();
-
-		// Get the relation if not defined
-		if ($relation || ($relation = $this->parentRelation())) {
-
-			// Add standard belongs to foreign key
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
-				$pairs[] = (object) array(
-					'key' => $relation->getPlainForeignKey(), 
-					'val' => $relation->getParentKey()
-				);
-			}
-
-			// Add polymorphic column
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
-				$pairs[] = (object) array(
-					'key' => $relation->getPlainMorphType(), 
-					'val' => $relation->getMorphClass()
-				);
-			}
-
-			// Return the pairs
-			return $pairs;
-
-		// Relation could not be found, so return nothing
-		} else return array();
-
 	}
 
 	/**
