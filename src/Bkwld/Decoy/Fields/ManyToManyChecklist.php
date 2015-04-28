@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
-use Bkwld\Decoy\Input\ManyToManyChecklist as ManyToManyChecklistHandler;
+use Bkwld\Decoy\Observers\ManyToManyChecklist as ManyToManyChecklistObserver;
 use Former\Form\Fields\Checkbox;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
@@ -71,7 +71,7 @@ class ManyToManyChecklist extends Checkbox {
 	 * Decoy to treat it has a many to many checkbox
 	 */
 	protected function boxName() {
-		return ManyToManyChecklistHandler::PREFIX.$this->name.'[]';
+		return ManyToManyChecklistObserver::PREFIX.$this->name.'[]';
 	}
 
 	/**
