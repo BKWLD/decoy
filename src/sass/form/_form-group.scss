@@ -6,10 +6,6 @@
 	@media(max-width: $screen-sm) {
 		padding: $form-group-margin-sm;
 	}
-	border-bottom: 1px solid $grey-border;
-	&:last-child {
-		border-bottom: none;	
-	}
 
 	// Override bootstrap
 	margin-bottom: 0;
@@ -34,4 +30,12 @@
 		font-size: $font-size-base - 1px;
 	}
 	
+}
+
+// Add bottom borders to the immediate children of a fieldset
+fieldset > * {
+	border-bottom: 1px solid $grey-border;
+	&:last-child {
+		border-bottom: none;	
+	}
 }
