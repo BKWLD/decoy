@@ -66,7 +66,6 @@ define(function (require) {
 
 	// Enable affixing
 	View.enablePlugin = function() {
-		// this.$el.affix({ offset: {top: this.offset - this.top }});
 		this.$el.affix({ offset: {top: this.offset - this.top }});
 	};
 
