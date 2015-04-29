@@ -84,8 +84,8 @@ define(function (require) {
 
 	// Newer style view declaration
 	$('body.elements.field #main').views(require('decoy/elements/field'));
-	$('body.elements.index form, body.fragments.index form').views(require('decoy/views/tab-sidebar'));
-	$('body > .sidebar').views(Sidebar); // The nav
+	$('body.elements.index .tab-sidebar, body.fragments.index .tab-sidebar').views(require('decoy/views/tab-sidebar'));
+	$('body > .sidebar').views(Sidebar); // The nav sidebar
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
 
 	

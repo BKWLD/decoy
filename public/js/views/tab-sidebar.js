@@ -19,9 +19,6 @@ define(function (require) {
 	View.initialize = function() {
 		_.bindAll(this);
 
-		// Cache
-		this.$nav = $('.nav').find('a');
-
 		// Define router class 
 		this.router = new (Backbone.Router.extend());
 
@@ -33,7 +30,7 @@ define(function (require) {
 		});
 
 		// Register click listeners
-		this.$nav.on('click', this.updateRoute);
+		this.$('a').on('click', this.updateRoute);
 
 	};
 
