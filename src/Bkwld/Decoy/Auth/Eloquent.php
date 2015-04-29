@@ -155,7 +155,7 @@ class Eloquent implements AuthInterface {
 	 * @return string
 	 */
 	public function userPhoto() {
-		return $this->user()->image ?: HTML::gravatar($this->user()->email);
+		return $this->user()->croppa(80, 80) ?: HTML::gravatar($this->user()->email);
 	}
 
 	/**
