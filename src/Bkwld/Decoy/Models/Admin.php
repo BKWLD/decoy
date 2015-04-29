@@ -45,7 +45,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 * 
 	 * @var array
 	 */
-	private $upload_attributes = ['image'];
+	protected $upload_attributes = ['image'];
 
 	/**
 	 * Orders instances of this model in the admin

@@ -575,7 +575,7 @@ Then, models that support encoding should use the `Bkwld\Decoy\Models\Traits\Enc
 class Marquee extends Base {
 	use Bkwld\Decoy\Models\Traits\Encodable, Bkwld\Upchuck\SupportsUploads;
 	private $encodable_attributes = ['video'];
-	private $upload_attributes = [
+	protected $upload_attributes = [
 		'types.marquee.video' => 'video',
 	];
 }

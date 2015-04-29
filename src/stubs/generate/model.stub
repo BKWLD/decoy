@@ -20,7 +20,7 @@ class {{model}} extends Base {
 	 * 
 	 * @var array
 	 */
-	// private $upload_attributes = ['image'];
+	// protected $upload_attributes = ['image'];
 	
 	/**
 	 * Admin cropping tool rules
