@@ -51,9 +51,14 @@
 						-if(count(Bkwld\Decoy\Models\Worker::all()))
 							%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
 
-			-else
+			-elseif(app('decoy.auth')->can('manage', 'admins'))
 				.main-nav(class=Request::segment(2)=='admins'?'active':null)
 					%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
 						%span.glyphicon.glyphicon-user
 						Admins
-				
+
+			-else
+				.main-nav(class=Request::segment(2)=='admins'?'active':null)
+					%a.top-level(href=$auth->userUrl()) 
+						%span.glyphicon.glyphicon-cog
+						Account
