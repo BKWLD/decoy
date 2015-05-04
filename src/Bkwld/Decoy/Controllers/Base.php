@@ -817,16 +817,15 @@ class Base extends Controller {
 	 * @param $string  event The name of this event
 	 * @param $array   args  An array of params that will be passed to the handler
 	 * @param $boolean until Whether to fire an "until" event or not
+	 * @return object 
 	 */
-	protected function fireEvent($event, $args = null, $until = false) {
+	protected function fireEvent($event, $args = null) {
 		
 		// Create the event name
 		$event = "decoy::model.{$event}: ".$this->model;
 		
 		// Fire event
-		if ($until) {
-			if ($response = Event::until($event, $args)) return $response;
-		} else Event::fire($event, $args, $until);
+		return Event::fire($event, $args);
 	}
 	
 	/**
