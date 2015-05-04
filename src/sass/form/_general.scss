@@ -79,6 +79,12 @@
 	}
 }
 
+// Fix the color of links in error blocks
+.has-error .help-block:first-of-type a {
+	color: $state-danger-text;
+	text-decoration: underline;
+}
+
 // Make textareas 4 lines long
 textarea.form-control {
 	height: 6.8em;
