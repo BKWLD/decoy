@@ -52,6 +52,14 @@ $header-z: 700 !default; // This is to clear the crop image UI
  * Aka, the variable name is significant
  */
 
+// Override or re-itereate color
+$text-color: #333 !default;
+$link-color: $text-color !default;
+$link-hover-color: $theme-primary-color !default;
+$input-border-focus: $theme-secondary-color !default;
+$tooltip-bg: #333 !default;
+$input-group-addon-bg: $light-grey !default;
+
 // Customize the path to the font
 $icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/' !default;
 
@@ -65,21 +73,12 @@ $table-cell-padding-vertical: 8px !default;
 $table-cell-padding: $table-cell-padding-vertical $table-cell-padding-horizontal !default;
 
 // Pagination - using the theme's primary color
-$pagination-color: $theme-secondary-inverse !default;
 $pagination-active-color: $theme-primary-inverse !default;
 $pagination-active-bg: $theme-primary-color !default;
 $pagination-active-border: $theme-primary-color !default;
-$pagination-hover-color: $theme-secondary-inverse !default;
 
 // Fonts
 $fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400' !default;
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
-
-// Override colors
-$link-color: #333 !default;
-$link-hover-color: $theme-primary-color !default;
-$input-border-focus: $theme-secondary-color !default;
-$tooltip-bg: #333 !default;
-$input-group-addon-bg: $light-grey !default;
