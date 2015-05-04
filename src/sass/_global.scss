@@ -56,7 +56,7 @@ a:active {
 }
 
 // Underline links in paragraphs
-p a {
+p a, .help-block a {
 	border-bottom: $link-border;
 }
 
