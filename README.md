@@ -655,3 +655,14 @@ You can get the current locale by calling `Decoy::locale()` with no argument.  T
 ```php
 Article::ordered()->visible()->localize()->paginate(10)
 ```
+
+
+### Custom Validation
+
+
+An easy way to add custom validation to models is by specifying an `onValidating` method, taking the `$validation` object, adding errors to it, and returning it.  Special logic in the Base Controller's validate method will see the returned `Validator` and its errors and respond appropriately.
+
+	public function onValidating($validation) {
+		$validation->errors()->add('last_name', 'This last name sucks');
+		throw new \Bkwld\Decoy\Exceptions\ValidationFail($validation);
+	}
