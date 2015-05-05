@@ -24,6 +24,12 @@
 		&.affix {
 			position: fixed;
 			right: $main-padding; // The padding of the row no longer affects it
+
+			// If a really wide page, fix it using left
+			@media(min-width: $max-width) {
+				right: auto;
+				left: $max-width - $width - $main-padding;
+			}
 		}
 	}
 
