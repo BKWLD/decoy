@@ -99,7 +99,8 @@ class ManyToManyChecklist extends Checkbox {
 	 */
 	protected function generateBoxLabel($row) {
 		$url = Str::snake($this->name,'-').'/'.$row->getKey().'/edit';
-		$html = '<a href="/admin/'.$url.'">'.$row->title().'</a>';
+		$html = '<span class="title">'.$row->title().'</span><a href="/admin/'.$url.'">
+			<span class="glyphicon glyphicon-pencil edit"></span></a>';
 
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
 		$html = str_replace('_', '&#95;', $html);

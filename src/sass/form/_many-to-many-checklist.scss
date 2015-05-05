@@ -34,24 +34,32 @@
 			label {
 
 				// Wrap in boxes
+				position: relative;
 				display: block;
 				background-color: #f9f9f9;
 				@include border-radius(3px);
-				padding: 7px 10px 7px 30px;
+				padding: 7px 30px;
 				white-space: nowrap;
 
 				// Prevent text from wrapping.  Need to assign to the a tag because
 				// FF was hiding the checkbox
 				// https://github.com/BKWLD/decoy/issues/371
-				a {
+				.title {
 					display: inline-block;
 					text-overflow: ellipsis;
 					overflow: hidden;
 					vertical-align: middle;
 					width: 100%;
 				}
+
+				// The edit icon
+				.edit {
+					position: absolute;
+					right: 10px;
+					top: 10px;
+				}
+
 			}
 		}
-
 	}
 }
