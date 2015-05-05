@@ -31,7 +31,7 @@ define(function (require) {
 			e.preventDefault();
 			
 			// Vars
-			var url = this.$('a').attr('href'),
+			var url = this.$('a').data('action'),
 				spinner_template = this.$('img').first(),
 				spinner = spinner_template.clone().show();
 			
