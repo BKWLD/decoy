@@ -66,4 +66,21 @@ other:
           type: boolean
           label: Show the contact page
           value: 1 # Default the checkbox to "checked"
-          
+
+        # A select menu
+        select_menu:
+          type: select
+          options:
+            one: One
+            two: Two
+          value: two
+          help: Example of help
+
+        # A list of radio buttons
+        radio_list:
+          type: radios
+          options:
+            one: One
+            two: Two
+          value: two
+

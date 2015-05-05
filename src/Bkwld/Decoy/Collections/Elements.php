@@ -243,6 +243,7 @@ class Elements extends Collection {
 		// Fields
 		$el[$prefix.'label'] = empty($data['label']) || $skip ? Utils\String::titleFromKey($key) : $data['label'];
 		$el[$prefix.'help'] = empty($data['help']) || $skip ? null : $data['help'];
+		$el[$prefix.'options'] = empty($data['options']) || $skip ? null : $data['options'];
 	}
 
 	/**

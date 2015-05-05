@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Collections\Elements as ElementsCollection;
+use Bkwld\Library\Laravel\Former as FormerUtils;
 use Bkwld\Library\Utils\File;
 use Cache;
 use Config;
@@ -79,6 +80,9 @@ class Elements extends Base {
 			case 'image': return Former::image($key, $el->label)->blockHelp($el->help);
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
 			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);
+			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help);
+			case 'radio':
+			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help);
 			/**
 			 * Not ported yet from Frags:
 			 */
