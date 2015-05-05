@@ -2,6 +2,7 @@
 
 // Dependencies
 use Config;
+use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Library\Utils\File;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -12,6 +13,14 @@ use Str;
  * YAML and DB Element sources
  */
 class Element extends Base {
+	use Encodable;
+
+	/**
+	 * Enable encoding
+	 * 
+	 * @var array
+	 */
+	private $encodable_attributes = ['value'];
 
 	/**
 	 * The primary key for the model.

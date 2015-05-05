@@ -66,23 +66,32 @@ trait Encodable {
 	}
 
 	/**
-	 * Create an encoding instance which, in affect, begins an encode.  This should be
-	 * invoked before the model is saved.  For instance, from saving() handler
+	 * Create an encoding instance which, in affect, begins an encode.  This 
+	 * should be invoked before the model is saved.  For instance, from saving() 
+	 * handler
 	 *
-	 * @param  string $attribute The name of the attribtue on the model that contains the
-	 *                           source for the encode
+	 * @param  string $attribute The name of the attribtue on the model that 
+	 *                           contains the source for the encode
 	 * @return void
 	 */
 	public function encodeOnSave($attribute) {
 
-		// Create a new encoding model instance. It's callbacks will talk to the encoding provider.
-		// Save it after the model is fully saved so the foreign id is available for the 
-		// polymorphic relationship.
-		$this->saved(function($model) use ($attribute) {
+		// Preserve the key for the saved callback.  It's a mystery to me why, but
+		// when Elements are being saved, the key would become '0' between here
+		// and the `saved()` callback.
+		$key = $this->getKey();
+
+		// Create a new encoding model instance. It's callbacks will talk to the 
+		// encoding provider. Save it after the model is fully saved so the foreign 
+		// id is available for the  polymorphic relationship.
+		$this->saved(function($model) use ($attribute, $key) {
 
 			// Make sure that that the model instance handling the event is the one
 			// we're updating.
 			if ($this != $model) return;
+
+			// Restore the key value (see above)
+			$model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
 			$model->encodings()->save(new Encoding(array(

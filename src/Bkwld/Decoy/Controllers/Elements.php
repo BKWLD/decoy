@@ -83,10 +83,10 @@ class Elements extends Base {
 			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help);
 			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help);
 			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help);
+			case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help)->setModel($el);
 			/**
 			 * Not ported yet from Frags:
 			 */
-			// case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help);
 			// case 'belongs_to': return Former::belongsTo($key, $el->label)->route($el->value)->blockHelp($el->help);
 		}
 	}
@@ -133,8 +133,15 @@ class Elements extends Base {
 			// doesn't do this, thus we must check ourselves. 
 			if ($value == $el->value) return;
 
-			// Save it
+			// Inform the model as to whether the model already exists in the db.
 			$el->exists = $elements->keyUpdated($el->key);
+
+			// If type is a video encoder and the value is empty, delete the row to
+			// force the encoding row to also delete.  This is possible because
+			// videos cannot have a YAML set default value.
+			if (!$value && $el->type == 'video-encoder') return $el->delete();
+
+			// Save it
 			$el->value = Input::hasFile($key) ? app('upchuck.storage')->moveUpload(Input::file($key)) : $value;
 			$el->locale = $locale;
 			$el->save();
