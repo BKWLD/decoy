@@ -83,6 +83,7 @@ class Element extends Base {
 			case 'image': return $this->copyImage();
 			case 'textarea': return nl2br($this->value);
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
+			case 'checkboxes': return explode(',', $this->value);
 			default: return $this->value;
 		}
 	}
@@ -144,7 +145,9 @@ class Element extends Base {
 	 * @return string 
 	 */
 	public function __toString() {
-		return $this->value();
+		$value = $this->value();
+		if (is_array($value)) return implode(',', $value);
+		return $value;
 	}
 
 }

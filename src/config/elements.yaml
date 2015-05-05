@@ -84,3 +84,14 @@ other:
             two: Two
           value: two
 
+        # A series of checkboxes. The `Decoy:el()` value when rendered as a
+        # string will be a commad delimited list.  But `Decoy:el()->value()`
+        # will return an array of the keys.
+        checkboxes:
+          type: checkboxes
+          options:
+            one: One
+            two: Two
+            three: Three
+          value: two,three
+

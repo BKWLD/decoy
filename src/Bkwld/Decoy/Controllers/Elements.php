@@ -81,8 +81,8 @@ class Elements extends Base {
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
 			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);
 			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help);
-			case 'radio':
 			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help);
+			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help);
 			/**
 			 * Not ported yet from Frags:
 			 */
@@ -117,12 +117,17 @@ class Elements extends Base {
 
 			// Empty file fields will have no key as a result of the above
 			// array_replace_recursive()
-			if (!array_key_exists($key, $input)) return; 
+			if (!array_key_exists($key, $input)) return;
+			$value = $input[$key];
+
+			// If value is an array, like it would be for the "checkboxes" type, make
+			// it a comma delimited string
+			if (is_array($value)) $value = implode(',', $value);
 			
 			// We're removing the carriage returns because YAML won't include them and 
 			// all multiline YAML config values were incorrectly being returned as 
 			// dirty.
-			$value = str_replace("\r", '', $input[$key]);
+			$value = str_replace("\r", '', $value);
 			
 			// Check if the model is dirty, manually.  Laravel's performInsert()
 			// doesn't do this, thus we must check ourselves. 
