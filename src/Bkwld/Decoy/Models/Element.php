@@ -93,6 +93,7 @@ class Element extends Base {
 			case 'textarea': return nl2br($this->value);
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
 			case 'checkboxes': return explode(',', $this->value);
+			case 'video-encoder': return $this->encoding('value')->tag; 
 			default: return $this->value;
 		}
 	}
