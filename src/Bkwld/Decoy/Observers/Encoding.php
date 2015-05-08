@@ -35,13 +35,16 @@ class Encoding {
 	}
 
 	/**
-	 * Check if a model is using the encodable trait
+	 * Check if a model should be encoded
 	 *
 	 * @param Bkwld\Decoy\Models\Base $model 
 	 * @return boolean 
 	 */
 	public function isEncodable($model) {
-		return method_exists($model, 'getDirtyEncodableAttributes');
+		if (!method_exists($model, 'getDirtyEncodableAttributes')) return false;
+		if (is_a($model, 'Bkwld\Decoy\Models\Element') 
+			&& $model->getAttribute('type') != 'video-encoder') return false;
+		return true;
 	}
 
 }
