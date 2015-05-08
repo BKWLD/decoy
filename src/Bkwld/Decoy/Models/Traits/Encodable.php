@@ -90,8 +90,9 @@ trait Encodable {
 			// we're updating.
 			if ($this != $model) return;
 
-			// Restore the key value (see above)
-			$model->setAttribute($this->getKeyName(), $key);
+			// Restore the key value (see above).  It will be defined for Elements but
+			// not of most models.
+			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
 			$model->encodings()->save(new Encoding(array(
