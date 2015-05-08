@@ -72,7 +72,7 @@ class Account extends Base {
 			], Input::get('remember'))) {
 
 			// On success, redirect where they intended to go
-			return Redirect::intended(Session::get('login_redirect'));
+			return Redirect::intended(URL::current());
 
 		// On fail, redirect back and show error
 		} else {
