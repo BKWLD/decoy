@@ -16,10 +16,7 @@
 	<body class="<?=Decoy::bodyClass()?>">
 		
 		<?// Sidebar ?>
-		<? if (App::make('decoy.auth')->check()): ?>
-			<?= View::make('decoy::layouts._nav') ?>
-			<?= View::make('decoy::layouts._bottom_nav', $__data) ?>
-		<? endif ?>
+		<?= View::make('decoy::layouts.sidebar._sidebar') ?>
 
 		<?// Header ?>
 		<?= View::make('decoy::layouts._header', $__data) ?>

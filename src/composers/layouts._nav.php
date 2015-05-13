@@ -2,7 +2,7 @@
 
 // Massage the naigation data into a format that is more usable for
 // the nav partial
-View::composer('decoy::layouts._nav', function($view) {
+View::composer('decoy::layouts.sidebar._nav', function($view) {
 
 	// Get the navigation pages from the config
 	$pages = Config::get('decoy::site.nav');

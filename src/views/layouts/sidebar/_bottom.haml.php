@@ -1,7 +1,7 @@
 -# Holder for the ajax bar, logout, and view public site
 .bottom-nav
 	-# Add AJAX progress indicator
-	!= View::make('decoy::layouts._ajax_progress')
+	!= View::make('decoy::layouts.sidebar._progress')
 
 	.controls
 		.left
