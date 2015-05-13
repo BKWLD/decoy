@@ -333,4 +333,21 @@ class Elements extends Collection {
 		}, $this->keys()), $this->lists('value'));
 	}
 
+	/**
+	 * Get the model instance being used
+	 *
+	 * @return Bkwld\Decoy\Models\Element
+	 */
+	public function getModel() {
+		return $this->model;
+	}
+
+	/**
+	 * Replace the model instance being used
+	 *
+	 * @param Bkwld\Decoy\Models\Element $element 
+	 */
+	public function setModel($element) {
+		$this->model = $element;
+	}
 }
