@@ -260,10 +260,11 @@ class Elements extends Collection {
 		$elements = $this->model->query();
 		if ($this->locale) $elements->localize($this->locale);
 
-		// Convert models to simple arrays with the type and value
+		// Convert models to simple array
 		$elements = array_map(function(Element $element) {
-			$element->setVisible(['type', 'value']);
-			return $element->toArray();
+
+			// Don't need the key as an attribute
+			return array_except($element->toArray(), ['key']);
 
 		// .. from a dictionary of ALL elements for the locale
 		}, $elements->get()->getDictionary());

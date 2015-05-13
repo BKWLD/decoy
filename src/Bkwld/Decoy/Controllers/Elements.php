@@ -135,7 +135,10 @@ class Elements extends Base {
 			if ($value == $el->value) return;
 
 			// Inform the model as to whether the model already exists in the db.
-			$el->exists = $elements->keyUpdated($el->key);
+			if ($el->exists = $elements->keyUpdated($el->key)) $el->syncOriginal();
+
+			// If a new record, add the locale
+			else $el->locale = $locale;
 
 			// If type is a video encoder and the value is empty, delete the row to
 			// force the encoding row to also delete.  This is possible because
@@ -144,7 +147,6 @@ class Elements extends Base {
 
 			// Save it
 			$el->value = Input::hasFile($key) ? app('upchuck.storage')->moveUpload(Input::file($key)) : $value;
-			$el->locale = $locale;
 			$el->save();
 		});
 
