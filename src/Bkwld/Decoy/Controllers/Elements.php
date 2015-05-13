@@ -73,17 +73,18 @@ class Elements extends Base {
 	 */
 	public static function renderField($el, $key = null) {
 		if (!$key) $key = $el->inputName();
+		$id = str_replace('|', '-', $key);
 		switch($el->type) {
-			case 'text': return Former::text($key, $el->label)->blockHelp($el->help);
-			case 'textarea': return Former::textarea($key, $el->label)->blockHelp($el->help);
-			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help);
-			case 'image': return Former::image($key, $el->label)->blockHelp($el->help);
-			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help);
-			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help);
-			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help);
-			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help);
-			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help);
-			case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help)->setModel($el);
+			case 'text': return Former::text($key, $el->label)->blockHelp($el->help)->id($id);
+			case 'textarea': return Former::textarea($key, $el->label)->blockHelp($el->help)->id($id);
+			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help)->id($id);
+			case 'image': return Former::image($key, $el->label)->blockHelp($el->help)->id($id);
+			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help)->id($id);
+			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id);
+			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help)->id($id);
+			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help)->id($id);
+			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help)->id($id);
+			case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help)->setModel($el)->id($id);
 			/**
 			 * Not ported yet from Frags:
 			 */
