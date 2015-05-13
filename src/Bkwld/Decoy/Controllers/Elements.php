@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Collections\Elements as ElementsCollection;
+use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Library\Laravel\Former as FormerUtils;
 use Bkwld\Library\Utils\File;
 use Cache;
@@ -14,6 +15,7 @@ use Input;
 use Redirect;
 use Str;
 use URL;
+use Validator;
 use View;
 
 /**
@@ -110,6 +112,10 @@ class Elements extends Base {
 
 		// Get all the input such that empty file fields are removed from the input.
 		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+
+		// Validate the input
+		$validator = Validator::make($input, $elements->rules());
+		if ($validator->fails()) throw new ValidationFail($validator);
 
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP

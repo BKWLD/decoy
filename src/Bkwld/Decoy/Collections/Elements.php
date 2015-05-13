@@ -317,14 +317,18 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Return the validation rules for the items
+	 * Return the validation rules for the items.  Convert the keys to the
+	 * expected input style
 	 *
 	 * @return array An array of validation rules, keyed to element keys
 	 */
 	public function rules() {
-		return array_filter(array_map(function($data) {
-			return isset($data['rules']) ? $data['rules'] : null;
-		}, $this->assocConfig(true)));
+		$rules = [];
+		foreach($this->assocConfig(true) as $key => $data) {
+			if (empty($data['rules'])) continue;
+			$rules[str_replace('.', '|', $key)] = $data['rules'];
+		}
+		return $rules;
 	}
 	
 	/**
