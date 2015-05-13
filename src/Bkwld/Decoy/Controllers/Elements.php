@@ -160,7 +160,7 @@ class Elements extends Base {
 		$elements->clearCache();
 
 		// Redirect back to index
-		return Redirect::to(URL::current());;
+		return Redirect::to(URL::current())->with('success', '<b>Elements</b> were successfully saved.');
 		
 	}
 
