@@ -67,7 +67,10 @@ class Elements extends Collection {
 	public function asModels() {
 		$this->hydrate();
 		return new ModelCollection(array_map(function($element, $key) {
-			return new Element(array_merge($element, ['key' => $key])); // Add the key as an attribute
+
+			// Add the key as an attribute
+			return $this->model->newInstance(array_merge($element, ['key' => $key]));
+
 		}, $this->all(), array_keys($this->items)));
 	}
 
@@ -90,7 +93,7 @@ class Elements extends Collection {
 			}
 
 		// Add the key as an attribute
-		} else return new Element(array_merge($this->items[$key], ['key' => $key])); 
+		} else return $this->model->newInstance(array_merge($this->items[$key], ['key' => $key])); 
 
 	}
 
@@ -254,7 +257,7 @@ class Elements extends Collection {
 	protected function assocAdminChoices() {
 
 		// Build the query
-		$elements = Element::query();
+		$elements = $this->model->query();
 		if ($this->locale) $elements->localize($this->locale);
 
 		// Convert models to simple arrays with the type and value
