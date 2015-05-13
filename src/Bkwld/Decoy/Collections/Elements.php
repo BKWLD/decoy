@@ -321,7 +321,9 @@ class Elements extends Collection {
 	 * @return array An array of validation rules, keyed to element keys
 	 */
 	public function rules() {
-		return array_filter(array_combine($this->keys(), $this->lists('rules')));
+		return array_filter(array_map(function($data) {
+			return $data['rules'];
+		}, $this->assocConfig(true)));
 	}
 	
 	/**
