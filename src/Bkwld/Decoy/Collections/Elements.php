@@ -212,7 +212,7 @@ class Elements extends Collection {
 
 					// Build the value array
 					$el = ['type' => $type, 'value' => $value];
-					if ($this->has_extra) {
+					if ($this->has_extra || $include_extra) {
 						$this->mergeExtra($el, $field, $field_data);
 						$this->mergeExtra($el, $section, $section_data, 'section_');
 						$this->mergeExtra($el, $page, $page_data, 'page_');
