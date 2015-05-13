@@ -323,7 +323,7 @@ class Elements extends Collection {
 	 */
 	public function rules() {
 		return array_filter(array_map(function($data) {
-			return $data['rules'];
+			return isset($data['rules']) ? $data['rules'] : null;
 		}, $this->assocConfig(true)));
 	}
 	
