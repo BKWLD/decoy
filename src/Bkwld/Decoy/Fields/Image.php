@@ -51,11 +51,7 @@ class Image extends Upload {
 		$this->group->setAttribute('data-js-view', 'image-fullscreen');
 
 		// Make it accept only images
-		$this->accept('image');
-
-		// Get the crop data from the model, if it exists
-		if (($item = $this->model()) && isset($item::$crops[$name])) $this->crops = $item::$crops[$name];
-		
+		$this->accept('image');		
 	}
 
 	/**
@@ -102,6 +98,21 @@ class Image extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderImageReview() {
+
+		// Check for a crops defintion.  The defintion is named after the model
+		// attribute, not the input name
+		if (($item = $this->model()) && method_exists($item, 'getUploadMap')) {
+
+			// Convert array-like names to dot notation to match the supportsUploads
+			// map
+			$name = preg_match('#\]$#', $this->name) ? 
+				trim(str_replace(array('[', ']'), array('.', ''), $this->name), '.') : 
+				$this->name;
+
+			// Get the model attribute for the name
+			$map = $item->getUploadMap();
+			$this->crops = @$item::$crops[$map[$name]];
+		}
 
 		// Show cropper
 		if ($this->crops && $this->isInUploads()) return $this->renderCropper();
@@ -166,10 +177,15 @@ class Image extends Upload {
 		// Close
 		$html .= '</div></div>';
 
-		// Add hidden field to store cropping choices.  After rendering a new
-		// Former field, the active former field must be reset for form validation
-		// errors to work.
-		$html .= Former::hidden($this->name.'_crops');
+		// Add hidden field to store cropping choices. If the field use array-like
+		// naming, insert the _crops suffix inside the last bracket. 
+		$name = preg_match('#\]$#', $this->name) ? 
+			substr_replace($this->name, '_crops', -1, 0) : 
+			$name.'_crops';
+		$html .= Former::hidden($name);
+
+		// After rendering a new Former field, the active former field must be reset 
+		// for form validation errors to work.
 		$this->app['former.field'] = $this;
 
 		// Return HTML
