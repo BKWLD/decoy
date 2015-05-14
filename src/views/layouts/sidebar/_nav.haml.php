@@ -41,7 +41,7 @@
 		-elseif(app('decoy.auth')->can('manage', 'admins'))
 			.main-nav(class=Request::segment(2)=='admins'?'active':null)
 				%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
-					%span.glyphicon.glyphicon-user
+					%span.glyphicon.glyphicon-lock
 					Admins
 
 		-else
