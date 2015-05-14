@@ -181,7 +181,7 @@ class Image extends Upload {
 		// naming, insert the _crops suffix inside the last bracket. 
 		$name = preg_match('#\]$#', $this->name) ? 
 			substr_replace($this->name, '_crops', -1, 0) : 
-			$name.'_crops';
+			$this->name.'_crops';
 		$html .= Former::hidden($name);
 
 		// After rendering a new Former field, the active former field must be reset 
