@@ -268,6 +268,18 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
+	 * Get all visible items by the default order.  This is a good thing to
+	 * subclass to define special listing scopes used ONLY on the frontend.  As
+	 * compared with scopeOrdered().
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
+	 */
+	public function scopeListing($query) {
+		return $query->orderedAndVisible();
+	}
+
+	/**
 	 * Order a table that has a position value
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
