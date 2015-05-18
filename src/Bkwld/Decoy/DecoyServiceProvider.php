@@ -39,6 +39,10 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app->instance('decoy.router', $router);
 		if (App::runningInConsole()) $router->registerAll();
 		else $this->app->before(array($router, 'registerAll'));
+		
+		// Wire up model event callbacks even if request is not for admin
+		$this->app['events']->listen('eloquent.*',                'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.*',            'Bkwld\Decoy\Observers\ModelCallbacks');
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
@@ -86,8 +90,6 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app['events']->listen('eloquent.saved:*',          'Bkwld\Decoy\Observers\ManyToManyChecklist');
 		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
 		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
-		$this->app['events']->listen('eloquent.*',                'Bkwld\Decoy\Observers\ModelCallbacks');
-		$this->app['events']->listen('decoy::model.*',            'Bkwld\Decoy\Observers\ModelCallbacks');
 		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
 
 		// Handle form validation errors
