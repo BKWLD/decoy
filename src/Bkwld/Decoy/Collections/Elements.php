@@ -17,8 +17,10 @@ class Elements extends Collection {
 
 	/**
 	 * The cache key used for the Elements collection
+	 *
+	 * @var string 
 	 */
-	const CACHE_KEY = 'decoy.elements.data';
+	protected $cache_key = 'decoy.elements.data';
 
 	/**
 	 * The parse YAML contents
@@ -150,8 +152,19 @@ class Elements extends Collection {
 	 * @return string 
 	 */
 	protected function cacheKey() {
-		if ($this->locale) return self::CACHE_KEY.'.'.$this->locale;
-		else return self::CACHE_KEY;
+		if ($this->locale) return $this->cache_key.'.'.$this->locale;
+		else return $this->cache_key;
+	}
+
+	/**
+	 * Set the cache key
+	 *
+	 * @param string $key 
+	 * @return $this
+	 */
+	public function setCacheKey($key) {
+		$this->cache_key = $key;
+		return $this;
 	}
 
 	/**
@@ -356,9 +369,11 @@ class Elements extends Collection {
 	/**
 	 * Replace the model instance being used
 	 *
-	 * @param Bkwld\Decoy\Models\Element $element 
+	 * @param  Bkwld\Decoy\Models\Element $element 
+	 * @return $this
 	 */
 	public function setModel($element) {
 		$this->model = $element;
+		return $this;
 	}
 }
