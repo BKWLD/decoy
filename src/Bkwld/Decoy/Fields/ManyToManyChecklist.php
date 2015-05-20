@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Observers\ManyToManyChecklist as ManyToManyChecklistObserver;
+use Config;
 use Former\Form\Fields\Checkbox;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
@@ -98,9 +99,16 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return string HTML
 	 */
 	protected function generateBoxLabel($row) {
-		$url = Str::snake($this->name,'-').'/'.$row->getKey().'/edit';
-		$html = '<span class="title">'.$row->title().'</span><a href="/admin/'.$url.'">
-			<span class="glyphicon glyphicon-pencil edit"></span></a>';
+
+		// Generate the title
+		$html = '<span class="title">'.$row->title().'</span>';
+
+		// Add link to edit
+		$url = '/'.Config::get('decoy::core.dir').'/'.Str::snake($this->name,'-')
+			.'/'.$row->getKey().'/edit';
+		if (app('decoy.auth')->can('update', $url)) {
+			$html .= '<a href="/admin/'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
+		}
 
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
 		$html = str_replace('_', '&#95;', $html);
