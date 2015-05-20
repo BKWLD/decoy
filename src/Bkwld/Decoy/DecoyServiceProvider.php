@@ -33,19 +33,24 @@ class DecoyServiceProvider extends ServiceProvider {
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
-		// Register the routes AFTER all the app routes using the "before" register.  Unless
-		// the app is running via the CLI where we want the routes reigsterd for URL generation.
+		// Register the routes AFTER all the app routes using the "before" register.  
+		// Unless the app is running via the CLI where we want the routes reigsterd 
+		// for URL generation.
 		$router = new Routing\Router($dir, $filters);
 		$this->app->instance('decoy.router', $router);
 		if (App::runningInConsole()) $router->registerAll();
 		else $this->app->before(array($router, 'registerAll'));
-		
-		// Wire up model event callbacks even if request is not for admin
-		$this->app['events']->listen('eloquent.*',                'Bkwld\Decoy\Observers\ModelCallbacks');
-		$this->app['events']->listen('decoy::model.*',            'Bkwld\Decoy\Observers\ModelCallbacks');
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
+
+		// Wire up model event callbacks even if request is not for admin.  Do this
+		// after the usingAdmin call so that the callbacks run after models are
+		// mutated by Decoy logic.  This is important, in particular, so the
+		// Validation observer can alter validation rules before the onValidation
+		// callback runs.
+		$this->app['events']->listen('eloquent.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
 		
 	}
 	
