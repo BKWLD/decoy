@@ -17,6 +17,12 @@
 	// Push the edit icon off the label
 	.edit {
 		margin-left: 8px;
+		display: none;
+	}
+
+	// Only show the edit link on hover
+	.checkbox:hover .edit {
+		display: inline-block;
 	}
 
 	// Layout the items in two columns
