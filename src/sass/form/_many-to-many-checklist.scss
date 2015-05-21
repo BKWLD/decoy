@@ -36,7 +36,7 @@
 				// Wrap in boxes
 				position: relative;
 				display: block;
-				background-color: #f9f9f9;
+				background-color: $bkgd;
 				@include border-radius(3px);
 				padding: 7px 30px;
 				white-space: nowrap;
@@ -60,6 +60,13 @@
 				}
 
 			}
+
+		}
+
+		// Make the bkgd darker so it isn't over powered by hover
+		&:hover .checkbox label {
+			background: darken($bkgd, 3%);
 		}
 	}
+
 }
