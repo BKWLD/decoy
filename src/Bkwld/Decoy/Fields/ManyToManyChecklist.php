@@ -9,9 +9,10 @@ use Illuminate\Container\Container;
 use Str;
 
 /**
- * Render a list of checkboxes to represent a related many-to-many table.  The underlying
- * Former field type is a checkbox.  The relationship names is stored in the name. 
- * The relationship instance that is being represented is stored in the value.
+ * Render a list of checkboxes to represent a related many-to-many table.  The 
+ * underlying Former field type is a checkbox.  The relationship names is stored 
+ * in the name.  The relationship instance that is being represented is stored 
+ * in the value.
  */
 class ManyToManyChecklist extends Checkbox {
 	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
@@ -85,7 +86,8 @@ class ManyToManyChecklist extends Checkbox {
 		return array(
 			'name' => $this->boxName(),
 			'value' => $row->getKey(),
-			'checked' => ($children = $this->children()) && $children->contains($row->getKey()),
+			'checked' => ($children = $this->children()) 
+				&& $children->contains($row->getKey()),
 
 			// Former is giving these a class of "form-control" which isn't correct
 			'class' => false,
@@ -121,7 +123,9 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	protected function children() {
-		if (($item = $this->model()) && method_exists($item, $this->name)) return $item->{$this->name};
+		if (($item = $this->model()) && method_exists($item, $this->name)) {
+			return $item->{$this->name};
+		}
 	}
 
 }
