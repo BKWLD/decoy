@@ -672,7 +672,8 @@ class Base extends Controller {
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
 				
 				// Add condition to query
-				$query = $query->whereNotIn('id', $sibling_ids);
+				$model = new Model;
+				$query = $query->whereNotIn($model->getQualifiedKeyName(), $sibling_ids);
 			}
 		}
 		
