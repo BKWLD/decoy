@@ -388,7 +388,7 @@ class Base extends Controller {
 
 		// Run the query. 
 		$search = new Search();
-		$results = $search->apply($query, $this->search)->paginate($this->perPage());
+		$results = $search->apply($query, $this->search())->paginate($this->perPage());
 		
 		// Render the view using the `listing` builder.
 		$listing = Listing::createFromController($this, $results);
