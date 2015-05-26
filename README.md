@@ -129,29 +129,75 @@ The following protected proprties allow you to customize how Decoy works from th
 
 	```
 	array(
-		'title', // 'title' column assumed to be a text type
-		'description' => 'text', // Label auto generated from field name
-		'body' => array( // Most explicit way
+
+		// 'title' column assumed to be a text type
+		'title',
+
+		// Label auto generated from field name
+		'description' => 'text',
+
+		// Most explicit way to define a text field
+		'body' => array(
 			'type' => 'text',
 			'label' => 'Body',
 		)
-		'type' => array( // Creates a pulldown menu
+
+		// Creates a pulldown menu
+		'type' => array( 
 			'type' => 'select',
 			'options' => array(
 				'photo' => 'Photo',
 				'video' => 'Video',
 			),
 		),
-		'category' => array( // Creates a pulldowon using static array on Post model
+
+		// Creates a pulldowon using static array on Post model
+		'category' => array( 
 			'type' => 'select',
 			'options' => 'Post::$categories'
 		),
-		'like_count' => array( // Numeric input field
+
+		// Numeric input field
+		'like_count' => array(
 			'type' => 'number',
 			'label' => 'Like total',
+
+			// Call the static method `likeCountSearch`() on the `Admin\SomeController`
+			// class to override the query for the like_count field
+			'query' => 'Admin\SomeController::likeCountSearch'
 		),
-		'created_at' => 'date', // Date input field
+
+		// Date input field
+		'created_at' => 'date',
 	);
+	```
+	
+Several of these properties have accessor functions that can be overrode by subclasses.  This has the advantage of allowing you to generate the configuration programatically or to use closures in the configuration.  For instance:
+
+	```
+	class ArticlesController {
+
+		// Support a database "SET" type column in searches
+		public function search() {
+			return [
+				'type' => [
+					'type' => 'select',
+					'options' => 'Article::$types',
+
+					// Any search type supports the `query` parameter for change how the 
+					// field input is applied to the search query
+					'query' => function($query, $condition, $input) {
+						$type = DB::connection()->getPdo()->quote($type);
+						$query->whereRaw('FIND_IN_SET('.$type.', articles.type)');
+					},
+				],
+			];
+		}
+
+		// Other accessor functions
+		public function description() { return ''; }
+		public function columns() { return []; }
+	}
 	```
 
 The following properties are only relevant if a controller is a parent or child of another, as in `hasMany()`, `belongsToMany()`, etc.  You can typically use Decoy's default values for these (which are deduced from the `nav` Config property).
