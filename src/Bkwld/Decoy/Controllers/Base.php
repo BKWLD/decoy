@@ -849,7 +849,7 @@ class Base extends Controller {
 			// 'columns' property of this row in the response.  Use the same logic
 			// found in Decoy::renderListColumn();
 			$item->columns = array();
-			foreach($this->columns as $column) {
+			foreach($this->columns() as $column) {
 				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
 				elseif (isset($row->$column)) {
 					if (is_a($row->$column, 'Carbon\Carbon')) $item->columns[$column] = $row->$column->format(FORMAT_DATE);
@@ -913,7 +913,7 @@ class Base extends Controller {
 
 		// Set vars
 		$this->layout->title = $this->title;
-		$this->layout->description = $this->description;
+		$this->layout->description = $this->description();
 		View::share('controller', $this->controller);
 		
 		// Make sure that the content is a Laravel view before applying vars.  
