@@ -37,10 +37,14 @@ class Search {
 			$field_key = $field_keys[$field_index];
 			$field = is_string($field_key) ? $field_key : $config[$field_key];
 			
-			// Apply the condition to the query
+			// Extract vars for query
 			$comparison = $condition[1];
 			$input = $condition[2];
-			$query = $this->condition($query, $field, $comparison, $input);
+
+			// Use an app-defined query or one of the basic ones
+			if (is_array(($config[$field])) && isset($config[$field]['query'])) {
+				call_user_func($config[$field]['query'], $query, $comparison, $input);
+			} else $this->condition($query, $field, $comparison, $input);
 			
 		}
 		
