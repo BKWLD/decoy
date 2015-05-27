@@ -37,7 +37,8 @@ $nav-bottom-height-mobile: 45px !default;
 $horizontal-label-width: 150px !default;
 $horizontal-label-margin: $horizontal-label-width + $form-group-margin !default;
 $nav-pad: 10px !default;
-$max-width: 1280px - $sidebar-width - $main-padding * 2 !default;
+$effective-max-width: 1280px; // The target max width
+$max-width: $effective-max-width - $sidebar-width - $main-padding * 2 !default;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd !default;
