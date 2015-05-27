@@ -14,7 +14,7 @@
 		else if($errors->has('error message')) 
 			$message = $errors->first('error message');
 		else 
-			$message = '<b>Validation error</b>, the field in conflict is highlighted below. Your submission was <b>not</b> saved.';
+			$message = '<b>Validation error:</b> the field in conflict is highlighted below. Your submission was <b>not</b> saved.';
 
 	// SUCCESS
 	} else if(Session::has('success')) {

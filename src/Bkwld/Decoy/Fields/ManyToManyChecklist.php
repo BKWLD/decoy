@@ -2,18 +2,46 @@
 
 // Dependencies
 use Bkwld\Decoy\Observers\ManyToManyChecklist as ManyToManyChecklistObserver;
+use Config;
 use Former\Form\Fields\Checkbox;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
 use Str;
 
 /**
- * Render a list of checkboxes to represent a related many-to-many table.  The underlying
- * Former field type is a checkbox.  The relationship names is stored in the name. 
- * The relationship instance that is being represented is stored in the value.
+ * Render a list of checkboxes to represent a related many-to-many table.  The 
+ * underlying Former field type is a checkbox.  The relationship names is stored 
+ * in the name.  The relationship instance that is being represented is stored 
+ * in the value.
  */
 class ManyToManyChecklist extends Checkbox {
 	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
+
+	/**
+	 * @var callable
+	 */
+	protected $decorator;
+
+	/**
+	 * Allow an implementation to customize the markup for each item. The callback
+	 * will get 2 params: the rendered html for the checkbox and the model
+	 * instance.  It should return a string, the html for th checkbox.
+	 *
+	 *
+	 * Example:
+	 * 
+	 *    echo Former::manyToManyChecklist('categories')
+	 *    	->decorate(function($html, $model) {
+	 *    		return $html;
+	 *      })
+	 *
+	 * @param callable $callback
+	 * @return $this
+	 */
+	public function decorate($callback) {
+		if (is_callable($callback)) $this->decorator = $callback;
+		return $this;
+	}
 
 	/**
 	 * Prints out the field, wrapped in its group.  This is the opportunity
@@ -24,7 +52,6 @@ class ManyToManyChecklist extends Checkbox {
 	public function wrapAndRender() {
 		$this->addGroupClass('many-to-many-checklist');
 		return parent::wrapAndRender();
-
 	}
 
 	/**
@@ -69,6 +96,8 @@ class ManyToManyChecklist extends Checkbox {
 	/**
 	 * Generate the checkbox name using a special prefix that tells
 	 * Decoy to treat it has a many to many checkbox
+	 *
+	 * @return string 
 	 */
 	protected function boxName() {
 		return ManyToManyChecklistObserver::PREFIX.$this->name.'[]';
@@ -84,10 +113,14 @@ class ManyToManyChecklist extends Checkbox {
 		return array(
 			'name' => $this->boxName(),
 			'value' => $row->getKey(),
-			'checked' => ($children = $this->children()) && $children->contains($row->getKey()),
+			'checked' => ($children = $this->children()) 
+				&& $children->contains($row->getKey()),
 
 			// Former is giving these a class of "form-control" which isn't correct
 			'class' => false,
+
+			// Add the model instance so the decorator can use it
+			'model' => $row,
 		);
 	}
 
@@ -98,9 +131,16 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return string HTML
 	 */
 	protected function generateBoxLabel($row) {
-		$url = Str::snake($this->name,'-').'/'.$row->getKey().'/edit';
-		$html = '<span class="title">'.$row->title().'</span><a href="/admin/'.$url.'">
-			<span class="glyphicon glyphicon-pencil edit"></span></a>';
+
+		// Generate the title
+		$html = '<span class="title">'.$row->title().'</span>';
+
+		// Add link to edit
+		$url = '/'.Config::get('decoy::core.dir').'/'.Str::snake($this->name,'-')
+			.'/'.$row->getKey().'/edit';
+		if (app('decoy.auth')->can('update', $url)) {
+			$html .= '<a href="/admin/'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
+		}
 
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
 		$html = str_replace('_', '&#95;', $html);
@@ -113,7 +153,37 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	protected function children() {
-		if (($item = $this->model()) && method_exists($item, $this->name)) return $item->{$this->name};
+		if (($item = $this->model()) && method_exists($item, $this->name)) {
+			return $item->{$this->name};
+		}
+	}
+
+	/**
+	 * Renders a checkable. This overrides the Former subclass so we can decorate
+	 * each individual `.checkbox`div.
+	 *
+	 * @param string|array $item          A checkable item
+	 * @param integer      $fallbackValue A fallback value if none is set
+	 *
+	 * @return string
+	 */
+	protected function createCheckable($item, $fallbackValue = 1) {
+
+		// Get the model reference out of the item and remove it before it's
+		// rendered.  Otherwise it gets created as a data atrribute
+		$model = $item['attributes']['model'];
+		unset($item['attributes']['model']);
+
+		// Render the checkbox as per normal
+		$html = parent::createCheckable($item, $fallbackValue);
+
+		// Mutate a checkable using user defined 
+		if ($this->decorator) {
+			$html = call_user_func($this->decorator, $html, $model);
+		}
+	
+		// Return html
+		return $html;
 	}
 
 }

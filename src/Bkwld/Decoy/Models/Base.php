@@ -336,7 +336,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	static public function findBySlugOrFail($slug) {
 		if ($item = static::findBySlug($slug)) return $item;
-		throw (new ModelNotFoundException)->setModel(get_class($this));
+		throw (new ModelNotFoundException)->setModel(get_called_class());
 	}
 	
 	//---------------------------------------------------------------------------

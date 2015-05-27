@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Observers;
 
 // Dependencies
+use Event;
 use Input;
 
 /**
@@ -28,7 +29,6 @@ class ManyToManyChecklist {
 				$this->updateRelationship($model, $matches[1]);
 			}
 		}
-
 	}
 
 	/**
@@ -39,14 +39,24 @@ class ManyToManyChecklist {
 	 */
 	private function updateRelationship($model, $relationship) {
 
-		// Strip all the "0"s from the input.  These exist because push checkboxes is globally
-		// set for all of Decoy;
+		// Strip all the "0"s from the input.  These exist because push checkboxes 
+		// is globally set for all of Decoy;
 		$ids = Input::get(self::PREFIX.$relationship);
 		$ids = array_filter($ids, function($id) { return $id > 0; });
 
-		// Attach just the ones mentioned in the input.  This blows away the previous joins
+		// Allow a single listener to transform the list of ids to, for instance, 
+		// add pivot data.
+		$prefix = 'decoy::many-to-many-checklist.';
+		if ($mutated = Event::until($prefix."syncing: $relationship", [$ids])) {
+			$ids = $mutated;
+		}
+
+		// Attach just the ones mentioned in the input.  This blows away the 
+		// previous joins
 		$model->$relationship()->sync($ids);
 
+		// Fire completion event
+		Event::fire($prefix."synced: $relationship");
 	}
 
 }

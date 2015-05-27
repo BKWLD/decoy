@@ -60,11 +60,12 @@
 
 // Theme the hovers in the toolbar.  Need to increase specificity to counter
 // an important in their styles
-body .redactor-dropdown a {
-	&:hover {
-		background: $theme-primary-color !important;
-		color: $theme-primary-inverse !important;
-	}
+body .redactor-dropdown:not(.redactor-dropdown-box-fontcolor) a:hover {
+	background: $theme-primary-color !important;
+	color: $theme-primary-inverse !important;
+}
+body .redactor-dropdown.redactor-dropdown-box-fontcolor a:hover {
+	border-color: $theme-primary-color !important;
 }
 
 // Fix file upload placement in redactor modal
