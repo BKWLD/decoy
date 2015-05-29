@@ -56,51 +56,12 @@
 	@include text-shadow(none);
 }
 
-// Help text config
-.help-block {
-
-	// Change the margins on the help block
-	margin-bottom: 0;
-
-	// The bold text is a BIT too big
-	b {
-		font-size: $font-size-base - 1px;
-	}
-
-	// Restore the color of manual help text during a validation error
-	.has-error & + .help-block {
-		color: lighten($text-color, 25%); // This is copied from BS3
-		margin-top: 0px; // Looks better with reduced spacing
-	}
-
-	// Push it up if following a `note` field
-	.form-control-static + & {
-		margin-top: -5px;
-	}
-}
-
-// Fix the color of links in error blocks
-.has-error .help-block:first-of-type a {
-	color: $state-danger-text;
-}
-
 // Make textareas 4 lines long
 textarea.form-control {
 	height: 6.8em;
 	resize: vertical;
 	&.wysiwyg {
 		height: 16em;
-	}
-}
-
-// Reduce padding on autocomplete
-.tt-dropdown-menu .tt-suggestion {
-	padding: 4px 12px;
-
-	// The bold for this font is too big, this makes it look
-	// less jerky
-	.belongs-to & .tt-highlight {
-		font-size: $font-size-base - 1px;
 	}
 }
 
