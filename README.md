@@ -306,7 +306,7 @@ Decoy supports both [Redactor](http://imperavi.com/redactor/) and [CKEditor](htt
 wysiwyg = require('decoy/wysiwyg/factory')
 wysiwyg.config.allowUploads();
 wysiwyg.config.merge({
-	buttons: ['formatting', 'bold', 'italic', 'link', 'image', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
+	buttons: ['formatting', 'bold', 'italic', 'link', 'file', image', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
 	formatting: ['p', 'h2']
 });
 
