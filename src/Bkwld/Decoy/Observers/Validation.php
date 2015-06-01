@@ -40,8 +40,11 @@ class Validation {
 		if (Config::get('upchuck::disk.driver') != 'local') return;
 
 		// Get all the file related rules
+		// https://regex101.com/r/oP4kD2/1
 		$rules = array_filter($validation->getRules(), function($rules) {
-			return count(array_intersect(['image', 'file', 'mime', 'video'], $rules));
+			foreach($rules as $rule) {
+				if (preg_match('#^image|file|video|mimes\:[\w,]+$#', $rule)) return true;
+			}
 		});
 
 		// For each of the file rules, if the input has a value, make a file
