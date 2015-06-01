@@ -50,7 +50,8 @@
 				display: block;
 				background-color: $bkgd;
 				@include border-radius(3px);
-				padding: 7px 30px;
+				padding: 7px;
+				padding-left: 30px;
 				white-space: nowrap;
 			}
 
