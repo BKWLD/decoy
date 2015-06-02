@@ -131,7 +131,7 @@
 	}
 
 	// Remove margins on paragraphs, like if a WYSIWYG is directly rendered
-	p { margin: 0; }
+	td > p, td > a > p { margin: 0; }
 
 	// On small browsers, only show the second and last columns in tables
 	@media (max-width: $screen-sm) {
