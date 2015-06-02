@@ -12,6 +12,7 @@ use Cviebrock\EloquentSluggable\SluggableInterface;
 use Cviebrock\EloquentSluggable\SluggableTrait;
 use DB;
 use Decoy;
+use DecoyURL;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
@@ -20,6 +21,7 @@ use Log;
 use Request;
 use Session;
 use Str;
+use URL;
 
 abstract class Base extends Eloquent implements SluggableInterface {
 
@@ -208,6 +210,115 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return $attributes;
 	}
 
+	//---------------------------------------------------------------------------
+	// Listing view, action-column accessors
+	//---------------------------------------------------------------------------
+
+	/**
+	 * Make the markup for the actions column of the admin listing view.  The
+	 * indivudal actions are stored in an array that is iterted through in the
+	 * view
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return array 
+	 */
+	public function makeAdminActions($data) {
+		$actions = [];
+		if ($html = $this->makeVisibilityAction($data)) $actions['visibility'] = $html;
+		if ($html = $this->makeEditAction($data))       $actions['edit'] = $html;
+		if ($html = $this->makeViewAction($data))       $actions['view'] = $html;
+		if ($html = $this->makeDeleteAction($data))           $actions['delete'] = $html;
+		return $actions;
+	}
+
+	/**
+	 * Make the visibility action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string
+	 */
+	protected function makeVisibilityAction($data) {
+		extract($data);
+		
+		// Check if this model supports editing the visibility
+		if ($many_to_many 
+			|| !app('decoy.auth')->can('publish', $controller) 
+			|| !array_key_exists('visible', $this->attributes)) return;
+
+		// Create the markup
+		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
+				<span class="glyphicon glyphicon-eye-%s"></span>
+			</a>', 
+			$this->visible ? 'Make draft' : 'Publish',
+			$this->visible ? 'open' : 'close'
+		);
+
+	}
+
+	/**
+	 * Make the edit action.
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeEditAction($data) {
+		extract($data);
+		return sprintf('<a href="%s" class="visibility js-tooltip" 
+			data-placement="left" title="Edit in admin">
+				<span class="glyphicon glyphicon-pencil"></span>
+			</a>', $this->getAdminEditUri($controller, $many_to_many));
+	}
+
+	/**
+	 * Get the admin edit URL assuming you know the controller and whether it's
+	 * being listed as a many to many 
+	 *
+	 * @param string $controller ex: Admin\ArticlesController
+	 * @param boolean $many_to_many
+	 * @return string 
+	 */
+	public function getAdminEditUri($controller, $many_to_many = false) {
+		if ($many_to_many) return URL::to(DecoyURL::action($controller, $this->getKey()));
+		return URL::to(DecoyURL::relative('edit', $this->getKey(), $controller));
+	}
+
+	/**
+	 * Make the view action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeViewAction($data) {
+		if (!$uri = $this->getUriAttribute()) return;
+		return sprintf('<a href="%s" target="_blank" class="visibility js-tooltip" 
+			data-placement="left" title="View on site">
+				<span class="glyphicon glyphicon-bookmark"></span>
+			</a>', $uri);
+	}
+
+	/**
+	 * Make the delete action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeDeleteAction($data) {
+		extract($data);
+
+		// Check if this model can be deleted.  This mirrors code found in the table
+		//  partial for generating the edit link on the title
+		if (!(app('decoy.auth')->can('destroy', $controller) 
+					|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
+
+		// Return markup
+		return sprintf('<a class="remove-now js-tooltip" data-placement="left" title="%s">
+				<span class="glyphicon glyphicon-%s"></span>
+			</a>',
+			$many_to_many ? 'Remove relationship' : 'Permanently delete',
+			$many_to_many ? 'remove' : 'trash'
+		);
+	}
+	
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------

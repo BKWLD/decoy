@@ -17,11 +17,8 @@ $actions = 2; // Default
 if ($listing->count()) {
 	$test_row = $listing[0]->toArray();
 
-	// Has visibilty toggle
-	$has_visible = app('decoy.auth')->can('publish', $controller) && array_key_exists('visible', $test_row);
-
-	// Increment the actions count
-	if (!$many_to_many && $has_visible) $actions++;
+	// Get the list of actions
+	$test_actions = $listing[0]->makeAdminActions($__data);
 }
 
 // Can user delete this item or, if many to many, update the parent.
@@ -44,7 +41,14 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
 				<? endforeach ?>
 				
-				<th class="actions-<?=$actions?>">Actions</th>
+				<? if (isset($test_actions)): ?>
+					<? if (count($test_actions)): ?>
+						<th class="actions-<?=count($test_actions)?>">Actions</th>
+					<? endif ?>
+				<? else: ?>
+					<th class="actions-3">Actions</th>
+				<? endif ?>
+
 			</tr>
 		</thead>
 	<tbody>
@@ -66,16 +70,7 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 		
 		<?
 		// Loop through the listing data
-		foreach ($listing as $item):
-
-			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
-			// rows from multiple models
-			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
-		
-			// Figure out the edit link
-			if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->getKey()));
-			else $edit = URL::to(DecoyURL::relative('edit', $item->getKey(), $controller));
-			?>
+		foreach ($listing as $item): ?>
 	
 			<tr data-model-id="<?=$item->getKey()?>"
 				<?
@@ -102,7 +97,7 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 						
 						<?// Add an automatic link on the first column?>
 						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=$edit?>">
+							<a href="<?=$item->getAdminEditUri($controller, $many_to_many)?>">
 						<? endif ?>	
 						
 						<?// Produce the value of the cell?>
@@ -114,35 +109,12 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 				<? endforeach ?>
 				
 				<?// Standard action links?>
-				<td class="actions">
-					
-					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible): ?>
-						<? if ($item->visible): ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make draft"><span class="glyphicon glyphicon-eye-open"></span></a>
-						<? else: ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Publish"><span class="glyphicon glyphicon-eye-close"></span></a>
-						<? endif ?>
-						<span class="visible-edit-seperator">|</span>
-					<? endif ?>
-					
-					<?// Edit link?>
-					<a href="<?=$edit?>"><span class="glyphicon glyphicon-pencil"></span></a>
+				<? if (count($test_actions)): ?>
+					<td class="actions">
+						<?=implode(' | ', $item->makeAdminActions($__data))?>
+					</td>
+				<? endif ?>
 
-					<?// Delete or remove ?>
-					<? if ($can_delete): ?>
-						<span class="edit-delete-seperator">|</span>
-						 
-						 <?// Many to many listings have remove icons instead of trash?>
-						<? if ($many_to_many): ?>
-							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><span class="glyphicon glyphicon-remove"></span></a>
-							
-						<?// Regular listings actually delete rows ?>
-						<? else: ?> 
-							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><span class="glyphicon glyphicon-trash"></span></a>
-						<? endif ?>
-					<? endif ?>
-				</td>
 			</tr>
 		<? endforeach ?>
 		
