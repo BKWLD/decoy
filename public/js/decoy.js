@@ -23,6 +23,7 @@ define(function (require) {
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
 	require('decoy/modules/auto-toggleable'); // Scan make for attributes that enable toggling
+	require('decoy/modules/chicken-switch').register(); // Enable chicken switches on delete
 	var wysiwyg = require('decoy/wysiwyg/factory');
 
 	// Private static vars
