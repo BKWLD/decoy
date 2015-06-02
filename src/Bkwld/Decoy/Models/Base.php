@@ -246,11 +246,12 @@ abstract class Base extends Eloquent implements SluggableInterface {
 			|| !array_key_exists('visible', $this->attributes)) return;
 
 		// Create the markup
+		$is_visible = $this->getAttribute('visible');
 		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
 				<span class="glyphicon glyphicon-eye-%s"></span>
 			</a>', 
-			$this->visible ? 'Make draft' : 'Publish',
-			$this->visible ? 'open' : 'close'
+			$is_visible ? 'Make draft' : 'Publish',
+			$is_visible ? 'open' : 'close'
 		);
 
 	}
@@ -263,7 +264,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	protected function makeEditAction($data) {
 		extract($data);
-		return sprintf('<a href="%s" class="visibility js-tooltip" 
+		return sprintf('<a href="%s" class="action-edit js-tooltip" 
 			data-placement="left" title="Edit in admin">
 				<span class="glyphicon glyphicon-pencil"></span>
 			</a>', $this->getAdminEditUri($controller, $many_to_many));
@@ -290,7 +291,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	protected function makeViewAction($data) {
 		if (!$uri = $this->getUriAttribute()) return;
-		return sprintf('<a href="%s" target="_blank" class="visibility js-tooltip" 
+		return sprintf('<a href="%s" target="_blank" class="action-view js-tooltip" 
 			data-placement="left" title="View on site">
 				<span class="glyphicon glyphicon-bookmark"></span>
 			</a>', $uri);
