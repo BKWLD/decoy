@@ -210,6 +210,13 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return $attributes;
 	}
 
+	/**
+	 * A no-op that can add classes to rows in listing tables in the admin
+	 *
+	 * @return string 
+	 */
+	public function getAdminRowClassAttribute() { }
+
 	//---------------------------------------------------------------------------
 	// Listing view, action-column accessors
 	//---------------------------------------------------------------------------

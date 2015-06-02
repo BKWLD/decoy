@@ -72,7 +72,7 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 		// Loop through the listing data
 		foreach ($listing as $item): ?>
 	
-			<tr data-model-id="<?=$item->getKey()?>"
+			<tr data-model-id="<?=$item->getKey()?>" class="<?=$item->getAdminRowClassAttribute()?>"
 				<?
 				// Render parent id
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
