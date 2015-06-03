@@ -5,7 +5,7 @@
 		@include box-sizing(border-box);
 
 		// Don't break out of box on FF
-		width: 100%;
+		max-width: 100%;
 
 		// Looks better with a lil extra.  I think because of line-height stuff
 		margin-top: 5px + 2px;
