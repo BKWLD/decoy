@@ -50,6 +50,11 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return string
 	 */
 	public function wrapAndRender() {
+
+		// Do not show the form at all if they don't have permission
+		if (!app('decoy.auth')->can('read', $this->name)) return '';
+
+		// Add classes and continue
 		$this->addGroupClass('many-to-many-checklist');
 		return parent::wrapAndRender();
 	}
