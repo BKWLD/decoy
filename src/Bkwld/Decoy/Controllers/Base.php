@@ -16,6 +16,7 @@ use Bkwld\Library\Utils\File;
 use Config;
 use Croppa;
 use DB;
+use Decoy;
 use Event;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
@@ -289,25 +290,14 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Figure out the model for a controller class
+	 * Figure out the model for a controller class or return the current model class
+	 * 
 	 * @param string $class ex: "Admin\SlidesController"
 	 * @return string ex: "Slide"
 	 */
 	public function model($class = null) {
-		if (!$class) return $this->model; // for getters
-		
-		// Swap out the namespace if decoy
-		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
-		
-		// Remove the Controller suffix app classes may have
-		$model = preg_replace('#Controller$#', '', $model);
-		
-		// Assume that non-decoy models want the first namespace (aka Admin) removed
-		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
-		
-		// Make it singular
-		$model = Str::singular($model);
-		return $model;
+		if ($class) return Decoy::modelForController($class);
+		return $this->model;
 	}
 	
 	/**
