@@ -24,7 +24,7 @@
 				.btn-group
 					%a.btn.outline.new(href=URL::to(DecoyURL::relative('create')))
 						%span.glyphicon.glyphicon-plus 
-					!=View::make('decoy::shared.form._create-locales', ['title' => $title])
+					!=View::make('decoy::shared.form._create-locales', $__data)
 
 	-# Description of the controller
 	-if($description)
