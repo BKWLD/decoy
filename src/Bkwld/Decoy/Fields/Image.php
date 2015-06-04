@@ -136,17 +136,19 @@ class Image extends Upload {
 		$html = '<div class="image-upload-cropper">';
 			
 		// Add the tabs
-		$html .= '<div class="tabs" data-js-view="crop-styles">';
-		$active = 'active';
-		foreach($this->crops as $key => $val) {
-			$label = is_numeric($key) ? $val : $key;
-			$html .= '<span class="'.$active.'">'
-				.Library\Utils\String::titleFromKey($label)
-				.'</span>';
-			$active = null;
+		if (count($this->crops) > 1) {
+			$html .= '<div class="tabs" data-js-view="crop-styles">';
+			$active = 'active';
+			foreach($this->crops as $key => $val) {
+				$label = is_numeric($key) ? $val : $key;
+				$html .= '<span class="'.$active.'">'
+					.Library\Utils\String::titleFromKey($label)
+					.'</span>';
+				$active = null;
+			}
+			$html .= '</div>';
 		}
-		$html .= '</div>';
-		
+	
 		// Add fullscreen button
 		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
 		
