@@ -114,6 +114,7 @@ class Filters {
 			$action = $wildcard->detectAction();
 			if (in_array($action, ['attach', 'remove'])) {
 				$controller = Input::get('parent_controller');
+				$action = 'edit';
 
 			// Otherwise, use the controller from the route
 			} else $controller = $wildcard->detectControllerName();
