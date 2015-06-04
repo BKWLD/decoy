@@ -144,7 +144,7 @@ class ManyToManyChecklist extends Checkbox {
 		$url = '/'.Config::get('decoy::core.dir').'/'.Str::snake($this->name,'-')
 			.'/'.$row->getKey().'/edit';
 		if (app('decoy.auth')->can('update', $url)) {
-			$html .= '<a href="/admin/'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
+			$html .= '<a href="'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
 		}
 
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
