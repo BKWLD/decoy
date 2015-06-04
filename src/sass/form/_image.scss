@@ -41,10 +41,7 @@
 	
 	// Remove the margin that we want when no crops are present
 	.img-thumbnail {
-		margin: 0;
-
-		// Remove the rounded corner in the uppwer left
-		@include border-corner-radius(top, left, 0);
+		margin: 0;	
 	}
 	
 	// Setup the tabs
@@ -78,6 +75,12 @@
 				background-color: darken($light-grey, 2%);
 			}
 		}
+
+		// Remove the rounded corner in the uppwer left
+		~ .imgs .img-thumbnail {
+			@include border-corner-radius(top, left, 0);
+		}
+
 	}
 	
 	// Deactivate all but the first image
