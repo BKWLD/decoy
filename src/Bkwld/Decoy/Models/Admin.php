@@ -30,6 +30,13 @@ class Admin extends Base {
 	);
 	
 	/**
+	 * Admins should not be localized
+	 *
+	 * @var boolean
+	 */
+	static public $localizable = false;
+
+	/**
 	 * Allow all properties to be mass assigned.  This model doesn't actually correspond 
 	 * with a real table so there is no risk that this setting would allow a malicious 
 	 * person to set one of the actual DB values
