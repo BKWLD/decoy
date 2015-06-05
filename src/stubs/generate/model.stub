@@ -9,7 +9,7 @@ class {{model}} extends Base {
 	 */
 	// public static $rules = [
 	// 	'title' => 'required',
-	// 	'slug' => 'alpha_dash',
+	// 	'slug' => 'alpha_dash|unique:articles',
 	// 	'image' => 'image',
 	// 	'date' => 'required',
 	// 	'url' => 'url',
