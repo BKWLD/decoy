@@ -48,7 +48,7 @@ class Search {
 				call_user_func($config[$field]['query'], $query, $comparison, $input);
 
 			// ... or one of the simple, standard ones
-			} else $this->condition($query, $field, $comparison, $input);
+			} else $this->condition($query, $field, $comparison, $input, $config[$field]['type']);
 			
 		}
 		
@@ -64,9 +64,15 @@ class Search {
 	 * @param  string $field The field name from search config
 	 * @param  string $comparison The operator string from the search UI
 	 * @param  string $input The input for the field
+	 * @param  string $type The type of the field
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	private function condition($query, $field, $comparison, $input) {
+	private function condition($query, $field, $comparison, $input, $type) {
+
+		// Convert date formats
+		if ($type == 'date') $input = date('Y-m-d', strtotime($input));
+
+		// Apply the where
 		switch ($comparison) {
 			
 			// Not Like
