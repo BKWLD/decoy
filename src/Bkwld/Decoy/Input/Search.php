@@ -22,9 +22,12 @@ class Search {
 	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function apply($query, $config) {
-		
+
 		// Do nothing if no query in the input
 		if (!Input::has('query')) return $query;
+
+		// Expand the config
+		$config = $this->longhand($config);
 		
 		// Deserialize the query and loop through
 		$conditions = json_decode(Input::get('query'));
@@ -33,18 +36,15 @@ class Search {
 		foreach($conditions as $condition) {
 			
 			// Get the field name by taking the index and looking up which key it corresponds to
-			$field_index = $condition[0];
-			$field_key = $field_keys[$field_index];
-			$field = is_string($field_key) ? $field_key : $config[$field_key];
-			
+			$field = $field_keys[$condition[0]];
+			$field_config = $config[$field];
+
 			// Extract vars for query
 			$comparison = $condition[1];
 			$input = $condition[2];
 
 			// Use an app-defined query ...
-			if (isset($config[$field]) 
-				&& is_array(($config[$field])) 
-				&& isset($config[$field]['query'])) {
+			if (isset($config[$field]['query'])) {
 				call_user_func($config[$field]['query'], $query, $comparison, $input);
 
 			// ... or one of the simple, standard ones
