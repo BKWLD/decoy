@@ -41,9 +41,13 @@ class Search {
 			$comparison = $condition[1];
 			$input = $condition[2];
 
-			// Use an app-defined query or one of the basic ones
-			if (is_array(($config[$field])) && isset($config[$field]['query'])) {
+			// Use an app-defined query ...
+			if (isset($config[$field]) 
+				&& is_array(($config[$field])) 
+				&& isset($config[$field]['query'])) {
 				call_user_func($config[$field]['query'], $query, $comparison, $input);
+
+			// ... or one of the simple, standard ones
 			} else $this->condition($query, $field, $comparison, $input);
 			
 		}
