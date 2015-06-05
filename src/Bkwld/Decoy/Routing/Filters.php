@@ -15,6 +15,7 @@ use Redirect;
 use Request;
 use Route;
 use Session;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Str;
 use URL;
 use View;
@@ -93,6 +94,8 @@ class Filters {
 	
 	/**
 	 * Force users to login to the admin
+	 *
+	 * @throws AccessDeniedHttpException
 	 */
 	public function acl() {
 		
@@ -121,13 +124,14 @@ class Filters {
 
 			// If they don't hvae permission, throw an error
 			if (!app('decoy.auth')->can($this->mapActionToPermission($action), $controller)) {
-				return App::abort(401);
+				throw new AccessDeniedHttpException;
 			}
 		}
 	}
 	
 	/**
 	 * Return boolean if the current URL is a public one.  Meaning, ACL is not enforced
+	 * 
 	 * @return boolean
 	 */
 	public function isPublic() {

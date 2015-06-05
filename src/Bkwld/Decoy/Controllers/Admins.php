@@ -5,6 +5,7 @@ use App;
 use Bkwld\Decoy\Models\Admin;
 use Input;
 use Redirect;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
  * The CRUD listing of admins
@@ -50,13 +51,14 @@ class Admins extends Base {
 	 * in the GET
 	 *
 	 * @param  int $id Model key
+	 * @throws AccessDeniedHttpException
 	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function update($id) {
 
 		// Encorce permissions on updating ones own role
 		if (!app('decoy.auth')->can('manage', 'admins') && Input::has('role')) {
-			return App::abort(401);
+			throw new AccessDeniedHttpException;
 		}
 
 		// If the password is empty, remove the key from the input so it isn't cleared
@@ -74,7 +76,7 @@ class Admins extends Base {
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function disable($id) {
-		if (!app('decoy.auth')->can('manage', 'admins')) return App::abort(401);
+		if (!app('decoy.auth')->can('manage', 'admins')) throw new AccessDeniedHttpException;
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = null;
 		$admin->save();
@@ -87,7 +89,7 @@ class Admins extends Base {
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function enable($id) {
-		if (!app('decoy.auth')->can('manage', 'admins')) return App::abort(401);
+		if (!app('decoy.auth')->can('manage', 'admins')) throw new AccessDeniedHttpException;
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = 1;
 		$admin->save();
