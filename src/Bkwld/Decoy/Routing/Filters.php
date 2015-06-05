@@ -106,8 +106,8 @@ class Filters {
 		// to login and pass along the current url so we can take the user there.
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
 
-		// Always allow logout
-		if (Request::is('admin/logout')) return;
+		// Always allow logout and redactor uploads
+		if (Request::is('admin/logout', 'admin/redactor/upload')) return;
 
 		// If permissions were defined, see if the user has permission for the current action
 		if (Config::has('permissions')) {
