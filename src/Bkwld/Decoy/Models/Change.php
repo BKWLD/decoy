@@ -1,15 +1,30 @@
 <?php namespace Bkwld\Decoy\Models;
 
-// Deps\
+// Deps
 use Bkwld\Decoy\Models\Admin;
 use DB;
 use Illuminate\Database\Eloquent\Model;
+use Str;
 
 /**
  * Reperesents a single model change event.  Typically a single CRUD action on
  * a model.
  */
 class Change extends Base {
+
+	/**
+	 * Always eager load the admins
+	 *
+	 * @var array
+	 */
+	protected $with = ['admin'];
+
+	/**
+	 * List of all relationships
+	 *
+	 * @return Illuminate\Database\Eloquent\Relations\Relation
+	 */
+	public function admin() { return $this->belongsTo('Bkwld\Decoy\Models\Admin'); }
 
 	/**
 	 * A convenience method for saving a change instance
@@ -43,7 +58,79 @@ class Change extends Base {
 		
 		// Return the changed instance
 		return $change;
+	}
 
+	/**
+	 * Return a list of all the actions currently being used as a hash for use
+	 * in a select menu
+	 *
+	 * @return array 
+	 */
+	static public function getActions() {
+		return static::groupBy('action')->lists('action', 'action');
+	}
+
+	/**
+	 * Return a list of all the admins that have been logged as a hash for use
+	 * in a select menu
+	 *
+	 * @return array 
+	 */
+	static public function getAdmins() {
+		return static::groupBy('admin_id')
+		->join('admins', 'admins.id', '=', 'admin_id')
+		->select(DB::raw('changes.id, CONCAT(first_name, " ", last_name) name'))
+		->lists('name', 'id');
+	}
+
+	/**
+	 * Format the the activity like a sentance
+	 *
+	 * @return string HTML
+	 */
+	public function getAdminTitleHtmlAttribute() {
+		return $this->admin->getAdminTitleHtmlAttribute()
+			.' '.$this->getActionLabelAttribute()
+			.' the '.$this->getModelTitleAttribute()
+			.', "<a href="">'.$this->title.'</a>"'
+			.', on '.$this->created_at->format('n/j/y g:i A')
+		;
+	}
+
+	/**
+	 * Get the admin name and link
+	 *
+	 * @return string HTML
+	 */
+	public function getAdminLinkAttribute() {
+		return '<a href="'.$this->admin->getAdminEditAttribute().'">'
+			.$this->admin->getAdminTitleHtmlAttribute().'</a>';
+	}
+
+	/**
+	 * Format the activity as a colored label
+	 *
+	 * @return string HTML
+	 */
+	public function getActionLabelAttribute() {
+		$map = [
+			'created' => 'success',
+			'updated' => 'warning',
+			'deleted' => 'danger',
+		];
+		$type = @$map[$this->action] ?: 'info';
+		return "<span class='label label-{$type}'>{$this->action}</span>";
+	}
+
+	/**
+	 * Format the model name by translating it through the contorller's defined
+	 * title
+	 *
+	 * @return string HTML
+	 */
+	public function getModelTitleAttribute() {
+		$controller = call_user_func($this->model.'::adminControllerClass');
+		return '<b>'.Str::singular(with(new $controller)->title()).'</b>';
 	}
 
 }
