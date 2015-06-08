@@ -90,5 +90,22 @@
 	 * @var boolean 
 	 */
 	'show_frontend_tools' => false,
+
+	/**
+	 * Store an entry in the database of all model changes.
+	 *
+	 * 		@var boolean|callable
+	 *
+	 * If a function, it's signature is:
+	 * 
+	 *   	@param Illuminate\Database\Eloquent\Model $model The model being touched
+	 *   	@param string $action Generally a CRUD verb: "created", "updated", "deleted"
+	 *   	@param Bkwld\Decoy\Models\Admin $admin The admin acting on the record
+	 *   	@return boolean 
+	 */
+	// 'log_changes' => true,
+	'log_changes' => function($model, $action, $admin_id) {
+		return true;
+	},
 	
 );

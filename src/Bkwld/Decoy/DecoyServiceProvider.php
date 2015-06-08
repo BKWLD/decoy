@@ -49,8 +49,13 @@ class DecoyServiceProvider extends ServiceProvider {
 		// mutated by Decoy logic.  This is important, in particular, so the
 		// Validation observer can alter validation rules before the onValidation
 		// callback runs.
-		$this->app['events']->listen('eloquent.*',    'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('eloquent.*',     'Bkwld\Decoy\Observers\ModelCallbacks');
 		$this->app['events']->listen('decoy::model.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
+
+		// If logging changes hasn't been disabled, log all model events
+		if (Config::get('decoy::site.log_changes')) {
+			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
+		}
 		
 	}
 	
