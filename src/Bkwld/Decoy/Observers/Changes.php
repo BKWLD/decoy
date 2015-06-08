@@ -27,6 +27,10 @@ class Changes {
 		// Don't log the Change model events
 		if (is_a($model, 'Bkwld\Decoy\Models\Change')) return;
 
+		// Hide Elements.  To do this right, I should aggregate a bunch of Element
+		// changes into a single log.
+		if (is_a($model, 'Bkwld\Decoy\Models\Element')) return;
+
 		// Get the action of the event
 		preg_match('#eloquent\.(\w+)#', Event::firing(), $matches);
 		$action = $matches[1];
