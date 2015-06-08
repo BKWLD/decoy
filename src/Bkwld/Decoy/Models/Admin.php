@@ -214,6 +214,15 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Get the URL to edit the admin
+	 *
+	 * @return string 
+	 */
+	public function getAdminEditAttribute() {
+		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->id);
+	}
+
+	/**
 	 * Check if admin is banned
 	 * 
 	 * @return boolean true if banned

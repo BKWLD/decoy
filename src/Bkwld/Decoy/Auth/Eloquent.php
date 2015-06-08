@@ -173,7 +173,7 @@ class Eloquent implements AuthInterface {
 	 * @return string
 	 */
 	public function userUrl() {
-		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->auth->id());
+		return $this->user()->getAdminEditAttribute();
 	}
 	
 	/**
