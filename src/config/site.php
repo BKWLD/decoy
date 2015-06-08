@@ -2,6 +2,8 @@
 	
 	/**
 	 * The name of the site is shown in the header of all pages
+	 *
+	 * @var string
 	 */
 	'name' => Config::get('site.name') ? Config::get('site.name') : 'Admin',
 	
@@ -14,6 +16,8 @@
 	 * In addition, you may append an icon name after a label, delimited by
 	 * a comma.  The icon name should be the suffix of a Bootstrap Glyphicon.  For example,
 	 * to show the `glyphicon-book` icon, just append `,book` to the end of the label. 
+	 *
+	 * @var array 
 	 */
 	'nav' => [
 		// 'Content,book' => [
@@ -23,13 +27,17 @@
 
 	/**
 	 * After a succesful login, this is the absolute path or url that should be
-	 * redirected to
+	 * redirected to.
+	 *
+	 * @var string
 	 */
 	'post_login_redirect' => '/admin/admins',
 
 	/**
 	 * Roles that super admins can assign other admins to on the admin edit page.
 	 * If left empty, all admins will be assigned to the default level of "admin".
+	 *
+	 * @var array 
 	 */
 	'roles' => [
 		// 'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
@@ -38,6 +46,8 @@
 
 	/**
 	 * Permissions rules.  These are described in more detail in the README.
+	 *
+	 * @var array 
 	 */
 	'permissions' => [
 		// 'general' => [
@@ -54,6 +64,8 @@
 	/**
 	 * A hash of localization slugs and readable labels for all the locales for this
 	 * site.  Localization UI will only appear if the count > 1.
+	 *
+	 * @var array 
 	 */
 	'locales' => [
 		'english' => 'English',
@@ -66,12 +78,16 @@
 	 * level in the nav.  The thinking is that a site that is localized should
 	 * have everything localized but that children will inherit the localization
 	 * preference from a parent.
+	 *
+	 * @var boolean 
 	 */
 	'auto_localize_root_models' => true,
 
 	/**
 	 * Switch to show the front-end decoy tools or not. These include editing of
 	 * Elements, etc
+	 *
+	 * @var boolean 
 	 */
 	'show_frontend_tools' => false,
 	
