@@ -27,6 +27,13 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	protected $table = 'admins';
 
 	/**
+	 * Admins should not be localized
+	 *
+	 * @var boolean
+	 */
+	static public $localizable = false;
+
+	/**
 	 * Validation rules
 	 * 
 	 * @var array

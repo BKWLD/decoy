@@ -50,6 +50,11 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return string
 	 */
 	public function wrapAndRender() {
+
+		// Do not show the form at all if they don't have permission
+		if (!app('decoy.auth')->can('read', $this->name)) return '';
+
+		// Add classes and continue
 		$this->addGroupClass('many-to-many-checklist');
 		return parent::wrapAndRender();
 	}
@@ -139,7 +144,7 @@ class ManyToManyChecklist extends Checkbox {
 		$url = '/'.Config::get('decoy::core.dir').'/'.Str::snake($this->name,'-')
 			.'/'.$row->getKey().'/edit';
 		if (app('decoy.auth')->can('update', $url)) {
-			$html .= '<a href="/admin/'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
+			$html .= '<a href="'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
 		}
 
 		// The str_replace fixes Former's auto conversion of underscores into spaces. 
