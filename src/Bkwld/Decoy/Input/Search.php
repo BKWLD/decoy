@@ -31,12 +31,11 @@ class Search {
 		
 		// Deserialize the query and loop through
 		$conditions = json_decode(Input::get('query'));
-		$field_keys = array_keys($config);
 		if (!is_array($conditions)) throw new Exception('Bad query');
 		foreach($conditions as $condition) {
 			
 			// Get the field name by taking the index and looking up which key it corresponds to
-			$field = $field_keys[$condition[0]];
+			$field = $condition[0];
 			$field_config = $config[$field];
 
 			// Extract vars for query

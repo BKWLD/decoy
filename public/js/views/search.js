@@ -248,8 +248,8 @@ define(function (require) {
 				var $condition = this.add();
 				
 				// Restore choices
-				if ($condition.find('select.fields').length) $condition.find('.fields')[0].selectedIndex = condition[0];
-				this.change(); // selectedIndex won't tigger the handler automatically
+				$condition.find('.comparisons').val(condition[0]);
+				this.change(); // Have to trigger handler automatically
 				$condition.find('.comparisons').val(condition[1]);
 				$condition.find('.input-field').val(condition[2]);
 				
@@ -270,7 +270,7 @@ define(function (require) {
 				var $condition = $(this);
 				
 				// Lookup vals
-				var field = $condition.find('select.fields').length ? $condition.find('.fields')[0].selectedIndex : 0,
+				var field = $condition.find('select.fields').val(),
 					comparison = $condition.find('.comparisons').val(),
 					input = $condition.find('.input-field').val();
 					
