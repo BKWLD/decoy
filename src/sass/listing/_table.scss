@@ -34,6 +34,7 @@
 		text-align: right;
 
 		// Many non-Chrome browsers need these to be a little wider than normal.  I gave it 4px extra
+		&.actions-1, 
 		&.actions-2 { width: 46px; } 
 		&.actions-3 { width: 76px; }
 		&.actions-4 { width: 96px; }
