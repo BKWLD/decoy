@@ -298,7 +298,6 @@ class Listing extends Field {
 			'description'       => $this->controller->description(),
 			'columns'           => $this->getColumns($this->controller),
 			'search'            => $this->controller->search(),
-			'auto_link'         => 'first',
 			'convert_dates'     => 'date',
 			'layout'            => $this->layout,
 			'parent_id'         => null,

@@ -9,7 +9,6 @@
 // Set defaults for optional values so this partial can more easily be rendered
 // by itself
 if (!isset($many_to_many)) $many_to_many = false;
-if (!isset($auto_link)) $auto_link = 'first';
 if (!isset($convert_dates)) $convert_dates = 'date';
 
 // Test the data for presence of special properties
@@ -95,16 +94,16 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 				<? foreach(array_values($columns) as $i => $column): ?>					
 					<td class="<?=strtolower($column_names[$i])?>">
 						
-						<?// Add an automatic link on the first column?>
-						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=$item->getAdminEditUri($controller, $many_to_many)?>">
-						<? endif ?>	
-						
-						<?// Produce the value of the cell?>
-						<?=Decoy::renderListColumn($item, $column, $convert_dates)?>	
-						
-						<?// End the automatic first link?>
-						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>
+						<?
+						// Wrap the column value in an edit link only if it's the first
+						// column and it doesn't contain an a tag with an href attribute
+						$value = Decoy::renderListColumn($item, $column, $convert_dates);
+						if ($i ===0 && !preg_match('#<a[^.]+href[^.]+>#', $value)) {
+							$value = '<a href="'
+								.$item->getAdminEditUri($controller, $many_to_many)
+								.'">'.$value.'</a>';
+						} ?>
+
 					</td>
 				<? endforeach ?>
 				
