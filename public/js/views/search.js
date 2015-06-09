@@ -6,8 +6,7 @@ define(function (require) {
 	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
-		Backbone = require('backbone'),
-		storage = require('decoy/plugins/kizzy')('decoy.search');
+		Backbone = require('backbone');
 
 	// Make the key used to save the state
 	var state_key = 'state-'+location.pathname;
@@ -22,15 +21,19 @@ define(function (require) {
 		initialize: function () {
 			_.bindAll(this);
 			
-			// Set the initial state
-			this.visible = storage.get('visible') ? true : false;
-			if (this.visible) this.$el.show();
+			// Parse the query string
+			this.query = this.parseQuery();
+			this.visible = !!this.query
 			
 			// Cache selectors
 			this.schema = this.$el.data('schema');
 			this.$conditions = this.$('.conditions');
 			this.$submit = this.$conditions.find('button[type="submit"]');
 			this.$search_actions = $('.search-controls');
+
+			// Set initial state
+			if (this.visible) this.$el.show();
+			this.toggleClear();
 			
 			// Make the add and substract buttons
 			this.$add = $('<button type="button" class="btn btn-sm outline add"><span class="glyphicon glyphicon-plus">');
@@ -47,7 +50,20 @@ define(function (require) {
 			_.defer(_.bind(function() {
 				this.$search_actions.addClass('initialized');
 			}, this));
-			
+		},
+
+		// Parse the query string
+		// Modified from https://gist.github.com/ryoppy/5780748
+		parseQuery: function() {
+			var query = window.location.search.substring(1);
+			if (!query) return;
+			query = _.chain(query.split('&'))
+				.map(function(params) {
+					var p = params.split('=');
+					return [p[0], decodeURIComponent(p[1])];
+				})
+				.object().value();
+			if (query.query) return JSON.parse(query.query);
 		},
 		
 		// Events
@@ -55,9 +71,6 @@ define(function (require) {
 			'change .fields': 'change',
 			'click .add': 'add',
 			'click .subtract': 'subtract',
-			'change .comparisons': 'freeze',
-			'change .input-field': 'freeze',
-			'input .input-field': 'freeze',
 			'submit': 'submit'
 		},
 		
@@ -71,7 +84,6 @@ define(function (require) {
 			
 			// Remember the state
 			this.visible = !this.visible;
-			storage.set('visible', this.visible);
 			
 			// Animate
 			this.$el.slideToggle();
@@ -95,10 +107,6 @@ define(function (require) {
 			// Add comparison options
 			this.removeComparisons($condition);
 			$condition.find('.fields').after(this.addComparisons(this.schema[field]));
-			
-			// Remember the form
-			this.freeze();
-
 		},
 		
 		// Return type specific comparison options
@@ -196,9 +204,6 @@ define(function (require) {
 			// Produce input fields for the first field
 			this.change();
 			
-			// Update the cached version
-			this.freeze();
-			
 			// Return the new condition
 			return $condition;
 			
@@ -209,20 +214,11 @@ define(function (require) {
 			if (e) e.preventDefault();
 			var $condition = $(e.target).closest('.condition');
 			$condition.remove();
-			this.freeze();
 		},
 		
 		// Toggle the clear button
 		toggleClear: function() {
-			
-			// Get the conditions from the frozen state
-			var conditions = storage.get(state_key);
-			
-			// Anytime we serialize, check if we should show or hide the clear button.
-			// The form must be visible and have more than one condition or an input
-			// value in the first condition.  This function gets called often but jquery
-			// won't add a class more than once, so it won't be triggered too often.
-			if (this.visible && (conditions.length > 1 || conditions[0][2])) this.$search_actions.removeClass('closed');
+			if (this.visible) this.$search_actions.removeClass('closed');
 			else this.$search_actions.addClass('closed');
 			
 		},
@@ -231,22 +227,16 @@ define(function (require) {
 		// Store and recall the state of the form
 		//----------------------------------------------------------------
 		
-		// Freeze the state of the form in storage
-		freeze: function() {
-			storage.set(state_key, this.serialize());
-			this.toggleClear();
-		},
-		
 		// Restore the form from a frozen state
 		defrost: function() {
-			var conditions = storage.get(state_key);
+			var conditions = this.query;
 			if (!conditions || conditions.length === 0) return false;
 			
 			// Loop through the conditions, add new rows, and then set them to what
 			// was in the conditions
 			_.each(conditions, function(condition) {
 				var $condition = this.add();
-				
+
 				// Restore choices
 				$condition.find('.comparisons').val(condition[0]);
 				this.change(); // Have to trigger handler automatically
@@ -254,9 +244,6 @@ define(function (require) {
 				$condition.find('.input-field').val(condition[2]);
 				
 			}, this);
-			
-			// Update the state after the last change
-			this.freeze();
 		},
 		
 		// Serialize the state of the form.  It's done in a terse form because
@@ -314,9 +301,6 @@ define(function (require) {
 		clear: function(e) {
 			if (e) e.preventDefault();
 			
-			// Clear the state
-			storage.set(state_key, null);
-			
 			// Redirect with no query
 			var search = this.stripQuery(location.search);
 			location.href = location.pathname+search;
@@ -328,9 +312,6 @@ define(function (require) {
 			
 			// If there is a query in the location, then do nothing
 			if (location.search.match(/query=/)) return;
-			
-			// If there is no state, do nothing
-			if (!storage.get(state_key)) return;
 			
 			// Otherwise, redirect the page by doing a submit
 			this.submit();
