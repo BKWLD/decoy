@@ -102,7 +102,8 @@ $can_delete = app('decoy.auth')->can('destroy', $controller)
 							$value = '<a href="'
 								.$item->getAdminEditUri($controller, $many_to_many)
 								.'">'.$value.'</a>';
-						} ?>
+						} 
+						echo $value; ?>
 
 					</td>
 				<? endforeach ?>
