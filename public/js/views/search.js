@@ -238,7 +238,8 @@ define(function (require) {
 				var $condition = this.add();
 
 				// Restore choices
-				$condition.find('.comparisons').val(condition[0]);
+				
+				$condition.find('.fields').val(condition[0]);
 				this.change(); // Have to trigger handler manually
 				$condition.find('.comparisons').val(condition[1]);
 				$condition.find('.input-field').val(condition[2]);
