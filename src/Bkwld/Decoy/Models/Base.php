@@ -316,7 +316,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		// Check if this model can be deleted.  This mirrors code found in the table
 		//  partial for generating the edit link on the title
 		if (!(app('decoy.auth')->can('destroy', $controller) 
-					|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
+			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
 
 		// Return markup
 		return sprintf('<a class="remove-now js-tooltip" data-placement="left" title="%s">

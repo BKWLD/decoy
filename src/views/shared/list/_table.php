@@ -20,9 +20,12 @@ if ($listing->count()) {
 	$test_actions = $listing[0]->makeAdminActions($__data);
 }
 
-// Can user delete this item or, if many to many, update the parent.
-$can_delete = app('decoy.auth')->can('destroy', $controller) 
-	|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller));
+// Check if the actions include a delete link and whether the user can delete 
+// this item or, if many to many, update the parent.
+$can_delete = count(array_filter($test_actions, function($action) {
+		return strpos($action, 'remove-now');
+	})) && (app('decoy.auth')->can('destroy', $controller) 
+		|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
 ?>
 
 <table class="table listing columns-<?=count($columns)?>">
