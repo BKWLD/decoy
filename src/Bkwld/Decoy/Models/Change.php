@@ -89,11 +89,11 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getAdminTitleHtmlAttribute() {
-		return $this->admin->getAdminTitleHtmlAttribute()
+		return $this->getAdminLinkAttribute()
 			.' '.$this->getActionLabelAttribute()
-			.' the '.$this->getModelTitleAttribute()
-			.', "<a href="">'.$this->title.'</a>"'
-			.', on '.$this->created_at->format('n/j/y g:i A')
+			.' the '.$this->getModelAttribute()
+			.' "'.$this->getModelTitleAttribute().'"'
+			.' about '.$this->getHumanDateAttribute()
 		;
 	}
 
@@ -128,9 +128,32 @@ class Change extends Base {
 	 *
 	 * @return string HTML
 	 */
-	public function getModelTitleAttribute() {
+	public function getModelAttribute() {
 		$controller = call_user_func($this->model.'::adminControllerClass');
-		return '<b>'.Str::singular(with(new $controller)->title()).'</b>';
+		$controller = new $controller;
+		return '<b class="js-tooltip" title="'.$controller->description().'">'
+			.Str::singular($controller->title()).'</b>';
+	}
+
+	/**
+	 * Get the title of the model. Perhaps in the future there will be more smarts
+	 * here, like generating a link to the edit view
+	 *
+	 * @return string HTML
+	 */
+	public function getModelTitleAttribute() {
+		return $this->title;
+	}
+
+	/**
+	 * Get the date of the change
+	 *
+	 * @return string HTML
+	 */
+	public function getHumanDateAttribute() {
+		return '<span class="js-tooltip" title="'
+			.$this->created_at->toDayDateTimeString().'">'
+			.$this->created_at->diffForHumans().'</span>';
 	}
 
 }
