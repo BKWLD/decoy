@@ -8,6 +8,11 @@
 		width: 24px;
 	}
 
+	// Fix bolding increasing the font size with this font
+	.activity b {
+		font-size: 13px;
+	}
+
 	// Improve horizontal alignment
 	.glyphicon-filter {
 		position: relative;
