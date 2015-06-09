@@ -156,4 +156,21 @@ class Change extends Base {
 			.$this->created_at->diffForHumans().'</span>';
 	}
 
+	/**
+	 * Customize the action links
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return array 
+	 */
+	public function makeAdminActions($data) {
+		return [
+			'<span class="glyphicon glyphicon-filter js-tooltip" 
+				title="Filter to just changes of this <b>'.$this->model.'</b>" 
+				data-placement="left"></span>',
+			'<span class="glyphicon glyphicon-export js-tooltip" 
+				title="View changed attributes" 
+				data-placement="left"></span>',
+		];
+	}
+
 }

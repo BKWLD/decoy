@@ -1,11 +1,17 @@
 /**
  * The changes listing
  */
-.changed.index .listing {
+.changes.index .listing {
 
 	// Reduce the size of the admin icon
 	.activity img {
 		width: 24px;
+	}
+
+	// Improve horizontal alignment
+	.glyphicon-filter {
+		position: relative;
+		top: 2px;
 	}
 
 }
