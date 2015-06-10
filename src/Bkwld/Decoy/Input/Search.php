@@ -69,7 +69,10 @@ class Search {
 	private function condition($query, $field, $comparison, $input, $type) {
 
 		// Convert date formats
-		if ($type == 'date') $input = date('Y-m-d', strtotime($input));
+		if ($type == 'date') {
+			$field = DB::raw("DATE($field)");
+			$input = date('Y-m-d', strtotime($input));
+		}
 
 		// Apply the where
 		switch ($comparison) {
