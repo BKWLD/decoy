@@ -14,7 +14,7 @@ if (preg_match('#^/uploads#', $url)) return;
 if (preg_match('#^https?://#', $url) && strpos($url, Request::root()) === false) return;
 
 // Form the prefix
-$url_link = '<a href="'.$url.'">URI</a>';
+$url_link = '<a href="'.$url.'" target="_blank">URI</a>';
 $prepend = preg_replace('#/[\w-\.]+$#', '/', parse_url(rtrim($url,'/'), PHP_URL_PATH));
 
 // Render the field

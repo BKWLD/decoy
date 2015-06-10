@@ -26,7 +26,7 @@ define(function (require) {
 			
 			// Shared vars
 			this.$bar = this.$('.progress-bar');
-			this.$links = $('.main-nav a[href], .breadcrumbs a, .standard-list a[href*="http://"]:not([target="_blank"]), .progress-link, .form-actions .btn');
+			this.$links = $('.main-nav a[href], .breadcrumbs a, .standard-list a[href*="http://"]:not([target="_blank"]), .progress-link, .form-actions .btn:not([target="_blank"])');
 			this.persist = false;
 
 			// Listen for start and complete
