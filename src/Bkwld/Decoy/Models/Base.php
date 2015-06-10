@@ -586,13 +586,21 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 	
 	/**
-	 * Get the admin controller class for this model.  It's assumed to NOT be a decoy controller.
-	 * In other words, it's in app/controllers/admin/.
+	 * Get the admin controller class for this model.
 	 * 
 	 * @return string ex: Admin\ArticlesController
 	 */
 	static public function adminControllerClass() {
-		return ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural(get_called_class()).'Controller';
+		$class = get_called_class();
+
+		// Decoy controller
+		if (strpos($class, 'Bkwld\Decoy\Models') !== false) {
+			return Str::plural(str_replace('Bkwld\Decoy\Models', 'Bkwld\Decoy\Controllers', $class));
+
+		// App controller
+		} else {
+			return ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural($class).'Controller';
+		}
 	}
 	
 	/**
