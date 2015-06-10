@@ -4,6 +4,7 @@
 use Bkwld\Decoy\Models\Change;
 use Config;
 use Event;
+use Route;
 
 /**
  * Create a log of all model changing events
@@ -34,6 +35,9 @@ class Changes {
 		// Hide Elements.  To do this right, I should aggregate a bunch of Element
 		// changes into a single log.
 		if (is_a($model, 'Bkwld\Decoy\Models\Element')) return;
+
+		// Don't log an admin logging in or out
+		if (Route::is('decoy::account@login', 'decoy::account@logout')) return;
 
 		// Get the action of the event
 		preg_match('#eloquent\.(\w+)#', Event::firing(), $matches);
