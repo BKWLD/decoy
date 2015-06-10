@@ -19,8 +19,8 @@
 		top: 2px;
 	}
 
-	// Grey out disabled glyphicons
-	.glyphicon.disabled {
+	// Grey out non-link glyphicons
+	span.glyphicon {
 		@include opacity($light-opacity);
 	}
 

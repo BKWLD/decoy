@@ -29,6 +29,7 @@ class Change extends Base {
 	 * @return Illuminate\Database\Eloquent\Relations\Relation
 	 */
 	public function admin() { return $this->belongsTo('Bkwld\Decoy\Models\Admin'); }
+	public function loggable() { return $this->morphTo(); }
 
 	/**
 	 * Check whether changes are enabled
@@ -215,7 +216,7 @@ class Change extends Base {
 			DecoyURL::action('changes', $this->id));
 
 		// Else, show a disabled bitton
-		else $actions[] = '<span class="glyphicon glyphicon-export disabled js-tooltip"
+		else $actions[] = '<span class="glyphicon glyphicon-export js-tooltip"
 			title="Content was deleted"
 			data-placement="left"></span>';
 
