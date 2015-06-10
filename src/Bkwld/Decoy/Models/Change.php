@@ -1,8 +1,10 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Deps
+use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Admin;
 use DB;
+use DecoyURL;
 use Illuminate\Database\Eloquent\Model;
 use Str;
 
@@ -103,8 +105,9 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getAdminLinkAttribute() {
-		return '<a href="'.$this->admin->getAdminEditAttribute().'">'
-			.$this->admin->getAdminTitleHtmlAttribute().'</a>';
+		return sprintf('<a href="%s">%s</a>',
+			$this->filterUrl(['admin_id' => $this->admin_id]),
+			$this->admin->getAdminTitleHtmlAttribute());
 	}
 
 	/**
@@ -118,8 +121,10 @@ class Change extends Base {
 			'updated' => 'warning',
 			'deleted' => 'danger',
 		];
-		$type = @$map[$this->action] ?: 'info';
-		return "<span class='label label-{$type}'>{$this->action}</span>";
+		return sprintf('<a href="%s" class="label label-%s">%s</a>',
+			$this->filterUrl(['action' => $this->action]),
+			isset($map[$this->action]) ? $map[$this->action] : 'info',
+			$this->action);
 	}
 
 	/**
@@ -131,8 +136,10 @@ class Change extends Base {
 	public function getModelAttribute() {
 		$controller = call_user_func($this->model.'::adminControllerClass');
 		$controller = new $controller;
-		return '<b class="js-tooltip" title="'.$controller->description().'">'
-			.Str::singular($controller->title()).'</b>';
+		return sprintf('<b class="js-tooltip" title="%s"><a href="%s">%s</a></b>',
+			$controller->description(),
+			$this->filterUrl(['model' => $this->model]),
+			Str::singular($controller->title()));
 	}
 
 	/**
@@ -142,7 +149,9 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getModelTitleAttribute() {
-		return $this->title;
+		return sprintf('<a href="%s">%s</a>',
+			$this->filterUrl(['model' => $this->model, 'key' => $this->key]),
+			$this->title);
 	}
 
 	/**
@@ -151,9 +160,10 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getHumanDateAttribute() {
-		return '<span class="js-tooltip" title="'
-			.$this->created_at->toDayDateTimeString().'">'
-			.$this->created_at->diffForHumans().'</span>';
+		return sprintf('<a href="%s" class="js-tooltip" title="%s">%s</a>',
+			$this->filterUrl(['created_at' => $this->created_at->format('m/d/Y')]),
+			$this->created_at->toDayDateTimeString(),
+			$this->created_at->diffForHumans());
 	}
 
 	/**
@@ -164,13 +174,25 @@ class Change extends Base {
 	 */
 	public function makeAdminActions($data) {
 		return [
-			'<span class="glyphicon glyphicon-filter js-tooltip" 
-				title="Filter to just changes of this <b>'.$this->model.'</b>" 
-				data-placement="left"></span>',
+			sprintf('<a href="%s" 
+				class="glyphicon glyphicon-filter js-tooltip" 
+				title="Filter to just changes of this <b>%s</b>" 
+				data-placement="left"></a>',
+				$this->filterUrl(['model' => $this->model, 'key' => $this->key]),
+				$this->model),
 			'<span class="glyphicon glyphicon-export js-tooltip" 
 				title="View changed attributes" 
 				data-placement="left"></span>',
 		];
+	}
+
+	/**
+	 * Make a link to filter the result set
+	 *
+	 * @return string 
+	 */
+	public function filterUrl($query) {
+		return DecoyURL::action('changes').'?'.Search::query($query);
 	}
 
 }
