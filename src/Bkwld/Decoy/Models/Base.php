@@ -234,7 +234,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		if ($html = $this->makeVisibilityAction($data)) $actions['visibility'] = $html;
 		if ($html = $this->makeEditAction($data))       $actions['edit'] = $html;
 		if ($html = $this->makeViewAction($data))       $actions['view'] = $html;
-		if ($html = $this->makeDeleteAction($data))           $actions['delete'] = $html;
+		if ($html = $this->makeDeleteAction($data))     $actions['delete'] = $html;
 		return $actions;
 	}
 
