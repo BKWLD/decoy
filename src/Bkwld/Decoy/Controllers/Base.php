@@ -463,7 +463,7 @@ class Base extends Controller {
 	 */
 	public function edit($id) {
 
-		// Get the work
+		// Get the model instance
 		if (!($item = Model::find($id))) return App::abort(404);
 
 		// Look for overriden views
@@ -506,7 +506,7 @@ class Base extends Controller {
 	 */
 	public function update($id) {
 
-		// Load the entry
+		// Get the model instance
 		if (!($item = Model::find($id))) {
 			if (Request::ajax()) return Response::json(null, 404);
 			else return App::abort(404);

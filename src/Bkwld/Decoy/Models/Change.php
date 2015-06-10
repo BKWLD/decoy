@@ -95,7 +95,7 @@ class Change extends Base {
 			.' '.$this->getActionLabelAttribute()
 			.' the '.$this->getModelAttribute()
 			.' "'.$this->getModelTitleAttribute().'"'
-			.' about '.$this->getHumanDateAttribute()
+			.' about '.$this->getDateAttribute()
 		;
 	}
 
@@ -159,11 +159,20 @@ class Change extends Base {
 	 *
 	 * @return string HTML
 	 */
-	public function getHumanDateAttribute() {
+	public function getDateAttribute() {
 		return sprintf('<a href="%s" class="js-tooltip" title="%s">%s</a>',
 			$this->filterUrl(['created_at' => $this->created_at->format('m/d/Y')]),
-			$this->created_at->toDayDateTimeString(),
+			$this->getHumanDateAttribute(),
 			$this->created_at->diffForHumans());
+	}
+
+	/**
+	 * Get the human readable date
+	 *
+	 * @return string 
+	 */
+	public function getHumanDateAttribute() {
+		return $this->created_at->format('M j, Y \a\t g:i A');
 	}
 
 	/**
@@ -173,17 +182,30 @@ class Change extends Base {
 	 * @return array 
 	 */
 	public function makeAdminActions($data) {
-		return [
-			sprintf('<a href="%s" 
-				class="glyphicon glyphicon-filter js-tooltip" 
-				title="Filter to just changes of this <b>%s</b>" 
-				data-placement="left"></a>',
-				$this->filterUrl(['model' => $this->model, 'key' => $this->key]),
-				$this->model),
-			'<span class="glyphicon glyphicon-export js-tooltip" 
-				title="View changed attributes" 
-				data-placement="left"></span>',
-		];
+		$actions = [];
+
+		// Always add a filter icon
+		$actions[] = sprintf('<a href="%s" 
+			class="glyphicon glyphicon-filter js-tooltip" 
+			title="Filter to just changes of this <b>%s</b>" 
+			data-placement="left"></a>',
+			$this->filterUrl(['model' => $this->model, 'key' => $this->key]),
+			$this->model);
+
+		// If there are changes, add the modal button
+		if ($this->changed) $actions[] = sprintf('<a href="%s" 
+			class="glyphicon glyphicon-export js-tooltip changes-modal-link" 
+			title="View changed attributes" 
+			data-placement="left"></a>',
+			DecoyURL::action('changes', $this->id));
+
+		// Else, show a disabled bitton
+		else $actions[] = '<span class="glyphicon glyphicon-export disabled js-tooltip"
+			title="Content was deleted"
+			data-placement="left"></span>';
+
+		// Return the actions
+		return $actions;
 	}
 
 	/**
@@ -193,6 +215,21 @@ class Change extends Base {
 	 */
 	public function filterUrl($query) {
 		return DecoyURL::action('changes').'?'.Search::query($query);
+	}
+
+	/**
+	 * Get just the attributes that should be displayed in the admin modal
+	 *
+	 * @return array 
+	 */
+	public function attributesForModal() {
+		return array_filter(array_except(json_decode($this->changed, true), [
+			'id',
+			'updated_at',
+			'created_at',
+			'password',
+			'remember_token',
+		]));
 	}
 
 }

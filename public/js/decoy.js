@@ -89,7 +89,10 @@ define(function (require) {
 	$('body > .sidebar').views(Sidebar); // The nav sidebar
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
 
-	
+	// Launch change modal
+	var changes_modal = require('decoy/modules/changes-modal');
+	$('.changes-modal-link').on('click', changes_modal.open);
+
 	// --------------------------------------------------
 	// DOM ready
 	app.on('ready', function () {

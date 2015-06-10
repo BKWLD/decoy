@@ -1,5 +1,9 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
+// Deps
+use Bkwld\Decoy\Models\Change;
+use Response;
+
 /**
  * A log of model changes, used for auditing Admin activity. Can also be used
  * as a source for recovering changed / deleted content.
@@ -32,5 +36,24 @@ class Changes extends Base {
 			'label' => 'Date',
 		],
 	];
+
+	/**
+	 * Customize the edit view to return the changed attributes as JSON. Using
+	 * this method / action so that a new routing rule doesn't need to be created
+	 *
+	 * @param  int $id Model key
+	 * @return Illuminate\Http\Response
+	 */
+	public function edit($id) {
+		$change = Change::findOrFail($id);
+		return Response::json([
+			'action' => $change->action,
+			'title' => $change->title,
+			'admin' => $change->admin->getAdminTitleHtmlAttribute(),
+			'admin_edit' => $change->admin->getAdminEditAttribute(),
+			'date' => $change->getHumanDateAttribute(),
+			'attributes' => $change->attributesForModal(),
+		]);
+	}
 
 }

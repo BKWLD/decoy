@@ -19,4 +19,32 @@
 		top: 2px;
 	}
 
+	// Grey out disabled glyphicons
+	.glyphicon.disabled {
+		@include opacity($light-opacity);
+	}
+
+}
+
+/**
+ * The changes modal
+ */
+.changes-modal {
+
+	// Shrink the avatar
+	.gravatar {
+		width: 22px;
+	  border: 1px solid #ddd;
+	}
+
+	// Capitalize the attribtues
+	dt {
+		text-transform: capitalize;
+	}
+
+	// Hide the bottom margin on the list
+	dl {
+		margin-bottom: 0;
+	}
+
 }
