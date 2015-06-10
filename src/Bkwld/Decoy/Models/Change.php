@@ -3,6 +3,7 @@
 // Deps
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Admin;
+use Bkwld\Library\Utils\String;
 use Config;
 use DB;
 use DecoyURL;
@@ -232,18 +233,19 @@ class Change extends Base {
 	}
 
 	/**
-	 * Get just the attributes that should be displayed in the admin modal
+	 * Get just the attributes that should be displayed in the admin modal.
 	 *
 	 * @return array 
 	 */
 	public function attributesForModal() {
-		return array_filter(array_except(json_decode($this->changed, true), [
-			'id',
-			'updated_at',
-			'created_at',
-			'password',
-			'remember_token',
-		]));
+		return array_flip(
+			array_map(function($key) { return String::titleFromKey($key); }, // Convert keys to labels
+				array_flip(
+					array_filter( // Strip nulled attributes
+						array_except( // Remove some of them
+							json_decode($this->changed, true), // Get the changed attribtues
+							['id', 'updated_at', 'created_at', 'password', 'remember_token']
+		)))));
 	}
 
 }
