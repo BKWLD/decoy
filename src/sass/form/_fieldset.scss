@@ -15,6 +15,9 @@ fieldset, .fieldset {
 	// Surround sections in a white box
 	@include panel;
 
+	// Clear the rule on breaking text from panel
+	word-wrap: normal;
+
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
 	.legend {	
