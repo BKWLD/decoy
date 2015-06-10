@@ -10,22 +10,22 @@
 // by itself
 if (!isset($many_to_many)) $many_to_many = false;
 if (!isset($convert_dates)) $convert_dates = 'date';
+$can_delete = false;
 
 // Test the data for presence of special properties
-$actions = 2; // Default
 if ($listing->count()) {
 	$test_row = $listing[0]->toArray();
 
 	// Get the list of actions
 	$test_actions = $listing[0]->makeAdminActions($__data);
-}
 
-// Check if the actions include a delete link and whether the user can delete 
-// this item or, if many to many, update the parent.
-$can_delete = count(array_filter($test_actions, function($action) {
-		return strpos($action, 'remove-now');
-	})) && (app('decoy.auth')->can('destroy', $controller) 
-		|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
+	// Check if the actions include a delete link and whether the user can delete 
+	// this item or, if many to many, update the parent.
+	$can_delete = count(array_filter($test_actions, function($action) {
+			return strpos($action, 'remove-now');
+		})) && (app('decoy.auth')->can('destroy', $controller) 
+			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
+}
 ?>
 
 <table class="table listing columns-<?=count($columns)?>">
@@ -56,7 +56,7 @@ $can_delete = count(array_filter($test_actions, function($action) {
 	<tbody>
 		
 		<?// Many to many listings have a remove option, so the bulk actions change?>
-		<? if ($many_to_many): ?>
+		<? if ($can_delete && $many_to_many): ?>
 			<tr class="hide warning bulk-actions">
 				<td colspan="999">
 					<a class="btn btn-warning remove-confirm" href="#">
