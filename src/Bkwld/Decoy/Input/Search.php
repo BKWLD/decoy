@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Exceptions\Exception;
 use Config;
+use DB;
 use Input;
 use Log;
 use Bkwld\Library\Utils\String;
@@ -13,6 +14,20 @@ use Bkwld\Library\Utils\String;
  * trying to reduce it's bulk
  */
 class Search {
+
+	/**
+	 * Utility method to generate a query string that applies the condition
+	 * provided in the args
+	 *
+	 * @param  array $terms An associative array where the keys are "fields" and the
+	 *                      values are "inputs"
+	 * @return string 
+	 */
+	public static function query($terms) {
+		return 'query='.urlencode(json_encode(array_map(function($input, $field) {
+			return [$field, '=', $input];
+		}, $terms, array_keys($terms))));
+	}
 
 	/**
 	 * Apply the effect of a search (which is communicated view Input::get('query'))
