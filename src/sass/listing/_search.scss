@@ -172,10 +172,10 @@
 
 		// mobile date picker input
 		@media (max-width: $break-search) {
-			.input-group.input.date {
+			.date-field {
 				margin: 0;
 			}
-			.input.date {
+			.date-field {
 				width: 52%;
 			}
 			.input-group .input-group-addon {

@@ -131,10 +131,12 @@ define(function (require) {
 							'<option value="<">is before</option>'+
 							'<option value="=">is on</option>'+
 						'</select>').add($(''+
-						'<div class="input-group input date">'+
+						'<div class="input-group date-field date">'+
 							'<input class="date input-field form-control" maxlength="10" placeholder="mm/dd/yyyy" type="text">'+
 							'<span class="input-group-btn"><button class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></button></span></span>'+
-						'</div>').datepicker());
+						'</div>').datepicker({
+							todayHighlight: true
+						}));
 				
 				// Number selector
 				case 'number':
@@ -159,7 +161,7 @@ define(function (require) {
 					return comparisons + $select[0].outerHTML;
 			}
 		},
-		
+
 		// Remove any existing comparisons on a condition
 		removeComparisons: function($condition) {
 			$condition.find('.comparisons,.input').remove();
@@ -238,12 +240,14 @@ define(function (require) {
 				var $condition = this.add();
 
 				// Restore choices
-				
 				$condition.find('.fields').val(condition[0]);
 				this.change(); // Have to trigger handler manually
 				$condition.find('.comparisons').val(condition[1]);
 				$condition.find('.input-field').val(condition[2]);
-				
+
+				// Update date picker to highlight current day
+				$condition.find('.date-field').datepicker('update');
+
 			}, this);
 		},
 		
