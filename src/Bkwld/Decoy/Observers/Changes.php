@@ -49,10 +49,10 @@ class Changes {
 
 		// If `log_changes` was configed as a callable, see if this model event
 		// should not be logged
-		if (($check = Config::get('decoy::site.site.log_changes'))
-			&& !is_bool($check) // Avoid more compicated check for callability
-			&& is_callable($check)
-			&& !call_user_func($check, $model, $action, $admin)) return;
+		if ($check = Config::get('decoy::site.log_changes')) {
+			if (is_bool($check) && !$check) return;
+			if (is_callable($check) && !call_user_func($check, $model, $action, $admin)) return;
+		} else return;
 
 		// Log the event
 		Change::log($model, $action, $admin);

@@ -26,26 +26,23 @@
 							%span.glyphicon(class="glyphicon-#{$page->icon}")
 						!=$page->label
 
-		-if($auth->developer())
-			.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers']))?'active open':null)
-				%a.top-level.parent
-					%span.glyphicon.glyphicon-cog
-					Admin
+		.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers', 'changes']))?'active open':null)
+			%a.top-level.parent
+				%span.glyphicon.glyphicon-cog
+				Settings
 
-				.subnav
+			.subnav
+
+				-if($auth->can('manage', 'admins'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
+				-else
+					%a(href=$auth->userUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
+
+				-if ($auth->can('read', 'changes'))
+					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null)) Changes
+
+				-if($auth->developer())
 					%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
 					-if(count(Bkwld\Decoy\Models\Worker::all()))
 						%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
-
-		-elseif(app('decoy.auth')->can('manage', 'admins'))
-			.main-nav(class=Request::segment(2)=='admins'?'active':null)
-				%a.top-level(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index')) 
-					%span.glyphicon.glyphicon-lock
-					Admins
-
-		-else
-			.main-nav(class=Request::segment(2)=='admins'?'active':null)
-				%a.top-level(href=$auth->userUrl()) 
-					%span.glyphicon.glyphicon-cog
-					Account
+						
