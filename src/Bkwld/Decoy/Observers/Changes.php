@@ -27,6 +27,10 @@ class Changes {
 		// Don't log the Change model events
 		if (is_a($model, 'Bkwld\Decoy\Models\Change')) return;
 
+		// Don't log encoding events since they aren't really the result of admin
+		// input
+		if (is_a($model, 'Bkwld\Decoy\Models\Encoding')) return;
+
 		// Hide Elements.  To do this right, I should aggregate a bunch of Element
 		// changes into a single log.
 		if (is_a($model, 'Bkwld\Decoy\Models\Element')) return;
