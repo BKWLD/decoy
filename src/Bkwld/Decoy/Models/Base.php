@@ -111,6 +111,15 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	public function onAttached($parent) {}
 	public function onRemoving($ids) {}
 	public function onRemoved($ids) {}
+
+	/**
+	 * Get the polymorphic relationship to Changes
+	 *
+	 * @return Illuminate\Database\Eloquent\Relations\Relation
+	 */
+	public function changes() { 
+		return $this->morphMany('Bkwld\Decoy\Models\Change', 'loggable', 'model', 'key'); 
+	}
 	
 	//---------------------------------------------------------------------------
 	// Slug creation via cviebrock/eloquent-sluggable
