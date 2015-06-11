@@ -113,7 +113,7 @@ class Change extends Base {
 		return $this->getAdminLinkAttribute()
 			.' '.$this->getActionLabelAttribute()
 			.' the '.$this->getModelAttribute()
-			.' "'.$this->getModelTitleAttribute().'"'
+			.' "'.$this->getLinkedlTitleAttribute().'"'
 			.' about '.$this->getDateAttribute()
 		;
 	}
@@ -156,7 +156,7 @@ class Change extends Base {
 		$controller = call_user_func($this->model.'::adminControllerClass');
 		$controller = new $controller;
 		return sprintf('<b class="js-tooltip" title="%s"><a href="%s">%s</a></b>',
-			$controller->description(),
+			htmlentities($controller->description()),
 			$this->filterUrl(['model' => $this->model]),
 			Str::singular($controller->title()));
 	}
@@ -167,7 +167,7 @@ class Change extends Base {
 	 *
 	 * @return string HTML
 	 */
-	public function getModelTitleAttribute() {
+	public function getLinkedlTitleAttribute() {
 		return sprintf('<a href="%s">%s</a>',
 			$this->filterUrl(['model' => $this->model, 'key' => $this->key]),
 			$this->title);
