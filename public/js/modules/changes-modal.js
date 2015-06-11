@@ -33,7 +33,7 @@ define(function (require) {
 		// Create the body from the list of attributes
 		data.body = '<dl class="dl-horizontal">' +
 			_.reduce(data.attributes, function(html, val, key) {
-				return html+'<dt>'+key+'</dt><dd>'+val+'</dd>';
+				return html+'<dt>'+key+'</dt><dd>'+(val||'<em>Empty</em>')+'</dd>';
 			}, '') + '</dl>';
 
 		// Render markup and render
