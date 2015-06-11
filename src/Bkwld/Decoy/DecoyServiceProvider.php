@@ -52,8 +52,11 @@ class DecoyServiceProvider extends ServiceProvider {
 		$this->app['events']->listen('eloquent.*',     'Bkwld\Decoy\Observers\ModelCallbacks');
 		$this->app['events']->listen('decoy::model.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
 
-		// If logging changes hasn't been disabled, log all model events
-		if (Config::get('decoy::site.log_changes')) {
+		// If logging changes hasn't been disabled, log all model events.  This
+		// should come after the callbacks in case they modify the record before
+		// being saved.  And we're logging ONLY admin actions, thus the handling
+		// condition.
+		if ($this->app['decoy']->handling() && Config::get('decoy::site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
 		}
 		
