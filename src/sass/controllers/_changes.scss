@@ -32,9 +32,10 @@
 .changes-modal {
 
 	// Shrink the avatar
-	.gravatar {
+	.modal-footer img {
 		width: 22px;
 	  border: 1px solid #ddd;
+		margin-right: 3px;
 	}
 
 	// Hide the bottom margin on the list
