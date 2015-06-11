@@ -242,14 +242,19 @@ class Change extends Base {
 	 * @return array 
 	 */
 	public function attributesForModal() {
-		return array_flip(
-			array_map(function($key) { return String::titleFromKey($key); }, // Convert keys to labels
-				array_flip(
-					array_filter( // Strip nulled attributes
-						array_except( // Remove some of them
-							json_decode($this->changed, true), // Get the changed attribtues
-							['id', 'updated_at', 'created_at', 'password', 'remember_token']
-		)))));
+
+		// Remove some specific attributes.  Leaving empties in there so the updating
+		// of values to NULL is displayed.
+		$attributes = array_except(json_decode($this->changed, true), [
+			'id', 'updated_at', 'created_at', 'password', 'remember_token',
+		]);
+
+		// Make more readable titles
+		$out = [];
+		foreach($attributes as $key => $val) {
+			$out[String::titleFromKey($key)] = $val;
+		}
+		return $out;
 	}
 
 }
