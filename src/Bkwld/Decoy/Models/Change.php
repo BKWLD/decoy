@@ -52,7 +52,10 @@ class Change extends Base {
 	 * @param Admin  $admin The admin acting on the record
 	 * @return static
 	 */
-	public static function log(Model $model, $action, Admin $admin) {
+	public static function log(Model $model, $action, Admin $admin = null) {
+
+		// If no admin provided, get the current one
+		if (!$admin) $admin = app('decoy.auth')->user();
 
 		// Create a new change instance
 		$change = static::create([
