@@ -95,9 +95,11 @@ class Search {
 			// NULL safe equals and not equals
 			// http://stackoverflow.com/a/19778341/59160
 			case '=': return $query->whereRaw(sprintf('%s <=> %s',
-				$field, empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
+				is_string($field) ? "`{$field}`" : $field, 
+				empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
 			case '!=': return $query->whereRaw(sprintf('NOT(%s <=> %s)',
-				$field, empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
+				is_string($field) ? "`{$field}`" : $field, 
+				empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
 			
 			// Not Like
 			case '!%*%':
