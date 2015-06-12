@@ -32,6 +32,16 @@ class Change extends Base {
 	public function loggable() { return $this->morphTo(); }
 
 	/**
+	 * Default ordering by descending time, designed to be overridden
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
+	 */
+	public function scopeOrdered($query) {
+		return $query->orderBy('changes.id', 'desc');
+	}
+
+	/**
 	 * Check whether changes are enabled
 	 *
 	 * @return boolean
@@ -58,13 +68,17 @@ class Change extends Base {
 		if (!$admin) $admin = app('decoy.auth')->user();
 		if (!$admin) return;
 
+		// Get the changed attributes
+		$changed = $model->getDirty();
+		if ($action == 'deleted' || empty($changed)) $changed = null;
+
 		// Create a new change instance
 		$change = static::create([
 			'model' => get_class($model),
 			'key' => $model->getKey(),
 			'action' => $action,
 			'title' => method_exists($model, 'getAdminTitleAttribute') ? $model->getAdminTitleAttribute() : null,
-			'changed' => $action != 'deleted' ? json_encode($model->getDirty()) : null,
+			'changed' => $changed ? json_encode($changed) : null,
 			'admin_id' => $admin->getKey(),
 		]);
 
@@ -221,7 +235,7 @@ class Change extends Base {
 
 		// Else, show a disabled bitton
 		else $actions[] = '<span class="glyphicon glyphicon-export js-tooltip"
-			title="Content was deleted"
+			title="No changed attributes"
 			data-placement="left"></span>';
 
 		// Return the actions
