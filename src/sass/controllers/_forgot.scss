@@ -6,6 +6,7 @@ body.forgot, body.reset {
 	// Don't fix the form actions on such small pages
 	.form-actions {
 		position: static;
+		width: 100%;
 	}
 
 }
