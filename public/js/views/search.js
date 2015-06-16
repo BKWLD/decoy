@@ -184,7 +184,7 @@ define(function (require) {
 			// Add the fields list
 			if (_.size(this.schema) > 1) {
 				$condition.append('</span>');
-				var $fields = $('<select class="form-control">').addClass('fields');
+				var $fields = $('<select class="form-control fields">');
 				_.each(this.schema, function(meta, field) {
 					$fields.append($('<option>').text(meta.label.toLowerCase()).val(field));
 				});
@@ -262,7 +262,7 @@ define(function (require) {
 				var $condition = $(this);
 				
 				// Lookup vals
-				var field = $condition.find('select.fields').val(),
+				var field = $condition.find('.fields').val(),
 					comparison = $condition.find('.comparisons').val(),
 					input = $condition.find('.input-field').val();
 					
