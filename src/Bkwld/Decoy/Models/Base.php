@@ -328,9 +328,10 @@ abstract class Base extends Eloquent implements SluggableInterface {
 			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
 
 		// Return markup
-		return sprintf('<a class="remove-now js-tooltip" data-placement="left" title="%s">
+		return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">
 				<span class="glyphicon glyphicon-%s"></span>
 			</a>',
+			$many_to_many ? 'remove-now' : 'delete-now',
 			$many_to_many ? 'Remove relationship' : 'Permanently delete',
 			$many_to_many ? 'remove' : 'trash'
 		);
