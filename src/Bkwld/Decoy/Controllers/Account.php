@@ -5,6 +5,7 @@ use App;
 use Auth;
 use Bkwld\Decoy\Models\Admin;
 use Config;
+use Decoy;
 use Exception;
 use Former;
 use Hash;
@@ -140,7 +141,7 @@ class Account extends Base {
 
 			// Add subject and from
 			function($m, $user, $token) {
-				$m->subject('Recover access to '.Config::get('decoy::site.name'));
+				$m->subject('Recover access to '.Decoy::site());
 				$m->from(
 					Config::get('decoy::core.mail_from_address'), 
 					Config::get('decoy::core.mail_from_name')

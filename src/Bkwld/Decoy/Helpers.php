@@ -28,6 +28,8 @@ class Helpers {
 
 	/**
 	 * Generate title tags based on section content
+	 *
+	 * @return string
 	 */
 	public function title() {
 		
@@ -35,13 +37,21 @@ class Helpers {
 		// default breadcrumbs
 		$title = View::yieldContent('title');
 		if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
-		
-		// Get the site name
-		$site = Config::get('decoy::site.name');
-		if (is_callable($site)) $site = call_user_func($site);
 
 		// Set the title
+		$site = $this->site();
 		return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
+	}
+
+	/**
+	 * Get the site name
+	 *
+	 * @return string
+	 */
+	public function site() {
+		$site = Config::get('decoy::site.name');
+		if (is_callable($site)) $site = call_user_func($site);
+		return $site;
 	}
 
 	/**

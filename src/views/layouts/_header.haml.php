@@ -8,10 +8,9 @@
 	%h1.title
 
 		-# The page title
-		%span.site 
-			#{Config::get('decoy::site.name')}
+		%span.site = Decoy::site()
 		%br.mobile-break
-		%span.controller!=$title
+		%span.controller != $title
 
 		-if(!empty($many_to_many) && app('decoy.auth')->can('update', $controller))
 			-# If we've declared this relationship a many to many one, show the autocomplete

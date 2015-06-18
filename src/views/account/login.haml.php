@@ -1,7 +1,7 @@
 .ui(data-js-view="login")
 	.max-width
 		.branding
-			%h1=Config::get('decoy::site.name')
+			%h1 = Decoy::site()
 			%h4 Powered by <a href="http://bkwld.com">Decoy</a>
 		
 		!=Former::open_vertical(action('Bkwld\Decoy\Controllers\Account@login'))->addClass('form')

@@ -3,6 +3,7 @@
 // Deps
 use Bkwld\Upchuck\SupportsUploads;
 use Config;
+use Decoy;
 use DecoyURL;
 use HTML;
 use Illuminate\Auth\UserTrait;
@@ -138,7 +139,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		// Send the email
 		Mail::send('decoy::emails.create', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
-			$m->subject('Welcome to the '.Config::get('decoy::site.name').' admin site');
+			$m->subject('Welcome to the '.Decoy::site().' admin site');
 			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
 	}
@@ -166,7 +167,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		// Send the email
 		Mail::send('decoy::emails.update', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
-			$m->subject('Your '.Config::get('decoy::site.name').' admin account info has been updated');
+			$m->subject('Your '.Decoy::site().' admin account info has been updated');
 			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
 	}
