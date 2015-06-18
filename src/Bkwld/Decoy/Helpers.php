@@ -38,6 +38,7 @@ class Helpers {
 		
 		// Get the site name
 		$site = Config::get('decoy::site.name');
+		if (is_callable($site)) $site = call_user_func($site);
 
 		// Set the title
 		return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
