@@ -54,6 +54,11 @@
 		overflow: visible; // Don't show ellipsis
 	}
 
+	// If the first column is hidden, add some extra padding to the second column
+	th.hide + th, td.hide + td {
+		padding-left: $form-group-margin;
+	}
+
 	// Style the header
 	thead {
 		background: lighten($theme-secondary-color, 10%);
