@@ -22,7 +22,7 @@ if ($listing->count()) {
 	// Check if the actions include a delete link and whether the user can delete 
 	// this item or, if many to many, update the parent.
 	$can_delete = count(array_filter($test_actions, function($action) {
-			return strpos($action, 'remove-now');
+			return strpos($action, 'delete-now') || strpos($action, 'remove-now');
 		})) && (app('decoy.auth')->can('destroy', $controller) 
 			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
 }
