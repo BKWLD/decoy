@@ -499,6 +499,8 @@ The roles array generates the list of roles on the Admin edit screen. The permis
 - publish (set the `visibility`)
 - manage (combines all of the above)
 
+In addition, you can make custom permissions and check for them using the same methods.  For instance, you could add an `approve.articles` permission to the config and then check for it using `app('decoy.auth')->can('approve', 'articles')`.  This is preferred over checking the admin's role as it is more flexible and expressive.
+
 
 ### Form fields
 
