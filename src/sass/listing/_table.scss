@@ -107,6 +107,12 @@
 
 		// Pushes subsequent text off the edge of the image, usually a thumbnail
 		margin-right: 5px;
+		
+		// Set a default max height for images. This helps images that were uploaded in wysiwyg and
+		// are being displayed in listings
+		max-height: 100px;
+  		max-width: 100%;
+		width: auto;
 
 		// Animated gifs won't be cropped by croppa, so give them a default width / height.  Same
 		// with gravtars in admin.
