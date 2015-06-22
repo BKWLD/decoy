@@ -68,16 +68,18 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	public function __construct(array $attributes = array()) {
 		
+		// Remove any settings the affect JSON conversion (visible / hidden) and
+		// mass assignment protection (fillable / guarded) while in the admin
+		if (Decoy::handling()) {
+			$this->visible = $this->hidden = $this->fillable = $this->guarded = [];
+		}
+
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
 			'select-row', // This is the name of the checkboxes used for bulk delete
 		));
-		
-		// Remove any hidden/visible settings that may have been set on models if
-		// the user is in the admin
-		if (Decoy::handling()) $this->visible = $this->hidden = array();
 
 		// Continue Laravel construction
 		parent::__construct($attributes);
