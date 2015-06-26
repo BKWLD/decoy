@@ -8,7 +8,6 @@ use Config;
 use Decoy;
 use Exception;
 use Former;
-use Hash;
 use Input;
 use Lang;
 use Password;
@@ -208,7 +207,7 @@ class Account extends Base {
 
 		// Save their creds
 		$response = Password::reset($credentials, function($user, $password) {
-			$user->password = Hash::make($password);
+			$user->password = $password; // Gets hashed via model callback
 			$user->save();
 		});
 
