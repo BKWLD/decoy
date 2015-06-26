@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "4.2.1",
+  "version": "4.7.1",
   "private": true,
   "main": "",
   "ignore": [
@@ -17,7 +17,7 @@
     "imagesloaded": "~3",
     "jcrop": "master",
     "jquery": "~1",
-    "lodash": "~2",
+    "lodash": "~3",
     "notifyjs": "~0",
     "pixi.js": "~2",
     "requirejs": "~2",
