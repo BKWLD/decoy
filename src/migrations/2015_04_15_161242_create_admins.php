@@ -90,8 +90,8 @@ class CreateAdmins extends Migration {
 		Bkwld\Decoy\Models\Admin::create([
 			'first_name' => 'Default',
 			'last_name' => 'Admin',
-			'email' => 'redacted',
-			'password' => Hash::make('redacted'),
+			'email' => Config::get('decoy::core.default_login'),
+			'password' => Hash::make(Config::get('decoy::core.default_password')),
 			'role' => 'admin',
 			'active' => 1,
 		]);
