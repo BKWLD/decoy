@@ -17,7 +17,7 @@
     "imagesloaded": "~3",
     "jcrop": "master",
     "jquery": "~1",
-    "lodash": "~2",
+    "lodash": "~3",
     "notifyjs": "~0",
     "pixi.js": "~2",
     "requirejs": "~2",
