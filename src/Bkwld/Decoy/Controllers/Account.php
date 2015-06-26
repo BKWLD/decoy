@@ -176,7 +176,7 @@ class Account extends Base {
 		// Lookup the admin
 		$user = Admin::where('token', $token)
 			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
-			->first();
+			->firstOrFail();
 
 		// Show the page
 		$this->title = 'Reset Password';
