@@ -19,7 +19,7 @@
 		!= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles))
 		!= View::make('decoy::admins._permissions', $__data)
 
-	!= Former::checkbox('_send_email', ' ')->value(1)->text(empty($item)?'Send welcome email, including password':'Email '.$item->first_name.' with login changes')
+	!= Former::checkbox('_send_email', 'Notify')->value(1)->text(empty($item)?'Send welcome email, including password':'Email '.$item->first_name.' with login changes')
 
 	-# Create moderation actions
 	-ob_start()
