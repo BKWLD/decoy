@@ -215,6 +215,27 @@ class Elements extends Base {
 			'content' => "<div id='response' data-key='{$key}'>{$el}</div>"
 		]);
 	}
-	
-	
+
+	/**
+	 * The permissions options are a list of all the tabs
+	 *
+	 * @return array 
+	 */
+	public function getPermissionOptions() {
+
+		// Get all the grouped elements
+		$elements = app('decoy.elements')
+			->localize(Decoy::locale())
+			->hydrate(true)
+			->asModels()
+			->sortBy('page_label')
+			->groupBy('page_label');
+
+		// Map to the expected permisions forat
+		$out = [];
+		foreach($elements as $page_label => $fields) {
+			$out[Str::slug($page_label)] = [$page_label, $fields[0]->page_help];
+		}
+		return $out;
+	}
 }

@@ -362,7 +362,10 @@ class Base extends Controller {
 	 * Get the permission options for the controller.  By default, these are the
 	 * stanadard CRUD actions
 	 *
-	 * @return array An associative array of where the values are descriptions
+	 * @return array An associative array.  The keys are the permissions slugs.
+	 *               The value is either the description as a string or an array
+	 *               with the first index being an english title and the second
+	 *               being the description.
 	 */
 	public function getPermissionOptions() {
 		return [
@@ -370,7 +373,7 @@ class Base extends Controller {
 			'create' => 'Create new items',
 			'update' => 'Update existing items',
 			'publish' => 'Move from "draft" to "published"',
-			'destroy' => 'Delete items permanently',
+			'destroy' => ['Delete', 'Delete items permanently'],
 		];
 	}
 	

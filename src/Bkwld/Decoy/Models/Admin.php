@@ -244,10 +244,9 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		$controllers[] = 'Bkwld\Decoy\Controllers\Changes';
 		$controllers[] = 'Bkwld\Decoy\Controllers\Elements';
 
-		// Alphabetize
+		// Alphabetize the controller classes
 		usort($controllers, function($a, $b) {
-			return substr($a, strrpos($a, '\\') + 1) > 
-				substr($b, strrpos($b, '\\') + 1);
+			return substr($a, strrpos($a, '\\') + 1) > substr($b, strrpos($b, '\\') + 1);
 		});
 
 		// Convert the list of controller classes into the shorthand strings used
@@ -259,11 +258,11 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 				'slug' => DecoyURL::slugController($class),
 				'title' => $obj->title(),
 				'description' => $obj->description(),
-				'permissions' => array_map(function($description, $permission) {
+				'permissions' => array_map(function($value, $key) {
 					return (object) [
-						'slug' => $permission,
-						'title' => String::titleFromKey($permission),
-						'description' => $description,
+						'slug' => $key,
+						'title' => is_array($value) ? $value[0] : String::titleFromKey($key),
+						'description' => is_array($value) ? $value[1] : $value,
 						'checked' => false,
 					];
 				}, $permissions, array_keys($permissions)),

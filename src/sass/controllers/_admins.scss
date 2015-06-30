@@ -6,13 +6,21 @@
 // The permissions UI
 .admin-permisssions {
 
+	// Width of one of the permission blocks
+	$w: 120px;
+
 	// Contains the list of permissions
 	.permissions-list {
 		padding-top: 5px;
+		@media(max-width: $screen-sm) {
+			padding-top: 0;
+			margin-top: -2px;
+		}
 	}
 
 	// A row of permissions for a specific controller
 	.controller {
+		@include clearfix;
 		margin: 6px 0;
 		border-bottom: 1px dashed $grey-border;
 		&:last-of-type {
@@ -24,15 +32,27 @@
 	.controller .title {
 		font-weight: bold;
 		float: left;
-		width: 80px;
+		max-width: $w - 10px;
+
+		// Don't allow the text to wrap to multiple lins
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+
+		// Don't indent on mobile
 		@media(max-width: $screen-sm) {
 			float: none;
 			width: auto;
+		  margin-bottom: 2px;
+		  display: block;
 		}
 	}
 
+	// Container for permissions
 	.controller-permissions {
-		margin-left: 100px;
+		margin-left: $w;
+
+		// Don't indent on mobile
 		@media(max-width: $screen-sm) {
 			margin-left: 0;
 		}
@@ -41,6 +61,12 @@
 	// The permission types
 	.controller-permission {
 		font-weight: normal;
-		width: 100px;
+		width: $w;
+		margin-bottom: 1px;
+
+		// Don't allow the text to wrap to multiple lins
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
 	}
 }
