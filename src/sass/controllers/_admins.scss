@@ -2,3 +2,45 @@
 .admins.index .listing .group {
 	text-transform: capitalize;
 }
+
+// The permissions UI
+.admin-permisssions {
+
+	// Contains the list of permissions
+	.permissions-list {
+		padding-top: 5px;
+	}
+
+	// A row of permissions for a specific controller
+	.controller {
+		margin: 6px 0;
+		border-bottom: 1px dashed $grey-border;
+		&:last-of-type {
+			border-bottom: none;
+		}
+	}
+
+	// The title of the controller
+	.controller .title {
+		font-weight: bold;
+		float: left;
+		width: 80px;
+		@media(max-width: $screen-sm) {
+			float: none;
+			width: auto;
+		}
+	}
+
+	.controller-permissions {
+		margin-left: 100px;
+		@media(max-width: $screen-sm) {
+			margin-left: 0;
+		}
+	}
+
+	// The permission types
+	.controller-permission {
+		font-weight: normal;
+		width: 100px;
+	}
+}

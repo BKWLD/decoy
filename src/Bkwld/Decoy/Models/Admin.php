@@ -2,6 +2,7 @@
 
 // Deps
 use Bkwld\Upchuck\SupportsUploads;
+use Bkwld\Library\Utils\String;
 use Config;
 use Decoy;
 use DecoyURL;
@@ -221,6 +222,53 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 */
 	public function getAdminEditAttribute() {
 		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->id);
+	}
+
+	/**
+	 * Get the list of all permissions
+	 *
+	 * @return array
+	 */
+	static public function getPermissionOptions() {
+
+		// Get all the app controllers
+		$controllers = array_map(function($path) {
+			return 'Admin\\'.basename($path, '.php');
+		}, glob(app_path().'/controllers/admin/*Controller.php'));
+
+		// Remove some classes
+		$controllers = array_diff($controllers, ['Admin\BaseController']);
+
+		// Add some Decoy controllers
+		$controllers[] = 'Bkwld\Decoy\Controllers\Admins';
+		$controllers[] = 'Bkwld\Decoy\Controllers\Changes';
+		$controllers[] = 'Bkwld\Decoy\Controllers\Elements';
+
+		// Alphabetize
+		usort($controllers, function($a, $b) {
+			return substr($a, strrpos($a, '\\') + 1) > 
+				substr($b, strrpos($b, '\\') + 1);
+		});
+
+		// Convert the list of controller classes into the shorthand strings used
+		// by Decoy Auth as well as english name and desciption
+		return array_map(function($class) {
+			$obj = new $class;
+			$permissions = $obj->getPermissionOptions();
+			return (object) [
+				'slug' => DecoyURL::slugController($class),
+				'title' => $obj->title(),
+				'description' => $obj->description(),
+				'permissions' => array_map(function($description, $permission) {
+					return (object) [
+						'slug' => $permission,
+						'title' => String::titleFromKey($permission),
+						'description' => $description,
+						'checked' => false,
+					];
+				}, $permissions, array_keys($permissions)),
+			];
+		}, $controllers);
 	}
 
 	/**

@@ -357,6 +357,22 @@ class Base extends Controller {
 			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
 
 	}
+
+	/**
+	 * Get the permission options for the controller.  By default, these are the
+	 * stanadard CRUD actions
+	 *
+	 * @return array An associative array of where the values are descriptions
+	 */
+	public function getPermissionOptions() {
+		return [
+			'read' => 'View listing and edit views',
+			'create' => 'Create new items',
+			'update' => 'Update existing items',
+			'publish' => 'Move from "draft" to "published"',
+			'destroy' => 'Delete items permanently',
+		];
+	}
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
