@@ -25,6 +25,21 @@ class Admins extends Base {
 	protected $show_view = 'decoy::admins.edit';
 
 	/**
+	 * Add a "grant" option for assigning permissions and disabling folks
+	 *
+	 * @return array
+	 */
+	public function getPermissionOptions() {
+		return [
+			'read' => 'View listing and edit views',
+			'create' => 'Create new items',
+			'update' => 'Update existing items',
+			'grant' => 'Change role and permissions',
+			'destroy' => ['Delete', 'Delete items permanently'],
+		];
+	}
+
+	/**
 	 * If the user can't manage admins, bounce them to their profile page
 	 * 
 	 * @return Symfony\Component\HttpFoundation\Response | void
