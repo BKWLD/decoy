@@ -120,7 +120,9 @@ class Eloquent implements AuthInterface {
 
 		// If `who` was passed in as a string, treat is as a role.  Otherwise, get 
 		// the current user's role.
-		$role = is_string($who) ? $who : $this->user()->role;
+		if (is_string($who)) $role = $who;
+		elseif (is_a($who, 'Bkwld\Decoy\Models\Admin')) $role = $who->role;
+		else $role = $this->user()->role;
 
 		// If there are "can" rules, then apply them as a whitelist.  Only those
 		// actions are allowed.
