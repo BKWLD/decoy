@@ -55,9 +55,21 @@ class Elements extends Base {
 		Former::withRules($elements->rules());
 		Former::populate($elements->populate());
 
+		// Convert the collection to models for simpler manipulation
+		$elements = $elements->asModels();
+
+		// If the user has cusotmized permissions, filter the elements to show
+		// only those that they have access to.
+		if (($permissions = app('decoy.auth')->user()->getPermissionsAttribute())
+			&& isset($permissions->elements)) {
+			$elements = $elements->filter(function($element) use ($permissions) {
+				return in_array(Str::slug($element['page_label']), $permissions->elements);
+			});
+		}
+
 		// Render the view
 		$this->populateView('decoy::elements.index', [
-			'elements' => $elements->asModels(),
+			'elements' => $elements,
 			'locale' => $locale,
 			'tab' => $tab,
 		]);
