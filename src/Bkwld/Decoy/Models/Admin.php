@@ -206,6 +206,11 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	public function getAdminStatusAttribute() {
 		$html ='';
 		
+		// Add the role
+		if (($roles = static::getRoleTitles()) && count($roles)) {
+			$html .= '<span class="label label-primary">'.$roles[$this->role].'</span>';
+		}
+
 		// If row is you
 		if ($this->id == app('decoy.auth')->user()->id) {
 			$html .= '<span class="label label-info">You</span>';
@@ -227,6 +232,19 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	 */
 	public function getAdminEditAttribute() {
 		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->id);
+	}
+
+	/**
+	 * Make a list of the role titles by getting just the text between bold tags 
+	 * in the roles config array, which is a common convention in Decoy 4.x
+	 *
+	 * @return array
+	 */
+	static public function getRoleTitles() {
+		return array_map(function($title) {
+			if (preg_match('#^<b>(\w+)</b>#i', $title, $matches)) return $matches[1];
+			return $title;
+		}, Config::get('decoy::site.roles'));
 	}
 
 	/**

@@ -25,6 +25,33 @@ class Admins extends Base {
 	protected $show_view = 'decoy::admins.edit';
 
 	/**
+	 * Make search options dependent on whether the site is using roles
+	 *
+	 * @return array;
+	 */
+	public function search() {
+		$options = [
+			'first_name',
+			'last_name',
+			'email',
+			'status' => [
+				'type' => 'select',
+				'options' => [
+					1 => 'enabled',
+					0 => 'disabled',
+				],
+			],
+		];
+		if (($roles = Admin::getRoleTitles()) && count($roles)) {
+			$options['role'] = [
+				'type' => 'select',
+				'options' => $roles,
+			];
+		}
+		return $options;
+	}
+
+	/**
 	 * Add a "grant" option for assigning permissions and disabling folks
 	 *
 	 * @return array
