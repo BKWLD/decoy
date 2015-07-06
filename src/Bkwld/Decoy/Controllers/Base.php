@@ -154,6 +154,7 @@ class Base extends Controller {
 	
 	/**
 	 * Populate the controller's protected properties
+	 * 
 	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
 	 */
 	private function init($class = null) {
@@ -200,6 +201,7 @@ class Base extends Controller {
 	
 	/**
 	 * Make a new instance of the base class for the purposes of testing
+	 * 
 	 * @param string $path A request path, i.e. 'admin/news/create'
 	 * @param string $verb i.e. GET,POST
 	 */
