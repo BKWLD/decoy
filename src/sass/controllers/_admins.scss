@@ -55,6 +55,10 @@
 		text-overflow: ellipsis;
 		overflow: hidden;
 
+		// These are clickable
+		cursor: pointer;
+		@include user-select(none);
+
 		// Don't indent on mobile
 		@media(max-width: $screen-sm) {
 			float: none;
@@ -79,6 +83,12 @@
 		font-weight: normal;
 		width: $w;
 		margin-bottom: 1px;
+
+		// These are clickable
+		span {
+			cursor: pointer;
+			@include user-select(none);
+		}
 
 		// Don't allow the text to wrap to multiple lins
 		white-space: nowrap;

@@ -30,6 +30,9 @@ define(function (require) {
 		// Check for the role to change and clear the custom permissions
 		this.$role.on('change', this.changeRole);
 
+		// Make clicking a controller name toggler all of it's checkboxes
+		this.$controllers.find('.title').on('click', this.toggleActions);
+
 	};
 
 	/**
@@ -92,6 +95,16 @@ define(function (require) {
 	View.checkRole = function(role) {
 		this.$permission_boxes.prop('checked', false);
 		this.role_boxes[role].prop('checked', true);
+	};
+
+	/**
+	 * Toggle all of the actions for a controller when the title is clicked
+	 *
+	 * @param mouseevent e
+	 */
+	View.toggleActions = function(e) {
+		var $actions = $(e.currentTarget).next().find(':checkbox');
+		$actions.prop('checked', $actions.filter(':checked').length != $actions.length);
 	};
 
 	// Return view class
