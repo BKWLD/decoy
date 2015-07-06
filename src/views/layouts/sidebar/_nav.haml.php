@@ -33,7 +33,7 @@
 
 			.subnav
 
-				-if($auth->can('manage', 'admins'))
+				-if($auth->can('read', 'admins'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
 				-else
 					%a(href=$auth->userUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
