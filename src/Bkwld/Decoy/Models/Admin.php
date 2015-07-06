@@ -252,7 +252,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 
 		// Convert the list of controller classes into the shorthand strings used
 		// by Decoy Auth as well as english name and desciption
-		return array_map(function($class) {
+		return array_map(function($class) use ($admin) {
 			$obj = new $class;
 			$permissions = $obj->getPermissionOptions();
 			return (object) [
