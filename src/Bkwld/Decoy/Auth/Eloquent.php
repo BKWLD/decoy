@@ -114,8 +114,19 @@ class Eloquent implements AuthInterface {
 		if ((is_a($who, 'Bkwld\Decoy\Models\Admin') && ($permissions = $who->permissions))
 			|| (!$who && ($permissions = $this->user()->permissions))) {
 			$permissions = json_decode($permissions);
-			return isset($permissions->$controller) &&
-				in_array($action, $permissions->$controller);
+
+			// Check that the controller was defined in the permissions
+			if (!isset($permissions->$controller) 
+				|| !is_array($permissions->$controller)) return false;
+
+			// If the controller is elements, return true as long as there is at least
+			// one element page mentioned.  Elements are stored differently where the
+			// management of elements pages are what is granted.
+			if ($controller == 'elements') return count($permissions->elements) > 0;
+
+			// Default behavoir checks that the action was checked in the permissions
+			// UI for the controller.
+			return in_array($action, $permissions->$controller);
 		}
 
 		// If `who` was passed in as a string, treat is as a role.  Otherwise, get 
