@@ -19,12 +19,16 @@ define(function (require) {
 		this.$permissions = this.$('.permissions-list');
 		this.$permissions_inner = this.$('.permissions-list-inner');
 		this.$controllers = this.$permissions.find('.controller');		
+		this.$permission_boxes = this.$controllers.find(':checkbox');
+
+		// Parse the permission checkboxes into a mapping by role
+		this.role_boxes = this.parseBoxesForRoles(this.$permission_boxes);
 
 		// Listen for clicks on the override checkbox
 		this.$customize.on('change', this.togglePermissionsOptions);
 
 		// Check for the role to change and clear the custom permissions
-		this.$role.on('change', this.clearCustomPermissions);
+		this.$role.on('change', this.changeRole);
 
 	};
 
@@ -46,10 +50,48 @@ define(function (require) {
 	};
 	
 	/**
+	 * Update the permissions when the role changes
+	 */
+	View.changeRole = function(e) {
+		this.clearCustomPermissions();
+		this.checkRole(this.$role.filter(':checked').val());
+	};
+
+	/**
 	 * Clear permissions customizations
 	 */
 	View.clearCustomPermissions = function() {
-		this.$customize.attr('checked', false).trigger('change');
+		if (!this.$customize.is(':checked')) return;
+		this.$customize.prop('checked', false).trigger('change');
+	};
+
+	/**
+	 * Parse the checkboxes into buckets by roles
+	 *
+	 * @param jQuery boxes
+	 * @return object
+	 */
+	View.parseBoxesForRoles = function(boxes) {
+		var map = {}, roles, $el;
+		boxes.each(function(i, el) {
+			roles = $(el).data('roles');
+			if (roles) {
+				_.each(roles.split(','), function(role) {
+					map[role] = ( map[role] || $([]) ).add(el);
+				});	
+			}
+		});
+		return map;
+	};
+
+	/**
+	 * Check all the boxes that are defaults for the role
+	 *
+	 * @param string role
+	 */
+	View.checkRole = function(role) {
+		this.$permission_boxes.prop('checked', false);
+		this.role_boxes[role].prop('checked', true);
 	};
 
 	// Return view class
