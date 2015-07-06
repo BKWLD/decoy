@@ -1,13 +1,13 @@
 -use Bkwld\Decoy\Models\Admin
 
 -# Implement this as a collectoin instead, like fetch the collection of permission options
-.form-group.admin-permissions.closed
+.form-group.admin-permissions(class=$item&&$item->permissions?null:'closed')
 	%label.control-label Permissions
 	%div
 
 		.checkbox
 			%label
-				%input(type='checkbox' name='_custom_permissions' value=1)
+				%input(type='checkbox' name='_custom_permissions' value=1 checked=$item&&$item->permissions)
 				Override default permissions for the selected Role
 
 		.permissions-list
@@ -19,9 +19,9 @@
 						%span.title.js-tooltip(title=$controller->description) = $controller->title
 
 						.controller-permissions
-							%input(type='hidden' name="_permission[#{$controller->slug}][]")
 							-foreach($permissions as $permission)
 								%label.controller-permission
+
 									%input(type='checkbox' 
 										name="_permission[#{$controller->slug}][]" 
 										value=$permission->slug 

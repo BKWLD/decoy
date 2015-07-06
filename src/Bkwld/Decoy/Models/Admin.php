@@ -117,6 +117,11 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		if ($this->isDirty('password')) {
 			$this->password = Hash::make($this->password);
 		}
+
+		// Save or clear permission choices
+		if (Input::get('_custom_permissions')) {
+			$this->permissions = json_encode(Input::get('_permission'));
+		} else $this->permissions = null;
 	}
 
 	/**
@@ -263,23 +268,23 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 				'description' => $obj->description(),
 
 				// Add permission options for the controller 
-				'permissions' => array_map(function($value, $key) use ($class, $admin) {
+				'permissions' => array_map(function($value, $action) use ($class, $admin) {
 					$roles = array_keys(Config::get('decoy::site.roles'));
 					return (object) [
-						'slug' => $key,
-						'title' => is_array($value) ? $value[0] : String::titleFromKey($key),
+						'slug' => $action,
+						'title' => is_array($value) ? $value[0] : String::titleFromKey($action),
 						'description' => is_array($value) ? $value[1] : $value,
 
 						// Set the initial checked state based on the admin's permissions, if
 						// one is set.  Or based on the first role.
 						'checked' => $admin ? 
-							app('decoy.auth')->can($key, $class, $admin) :
-							app('decoy.auth')->can($key, $class, $roles[0]),
+							app('decoy.auth')->can($action, $class, $admin) :
+							app('decoy.auth')->can($action, $class, $roles[0]),
 
 						// Filter the list of roles to just the roles that allow the
 						// permission currently being iterated through
-						'roles' => array_filter($roles, function($role) use ($key, $class) {
-							return app('decoy.auth')->can($key, $class, $role);
+						'roles' => array_filter($roles, function($role) use ($action, $class) {
+							return app('decoy.auth')->can($action, $class, $role);
 						}),
 
 					];

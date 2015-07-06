@@ -108,6 +108,14 @@ class Eloquent implements AuthInterface {
 			return true;
 		}
 
+		// If the `who` is an admin who has permissions defined, check that the
+		// admin has the controller and action selected.
+		if (is_a($who, 'Bkwld\Decoy\Models\Admin') && $who->permissions) {
+			$permissions = json_decode($who->permissions);
+			return isset($permissions->$controller) &&
+				in_array($action, $permissions->$controller);
+		}
+
 		// If `who` was passed in as a string, treat is as a role.  Otherwise, get 
 		// the current user's role.
 		$role = is_string($who) ? $who : $this->user()->role;
