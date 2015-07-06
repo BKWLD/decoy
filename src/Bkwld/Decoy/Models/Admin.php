@@ -235,6 +235,16 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Get the permissions for the admin
+	 *
+	 * @return stdObject
+	 */
+	public function getPermissionsAttribute() {
+		if (!$this->permissions) return null;
+		return json_decode($this->permissions);
+	}
+
+	/**
 	 * Make a list of the role titles by getting just the text between bold tags 
 	 * in the roles config array, which is a common convention in Decoy 4.x
 	 *

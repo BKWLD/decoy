@@ -111,9 +111,10 @@ class Eloquent implements AuthInterface {
 		// If no `who` (and using logged in user) or the `who` is an admin and if
 		// that admin has permissiosn, test if they have access to the action using
 		// the array of permitted actions.
-		if ((is_a($who, 'Bkwld\Decoy\Models\Admin') && ($permissions = $who->permissions))
-			|| (!$who && ($permissions = $this->user()->permissions))) {
-			$permissions = json_decode($permissions);
+		if ((is_a($who, 'Bkwld\Decoy\Models\Admin') 
+				&& ($permissions = $who->getPermissionsAttribute()))
+			|| (is_null($who) 
+				&& ($permissions = $this->user()->getPermissionsAttribute()))) {
 
 			// Check that the controller was defined in the permissions
 			if (!isset($permissions->$controller) 
@@ -122,7 +123,9 @@ class Eloquent implements AuthInterface {
 			// If the controller is elements, return true as long as there is at least
 			// one element page mentioned.  Elements are stored differently where the
 			// management of elements pages are what is granted.
-			if ($controller == 'elements') return count($permissions->elements) > 0;
+			if ($controller == 'elements' && $action == 'read') {
+				return count($permissions->elements) > 0;
+			}
 
 			// Default behavoir checks that the action was checked in the permissions
 			// UI for the controller.
