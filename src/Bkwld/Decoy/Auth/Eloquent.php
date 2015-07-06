@@ -108,10 +108,12 @@ class Eloquent implements AuthInterface {
 			return true;
 		}
 
-		// If the `who` is an admin who has permissions defined, check that the
-		// admin has the controller and action selected.
-		if (is_a($who, 'Bkwld\Decoy\Models\Admin') && $who->permissions) {
-			$permissions = json_decode($who->permissions);
+		// If no `who` (and using logged in user) or the `who` is an admin and if
+		// that admin has permissiosn, test if they have access to the action using
+		// the array of permitted actions.
+		if ((is_a($who, 'Bkwld\Decoy\Models\Admin') && ($permissions = $who->permissions))
+			|| (!$who && ($permissions = $this->user()->permissions))) {
+			$permissions = json_decode($permissions);
 			return isset($permissions->$controller) &&
 				in_array($action, $permissions->$controller);
 		}
