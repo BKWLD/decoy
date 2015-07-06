@@ -76,9 +76,13 @@ class Eloquent implements AuthInterface {
 	 *        - controller name (Admin\ArticlesController)
 	 *        - URL (/admin/articles)
 	 *        - slug (articles)
+	 * @param string|Admin|null $who
+	 *        - if string, treat as a role
+	 *        - if Admin instance, treat as an admin user
+	 *        - if null, use the current user
 	 * @return boolean
 	 */
-	public function can($action, $controller) {
+	public function can($action, $controller, $who = null) {
 
 		// They must be logged in
 		if (!$this->check()) return false;
@@ -104,9 +108,13 @@ class Eloquent implements AuthInterface {
 			return true;
 		}
 
+		// If `who` was passed in as a string, treat is as a role.  Otherwise, get 
+		// the current user's role.
+		$role = is_string($who) ? $who : $this->user()->role;
+
 		// If there are "can" rules, then apply them as a whitelist.  Only those
 		// actions are allowed.
-		$can = Config::get('decoy::site.permissions.'.$this->user()->role.'.can');
+		$can = Config::get('decoy::site.permissions.'.$role.'.can');
 		if (is_callable($can)) $can = call_user_func($can, $action, $controller);
 		if (is_array($can) &&
 			!in_array($action.'.'.$controller, $can) && 
@@ -114,7 +122,7 @@ class Eloquent implements AuthInterface {
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING
-		$cant = Config::get('decoy::site.permissions.'.$this->user()->role.'.cant');
+		$cant = Config::get('decoy::site.permissions.'.$role.'.cant');
 		if (is_callable($cant)) $cant = call_user_func($cant, $action, $controller);
 		if (is_array($cant) && (
 			in_array($action.'.'.$controller, $cant) ||

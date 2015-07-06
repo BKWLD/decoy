@@ -227,9 +227,10 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	/**
 	 * Get the list of all permissions
 	 *
+	 * @param Admin|null $admin
 	 * @return array
 	 */
-	static public function getPermissionOptions() {
+	static public function getPermissionOptions($admin = null) {
 
 		// Get all the app controllers
 		$controllers = array_map(function($path) {
@@ -255,15 +256,27 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 			$obj = new $class;
 			$permissions = $obj->getPermissionOptions();
 			return (object) [
+
+				// Add controller information
 				'slug' => DecoyURL::slugController($class),
 				'title' => $obj->title(),
 				'description' => $obj->description(),
-				'permissions' => array_map(function($value, $key) {
+
+				// Add permission options for the controller 
+				'permissions' => array_map(function($value, $key) use ($class, $admin) {
 					return (object) [
 						'slug' => $key,
 						'title' => is_array($value) ? $value[0] : String::titleFromKey($key),
 						'description' => is_array($value) ? $value[1] : $value,
 						'checked' => false,
+
+						// Filter the list of roles to just the roles that allow the
+						// permission currently being iterated through
+						'roles' => array_filter(array_keys(Config::get('decoy::site.roles')), 
+							function($role) use ($key, $class) {
+							return app('decoy.auth')->can($key, $class, $role);
+						}),
+
 					];
 				}, $permissions, array_keys($permissions)),
 			];
