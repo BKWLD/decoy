@@ -88,6 +88,7 @@ define(function (require) {
 	$('body.elements.index .tab-sidebar, body.fragments.index .tab-sidebar').views(require('decoy/views/tab-sidebar'));
 	$('body > .sidebar').views(Sidebar); // The nav sidebar
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
+	$('.admin-permissions').views(require('decoy/views/admin-permissions'));
 
 	// Launch change modal
 	var changes_modal = require('decoy/modules/changes-modal');

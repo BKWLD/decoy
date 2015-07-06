@@ -1,7 +1,7 @@
 -use Bkwld\Decoy\Models\Admin
 
 -# Implement this as a collectoin instead, like fetch the collection of permission options
-.form-group.admin-permisssions
+.form-group.admin-permissions.closed
 	%label.control-label Permissions
 	%div
 
@@ -11,19 +11,20 @@
 				Override default permissions for the selected Role
 
 		.permissions-list
-			-foreach(Admin::getPermissionOptions($item) as $controller)
-				-if(!($permissions = $controller->permissions) || empty($permissions)) continue
+			.permissions-list-inner
+				-foreach(Admin::getPermissionOptions($item) as $controller)
+					-if(!($permissions = $controller->permissions) || empty($permissions)) continue
 
-				.controller
-					%span.title.js-tooltip(title=$controller->description) = $controller->title
+					.controller
+						%span.title.js-tooltip(title=$controller->description) = $controller->title
 
-					.controller-permissions
-						%input(type='hidden' name="_permission[#{$controller->slug}][]")
-						-foreach($permissions as $permission)
-							%label.controller-permission
-								%input(type='checkbox' 
-									name="_permission[#{$controller->slug}][]" 
-									value=$permission->slug 
-									checked=$permission->checked
-									data-roles=implode(',',$permission->roles))
-								%span.js-tooltip(title=$permission->description) = $permission->title
+						.controller-permissions
+							%input(type='hidden' name="_permission[#{$controller->slug}][]")
+							-foreach($permissions as $permission)
+								%label.controller-permission
+									%input(type='checkbox' 
+										name="_permission[#{$controller->slug}][]" 
+										value=$permission->slug 
+										checked=$permission->checked
+										data-roles=implode(',',$permission->roles))
+									%span.js-tooltip(title=$permission->description) = $permission->title

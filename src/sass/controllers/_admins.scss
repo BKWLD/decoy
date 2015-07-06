@@ -4,25 +4,41 @@
 }
 
 // The permissions UI
-.admin-permisssions {
+.admin-permissions {
 
 	// Width of one of the permission blocks
 	$w: 120px;
 
 	// Contains the list of permissions
 	.permissions-list {
-		padding-top: 5px;
-		@media(max-width: $screen-sm) {
-			padding-top: 0;
-			margin-top: -2px;
+
+		// An extra push off the label.  This div is also used to measure the
+		// height from JS.
+		.permissions-list-inner {
+			padding-top: 6px; 
+			@media(max-width: $screen-sm) {
+				padding-top: 0;
+			}
 		}
+
+		// Setup for the closed animation
+		$span: 300ms;
+		@include transition(height $span);
+		overflow: hidden;
+	}
+
+	// The permissions list if the customize checkbox is unchecked
+	&.closed .permissions-list {
+		height: 0 !important;
 	}
 
 	// A row of permissions for a specific controller
 	.controller {
 		@include clearfix;
-		margin: 6px 0;
+		padding-top: 6px;
 		border-bottom: 1px dashed $grey-border;
+
+		// Clear the last border
 		&:last-of-type {
 			border-bottom: none;
 		}
