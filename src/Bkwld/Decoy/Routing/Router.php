@@ -82,7 +82,7 @@ class Router {
 		$self = $this;
 		
 		// Setup a wildcarded catch all route
-		Route::any($this->dir.'/{path}', function($path) use ($dir, $self) {
+		Route::any($this->dir.'/{path}', ['as' => 'decoy::wildcard', function($path) use ($dir, $self) {
 
 			// Remember the detected route
 			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
@@ -97,7 +97,7 @@ class Router {
 				return $response;
 			else App::abort(404);
 			
-		})->where('path', '.*');
+		}])->where('path', '.*');
 
 	}
 	

@@ -99,6 +99,9 @@ class Filters {
 	 */
 	public function acl() {
 		
+		// If site isn't using permissions, no need to enforce
+		if (!Config::has('decoy::site.permissions')) return;
+
 		// Do nothing if the current path contains any of the whitelisted urls
 		if ($this->isPublic()) return;
 
@@ -109,23 +112,17 @@ class Filters {
 		// Always allow logout and redactor uploads
 		if (Request::is('admin/logout', 'admin/redactor/upload')) return;
 
-		// If permissions were defined, see if the user has permission for the current action
-		if (Config::has('permissions')) {
-			$wildcard = app('decoy.wildcard');
+		// Determine the action and controller differently depending on how the
+		// request is routed.
+		if (Route::is('decoy::wildcard')) {
+			list($action, $controller) = $this->dectectFromWildcardRouter();
+		} else {
+			list($action, $controller) = $this->dectectFromExplicitRoute();
+		}
 
-			// Attach / detach are ACL-ed by the parent controller.  It's the one being touched
-			$action = $wildcard->detectAction();
-			if (in_array($action, ['attach', 'remove'])) {
-				$controller = Input::get('parent_controller');
-				$action = 'update';
-
-			// Otherwise, use the controller from the route
-			} else $controller = $wildcard->detectControllerName();
-
-			// If they don't hvae permission, throw an error
-			if (!app('decoy.auth')->can($this->mapActionToPermission($action), $controller)) {
-				throw new AccessDeniedHttpException;
-			}
+		// If they don't hvae permission, throw an error
+		if (!app('decoy.auth')->can($action, $controller)) {
+			throw new AccessDeniedHttpException;
 		}
 	}
 	
@@ -137,17 +134,60 @@ class Filters {
 	public function isPublic() {
 		$path = '/'.Request::path();
 		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
-			|| $path === parse_url(route('decoy::account@forgot'), PHP_URL_PATH)  // Forgot
+			|| $path === parse_url(route('decoy::account@forgot'), PHP_URL_PATH) // Forgot
 			|| Str::startsWith($path, '/'.$this->dir.'/reset/')                  // Reset
-			|| Route::is('decoy::encode@notify')                                  // Notification handler from encoder
+			|| Route::is('decoy::encode@notify')                                 // Notification handler from encoder
 		;
+	}
+
+	/**
+	 * Get the actino and controller from an explicilty defined route
+	 *
+	 * @return array action,controller
+	 */
+	protected function dectectFromExplicitRoute() {
+
+		// Get parse the `uses` from the route definition
+		preg_match('#(.+)@(.+)#', Route::current()->getActionName(), $matches);
+		$controller = $matches[1];
+		$action = $matches[2];
+
+		// Further mapping of the action
+		$action = $this->mapActionToPermission($action);
+
+		// Return the detected action and controller
+		return [$action, $controller];
+	}
+
+	/**
+	 * Get the action and controller from the wildcard router
+	 *
+	 * @return array action,controller
+	 */
+	protected function dectectFromWildcardRouter() {
+		$wildcard = app('decoy.wildcard');
+
+		// Attach / detach are ACL-ed by the parent controller.  It's the one being touched		
+		$action = $wildcard->detectAction();
+		if (in_array($action, ['attach', 'remove'])) {
+			$controller = Input::get('parent_controller');
+			$action = 'update';
+
+		// Otherwise, use the controller from the route
+		} else $controller = $wildcard->detectControllerName();
+
+		// Further mapping of the action
+		$action = $this->mapActionToPermission($action);
+
+		// Return the detected action and controller
+		return [$action, $controller];
 	}
 
 	/**
 	 * Map the actions from the wildcard router into the smaller set supported by
 	 * the Decoy permissions system
 	 */
-	private function mapActionToPermission($action) {
+	protected function mapActionToPermission($action) {
 		switch($action) {
 			case 'new':
 			case 'store': return 'create';
