@@ -260,6 +260,9 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		return array_map(function($class) use ($admin) {
 			$obj = new $class;
 			$permissions = $obj->getPermissionOptions();
+			if (!is_array($permissions)) $permissions = [];
+
+			// Build the controller-level node
 			return (object) [
 
 				// Add controller information
