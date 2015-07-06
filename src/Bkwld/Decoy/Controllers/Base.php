@@ -216,6 +216,7 @@ class Base extends Controller {
 	/**
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
+	 * 
 	 * @param string $class ex: Admin\NewsController
 	 * @return string ex: News
 	 */
@@ -229,6 +230,7 @@ class Base extends Controller {
 	/**
 	 * Get the title for the controller based on the controller name.  Basically, it's
 	 * a de-studdly-er
+	 * 
 	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
@@ -240,6 +242,7 @@ class Base extends Controller {
 
 	/**
 	 * Get the description for a controller
+	 * 
 	 * @return string
 	 */
 	public function description() {
@@ -248,6 +251,7 @@ class Base extends Controller {
 
 	/**
 	 * Get the columns for a controller
+	 * 
 	 * @return array
 	 */
 	public function columns() {
@@ -256,6 +260,7 @@ class Base extends Controller {
 	
 	/**
 	 * Get the search settings for a controller
+	 * 
 	 * @return array
 	 */
 	public function search() {
