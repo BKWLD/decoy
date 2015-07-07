@@ -90,11 +90,6 @@ class Eloquent implements AuthInterface {
 		// If no permissions have been defined, do nothing.
 		if (!Config::has('decoy::site.permissions')) return true;
 
-		// Always let developers do everything. In particular, this is required to
-		// give access to commands and workers controllers for admins with
-		// customized permissions.
-		if ($this->developer()) return true;
-
 		// Convert controller instance to it's name
 		if (is_object($controller)) $controller = get_class($controller);
 
@@ -110,6 +105,11 @@ class Eloquent implements AuthInterface {
 		if ($controller == 'admins' 
 			&& ($action == 'read' 
 			|| ($action == 'update' && Request::segment(3) == $this->user()->id))) {
+			return true;
+		}
+
+		// Always let developers access workers and commands
+		if (in_array($controller, ['workers', 'commands']) && $this->developer($who)) {
 			return true;
 		}
 
@@ -180,12 +180,13 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Boolean as to whether the user has developer entitlements
-	 * 
+	 *
+	 * @param Bkwld\Decoy\Models\Admin $user
 	 * @return boolean
 	 */
-	public function developer() {
-		return $this->user()->role == 'developer' 
-			|| strpos($this->user()->email, 'bkwld.com');
+	public function developer($user = null) {
+		if (!$user) $user = $this->user();
+		return $user->role == 'developer' || strpos($user->email, 'bkwld.com');
 	}
 
 	/**
