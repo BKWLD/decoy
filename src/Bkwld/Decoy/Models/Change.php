@@ -231,7 +231,7 @@ class Change extends Base {
 			class="glyphicon glyphicon-export js-tooltip changes-modal-link" 
 			title="View changed attributes" 
 			data-placement="left"></a>',
-			DecoyURL::action('changes', $this->id));
+			DecoyURL::action('changes@edit', $this->id));
 
 		// Else, show a disabled bitton
 		else $actions[] = '<span class="glyphicon glyphicon-export js-tooltip"
