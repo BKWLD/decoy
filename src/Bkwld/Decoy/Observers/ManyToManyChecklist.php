@@ -6,7 +6,7 @@ use Input;
 
 /**
  * Take input from a Many to Many Checklist and commit it to the db,
- * updating the relationshups
+ * updating the relationships
  */
 class ManyToManyChecklist {
 
@@ -38,6 +38,11 @@ class ManyToManyChecklist {
 	 * @param string $relationship The relationship name
 	 */
 	private function updateRelationship($model, $relationship) {
+
+		// Make sure the relationship exists on the model.  This also prevents the
+		// wrong model (who might also have an `saved` callback) from trying to have
+		// this data saved on it
+		if (!method_exists($model, $relationship)) return;
 
 		// Strip all the "0"s from the input.  These exist because push checkboxes 
 		// is globally set for all of Decoy;
