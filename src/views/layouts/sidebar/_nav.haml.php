@@ -41,8 +41,9 @@
 				-if ($auth->can('read', 'changes'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null)) Changes
 
-				-if($auth->developer())
+				-if($auth->can('read', 'commands'))
 					%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
-					-if(count(Bkwld\Decoy\Models\Worker::all()))
-						%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
+
+				-if($auth->can('read', 'workers') && count(Bkwld\Decoy\Models\Worker::all()))
+					%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
 						

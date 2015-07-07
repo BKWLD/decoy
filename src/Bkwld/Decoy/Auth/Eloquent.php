@@ -90,6 +90,11 @@ class Eloquent implements AuthInterface {
 		// If no permissions have been defined, do nothing.
 		if (!Config::has('decoy::site.permissions')) return true;
 
+		// Always let developers do everything. In particular, this is required to
+		// give access to commands and workers controllers for admins with
+		// customized permissions.
+		if ($this->developer()) return true;
+
 		// Convert controller instance to it's name
 		if (is_object($controller)) $controller = get_class($controller);
 
