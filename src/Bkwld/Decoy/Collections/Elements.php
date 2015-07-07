@@ -8,6 +8,7 @@ use Bkwld\Library\Utils;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
 use Illuminate\Support\Collection;
+use Str;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -328,6 +329,19 @@ class Elements extends Collection {
 	public function keyUpdated($key) {
 		if ($this->updated_items === null) $this->assocAdminChoices();
 		return in_array($key, $this->updated_items);
+	}
+
+	/**
+	 * Filter the elements to only those allowed in the provided pages
+	 *
+	 * @param  array $pages 
+	 * @return this 
+	 */
+	public function onlyPages($pages) {
+		$this->items = array_filter($this->items, function($element) use ($pages) {
+			return in_array(Str::slug($element['page_label']), $pages);
+		});
+		return $this;
 	}
 
 	/**

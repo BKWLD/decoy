@@ -120,10 +120,10 @@ class Eloquent implements AuthInterface {
 			if (!isset($permissions->$controller) 
 				|| !is_array($permissions->$controller)) return false;
 
-			// If the controller is elements, return true as long as there is at least
-			// one element page mentioned.  Elements are stored differently where the
-			// management of elements pages are what is granted.
-			if ($controller == 'elements' && $action == 'read') {
+			// When interacting with elements, allow as long as there is at least one
+			// page they have access to.  Rely on the elements controller to enforce
+			// additional restrictions.
+			if ($controller == 'elements' && in_array($action, ['read', 'create'])) {
 				return count($permissions->elements) > 0;
 			}
 

@@ -45,6 +45,12 @@ class Elements extends Base {
 		// Get all the elements for the current locale
 		$elements = app('decoy.elements')->localize($locale)->hydrate(true);
 
+		// If the user has customized permissions, filter the elements to only the
+		// allowed pages of elements.
+		if ($permissions = app('decoy.auth')->user()->getPermissionsAttribute()) {
+			$elements->onlyPages($permissions->elements);
+		}
+
 		// If handling a deep link to a tab, verify that the passed tab
 		// slug is a real key in the data.  Else 404.
 		if ($tab && !in_array($tab, array_map(function($title) {
@@ -57,15 +63,6 @@ class Elements extends Base {
 
 		// Convert the collection to models for simpler manipulation
 		$elements = $elements->asModels();
-
-		// If the user has cusotmized permissions, filter the elements to show
-		// only those that they have access to.
-		if (($permissions = app('decoy.auth')->user()->getPermissionsAttribute())
-			&& isset($permissions->elements)) {
-			$elements = $elements->filter(function($element) use ($permissions) {
-				return in_array(Str::slug($element['page_label']), $permissions->elements);
-			});
-		}
 
 		// Render the view
 		$this->populateView('decoy::elements.index', [
@@ -120,7 +117,13 @@ class Elements extends Base {
 		// Hydrate the elements collection
 		$elements = app('decoy.elements')
 			->localize($locale)
-			->hydrate();
+			->hydrate(true);
+
+		// If the user has customized permissions, filter the elements to only the
+		// allowed pages of elements.
+		if ($permissions = app('decoy.auth')->user()->getPermissionsAttribute()) {
+			$elements->onlyPages($permissions->elements);
+		}
 
 		// Get all the input such that empty file fields are removed from the input.
 		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
@@ -162,6 +165,12 @@ class Elements extends Base {
 			// force the encoding row to also delete.  This is possible because
 			// videos cannot have a YAML set default value.
 			if (!$value && $el->type == 'video-encoder') return $el->delete();
+
+			// Whitelist only the attributes that actually exist in the table.  This
+			// cleans up after the hydrate(true)
+			$el->setRawAttributes(array_only($el->getAttributes(), [
+				'key', 'type', 'value', 'locale',
+			]));
 
 			// Save it
 			$el->value = Input::hasFile($key) ? app('upchuck.storage')->moveUpload(Input::file($key)) : $value;
