@@ -118,10 +118,12 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 			$this->password = Hash::make($this->password);
 		}
 
-		// Save or clear permission choices
-		if (Input::get('_custom_permissions')) {
-			$this->permissions = json_encode(Input::get('_permission'));
-		} else $this->permissions = null;
+		// Save or clear permission choices if the form had a "custom permissions"
+		// pushed checkbox
+		if (Input::exists('_custom_permissions')) {
+			$this->permissions = Input::get('_custom_permissions') ? 
+				json_encode(Input::get('_permission')) : null;
+		}
 	}
 
 	/**

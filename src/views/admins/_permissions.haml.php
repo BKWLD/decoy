@@ -7,6 +7,7 @@
 
 		.checkbox
 			%label
+				%input(type='hidden' name='_custom_permissions')
 				%input(type='checkbox' name='_custom_permissions' value=1 checked=$item&&$item->permissions)
 				Override default permissions for the selected Role
 
