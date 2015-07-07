@@ -270,7 +270,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		// Get all the app controllers
 		$controllers = array_map(function($path) {
 			return 'Admin\\'.basename($path, '.php');
-		}, glob(app_path().'/controllers/admin/*Controller.php'));
+		}, glob(app_path().'/controllers/Admin/*Controller.php'));
 
 		// Remove some classes
 		$controllers = array_diff($controllers, ['Admin\BaseController']);
