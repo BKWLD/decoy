@@ -38,6 +38,17 @@ class Changes extends Base {
 	];
 
 	/**
+	 * Only reading is possible
+	 *
+	 * @return array An associative array.
+	 */
+	public function getPermissionOptions() {
+		return [
+			'read' => 'View changes of all content',
+		];
+	}
+
+	/**
 	 * Customize the edit view to return the changed attributes as JSON. Using
 	 * this method / action so that a new routing rule doesn't need to be created
 	 *
