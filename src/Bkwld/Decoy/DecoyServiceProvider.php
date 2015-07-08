@@ -167,7 +167,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		});
 
 		// The NotFound observer used by the Redirect system
-		$this->app->singleton('decoy.404', function($app) { return new NotFound; });
+		$this->app->singleton('decoy.404', function($app) { 
+			return new NotFound(new Models\RedirectRule);
+		});
 
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });

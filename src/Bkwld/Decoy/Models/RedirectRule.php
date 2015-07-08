@@ -82,7 +82,7 @@ class RedirectRule extends Base {
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
-	public function scopeMatchFromWithRequest($query) {
+	public function scopeMatchUsingRequest($query) {
 		$from = $this->pathAndQuery();
 		$escaped_from = DB::connection()->getPdo()->quote($from);
 		return $query
