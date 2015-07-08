@@ -83,13 +83,13 @@ class RedirectRule extends Base {
 	 * @return void
 	 */
 	public function scopeMatchUsingRequest($query) {
-		$from = $this->pathAndQuery();
-		$escaped_from = DB::connection()->getPdo()->quote($from);
-		return $query
-			->where('from', $from)
-			->orWhereRaw("{$escaped_from} LIKE `from`")
-			->orWhereRaw("{$escaped_from} REGEXP `from`")
-		;
+		return $query->where(function($query) {
+			$from = $this->pathAndQuery();
+			$escaped_from = DB::connection()->getPdo()->quote($from);
+			$query->where('from', $from)
+				->orWhereRaw("{$escaped_from} LIKE `from`")
+				->orWhereRaw("{$escaped_from} REGEXP `from`");
+		});
 	}
 
 	/**
