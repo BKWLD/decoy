@@ -2,6 +2,7 @@
 
 // Deps
 use Bkwld\Library\Utils;
+use DB;
 use Request;
 
 class RedirectRule extends Base {
@@ -75,13 +76,20 @@ class RedirectRule extends Base {
 	}
 
 	/**
-	 * See if the current request matches the "FROM"
+	 * See if the current request matches the "FROM" using progressively more
+	 * expensive ways to match the from column.
 	 * 
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
 	public function scopeMatchFromWithRequest($query) {
-		return $query->where('from', '=', $this->pathAndQuery());
+		$from = $this->pathAndQuery();
+		$escaped_from = DB::connection()->getPdo()->quote($from);
+		return $query
+			->where('from', $from)
+			->orWhereRaw("{$escaped_from} LIKE `from`")
+			->orWhereRaw("{$escaped_from} REGEXP `from`")
+		;
 	}
 
 	/**
