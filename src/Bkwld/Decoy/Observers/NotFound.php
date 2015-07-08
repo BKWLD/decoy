@@ -14,7 +14,7 @@ class NotFound {
 	 * 
 	 * @return Illuminate\Http\RedirectResponse|void
 	 */
-	static public function handle() {
+	public function handle() {
 		if ($rule = RedirectRule::matchFromWithRequest()->first()) {
 			return Redirect::to($rule->to, $rule->code);
 		}

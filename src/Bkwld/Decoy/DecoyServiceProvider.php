@@ -64,8 +64,8 @@ class DecoyServiceProvider extends ServiceProvider {
 		}
 
 		// Listen for 404s and pass handling on to redirect rules.
-		$this->app['exception']->error(function(NotFoundHttpException $e) { return NotFound::handle(); });
-		$this->app['exception']->error(function(ModelNotFoundException $e) { return NotFound::handle(); });
+		$this->app['exception']->error(function(NotFoundHttpException $e) { return $this->app['decoy.404']->handle(); });
+		$this->app['exception']->error(function(ModelNotFoundException $e) { return $this->app['decoy.404']->handle(); });
 		
 	}
 	
@@ -165,6 +165,9 @@ class DecoyServiceProvider extends ServiceProvider {
 				$this->app->make('cache')->driver()
 			);
 		});
+
+		// The NotFound observer used by the Redirect system
+		$this->app->singleton('decoy.404', function($app) { return new NotFound; });
 
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
