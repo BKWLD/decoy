@@ -279,6 +279,7 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		$controllers[] = 'Bkwld\Decoy\Controllers\Admins';
 		$controllers[] = 'Bkwld\Decoy\Controllers\Changes';
 		$controllers[] = 'Bkwld\Decoy\Controllers\Elements';
+		$controllers[] = 'Bkwld\Decoy\Controllers\RedirectRules';
 
 		// Alphabetize the controller classes
 		usort($controllers, function($a, $b) {

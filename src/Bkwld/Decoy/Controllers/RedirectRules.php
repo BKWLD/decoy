@@ -18,4 +18,13 @@ class RedirectRules extends Base {
 		),
 		'label',
 	);
+
+	/**
+	 * Get the permission options.
+	 *
+	 * @return array An associative array.
+	 */
+	public function getPermissionOptions() {
+		return array_except(parent::getPermissionOptions(), ['publish']);
+	}
 }
