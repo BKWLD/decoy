@@ -168,8 +168,15 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getModelAttribute() {
-		$controller = call_user_func($this->model.'::adminControllerClass');
-		$controller = new $controller;
+		$class = call_user_func($this->model.'::adminControllerClass');
+		
+		// There is not a controller for the model
+		if (!$class) return sprintf('<b><a href="%s">%s</a></b>',
+			$this->filterUrl(['model' => $this->model]),
+			preg_replace('#(?<!\ )[A-Z]#', ' $0', $this->model));
+			
+		// There is a corresponding controller class
+		$controller = new $class;
 		return sprintf('<b class="js-tooltip" title="%s"><a href="%s">%s</a></b>',
 			htmlentities($controller->description()),
 			$this->filterUrl(['model' => $this->model]),
