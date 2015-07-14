@@ -218,7 +218,7 @@ Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the 
 
 Use a `fieldset` and a div of class `.legend` to contain groups of fields in box.  For instance:
 
-	!= View::make('decoy::shared.form._header', $__data)
+	!= View::make('decoy::shared.form._header', $__data)->render()
 	%fieldset
 		.legend=empty($item)?'New':'Edit'
 		!= Former::text('title')

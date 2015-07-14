@@ -67,7 +67,7 @@ if ($listing->count()) {
 			
 		<?// Standard bulk actions ?>
 		<? else: ?>
-			<?=View::make('decoy::shared.list._bulk_actions')?>
+			<?=View::make('decoy::shared.list._bulk_actions')->render()?>
 		<? endif ?>
 		
 		<?
@@ -122,7 +122,7 @@ if ($listing->count()) {
 		<? endforeach ?>
 		
 		<?// Maybe there were no results found ?>
-		<?=View::make('decoy::shared.list._no_results', $__data)?>
+		<?=View::make('decoy::shared.list._no_results', $__data)->render()?>
 		
 	</tbody>
 </table>
