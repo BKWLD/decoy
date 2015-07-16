@@ -10,7 +10,13 @@
 // by itself
 if (!isset($many_to_many)) $many_to_many = false;
 if (!isset($convert_dates)) $convert_dates = 'date';
-$can_delete = false;
+
+// This is the deletable boolean if the listing is empty. If a many to many,
+// set to true. If the user has permission to update their parent, then we'll
+// want to include the bulk delete checkbox in `thead`.  If they don't have
+// that permission, then they won't see the autocomplete to attach items anyway,
+// so it doesn't matter that they see the bulk delete checkbox. 
+$can_delete = $many_to_many;
 
 // Test the data for presence of special properties
 if ($listing->count()) {
@@ -19,11 +25,15 @@ if ($listing->count()) {
 	// Get the list of actions
 	$test_actions = $listing[0]->makeAdminActions($__data);
 
-	// Check if the actions include a delete link and whether the user can delete 
-	// this item or, if many to many, update the parent.
+	// Check if the actions include a delete link
 	$can_delete = count(array_filter($test_actions, function($action) {
 			return strpos($action, 'delete-now') || strpos($action, 'remove-now');
-		})) && (app('decoy.auth')->can('destroy', $controller) 
+		})) 
+
+			// ... and whether the user can delete this item
+			&& (app('decoy.auth')->can('destroy', $controller) 
+
+			// ... or, if many to many, update the parent
 			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
 }
 ?>
