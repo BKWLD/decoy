@@ -35,4 +35,4 @@
 				Enable
 	-$actions = ob_get_clean();
 
-!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions])->render())
+!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions]))->render()
