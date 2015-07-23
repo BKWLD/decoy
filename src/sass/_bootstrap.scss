@@ -1,0 +1,6 @@
+/**
+ * Loading bootstrap css in a seperate partial to workaround IE9's 4095 total cap
+ * http://stackoverflow.com/a/9906889/59160
+ */
+@import "variables";
+@import "vendor/bootstrap/bootstrap";

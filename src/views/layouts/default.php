@@ -10,6 +10,7 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
+		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/vendor.css')?>"/>
 		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
