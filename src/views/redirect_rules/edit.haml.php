@@ -1,4 +1,4 @@
-!= View::make('decoy::shared.form._header', $__data)
+!= View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
 	.legend=empty($item)?'New':'Edit'
@@ -7,4 +7,4 @@
 	!= Former::radios('code')->radios(Bkwld\Library\Laravel\Former::radioArray(Bkwld\Decoy\Models\RedirectRule::$codes))->blockHelp('How should browsers treat this redirect.');
 	!= Former::text('label')->help('An optional internal label used to identify this <b>Rule</b> in the Admin.')
 
-!= View::make('decoy::shared.form._footer', $__data)
+!= View::make('decoy::shared.form._footer', $__data)->render()

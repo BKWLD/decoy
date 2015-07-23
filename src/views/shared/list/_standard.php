@@ -7,14 +7,14 @@
 	
 	<?
 	// Create the page title for the sidebar layout
-	if ($layout == 'sidebar') echo View::make('decoy::shared.list._sidebar_header', $__data);
+	if ($layout == 'sidebar') echo View::make('decoy::shared.list._sidebar_header', $__data)->render();
 	
 	// Create the page title for a full page layout
-	else if ($layout == 'full') echo View::make('decoy::shared.list._full_header', $__data);
+	else if ($layout == 'full') echo View::make('decoy::shared.list._full_header', $__data)->render();
 
 	// Render the full table.  This could be broken up into smaller chunks but leaving
 	// it as is until the need arises
-	echo View::make('decoy::shared.list._table', $__data);
+	echo View::make('decoy::shared.list._table', $__data)->render();
 
 	// Add sidebar pagination
 	if (!empty($layout) && $layout != 'full' && $count > count($listing)): ?>
@@ -25,6 +25,6 @@
 
 <?
 // Render pagination
-echo View::make('decoy::shared.list._pagination', $__data);
+echo View::make('decoy::shared.list._pagination', $__data)->render();
 
 ?>

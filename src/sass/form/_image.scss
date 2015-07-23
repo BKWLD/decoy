@@ -16,6 +16,12 @@
 		// Make the border color match form-controls
 		border-color: $input-border;
 	}
+	
+	// Add a checkered bkgd behind the non-cropper view for transparent pngs
+	> div > a {
+		background-image: url($decoy_img_dir + 'jcrop/img-bkgd.png');
+		display: block;
+	}
 }
 
 // This container contains multiple instances of images that get turned

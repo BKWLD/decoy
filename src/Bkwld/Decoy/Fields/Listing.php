@@ -285,7 +285,7 @@ class Listing extends Field {
 		// then don't show a special message
 		if ($this->layout == 'sidebar' && !$this->parent_item) return View::make('decoy::shared.list._pending', [
 			'title' => $this->label_text,
-			'description' => $this->controller->description(),
+			'description' => $this->controller->description()->render(),
 		]);
 
 		// Get the listing of items

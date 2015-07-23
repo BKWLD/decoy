@@ -1,4 +1,4 @@
-!= View::make('decoy::shared.form._header', $__data)
+!= View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
 	.legend=empty($item)?'New':'Edit'
@@ -36,4 +36,4 @@
 				Enable
 	-$actions = ob_get_clean();
 
-!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions]))
+!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions]))->render()

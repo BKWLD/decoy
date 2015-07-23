@@ -103,7 +103,7 @@ class Base extends Controller {
 	// Shared layout for admin view, set in the constructor
 	public $layout;
 	protected function setupLayout() {
-		if (!is_null($this->layout)) $this->layout = \View::make($this->layout);
+		if (!is_null($this->layout)) $this->layout = View::make($this->layout);
 	}
 	
 	/**
