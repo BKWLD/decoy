@@ -113,12 +113,12 @@ class Localize {
 	 * @return string
 	 */
 	public function __toString() {
-		return (string) View::make('decoy::shared.form.relationships._localize', [
+		return View::make('decoy::shared.form.relationships._localize', [
 			'model' => $this->model,
 			'item' => $this->item,
 			'title' => $this->title,
 			'localize' => $this,
-		]);
+		])->render();
 	}
 
 }

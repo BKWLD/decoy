@@ -172,7 +172,7 @@ class Elements extends Base {
 	 * @return Illuminate\Http\Response
 	 */
 	public function field($key) {
-		return View::make('decoy::layouts.blank')
+		return View::make('decoy::layouts.blank')->render()
 			->nest('content', 'decoy::elements.field', [
 				'element' => app('decoy.elements')
 					->localize(Decoy::locale())
@@ -213,7 +213,7 @@ class Elements extends Base {
 		// after saving.  Thus, post any saving callback operations.
 		return View::make('decoy::layouts.blank', [
 			'content' => "<div id='response' data-key='{$key}'>{$el}</div>"
-		]);
+		])->render();
 	}
 	
 	

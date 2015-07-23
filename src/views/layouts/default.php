@@ -16,12 +16,12 @@
 	<body class="<?=Decoy::bodyClass()?>">
 		
 		<?// Sidebar ?>
-		<?= View::make('decoy::layouts.sidebar._sidebar') ?>
+		<?= View::make('decoy::layouts.sidebar._sidebar')->render() ?>
 
 		<?// Header ?>
-		<?= View::make('decoy::layouts._header', $__data) ?>
-		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs; ?>
-		<?= View::make('decoy::layouts._notifications', $__data)?>
+		<?= View::make('decoy::layouts._header', $__data)->render() ?>
+		<?= empty($breadcrumbs) ? View::make('decoy::layouts._breadcrumbs', $__data)->render() : $breadcrumbs; ?>
+		<?= View::make('decoy::layouts._notifications', $__data)->render()?>
 
 		<?// The main page content ?>
 		<div id="main">
@@ -31,7 +31,7 @@
 	<?// Footer embeds ?>
 	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
 	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
-	<?= View::make('decoy::layouts._wysiwyg') ?>
+	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
 	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>

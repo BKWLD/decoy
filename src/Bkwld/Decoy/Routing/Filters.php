@@ -87,7 +87,7 @@ class Filters {
 			
 			// Add the Decoy Frontend markup to the page right before the closing body tag
 			$response->setContent(
-				str_replace('</body>', View::make('decoy::frontend._embed').'</body>', $content)
+				str_replace('</body>', View::make('decoy::frontend._embed')->render().'</body>', $content)
 			);
 		}
 	}
