@@ -283,10 +283,12 @@ class Listing extends Field {
 
 		// If in a sidebar and there is no parent (like if you are on a create page)
 		// then don't show a special message
-		if ($this->layout == 'sidebar' && !$this->parent_item) return View::make('decoy::shared.list._pending', [
-			'title' => $this->label_text,
-			'description' => $this->controller->description()->render(),
-		]);
+		if ($this->layout == 'sidebar' && !$this->parent_item) {
+			return View::make('decoy::shared.list._pending', [
+				'title' => $this->label_text,
+				'description' => $this->controller->description(),
+			])->render();
+		}
 
 		// Get the listing of items
 		$items = $this->getItems();
