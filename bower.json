@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "4.7.1",
+  "version": "4.10.1",
   "private": true,
   "main": "",
   "ignore": [
@@ -22,6 +22,6 @@
     "pixi.js": "~2",
     "requirejs": "~2",
     "requirejs-text": "~2",
-    "typeahead.js": "~0"
+    "typeahead.js": "~0.10"
   }
 }
