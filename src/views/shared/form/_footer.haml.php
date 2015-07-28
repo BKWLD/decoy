@@ -30,6 +30,9 @@
 
 	.pull-right
 		.btn-group
+			-if (isset($item) && app('decoy.auth')->can('create', $controller))
+				%a.btn.btn-default.js-tooltip(title="Duplicate" href=DecoyURL::relative('duplicate', $item->id))
+					%span.glyphicon.glyphicon-duplicate
 			-if (isset($item) && app('decoy.auth')->can('read', 'changes'))
 				-$url = DecoyURL::action('changes').'?'.Search::query([ 'model' => get_class($item), 'key' => $item->getKey()])
 				%a.btn.btn-default.js-tooltip(title="<b>Changes</b> history" href=$url)
