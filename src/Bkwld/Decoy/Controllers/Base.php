@@ -597,6 +597,15 @@ class Base extends Controller {
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();
 
+		// If there is a name or title field, append " copy" to it
+		if ($name = $new->getAttribute('name')) {
+			$new->setAttribute('name', $name.' copy');
+			$new->save();
+		} else if ($title = $new->getAttribute('title')) {
+			$new->setAttribute('title', $title.' copy');
+			$new->save();
+		}
+
 		// Set localization options on new instance
 		if ($locale = Input::get('locale')) {
 			$new->locale = $locale;
