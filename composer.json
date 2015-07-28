@@ -21,7 +21,7 @@
 		"anahkiasen/former": ">=3.5.2,<4.0",
 		"anahkiasen/html-object": "~1.3",
 		"bkwld/croppa": "3 - 4",
-		"bkwld/cloner": "dev-master",
+		"bkwld/cloner": "~1.0",
 		"bkwld/laravel-haml": "~2.0",
 		"bkwld/library": "~2.16",
 		"bkwld/upchuck": "~1.1",
