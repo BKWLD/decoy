@@ -65,11 +65,12 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	static public $localizable;
 
 	/**
-	 * Specify columns that shouldn't be duplicated by Bkwld\Cloner
+	 * Specify columns that shouldn't be duplicated by Bkwld\Cloner.  Include
+	 * slug by default so that Sluggable will automatically generate a new one.
 	 * 
 	 * @var array
 	 */
-	protected $clone_exempt_attributes;
+	protected $clone_exempt_attributes = ['slug'];
 
 	/**
 	 * Relations to follow when models are duplicated
