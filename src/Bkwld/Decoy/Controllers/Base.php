@@ -615,7 +615,7 @@ class Base extends Controller {
 
 		// Save the new record and redirect to its edit view
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
-			->with('success', $this->successMessage($new, 'duplicated') );
+			->with('success', $this->successMessage($src, 'duplicated') );
 	}
 	
 	//---------------------------------------------------------------------------
