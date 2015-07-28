@@ -44,6 +44,7 @@ class {{model}} extends Base {
 	 * @return void
 	 */
 	// public function onCreating() {
+	// 	if (isset($this->position)) return;
 	// 	$this->position = $this->article->blocks()->max('position') + 1;
 	// }
 
