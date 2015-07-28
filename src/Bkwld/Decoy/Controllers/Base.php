@@ -593,49 +593,20 @@ class Base extends Controller {
 
 		// Find the source item
 		if (!($src = Model::find($id))) return App::abort(404);
-		$file_attributes = $src->file_attributes;
 
-		// Get the options
-		$options = Input::get('options') ?: [];
-
-		// If inlcuding text, start by cloning the model.  A number of columns are
-		// excepted by the duplciate, including all of the file attributes.
-		if (in_array('text', $options)) {
-			$new = $src->replicate(array_merge([
-				$src->getKeyName(),
-				$src->getCreatedAtColumn(),
-				$src->getUpdatedAtColumn(),
-				'visible',
-			], $file_attributes));
-		
-		// Otherwise, create a blank instance of the model
-		} else $new = $src->newInstance();
-
-		// Duplicate all files and associate new paths
-		if (in_array('files', $options)) {
-			$uploads_dir = Config::get('decoy::core.upload_dir');
-			foreach ($file_attributes as $field) {
-				if (empty($src->$field)) continue;
-
-				// Copy the file
-				$tmp = $uploads_dir.'/'.basename($src->$field);
-				$copy = copy(public_path().$src->$field, $tmp);
-
-				// Move it save the new path
-				$new->$field = File::publicPath(File::organizeFile($tmp, $uploads_dir));
-			}
-		}
+		// Duplicate using Bkwld\Cloner
+		$new = $src->duplicate();
 
 		// Set localization options on new instance
 		if ($locale = Input::get('locale')) {
 			$new->locale = $locale;
 			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
+			$new->save();
 		}
 
 		// Save the new record and redirect to its edit view
-		$new->save();
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
-			->with('success', $this->successMessage($new, 'copied') );
+			->with('success', $this->successMessage($new, 'duplicated') );
 	}
 	
 	//---------------------------------------------------------------------------
@@ -959,8 +930,14 @@ class Base extends Controller {
 		// Render the message
 		$message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
 
+		// Add extra messaging for copies
+		if ($verb == 'duplicated') {
+			$url = preg_replace('#/duplicate#', '/edit', Request::url());
+			$message .= ' You are viewing a <b>copy</b> of the <a href="'.$url.'">original</a>.';
+		}
+
 		// Add extra messaging if the creation was begun from the localize UI
-		if ($verb == 'copied' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
+		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
 			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
 		}
 
