@@ -592,7 +592,7 @@ class Base extends Controller {
 	public function duplicate($id) {
 
 		// Find the source item
-		if (!($src = Model::find($id))) return App::abort(404);
+		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
 
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();

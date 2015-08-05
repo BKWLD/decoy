@@ -30,7 +30,7 @@
 
 	.pull-right
 		.btn-group
-			-if (isset($item) && app('decoy.auth')->can('create', $controller))
+			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty($item->cloneable))
 				%a.btn.btn-default.js-tooltip(title="Duplicate" href=DecoyURL::relative('duplicate', $item->id))
 					%span.glyphicon.glyphicon-duplicate
 			-if (isset($item) && app('decoy.auth')->can('read', 'changes'))
