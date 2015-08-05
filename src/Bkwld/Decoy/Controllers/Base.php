@@ -597,11 +597,12 @@ class Base extends Controller {
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();
 
-		// If there is a name or title field, append " copy" to it
-		if ($name = $new->getAttribute('name')) {
+		// If there is a name or title field, append " copy" to it.  Use "original"
+		// to avoid mutators.
+		if ($name = $new->getOriginal('name')) {
 			$new->setAttribute('name', $name.' copy');
 			$new->save();
-		} else if ($title = $new->getAttribute('title')) {
+		} else if ($title = $new->getOriginal('title')) {
 			$new->setAttribute('title', $title.' copy');
 			$new->save();
 		}
