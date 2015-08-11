@@ -2,6 +2,10 @@
 -use Bkwld\Decoy\Controllers\Elements
 -use Illuminate\Support\Collection
 
+-# Grouped and ordered elements
+-$grouped_elements = $elements->groupBy('page_label')->toArray()
+-ksort($grouped_elements)
+
 -# Form tag
 !=Former::open_vertical_for_files()->addClass('row')
 
@@ -26,7 +30,7 @@
 
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
 		-$first = 0
-		-foreach($elements->groupBy('page_label') as $page => $sections)
+		-foreach($grouped_elements as $page => $sections)
 			-$slug = Str::slug($page)
 			-$path = $locale ? $locale.'/'.$slug : $slug
 			-$active = (empty($tab) && $first++==0 ) || $slug == $tab
@@ -41,7 +45,7 @@
 -# Create pages
 .padded-col.tab-content
 	-$first = 0
-	-foreach($elements->groupBy('page_label') as $page => $sections)
+	-foreach($grouped_elements as $page => $sections)
 		-$slug = Str::slug($page)
 		-$sections = Collection::make($sections)->groupBy('section_label')
 		-$active = (empty($tab) && $first++==0 ) || $slug == $tab

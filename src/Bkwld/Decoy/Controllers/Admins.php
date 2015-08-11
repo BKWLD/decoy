@@ -1,116 +1,141 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
-// Dependencies
+// Deps
 use App;
-use Bkwld\Decoy\Fields\Listing;
-use DecoyURL;
+use Bkwld\Decoy\Models\Admin;
 use Input;
-use Former;
-use Sentry;
 use Redirect;
-use URL;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 /**
- * Admin management interface
+ * The CRUD listing of admins
  */
 class Admins extends Base {
-	
-	// Shared settings
-	protected $description = 'Users who have access to this admin area.';
+
+	/**
+	 * Normal Decoy controller config.  There is some increased specifity so that
+	 * subclassing controllers don't have to have to specify everything.
+	 */
+	protected $description = 'Users who have access to the admin.';
 	protected $columns = array(
-		'Name'          => 'title',
-		'Status'        => 'statuses',
+		'Name'          => 'getAdminTitleHtmlAttribute',
+		'Status'        => 'getAdminStatusAttribute',
 		'Email'         => 'email',
 	);
-	
+	protected $show_view = 'decoy::admins.edit';
+
 	/**
-	 * Listing view
+	 * Make search options dependent on whether the site is using roles
+	 *
+	 * @return array;
+	 */
+	public function search() {
+		$options = [
+			'first_name',
+			'last_name',
+			'email',
+			'status' => [
+				'type' => 'select',
+				'options' => [
+					1 => 'enabled',
+					0 => 'disabled',
+				],
+			],
+		];
+		if (($roles = Admin::getRoleTitles()) && count($roles)) {
+			$options['role'] = [
+				'type' => 'select',
+				'options' => $roles,
+			];
+		}
+		return $options;
+	}
+
+	/**
+	 * Add a "grant" option for assigning permissions and disabling folks
+	 *
+	 * @return array
+	 */
+	public function getPermissionOptions() {
+		return [
+			'read' => 'View listing and edit views',
+			'create' => 'Create new items',
+			'update' => 'Update existing items',
+			'grant' => 'Change role and permissions',
+			'destroy' => ['Delete', 'Delete items permanently'],
+		];
+	}
+
+	/**
+	 * If the user can't read admins, bounce them to their profile page
+	 * 
+	 * @return Symfony\Component\HttpFoundation\Response | void
 	 */
 	public function index() {
-		
-		// Take the listing results and replace them with model instances
-		// so title() can be called on them to decorate the person's name
-		$results = Model::ordered()->paginate($this->perPage())->getIterator();
-		foreach($results as &$item) {
-			$item = new Model((array) $item);
+		if (!app('decoy.auth')->can('read', 'admins')) {
+			return Redirect::to(app('decoy.auth')->userUrl());
 		}
-
-		// Bind to view
-		$this->populateView(Listing::createFromController($this, $results));
-
-	}
-	
-	/**
-	 * Create a new one
-	 */
-	public function store() {
-
-		// Validate
-		if ($result = $this->validate(null, Model::$rules)) return $result;
-		
-		// Create
-		$id = Model::create(Input::get());
-		
-		// Redirect to edit view
-		return Redirect::to(DecoyURL::relative('edit', $id))
-			->with('success', $this->successMessage(Input::get('first_name').' '.Input::get('last_name')));
+		return parent::index();
 	}
 
 	/**
-	 * Edit form
+	 * Make password optional
+	 *
+	 * @return void 
 	 */
 	public function edit($id) {
-		
-		// Make password optional
-		unset(Model::$rules['password']);
-		
-		// Run default logic (which doesn't return a response)
-		parent::edit($id);
-
-		// Populate the role
-		Former::populateField('role', Model::find($id)->getRoleName());
-
+		unset(Admin::$rules['password']);
+		return parent::edit($id);
 	}
-	
+
 	/**
-	 * Handle updates
+	 * Don't let unauthorize folks update their role by passing in role values
+	 * in the GET
+	 *
+	 * @param  int $id Model key
+	 * @throws AccessDeniedHttpException
+	 * @return Symfony\Component\HttpFoundation\Response
 	 */
 	public function update($id) {
-		
-		// Lookup admin
-		if (!($admin = Model::find($id))) return App::abort(404);
 
-		// Validate.  Password isn't required when editing.  And make sure this row
-		// is excluded from uniqueness check
-		unset(Model::$rules['password']);
-		Model::$rules['email'] = Model::$rules['email'].','.$id;
-		if ($result = $this->validate(null, Model::$rules)) return $result;
-		
-		// Update
-		$admin->update(Input::get());
-		
-		// Redirect to the edit view
-		return Redirect::to(URL::current())
-			->with('success', $this->successMessage(Input::get('first_name').' '.Input::get('last_name')));
-	
+		// Encorce permissions on updating ones own role
+		if (!app('decoy.auth')->can('update', 'admins') && Input::has('role')) {
+			throw new AccessDeniedHttpException;
+		}
+
+		// If the password is empty, remove the key from the input so it isn't cleared
+		if (!Input::has('password')) {
+			Input::replace(array_except(Input::get(), ['password']));
+		}
+
+		// Continue processing
+		return parent::update($id);
 	}
-	
+
 	/**
 	 * Disable the admin
+	 * 
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function disable($id) {
-		if (!($admin = Model::find($id))) return App::abort(404);
-		$admin->disable();
+		if (!app('decoy.auth')->can('grant', 'admins')) throw new AccessDeniedHttpException;
+		if (!($admin = Admin::find($id))) return App::abort(404);
+		$admin->active = null;
+		$admin->save();
 		return Redirect::back();
 	}
 	
 	/**
 	 * Enable the admin
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function enable($id) {
-		if (!($admin = Model::find($id))) return App::abort(404);
-		$admin->enable();
+		if (!app('decoy.auth')->can('grant', 'admins')) throw new AccessDeniedHttpException;
+		if (!($admin = Admin::find($id))) return App::abort(404);
+		$admin->active = 1;
+		$admin->save();
 		return Redirect::back();
 	}
-	
+
 }

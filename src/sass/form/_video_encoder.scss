@@ -2,35 +2,15 @@
 // Skin video encoder
 .form-group.video-encoder {
 
-	// Apply block to the progress bar since we're rendering it as a span
-	// because it's in block-help which is a p
-	.progress, .bar {
-		display: inline-block;
-	}
-
 	// Format the progress bar
 	.progress {
-		width: 260px;
 		margin-bottom: 0;
-
-		// Middle relateive to the status label
-		vertical-align: middle;
-
-		// Make the bar look more like the download link, which inherits from <code>
-		background: none;
-		box-shadow: none;
-		border: 1px solid #e1e1e8;
-		.bar {
+		.progress-bar {
 			font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
 			font-size: 12px;
 			@include text-shadow(none);
 			text-transform: capitalize;
 		}
-	}
-
-	// Error message
-	.error {
-		color: #d14;
 	}
 
 	// The video player

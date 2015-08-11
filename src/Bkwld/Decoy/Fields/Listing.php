@@ -2,7 +2,7 @@
 
 // Dependencies
 use Bkwld\Library;
-use Bkwld\Decoy\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
@@ -24,7 +24,7 @@ use URL;
  * 	->take(20)
  */
 class Listing extends Field {
-	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers;
+	use Traits\CaptureLabel, Traits\Scopable, Traits\Helpers, Traits\CaptureHelp;
 
 	/**
 	 * Override Former Field and Tag properties to wrap the listing inside of
@@ -91,6 +91,9 @@ class Listing extends Field {
    */
   public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
 
+  	// Get the parent item
+    $this->parent_item = $this->model();
+
   	// Instantiate a controller given the model name
   	$this->controller(isset($config['controller'])
   		? $config['controller']
@@ -106,9 +109,6 @@ class Listing extends Field {
 
   	// Continue instantiation
     parent::__construct($app, $type, $model, $label, $value, $attributes);
-
-    // Get the parent item
-    $this->parent_item = $this->model();
     
   }
 
@@ -143,16 +143,16 @@ class Listing extends Field {
 			$this->controller_name = $controller;
 			$this->controller = new $controller;
 
+			// Apply the parent if one was set
+			if ($this->parent_item && $this->controller) {
+				$this->controller->parent($this->parent_item);
+			}
+
 		// Or, validate a passed controller instance
 		} elseif (is_object($controller)
 			&& is_a($controller, 'Bkwld\Decoy\Controllers\Base')) {
 			$this->controller_name = get_class($controller);
 			$this->controller = $controller;
-		}
-
-		// Re-apply the parent if one was set
-		if ($this->parent_item && $this->controller) {
-			$this->controller->parent($this->parent_item);
 		}
 		
 		// Chain
@@ -192,6 +192,17 @@ class Listing extends Field {
 		if ($layout == 'form') $this->addClass('span9');
 
 		// Chain
+		return $this;
+	}
+
+	/**
+	 * Store the parent model instance
+	 *
+	 * @param  Illuminate\Database\Eloquent\Model $parent
+	 * @return this
+	 */
+	public function parent($parent) {
+		$this->parent_item = $parent;
 		return $this;
 	}
 
@@ -237,7 +248,7 @@ class Listing extends Field {
 		$this->addGroupClass('list-form-group');
 
 		// Use the controller description for blockhelp
-		$this->blockhelp($this->controller->description());
+		if (!$this->hasHelp()) $this->blockhelp($this->controller->description());
 
 		// Show no results if there is no parent specified
 		if (empty($this->parent_item)) {
@@ -247,7 +258,12 @@ class Listing extends Field {
 
 		// Add create button if we have permission and if there is a parent item
 		if (app('decoy.auth')->can('create', $this->controller)) {
-			$this->group->setLabel($this->label_text.$this->makeCreateBtn());
+			$this->group->setLabel(
+				'<a href="'.$this->getIndexURL().'">'
+				.$this->label_text
+				.'</a>'
+				.$this->makeCreateBtn()
+			);
 		}
 
 		// Return the wrapped field
@@ -267,10 +283,12 @@ class Listing extends Field {
 
 		// If in a sidebar and there is no parent (like if you are on a create page)
 		// then don't show a special message
-		if ($this->layout == 'sidebar' && !$this->parent_item) return View::make('decoy::shared.list._pending', [
-			'title' => $this->label_text,
-			'description' => $this->controller->description(),
-		]);
+		if ($this->layout == 'sidebar' && !$this->parent_item) {
+			return View::make('decoy::shared.list._pending', [
+				'title' => $this->label_text,
+				'description' => $this->controller->description(),
+			])->render();
+		}
 
 		// Get the listing of items
 		$items = $this->getItems();
@@ -282,7 +300,6 @@ class Listing extends Field {
 			'description'       => $this->controller->description(),
 			'columns'           => $this->getColumns($this->controller),
 			'search'            => $this->controller->search(),
-			'auto_link'         => 'first',
 			'convert_dates'     => 'date',
 			'layout'            => $this->layout,
 			'parent_id'         => null,
@@ -293,7 +310,7 @@ class Listing extends Field {
 			'paginator_from'    => (Input::get('page', 1)-1) * $this->perPage(),
 		);
 
-		// If parent, add relationship ones
+		// If the listing has a parent, add relationship vars
 		if ($this->parent_item) {
 			$vars = array_merge($vars, $this->controller->autocompleteViewVars());
 		}
@@ -310,6 +327,9 @@ class Listing extends Field {
 	 * @return string
 	 */
 	protected function controllerNameOfModel($model) {
+		if (strpos($model, 'Bkwld\Decoy\Models') === 0) {
+			return Str::plural(str_replace('\Models', '\Controllers', $model));
+		}
 		return 'Admin\\'.Str::plural($model).'Controller';
 	}
 
@@ -324,6 +344,17 @@ class Listing extends Field {
 			<a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
 			<span class="glyphicon glyphicon-plus"></span> New</a>
 			</div>';
+	}
+
+	/**
+	 * Get the index URL for this controller
+	 *
+	 * @return string URL
+	 */
+	protected function getIndexURL() {
+		return $this->controller->isChildInManyToMany() ? 
+			DecoyURL::action($this->controller_name.'@index') : 
+			DecoyURL::relative('index', null, $this->controller_name);
 	}
 
 	/**

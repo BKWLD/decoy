@@ -9,7 +9,6 @@ define(function (require) {
 		, Backbone = require('backbone')
 		, FastClick = require('fastclick')
 		, Affixable = require('decoy/modules/affixable')
-		, Sidebar = require('decoy/modules/sidebar')
 		, LocalizeCompare = require('decoy/localize/compare')
 		, manifest = require('decoy/modules/manifest')
 		, bootstrap = require('bootstrap')
@@ -22,8 +21,9 @@ define(function (require) {
 	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
 	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
 	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
-	require('decoy/modules/auto-toggleable');
-	var wysiwyg = require('decoy/modules/wysiwyg'); // CKeditor
+	require('decoy/modules/auto-toggleable'); // Scan make for attributes that enable toggling
+	require('decoy/modules/chicken-switch').register(); // Enable chicken switches on delete
+	var wysiwyg = require('decoy/wysiwyg/factory');
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
@@ -84,11 +84,15 @@ define(function (require) {
 
 	// Newer style view declaration
 	$('body.elements.field #main').views(require('decoy/elements/field'));
-	$('body.elements.index form').views(require('decoy/views/tab-sidebar'));
-	$('body > .sidebar').views(Sidebar); // The nav
+	$('body.elements.index .tab-sidebar').views(require('decoy/views/tab-sidebar'));
+	$('body > .sidebar').views(Sidebar); // The nav sidebar
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
+	$('.admin-permissions').views(require('decoy/views/admin-permissions'));
 
-	
+	// Launch change modal
+	var changes_modal = require('decoy/modules/changes-modal');
+	$('.changes-modal-link').on('click', changes_modal.open);
+
 	// --------------------------------------------------
 	// DOM ready
 	app.on('ready', function () {
@@ -100,7 +104,7 @@ define(function (require) {
 		// a required class with Former, which puts it on the input rather than the control group.  We
 		// want these fields to look required but not actually be enforced by the browser.
 		var required_html = ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>';
-		$('input.required').siblings('.control-label').append(required_html);
+		$('input.required, textarea.required').closest('.form-group').find('.control-label').append(required_html);
 		
 		// And "Help" icons
 		// Disabled cause I'm not sure we really want this
@@ -114,7 +118,7 @@ define(function (require) {
 		});
 		
 		// Turn WYSIWYGs on.
-		wysiwyg.replace('textarea.wysiwyg');	
+		wysiwyg.init('textarea.wysiwyg');
 		
 		// Enable affix globally
 		$('.affixable').views(Affixable);		

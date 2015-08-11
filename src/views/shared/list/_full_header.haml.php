@@ -22,6 +22,6 @@
 					.glyphicon.glyphicon-ban-circle
 
 -# Search UI
-!=View::make('decoy::shared.list._search', $__data)
+!=View::make('decoy::shared.list._search', $__data)->render()
 
 

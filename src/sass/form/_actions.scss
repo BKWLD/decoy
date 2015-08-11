@@ -7,7 +7,7 @@
 	position: fixed;
 	bottom: 0;
 	z-index: $header-z;
-	width: 100%;
+	width: calc(100% - #{$sidebar-width});
 	padding: 0 $main-padding;
 	text-align: left;
 	@include adjust-for-sidebar(left);
@@ -22,6 +22,7 @@
 	// Adjust for the sidebar going away
 	@media(max-width:$screen-sm) {
 		padding: 0 $main-padding-mobile;
+		width: 100%;
 	}
 
 	// Make them fit on one line mobile by getting rid of the save and back button

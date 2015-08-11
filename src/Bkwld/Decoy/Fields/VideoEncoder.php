@@ -20,6 +20,13 @@ class VideoEncoder extends Upload {
 	protected $encoding;
 
 	/**
+	 * The model attribute to find the video source value
+	 * 
+	 * @var string
+	 */
+	protected $model_attribute;
+
+	/**
 	 * Create a regular file type field
 	 *
 	 * @param Container $app        The Illuminate Container
@@ -36,14 +43,44 @@ class VideoEncoder extends Upload {
 		$this->addGroupClass('video-encoder');
 		$this->group->data_js_view('video-encoder');
 
-		// Get the encoding row if it exists
-		if ($item = $this->model()) {
-			$attribute = Route::is('decoy::elements') ? 'value' : $name;
-			$this->encoding = $item->encodings()->where('encodable_attribute', '=', $attribute)->first();
+		// Set the model_attribute for the encoding
+		$this->model_attribute = Route::is('decoy::fragments') 
+			|| Route::is('decoy::elements') ? 'value' : $this->name;
+	}
+
+	/**
+	 * Inform VideoEncoder of the attribtue name on the encodings to find the encode.  This is
+	 * necessary if the form field is named different than the db column.
+	 *
+	 * @param string $name 
+	 * @return this 
+	 */
+	public function setModelAttribute($name) {
+		$this->model_attribute = $name;
+		return $this;
+	}
+
+	/**
+	 * Prints out the field, wrapped in its group.
+	 * 
+	 * @return string
+	 */
+	public function wrapAndRender() {
+
+		// Check if the model has encodings
+		if (($item = $this->model()) && method_exists($item, 'encodings')) {
+
+			// If so, get it's encoding model instance
+			$this->encoding = $item->encodings()
+				->where('encodable_attribute', $this->model_attribute)
+				->first();
 
 			// Add the data attributes for JS view
-			$this->group->data_encode($this->encoding->id);
+			if ($this->encoding) $this->group->data_encode($this->encoding->id);
 		}
+
+		// Continue rendering
+		return parent::wrapAndRender();
 	}
 
 	/**
@@ -92,10 +129,10 @@ class VideoEncoder extends Upload {
 	}
 
 	/**
-	 * Ender error's the same way that normal errors are rendered.
+	 * Render error's the same way that normal errors are rendered.
 	 */
 	protected function renderError($message) {
-		$this->addGroupClass('error');
+		$this->addGroupClass('has-error');
 		$this->help('Encoding error: '.$message);
 	}
 
@@ -106,14 +143,13 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderProgress($status) {
-		return '<span class="status">
-				Encoding 
-				<span class="progress progress-striped active">
-					<span class="bar" style="width: '
+		return '<div class="status">
+			<div class="progress">
+				<div class="progress-bar progress-bar-striped active" style="width: '
 					.($this->encoding->getProgressAttribute())
-					.'%;">'.$status.'</span>
-				</span>
-			</span>';
+					.'%;">'.$status.'</div>
+				</div>
+			</div>';
 	}
 
 }

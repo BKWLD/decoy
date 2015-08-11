@@ -1,5 +1,8 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
+// Deps
+use Bkwld\Decoy\Exceptions\Exception;
+
 /**
  * Check the status of workers from the admin
  */
@@ -19,7 +22,7 @@ class Workers extends Base {
 
 		// Form the path to the file
 		$file = Model::logPath(urldecode($worker));
-		if (!file_exists($file)) throw new Exception('Log file not found');
+		if (!file_exists($file)) throw new Exception('Log not found: '.$file);
 		$size = 1024*100; // in bytes to get
 
 		// Read from the end of the file

@@ -7,27 +7,27 @@ class {{controller}} extends BaseController {
 
 	protected $title = 'News & Events';
 	protected $description = 'News and events yo!';
-	protected $columns = array(
-		'Title' => 'title',
-		'Status' => 'adminColFeaturedStatus',
+	protected $columns = [
+		'Title' => 'getAdminTitleHtmlAttribute',
+		'Status' => 'getAdminFeaturedAttribute',
 		'Date' => 'created_at',
-	);
-	protected $search = array(
+	];
+	protected $search = [
 		'title',
-		'featured' => array(
+		'featured' => [
 			'type' => 'select',
 			'label' => 'featured status',
-			'options' => array(
+			'options' => [
 				1 => 'featured',
 				0 => 'not featured',
-			)
-		),
-		'category' => array(
+			]
+		],
+		'category' => [
 			'type' => 'select',
 			'options' => 'Article::$categories',
-		),
+		],
 		'date' => 'date',
-	);
+	];
 	
 	 *
 	 */

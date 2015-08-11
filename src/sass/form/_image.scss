@@ -1,17 +1,25 @@
 // Styles for cropper and not cropper images
 .image-upload {
 	.img-thumbnail { 
-		background: transparent;
 		z-index: 100;
 		@include box-sizing(border-box);
 
 		// Don't break out of box on FF
-		width: 100%;
+		max-width: 100%;
 
 		// Looks better with a lil extra.  I think because of line-height stuff
 		margin-top: 5px + 2px;
 
 		// Always put it on it's own line
+		display: block;
+
+		// Make the border color match form-controls
+		border-color: $input-border;
+	}
+	
+	// Add a checkered bkgd behind the non-cropper view for transparent pngs
+	> div > a {
+		background-image: url($decoy_img_dir + 'jcrop/img-bkgd.png');
 		display: block;
 	}
 }
@@ -39,10 +47,7 @@
 	
 	// Remove the margin that we want when no crops are present
 	.img-thumbnail {
-		margin: 0;
-
-		// Remove the rounded corner in the uppwer left
-		@include border-corner-radius(top, left, 0);
+		margin: 0;	
 	}
 	
 	// Setup the tabs
@@ -59,10 +64,11 @@
 			border: solid 1px transparent;
 			@include border-corner-radius(top, left, 4px);
 			@include border-corner-radius(top, right, 4px);
+			top: 1px; // Overlap the border on the image
 			
 			// The active tab
 			&.active {
-				border-color: $grey-border;
+				border-color: $input-border;
 				border-bottom: white;
 				background-color: white;
 				position: relative;
@@ -72,9 +78,15 @@
 			// Rollover
 			&:hover:not(.active) {
 				cursor: pointer;
-				background-color: $grey-border;
+				background-color: darken($light-grey, 2%);
 			}
 		}
+
+		// Remove the rounded corner in the uppwer left
+		~ .imgs .img-thumbnail {
+			@include border-corner-radius(top, left, 0);
+		}
+
 	}
 	
 	// Deactivate all but the first image

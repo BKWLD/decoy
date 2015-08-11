@@ -17,10 +17,19 @@
 		right: $main-padding/2;
 		top: 0;
 
+		// Bottom margin puhses it off of the form-actions fixed bar
+		margin-bottom: $footer-height + $main-padding;
+
 		// Otherwise, fixed position never takes
 		&.affix {
 			position: fixed;
 			right: $main-padding; // The padding of the row no longer affects it
+
+			// If a really wide page, fix it using left
+			@media(min-width: $effective-max-width) {
+				right: auto;
+				left: $effective-max-width - $width - $main-padding;
+			}
 		}
 	}
 
@@ -93,10 +102,13 @@
 
 		// Make full width
 		.tab-sidebar {
-			position: static;
 			width: auto;
 			padding: $main-padding/2;
-			padding-top: 0;
+			margin-bottom: 0;
+
+			// Override affixable
+			padding-top: 0 !important;
+			position: static !important;
 		}
 
 		// Make locale not span full width

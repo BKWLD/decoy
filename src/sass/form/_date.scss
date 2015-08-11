@@ -9,3 +9,9 @@ $date-input-width: 150px;
 .datepicker {
 	margin-left: 4px;
 }
+
+// Make datepicker go above header-z-ed items, like the `.form-actions`.  This
+// fixes cases where there is a date at the bototm of a form
+.dropdown-menu {
+	z-index: $header-z + 1 !important;
+}

@@ -56,8 +56,16 @@ a:active {
 }
 
 // Underline links in paragraphs
-p a {
+p a, .help-block a {
 	border-bottom: $link-border;
+}
+
+// Fix Roboto bold to not use faux-bold because it loses rgba opacity in FF
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	b, strong {
+		font-weight: 400;
+	}
 }
 
 // The main container
@@ -135,9 +143,15 @@ p a {
 // Tweak button padding to better center text
 .btn, .form-control {
 	padding-top: $padding-base-vertical + 1px;
-	padding-bottom: $padding-base-vertical -1px;
+	padding-bottom: $padding-base-vertical - 1px;
 }
 .btn-sm, .input-sm {
 	padding-top: $padding-small-vertical + 1px;
 	padding-bottom: $padding-small-vertical - 1px;
+}
+
+// Shift close buttons up a bit so they look like they are on the same line as
+// the text in alert boxes
+button.close {
+	margin-top: -3px;
 }

@@ -10,6 +10,14 @@ use Bkwld\Decoy\Models\Encoding;
 trait Encodable {
 
 	/**
+	 * Define a `private $encodable_attributes` property like:
+	 *
+	 * 		private $encodable_attributes = [
+	 * 			'video',
+	 * 		];
+	 */
+
+	/**
 	 * Polymorphic relationship definition
 	 *
 	 * @return Illuminate\Database\Eloquent\Relations\MorphMany
@@ -26,6 +34,18 @@ trait Encodable {
 	 */
 	public function encoding($field = 'video') {
 		return $this->encodings()->where('encodable_attribute', '=', $field)->first();
+	}
+
+	/**
+	 * Get all the attributes on a model who support video encodes and are dirty
+	 *
+	 * @return array 
+	 */
+	public function getDirtyEncodableAttributes() {
+		if (empty($this->encodable_attributes)) return [];
+		return array_filter($this->encodable_attributes, function($attribute) {
+			return $this->isDirty($attribute);
+		});
 	}
 			
 	/**
@@ -46,23 +66,33 @@ trait Encodable {
 	}
 
 	/**
-	 * Create an encoding instance which, in affect, begins an encode.  This should be
-	 * invoked before the model is saved.  For instance, from saving() handler
+	 * Create an encoding instance which, in affect, begins an encode.  This 
+	 * should be invoked before the model is saved.  For instance, from saving() 
+	 * handler
 	 *
-	 * @param  string $attribute The name of the attribtue on the model that contains the
-	 *                           source for the encode
+	 * @param  string $attribute The name of the attribtue on the model that 
+	 *                           contains the source for the encode
 	 * @return void
 	 */
 	public function encodeOnSave($attribute) {
 
-		// Create a new encoding model instance. It's callbacks will talk to the encoding provider.
-		// Save it after the model is fully saved so the foreign id is available for the 
-		// polymorphic relationship.
-		$this->saved(function($model) use ($attribute) {
+		// Preserve the key for the saved callback.  It's a mystery to me why, but
+		// when Elements are being saved, the key would become '0' between here
+		// and the `saved()` callback.
+		$key = $this->getKey();
+
+		// Create a new encoding model instance. It's callbacks will talk to the 
+		// encoding provider. Save it after the model is fully saved so the foreign 
+		// id is available for the  polymorphic relationship.
+		$this->saved(function($model) use ($attribute, $key) {
 
 			// Make sure that that the model instance handling the event is the one
 			// we're updating.
 			if ($this != $model) return;
+
+			// Restore the key value (see above).  It will be defined for Elements but
+			// not of most models.
+			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
 			$model->encodings()->save(new Encoding(array(
@@ -70,18 +100,6 @@ trait Encodable {
 			)));
 		});
 
-	}
-
-	/**
-	 * Tap into the deleted callback to delete this record if the parent is removed.  Note,
-	 * if a class using this trait defines it's own onDeleted() callback, this one will fail
-	 * to be fired.
-	 *
-	 * @return void 
-	 */
-	public function onDeleted() {
-		parent::onDeleted();
-		$this->deleteEncodings();
 	}
 
 	/**

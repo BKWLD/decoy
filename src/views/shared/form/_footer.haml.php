@@ -1,4 +1,6 @@
--use Bkwld\Decoy\Breadcrumbs
+:php
+	use Bkwld\Decoy\Breadcrumbs;
+	use Bkwld\Decoy\Input\Search;
 
 -# Push over for horizontal forms
 .form-actions
@@ -25,6 +27,19 @@
 	
 	-# Cancel
 	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Cancel
+
+	.pull-right
+		.btn-group
+			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty($item->cloneable))
+				%a.btn.btn-default.js-tooltip(title="Duplicate" href=DecoyURL::relative('duplicate', $item->id))
+					%span.glyphicon.glyphicon-duplicate
+			-if (isset($item) && app('decoy.auth')->can('read', 'changes'))
+				-$url = DecoyURL::action('changes').'?'.Search::query([ 'model' => get_class($item), 'key' => $item->getKey()])
+				%a.btn.btn-default.js-tooltip(title="<b>Changes</b> history" href=$url)
+					%span.glyphicon.glyphicon-list-alt
+			-if (isset($item) && ($uri = $item->getUriAttribute()))
+				%a.btn.btn-default.js-tooltip(title="Public view" href=$uri target="_blank")
+					%span.glyphicon.glyphicon-bookmark
 
 // CLose the form
 !=Former::close()

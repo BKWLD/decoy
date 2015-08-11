@@ -119,7 +119,9 @@ define(function (require) {
 		initSortable: function() {
 			
 			// Cache some selectors
-			var $sortable = this.$el.find('tbody');
+			var $sortable = this.$el.find('tbody')
+				, $table = $sortable.parent('table')
+			;
 			
 			// Tell the server of the new sorting rules by looping through
 			// all rows, looking up the model for the id, and then updating
@@ -153,14 +155,25 @@ define(function (require) {
 					;
 				},
 
-				// Preserve the widths of columns during dragging by freezing them
-				// in place
+				// Preserve the widths of columns during dragging by freezing widths
 				// From http://cl.ly/170d0h291V10
 				helper: function(e, $tr) {
+					
+					// Take advantage of this being early in the call to fix the height of
+					// the table so that the containment measures the currect height of
+					// the table
+					$table.css('height', $table.height());
+
+					// Set the widths
 					$tr.children().each(function(index) {
 						$(this).width($(this).width());
 					});
 					return $tr;
+				},
+
+				// Clear the fixed height when sorting is finished
+				stop: function(event, ui) {
+					$table.css('height', '');
 				},
 				
 				// Callback function after sorting happens.
@@ -465,6 +478,9 @@ define(function (require) {
 		
 		// Insert a new row into the list.  This may be triggered by many-to-many
 		insertNew: function(e, data) {
+
+			// Get all of the column values as an array
+			var columns = _.values(data.columns);
 			
 			// Build the row.  Note, the id must be unique for each row.  This means
 			// that we can't insert multiple rows for the same join or the bulk
@@ -472,17 +488,14 @@ define(function (require) {
 			var $row = $(row_template({
 				id: data.id,
 				parent_id: data.parent_id,
-				label: data.columns.title,
+				label: columns.shift(),
 				controller: this.controllerRoute
 			}));
 			
-			// Add additional columns if that data exists and we're not in a related sidebar
-			if (_.size(data.columns) > 1 && !this.$el.closest('.related').length) {
-				_.each(data.columns, function(html, column) {
-					
-					// Title has already been added
-					if (column == 'title') return;
-					
+			// Add additional columns if we're not in a related sidebar
+			if (!this.$el.closest('.related').length) {
+				_.each(columns, function(html) {
+										
 					// Add a new cell before the last one (which is the actions cell)
 					if (!html) html = ''; // Handle NULL
 					$row.find('td:last').before('<td>'+html+'</td>');
@@ -551,13 +564,13 @@ define(function (require) {
 				if (model.get('visible')) {
 					$icon.addClass(visibleIconClass);
 					$icon.removeClass(hiddenIconClass);
-					$icon.attr('title', 'Make hidden');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make hidden');
+					$icon.attr('title', 'Make draft');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make draft');
 				} else {
 					$icon.removeClass(visibleIconClass);
 					$icon.addClass(hiddenIconClass);
-					$icon.attr('title', 'Make visible');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make visible');
+					$icon.attr('title', 'Publish');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
 				}
 			}
 			

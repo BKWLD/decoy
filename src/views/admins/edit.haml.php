@@ -1,8 +1,11 @@
-!= View::make('decoy::shared.form._header', $__data)
+!= View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
 	.legend=empty($item)?'New':'Edit'
-		
+
+	!= Former::text('first_name') 
+	!= Former::text('last_name') 
+
 	!= Former::text('email')
 	-if (Config::get('decoy::core.obscure_admin_password'))
 		!= Former::password('password')
@@ -10,17 +13,17 @@
 	-else
 		!= Former::text('password')->forceValue(empty($item)?Str::random(16):null)->placeholder(empty($item)?null:'Leave blank to prevent change')
 
-	!= Former::text('first_name')
-	!= Former::text('last_name')
+	!= Former::image('image') 
 
-	-if (($roles = Config::get('decoy::site.roles')) && !empty($roles))
+	-if (app('decoy.auth')->can('grant', $controller) && ($roles = Config::get('decoy::site.roles')) && !empty($roles))
 		!= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles))
+		!= View::make('decoy::admins._permissions', $__data)
 
-	!= Former::checkbox('send_email', ' ')->value(1)->text(empty($item)?'Send welcome email, including password':'Email '.$item->first_name.' with login changes')
+	!= Former::checkbox('_send_email', 'Notify')->value(1)->text(empty($item)?'Send welcome email, including password':'Email '.$item->first_name.' with login changes')
 
 	-# Create moderation actions
 	-ob_start()
-	-if (!empty($item) && app('decoy.auth')->can('update', $controller))
+	-if (!empty($item) && app('decoy.auth')->can('grant', $controller))
 
 		-# Disable admin
 		-if (!$item->disabled())
@@ -33,5 +36,4 @@
 				Enable
 	-$actions = ob_get_clean();
 
-!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions]))
-
+!= View::make('decoy::shared.form._footer', array_merge($__data, ['actions' => $actions]))->render()

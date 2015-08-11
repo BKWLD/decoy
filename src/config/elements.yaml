@@ -66,4 +66,40 @@ other:
           type: boolean
           label: Show the contact page
           value: 1 # Default the checkbox to "checked"
-          
+
+        # A video encoder instance.  Video encoders can't have a default value,
+        # they must be supplied through upload a video in the admin
+        video,video-encoder:
+
+        # ----------------------------------------------------------------------
+        # The following all require additional attributes and, thus, can't be 
+        # invoked using the shorthand method
+
+        # A select menu
+        select_menu:
+          type: select
+          options:
+            one: One
+            two: Two
+          value: two
+          help: Example of help
+
+        # A list of radio buttons
+        radio_list:
+          type: radios
+          options:
+            one: One
+            two: Two
+          value: two
+
+        # A series of checkboxes. The `Decoy:el()` value when rendered as a
+        # string will be a commad delimited list.  But `Decoy:el()->value()`
+        # will return an array of the keys.
+        checkboxes:
+          type: checkboxes
+          options:
+            one: One
+            two: Two
+            three: Three
+          value: two,three
+

@@ -9,28 +9,40 @@
 // Set defaults for optional values so this partial can more easily be rendered
 // by itself
 if (!isset($many_to_many)) $many_to_many = false;
-if (!isset($auto_link)) $auto_link = 'first';
 if (!isset($convert_dates)) $convert_dates = 'date';
 
+// This is the deletable boolean if the listing is empty. If a many to many,
+// set to true. If the user has permission to update their parent, then we'll
+// want to include the bulk delete checkbox in `thead`.  If they don't have
+// that permission, then they won't see the autocomplete to attach items anyway,
+// so it doesn't matter that they see the bulk delete checkbox. 
+$can_delete = $many_to_many;
+
 // Test the data for presence of special properties
-$actions = 2; // Default
 if ($listing->count()) {
 	$test_row = $listing[0]->toArray();
 
-	// Has visibilty toggle
-	$has_visible = array_key_exists('visible', $test_row);
-		
-	// Increment the actions count
-	if (!$many_to_many && $has_visible) $actions++;
-}
+	// Get the list of actions
+	$test_actions = $listing[0]->makeAdminActions($__data);
 
+	// Check if the actions include a delete link
+	$can_delete = count(array_filter($test_actions, function($action) {
+			return strpos($action, 'delete-now') || strpos($action, 'remove-now');
+		})) 
+
+			// ... and whether the user can delete this item
+			&& (app('decoy.auth')->can('destroy', $controller) 
+
+			// ... or, if many to many, update the parent
+			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
+}
 ?>
 
 <table class="table listing columns-<?=count($columns)?>">
 	<thead>
 			<tr>
 
-				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+				<? if ($can_delete): ?>
 					<th class="select-all"><span class="glyphicon glyphicon-check"></span></th>
 				<? else: ?>
 					<th class="hide"></th>
@@ -41,13 +53,20 @@ if ($listing->count()) {
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
 				<? endforeach ?>
 				
-				<th class="actions-<?=$actions?>">Actions</th>
+				<? if (isset($test_actions)): ?>
+					<? if (count($test_actions)): ?>
+						<th class="actions-<?=count($test_actions)?>">Actions</th>
+					<? endif ?>
+				<? else: ?>
+					<th class="actions-3">Actions</th>
+				<? endif ?>
+
 			</tr>
 		</thead>
 	<tbody>
 		
 		<?// Many to many listings have a remove option, so the bulk actions change?>
-		<? if ($many_to_many): ?>
+		<? if ($can_delete && $many_to_many): ?>
 			<tr class="hide warning bulk-actions">
 				<td colspan="999">
 					<a class="btn btn-warning remove-confirm" href="#">
@@ -58,23 +77,14 @@ if ($listing->count()) {
 			
 		<?// Standard bulk actions ?>
 		<? else: ?>
-			<?=View::make('decoy::shared.list._bulk_actions')?>
+			<?=View::make('decoy::shared.list._bulk_actions')->render()?>
 		<? endif ?>
 		
 		<?
 		// Loop through the listing data
-		foreach ($listing as $item):
-
-			// Get the controller class from the model if it was not passed to the view.  This allows a listing to show
-			// rows from multiple models
-			if (empty($controller)) $controller = call_user_func(get_class($item).'::adminControllerClass');
-		
-			// Figure out the edit link
-			if ($many_to_many) $edit = URL::to(DecoyURL::action($controller, $item->getKey()));
-			else $edit = URL::to(DecoyURL::relative('edit', $item->getKey(), $controller));
-			?>
+		foreach ($listing as $item): ?>
 	
-			<tr data-model-id="<?=$item->getKey()?>"
+			<tr data-model-id="<?=$item->getKey()?>" class="<?=$item->getAdminRowClassAttribute()?>"
 				<?
 				// Render parent id
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
@@ -86,7 +96,7 @@ if ($listing->count()) {
 			>
 				
 				<?// Checkboxes or bullets ?>
-				<? if (app('decoy.auth')->can('destroy', $controller)): ?>
+				<? if ($can_delete): ?>
 					<td><input type="checkbox" name="select-row"></td>
 				<? else: ?>
 					<td class="hide"></td>
@@ -97,54 +107,32 @@ if ($listing->count()) {
 				<? foreach(array_values($columns) as $i => $column): ?>					
 					<td class="<?=strtolower($column_names[$i])?>">
 						
-						<?// Add an automatic link on the first column?>
-						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?>
-							<a href="<?=$edit?>">
-						<? endif ?>	
-						
-						<?// Produce the value of the cell?>
-						<?=Decoy::renderListColumn($item, $column, $convert_dates)?>	
-						
-						<?// End the automatic first link?>
-						<? if (($i===0 && $auto_link == 'first') || $auto_link == 'all'): ?></a><?endif?>
+						<?
+						// Wrap the column value in an edit link only if it's the first
+						// column and it doesn't contain an a tag with an href attribute
+						$value = Decoy::renderListColumn($item, $column, $convert_dates);
+						if ($i ===0 && !preg_match('#<a[^.]+href[^.]+>#', $value)) {
+							$value = '<a href="'
+								.$item->getAdminEditUri($controller, $many_to_many)
+								.'">'.$value.'</a>';
+						} 
+						echo $value; ?>
+
 					</td>
 				<? endforeach ?>
 				
 				<?// Standard action links?>
-				<td class="actions">
-					
-					<?// Toggle visibility link.  This requires JS to work. ?>
-					<? if (!$many_to_many && $has_visible && app('decoy.auth')->can('update', $controller)): ?>
-						<? if ($item->visible): ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make hidden"><span class="glyphicon glyphicon-eye-open"></span></a>
-						<? else: ?>
-							<a href="#" class="visibility js-tooltip" data-placement='left' title="Make visible"><span class="glyphicon glyphicon-eye-close"></span></a>
-						<? endif ?>
-						<span class="visible-edit-seperator">|</span>
-					<? endif ?>
-					
-					<?// Edit link?>
-					<a href="<?=$edit?>"><span class="glyphicon glyphicon-pencil"></span></a>
+				<? if (count($test_actions)): ?>
+					<td class="actions">
+						<?=implode(' | ', $item->makeAdminActions($__data))?>
+					</td>
+				<? endif ?>
 
-					<?// Delete or remove ?>
-					<? if (app('decoy.auth')->can('destroy', $controller)): ?>
-						<span class="edit-delete-seperator">|</span>
-						 
-						 <?// Many to many listings have remove icons instead of trash?>
-						<? if ($many_to_many): ?>
-							<a href="#" class="remove-now js-tooltip" data-placement='left' title="Remove relationship"><span class="glyphicon glyphicon-remove"></span></a>
-							
-						<?// Regular listings actually delete rows ?>
-						<? else: ?> 
-							<a href="#" class="delete-now js-tooltip" data-placement='left' title="Permanently delete"><span class="glyphicon glyphicon-trash"></span></a>
-						<? endif ?>
-					<? endif ?>
-				</td>
 			</tr>
 		<? endforeach ?>
 		
 		<?// Maybe there were no results found ?>
-		<?=View::make('decoy::shared.list._no_results', $__data)?>
+		<?=View::make('decoy::shared.list._no_results', $__data)->render()?>
 		
 	</tbody>
 </table>

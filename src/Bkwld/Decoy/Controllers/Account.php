@@ -2,28 +2,29 @@
 
 // Dependencies
 use App;
+use Auth;
+use Bkwld\Decoy\Models\Admin;
 use Config;
+use Decoy;
 use Exception;
 use Former;
 use Input;
-use Mail;
+use Lang;
+use Password;
 use Redirect;
-use Section;
-use Sentry;
 use Session;
 use URL;
 use View;
 
-// The account controller deals with auth
+/**
+ * This deals with the login / forgot password interfaces
+ */
 class Account extends Base {
-	
-	// Validation rules for resetting password
-	private $forgot_rules = array('email' => 'required|email');
-	private $reset_rules = array('password' => 'required', 'password_repeat' => 'required|same:password');
-	private $reset_msgs = array('same' => 'The passwords do not match');
 	
 	/**
 	 * Redirect to a page where the user can manage their account
+	 *
+	 * @return Illuminate\View\View
 	 */
 	public function index() {
 		return Redirect::to(App::make('decoy.auth')->userUrl());
@@ -31,6 +32,8 @@ class Account extends Base {
 
 	/**
 	 * Display the login form
+	 *
+	 * @return Illuminate\View\View
 	 */
 	public function login() {
 
@@ -43,66 +46,50 @@ class Account extends Base {
 		
 		// Pass validation rules
 		Former::withRules(array(
-			'email' => 'required|email',
+			'email'    => 'required|email',
 			'password' => 'required',
 		));
 		
 		// Show the login homepage
 		View::inject('title', 'Login');
 		return View::make('decoy::layouts.blank', array(
-			'content' => View::make('decoy::account.login')
+			'content' => View::make('decoy::account.login')->render()
 		));
 	}
 	
 	/**
 	 * Process a sign in from the main login form
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function post() {
-		try {
-			
-			// Tell Sentry to check throttling (which includes banning)
-			Sentry::getThrottleProvider()->enable();
-			
-			// Attempt to login
-			$user = Sentry::authenticate(array(
-				'email' => Input::get('email'),
-				'password' => Input::get('password'),
-			), Input::get('is_remember') == 1);
-			
-			// Check if they are banned. Sentry's authenticate SHOULD do this but isn't.
-			$throttle = Sentry::findThrottlerByUserId($user->getId());
-			if($banned = $throttle->isBanned()) {
-				return $this->loginError('You have been banned.');
-			}
 
-			// Login must have succeeded
-			return Redirect::to(Session::get('login_redirect', URL::current()));
+		// Test submission
+		if (Auth::attempt([
+			'email'    => Input::get('email'), 
+			'password' => Input::get('password'),
+			'active'   => 1,
+			], Input::get('remember'))) {
 
-		// Make more easily read errros
-		} catch (\Cartalyst\Sentry\Users\LoginRequiredException $e) {
-			return $this->loginError('Email is required.');
-		} catch (\Cartalyst\Sentry\Users\PasswordRequiredException $e) {
-			return $this->loginError('Password is required.');
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('Those credentials could not be found.');
-		} catch (\Cartalyst\Sentry\Throttling\UserSuspendedException $e) {
-			return $this->loginError('Your ability to login has been suspended for '.Config::get('cartalyst/sentry::sentry.throttling.suspension_time').' minutes.');
-		} catch (Cartalyst\Sentry\Throttling\UserBannedException $e) {
-			return $this->loginError('You have been banned.');
-		
-		// Handle other errrors
-		} catch (Exception $e) {			
-			return $this->loginError($e->getMessage());
+			// On success, redirect where they intended to go
+			return Redirect::intended(URL::current());
+
+		// On fail, redirect back and show error
+		} else {
+			return $this->loginError('Your email or password could not be found.');
 		}
-
 	}
 
 	/**
 	 * Log a user out
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function logout() {
-		Sentry::logout();
-		
+
+		// Logout session
+		Auth::logout();
+
 		// I've gotten errors when going directly to this route
 		try { 
 			return Redirect::back();
@@ -110,14 +97,23 @@ class Account extends Base {
 			return Redirect::to('/'.Config::get('decoy::core.dir'));
 		}
 	}
+
+	/**
+	 * ---------------------------------------------------------------------------
+	 * The following is based on:
+	 * /vendor/laravel/framework/src/Illuminate/Auth/Console/stubs/controller.stub
+	 * ---------------------------------------------------------------------------
+	 */
 	
 	/**
 	 * Display the form to begin the reset password process
 	 */
 	public function forgot() {
-		
+
 		// Pass validation rules
-		Former::withRules($this->forgot_rules);
+		Former::withRules(array(
+			'email' => 'required|email',
+		));
 
 		// Show the page
 		$this->title = 'Forgot Password';
@@ -134,51 +130,53 @@ class Account extends Base {
 	
 	/**
 	 * Sent the user an email with a reset password link
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function postForgot() {
 
-		// Validate
-		if ($result = $this->validate(null, $this->forgot_rules)) return $result;
+		// Send reminder
+		switch ($response = Password::remind(Input::only('email'), 
 
-		// Find the user using the user email address
-		try {
-			$user = Sentry::getUserProvider()->findByLogin(Input::get('email'));
-			$code = $user->getResetPasswordCode();
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('That email could not be found.');
+			// Add subject and from
+			function($m, $user, $token) {
+				$m->subject('Recover access to '.Decoy::site());
+				$m->from(
+					Config::get('decoy::core.mail_from_address'), 
+					Config::get('decoy::core.mail_from_name')
+				);
+			})) {
+
+			// Failure
+			case Password::INVALID_USER:
+				return $this->loginError(Lang::get($response));
+			
+			// Success
+			case Password::REMINDER_SENT:
+				return Redirect::back()->with('success', Lang::get($response));
 		}
-
-		// Form the link
-		$url = route('decoy::account@reset', $code);
-
-		// Send an email to the user with the reset token
-		Mail::send('decoy::emails.reset', array('url' => $url), function($m) {
-			$m->to(Input::get('email'));
-			$m->subject('Recover access to the '.Config::get('decoy::site.name'));
-			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
-		});
-		
-		// Redirect back to login page
-		return Redirect::route('decoy::account@forgot')
-			->with('login_notice', 'An email with a link to reset your password has been sent.');
 		
 	}
 	
 	/**
 	 * Show the user the password reset form
-	 * @param $string code A sentry reset password code
+	 * 
+	 * @param $string token A reset password token
+	 * @return void
 	 */
-	public function reset($code) {
-		
-		// Look up the user
-		try {
-			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
-		}
+	public function reset($token) {
 		
 		// Pass validation rules
-		Former::withRules($this->reset_rules, $this->reset_msgs);
+		Former::withRules(array(
+			'email'                 => 'required|email',
+			'password'              => 'required',
+			'password_confirmation' => 'required|same:password',
+		));
+
+		// Lookup the admin
+		$user = Admin::where('token', $token)
+			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
+			->firstOrFail();
 
 		// Show the page
 		$this->title = 'Reset Password';
@@ -186,45 +184,49 @@ class Account extends Base {
 		$this->populateView('decoy::account.reset', [
 			'user' => $user,
 		]);
-		
+
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
 			route('decoy') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));
-		
 	}
 	
 	/**
 	 * Set a new password for a user and sign them in
-	 * @param $string code A sentry reset password code
+	 * 
+	 * @param $string token A reset password token
+	 * @return Illuminate\Http\RedirectResponse
 	 */
-	public function postReset($code) {
-		
-		// Look up the user
-		try {
-			$user = Sentry::getUserProvider()->findByResetPasswordCode($code);
-		} catch (\Cartalyst\Sentry\Users\UserNotFoundException $e) {
-			return $this->loginError('The reset password code is not valid', route('decoy::account@forgot'));
+	public function postReset($token) {
+
+		// Gather input
+		$credentials = Input::only('email', 'password', 'password_confirmation');
+		$credentials['token'] = $token;
+
+		// Save their creds
+		$response = Password::reset($credentials, function($user, $password) {
+			$user->password = $password; // Gets hashed via model callback
+			$user->save();
+		});
+
+		// Respond
+		switch ($response) {
+			case Password::INVALID_PASSWORD:
+			case Password::INVALID_TOKEN:
+			case Password::INVALID_USER:
+				return $this->loginError(Lang::get($response));
+			case Password::PASSWORD_RESET:
+				Auth::login(Admin::where('email', Input::get('email'))->first());
+				return Redirect::to(Config::get('decoy::site.post_login_redirect'));
 		}
-		
-		// Validate
-		if ($result = $this->validate(null, $this->reset_rules, $this->reset_msgs)) return $result;
-		
-		// Replace their password
-		$user->attemptResetPassword($code, Input::get('password'));
-		
-		// Log them in
-		Sentry::login($user, false);
-		
-		// Redirect
-		return Redirect::to(Config::get('decoy::site.post_login_redirect'));
-	
 	}
 
 	/**
 	 * Redirect with a login error
+	 *
+	 * @return Illuminate\Http\RedirectResponse
 	 */
 	private function loginError($msg, $url = null) {
 		return Redirect::to($url ? $url : URL::current())

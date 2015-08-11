@@ -10,13 +10,13 @@ define(function (require) {
 	var View = {};
 	View.initialize = function() {
 		_.bindAll(this);
-		
+
 		// Cache
 		this.encode_id = this.$el.data('encode');
-		this.name = this.$('input').attr('name');
-		this.$status = this.$('.controls .status');
+		this.$file = this.$(':file');
+		this.$status = this.$('.status');
 		this.$progress = this.$status.find('.progress');
-		this.$bar = this.$progress.find('.bar');
+		this.$bar = this.$progress.find('.progress-bar');
 		this.$help = this.$('.help-block');
 		this.$currently = this.$help.find('.download, .upload-delete');
 
@@ -43,15 +43,16 @@ define(function (require) {
 	// Show an error
 	View.renderError = function(message) {
 		this.$status.remove();
-		this.$el.addClass('error');
-		this.$help.before('<span class="help-inline">'+message+'</span>');
+		this.$el.addClass('has-error');
+		this.$file.after('<span class="help-block">'+message+'</span>');
 	};
 	
 	// Show the player
 	View.renderPlayer = function(tag) {
 		this.$status.remove();
 		this.$currently.remove();
-		this.$help.append(tag);
+		if (this.$help.length) this.$help.after(tag);
+		else this.$file.after(tag);
 	};
 
 	// Update progress

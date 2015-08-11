@@ -1,10 +1,22 @@
 /**
+ * Fix firefox issue with fieldsets. This fixes issues with images in the image
+ * crop forcing the fieldset too wide
+ * http://thatemil.com/blog/2015/01/03/reset-your-fieldset/
+ */
+body:not(:-moz-handler-blocked) fieldset {
+	display: table-cell;
+}
+
+/**
  * Fieldset group blocks of fields with a legend for a title
  */
 fieldset, .fieldset {
 
 	// Surround sections in a white box
 	@include panel;
+
+	// Clear the rule on breaking text from panel
+	word-wrap: normal;
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset

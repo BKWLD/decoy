@@ -1,4 +1,4 @@
-// Vendor dependncies
+// Vendor dependencies
 @import "compass/css3";
 @import "compass/utilities/general/clearfix";
 @import "ceaser-easing";
@@ -7,11 +7,13 @@
 // Add vars before bootstrap so they can override
 @import "variables";
 @import url($fonts-url); // Fonts
+@import "vendor/bootstrap/bootstrap/variables";
 
-// Plugins
-@import "vendor/bkwld/*"; // Loaded from /app/sass/vendor
-@import "vendor/bootstrap/bootstrap";
+// Add mixins
+@import "vendor/bootstrap/bootstrap/mixins";
+@import "vendor/bootstrap/bootstrap/buttons";
 @import "vendor/*";
+@import "vendor/bkwld/*"; // Loaded from /app/sass/vendor
 
 // Config
 @import "mixins/*";
@@ -20,7 +22,7 @@
 // Partials
 @import "header/*";
 @import "listing/*";
-@import "form/*";
+@import "form/**/*";
 @import "controllers/*";
 @import "shared/*";
 @import "sidebar/*";

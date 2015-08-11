@@ -65,10 +65,12 @@ class Command {
 			$name = str_replace('-', ' ', ucfirst($name));
 			
 			// Group commands by namespace
-			if (!array_key_exists('namespace', $commands)) $commands[ucfirst($namespace)] = array();
-			$commands[ucfirst($namespace)][ucfirst($name)] = $command;
+			$namespace = ucfirst($namespace);
+			$name = ucfirst($name);
+			if (!array_key_exists($namespace, $commands)) $commands[$namespace] = [];
+			$commands[$namespace][$name] = $command;
 		}
-		
+
 		// Return
 		return $commands;
 		

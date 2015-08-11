@@ -1,5 +1,4 @@
 body.workers.index {
-	$green: #299a0b;
 
 	// The right justifed actions
 	.actions {
@@ -51,8 +50,8 @@ body.workers.index {
 			white-space: pre;
 			white-space: pre-wrap;
 			font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
-			background: #1d1f21;
-			color: lighten($green, 10%);
+			background: $code-editor-bkgd;
+			color: $code-editor-text;
 			padding: 8px;
 			@include border-radius(4px);
 			font-size: 12px;

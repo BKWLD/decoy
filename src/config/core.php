@@ -6,12 +6,6 @@
 	// The layout to use
 	'layout' => 'decoy::layouts.default',
 	
-	// Directory for saving uploaded images
-	'upload_dir' => public_path().'/uploads',
-	
-	// The auth class that should be used.  The default relies on Sentry
-	'auth_class' => '\Bkwld\Decoy\Auth\Sentry',
-	
 	// Default admin credentials
 	'default_login' => 'redacted',
 	'default_password' => 'redacted',

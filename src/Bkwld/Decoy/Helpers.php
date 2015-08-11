@@ -28,6 +28,8 @@ class Helpers {
 
 	/**
 	 * Generate title tags based on section content
+	 *
+	 * @return string
 	 */
 	public function title() {
 		
@@ -35,12 +37,21 @@ class Helpers {
 		// default breadcrumbs
 		$title = View::yieldContent('title');
 		if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
-		
-		// Get the site name
-		$site = Config::get('decoy::site.name');
 
 		// Set the title
+		$site = $this->site();
 		return '<title>' . ($title ? "$title | $site" : $site) . '</title>';
+	}
+
+	/**
+	 * Get the site name
+	 *
+	 * @return string
+	 */
+	public function site() {
+		$site = Config::get('decoy::site.name');
+		if (is_callable($site)) $site = call_user_func($site);
+		return $site;
 	}
 
 	/**
@@ -67,8 +78,8 @@ class Helpers {
 		array_push($classes, $controller, $action);
 
 		// Add the admin roles
-		$roles = app('decoy.auth')->role();
-		if ($roles && (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
+		if (($roles = app('decoy.auth')->roles())
+			&& (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
 			foreach($roles as $role) {
 				array_push($classes, 'role-'.$role);
 			}
@@ -76,6 +87,31 @@ class Helpers {
 
 		// Return the list of classes
 		return implode(' ', $classes);
+	}
+
+	/**
+	 * Convert a key named with array syntax (i.e 'types[marquee][video]') to one
+	 * named with dot syntax (i.e. 'types.marquee.video]').  The latter is how fields
+	 * will be stored in the db
+	 *
+	 * @param string $attribute 
+	 * @return string 
+	 */
+	public function convertToDotSyntax($key) {
+		return str_replace(['[', ']'], ['.', ''], $key);
+	}
+
+	/**
+	 * Do the reverse of convertKeyToDotSyntax()
+	 *
+	 * @param string $attribute 
+	 * @return string 
+	 */
+	public function convertToArraySyntax($key) {
+		if (strpos($key, '.') === false) return $key;
+		$key = str_replace('.', '][', $key);
+		$key = preg_replace('#\]#', '', $key, 1);
+		return $key.']';
 	}
 
 	/**
@@ -210,6 +246,28 @@ class Helpers {
 			reset($locales);
 			return key($locales);
 		}
+	}
+
+	/**
+	 * Get the model class string from a controller class string
+	 *
+	 * @param  string $controller ex: "Admin\SlidesController"
+	 * @return string ex: "Slide"
+	 */
+	public function modelForController($controller) {
+
+		// Swap out the namespace if decoy
+		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $controller, $is_decoy);
+		
+		// Remove the Controller suffix app classes may have
+		$model = preg_replace('#Controller$#', '', $model);
+		
+		// Assume that non-decoy models want the first namespace (aka Admin) removed
+		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
+		
+		// Make it singular
+		$model = Str::singular($model);
+		return $model;
 	}
 
 }

@@ -2,9 +2,9 @@
 
 // Dependencies
 use Config;
-use Request;
-use HtmlObject\Element;
+use HtmlObject\Element as HtmlElement;
 use Bkwld\Library\Utils\File;
+use URL;
 
 /**
  * Stores the status of an encoding job and the converted outputs.
@@ -124,7 +124,7 @@ class Encoding extends Base {
 	public function source() {
 		$val = $this->encodable->{$this->encodable_attribute};
 		if (preg_match('#^http#', $val)) return $val;
-		else return Request::root().$val;
+		else return URL::asset($val);
 	}
 
 	/**
@@ -210,7 +210,7 @@ class Encoding extends Base {
 		$sources = json_decode($sources);
 
 		// Start the tag
-		$tag = Element::video();
+		$tag = HtmlElement::video();
 		$tag->value('Your browser does not support the video tag. You should <a href="http://whatbrowser.org/">consider updating</a>.');
 
 		// Loop through the outputs and add them as sources
@@ -221,7 +221,7 @@ class Encoding extends Base {
 			if (!in_array($type, $types)) continue;
 
 			// Make the source
-			$source = Element::source()->src($src);
+			$source = HtmlElement::source()->src($src);
 			if ($type == 'playlist') $source->type('application/x-mpegurl');
 			else $source->type('video/'.$type);
 

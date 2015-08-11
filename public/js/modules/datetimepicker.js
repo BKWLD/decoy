@@ -33,7 +33,7 @@ define(function (require) {
 			
 			// Selectors
 			var $date_group = this.$('.date-field')
-				, $time = this.$('.time-field :text').parent()
+				, $time = this.$('.time-field .time:text').parent()
 				, $time_group = $time.closest('.time-field')
 				, $date_help = $date_group.find('.help-block')
 				, $time_help = $time_group.find('.help-block')
@@ -48,7 +48,7 @@ define(function (require) {
 			
 			// Move over help text
 			if ($time_help.length && $date_help.length) $date_help.append($time_help.text());
-			else if ($time_help.length) $date_group.append($time_help);
+			else if ($time_help.length) $time.parent().after($time_help); // Put next to .input-groups
 			
 			// Kill the useless control group
 			$time_group.remove();

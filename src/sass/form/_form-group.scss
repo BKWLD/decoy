@@ -6,10 +6,9 @@
 	@media(max-width: $screen-sm) {
 		padding: $form-group-margin-sm;
 	}
+
+	// Add borders
 	border-bottom: 1px solid $grey-border;
-	&:last-child {
-		border-bottom: none;	
-	}
 
 	// Override bootstrap
 	margin-bottom: 0;
@@ -28,5 +27,15 @@
 		@include opacity(.7);
 		background: mix(white, $body-color, 70%); // This matches disabled fielset backg
 	}
-	
+
+	// The font we are using, Lato, renders bolds a little taller
+	b, strong {
+		font-size: $font-size-base - 1px;
+	}
+}
+
+// Clear the border on the last item in a fieldset
+// so there aren't double borders
+fieldset > :last-child {
+	border-bottom: none;
 }

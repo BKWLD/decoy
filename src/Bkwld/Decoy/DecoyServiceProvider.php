@@ -1,13 +1,19 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
+use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Decoy\Exceptions\ValidationFail;
+use Bkwld\Decoy\Observers\NotFound;
+use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Former\Former;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Yaml\Parser;
 
 class DecoyServiceProvider extends ServiceProvider {
@@ -30,8 +36,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		$filters = new Routing\Filters($dir);
 		$this->app->instance('decoy.filters', $filters);
 
-		// Register the routes AFTER all the app routes using the "before" register.  Unless
-		// the app is running via the CLI where we want the routes reigsterd for URL generation.
+		// Register the routes AFTER all the app routes using the "before" register.  
+		// Unless the app is running via the CLI where we want the routes reigsterd 
+		// for URL generation.
 		$router = new Routing\Router($dir, $filters);
 		$this->app->instance('decoy.router', $router);
 		if (App::runningInConsole()) $router->registerAll();
@@ -39,6 +46,26 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
+
+		// Wire up model event callbacks even if request is not for admin.  Do this
+		// after the usingAdmin call so that the callbacks run after models are
+		// mutated by Decoy logic.  This is important, in particular, so the
+		// Validation observer can alter validation rules before the onValidation
+		// callback runs.
+		$this->app['events']->listen('eloquent.*',     'Bkwld\Decoy\Observers\ModelCallbacks');
+		$this->app['events']->listen('decoy::model.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
+
+		// If logging changes hasn't been disabled, log all model events.  This
+		// should come after the callbacks in case they modify the record before
+		// being saved.  And we're logging ONLY admin actions, thus the handling
+		// condition.
+		if ($this->app['decoy']->handling() && Config::get('decoy::site.log_changes')) {
+			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
+		}
+
+		// Listen for 404s and pass handling on to redirect rules.
+		$this->app['exception']->error(function(NotFoundHttpException $e) { return $this->app['decoy.404']->handle(); });
+		$this->app['exception']->error(function(ModelNotFoundException $e) { return $this->app['decoy.404']->handle(); });
 		
 	}
 	
@@ -61,6 +88,9 @@ class DecoyServiceProvider extends ServiceProvider {
 		// Change Former's required field HTML
 		Config::set('former::required_text', ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>');
 
+		// Make pushed checkboxes have an empty string as their value
+		Config::set('former::unchecked_value', '');
+
 		// Add Decoy's custom Fields to Former so they can be invoked using the "Former::"
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
@@ -72,6 +102,18 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
+
+		// Delegate events to Decoy observers
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Localize');
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Cropping@onSaving');
+		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Cropping@onDeleted');
+		$this->app['events']->listen('eloquent.saved:*',          'Bkwld\Decoy\Observers\ManyToManyChecklist');
+		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
+		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
+		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
+
+		// Handle form validation errors
+		$this->app->error(function(ValidationFail $e) { return with(new Validation)->onFail($e); });
 	}
 
 	/**
@@ -101,39 +143,18 @@ class DecoyServiceProvider extends ServiceProvider {
 		
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
-			return $app->make('redirect')->to($app->make('decoy.auth')->deniedUrl())
-				->withErrors([ 'error message' => 'You must login first'])
-				->with('login_redirect', $app->make('request')->fullUrl());
+			return $app->make('redirect')->guest($app->make('decoy.auth')->deniedUrl())
+				->withErrors([ 'error message' => 'You must login first']);
 		});
 		
 		// Register URL Generators as "DecoyURL".
 		$this->app->singleton('decoy.url', function($app) {
 			return new Routing\UrlGenerator($app->make('request')->path());
 		});
-		
-		// Build the auth instance
+
+		// Build the default auth instance
 		$this->app->singleton('decoy.auth', function($app) {
-
-			// Build an instance of the specified auth class if it's a valid class path
-			$auth_class = $app->make('config')->get('decoy::core.auth_class');
-			if (!class_exists($auth_class)) throw new Exception('Auth class does not exist: '.$auth_class);
-			$instance = new $auth_class;
-			if (!is_a($instance, 'Bkwld\Decoy\Auth\AuthInterface')) throw new Exception('Auth class does not implement Auth\AuthInterface:'.$auth_class);
-
-			// If using Sentry, apply customizations.  Do this here so that requests that
-			// aren't handled by Decoy (like the requireDecoyAuthUntilLive() one) will benefit
-			// from the customizations.
-			if ($auth_class == '\Bkwld\Decoy\Auth\Sentry') {
-
-				// Disable the checkPersistCode() function when not on a live/prod site
-				$app->make('config')->set(
-					'cartalyst/sentry::users.model', 
-					'Bkwld\Decoy\Auth\SentryUser'
-				);
-			}
-			
-			// Return the auth class instance
-			return $instance;
+			return new Auth\Eloquent($app['auth']);
 		});
 		
 		// Build the Elements collection
@@ -145,13 +166,14 @@ class DecoyServiceProvider extends ServiceProvider {
 			);
 		});
 
+		// The NotFound observer used by the Redirect system
+		$this->app->singleton('decoy.404', function($app) { 
+			return new NotFound(new Models\RedirectRule);
+		});
+
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
-		$this->commands(array('command.decoy.generate'));
-
-		// Simple singletons
-		$this->app->singleton('decoy.slug', function($app) { return new Input\Slug; });
-		
+		$this->commands(array('command.decoy.generate'));		
 	}
 	
 	/**
@@ -159,19 +181,15 @@ class DecoyServiceProvider extends ServiceProvider {
 	 */
 	private function registerPackages() {
 		
-		// Former
+		// Form field generation
 		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
 		$this->app->register('Former\FormerServiceProvider');
-		
-		// Sentry
-		AliasLoader::getInstance()->alias('Sentry', 'Cartalyst\Sentry\Facades\Laravel\Sentry');
-		$this->app->register('Cartalyst\Sentry\SentryServiceProvider');
-		
-		// Croppa
+
+		// Image resizing
 		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 		
-		// BKWLD PHP Library
+		// PHP utils
 		$this->app->register('Bkwld\Library\LibraryServiceProvider');
 
 		// HAML
@@ -180,6 +198,15 @@ class DecoyServiceProvider extends ServiceProvider {
 		// BrowserDetect
 		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
 		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
+
+		// File uploading
+		$this->app->register('Bkwld\Upchuck\ServiceProvider');
+
+		// Creation of slugs
+		$this->app->register('Cviebrock\EloquentSluggable\SluggableServiceProvider');
+
+		// Support for cloning models
+		$this->app->register('Bkwld\Cloner\ServiceProvider');
 		
 	}
 	
@@ -197,7 +224,6 @@ class DecoyServiceProvider extends ServiceProvider {
 			'decoy.elements',
 			'decoy.filters',
 			'decoy.router', 
-			'decoy.slug', 
 			'decoy.url', 
 			'decoy.wildcard', 
 		);

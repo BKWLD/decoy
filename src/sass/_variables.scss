@@ -16,11 +16,14 @@ $grey-border: #ddd !default;
 $light-opacity: .3 !default;
 $nav-text: #8c8c8c !default;
 $nav-text-active: #eee !default;
+$nav-bkgd-active: $theme-primary-color !default;
 $element-icon-color: $theme-primary-color !default;
 $element-icon-inverse: $theme-primary-inverse !default;
 $element-icon-active: $grey-border !default;
 $form-container-bkgd: #F5F5F5 !default;
 $table-row-hover: #f6f6f6;
+$code-editor-bkgd: #1d1f21;
+$code-editor-text: #36ca0e;
 
 // Sizes
 $main-padding: 30px !default; // Same as $grid-gutter-width
@@ -37,7 +40,8 @@ $nav-bottom-height-mobile: 45px !default;
 $horizontal-label-width: 150px !default;
 $horizontal-label-margin: $horizontal-label-width + $form-group-margin !default;
 $nav-pad: 10px !default;
-$max-width: 1280px - $sidebar-width - $main-padding * 2 !default;
+$effective-max-width: 1280px; // The target max width
+$max-width: $effective-max-width - $sidebar-width - $main-padding * 2 !default;
 
 // UI
 $common-shadow: 0 2px 0px #dddddd !default;
@@ -48,6 +52,14 @@ $header-z: 700 !default; // This is to clear the crop image UI
  * Bootstrap variables
  * Aka, the variable name is significant
  */
+
+// Override or re-itereate color
+$text-color: #333 !default;
+$link-color: $text-color !default;
+$link-hover-color: $theme-primary-color !default;
+$input-border-focus: $theme-secondary-color !default;
+$tooltip-bg: #333 !default;
+$input-group-addon-bg: $light-grey !default;
 
 // Customize the path to the font
 $icon-font-path: '/js/admin/vendor/bootstrap/dist/fonts/' !default;
@@ -62,20 +74,12 @@ $table-cell-padding-vertical: 8px !default;
 $table-cell-padding: $table-cell-padding-vertical $table-cell-padding-horizontal !default;
 
 // Pagination - using the theme's primary color
-$pagination-color: $theme-secondary-inverse !default;
 $pagination-active-color: $theme-primary-inverse !default;
 $pagination-active-bg: $theme-primary-color !default;
 $pagination-active-border: $theme-primary-color !default;
-$pagination-hover-color: $theme-secondary-inverse !default;
 
 // Fonts
-$fonts-url: 'http://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400' !default;
+$fonts-url: '//fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:100,300,400' !default;
 $font-family-sans-serif: 'Lato' !default;
 $headings-font-family: 'Roboto Slab' !default;
 $headings-font-weight: 300 !default;
-
-// Override colors
-$link-color: #333 !default;
-$link-hover-color: $theme-primary-color !default;
-$input-border-focus: $theme-secondary-color !default;
-$tooltip-bg: #333 !default;

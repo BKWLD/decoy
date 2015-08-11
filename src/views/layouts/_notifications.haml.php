@@ -4,7 +4,7 @@
 	$message = ' ';
 
 	// Determine the alert type and build any related copy 
-	// 
+
 	// ERROR
 	if($errors->any()) {
 		$alert_type = 'danger';
@@ -14,17 +14,15 @@
 		else if($errors->has('error message')) 
 			$message = $errors->first('error message');
 		else 
-			$message = 'The field in conflict is highlighted below.';
-	}
+			$message = '<b>Validation error:</b> The field in conflict is highlighted below. Your submission was <b>not</b> saved.';
 
-	//SUCCESS
-	else if(Session::has('success')) {
+	// SUCCESS
+	} else if(Session::has('success')) {
 		$alert_type = 'success';
 		$message = Session::get('success');
-	}
 
 	// NEUTRAL
-	else $alert_type = 'normal';
+	} else $alert_type = 'normal';
 
 -# Display notifications after CRUD requests, AJAX errors, etc
 -# If there's no message, data-display attribute will be false. Used in the JS to open up the pane.

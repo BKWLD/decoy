@@ -1,5 +1,4 @@
-!= View::make('decoy::account._error')
-!= View::make('decoy::shared.form._header', $__data)
+!= View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
 	.legend Reset

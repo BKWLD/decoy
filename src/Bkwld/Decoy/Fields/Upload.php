@@ -41,16 +41,15 @@ class Upload extends File {
 	 */
 	public function wrapAndRender() {
 
-		// Get the rendered control group
-		$html = parent::wrapAndRender();
+		// Get additional UI first so it can modify the normal form-group UI.
+		$html = $this->renderReview();
 
 		// Add extra markup
-		return $this->appendToGroup($html, $this->renderReview());
+		return $this->appendToGroup(parent::wrapAndRender(), $html);
 	}
 
 	/**
-	 * Prints out the current file upload field. The hidden field with the current upload is
-	 * prepended before the input so it can be overriden
+	 * Prints out the current file upload field.
 	 *
 	 * @return string An input tag
 	 */
@@ -63,20 +62,10 @@ class Upload extends File {
 			// a file uploaded after all
 			if ($this->isRequired()) $this->setAttribute('required', null);
 
-			// Add hidden field and return
-			return $this->renderHidden().parent::render();
-		
-		// The field is empty
-		} else return parent::render();
-	}
+		}
 
-	/**
-	 * Render the hidden field that contains the currently uploaded file
-	 *
-	 * @return string A hidden field
-	 */
-	protected function renderHidden() {
-		return HtmlInput::hidden($this->name, $this->value);
+		// Continue execution
+		return parent::render();
 	}
 
 	/**
@@ -98,8 +87,7 @@ class Upload extends File {
 	 * @return boolean
 	 */
 	protected function isInUploads() {
-		$upload_dir = Utils\File::publicPath(Config::get('decoy::core.upload_dir'));
-		return Str::is($upload_dir.'*', $this->value);
+		return app('upchuck')->manages($this->value);
 	}
 
 	/**

@@ -62,7 +62,7 @@
 
 		// Put it on top of the breadcrumbs and overlap the icons with
 		// a background color
-		$color: darken(white, 2%);
+		$color: #fefefe;
 		background: $color;
 		position: relative;
 		z-index: 1;
@@ -73,7 +73,7 @@
 		position: fixed;
 
 		// Push content down now that it's out of the flow
-		+ #main {
+		+ * {
 			margin-top: $breadcrumb-height;
 		}
 

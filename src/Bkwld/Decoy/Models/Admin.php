@@ -1,270 +1,346 @@
 <?php namespace Bkwld\Decoy\Models;
 
-// Dependencies
-use App;
+// Deps
+use Bkwld\Upchuck\SupportsUploads;
+use Bkwld\Library\Utils\String;
 use Config;
-use DB;
+use Decoy;
 use DecoyURL;
 use HTML;
+use Illuminate\Auth\UserTrait;
+use Illuminate\Auth\UserInterface;
+use Illuminate\Auth\Reminders\RemindableTrait;
+use Illuminate\Auth\Reminders\RemindableInterface;
+use Hash;
 use Input;
 use Mail;
-use Redirect;
 use Request;
-use Sentry;
 use URL;
 
-/**
- * Admin extends Eloquent in part so that the listing view
- * can instantiate Admin models and hydrate them.  Which is
- * done so that title() can be run to decorate the listing
- */
-class Admin extends Base {
-	
-	// Validation rules
-	public static $rules = array(
-		'email' => 'required|email|unique:users,email',
-		'password' => 'required',
-		'confirm_password' => 'sometimes|required_with:password|same:password',
+class Admin extends Base implements UserInterface, RemindableInterface {
+	use UserTrait, RemindableTrait, SupportsUploads;
+
+	/**
+	 * The table associated with the model.  Explicitly declaring so that sub
+	 * classes can use it
+	 *
+	 * @var string
+	 */
+	protected $table = 'admins';
+
+	/**
+	 * Uploadable attributes
+	 * 
+	 * @var array
+	 */
+	protected $upload_attributes = ['image'];
+
+	/**
+	 * Don't allow cloning because duplicate emails are not allowed.
+	 *
+	 * @var boolean 
+	 */
+	public $cloneable = false;
+
+	/**
+	 * Admins should not be localized
+	 *
+	 * @var boolean
+	 */
+	static public $localizable = false;
+
+	/**
+	 * Validation rules
+	 * 
+	 * @var array
+	 */
+	public static $rules = [
 		'first_name' => 'required',
 		'last_name' => 'required',
-	);
-	
+		'image' => 'image',
+		'email' => 'required|email|unique:admins,email',
+		'password' => 'required',
+		'confirm_password' => 'sometimes|required_with:password|same:password',
+	];
+
 	/**
-	 * Allow all properties to be mass assigned.  This model doesn't actually correspond 
-	 * with a real table so there is no risk that this setting would allow a malicious 
-	 * person to set one of the actual DB values
+	 * Orders instances of this model in the admin
+	 * 
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return void
 	 */
-	protected $guarded = array();
-	
-	// Get a list of admins ordered by last name
-	static public function ordered() {
-		return DB::table('users')
-			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->leftJoin('throttle', 'throttle.user_id', '=', 'users.id')
-			->whereIn('users_groups.group_id', self::adminGroupIds())
-			->orderBy('last_name', 'asc')
-			->groupBy('users.id')
-			->select(array('users.id',
-					'users.email', 
-					'users.first_name', 
-					'users.last_name',
-					'users.created_at',
-					'throttle.banned',
-					'throttle.suspended',
-				));
+	public function scopeOrdered($query) {
+		$query->orderBy('last_name')->orderBy('first_name');
 	}
-	
-	// Count the total admins
-	static public function count() {
-		return DB::table('users')
-			->join('users_groups', 'users_groups.user_id', '=', 'users.id')
-			->whereIn('users_groups.group_id', self::adminGroupIds())
-			->count();
+
+	/**
+	 * Tweak some validation rules
+	 *
+	 * @param Illuminate\Validation\Validator $validation
+	 */
+	public function onValidating($validation) {
+
+		// Only apply mods when editing an existing record
+		if (!$this->exists) return;
+		$rules = self::$rules;
+
+		// Make password optional
+		$rules = array_except($rules, 'password');
+
+		// Ignore the current record when validating email
+		$rules['email'] .= ','.$this->id;
+		
+		// Update rules
+		$validation->setRules($rules);
 	}
-	
-	// Produce the title for the list view
-	public function title() {
-		return '<img src="'.HTML::gravatar($this->email).'" class="gravatar"/> '.$this->first_name.' '.$this->last_name;
+
+	/**
+	 * New admin callbacks
+	 *
+	 * @return void 
+	 */
+	public function onCreating() {
+		if (Input::has('_send_email')) $this->sendCreateEmail();
+		$this->active = 1;
 	}
+
+	/**
+	 * Admin updating callbacks
+	 *
+	 * @return void 
+	 */
+	public function onUpdating() {
+		if (Input::has('_send_email')) $this->sendUpdateEmail();
+	}
+
+	/**
+	 * Callbacks regardless of new or old
+	 *
+	 * @return void 
+	 */
+	public function onSaving() {
+
+		// If the password is changing, hash it
+		if ($this->isDirty('password')) {
+			$this->password = Hash::make($this->password);
+		}
+
+		// Save or clear permission choices if the form had a "custom permissions"
+		// pushed checkbox
+		if (Input::exists('_custom_permissions')) {
+			$this->permissions = Input::get('_custom_permissions') ? 
+				json_encode(Input::get('_permission')) : null;
+		}
+	}
+
+	/**
+	 * Send creation email
+	 *
+	 * @return void 
+	 */
+	public function sendCreateEmail() {
+
+		// Prepare data for mail
+		$admin = app('decoy.auth')->user();
+		$email = array(
+			'first_name' => $admin->first_name,
+			'last_name' => $admin->last_name,
+			'email' => Input::get('email'),
+			'url' => Request::root().'/'.Config::get('decoy::core.dir'),
+			'root' => Request::root(),
+			'password' => Input::get('password'),
+		);
 	
-	// Show a badge if the user is the currently logged in
-	public function statuses() {
+		// Send the email
+		Mail::send('decoy::emails.create', $email, function($m) use ($email) {
+			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
+			$m->subject('Welcome to the '.Decoy::site().' admin site');
+			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
+		});
+	}
+
+	/**
+	 * Send update email
+	 *
+	 * @return void 
+	 */
+	public function sendUpdateEmail() {
+		
+		// Prepare data for mail
+		$admin = app('decoy.auth')->user();
+		$email = array(
+			'editor_first_name' => $admin->first_name,
+			'editor_last_name' => $admin->last_name,
+			'first_name' =>Input::get('first_name'),
+			'last_name' =>Input::get('last_name'),
+			'email' => Input::get('email'),
+			'password' =>Input::get('password'),
+			'url' => Request::root().'/'.Config::get('decoy::core.dir'),
+			'root' => Request::root(),
+		);
+		
+		// Send the email
+		Mail::send('decoy::emails.update', $email, function($m) use ($email) {
+			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
+			$m->subject('Your '.Decoy::site().' admin account info has been updated');
+			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
+		});
+	}
+
+	/**
+	 * A shorthand for getting the admin name as a string
+	 *
+	 * @return string 
+	 */
+	public function getNameAttribute() {
+		return $this->getAdminTitleAttribute();
+	}
+
+	/**
+	 * Produce the title for the list view
+	 * 
+	 * @return string
+	 */
+	public function getAdminTitleHtmlAttribute() {
+		if (isset($this->image)) return parent::getAdminTitleHtmlAttribute();
+		return "<img src='".HTML::gravatar($this->email)."' class='gravatar'/> "
+			.$this->getAdminTitleAttribute();
+	}
+
+	/**
+	 * Show a badge if the user is the currently logged in
+	 * 
+	 * @return string
+	 */
+	public function getAdminStatusAttribute() {
 		$html ='';
 		
+		// Add the role
+		if (($roles = static::getRoleTitles()) && count($roles)) {
+			$html .= '<span class="label label-primary">'.$roles[$this->role].'</span>';
+		}
+
 		// If row is you
-		if ($this->id == App::make('decoy.auth')->userId()) {
+		if ($this->id == app('decoy.auth')->user()->id) {
 			$html .= '<span class="label label-info">You</span>';
 		}
-		
+
 		// If row is disabled
 		if ($this->disabled()) {
 			$html .= '<a href="'.URL::to(DecoyURL::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
 		}
-		
+
+		// Return HTML
 		return $html;
 	}
-	
-	// Override the Eloquent find.  This is required to make admins function with Decoy,
-	// which expects Eloquent models in it's generic breadcrumbs, listing, etc
-	static public function find($id, $columns = array('*')) {
-		if ($admin = DB::table('users')->find($id)) return new Admin((array) $admin);
-		return false;
-	}
-	
-	/**
-	 * Get a sentry user object from an admin object
-	 * @return integer
-	 */
-	public function sentryUser() {
-		return Sentry::getUserProvider()->findById($this->id);
-	}
-	
-	/**
-	 * Get the ids of all groups that have the "admin" permission
-	 * @return integer
-	 */
-	static public function adminGroupIds() {
 
-		// Get all the groups that are admins
-		$groups = array_filter(Sentry::findAllGroups(), function($group) {
-			$permissions = $group->getPermissions();
-			return !empty($permissions['admin']);
+	/**
+	 * Get the URL to edit the admin
+	 *
+	 * @return string 
+	 */
+	public function getAdminEditAttribute() {
+		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->id);
+	}
+
+	/**
+	 * Get the permissions for the admin
+	 *
+	 * @return stdObject
+	 */
+	public function getPermissionsAttribute() {
+		if (!$this->permissions) return null;
+		return json_decode($this->permissions);
+	}
+
+	/**
+	 * Make a list of the role titles by getting just the text between bold tags 
+	 * in the roles config array, which is a common convention in Decoy 4.x
+	 *
+	 * @return array
+	 */
+	static public function getRoleTitles() {
+		return array_map(function($title) {
+			if (preg_match('#^<b>(\w+)</b>#i', $title, $matches)) return $matches[1];
+			return $title;
+		}, Config::get('decoy::site.roles'));
+	}
+
+	/**
+	 * Get the list of all permissions
+	 *
+	 * @param Admin|null $admin
+	 * @return array
+	 */
+	static public function getPermissionOptions($admin = null) {
+
+		// Get all the app controllers
+		$controllers = array_map(function($path) {
+			return 'Admin\\'.basename($path, '.php');
+		}, glob(app_path().'/controllers/Admin/*Controller.php'));
+
+		// Remove some classes
+		$controllers = array_diff($controllers, ['Admin\BaseController']);
+
+		// Add some Decoy controllers
+		$controllers[] = 'Bkwld\Decoy\Controllers\Admins';
+		$controllers[] = 'Bkwld\Decoy\Controllers\Changes';
+		$controllers[] = 'Bkwld\Decoy\Controllers\Elements';
+		$controllers[] = 'Bkwld\Decoy\Controllers\RedirectRules';
+
+		// Alphabetize the controller classes
+		usort($controllers, function($a, $b) {
+			return substr($a, strrpos($a, '\\') + 1) > substr($b, strrpos($b, '\\') + 1);
 		});
 
-		// Return just their ids
-		return array_map(function($group) {
-			return $group->getId();
-		}, $groups);
-	}
+		// Convert the list of controller classes into the shorthand strings used
+		// by Decoy Auth as well as english name and desciption
+		return array_map(function($class) use ($admin) {
+			$obj = new $class;
+			$permissions = $obj->getPermissionOptions();
+			if (!is_array($permissions)) $permissions = [];
 
-	/**
-	 * Get the role name of the admin.  This will only return group
-	 * names that are explicitly in the `roles` config
-	 */
-	public function getRoleName() {
-		$keys = array_keys(Config::get('decoy::site.roles'));
-		$group = array_first($this->sentryUser()->getGroups(), function($i, $group) use ($keys) {
-			return in_array($group->getName(), $keys);
-		});
-		if ($group) return $group->getName();
-	}
-	
-	/**
-	 * Create a new admin, reading from Input directly
-	 */
-	static public function create(array $input) {
-		
-		// Cast to object
-		$input = (object) $input;
-		
-		// Create the login user
-		$user = Sentry::getUserProvider()->create(array(
-			'email'    => $input->email,
-			'password' => $input->password,
-			'first_name' => $input->first_name,
-			'last_name'  => $input->last_name,
-			'activated' => true,
-		));
-		
-		// Add to the specified group
-		if (isset($input->role)) {
-			$user->addGroup(Sentry::findGroupByName($input->role));
+			// Build the controller-level node
+			return (object) [
 
-		// Else add to the default group
-		} else {
-			$user->addGroup(Sentry::findGroupByName('admins'));
-		}
-		
-		// Send email
-		if (!empty($input->send_email)) {
-			
-			// Prepare data for mail
-			$admin = App::make('decoy.auth')->user();
-			$email = array(
-				'first_name' => $admin->first_name,
-				'last_name' => $admin->last_name,
-				'url' => Request::root().'/'.Config::get('decoy::core.dir'),
-				'root' => Request::root(),
-				'password' => $input->password,
-			);
-		
-			// Send the email
-			Mail::send('decoy::emails.create', $email, function($m) use ($input) {
-				$m->to($input->email, $input->first_name.' '.$input->last_name);
-				$m->subject('Welcome to the '.Config::get('decoy::site.name').' admin site');
-				$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
-			});
-		}
-		
-		// Return the id
-		return $user->id;
-		
-	}
-	
-	/**
-	 * Update admin values
-	 */
-	public function update(array $attributes = array()) {
-		
-		// Cast to object
-		$input = (object) $attributes;
-		
-		// Update user
-		$user = $this->sentryUser();
-		$user->email = $input->email;
-		if (!empty($input->password)) $user->password = $input->password;
-		$user->first_name = $input->first_name;
-		$user->last_name = $input->last_name;
-		$user->save();
+				// Add controller information
+				'slug' => DecoyURL::slugController($class),
+				'title' => $obj->title(),
+				'description' => $obj->description(),
 
-		// If a role was passed, add the group and remove the old groups
-		if (isset($input->role)) {
+				// Add permission options for the controller 
+				'permissions' => array_map(function($value, $action) use ($class, $admin) {
+					$roles = array_keys(Config::get('decoy::site.roles'));
+					return (object) [
+						'slug' => $action,
+						'title' => is_array($value) ? $value[0] : String::titleFromKey($action),
+						'description' => is_array($value) ? $value[1] : $value,
 
-			// Remove the old group IF it is one of the onese that are listed
-			// in the config.  Aka, one of the ones that was actually selectable
-			// in the admin.  This keeps, for instance, the developer group attached.
-			$keys = array_keys(Config::get('decoy::site.roles'));
-			foreach($user->getGroups() as $group) {
-				if (!in_array($group->getName(), $keys)) continue;
-				$user->removeGroup($group);
-			}
+						// Set the initial checked state based on the admin's permissions, if
+						// one is set.  Or based on the first role.
+						'checked' => $admin ? 
+							app('decoy.auth')->can($action, $class, $admin) :
+							app('decoy.auth')->can($action, $class, $roles[0]),
 
-			// Add the new group
-			$user->addGroup(Sentry::findGroupByName($input->role));
-		}
-		
-		// Send email
-		if (!empty($input->send_email)) {
-			
-			// Prepare data for mail
-			$admin = App::make('decoy.auth')->user();
-			$email = array(
-				'editor_first_name' => $admin->first_name,
-				'editor_last_name' => $admin->last_name,
-				'first_name' => $input->first_name,
-				'last_name' => $input->last_name,
-				'email' => $input->email,
-				'password' => $input->password,
-				'url' => Request::root().'/'.Config::get('decoy::core.dir'),
-				'root' => Request::root(),
-			);
-			
-			// Send the email
-			Mail::send('decoy::emails.update', $email, function($m) use ($input) {
-				$m->to($input->email, $input->first_name.' '.$input->last_name);
-				$m->subject('Your '.Config::get('decoy::site.name').' admin account info has been updated');
-				$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
-			});
-		}
-	}
-	
-	/**
-	 * Delete this admin
-	 */
-	public function delete() {
-		$this->sentryUser()->delete();
-	}
-	
-	/**
-	 * Disable an admin
-	 */
-	public function disable() {
-		Sentry::getThrottleProvider()->findByUserId($this->id)->ban();
-	}
-	
-	/**
-	 * Enable an admin
-	 */
-	public function enable() {
-		Sentry::getThrottleProvider()->findByUserId($this->id)->unBan();
+						// Filter the list of roles to just the roles that allow the
+						// permission currently being iterated through
+						'roles' => array_filter($roles, function($role) use ($action, $class) {
+							return app('decoy.auth')->can($action, $class, $role);
+						}),
+
+					];
+				}, $permissions, array_keys($permissions)),
+			];
+		}, $controllers);
 	}
 
 	/**
 	 * Check if admin is banned
+	 * 
 	 * @return boolean true if banned
 	 */
 	public function disabled() {
-		return Sentry::getThrottleProvider()->findByUserId($this->id)->isBanned();
+		return !$this->active;
 	}
-	
+
 }

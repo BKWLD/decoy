@@ -141,7 +141,7 @@ class Breadcrumbs {
 				$url .= '/' . $id;
 				$model = $controller->model();
 				$item = call_user_func($model.'::find', $id);
-				$breadcrumbs[URL::to($url.'/edit')] = strip_tags($item->title(), '<img>');
+				$breadcrumbs[URL::to($url.'/edit')] = strip_tags($item->getAdminTitleHtmlAttribute(), '<img>');
 			}
 		}
 		

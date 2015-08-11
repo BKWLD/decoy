@@ -43,9 +43,10 @@ class UrlGenerator {
 		
 		// Get the URL up to and including the last controller.  If we're not linking
 		// to a child, also remove the id, which may be replaced by a passed id
-		if ($child) $pattern = '#(/('.implode('|', $this->actions).'))?/?$#i';
-		else $pattern = '#(/\d+)?(/('.implode('|', $this->actions).'))?/?$#i';
-		$path = preg_replace($pattern, '', $path);	
+		$actions = implode('|', $this->actions);
+		if ($child) $pattern = '#(/('.$actions.'))?/?$#';
+		else $pattern = '#(/\d+)?(/('.$actions.'))?/?$#';
+		$path = preg_replace($pattern, '', $path);
 	
 		// If there is an id and we're not linking to a child, add that id
 		if (!$child && $id) $path .= '/'.$id;
@@ -56,14 +57,14 @@ class UrlGenerator {
 			// If the child has a backslash, it's a namespaced class name, so convert to just name
 			if (strpos($child, '\\') !== false) $child = $this->slugController($child);
 			
-			// If the child is the same as the current controller in the path, then don't add the
-			// child.  For instance, if you are on an articles controller and the child is for
-			// articles, don't form a child link.  This logic exists so we can execute relative()
-			// from listing views and pass it the controller of a list item and not worry about
-			// whether we're already on that page or whether the list is for related data.  However,
-			// allow it if the link is to an index view.  This is valid for many to many to self.
-			if (!preg_match('#'.$child.'(/\d+)?$#i', $path) || $action == 'index') $path .= '/'.$child;
-			
+			// If currently on an edit view (where we always respect child parameters literally),
+			// or if the link is to an index view (for many to many to self) or if the child 
+			// is different than the current path, appened the child controller slug.
+			if (preg_match('#edit$#', $this->path) 
+				|| $action == 'index'
+				|| !preg_match('#'.$child.'(/\d+)?$#', $path) 
+				) $path .= '/'.$child;
+
 			// If the action was not index and there was an id, add it
 			if ($action != 'index' && $id) $path .= '/'.$id;
 			

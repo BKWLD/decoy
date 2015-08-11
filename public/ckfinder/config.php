@@ -50,8 +50,8 @@ function CheckAuthentication() {
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be
 // fully functional, in demo mode.
-$config['LicenseName'] = Config::get('decoy::wysiwyg.license_name');
-$config['LicenseKey'] = Config::get('decoy::wysiwyg.license_key');
+$config['LicenseName'] = Config::get('decoy::wysiwyg.ckeditor.license_name');
+$config['LicenseKey'] = Config::get('decoy::wysiwyg.ckeditor.license_key');
 
 /*
  Uncomment lines below to enable PHP error reporting and displaying PHP errors.
@@ -75,7 +75,7 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = '/uploads/ckfinder/';
+$baseUrl = Config::get('decoy::wysiwyg.ckeditor.upload_dir');
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the
@@ -118,10 +118,7 @@ $config['Thumbnails'] = Array(
 Set the maximum size of uploaded images. If an uploaded image is larger, it
 gets scaled down proportionally. Set to 0 to disable this feature.
 */
-$config['Images'] = Array(
-		'maxWidth' => 2400,
-		'maxHeight' => 2400,
-		'quality' => 90);
+$config['Images'] = false;
 
 /*
 RoleSessionVar : the session variable name that CKFinder must use to retrieve

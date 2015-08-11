@@ -34,7 +34,7 @@
 				
 				&:active {
 					color: $nav-text-active;
-					background: $theme-primary-color;
+					background: $nav-bkgd-active;
 				}
 
 				&:hover {
@@ -66,7 +66,7 @@
 			&.active {
 				.top-level {
 					color: $nav-text-active;
-					.glyphicon { color: $theme-primary-color; }
+					.glyphicon { color: $nav-bkgd-active; }
 					&:active .glyphicon { 
 						color: $nav-text-active; 
 						@include transition(color 100ms);
@@ -131,7 +131,7 @@
 					}
 
 					&:active {
-						background: $theme-primary-color;
+						background: $nav-bkgd-active;
 					}
 
 					// highlight the active page
@@ -141,8 +141,8 @@
 
 						// set nav dots to the active color
 						&:after {
-							border:1px solid $theme-primary-color;
-							background-color: $theme-primary-color;
+							border:1px solid $nav-bkgd-active;
+							background-color: $nav-bkgd-active;
 						}
 					}
 				}

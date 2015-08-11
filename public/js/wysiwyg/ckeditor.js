@@ -3,11 +3,14 @@ define(function(require) {
 	
 	// Dependencies
 	var $ = require('jquery')
-		, _ = require('underscore')
+		, _ = require('lodash')
 		, CKEDITOR = window.CKEDITOR // CK isn't currently loaded via requirejs
 		, CKFINDER = window.CKFinder // CK isn't currently loaded via requirejs
 	;
 	
+	// Abort if no CKEditor
+	if (!CKEDITOR) return;
+
 	// Default config
 	var config = {
 		customConfig: '', // Don't load external config js file
@@ -62,7 +65,7 @@ define(function(require) {
 	function replaceConfig(_config) { config = _config; }
 	
 	// Apply CKeditor to the selector
-	function replace(selector) {
+	function init(selector) {
 		$(selector).each(function() {
 			var $el = $(this);
 		
@@ -72,7 +75,9 @@ define(function(require) {
 			$el.wrap('<div class="'+span+' wysiwyg-wrap">');
 		
 			// Init CK Editor	and CK Finder
-			var editor = CKEDITOR.replace(this, config);
+			var editor = CKEDITOR.replace(this, _.defaults(_.cloneDeep(config), {
+				height: $el.height() - 47 // This is the extra chrome that gets added
+			}));
 			if (allow_uploads) CKFINDER.setupCKEditor(editor, '/packages/bkwld/decoy/ckfinder/');
 			
 		});
@@ -86,7 +91,7 @@ define(function(require) {
 			replace: replaceConfig,
 			allowUploads: allowUploads
 		},
-		replace: replace
+		init: init
 	};
 	
 });

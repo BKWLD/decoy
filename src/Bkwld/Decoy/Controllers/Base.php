@@ -3,9 +3,9 @@
 // Dependencies
 use App;
 use Bkwld\Decoy\Breadcrumbs;
-use Bkwld\Decoy\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Fields\Listing;
-use Bkwld\Decoy\Input\Files;
 use Bkwld\Decoy\Input\Localize;
 use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\Sidebar;
@@ -16,6 +16,7 @@ use Bkwld\Library\Utils\File;
 use Config;
 use Croppa;
 use DB;
+use Decoy;
 use Event;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
@@ -102,7 +103,7 @@ class Base extends Controller {
 	// Shared layout for admin view, set in the constructor
 	public $layout;
 	protected function setupLayout() {
-		if (!is_null($this->layout)) $this->layout = \View::make($this->layout);
+		if (!is_null($this->layout)) $this->layout = View::make($this->layout);
 	}
 	
 	/**
@@ -153,6 +154,7 @@ class Base extends Controller {
 	
 	/**
 	 * Populate the controller's protected properties
+	 * 
 	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
 	 */
 	private function init($class = null) {
@@ -199,6 +201,7 @@ class Base extends Controller {
 	
 	/**
 	 * Make a new instance of the base class for the purposes of testing
+	 * 
 	 * @param string $path A request path, i.e. 'admin/news/create'
 	 * @param string $verb i.e. GET,POST
 	 */
@@ -215,6 +218,7 @@ class Base extends Controller {
 	/**
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
+	 * 
 	 * @param string $class ex: Admin\NewsController
 	 * @return string ex: News
 	 */
@@ -228,6 +232,7 @@ class Base extends Controller {
 	/**
 	 * Get the title for the controller based on the controller name.  Basically, it's
 	 * a de-studdly-er
+	 * 
 	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
@@ -239,6 +244,7 @@ class Base extends Controller {
 
 	/**
 	 * Get the description for a controller
+	 * 
 	 * @return string
 	 */
 	public function description() {
@@ -247,6 +253,7 @@ class Base extends Controller {
 
 	/**
 	 * Get the columns for a controller
+	 * 
 	 * @return array
 	 */
 	public function columns() {
@@ -255,6 +262,7 @@ class Base extends Controller {
 	
 	/**
 	 * Get the search settings for a controller
+	 * 
 	 * @return array
 	 */
 	public function search() {
@@ -289,25 +297,14 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Figure out the model for a controller class
+	 * Figure out the model for a controller class or return the current model class
+	 * 
 	 * @param string $class ex: "Admin\SlidesController"
 	 * @return string ex: "Slide"
 	 */
 	public function model($class = null) {
-		if (!$class) return $this->model; // for getters
-		
-		// Swap out the namespace if decoy
-		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $class, $is_decoy);
-		
-		// Remove the Controller suffix app classes may have
-		$model = preg_replace('#Controller$#', '', $model);
-		
-		// Assume that non-decoy models want the first namespace (aka Admin) removed
-		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
-		
-		// Make it singular
-		$model = Str::singular($model);
-		return $model;
+		if ($class) return Decoy::modelForController($class);
+		return $this->model;
 	}
 	
 	/**
@@ -315,6 +312,7 @@ class Base extends Controller {
 	 * view a listing of just the children of the parent.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $parent
+	 * @return this 
 	 */
 	public function parent($parent) {
 
@@ -366,6 +364,25 @@ class Base extends Controller {
 			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
 
 	}
+
+	/**
+	 * Get the permission options for the controller.  By default, these are the
+	 * stanadard CRUD actions
+	 *
+	 * @return array An associative array.  The keys are the permissions slugs.
+	 *               The value is either the description as a string or an array
+	 *               with the first index being an english title and the second
+	 *               being the description.
+	 */
+	public function getPermissionOptions() {
+		return [
+			'read' => 'View listing and edit views',
+			'create' => 'Create new items',
+			'update' => 'Update existing items',
+			'publish' => 'Move from "draft" to "published"',
+			'destroy' => ['Delete', 'Delete items permanently'],
+		];
+	}
 	
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
@@ -387,7 +404,7 @@ class Base extends Controller {
 
 		// Run the query. 
 		$search = new Search();
-		$results = $search->apply($query, $this->search)->paginate($this->perPage());
+		$results = $search->apply($query, $this->search())->paginate($this->perPage());
 		
 		// Render the view using the `listing` builder.
 		$listing = Listing::createFromController($this, $results);
@@ -451,24 +468,11 @@ class Base extends Controller {
 		// Create a new object and hydrate
 		$item = new Model();
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-		$slugger = App::make('decoy.slug');
-		$slugger->merge($item);
 
-		// Add foreign keys to the model instance manually.  This is done
-		// This was added so that the unique_with validator could test slugs that
-		// are unqiue across multiple columns.  Those other columns are typically
-		// foreign keys.
-		foreach ($this->allForeignKeyPairs() as $pair) {
-			$item->setAttribute($pair->key, $pair->val);
-			$slugger->addWhere($item, $pair->key, $pair->val);
-		}
-
-		// Validate
-		if ($result = $this->validate($item)) return $result;
-
-		// Save it.  We don't save through relations becaue the foreign keys were manually
-		// set previously.  And many to many relationships are not formed during a store().
-		$item->save();
+		// Validate and save.
+		$this->validate($item);
+		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
+		else $item->save();
 		
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
@@ -484,7 +488,7 @@ class Base extends Controller {
 	 */
 	public function edit($id) {
 
-		// Get the work
+		// Get the model instance
 		if (!($item = Model::find($id))) return App::abort(404);
 
 		// Look for overriden views
@@ -526,7 +530,7 @@ class Base extends Controller {
 	 */
 	public function update($id) {
 
-		// Load the entry
+		// Get the model instance
 		if (!($item = Model::find($id))) {
 			if (Request::ajax()) return Response::json(null, 404);
 			else return App::abort(404);
@@ -540,19 +544,14 @@ class Base extends Controller {
 		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
-			$slugger = App::make('decoy.slug');
-			$slugger->merge($item);
-
-			// If this is a child, add "where" conditions on the slug uniqueness
-			foreach ($this->allForeignKeyPairs() as $pair) {
-				$slugger->addWhere($item, $pair->key, $pair->val);
+			if (isset($item::$rules['slug'])) {
+				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
+				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
 			}
 		}
 
-		// Validate data
-		if ($result = $this->validate($item)) return $result;
-
 		// Save the record
+		$this->validate($item);
 		$item->save();
 
 		// Redirect to the edit view
@@ -578,7 +577,8 @@ class Base extends Controller {
 	
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to($this->url->relative('index'))->with('success', $this->successMessage($item, 'deleted') );;
+		else return Redirect::to($this->url->relative('index'))
+			->with('success', $this->successMessage($item, 'deleted') );
 	}
 
 	/**
@@ -590,63 +590,31 @@ class Base extends Controller {
 	public function duplicate($id) {
 
 		// Find the source item
-		if (!($src = Model::find($id))) return App::abort(404);
-		$file_attributes = $src->file_attributes;
+		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
 
-		// Get the options
-		$options = Input::get('options') ?: [];
+		// Duplicate using Bkwld\Cloner
+		$new = $src->duplicate();
 
-		// If inlcuding text, start by cloning the model.  A number of columns are
-		// excepted by the duplciate, including all of the file attributes.
-		if (in_array('text', $options)) {
-			$new = $src->replicate(array_merge([
-				$src->getKeyName(),
-				$src->getCreatedAtColumn(),
-				$src->getUpdatedAtColumn(),
-				'visible',
-			], $file_attributes));
-		
-		// Otherwise, create a blank instance of the model
-		} else $new = $src->newInstance();
-
-		// Duplicate all files and associate new paths
-		if (in_array('files', $options)) {
-			$uploads_dir = Config::get('decoy::core.upload_dir');
-			foreach ($file_attributes as $field) {
-				if (empty($src->$field)) continue;
-
-				// Copy the file
-				$tmp = $uploads_dir.'/'.basename($src->$field);
-				$copy = copy(public_path().$src->$field, $tmp);
-
-				// Move it save the new path
-				$new->$field = File::publicPath(File::organizeFile($tmp, $uploads_dir));
-			}
+		// If there is a name or title field, append " copy" to it.  Use "original"
+		// to avoid mutators.
+		if ($name = $new->getOriginal('name')) {
+			$new->setAttribute('name', $name.' copy');
+			$new->save();
+		} else if ($title = $new->getOriginal('title')) {
+			$new->setAttribute('title', $title.' copy');
+			$new->save();
 		}
 
 		// Set localization options on new instance
 		if ($locale = Input::get('locale')) {
 			$new->locale = $locale;
 			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
-		}
-
-		// If there was a slug, append the new locale to it so it stays unique
-		if (isset($src->slug)) {
-
-			// If we're copying text and settings, first remove any existing locale suffix
-			// from the slug before adding the new locale slug to it.
-			if (in_array('text', $options)) {
-				$pattern = '#\-('.implode('|', array_keys(Config::get('decoy::site.locales'))).')$#i';
-				$new->slug = preg_replace($pattern, '', $src->slug).'-'.$locale;
-
-			// Else, if blank, use a random key
-			} else $new->slug = Str::random(6);
+			$new->save();
 		}
 
 		// Save the new record and redirect to its edit view
-		$new->save();
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
-			->with('success', $this->successMessage($new, 'copied') );
+			->with('success', $this->successMessage($src, 'duplicated') );
 	}
 	
 	//---------------------------------------------------------------------------
@@ -663,36 +631,44 @@ class Base extends Controller {
 		// Do nothing if the query is too short
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
 		
+		// Get an instance so the title attributes can be found.  If none are found,
+		// then there are no results, so bounce
+		if (!$model = Model::first()) {
+			return Response::json($this->formatAutocompleteResponse([]));
+		}
+
 		// Get data matching the query
-		if (empty(Model::$title_column)) throw new Exception($this->model.'::$title_column must be defined');
-		$query = Model::ordered()
-			->where(Model::$title_column, 'LIKE', '%'.Input::get('query').'%')
+		$query = Model::titleContains(Input::get('query'))
+			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
 		
-		// Don't return any rows already attached to the parent.  So make sure the id is not already
-		// in the pivot table for the parent
+		// Don't return any rows already attached to the parent.  So make sure the 
+		// id is not already in the pivot table for the parent
 		if ($this->isChildInManyToMany()) {
 			
-			// See if there is an exact match on what's been entered.  This is useful for many
-			// to manys with tags because we want to know if the reason that autocomplete
-			// returns no results on an exact match that is already attached is because it
-			// already exists.  Otherwise, it would allow the user to create the tag
+			// See if there is an exact match on what's been entered.  This is useful 
+			// for many to manys with tags because we want to know if the reason that 
+			// autocomplete returns no results on an exact match that is already 
+			// attached is because it already exists.  Otherwise, it would allow the 
+			// user to create the tag
 			if ($this->parentRelation()
-				->where(Model::$title_column, '=', Input::get('query'))
+				->titleContains(Input::get('query'), true)
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
 			
-			// Get the ids of already attached rows through the relationship function.  There
-			// are ways to do just in SQL but then we lose the ability for the relationship
-			// function to apply conditions, like is done in polymoprhic relationships.
+			// Get the ids of already attached rows through the relationship function.  
+			// There are ways to do just in SQL but then we lose the ability for the 
+			// relationship function to apply conditions, like is done in polymoprhic 
+			// relationships.
 			$siblings = $this->parentRelation()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
 				
 				// Add condition to query
-				$query = $query->whereNotIn('id', $sibling_ids);
+				$model = new Model;
+				$query = $query->whereNotIn($model->getQualifiedKeyName(), $sibling_ids);
 			}
 		}
 		
@@ -732,9 +708,9 @@ class Base extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
-		$this->fireEvent('attaching', array($item));
+		$this->fireEvent('attaching', array($item, $this->parent));
 		$item->{$this->self_to_parent}()->attach($this->parent);
-		$this->fireEvent('attached', array($item));
+		$this->fireEvent('attached', array($item, $this->parent));
 		
 		// Return the response
 		return Response::json('ok');
@@ -774,66 +750,49 @@ class Base extends Controller {
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
+	 * @throws Bkwld\Decoy\Exception\ValidationFail
+	 * @return void
 	 */
 	protected function validate($model = null, $rules = null, $messages = array()) {
-		
-		// Pull the input including files.  We manually merge files in because Laravel's Input::all()
-		// does a recursive merge which results in file fields containing BOTH the string version
-		// of the previous file plus the new File instance when the user is replacing a file during
-		// an update.  The array_filter() is there to strip out empties from the files array.  This
-		// prevents empty file fields from overriding the contents of the hidden field that stores
-		// the previous file name.
+
+		// Pull the input including files.  We manually merge files in because 
+		// Laravel's Input::all()	does a recursive merge which results in file 
+		// fields containing BOTH the string version of the previous file plus the 
+		// new File instance when the user is replacing a file during	an update.  
+		// The array_filter() is there to strip out empties from the files array.  
+		// This prevents empty file fields from overriding the contents of the 
+		// hidden field that stores	the previous file name.		
 		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
-		// Fire validating event
-		if ($model && ($response = $this->fireEvent('validating', array($model, $input), true))) {
-			if (is_a($response, 'Symfony\Component\HttpFoundation\Response')) return $response;
-		}
-
-		// Pull the rules from the model instance.  This itentionally comes after the validating
-		// event is fired, so handlers of that event can modify the rules.
+		// Get the rules if they were not passed in
 		if ($model && empty($rules)) $rules = $model::$rules;
-
-		// If an AJAX update, don't require all fields to be present. Pass
-		// just the keys of the input to the array_only function to filter
-		// the rules list.
+		
+		// If an AJAX update, don't require all fields to be present. Pass just the 
+		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
 
-		// If a model instance was passed, merge the input on top of that.  This allows
-		// data that may already be set on the model to be validated.  The input will override
-		// anything already set on the model.  In particular, this is done so that auto
-		// generated fields like the slug can be validated.  This intentionally comes after the
-		// AJAX conditional so that we still only validate fields that were present in
-		// the AJAX request.
+		// If a model instance was passed, merge the input on top of that.  This 
+		// allows data that may already be set on the model to be validated.  The 
+		// input will override anything already set on the model.  In particular, 
+		// this is done so that auto generated fields like the slug can be 
+		// validated.  This intentionally comes after the AJAX conditional so that 
+		// we still only validate fields that were present in the AJAX request.
 		if ($model && method_exists($model, 'getAttributes')) {
 			$input = array_merge($model->getAttributes(), $input);
 		}
 
-		// Validate
+		// Build the validation instance and fire the intiating event.
 		$validation = Validator::make($input, $rules, $messages);
-		if ($validation->fails()) {
-			
-			// Log validation errors
-			if (Config::get('app.debug')) Log::debug(print_r($validation->messages(), true));
-			
-			// Respond
-			if (Request::ajax()) {
-				return Response::json($validation->messages(), 400);
-			} else {
-				return Redirect::to(Request::path())
-					->withInput()
-					->withErrors($validation);
-			}
-		}
+		if ($model) $this->fireEvent('validating', array($model, $validation));
+
+		// Run the validation.  If it fails, throw an exception that will get handled
+		// by Routing\Filters.
+		if ($validation->fails()) throw new ValidationFail($validation);
 		
-		// Fire event
-		$this->fireEvent('validated', array($model, $input));
-		
-		// If there were no errors, return false, which means
-		// that we don't need to redirect
-		return false;
+		// Fire completion event
+		$this->fireEvent('validated', array($model, $validation));
 	}
 	
 	/**
@@ -848,41 +807,44 @@ class Base extends Controller {
 	}
 	
 	/**
-	 * Fire an event.  Actually, two are fired, one for the event and one that mentions
-	 * the model for this controller
+	 * Fire an event.  Actually, two are fired, one for the event and one that 
+	 * mentions the model for this controller
+	 * 
 	 * @param $string  event The name of this event
 	 * @param $array   args  An array of params that will be passed to the handler
 	 * @param $boolean until Whether to fire an "until" event or not
+	 * @return object 
 	 */
-	protected function fireEvent($event, $args = null, $until = false) {
+	protected function fireEvent($event, $args = null) {
 		
-		// Setup both events
-		$events = array("decoy.{$event}");
-		if (!empty($this->model)) $events[] = "decoy.{$event}: ".$this->model;
+		// Create the event name
+		$event = "decoy::model.{$event}: ".$this->model;
 		
-		// Fire them
-		foreach($events as $event) {
-			if ($until) {
-				if ($response = Event::until($event, $args)) return $response;
-			} else Event::fire($event, $args, $until);
-		}
+		// Fire event
+		return Event::fire($event, $args);
 	}
 	
-	// Format the results of a query in the format needed for the autocomplete repsonses
+	/**
+	 * Format the results of a query in the format needed for the autocomplete 
+	 * responses
+	 * 
+	 * @param  array $results 
+	 * @return array
+	 */
 	public function formatAutocompleteResponse($results) {
 		$output = array();
 		foreach($results as $row) {
 			
 			// Only keep the id and title fields
 			$item = new stdClass;
-			$item->id = $row->id;
-			$item->title = $row->{Model::$title_column};
+			$item->id = $row->getKey();
+			$item->title = $row->getAdminTitleAttribute();
 			
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic
 			// found in Decoy::renderListColumn();
 			$item->columns = array();
-			foreach($this->columns as $column) {
+			foreach($this->columns() as $column) {
 				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
 				elseif (isset($row->$column)) {
 					if (is_a($row->$column, 'Carbon\Carbon')) $item->columns[$column] = $row->$column->format(FORMAT_DATE);
@@ -904,44 +866,9 @@ class Base extends Controller {
 	}
 
 	/**
-	 * Get all the foreign keys and values on the relationship with the parent
-	 * @param  Illuminate\Database\Eloquent\Relations\Relation $relation
-	 * @return array A list of key-val objects that have the column name and value for
-	 * the active relationship
-	 */
-	private function allForeignKeyPairs($relation = null) {
-		$pairs = array();
-
-		// Get the relation if not defined
-		if ($relation || ($relation = $this->parentRelation())) {
-
-			// Add standard belongs to foreign key
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\HasOneOrMany')) {
-				$pairs[] = (object) array(
-					'key' => $relation->getPlainForeignKey(), 
-					'val' => $relation->getParentKey()
-				);
-			}
-
-			// Add polymorphic column
-			if (is_a($relation, 'Illuminate\Database\Eloquent\Relations\MorphOneOrMany')) {
-				$pairs[] = (object) array(
-					'key' => $relation->getPlainMorphType(), 
-					'val' => $relation->getMorphClass()
-				);
-			}
-
-			// Return the pairs
-			return $pairs;
-
-		// Relation could not be found, so return nothing
-		} else return array();
-
-	}
-
-	/**
 	 * Run the parent relationship function for the active model, returning the Relation
 	 * object. Returns false if none found.
+	 * 
 	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
 	 */
 	private function parentRelation() {
@@ -955,6 +882,8 @@ class Base extends Controller {
 	 * Tell Laravel to look for view files within the app admin views so that,
 	 * on a controller-level basis, the app can customize elements of an admin
 	 * view through it's partials.
+	 *
+	 * @return void 
 	 */
 	protected function overrideViews() {
 		app('view.finder')->prependNamespace('decoy', app_path()
@@ -979,9 +908,15 @@ class Base extends Controller {
 
 		// Set vars
 		$this->layout->title = $this->title;
-		$this->layout->description = $this->description;
+		$this->layout->description = $this->description();
 		View::share('controller', $this->controller);
-		$this->layout->content->with($vars);
+		
+		// Make sure that the content is a Laravel view before applying vars.  
+		// to it.  In the case of the index view, `content` is a Fields\Listing 
+		// instance, not a Laravel view
+		if (is_a($this->layout->content, 'Illuminate\View\View')) {
+			$this->layout->content->with($vars);
+		}
 
 	}
 
@@ -997,14 +932,20 @@ class Base extends Controller {
 
 		// Figure out the title and wrap it in quotes
 		$title = $input;
-		if (is_a($input, '\Bkwld\Decoy\Models\Base')) $title = $input->titleText();
+		if (is_a($input, '\Bkwld\Decoy\Models\Base')) $title = $input->getAdminTitleAttribute();
 		if ($title && is_string($title)) $title =  '"'.$title.'"';
 
 		// Render the message
 		$message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
 
+		// Add extra messaging for copies
+		if ($verb == 'duplicated') {
+			$url = preg_replace('#/duplicate#', '/edit', Request::url());
+			$message .= ' You are viewing a <b>copy</b> of the <a href="'.$url.'">original</a>.';
+		}
+
 		// Add extra messaging if the creation was begun from the localize UI
-		if ($verb == 'copied' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
+		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
 			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
 		}
 

@@ -2,12 +2,13 @@
 
 // Dependencies
 use App;
-use Bkwld\Decoy\Exception;
+use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Library\Utils;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
 use Illuminate\Support\Collection;
+use Str;
 use Symfony\Component\Yaml\Parser;
 
 /**
@@ -17,8 +18,10 @@ class Elements extends Collection {
 
 	/**
 	 * The cache key used for the Elements collection
+	 *
+	 * @var string 
 	 */
-	const CACHE_KEY = 'decoy.elements.data';
+	protected $cache_key = 'decoy.elements.data';
 
 	/**
 	 * The parse YAML contents
@@ -67,7 +70,10 @@ class Elements extends Collection {
 	public function asModels() {
 		$this->hydrate();
 		return new ModelCollection(array_map(function($element, $key) {
-			return new Element(array_merge($element, ['key' => $key])); // Add the key as an attribute
+
+			// Add the key as an attribute
+			return $this->model->newInstance(array_merge($element, ['key' => $key]));
+
 		}, $this->all(), array_keys($this->items)));
 	}
 
@@ -90,7 +96,7 @@ class Elements extends Collection {
 			}
 
 		// Add the key as an attribute
-		} else return new Element(array_merge($this->items[$key], ['key' => $key])); 
+		} else return $this->model->newInstance(array_merge($this->items[$key], ['key' => $key])); 
 
 	}
 
@@ -147,8 +153,19 @@ class Elements extends Collection {
 	 * @return string 
 	 */
 	protected function cacheKey() {
-		if ($this->locale) return self::CACHE_KEY.'.'.$this->locale;
-		else return self::CACHE_KEY;
+		if ($this->locale) return $this->cache_key.'.'.$this->locale;
+		else return $this->cache_key;
+	}
+
+	/**
+	 * Set the cache key
+	 *
+	 * @param string $key 
+	 * @return $this
+	 */
+	public function setCacheKey($key) {
+		$this->cache_key = $key;
+		return $this;
 	}
 
 	/**
@@ -209,7 +226,7 @@ class Elements extends Collection {
 
 					// Build the value array
 					$el = ['type' => $type, 'value' => $value];
-					if ($this->has_extra) {
+					if ($this->has_extra || $include_extra) {
 						$this->mergeExtra($el, $field, $field_data);
 						$this->mergeExtra($el, $section, $section_data, 'section_');
 						$this->mergeExtra($el, $page, $page_data, 'page_');
@@ -234,8 +251,17 @@ class Elements extends Collection {
 	 * @param string $prefix A prefix to append to the beginning of the key being set on $el
 	 */
 	protected function mergeExtra(&$el, $key, $data, $prefix = null) {
-		$el[$prefix.'label'] = isset($data['label']) ? $data['label'] : Utils\String::titleFromKey($key);
-		$el[$prefix.'help'] = isset($data['help']) ? $data['help'] : null;
+
+		// Don't add extra if this in the 1st or 2nd depth (which means there is a prefix)
+		// and there is no node for the children.  This prevents a FIELD named "label" to be
+		// treated as the the label for it's section.
+		$skip = $prefix && empty($data['sections']) && empty($data['fields']);
+
+		// Fields
+		if (isset($data['label']) && $data['label'] === false) $el[$prefix.'label'] = false;
+		else $el[$prefix.'label'] = empty($data['label']) || $skip ? Utils\String::titleFromKey($key) : $data['label'];
+		$el[$prefix.'help'] = empty($data['help']) || $skip ? null : $data['help'];
+		$el[$prefix.'options'] = empty($data['options']) || $skip ? null : $data['options'];
 	}
 
 	/**
@@ -246,13 +272,14 @@ class Elements extends Collection {
 	protected function assocAdminChoices() {
 
 		// Build the query
-		$elements = Element::query();
+		$elements = $this->model->query();
 		if ($this->locale) $elements->localize($this->locale);
 
-		// Convert models to simple arrays with the type and value
+		// Convert models to simple array
 		$elements = array_map(function(Element $element) {
-			$element->setVisible(['type', 'value']);
-			return $element->toArray();
+
+			// Don't need the key as an attribute
+			return array_except($element->toArray(), ['key']);
 
 		// .. from a dictionary of ALL elements for the locale
 		}, $elements->get()->getDictionary());
@@ -305,12 +332,31 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Return the validation rules for the items
+	 * Filter the elements to only those allowed in the provided pages
+	 *
+	 * @param  array $pages 
+	 * @return this 
+	 */
+	public function onlyPages($pages) {
+		$this->items = array_filter($this->items, function($element) use ($pages) {
+			return in_array(Str::slug($element['page_label']), $pages);
+		});
+		return $this;
+	}
+
+	/**
+	 * Return the validation rules for the items.  Convert the keys to the
+	 * expected input style
 	 *
 	 * @return array An array of validation rules, keyed to element keys
 	 */
 	public function rules() {
-		return array_combine($this->keys(), $this->lists('rules'));
+		$rules = [];
+		foreach($this->assocConfig(true) as $key => $data) {
+			if (empty($data['rules'])) continue;
+			$rules[str_replace('.', '|', $key)] = $data['rules'];
+		}
+		return $rules;
 	}
 	
 	/**
@@ -325,4 +371,23 @@ class Elements extends Collection {
 		}, $this->keys()), $this->lists('value'));
 	}
 
+	/**
+	 * Get the model instance being used
+	 *
+	 * @return Bkwld\Decoy\Models\Element
+	 */
+	public function getModel() {
+		return $this->model;
+	}
+
+	/**
+	 * Replace the model instance being used
+	 *
+	 * @param  Bkwld\Decoy\Models\Element $element 
+	 * @return $this
+	 */
+	public function setModel($element) {
+		$this->model = $element;
+		return $this;
+	}
 }

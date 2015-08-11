@@ -1,4 +1,5 @@
 .many-to-many-checklist {
+	$bkgd: #f9f9f9;
 
 	// Make the checkboxes vertically centered if there are images
 	// as part of the label titles
@@ -13,20 +14,27 @@
 		width: 30px;
 	}
 
+	// Push the edit icon off the label
+	.edit {
+		margin-left: 8px;
+		display: none;
+	}
+
+	// Only show the edit link on hover
+	.checkbox:hover .edit {
+		display: inline-block;
+	}
+
 	// Layout the items in two columns
 	&.two-col {
-
-		// Account for the margins and pull the list up
-		.control-label {
-			margin-bottom: 0;
-		}
 
 		// Make cols
 		.checkbox {
 			display: inline-block;
 			width: 50%;
 			padding: 0 5px 0 0;
-			margin-bottom: 10px; // Extra tall to work around the -5px margin-top
+			margin-bottom: 5px;
+			margin-top: 0;
 			
 			// Break columns
 			@media (max-width: $screen-xs) {
@@ -38,24 +46,39 @@
 			label {
 
 				// Wrap in boxes
+				position: relative;
 				display: block;
-				background-color: #f9f9f9;
+				background-color: $bkgd;
 				@include border-radius(3px);
-				padding: 7px 10px 7px 30px;
+				padding: 7px;
+				padding-left: 30px;
 				white-space: nowrap;
-
-				// Prevent text from wrapping.  Need to assign to the a tag because
-				// FF was hiding the checkbox
-				// https://github.com/BKWLD/decoy/issues/371
-				a {
-					display: inline-block;
-					text-overflow: ellipsis;
-					overflow: hidden;
-					vertical-align: middle;
-					width: 100%;
-				}
 			}
+
+			// Prevent text from wrapping.  Need to assign to the a tag because
+			// FF was hiding the checkbox
+			// https://github.com/BKWLD/decoy/issues/371
+			.title {
+				display: inline-block;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				vertical-align: middle;
+				width: 100%;
+			}
+
+			// The edit icon
+			.edit {
+				position: absolute;
+				right: 10px;
+				top: 10px;
+			}
+
 		}
 
+		// Make the bkgd darker so it isn't over powered by hover
+		&:hover .checkbox label {
+			background: darken($bkgd, 3%);
+		}
 	}
+
 }

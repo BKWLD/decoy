@@ -1,0 +1,117 @@
+// Increase specifity to override vendor styles
+.form-group .redactor-box {
+
+	// Clear bottom margin
+	margin-bottom: 0;
+
+	// Add a border around the whole unit
+	border: 1px solid $input-border;
+	@include border-radius($input-border-radius);
+
+	// Prevent drop shadow on toolbar from overlapping
+	overflow: hidden;
+
+	// Change bkgd color to the same one used by input groups
+	.redactor-toolbar {
+		background: $light-grey;
+		@include border-radius($input-border-radius $input-border-radius 0 0); // Match parent so no clipping
+
+		// Remove shadow and add a border
+		@include box-shadow(none);
+		border-bottom: 1px solid $input-border;
+
+		// Make the links use the theme colors
+		li a {
+			&:hover {
+				background: $theme-primary-color;
+				color: $theme-primary-inverse;
+			}
+		}
+	}
+
+	// Style the editor
+	.redactor-editor {
+
+		// Remove border since it's global now
+		border: none;
+
+		// Style like normal inputs (with a little bonus padding)
+		padding: ($padding-base-vertical + 2px) $padding-base-horizontal;
+		@include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
+
+		// Styling
+		font-family: inherit;
+		line-height: inherit;
+		background: none;
+
+		// Clear the decoy link styling
+		a { border: none; }
+	}
+
+	// Improve styling of code editor view
+	textarea {
+		@include border-radius(0);
+		font-family: $font-family-monospace;
+		padding: ($padding-base-vertical + 2px) $padding-base-horizontal;
+		background: $code-editor-bkgd;
+		color: $code-editor-text;
+	}
+}	
+
+// Theme the hovers in the toolbar.  Need to increase specificity to counter
+// an important in their styles
+body .redactor-dropdown:not(.redactor-dropdown-box-fontcolor) a:hover {
+	background: $theme-primary-color !important;
+	color: $theme-primary-inverse !important;
+}
+body .redactor-dropdown.redactor-dropdown-box-fontcolor a:hover {
+	border-color: $theme-primary-color !important;
+}
+
+// Fix file upload placement in redactor modal
+#redactor-droparea-placeholder input[type="file"] {
+	display: inline;
+}
+
+// Reorder modal forms to look like bootstrap
+#redactor-modal-box #redactor-modal {
+	@include clearfix;
+
+	// Use admin font
+	font-family: inherit;
+
+	// Fix inputs
+	input[type="text"], select { @extend .form-control; }
+	input[type="checkbox"], input[type="radio"] { margin-right: 5px; }
+
+	// The footer
+	footer {
+		@include clearfix;
+
+		// Position on left of element
+		float: left;
+
+		// Push buttons over the same as content
+		padding: 0 40px 40px;
+
+		// Put save on the left and style like bootstrap
+		button {
+			float: right;
+			width: auto !important;
+			@extend .btn;
+			font-family: inherit;
+			margin-right: 2px;
+		}
+
+		// Fix the button colors
+		.redactor-modal-action-btn { 
+			@extend .btn-success;
+		}
+		.redactor-modal-delete-btn { 
+			@extend .btn-danger;
+		}
+		.redactor-modal-close-btn { 
+			@extend .btn-default;
+		}
+	}
+}

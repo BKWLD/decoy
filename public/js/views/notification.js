@@ -20,7 +20,7 @@ define(function(require) {
 		
 		// Alert type settings
 		this.alertGlyphs = {
-			danger: 'remove-sign',
+			danger: 'warning-sign',
 			success: 'ok-sign',
 			info: 'info-sign',
 			warning: 'question-sign'
@@ -108,7 +108,7 @@ define(function(require) {
 		var message = "<strong>Server request failed</strong>";
 		if( response !== null && typeof response != 'undefined') {
 			if( response.responseJSON !== null && typeof response.responseJSON != 'undefined')
-				message += '<br/><br/><pre>' + JSON.stringify(response.responseJSON) + '</pre>';
+				message += '<pre>' + JSON.stringify(response.responseJSON) + '</pre>';
 		}
 		this.set( message, 'danger', true );
 	};

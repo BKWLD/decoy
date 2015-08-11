@@ -28,9 +28,8 @@ define(function (require) {
 		
 		// Cache
 		this.fixed = false;
-		this.$main = $('#main');
-		this.mainTopPadding = this.$main.css('paddingTop').replace(/[^-\d\.]/g, '');
 		this.auto_set_width = this.$el.data('set-width');
+		this.height = this.$el.height();
 
 		// How far down to place it while affixed
 		this.top = this.$el.data('top') || 0;
@@ -40,6 +39,7 @@ define(function (require) {
 
 		// Listen for the affixable to switch between fixed and static positioning 
 		this.$el.on('affix.bs.affix', this.onFixing);
+		this.$el.on('affixed.bs.affix', this.onFixed);
 		this.$el.on('affix-top.bs.affix', this.onStatic);
 
 		// Enable plugin
@@ -68,7 +68,6 @@ define(function (require) {
 
 	// Enable affixing
 	View.enablePlugin = function() {
-		// this.$el.affix({ offset: {top: this.offset - this.top }});
 		this.$el.affix({ offset: {top: this.offset - this.top }});
 	};
 
@@ -76,6 +75,14 @@ define(function (require) {
 	View.onFixing = function() {
 		this.fixed = true;
 		this.setLayout();
+	};
+
+	// If the affixing has been disabled, immediately remove affixing. Affix has
+	// no API to remove itself, so this is the best method I could find.
+	View.onFixed = function() {
+		if (this.disabled) {
+			this.$el.removeClass('affix affix-top affix-bottom').css('padding-top', '');
+		}
 	};
 
 	// Switch back to static positioning
@@ -88,6 +95,10 @@ define(function (require) {
 	View.measureLayout = function() {
 		if (this.auto_set_width) this.width = this.$el.outerWidth();
 		this.offset = this.$el.offset().top;
+
+		// Check if the element is too tall for the page.  The 84 comes from the
+		// the actions bar
+		this.disabled = this.height > $win.height() - this.top - 60;
 	};
 
 	// Set the dimenions of the fixable

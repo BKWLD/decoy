@@ -56,29 +56,12 @@
 	@include text-shadow(none);
 }
 
-// Change the margins on the help block
-.help-block {
-	margin-bottom: 0;
-
-	// The bold text is a BIT too big
-	b {
-		font-size: $font-size-base - 1px;
-	}
-}
-
 // Make textareas 4 lines long
 textarea.form-control {
 	height: 6.8em;
-}
-
-// Reduce padding on autocomplete
-.tt-dropdown-menu .tt-suggestion {
-	padding: 4px 12px;
-
-	// The bold for this font is too big, this makes it look
-	// less jerky
-	.belongs-to & .tt-highlight {
-		font-size: $font-size-base - 1px;
+	resize: vertical;
+	&.wysiwyg {
+		height: 16em;
 	}
 }
 

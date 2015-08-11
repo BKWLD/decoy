@@ -2,23 +2,37 @@
 
 // Imports
 use App;
-use Bkwld\Library\Utils\File;
-use Bkwld\Library\Utils\Collection;
-use Bkwld\Decoy\Input\Files;
+use Bkwld\Cloner\Cloneable;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
+use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Library\Utils\Collection;
+use Bkwld\Upchuck\SupportsUploads;
 use Config;
 use Croppa;
+use Cviebrock\EloquentSluggable\SluggableInterface;
+use Cviebrock\EloquentSluggable\SluggableTrait;
 use DB;
 use Decoy;
+use DecoyURL;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Input;
 use Log;
 use Request;
+use Session;
 use Str;
+use URL;
 
-abstract class Base extends Eloquent {
+abstract class Base extends Eloquent implements SluggableInterface {
+
+	/**
+	 * Adding common traits.  The memory usage of adding additional methods is
+	 * negligible.
+	 */
+	use SupportsUploads, Cloneable, SluggableTrait {
+		needsSlugging as traitNeedsSlugging;
+	}
 	
 	//---------------------------------------------------------------------------
 	// Overrideable properties
@@ -31,19 +45,11 @@ abstract class Base extends Eloquent {
 	 * @var array
 	 */
 	static public $rules = [];
-	
-	/**
-	 * This is designed to be overridden to store the DB column name that
-	 * should be used as the source for titles.  Used in the title() function
-	 * and in autocompletes.
-	 *
-	 * @var string
-	 */
-	static public $title_column;
 
 	/**
-	 * This is should be overriden like so to specify crops that the image cropping
-	 * widget should make UI for
+	 * This is should be overriden like so to specify crops that the image 
+	 * cropping widget should make UI.  Example:
+	 * 
 	 * array('image' => array('marquee' => '4:3', 'feature'))
 	 *
 	 * @var array
@@ -51,44 +57,63 @@ abstract class Base extends Eloquent {
 	static public $crops = [];
 
 	/**
-	 * Should this model be localizable in the admin.  If not undefined, will override
-	 * the site config "auto_localize_root_models"
+	 * Should this model be localizable in the admin.  If not undefined, will 
+	 * override the site config "auto_localize_root_models"
 	 *
 	 * @var boolean
 	 */
 	static public $localizable;
 
 	/**
-	 * If true, process file handling updates via Decoy's Input\Files class during
-	 * model callbacks
+	 * If false, this model cannot be cloned
 	 *
-	 * @var boolean
+	 * @var boolean 
 	 */
-	public $auto_manage_files = true;
+	public $cloneable = true;
+
+	/**
+	 * Specify columns that shouldn't be duplicated by Bkwld\Cloner.  Include
+	 * slug by default so that Sluggable will automatically generate a new one.
+	 * 
+	 * @var array
+	 */
+	protected $clone_exempt_attributes = ['slug'];
+
+	/**
+	 * Relations to follow when models are duplicated
+	 * 
+	 * @var array
+	 */
+	protected $cloneable_relations;
+
+	/**
+	 * If populated, these will be used instead of the files that are found
+	 * automatically by getCloneableFileAttributes()
+	 * 
+	 * @var array
+	 */
+	protected $cloneable_file_attributes;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
 	 */
 	public function __construct(array $attributes = array()) {
 		
+		// Remove any settings the affect JSON conversion (visible / hidden) and
+		// mass assignment protection (fillable / guarded) while in the admin
+		if (Decoy::handling()) {
+			$this->visible = $this->hidden = $this->fillable = $this->guarded = [];
+		}
+
 		// Blacklist special columns that aren't intended for the DB
 		$this->guarded = array_merge($this->guarded, array(
-			'_token', // Part of CSRF protection
-			'_save', // The submit buttons, tells us which submit button they clicked
 			'parent_controller', // Backbone.js sends this with sort updates
 			'parent_id', // Backbone.js may also send this with sort
 			'select-row', // This is the name of the checkboxes used for bulk delete
 		));
-		
-		// Remove any hidden/visible settings that may have been set on models if
-		// the user is in the admin
-		if (Decoy::handling()) $this->visible = $this->hidden = array();
 
 		// Continue Laravel construction
 		parent::__construct($attributes);
-		
-		// Register Laravel model events
-		static::registerModelEvents();
 	}
 
 	// Disable all mutatators while in Admin by returning that no mutators exist
@@ -98,131 +123,93 @@ abstract class Base extends Eloquent {
 	public function hasSetMutator($key) { 
 		return Decoy::handling() && array_key_exists($key, $this->attributes) ? false : parent::hasSetMutator($key);
 	}
-	
-	//---------------------------------------------------------------------------
-	// Model event callbacks
-	//---------------------------------------------------------------------------
-	// Setup listeners for all of Laravel's built in events that fire our no-op
-	// callbacks. These listeners are created when the first instance of a model
-	// is created.
-	
+
 	/**
-	 * This array is used so we can make sure that a model event callbacks only
-	 * get registered once for a class.  Since the Laravel model listening happens 
-	 * at the class level, not at the model level.
+	 * No-Op callbacks invoked by Observers\ModelCallbacks.  These allow quick handling
+	 * of model event states.
 	 *
-	 * @var array 
-	 */
-	static private $models_registered_for_events = [];
-
-	/**
-	 * Listen for model events and execute no-op callbacks on the model instance
-	 * 
-	 * @return void
-	 */
-	static private function registerModelEvents() {
-		
-		// Only run once per class.  Having to store in an array like this because
-		// setting a boolean on the class kept setting it to true for all models that
-		// inherit from Base.  I couldn't seem to set the boolean on the child only.
-		$class = get_called_class();
-		if (in_array($class, self::$models_registered_for_events)) return;
-		self::$models_registered_for_events[] = $class;
-		
-		// Setup a Files instance for auto handling of file input
-		$files = new Files();
-
-		// Setup a ManyToManyChecklist to create pivot rows
-		$many_to_many_checklist = Decoy::handling() ? new ManyToManyChecklist() : null;
-
-		// Built in Laravel model events.  Note the special file handling that happens
-		// on save and delete
-		self::creating (function($model){ return $model->onCreating(); });
-		self::created  (function($model){ return $model->onCreated(); });
-		self::updating (function($model){ return $model->onUpdating(); });
-		self::updated  (function($model){ return $model->onUpdated(); });
-		self::saving   (function($model) use ($files){ 
-			if ($model->auto_manage_files) {
-				$files->delete($model);
-				$files->save($model);
-			}
-			if ($model->onSaving() === false) return false;
-			$model->setLocaleGroup(); 
-		});
-		self::saved    (function($model) use ($many_to_many_checklist) { 
-			if ($many_to_many_checklist) $many_to_many_checklist->update($model);
-			return $model->onSaved(); 
-		});
-		self::deleting (function($model) use ($files){ 
-			if ($model->auto_manage_files) $files->delete($model, true); 
-			return $model->onDeleting(); 
-		});
-		self::deleted  (function($model){ return $model->onDeleted(); });
-		
-		// Decoy events
-		$events = array('validating', 'validated', 'attaching', 'attached', 'removing', 'removed');
-		foreach ($events as $event) {
-			Event::listen('decoy.'.$event.': '.$class, function($model = null, $options = null) use ($event, $files) {
-				
-				// It's possible a model wasn't defined
-				if (!$model) return;
-				
-				// Special files behavior
-				if ($event == 'validating' && $model->auto_manage_files) $files->preValidate($model);
-				
-				// Call the appropriate model callback with all other arguments
-				$args = array_slice(func_get_args(), 1);
-				$callback = 'on'.ucfirst($event);
-				return call_user_func_array(array($model, $callback), $args);
-			});
-		}
-		
-	}
-	
-	/**
-	 * The no-op callbacks.  They have to be defined as public because they are invoked 
-	 * from anonymous functions.
+	 * @return void|false 
 	 */
 	public function onSaving() {}
 	public function onSaved() {}
-	public function onValidating() {} // input is passed in first arg
-	public function onValidated() {} // input array is passed in first arg
+	public function onValidating($validation) {} // Illuminate\Validation\Validator
+	public function onValidated($validation) {} // Illuminate\Validation\Validator
 	public function onCreating() {}
 	public function onCreated() {}
 	public function onUpdating() {}
 	public function onUpdated() {}
 	public function onDeleting() {}
 	public function onDeleted() {}
-	public function onAttaching() {}
-	public function onAttached() {}
-	public function onRemoving() {} // ids are passed in first arg
-	public function onRemoved() {} // ids are passed in first arg
+	public function onAttaching($parent) {}
+	public function onAttached($parent) {}
+	public function onRemoving($ids) {}
+	public function onRemoved($ids) {}
 
 	/**
-	 * Create a locale group key if a localized model doesn't have one
+	 * Get the polymorphic relationship to Changes
 	 *
-	 * @return void 
+	 * @return Illuminate\Database\Eloquent\Relations\Relation
 	 */
-	public function setLocaleGroup() {
-		if (!empty($this->locale)
-			&& empty($this->locale_group)) {
-			$this->locale_group = Str::random();
-		}
+	public function changes() { 
+		return $this->morphMany('Bkwld\Decoy\Models\Change', 'loggable', 'model', 'key'); 
 	}
-		
+	
+	//---------------------------------------------------------------------------
+	// Slug creation via cviebrock/eloquent-sluggable
+	//---------------------------------------------------------------------------
+
+	/**
+	 * Tell sluggable where to get the source for the slug and apply other
+	 * customizations.
+	 * 
+	 * @var array
+	 */
+	protected $sluggable = array(
+		'build_from' => 'admin_title',
+		'max_length' => 100,
+	);
+
+	/**
+	 * Check for a validation rule for a slug column
+	 * 
+	 * @return boolean 
+	 */
+	protected function needsSlugging() {
+		if (!array_key_exists('slug', static::$rules)) return false;
+		return $this->traitNeedsSlugging();
+	}
+
 	//---------------------------------------------------------------------------
 	// Accessors
 	//---------------------------------------------------------------------------
 	
 	/**
-	 * Return the title for the row for the purpose of displaying
-	 * in admin list views and breadcrumbs.  It looks for columns
-	 * that are named like common things that would be titles
+	 * Deprecated
 	 *
 	 * @return string 
 	 */
 	public function title() {
-		return $this->croppaTag(40, 40).$this->titleText();
+		return $this->getAdminTitleHtmlAttribute();
+	}
+
+	/**
+	 * Return the title for the row for the purpose of displaying in admin list 
+	 * views and breadcrumbs.  It looks for columns that are named like common 
+	 * things that would be titles.
+	 *
+	 * @return string 
+	 */
+	public function getAdminTitleHtmlAttribute() {
+		return $this->croppaTag(40, 40).$this->getAdminTitleAttribute();
+	}
+
+	/**
+	 * Deprecated
+	 * 
+	 * @return string 
+	 */
+	public function titleText() {
+		return $this->getAdminTitleAttribute();
 	}
 
 	/**
@@ -230,17 +217,10 @@ abstract class Base extends Eloquent {
 	 * 
 	 * @return string 
 	 */
-	public function titleText() {
-
-		// Convert to an array so I can test for the presence of values.
-		// As an object, it would throw exceptions
-		$row = $this->getAttributes();
-
-		// Deduce and return
-		if (!empty(static::$title_column) && !empty($row[static::$title_column])) return $row[static::$title_column];
-		else if (isset($row['name'])) return $row['name']; // Name before title to cover the case of people with job titles
-		else if (isset($row['title'])) return $row['title'];
-		else return 'Untitled';
+	public function getAdminTitleAttribute() {
+		return implode(' ', array_map(function($attribute) {
+			return $this->$attribute;
+		}, $this->titleAttributes())) ?: 'Untitled';
 	}
 
 	/**
@@ -251,56 +231,192 @@ abstract class Base extends Eloquent {
 	public function getUriAttribute() { }
 
 	/**
-	 * Get all file fields by looking at validation rules
+	 * Get all file fields by looking at Upchuck config and validation rules
 	 *
 	 * @return array The keys of all the attributes that store file references
 	 */
 	public function getFileAttributesAttribute() {
-		return array_keys(array_filter(static::$rules, function($rules) {
-			return preg_match('#'.Files::RULES.'#i', $rules);
+
+		// Get all the file validation rule keys
+		$attributes = array_keys(array_filter(static::$rules, function($rules) {
+			return preg_match('#file|image|mimes|video#i', $rules);
 		}));
+
+		// Get all the model attributes from upchuck
+		if (method_exists($this, 'getUploadMap')) {
+			$attributes = array_unique(array_merge($attributes, 
+				array_values($this->getUploadMap())));
+		}
+
+		// Return array of attributes
+		return $attributes;
 	}
 
+	/**
+	 * Use getFileAttributesAttribute() to get the files that should be cloned
+	 * by Bkwld\Cloner
+	 * 
+	 * @return array The keys of all the attributes that store file references
+	 */
+	public function getCloneableFileAttributes() {
+		if (isset($this->cloneable_file_attributes)) {
+			return $this->cloneable_file_attributes;
+		}
+		return $this->getFileAttributesAttribute();
+	}
+
+	/**
+	 * A no-op that can add classes to rows in listing tables in the admin
+	 *
+	 * @return string 
+	 */
+	public function getAdminRowClassAttribute() { }
+
 	//---------------------------------------------------------------------------
-	// File handling
+	// Listing view, action-column accessors
 	//---------------------------------------------------------------------------
 
 	/**
-	 * Save out an image or file given the field name.  They are saved
-	 * to the directory specified in the bundle config
+	 * Make the markup for the actions column of the admin listing view.  The
+	 * indivudal actions are stored in an array that is iterted through in the
+	 * view
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return array 
 	 */
-	public function saveImage($field = 'image') { return $this->saveFile($field); }
-	public function saveFile($field = 'file') {
-		if (!Input::hasFile($field)) return;
-		return File::publicPath(
-			File::organizeUploadedFile(
-				Input::file($field), Config::get('decoy::core.upload_dir')
-			)
+	public function makeAdminActions($data) {
+		$actions = [];
+		if ($html = $this->makeVisibilityAction($data)) $actions['visibility'] = $html;
+		if ($html = $this->makeEditAction($data))       $actions['edit'] = $html;
+		if ($html = $this->makeViewAction($data))       $actions['view'] = $html;
+		if ($html = $this->makeDeleteAction($data))     $actions['delete'] = $html;
+		return $actions;
+	}
+
+	/**
+	 * Make the visibility action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string
+	 */
+	protected function makeVisibilityAction($data) {
+		extract($data);
+		
+		// Check if this model supports editing the visibility
+		if ($many_to_many 
+			|| !app('decoy.auth')->can('publish', $controller) 
+			|| !array_key_exists('visible', $this->attributes)) return;
+
+		// Create the markup
+		$is_visible = $this->getAttribute('visible');
+		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
+				<span class="glyphicon glyphicon-eye-%s"></span>
+			</a>', 
+			$is_visible ? 'Make draft' : 'Publish',
+			$is_visible ? 'open' : 'close'
+		);
+
+	}
+
+	/**
+	 * Make the edit action.
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeEditAction($data) {
+		extract($data);
+		return sprintf('<a href="%s" class="action-edit js-tooltip" 
+			data-placement="left" title="Edit in admin">
+				<span class="glyphicon glyphicon-pencil"></span>
+			</a>', $this->getAdminEditUri($controller, $many_to_many));
+	}
+
+	/**
+	 * Get the admin edit URL assuming you know the controller and whether it's
+	 * being listed as a many to many 
+	 *
+	 * @param string $controller ex: Admin\ArticlesController
+	 * @param boolean $many_to_many
+	 * @return string 
+	 */
+	public function getAdminEditUri($controller, $many_to_many = false) {
+		if ($many_to_many) return URL::to(DecoyURL::action($controller.'@edit', $this->getKey()));
+		return URL::to(DecoyURL::relative('edit', $this->getKey(), $controller));
+	}
+
+	/**
+	 * Make the view action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeViewAction($data) {
+		if (!$uri = $this->getUriAttribute()) return;
+		return sprintf('<a href="%s" target="_blank" class="action-view js-tooltip" 
+			data-placement="left" title="View on site">
+				<span class="glyphicon glyphicon-bookmark"></span>
+			</a>', $uri);
+	}
+
+	/**
+	 * Make the delete action
+	 *
+	 * @param array $data The data passed to a listing view
+	 * @return string 
+	 */
+	protected function makeDeleteAction($data) {
+		extract($data);
+
+		// Check if this model can be deleted.  This mirrors code found in the table
+		//  partial for generating the edit link on the title
+		if (!(app('decoy.auth')->can('destroy', $controller) 
+			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
+
+		// Return markup
+		return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">
+				<span class="glyphicon glyphicon-%s"></span>
+			</a>',
+			$many_to_many ? 'remove-now' : 'delete-now',
+			$many_to_many ? 'Remove relationship' : 'Permanently delete',
+			$many_to_many ? 'remove' : 'trash'
 		);
 	}
 	
-	/**
-	 * Delete the file referenced by the Frag
-	 *
-	 * @param string $file The path to the file relative to the doc root
-	 * @return void 
-	 */
-	public function deleteFile($file) {
-	
-		// If the file has an image suffix, use Croppa to delete
-		if (Str::endsWith($file, array('jpg', 'jpeg', 'gif', 'png', 'bmp'))) Croppa::delete($file);
-
-		// Otherwise, do a normal delete
-		elseif (file_exists(public_path().$file)) unlink(public_path().$file);
-		
-	}
-
 	//---------------------------------------------------------------------------
 	// Scopes
 	//---------------------------------------------------------------------------
 	
 	/**
+	 * Search the title (where "title" is the admin definiton of the title) for
+	 * the terms.  This is designed for the Decoy autocomplete
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  string $term 
+	 * @throws Bkwld\Decoy\Exceptions\Exception
+	 * @return Illuminate\Database\Query\Builder
+	 */
+	public function scopeTitleContains($query, $term, $exact = false) {
+
+		// Get an instance so the title attributes can be found.
+		if (!$model = static::first()) return;
+
+		// Get the title attributes
+		$attributes = $model->titleAttributes();
+		if (empty($attributes)) throw new Exception('No searchable attributes');
+
+		// Concatenate all the attributes with spaces and look for the term.
+		$source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
+		return $exact ? 
+			$query->where($source, '=', $term) :
+			$query->where($source, 'LIKE', "%$term%");
+	}
+
+	/**
 	 * Default ordering by descending time, designed to be overridden
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrdered($query) {
 		return $query->orderBy($this->getTable().'.created_at', 'desc');
@@ -308,6 +424,9 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Get visible items
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeVisible($query) {
 		return $query->where($this->getTable().'.visible', '1');
@@ -315,13 +434,31 @@ abstract class Base extends Eloquent {
 	
 	/**
 	 * Get all visible items by the default order
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrderedAndVisible($query) {
 		return $query->ordered()->visible();
 	}
 
 	/**
+	 * Get all visible items by the default order.  This is a good thing to
+	 * subclass to define special listing scopes used ONLY on the frontend.  As
+	 * compared with scopeOrdered().
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
+	 */
+	public function scopeListing($query) {
+		return $query->orderedAndVisible();
+	}
+
+	/**
 	 * Order a table that has a position value
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopePositioned($query) {
 		return $query->orderBy($this->getTable().'.position', 'asc')
@@ -331,13 +468,23 @@ abstract class Base extends Eloquent {
 	/**
 	 * Randomize the results in the DB.  This shouldn't be used for large datasets
 	 * cause it's not very performant
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  mixed $seed Providing a seed keeps the order the same on subsequent queries
+	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeRandomize($query) {
+	public function scopeRandomize($query, $seed = false) {
+		if ($seed === true) $seed = Session::getId();
+		if ($seed) return $query->orderBy(DB::raw('RAND("'.$seed.'")'));
 		return $query->orderBy(DB::raw('RAND()'));
 	}
 
 	/**
 	 * Filter by the current locale
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @param  string  $locale
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeLocalize($query, $locale = null) {
 		return $query->where('locale', $locale ?: Decoy::locale());
@@ -345,24 +492,26 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Get localized siblings of this model
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOtherLocalizations($query) {
 		return $query->where('locale_group', $this->locale_group)
 			->where($this->getKeyName(), '!=', $this->getKey());
 	}
-	
-	/**
-	 * Find by the slug.  Like "find()" but use the slug column instead
-	 */
-	static public function findBySlug($slug) {
-		return static::where('slug', $slug)->first();
-	}
 
 	/**
-	 * Find by the slug and fail if missing.  Like "findOrFail()" but use the slug column instead
+	 * Find by the slug and fail if missing.  Invokes methods from the
+	 * Sluggable trait.
+	 *
+	 * @param string $string 
+	 * @return Illuminate\Database\Eloquent\Model
+	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
-		return static::where('slug', $slug)->firstOrFail();
+		if ($item = static::findBySlug($slug)) return $item;
+		throw (new ModelNotFoundException)->setModel(get_called_class());
 	}
 	
 	//---------------------------------------------------------------------------
@@ -370,10 +519,29 @@ abstract class Base extends Eloquent {
 	//---------------------------------------------------------------------------
 
 	/**
+	 * Deduce the source for the title of the model
+	 * 
+	 * @return array 
+	 */
+	public function titleAttributes() {
+
+		// Convert to an array so I can test for the presence of values. As an 
+		// object, it would throw exceptions
+		$row = $this->getAttributes();
+
+		 // Name before title to cover the case of people with job titles
+		if (isset($row['name'])) return ['name'];
+		else if (isset($row['first_name']) && isset($row['last_name'])) return ['first_name', 'last_name'];
+		else if (isset($row['title'])) return ['title'];
+		return [];
+	}
+
+	/**
 	 * The pivot_id may be accessible at $this->pivot->id if the result was fetched
 	 * through a relationship OR it may be named pivot_id out of convention (something
 	 * currently done in Decoy_Base_Controller->get_index_child()).  This function
 	 * checks for either
+	 * 
 	 * @return integer 
 	 */
 	public function pivotId() {
@@ -385,6 +553,7 @@ abstract class Base extends Eloquent {
 	/**
 	 * Form a croppa URL, taking advantage of being able to set more columns null.  Also,
 	 * provides an easier way to inform the source crops
+	 * 
 	 * @param int $width 
 	 * @param int $height
 	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
@@ -397,7 +566,7 @@ abstract class Base extends Eloquent {
 		
 		// Get the image src path
 		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
-		else $src = $this->$field;
+		else $src = $this->getOriginal($field); // Get un-mutated value
 		if (empty($src)) return;
 
 		// Check if the image field has crops
@@ -442,6 +611,7 @@ abstract class Base extends Eloquent {
 
 	/**
 	 * Return an image tag using croppa data
+	 * 
 	 * @param int $width 
 	 * @param int $height
 	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
@@ -451,21 +621,51 @@ abstract class Base extends Eloquent {
 	 * @return string An image tag
 	 */
 	public function croppaTag($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
-		return '<img src="'.$url.'"/>';
+		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		return "<img src='{$url}' alt=''/>";
+	}
+
+	/**
+	 * Return inline, background style elements using croppa data
+	 *
+	 * @param int $width 
+	 * @param int $height
+	 * @param string $crop_style A key from the $crops property of the model
+	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
+	 *                      string of the column name in the database
+	 * @param array $options Croppa-style options
+	 * @return string An image tag
+	 */
+	public function croppaBkgd($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
+		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		return "background-image:url('{$url}')";
 	}
 	
 	/**
-	 * Get the admin controller class for this model.  It's assumed to NOT be a decoy controller.
-	 * In other words, it's in app/controllers/admin/.
+	 * Get the admin controller class for this model.
+	 * 
 	 * @return string ex: Admin\ArticlesController
 	 */
 	static public function adminControllerClass() {
-		return ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural(get_called_class()).'Controller';
+		$class = get_called_class();
+
+		// Decoy controller
+		if (strpos($class, 'Bkwld\Decoy\Models') !== false) {
+			$controller = Str::plural(str_replace('Bkwld\Decoy\Models', 'Bkwld\Decoy\Controllers', $class));
+
+		// App controller
+		} else {
+			$controller = ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural($class).'Controller';
+		}
+
+		// Check if class exists before returning
+		if (class_exists($controller)) return $controller;
 	}
 	
 	/**
 	 * Add a field to the blacklist
+	 *
+	 * @param string $field 
 	 */
 	public function blacklist($field) {
 		$this->guarded[] = $field;

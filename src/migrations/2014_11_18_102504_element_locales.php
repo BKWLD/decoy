@@ -13,7 +13,7 @@ class ElementLocales extends Migration {
 	public function up()
 	{
 		Schema::table('elements', function($t) {
-			$t->string('locale')->nullable();
+			$t->string('locale');
 			$t->dropPrimary('elements_key_primary');
 			$t->primary(['key', 'locale']);
 			$t->index(['locale', 'key']);

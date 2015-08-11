@@ -59,19 +59,22 @@ define(function (require) {
 			// Get $ ref and the value
 			var $trigger = $(trigger)
 				, val = $trigger.val()
-				, $rule = $('[data-show-when-'+key+'="'+val+'"]')
+				, $matches = $('[data-show-when-'+key+']')
 			;
+
+			// Loop through all the elements that have the right show-when key and see
+			// if their data contains the trigger value.
+			$matches = $matches.filter(function() {
+				return $(this).data('show-when-'+key).split(',').indexOf(val) >= 0;
+			});
 
 			// If the trigger is a radio, assume it is wrapped by a label
 			if ($trigger.is(':radio')) $trigger = $trigger.parent();
 
-			// Add a mapping to toggleable that shows all .form-groups that
-			// contain an element with a data element that looks like, for example:
-			// data-show-when-type="internal".  Also add form groups INSIDE the element
-			// with the rule
+			// Add mapping, inlucding any form-groups that contain the matches.
 			return {
 				on: $trigger,
-				show: $rule.closest('.form-group').add($rule.find($rule.find('.form-group')))
+				show: $matches.add($matches.closest('.form-group'))
 			};
 		}));
 
