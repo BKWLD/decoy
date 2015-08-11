@@ -17,10 +17,11 @@
 		}
 	],
 	"require": {
-		"php": ">=5.3.0",
+		"php": ">=5.4.0",
 		"anahkiasen/former": ">=3.5.2,<4.0",
 		"anahkiasen/html-object": "~1.3",
 		"bkwld/croppa": "3 - 4",
+		"bkwld/cloner": "~1.0",
 		"bkwld/laravel-haml": "~2.0",
 		"bkwld/library": "~2.16",
 		"bkwld/upchuck": "~1.1",
@@ -32,8 +33,8 @@
 		"jenssegers/agent": "~2.1"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "3.7.*",
-		"mockery/mockery": "0.8.*",
+		"phpunit/phpunit": "^4.0",
+		"mockery/mockery": "^0.9",
 		"illuminate/http": "<4.3,>=4.0",
 		"illuminate/routing": "<4.3,>=4.0",
 		"illuminate/database": "<4.3,>=4.0"
@@ -45,8 +46,8 @@
 		"classmap": [
 			"src/migrations"
 		],
-		"psr-0": {
-			"Bkwld\\Decoy": "src/"
+		"psr-4": {
+			"Bkwld\\Decoy\\": "src/Bkwld/Decoy/"
 		}
 	},
 	"minimum-stability": "dev"

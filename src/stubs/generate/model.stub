@@ -32,11 +32,18 @@ class {{model}} extends Base {
 	// ];
 	
 	/**
+	 * Relationships to copy during duplication
+	 *
+	 * @var array 
+	 */
+	// protected $cloneable_relations = ['photos'];
+
+	/**
 	 * List of all relationships
 	 *
 	 * @return Illuminate\Database\Eloquent\Relations\Relation
 	 */
-	// public function article() { return $this->belongsTo('Article'); }
+	// public function photos() { return $this->hasMany('Photo'); }
 
 	/**
 	 * Put new instances at the end
@@ -44,6 +51,7 @@ class {{model}} extends Base {
 	 * @return void
 	 */
 	// public function onCreating() {
+	// 	if (isset($this->position)) return;
 	// 	$this->position = $this->article->blocks()->max('position') + 1;
 	// }
 

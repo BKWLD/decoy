@@ -204,6 +204,9 @@ class DecoyServiceProvider extends ServiceProvider {
 
 		// Creation of slugs
 		$this->app->register('Cviebrock\EloquentSluggable\SluggableServiceProvider');
+
+		// Support for cloning models
+		$this->app->register('Bkwld\Cloner\ServiceProvider');
 		
 	}
 	

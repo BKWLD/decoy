@@ -29,6 +29,20 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	protected $table = 'admins';
 
 	/**
+	 * Uploadable attributes
+	 * 
+	 * @var array
+	 */
+	protected $upload_attributes = ['image'];
+
+	/**
+	 * Don't allow cloning because duplicate emails are not allowed.
+	 *
+	 * @var boolean 
+	 */
+	public $cloneable = false;
+
+	/**
 	 * Admins should not be localized
 	 *
 	 * @var boolean
@@ -48,13 +62,6 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		'password' => 'required',
 		'confirm_password' => 'sometimes|required_with:password|same:password',
 	];
-
-	/**
-	 * Uploadable attributes
-	 * 
-	 * @var array
-	 */
-	protected $upload_attributes = ['image'];
 
 	/**
 	 * Orders instances of this model in the admin
