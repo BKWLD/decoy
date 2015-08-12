@@ -4,6 +4,7 @@ use App;
 use Bkwld\Decoy\Observers\NotFound;
 use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
+use Config;
 use Former\Former;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Filesystem\Filesystem;
