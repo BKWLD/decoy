@@ -7,18 +7,19 @@ use Config;
 use Decoy;
 use DecoyURL;
 use HTML;
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Hash;
 use Input;
 use Mail;
 use Request;
 use URL;
 
-class Admin extends Base implements UserInterface, RemindableInterface {
-	use UserTrait, RemindableTrait, SupportsUploads;
+class Admin extends Base implements AuthenticatableContract, CanResetPasswordContract {
+	use Authenticatable, CanResetPassword;
 
 	/**
 	 * The table associated with the model.  Explicitly declaring so that sub
