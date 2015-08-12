@@ -1,7 +1,6 @@
 <?php namespace Bkwld\Decoy\Auth;
 
 // Deps
-use Config;
 use DecoyURL;
 use HTML;
 use Illuminate\Auth\AuthManager;
@@ -52,7 +51,7 @@ class Eloquent implements AuthInterface {
 	 * @return array 
 	 */
 	public function roles() {
-		$roles = Config::get('decoy::site.permissions');
+		$roles = config('decoy.site.permissions');
 		if (!is_array($roles)) return [];
 		return array_keys($roles);
 	}
@@ -96,7 +95,7 @@ class Eloquent implements AuthInterface {
 		// Get the slug version of the controller.  Test if a URL was passed first
 		// and, if not, treat it like a full controller name.  URLs are used in the 
 		// nav. Also, an already slugified controller name will work fine too.
-		if (preg_match('#/'.Config::get('decoy::core.dir').'/([^/]+)#', $controller, $matches)) {
+		if (preg_match('#/'.config('decoy.core.dir').'/([^/]+)#', $controller, $matches)) {
 			$controller = $matches[1];
 		} else $controller = DecoyURL::slugController($controller);
 
@@ -145,7 +144,7 @@ class Eloquent implements AuthInterface {
 
 		// If there are "can" rules, then apply them as a whitelist.  Only those
 		// actions are allowed.
-		$can = Config::get('decoy::site.permissions.'.$role.'.can');
+		$can = config('decoy.site.permissions.'.$role.'.can');
 		if (is_callable($can)) $can = call_user_func($can, $action, $controller);
 		if (is_array($can) &&
 			!in_array($action.'.'.$controller, $can) && 
@@ -153,7 +152,7 @@ class Eloquent implements AuthInterface {
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
 		// "manage" which means they can't do ANYTHING
-		$cant = Config::get('decoy::site.permissions.'.$role.'.cant');
+		$cant = config('decoy.site.permissions.'.$role.'.cant');
 		if (is_callable($cant)) $cant = call_user_func($cant, $action, $controller);
 		if (is_array($cant) && (
 			in_array($action.'.'.$controller, $cant) ||

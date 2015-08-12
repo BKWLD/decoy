@@ -2,7 +2,6 @@
 
 // Dependencies
 use Bkwld\Library\Utils;
-use Config;
 use Former\Form\Fields\File;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;

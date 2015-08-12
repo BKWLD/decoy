@@ -1,6 +1,6 @@
 -# Add a locales dropdown menu to a create button
 -if (!with(new Bkwld\Decoy\Input\Localize)->model(Decoy::modelForController($controller))->hidden())
-	-$locales = Config::get('decoy::site.locales')
+	-$locales = config('decoy.site.locales')
 	%button.btn.outline.dropdown-toggle(data-toggle='dropdown' aria-expanded='false' class=empty($small)?null:'btn-sm')
 		%span.caret
 		%span.sr-only Toggle Dropdown

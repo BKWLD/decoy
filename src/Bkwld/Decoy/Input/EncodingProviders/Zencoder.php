@@ -3,7 +3,6 @@
 // Dependencies
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Encoding;
-use Config;
 use Services_Zencoder;
 use Services_Zencoder_Exception;
 
@@ -227,8 +226,8 @@ class Zencoder extends EncodingProvider {
 
 			// If a destination_root was set, subsitute that in for the destination
 			// in the retured URL
-			if ($root = Config::get('decoy::encode.destination_root')) {
-				return str_replace(Config::get('decoy::encode.destination'), $root, $output->url);
+			if ($root = config('decoy.encode.destination_root')) {
+				return str_replace(config('decoy.encode.destination'), $root, $output->url);
 			}
 
 			// Else just return the URL
@@ -311,7 +310,7 @@ class Zencoder extends EncodingProvider {
 	 * @return Services_Zencoder
 	 */
 	public function sdk() {
-		return new Services_Zencoder(Config::get('decoy::encode.api_key'));
+		return new Services_Zencoder(config('decoy.encode.api_key'));
 	}
 
 	/**

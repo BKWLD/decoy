@@ -3,7 +3,6 @@
 // Imports
 use Bkwld\Decoy\Routing\Wildcard;
 use Bundle;
-use Config;
 use Request;
 use Log;
 use URL;
