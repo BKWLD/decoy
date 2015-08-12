@@ -21,10 +21,18 @@ Decoy expects to be installed ontop of [Camo](https://github.com/BKWLD/camo).  I
 
 If you **are** installing outside of Camo, here are some steps to get you started.
 
-1. Add `"bkwld/decoy": "~4.1",` to your composer.json and install.  This reflects the latest stable branch.
-2. Run `php artisan migrate --package=cartalyst/sentry`
-3. Run `php artisan migrate --package=bkwld/decoy`
-4. Run `php artisan config:publish bkwld/decoy`
+1. Add `"bkwld/decoy": "~5.0",` to your composer.json and install.  This reflects the latest stable branch.
+2. Edit the app config file as follows:
+
+		'providers' => [
+			Bkwld\Decoy\ServiceProvider::class
+		], 'aliases' => [
+			'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
+			'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
+		],
+
+3. Run `php artisan vendor:publish --provider=Bkwld\Decoy\ServiceProvider`
+4. Run `php artisan migrate`
 
 
 ### Contributing
