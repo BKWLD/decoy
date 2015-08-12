@@ -68,23 +68,4 @@ class Validation {
 		$validation->setData(array_merge($files, $data));
 	}
 
-	/**
-	 * Handle the validation failure exceptions
-	 * 
-	 * @param  Bkwld\Decoy\Exceptions\ValidationFail $e
-	 * @return Illuminate\Http\Response
-	 */
-	public function onFail(ValidationFail $e) {
-
-		// Log validation errors so Reporter will output them
-		if (Config::get('app.debug')) Log::debug(print_r($e->validation->messages(), true));
-		
-		// Respond
-		if (Request::ajax()) {
-			return Response::json($e->validation->messages(), 400);
-		} else {
-			return Redirect::to(Request::path())->withInput()->withErrors($e->validation);
-		}
-	}
-
 }

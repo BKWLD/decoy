@@ -89,11 +89,6 @@ class ServiceProvider extends BaseServiceProvider {
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
 
-		// Listen for CSRF errors and kick the user back to the login screen (rather than throw a 500 page)
-		$this->app->error(function(\Illuminate\Session\TokenMismatchException $e) {
-			return App::make('decoy.acl_fail');
-		});
-
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
 
@@ -105,9 +100,6 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
 		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
 		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
-
-		// Handle form validation errors
-		$this->app->error(function(ValidationFail $e) { return with(new Validation)->onFail($e); });
 	}
 
 	/**
