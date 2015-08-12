@@ -6,29 +6,12 @@ use Bkwld\Decoy\Models\RedirectRule;
 use Exception;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Session\TokenMismatchException;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Subclass the App's handler to add custom handling of various exceptions
  */
 class Handler extends AppHandler {
-
-	/**
-	 * @var RedirectRule
-	 */
-	protected $redirector;
-
-	/**
-	 * DI
-	 *
-	 * @param  \Psr\Log\LoggerInterface  $log
-	 * @return void
-	 */
-	public function __construct(LoggerInterface $log, RedirectRule $redirector) {
-		parent::__construct($log);
-		$this->redirector = $redirector;
-	}
 
 	/**
 	 * Render an exception into an HTTP response.
@@ -61,7 +44,7 @@ class Handler extends AppHandler {
 			&& !is_a($e, NotFoundHttpException::class)) return;
 
 		// Check for 404
-		if ($rule = $this->redirector->matchUsingRequest()->first()) {
+		if ($rule = RedirectRule::matchUsingRequest()->first()) {
 			return redirect($rule->to, $rule->code);
 		}
 	}
