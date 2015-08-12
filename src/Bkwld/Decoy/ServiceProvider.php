@@ -24,7 +24,14 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		$this->package('bkwld/decoy');
+		
+		// Allow config to publish
+		$this->publishes([
+			__DIR__.'/../../config/core.php' => config_path('core.php'),
+			__DIR__.'/../../config/encode.php' => config_path('encode.php'),
+			__DIR__.'/../../config/site.php' => config_path('site.php'),
+			__DIR__.'/../../config/wysiwyg.php' => config_path('wysiwyg.php'),
+		]);
 
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
@@ -122,7 +129,7 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	public function register() {
-		
+
 		// Register external packages
 		$this->registerPackages();
 		
