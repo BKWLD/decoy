@@ -6,7 +6,7 @@ use Config;
 use Former\Form\Fields\Checkbox;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Render a list of checkboxes to represent a related many-to-many table.  The 

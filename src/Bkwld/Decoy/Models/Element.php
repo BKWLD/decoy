@@ -6,7 +6,7 @@ use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Library\Utils\File;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Represents an indivudal Element instance, hydrated with the merge of

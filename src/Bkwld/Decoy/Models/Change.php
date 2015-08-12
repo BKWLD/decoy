@@ -8,7 +8,7 @@ use Config;
 use DB;
 use DecoyURL;
 use Illuminate\Database\Eloquent\Model;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Reperesents a single model change event.  Typically a single CRUD action on

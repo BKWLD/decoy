@@ -4,7 +4,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Bkwld\Decoy\Exceptions\Exception;
-use Str;
+use Illuminate\Support\Str;
 
 class Generate extends Command {
 

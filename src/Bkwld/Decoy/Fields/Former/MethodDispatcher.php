@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Fields\Former;
 
 // Dependencies
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Override the getClassFromMethod() so that it doesn't destroy casing

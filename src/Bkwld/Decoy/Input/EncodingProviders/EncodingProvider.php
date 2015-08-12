@@ -6,7 +6,7 @@ use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Encoding;
 use Config;
 use Request;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Base class for encoding providers that provides some shared logic

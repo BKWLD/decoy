@@ -2,7 +2,7 @@
 
 // Deps
 use Config;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Generate a locale_group attribute for localized models if

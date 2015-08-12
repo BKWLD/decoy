@@ -4,7 +4,7 @@
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Create an autocomplete field that populates a foreign key in a 

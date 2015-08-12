@@ -16,7 +16,7 @@ use Request;
 use Route;
 use Session;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
-use Str;
+use Illuminate\Support\Str;
 use URL;
 use View;
 

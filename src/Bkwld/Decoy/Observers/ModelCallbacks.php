@@ -2,7 +2,7 @@
 
 // Deps
 use Event;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Call no-op classes on models for all event types.  This just simplifies

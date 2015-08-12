@@ -8,7 +8,7 @@ use Bkwld\Library\Utils;
 use Illuminate\Cache\Repository;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
 use Illuminate\Support\Collection;
-use Str;
+use Illuminate\Support\Str;
 use Symfony\Component\Yaml\Parser;
 
 /**

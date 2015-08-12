@@ -6,7 +6,7 @@ use Config;
 use Former\Form\Fields\File;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
-use Str;
+use Illuminate\Support\Str;
 
 /**
  * Creates a file upload field with addtional UI for reviewing the last upload

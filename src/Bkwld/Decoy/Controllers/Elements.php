@@ -13,7 +13,7 @@ use Decoy;
 use Former;
 use Input;
 use Redirect;
-use Str;
+use Illuminate\Support\Str;
 use URL;
 use Validator;
 use View;

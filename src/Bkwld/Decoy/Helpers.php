@@ -9,7 +9,7 @@ use Croppa;
 use Former;
 use Request;
 use Session;
-use Str;
+use Illuminate\Support\Str;
 use View;
 
 /**

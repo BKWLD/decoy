@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Collection;
 use DecoyURL;
 use Former;
 use Input;
-use Str;
+use Illuminate\Support\Str;
 use View;
 use URL;
 
