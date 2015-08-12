@@ -8,12 +8,11 @@ use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Former\Former;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Foundation\ProviderRepository;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Yaml\Parser;
 
 class ServiceProvider extends BaseServiceProvider {
@@ -61,12 +60,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// condition.
 		if ($this->app['decoy']->handling() && Config::get('decoy::site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
-		}
-
-		// Listen for 404s and pass handling on to redirect rules.
-		$this->app['exception']->error(function(NotFoundHttpException $e) { return $this->app['decoy.404']->handle(); });
-		$this->app['exception']->error(function(ModelNotFoundException $e) { return $this->app['decoy.404']->handle(); });
-		
+		}		
 	}
 
 	/**
@@ -178,10 +172,8 @@ class ServiceProvider extends BaseServiceProvider {
 			);
 		});
 
-		// The NotFound observer used by the Redirect system
-		$this->app->singleton('decoy.404', function($app) { 
-			return new NotFound(new Models\RedirectRule);
-		});
+		// Register Decoy's custom handling of some exception 
+		$this->app->singleton(ExceptionHandler::class, Exceptions\Handler::class);
 
 		// Register commands
 		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
