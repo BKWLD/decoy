@@ -202,7 +202,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 		
 		// PHP utils
-		$this->app->register('Bkwld\Library\LibraryServiceProvider');
+		$this->app->register('Bkwld\Library\ServiceProvider');
 
 		// HAML
 		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
