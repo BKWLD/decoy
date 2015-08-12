@@ -14,6 +14,14 @@
 		{
 			"name": "Matt Aebersold",
 			"email": "info@bkwld.com"
+		},
+		{
+			"name": "Eric Howard",
+			"email": "info@bkwld.com"
+		},
+		{
+			"name": "Michael Starks",
+			"email": "info@bkwld.com"
 		}
 	],
 	"require": {
