@@ -25,7 +25,7 @@ class Handler extends AppHandler {
 		// Check for custom handling
 		if ($response = $this->handle404s($e)) return $response;
 		if ($response = $this->handleCSRF($e)) return $response;
-		if ($response = $this->handleValidation($e)) return $response;
+		if ($response = $this->handleValidation($request, $e)) return $response;
 
 		// Allow the app to continue processing
 		return parent::render($request, $e);
