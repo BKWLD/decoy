@@ -1,12 +1,9 @@
 <?php namespace Bkwld\Decoy;
 
 use App;
-use Bkwld\Decoy\Exceptions\Exception;
-use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Observers\NotFound;
 use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
-use Config;
 use Former\Former;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Filesystem\Filesystem;
@@ -24,13 +21,15 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function boot() {
 		
-		// Allow config to publish
+		// Publish config files
 		$this->publishes([
-			__DIR__.'/../../config/core.php' => config_path('core.php'),
-			__DIR__.'/../../config/encode.php' => config_path('encode.php'),
-			__DIR__.'/../../config/site.php' => config_path('site.php'),
-			__DIR__.'/../../config/wysiwyg.php' => config_path('wysiwyg.php'),
-		]);
+			 __DIR__.'/../../config' => config_path('decoy')
+		], 'config');
+
+		// Publish migrations
+		$this->publishes([
+			__DIR__.'/../../migrations/' => database_path('migrations')
+		], 'migrations');
 
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
@@ -58,7 +57,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// should come after the callbacks in case they modify the record before
 		// being saved.  And we're logging ONLY admin actions, thus the handling
 		// condition.
-		if ($this->app['decoy']->handling() && Config::get('decoy::site.log_changes')) {
+		if ($this->app['decoy']->handling() && config('decoy.site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
 		}		
 	}
@@ -108,6 +107,12 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	public function register() {
+
+		// Merge own configs into user configs
+		$this->mergeConfigFrom(__DIR__.'/../../config/core.php',    'decoy.core');
+		$this->mergeConfigFrom(__DIR__.'/../../config/encode.php',  'decoy.encode');
+		$this->mergeConfigFrom(__DIR__.'/../../config/site.php',    'decoy.site');
+		$this->mergeConfigFrom(__DIR__.'/../../config/wysiwyg.php', 'decoy.wysiwyg');
 
 		// Register external packages
 		$this->registerPackages();
