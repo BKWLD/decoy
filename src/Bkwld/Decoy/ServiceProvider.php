@@ -37,17 +37,10 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
-		
-		// Filters is a dependency of router and it's used elsewhere
-		$dir = Config::get('decoy::core.dir');
-		$filters = new Routing\Filters($dir);
-		$this->app->instance('decoy.filters', $filters);
 
 		// Register the routes AFTER all the app routes using the "before" register.  
 		// Unless the app is running via the CLI where we want the routes reigsterd 
 		// for URL generation.
-		$router = new Routing\Router($dir, $filters);
-		$this->app->instance('decoy.router', $router);
 		if (App::runningInConsole()) $router->registerAll();
 		else $this->app->before(array($router, 'registerAll'));
 
@@ -75,7 +68,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app['exception']->error(function(ModelNotFoundException $e) { return $this->app['decoy.404']->handle(); });
 		
 	}
-	
+
 	/**
 	 * Things that happen only if the request is for the admin
 	 */
@@ -137,12 +130,24 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton('decoy', function($app) {
 			return new Helpers;
 		});
+
+		// Filters is a dependency of router and it's used elsewhere
+		$this->app->singleton('decoy.filters', function($app) {
+			$dir = $app['config']->get('decoy::core.dir');
+			return new Routing\Filters($dir);
+		});
+
+		// Registers explicit rotues and wildcarding routing
+		$this->app->singleton('decoy.router', function($app) {
+			$dir = $app['config']->get('decoy::core.dir');
+			return new Routing\Router($dir, $app['decoy.filters']);
+		});
 		
 		// Wildcard router
 		$this->app->singleton('decoy.wildcard', function($app) {
-			$request = $app->make('request');
+			$request = $app['request'];
 			return new Routing\Wildcard(
-				Config::get('decoy::core.dir'),
+				$app['config']->get('decoy::core.dir'),
 				$request->getMethod(), 
 				$request->path()
 			);
