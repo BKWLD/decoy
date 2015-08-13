@@ -4,7 +4,7 @@
 			%h1 = Decoy::site()
 			%h4 Powered by <a href="http://bkwld.com">Decoy</a>
 		
-		!=Former::open_vertical(action('Bkwld\Decoy\Controllers\Account@login'))->addClass('form')
+		!=Former::open_vertical(route('decoy::account@login'))->addClass('form')
 		
 		-# Erorrs
 		-if($errors->any())
@@ -25,7 +25,7 @@
 		.form-group.form-inline.fake-label
 			.buttons
 				%button.btn.btn-primary(type="submit") Login
-				%a.btn.btn-default(href=action('Bkwld\\Decoy\\Controllers\\Account@forgot')) Forgot Password
+				%a.btn.btn-default(href=route('decoy::account@forgot')) Forgot Password
 			
 		!=Former::close()
 
