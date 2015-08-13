@@ -27,10 +27,18 @@ class ServiceProvider extends BaseServiceProvider {
 			 __DIR__.'/../../config' => config_path('decoy')
 		], 'config');
 
+		// Publish assets
+		$this->publishes([
+			 __DIR__.'/../../../public' => public_path('packages/bkwld/decoy')
+		], 'assets');
+
 		// Publish migrations
 		$this->publishes([
 			__DIR__.'/../../migrations/' => database_path('migrations')
 		], 'migrations');
+
+		// Register views
+		$this->loadViewsFrom(__DIR__.'/../../views', 'decoy');
 
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
