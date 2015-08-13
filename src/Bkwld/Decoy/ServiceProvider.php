@@ -81,6 +81,23 @@ class ServiceProvider extends BaseServiceProvider {
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
 		require_once(__DIR__.'/../../composers/shared.list._search.php');
 
+		// Use the Decoy paginator
+		Config::set('view.pagination', 'decoy::shared.list._paginator');
+
+		// Config Former
+		$this->configureFormer();
+
+		// Delegate events to Decoy observers
+		$this->delegateAdminObservers();
+	}
+
+	/**
+	 * Config Former
+	 *
+	 * @return void 
+	 */
+	protected function configureFormer() {
+
 		// Use Bootstrap 3
 		Config::set('former.framework', 'TwitterBootstrap3');
 
@@ -96,11 +113,14 @@ class ServiceProvider extends BaseServiceProvider {
 		// Add Decoy's custom Fields to Former so they can be invoked using the "Former::"
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
-
-		// Use the Decoy paginator
-		Config::set('view.pagination', 'decoy::shared.list._paginator');
-
-		// Delegate events to Decoy observers
+	}
+	
+	/**
+	 * Delegate events to Decoy observers
+	 *
+	 * @return void
+	 */
+	protected function delegateAdminObservers() {
 		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Localize');
 		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Cropping@onSaving');
 		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Cropping@onDeleted');
@@ -108,7 +128,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
 		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
 		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
-	}
+	} 
 
 	/**
 	 * Register the service provider.
