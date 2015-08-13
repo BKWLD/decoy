@@ -11,13 +11,25 @@ use Route;
  * Decoy routes
  */
 class Router {
-	
+
 	/**
 	 * Action for current wildcard request
 	 *
 	 * @var string 
 	 */
 	private $action;
+
+	/**
+	 * The path "directory" of the admin.  I.e. "admin"
+	 *
+	 * @var string 
+	 */
+	private $dir;
+
+	/**
+	 * @var Bkwld\Decoy\Routing\Filters 
+	 */
+	private $filters;
 
 	/**
 	 * Constructor

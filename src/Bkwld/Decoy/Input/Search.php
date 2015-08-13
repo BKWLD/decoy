@@ -135,7 +135,7 @@ class Search {
 				$search['locale'] = [
 					'type' => 'select',
 					'label' => 'Locale',
-					'options' => Config::get('decoy::site.locales'),
+					'options' => Config::get('decoy.site.locales'),
 				];
 
 			// Not associative assume it's a text field

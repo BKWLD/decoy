@@ -111,7 +111,7 @@ class Encoding extends Base {
 	 * @return Bkwld\Decoy\Input\EncodingProviders\EncodingProvider
 	 */
 	static public function encoder(Encoding $model = null) {
-		$class = Config::get('decoy::encode.provider');
+		$class = Config::get('decoy.encode.provider');
 		return new $class($model);
 	}
 

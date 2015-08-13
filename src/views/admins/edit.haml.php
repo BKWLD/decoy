@@ -7,7 +7,7 @@
 	!= Former::text('last_name') 
 
 	!= Former::text('email')
-	-if (Config::get('decoy::core.obscure_admin_password'))
+	-if (Config::get('decoy.core.obscure_admin_password'))
 		!= Former::password('password')
 		!= Former::password('confirm_password')
 	-else
@@ -15,7 +15,7 @@
 
 	!= Former::image('image') 
 
-	-if (app('decoy.auth')->can('grant', $controller) && ($roles = Config::get('decoy::site.roles')) && !empty($roles))
+	-if (app('decoy.auth')->can('grant', $controller) && ($roles = Config::get('decoy.site.roles')) && !empty($roles))
 		!= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles))
 		!= View::make('decoy::admins._permissions', $__data)
 

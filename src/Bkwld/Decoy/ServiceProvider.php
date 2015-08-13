@@ -58,7 +58,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// should come after the callbacks in case they modify the record before
 		// being saved.  And we're logging ONLY admin actions, thus the handling
 		// condition.
-		if ($this->app['decoy']->handling() && config('decoy.site.log_changes')) {
+		if ($this->app['decoy']->handling() && Config::get('decoy.site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
 		}		
 	}
@@ -125,13 +125,13 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Filters is a dependency of router and it's used elsewhere
 		$this->app->singleton('decoy.filters', function($app) {
-			$dir = $app['config']->get('decoy::core.dir');
+			$dir = $app['config']->get('decoy.core.dir');
 			return new Routing\Filters($dir);
 		});
 
 		// Registers explicit rotues and wildcarding routing
 		$this->app->singleton('decoy.router', function($app) {
-			$dir = $app['config']->get('decoy::core.dir');
+			$dir = $app['config']->get('decoy.core.dir');
 			return new Routing\Router($dir, $app['decoy.filters']);
 		});
 		
@@ -139,7 +139,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton('decoy.wildcard', function($app) {
 			$request = $app['request'];
 			return new Routing\Wildcard(
-				$app['config']->get('decoy::core.dir'),
+				$app['config']->get('decoy.core.dir'),
 				$request->getMethod(), 
 				$request->path()
 			);

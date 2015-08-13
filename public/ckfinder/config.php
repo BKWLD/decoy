@@ -50,8 +50,8 @@ function CheckAuthentication() {
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be
 // fully functional, in demo mode.
-$config['LicenseName'] = Config::get('decoy::wysiwyg.ckeditor.license_name');
-$config['LicenseKey'] = Config::get('decoy::wysiwyg.ckeditor.license_key');
+$config['LicenseName'] = Config::get('decoy.wysiwyg.ckeditor.license_name');
+$config['LicenseKey'] = Config::get('decoy.wysiwyg.ckeditor.license_key');
 
 /*
  Uncomment lines below to enable PHP error reporting and displaying PHP errors.
@@ -75,7 +75,7 @@ Examples:
 
 ATTENTION: The trailing slash is required.
 */
-$baseUrl = Config::get('decoy::wysiwyg.ckeditor.upload_dir');
+$baseUrl = Config::get('decoy.wysiwyg.ckeditor.upload_dir');
 
 /*
 $baseDir : the path to the local directory (in the server) which points to the

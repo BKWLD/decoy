@@ -160,7 +160,7 @@ class Base extends Controller {
 	private function init($class = null) {
 		
 		// Set the layout from the Config file
-		$this->layout = $this->config->get('decoy::core.layout');
+		$this->layout = $this->config->get('decoy.core.layout');
 		
 		// Store the controller class for routing
 		if ($class) $this->controller = $class;
@@ -206,7 +206,7 @@ class Base extends Controller {
 	 * @param string $verb i.e. GET,POST
 	 */
 	public function simulate($path, $verb = 'GET') {
-		$wildcard = new Wildcard($this->config->get('decoy::core.dir'), $verb, $path);
+		$wildcard = new Wildcard($this->config->get('decoy.core.dir'), $verb, $path);
 		$class = $wildcard->detectController();
 		$this->init($class);
 	}
@@ -946,7 +946,7 @@ class Base extends Controller {
 
 		// Add extra messaging if the creation was begun from the localize UI
 		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
+			$message .= " You may begin localizing it for <b>".Config::get('decoy.site.locales')[$input->locale].'</b>.';
 		}
 
 		// Return message

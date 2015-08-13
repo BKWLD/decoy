@@ -4,7 +4,7 @@
 if (!$localize || $localize->hidden()) return;
 
 // Create radios config
-$config = Bkwld\Library\Laravel\Former::radioArray(Config::get('decoy::site.locales'));
+$config = Bkwld\Library\Laravel\Former::radioArray(Config::get('decoy.site.locales'));
 
 // Look for other localizations of this record
 if ($item && ($localizations = $localize->other())) {

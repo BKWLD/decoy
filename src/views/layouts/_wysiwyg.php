@@ -4,7 +4,7 @@
  * that we don't compile both when only one at a time is ever used.
  */
 
-switch(Config::get('decoy::wysiwyg.vendor')) {
+switch(Config::get('decoy.wysiwyg.vendor')) {
 
 	case 'ckeditor': ?>
 

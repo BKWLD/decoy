@@ -42,7 +42,7 @@ class Account extends Base {
 		if (Session::has('login_redirect')) Session::keep('login_redirect');
 		
 		// If the user is logged in, take them to whatever the dashboard should be
-		if (App::make('decoy.auth')->check()) return Redirect::to(Config::get('decoy::site.post_login_redirect'));
+		if (App::make('decoy.auth')->check()) return Redirect::to(Config::get('decoy.site.post_login_redirect'));
 		
 		// Pass validation rules
 		Former::withRules(array(
@@ -94,7 +94,7 @@ class Account extends Base {
 		try { 
 			return Redirect::back();
 		} catch(Exception $e) {
-			return Redirect::to('/'.Config::get('decoy::core.dir'));
+			return Redirect::to('/'.Config::get('decoy.core.dir'));
 		}
 	}
 
@@ -142,8 +142,8 @@ class Account extends Base {
 			function($m, $user, $token) {
 				$m->subject('Recover access to '.Decoy::site());
 				$m->from(
-					Config::get('decoy::core.mail_from_address'), 
-					Config::get('decoy::core.mail_from_name')
+					Config::get('decoy.core.mail_from_address'), 
+					Config::get('decoy.core.mail_from_name')
 				);
 			})) {
 
@@ -219,7 +219,7 @@ class Account extends Base {
 				return $this->loginError(Lang::get($response));
 			case Password::PASSWORD_RESET:
 				Auth::login(Admin::where('email', Input::get('email'))->first());
-				return Redirect::to(Config::get('decoy::site.post_login_redirect'));
+				return Redirect::to(Config::get('decoy.site.post_login_redirect'));
 		}
 	}
 

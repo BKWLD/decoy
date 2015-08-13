@@ -655,7 +655,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 
 		// App controller
 		} else {
-			$controller = ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural($class).'Controller';
+			$controller = ucfirst(Config::get('decoy.core.dir')).'\\'.Str::plural($class).'Controller';
 		}
 
 		// Check if class exists before returning

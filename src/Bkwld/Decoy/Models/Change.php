@@ -47,7 +47,7 @@ class Change extends Base {
 	 * @return boolean
 	 */
 	public static function enabled() {
-		if ($check = Config::get('decoy::site.log_changes')) {
+		if ($check = Config::get('decoy.site.log_changes')) {
 			if (is_bool($check)) return $check;
 			if (is_callable($check)) return call_user_func($check, $model, $action, app('decoy.auth')->user());
 		}

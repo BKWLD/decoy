@@ -227,8 +227,8 @@ class Zencoder extends EncodingProvider {
 
 			// If a destination_root was set, subsitute that in for the destination
 			// in the retured URL
-			if ($root = Config::get('decoy::encode.destination_root')) {
-				return str_replace(Config::get('decoy::encode.destination'), $root, $output->url);
+			if ($root = Config::get('decoy.encode.destination_root')) {
+				return str_replace(Config::get('decoy.encode.destination'), $root, $output->url);
 			}
 
 			// Else just return the URL
@@ -311,7 +311,7 @@ class Zencoder extends EncodingProvider {
 	 * @return Services_Zencoder
 	 */
 	public function sdk() {
-		return new Services_Zencoder(Config::get('decoy::encode.api_key'));
+		return new Services_Zencoder(Config::get('decoy.encode.api_key'));
 	}
 
 	/**
