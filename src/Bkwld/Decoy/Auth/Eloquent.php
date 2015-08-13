@@ -228,7 +228,7 @@ class Eloquent implements AuthInterface {
 	 * @return string
 	 */
 	public function loginAction() {
-		return 'Bkwld\Decoy\Controllers\Account@login';
+		return '\Bkwld\Decoy\Controllers\Account@login';
 	}
 	
 	/**
