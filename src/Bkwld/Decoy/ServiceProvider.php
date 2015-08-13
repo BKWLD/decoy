@@ -27,7 +27,7 @@ class ServiceProvider extends BaseServiceProvider {
 			 __DIR__.'/../../config' => config_path('decoy')
 		], 'config');
 
-		// Publish assets
+		// Publish public assets
 		$this->publishes([
 			 __DIR__.'/../../../public' => public_path('packages/bkwld/decoy')
 		], 'assets');

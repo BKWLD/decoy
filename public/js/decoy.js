@@ -18,9 +18,9 @@ define(function (require) {
 	;
 
 	// Modules that add mojo globally
-	require('decoy/modules/datepicker'); // Init datepickers created with HTML::date()
-	require('decoy/modules/timepicker'); // Init datepickers created with HTML::time()
-	require('decoy/modules/datetimepicker'); // Init datepickers created with HTML::datetime()
+	require('decoy/modules/datepicker'); // Init datepickers created with Former::date()
+	require('decoy/modules/timepicker'); // Init datepickers created with Former::time()
+	require('decoy/modules/datetimepicker'); // Init datepickers created with Former::datetime()
 	require('decoy/modules/auto-toggleable'); // Scan make for attributes that enable toggling
 	require('decoy/modules/chicken-switch').register(); // Enable chicken switches on delete
 	var wysiwyg = require('decoy/wysiwyg/factory');

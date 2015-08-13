@@ -204,7 +204,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	 */
 	public function getAdminTitleHtmlAttribute() {
 		if (isset($this->image)) return parent::getAdminTitleHtmlAttribute();
-		return "<img src='".HTML::gravatar($this->email)."' class='gravatar'/> "
+		return "<img src='".response()->gravatar($this->email)."' class='gravatar'/> "
 			.$this->getAdminTitleAttribute();
 	}
 

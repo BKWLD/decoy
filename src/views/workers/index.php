@@ -17,7 +17,7 @@
 		</div>
 		<div class="worker-entry">
 			
-			<?=HTML::tag($worker->getDescription())?>
+			<?=response()->tag($worker->getDescription())?>
 			
 			<ul>
 				<li>Last worker execution: <?=$worker->lastHeartbeat()?></li>
