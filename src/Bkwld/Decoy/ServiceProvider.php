@@ -182,8 +182,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton(ExceptionHandler::class, Exceptions\Handler::class);
 
 		// Register commands
-		$this->app->singleton('command.decoy.generate', function($app) { return new Commands\Generate; });
-		$this->commands(array('command.decoy.generate'));		
+		$this->commands([Commands\Generate::class]);
 	}
 	
 	/**
@@ -227,7 +226,6 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function provides() {
 		return array(
-			'command.decoy.generate',
 			'decoy', 
 			'decoy.acl_fail', 
 			'decoy.auth',
