@@ -13,6 +13,7 @@ use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
+use Config;
 use Croppa;
 use DB;
 use Decoy;
@@ -945,7 +946,7 @@ class Base extends Controller {
 
 		// Add extra messaging if the creation was begun from the localize UI
 		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-			$message .= " You may begin localizing it for <b>".config('decoy.site.locales')[$input->locale].'</b>.';
+			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
 		}
 
 		// Return message

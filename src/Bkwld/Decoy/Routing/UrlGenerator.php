@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Routing;
 
 // Dependencies
+use Config;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 

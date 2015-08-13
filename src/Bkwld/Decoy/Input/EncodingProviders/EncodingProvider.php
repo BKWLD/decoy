@@ -4,6 +4,7 @@
 use App;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Encoding;
+use Config;
 use Request;
 use Illuminate\Support\Str;
 
@@ -43,7 +44,7 @@ abstract class EncodingProvider {
 	 * @return string 
 	 */
 	protected function destination() {
-		return config('decoy.encode.destination').'/'.Str::random(32).'/';
+		return Config::get('decoy::encode.destination').'/'.Str::random(32).'/';
 	}
 
 	/**
@@ -74,7 +75,7 @@ abstract class EncodingProvider {
 
 		// Loop though user config and modify the defaults
 		$outputs = $this->defaults;
-		foreach(config('decoy.encode.outputs') as $key => $config) {
+		foreach(Config::get('decoy::encode.outputs') as $key => $config) {
 
 			// If there is a user key for one of the defaults but no value, then
 			// the delete the output

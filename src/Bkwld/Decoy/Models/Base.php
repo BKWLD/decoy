@@ -7,6 +7,7 @@ use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Upchuck\SupportsUploads;
+use Config;
 use Croppa;
 use Cviebrock\EloquentSluggable\SluggableInterface;
 use Cviebrock\EloquentSluggable\SluggableTrait;
@@ -654,7 +655,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 
 		// App controller
 		} else {
-			$controller = ucfirst(config('decoy.core.dir')).'\\'.Str::plural($class).'Controller';
+			$controller = ucfirst(Config::get('decoy::core.dir')).'\\'.Str::plural($class).'Controller';
 		}
 
 		// Check if class exists before returning

@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Observers;
 
 // Deps
+use Config;
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Illuminate\Validation\Validator;
 use Log;

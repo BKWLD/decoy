@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use Config;
 use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Library\Utils\File;
 use Illuminate\Database\Eloquent\Builder;

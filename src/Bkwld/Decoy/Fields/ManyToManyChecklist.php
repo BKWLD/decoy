@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Observers\ManyToManyChecklist as ManyToManyChecklistObserver;
+use Config;
 use Former\Form\Fields\Checkbox;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
@@ -140,7 +141,7 @@ class ManyToManyChecklist extends Checkbox {
 		$html = '<span class="title">'.$row->title().'</span>';
 
 		// Add link to edit
-		$url = '/'.config('decoy.core.dir').'/'.Str::snake($this->name,'-')
+		$url = '/'.Config::get('decoy::core.dir').'/'.Str::snake($this->name,'-')
 			.'/'.$row->getKey().'/edit';
 		if (app('decoy.auth')->can('update', $url)) {
 			$html .= '<a href="'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';

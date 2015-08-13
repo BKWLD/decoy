@@ -8,6 +8,7 @@ use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Library\Laravel\Former as FormerUtils;
 use Bkwld\Library\Utils\File;
 use Cache;
+use Config;
 use Decoy;
 use Former;
 use Input;
@@ -34,7 +35,7 @@ class Elements extends Base {
 	public function index($locale = null, $tab = null) {
 
 		// If there are no locales, treat the first argument as the tab
-		if (!($locales = config('decoy.site.locales')) || empty($locales)) {
+		if (!($locales = Config::get('decoy::site.locales')) || empty($locales)) {
 			$tab = $locale;
 			$locale = null;
 		

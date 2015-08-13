@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Exceptions\Exception;
+use Config;
 use DB;
 use Input;
 use Log;
@@ -134,7 +135,7 @@ class Search {
 				$search['locale'] = [
 					'type' => 'select',
 					'label' => 'Locale',
-					'options' => config('decoy.site.locales'),
+					'options' => Config::get('decoy::site.locales'),
 				];
 
 			// Not associative assume it's a text field

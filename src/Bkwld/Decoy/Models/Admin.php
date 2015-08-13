@@ -3,6 +3,7 @@
 // Deps
 use Bkwld\Upchuck\SupportsUploads;
 use Bkwld\Library\Utils\String;
+use Config;
 use Decoy;
 use DecoyURL;
 use HTML;
@@ -146,7 +147,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 			'first_name' => $admin->first_name,
 			'last_name' => $admin->last_name,
 			'email' => Input::get('email'),
-			'url' => Request::root().'/'.config('decoy.core.dir'),
+			'url' => Request::root().'/'.Config::get('decoy::core.dir'),
 			'root' => Request::root(),
 			'password' => Input::get('password'),
 		);
@@ -155,7 +156,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 		Mail::send('decoy::emails.create', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
 			$m->subject('Welcome to the '.Decoy::site().' admin site');
-			$m->from(config('decoy.core.mail_from_address'), config('decoy.core.mail_from_name'));
+			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
 	}
 
@@ -175,7 +176,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 			'last_name' =>Input::get('last_name'),
 			'email' => Input::get('email'),
 			'password' =>Input::get('password'),
-			'url' => Request::root().'/'.config('decoy.core.dir'),
+			'url' => Request::root().'/'.Config::get('decoy::core.dir'),
 			'root' => Request::root(),
 		);
 		
@@ -183,7 +184,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 		Mail::send('decoy::emails.update', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
 			$m->subject('Your '.Decoy::site().' admin account info has been updated');
-			$m->from(config('decoy.core.mail_from_address'), config('decoy.core.mail_from_name'));
+			$m->from(Config::get('decoy::core.mail_from_address'), Config::get('decoy::core.mail_from_name'));
 		});
 	}
 
@@ -263,7 +264,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 		return array_map(function($title) {
 			if (preg_match('#^<b>(\w+)</b>#i', $title, $matches)) return $matches[1];
 			return $title;
-		}, config('decoy.site.roles'));
+		}, Config::get('decoy::site.roles'));
 	}
 
 	/**
@@ -310,7 +311,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 				// Add permission options for the controller 
 				'permissions' => array_map(function($value, $action) use ($class, $admin) {
-					$roles = array_keys(config('decoy.site.roles'));
+					$roles = array_keys(Config::get('decoy::site.roles'));
 					return (object) [
 						'slug' => $action,
 						'title' => is_array($value) ? $value[0] : String::titleFromKey($action),

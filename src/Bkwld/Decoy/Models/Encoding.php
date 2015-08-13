@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
+use Config;
 use HtmlObject\Element as HtmlElement;
 use Bkwld\Library\Utils\File;
 use URL;
@@ -110,7 +111,7 @@ class Encoding extends Base {
 	 * @return Bkwld\Decoy\Input\EncodingProviders\EncodingProvider
 	 */
 	static public function encoder(Encoding $model = null) {
-		$class = config('decoy.encode.provider');
+		$class = Config::get('decoy::encode.provider');
 		return new $class($model);
 	}
 

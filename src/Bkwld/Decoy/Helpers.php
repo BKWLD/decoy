@@ -4,6 +4,7 @@
 use Bkwld\Decoy\Breadcrumbs;
 use Bkwld\Decoy\Models\Fragment;
 use Bkwld\Library;
+use Config;
 use Croppa;
 use Former;
 use Request;
@@ -48,7 +49,7 @@ class Helpers {
 	 * @return string
 	 */
 	public function site() {
-		$site = config('decoy.site.name');
+		$site = Config::get('decoy::site.name');
 		if (is_callable($site)) $site = call_user_func($site);
 		return $site;
 	}
@@ -140,7 +141,7 @@ class Helpers {
 
 		// If the column is named, locale, convert it to its label
 		if ($column == 'locale') {
-			$locales = config('decoy.site.locales');
+			$locales = Config::get('decoy::site.locales');
 			if (isset($locales[$item->locale])) return $locales[$item->locale];
 
 		// If the object has a method defined with the column value, use it
@@ -199,7 +200,7 @@ class Helpers {
 	private $is_handling;
 	public function handling() {
 		if (!is_null($this->is_handling)) return $this->is_handling;
-		$this->is_handling = preg_match('#^'.config('decoy.core.dir').'($|/)'.'#i', Request::path());
+		$this->is_handling = preg_match('#^'.Config::get('decoy::core.dir').'($|/)'.'#i', Request::path());
 		return $this->is_handling;
 	}
 
@@ -223,7 +224,7 @@ class Helpers {
 
 		// Set the locale if a valid local is passed
 		if ($locale 
-			&& ($locales = config('decoy.site.locales'))
+			&& ($locales = Config::get('decoy::site.locales'))
 			&& is_array($locales)
 			&& isset($locales[$locale])) return Session::set('locale', $locale);
 
@@ -240,7 +241,7 @@ class Helpers {
 	 * @return string 
 	 */
 	public function defaultLocale() {
-		if (($locales = config('decoy.site.locales'))
+		if (($locales = Config::get('decoy::site.locales'))
 			&& is_array($locales)) {
 			reset($locales);
 			return key($locales);

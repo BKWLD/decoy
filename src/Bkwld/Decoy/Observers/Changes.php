@@ -2,6 +2,7 @@
 
 // Deps
 use Bkwld\Decoy\Models\Change;
+use Config;
 use Event;
 use Route;
 
@@ -48,7 +49,7 @@ class Changes {
 
 		// If `log_changes` was configed as a callable, see if this model event
 		// should not be logged
-		if ($check = config('decoy.site.log_changes')) {
+		if ($check = Config::get('decoy::site.log_changes')) {
 			if (is_bool($check) && !$check) return;
 			if (is_callable($check) && !call_user_func($check, $model, $action, $admin)) return;
 		} else return;

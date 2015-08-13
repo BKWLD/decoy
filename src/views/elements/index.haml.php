@@ -12,13 +12,13 @@
 -# Create navigation
 .padded-col.tab-sidebar.affixable(data-top="58")
 
-	-if(($locales = config('decoy.site.locales')) && count($locales) > 1)
+	-if(($locales = Config::get('decoy::site.locales')) && count($locales) > 1)
 		%fieldset.locale
 			.legend
 				Locale
 				.btn-group.pull-right
 					%button.btn.btn-sm.outline.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
-						=config('decoy.site.locales')[$locale]
+						=Config::get('decoy::site.locales')[$locale]
 						%spen.caret
 					%ul.dropdown-menu(role="menu")
 						-foreach($locales as $slug => $label)
