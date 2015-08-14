@@ -341,7 +341,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return string 
 	 */
 	public function getAdminEditUri($controller, $many_to_many = false) {
-		if ($many_to_many) return URL::to(DecoyURL::action($controller, $this->getKey()));
+		if ($many_to_many) return URL::to(DecoyURL::action($controller.'@edit', $this->getKey()));
 		return URL::to(DecoyURL::relative('edit', $this->getKey(), $controller));
 	}
 
