@@ -7,4 +7,4 @@
 	%ul.dropdown-menu(role='menu')
 		-foreach($locales as $slug => $label)
 			%li
-				%a(href=URL::to(DecoyURL::relative('create')).'?locale='.$slug) New #{$label} #{Str::singular($title)}
+				%a(href=URL::to(DecoyURL::relative('create')).'?locale='.$slug) New #{$label} #{str_singular($title)}

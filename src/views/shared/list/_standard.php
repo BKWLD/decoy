@@ -18,7 +18,7 @@
 
 	// Add sidebar pagination
 	if (!empty($layout) && $layout != 'full' && $count > count($listing)): ?>
-		<a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>" class="btn btn-default btn-sm btn-block full-list">See full list of related <b><?=Str::title($title)?></b></a>
+		<a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>" class="btn btn-default btn-sm btn-block full-list">See full list of related <b><?=str_title($title)?></b></a>
 	<? endif ?>
 
 </div>

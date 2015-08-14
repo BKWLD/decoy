@@ -10,7 +10,7 @@ if (empty($breadcrumbs)) return;
 	<div class="inner">
 
 		<?// Back button is first so floating works correctly ?>
-		<? if (!empty($back) && !Str::is('decoy::account*', Route::currentRouteName())): ?>
+		<? if (!empty($back) && !str_is('decoy::account*', Route::currentRouteName())): ?>
 			<a href="<?=$back?>" class="back">
 				<span class="glyphicon glyphicon-arrow-left"></span>
 				Back to listing

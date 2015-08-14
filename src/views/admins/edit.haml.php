@@ -11,7 +11,7 @@
 		!= Former::password('password')
 		!= Former::password('confirm_password')
 	-else
-		!= Former::text('password')->forceValue(empty($item)?Str::random(16):null)->placeholder(empty($item)?null:'Leave blank to prevent change')
+		!= Former::text('password')->forceValue(empty($item)?str_random(16):null)->placeholder(empty($item)?null:'Leave blank to prevent change')
 
 	!= Former::image('image') 
 

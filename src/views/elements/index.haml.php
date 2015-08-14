@@ -31,7 +31,7 @@
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
 		-$first = 0
 		-foreach($grouped_elements as $page => $sections)
-			-$slug = Str::slug($page)
+			-$slug = str_slug($page)
 			-$path = $locale ? $locale.'/'.$slug : $slug
 			-$active = (empty($tab) && $first++==0 ) || $slug == $tab
 			%li(class=$active?'active':null)
@@ -46,7 +46,7 @@
 .padded-col.tab-content
 	-$first = 0
 	-foreach($grouped_elements as $page => $sections)
-		-$slug = Str::slug($page)
+		-$slug = str_slug($page)
 		-$sections = Collection::make($sections)->groupBy('section_label')
 		-$active = (empty($tab) && $first++==0 ) || $slug == $tab
 		.tab-pane(class=$active?'active':null id=$slug)
