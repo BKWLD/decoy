@@ -621,7 +621,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return string An image tag
 	 */
 	public function croppaTag($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
 		return "<img src='{$url}' alt=''/>";
 	}
 
@@ -637,7 +637,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return string An image tag
 	 */
 	public function croppaBkgd($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-		if (!($url = $this->croppa($width, $height, $crop_style, $field, $options))) return;
+		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
 		return "background-image:url('{$url}')";
 	}
 	
