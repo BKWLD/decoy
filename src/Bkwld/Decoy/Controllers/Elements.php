@@ -91,7 +91,7 @@ class Elements extends Base {
 			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help)->id($id);
 			case 'image': return Former::image($key, $el->label)->blockHelp($el->help)->id($id);
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id);
+			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id)->push();
 			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help)->id($id);
 			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help)->id($id);
 			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help)->id($id);
