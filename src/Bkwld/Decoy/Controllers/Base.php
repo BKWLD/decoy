@@ -151,13 +151,14 @@ class Base extends Controller {
 	//---------------------------------------------------------------------------
 	// Constructing
 	//---------------------------------------------------------------------------
-
-	// Shared layout for admin view, set in the constructor
-	public $layout;
-	protected function setupLayout() {
-		if (!is_null($this->layout)) $this->layout = View::make($this->layout);
-	}
 	
+	/**
+	 * A view instance to use as the layout
+	 * 
+	 * @var Illuminate\Contracts\View\Factory
+	 */
+	protected $layout;
+
 	/**
 	 * For the most part, this populates the protected properties.  Constructor
 	 * arguments are intentionally avoided so every controller that extends this
@@ -212,8 +213,8 @@ class Base extends Controller {
 	private function init($class = null) {
 		
 		// Set the layout from the Config file
-		$this->layout = $this->config->get('decoy.core.layout');
-		
+		$this->layout = View::make($this->config->get('decoy.core.layout'));
+
 		// Store the controller class for routing
 		if ($class) $this->controller = $class;
 		elseif (empty($this->controller)) $this->controller = get_class($this);
