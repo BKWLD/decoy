@@ -42,19 +42,71 @@ class Base extends Controller {
 	// Default settings
 	//---------------------------------------------------------------------------
 	
-	// Constants
+	/**
+	 * Amount of results to return per page
+	 * 
+	 * @var integer
+	 */
 	static public $per_page = 20;
+
+	/**
+	 * Amount of results to show in the sidebar layout
+	 * 
+	 * @var integer
+	 */
 	static public $per_sidebar = 6;
 
-	// Values that get shared by many controller methods.  Default values for these
-	// get set in the constructor.
-	protected $model;       // i.e. Post
-	protected $controller;  // i.e. Admin\PostsController
-	protected $title;       // i.e. News Posts
-	protected $description; // i.e. Relevant news about the brand
-	protected $columns = array('Title' => 'title'); // The default columns for listings
-	protected $show_view;   // i.e. admin.news.edit
-	protected $search;      // i.e. An array describing the fields to search upon
+	/**
+	 * The model class name that the contorller manages. Ex: Post
+	 * 
+	 * @var string
+	 */
+	protected $model;
+
+	/**
+	 * The controller class name. Ex: Admin\PostsController
+	 * 
+	 * @var string
+	 */
+	protected $controller;
+
+	/**
+	 * The HTML title, shown in header of the vie. Ex: News Posts
+	 * 
+	 * @var sting
+	 */
+	protected $title;
+
+	/**
+	 * The text description of what this controller manages, shown in the header.
+	 * Ex: "Relevant news about the brand"
+	 * 
+	 * @var string
+	 */
+	protected $description;
+
+	/**
+	 * The columns to show in the listing view.  The keys are the labels in the
+	 * table header.  The value is where to get the content for the cell.  Like a
+	 * database column name or an method name on the model.
+	 * 
+	 * @var array
+	 */
+	protected $columns = ['Title' => 'title'];
+
+	/**
+	 * The view-style path to the edit view.  Ex: admin.news.edit
+	 * 
+	 * @var string
+	 */
+	protected $show_view;
+
+	/**
+	 * The search configuration.  See the docs for more info
+	 * 
+	 * @var array
+	 */
+	protected $search;
 	
 	//---------------------------------------------------------------------------
 	// Properties that define relationships
