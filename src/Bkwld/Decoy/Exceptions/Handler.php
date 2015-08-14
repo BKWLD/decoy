@@ -3,7 +3,7 @@
 // Deps
 use App\Exceptions\Handler as AppHandler;
 use Bkwld\Decoy\Models\RedirectRule;
-use Exception;
+use Exception as BaseException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Session\TokenMismatchException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -20,7 +20,7 @@ class Handler extends AppHandler {
 	 * @param  \Exception  $e
 	 * @return \Illuminate\Http\Response
 	 */
-	public function render($request, Exception $e) {
+	public function render($request, BaseException $e) {
 
 		// Check for custom handling
 		if ($response = $this->handle404s($e)) return $response;
@@ -37,7 +37,7 @@ class Handler extends AppHandler {
 	 * @param  \Exception  $e
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	protected function handle404s(Exception $e) {
+	protected function handle404s(BaseException $e) {
 
 		// Check for right exception
 		if (!is_a($e, ModelNotFoundException::class) 
@@ -55,7 +55,7 @@ class Handler extends AppHandler {
 	 * @param  \Exception  $e
 	 * @return \Illuminate\Http\RedirectResponse
 	 */
-	protected function handleCSRF(Exception $e) {
+	protected function handleCSRF(BaseException $e) {
 		if (!is_a($e, TokenMismatchException::class)) return;
 		return app('decoy.acl_fail');
 	}
@@ -67,7 +67,7 @@ class Handler extends AppHandler {
 	 * @param  \Exception  $e
 	 * @return \Illuminate\Http\Response
 	 */
-	protected function handleValidation($request, Exception $e) {
+	protected function handleValidation($request, BaseException $e) {
 		if (!is_a($e, ValidationFail::class)) return;
 
 		// Log validation errors so Reporter will output them
