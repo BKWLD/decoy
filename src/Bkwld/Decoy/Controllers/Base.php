@@ -949,10 +949,9 @@ class Base extends Controller {
 	 * @return void 
 	 */
 	protected function overrideViews() {
-		app('view.finder')->prependNamespace('decoy', app_path()
-			.'/views/admin/'
-			.Str::snake($this->controllerName())
-		);
+		$dir = Str::snake($this->controllerName());
+		$path = base_path('resources/views/admin/').$dir;
+		app('view.finder')->prependNamespace('decoy', $path);
 	}
 
 	/**
