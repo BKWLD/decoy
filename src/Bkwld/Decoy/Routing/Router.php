@@ -44,7 +44,10 @@ class Router {
 		
 		// Public routes
 		Route::group([
-			'prefix' => $this->dir
+			'prefix' => $this->dir,
+			'middleware' => [
+				'decoy.middlewares.edit-redirect',
+			],
 		], function() {
 			$this->registerAccount();
 		});
@@ -54,6 +57,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'decoy.middlewares.auth',
+				'decoy.middlewares.edit-redirect',
 			],
 		], function() {
 			$this->registerAdmins();

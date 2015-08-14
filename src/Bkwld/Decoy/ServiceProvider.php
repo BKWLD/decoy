@@ -148,6 +148,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// Register admin only middleware
 		foreach([
 			'decoy.middlewares.auth' => Middleware\Auth::class,
+			'decoy.middlewares.edit-redirect' => Middleware\EditRedirect::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
 	}
 
