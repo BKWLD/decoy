@@ -122,14 +122,16 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	protected function delegateAdminObservers() {
-		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Localize');
-		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Cropping@onSaving');
-		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Cropping@onDeleted');
-		$this->app['events']->listen('eloquent.saved:*',          'Bkwld\Decoy\Observers\ManyToManyChecklist');
-		$this->app['events']->listen('eloquent.saving:*',         'Bkwld\Decoy\Observers\Encoding@onSaving');
-		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
-		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
-	} 
+		foreach([
+			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Localize',
+			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Cropping@onSaving',
+			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Cropping@onDeleted',
+			'eloquent.saved:*'   =>   'Bkwld\Decoy\Observers\ManyToManyChecklist',
+			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Encoding@onSaving',
+			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
+			'decoy::model.validating:*' => 'Bkwld\Decoy\Observers\Validation@onValidating',
+		] as $key => $method) $this->app['events']->listen($key, $method);
+	}
 
 	/**
 	 * Register middlewares
