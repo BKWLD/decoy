@@ -225,8 +225,8 @@ class Base extends Controller {
 		// Make a default title based on the controller name
 		if (empty($this->title)) $this->title = $this->title($controller_name);
 		
-		// Figure out what the show view should be.  This is the path to the show view file.  Such
-		// as 'admin.news.edit'
+		// Figure out what the show view should be.  This is the path to the show 
+		// view file.  Such as 'admin.news.edit'
 		if (empty($this->show_view)) $this->show_view = $this->detailPath($this->controller);
 		
 		// Try to suss out the model by singularizing the controller
@@ -238,12 +238,14 @@ class Base extends Controller {
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
 		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
-			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) throw new Exception('Class alias failed');
+			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) {
+				throw new Exception('Class alias failed');
+			}
 		}
 
 		// If the input contains info on the parent, immediately instantiate
-		// the parent instance.  These are populated by some AJAX calls like autocomplete
-		// on a many to many and the attach method.
+		// the parent instance.  These are populated by some AJAX calls like 
+		// autocomplete on a many to many and the attach method.
 		if (($parent_id = Input::get('parent_id'))
 			&& ($parent_controller = Input::get('parent_controller'))) {
 			$parent_model_class = $this->model($parent_controller);
