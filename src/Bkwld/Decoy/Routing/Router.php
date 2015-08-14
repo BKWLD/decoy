@@ -43,7 +43,9 @@ class Router {
 	public function registerAll() {
 		
 		// Public routes
-		Route::group(['prefix' => $this->dir], function() {
+		Route::group([
+			'prefix' => $this->dir
+		], function() {
 			$this->registerAccount();
 		});
 
@@ -62,6 +64,14 @@ class Router {
 			$this->registerRedactor();
 			$this->registerWildcard(); // Must be last
 		});
+
+		// Web service callback endpoints and don't require CSRF filtering
+		Route::group([
+			'prefix' => $this->dir,
+		], function() {
+			$this->registerCallbackEndpoints();
+		});
+		
 	}
 	
 	/**
@@ -138,22 +148,14 @@ class Router {
 	}
 
 	/**
-	 * Encoding
+	 * Get the status of an encode
 	 *
 	 * @return void 
 	 */
 	public function registerEncode() {
-
-		// Get the status of an encode
 		Route::get('encode/{id}/progress', function($id) {
 			return Encoding::findOrFail($id)->forProgress();
 		});
-
-		// Make a simply handler for notify callbacks.  The encoding model will pass the the handling
-		// onto whichever provider is registered.
-		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
-			return Encoding::notify(Input::get());
-		}]);
 	}
 
 	/**
@@ -177,7 +179,19 @@ class Router {
 	public function registerRedactor() {
 		Route::post('redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
 	}
-	
+
+	/**
+	 * Web service callback endpoints
+	 */
+	public function registerCallbackEndpoints() {
+
+		// Make a simply handler for notify callbacks.  The encoding model will pass 
+		// the the handling onto whichever provider is registered.
+		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
+			return Encoding::notify(Input::get());
+		}]);
+
+	}
 	
 	/**
 	 * Set and get the action for this request
