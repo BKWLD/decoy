@@ -45,6 +45,9 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 
+		// Register global and named middlewares
+		$this->registerMiddlewares();
+
 		// Register the routes AFTER all the app routes using the "before" register.  
 		$this->app['decoy.router']->registerAll();
 
@@ -86,10 +89,6 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Delegate events to Decoy observers
 		$this->delegateAdminObservers();
-
-		// Register middlewares
-		$this->registerMiddlewares();
-		$this->app['router']->middleware('decoy.auth', Middleware\Auth::class);
 	}
 
 	/**
@@ -139,8 +138,16 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void 
 	 */
 	protected function registerMiddlewares() {
+
+		// Register public, frontent tools middleware
+		if ($this->app['config']->get('decoy.site.show_frontend_tools')) {
+			$this->app['Illuminate\Contracts\Http\Kernel']
+				->pushMiddleware(Middleware\FrontendTools::class);
+		}
+
+		// Register admin only middleware
 		foreach([
-			'decoy.auth', Middleware\Auth::class,
+			'decoy.middlewares.auth' => Middleware\Auth::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
 	}
 

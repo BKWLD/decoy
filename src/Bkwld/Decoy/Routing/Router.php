@@ -53,7 +53,7 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
-				'decoy.auth',
+				'decoy.middlewares.auth',
 			],
 		], function() {
 			$this->registerAdmins();
