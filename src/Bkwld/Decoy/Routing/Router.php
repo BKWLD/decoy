@@ -27,42 +27,41 @@ class Router {
 	private $dir;
 
 	/**
-	 * @var Bkwld\Decoy\Routing\Filters 
-	 */
-	private $filters;
-
-	/**
 	 * Constructor
+	 * 
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
-	 * @param Bkwld\Decoy\Routing\Filters
 	 */
 	public function __construct($dir, $filters) {
 		$this->dir = $dir;
-		$this->filters = $filters;
 	}
 	
 	/**
 	 * Register all routes
 	 *
-	 * @param Illuminate\Http\Request $request 
+	 * @return void 
 	 */
-	public function registerAll($request = null) {
+	public function registerAll() {
 		
-		// Register routes
-		$this->registerAccounts();
-		$this->registerAdmins();
-		$this->registerCommands();
-		$this->registerWorkers();
-		$this->registerEncode();
-		$this->registerElements();
-		$this->registerRedactor();
+		// Public routes
+		Route::group(['prefix' => $this->dir], function() {
+			$this->registerAccount();
+		});
 
-		// Register wildcard last
-		$this->registerWildcard();
-		
-		// Setup filters if there was a request.  There might not be
-		// if Decoy was invoked via CLI
-		if ($request) return $this->filters->onBefore($request);
+		// Protected, admin routes
+		Route::group([
+			'prefix' => $this->dir,
+			'middleware' => [
+				'decoy.auth',
+			],
+		], function() {
+			$this->registerAdmins();
+			$this->registerCommands();
+			$this->registerWorkers();
+			$this->registerEncode();
+			$this->registerElements();
+			$this->registerRedactor();
+			$this->registerWildcard(); // Must be last
+		});
 	}
 	
 	/**
@@ -70,15 +69,15 @@ class Router {
 	 *
 	 * @return void 
 	 */
-	public function registerAccounts() {
-		Route::get($this->dir, ['as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()]);
-		Route::post($this->dir, ['as' => 'decoy::account@login', 'uses' => 'Bkwld\Decoy\Controllers\Account@post']);
-		Route::get($this->dir.'/account', ['as' => 'decoy::account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
-		Route::get($this->dir.'/logout', ['as' => 'decoy::account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
-		Route::get($this->dir.'/forgot', ['as' => 'decoy::account@forgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
-		Route::post($this->dir.'/forgot', 'Bkwld\Decoy\Controllers\Account@postForgot');
-		Route::get($this->dir.'/reset/{code}', ['as' => 'decoy::account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
-		Route::post($this->dir.'/reset/{code}', 'Bkwld\Decoy\Controllers\Account@postReset');
+	public function registerAccount() {
+		Route::get('/', ['as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()]);
+		Route::post('/', ['as' => 'decoy::account@login', 'uses' => 'Bkwld\Decoy\Controllers\Account@post']);
+		Route::get('account', ['as' => 'decoy::account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
+		Route::get('logout', ['as' => 'decoy::account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
+		Route::get('forgot', ['as' => 'decoy::account@forgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
+		Route::post('forgot', 'Bkwld\Decoy\Controllers\Account@postForgot');
+		Route::get('reset/{code}', ['as' => 'decoy::account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
+		Route::post('reset/{code}', 'Bkwld\Decoy\Controllers\Account@postReset');
 	}
 	
 	/**
@@ -88,16 +87,12 @@ class Router {
 	 */
 	public function registerWildcard() {
 		
-		// Localize vars for closure
-		$dir = $this->dir;
-		$self = $this;
-		
 		// Setup a wildcarded catch all route
-		Route::any($this->dir.'/{path}', ['as' => 'decoy::wildcard', function($path) use ($dir, $self) {
+		Route::any('{path}', ['as' => 'decoy::wildcard', function($path) {
 
 			// Remember the detected route
-			App::make('events')->listen('wildcard.detection', function($controller, $action) use ($self) {
-				$self->action($controller.'@'.$action);
+			App::make('events')->listen('wildcard.detection', function($controller, $action) {
+				$this->action($controller.'@'.$action);
 			});
 			
 			// Do the detection
@@ -118,8 +113,8 @@ class Router {
 	 * @return void 
 	 */
 	public function registerAdmins() {
-		Route::get($this->dir.'/admins/{id}/disable', ['as' => 'decoy::admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
-		Route::get($this->dir.'/admins/{id}/enable', ['as' => 'decoy::admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
+		Route::get('admins/{id}/disable', ['as' => 'decoy::admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
+		Route::get('admins/{id}/enable', ['as' => 'decoy::admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
 	}
 	
 	/**
@@ -128,8 +123,8 @@ class Router {
 	 * @return void 
 	 */
 	public function registerCommands() {
-		Route::get($this->dir.'/commands', ['uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy::commands']);
-		Route::post($this->dir.'/commands/{command}', ['uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy::commands@execute']);
+		Route::get('commands', ['uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy::commands']);
+		Route::post('commands/{command}', ['uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy::commands@execute']);
 	}
 	
 	/**
@@ -138,8 +133,8 @@ class Router {
 	 * @return void 
 	 */
 	public function registerWorkers() {
-		Route::get($this->dir.'/workers', ['uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy::workers']);
-		Route::get($this->dir.'/workers/tail/{worker}', ['uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy::workers@tail']);
+		Route::get('workers', ['uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy::workers']);
+		Route::get('workers/tail/{worker}', ['uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy::workers@tail']);
 	}
 
 	/**
@@ -150,13 +145,13 @@ class Router {
 	public function registerEncode() {
 
 		// Get the status of an encode
-		Route::get($this->dir.'/encode/{id}/progress', function($id) {
+		Route::get('encode/{id}/progress', function($id) {
 			return Encoding::findOrFail($id)->forProgress();
 		});
 
 		// Make a simply handler for notify callbacks.  The encoding model will pass the the handling
 		// onto whichever provider is registered.
-		Route::post($this->dir.'/encode/notify', ['as' => 'decoy::encode@notify', function() {
+		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
 			return Encoding::notify(Input::get());
 		}]);
 	}
@@ -167,10 +162,10 @@ class Router {
 	 * @return void 
 	 */
 	public function registerElements() {
-		Route::get($this->dir.'/elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy::elements@field']);
-		Route::post($this->dir.'/elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy::elements@field-update']);
-		Route::get($this->dir.'/elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy::elements']);
-		Route::post($this->dir.'/elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy::elements@store']);
+		Route::get('elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy::elements@field']);
+		Route::post('elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy::elements@field-update']);
+		Route::get('elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy::elements']);
+		Route::post('elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy::elements@store']);
 	}
 
 	/**
@@ -180,7 +175,7 @@ class Router {
 	 * @return void 
 	 */
 	public function registerRedactor() {
-		Route::post($this->dir.'/redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
+		Route::post('redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
 	}
 	
 	

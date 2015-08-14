@@ -46,10 +46,7 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
 
 		// Register the routes AFTER all the app routes using the "before" register.  
-		// Unless the app is running via the CLI where we want the routes reigsterd 
-		// for URL generation.
-		if (App::runningInConsole()) $router->registerAll();
-		else $this->app->before(array($router, 'registerAll'));
+		$this->app['decoy.router']->registerAll();
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
@@ -89,6 +86,10 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Delegate events to Decoy observers
 		$this->delegateAdminObservers();
+
+		// Register middlewares
+		$this->registerMiddlewares();
+		$this->app['router']->middleware('decoy.auth', Middleware\Auth::class);
 	}
 
 	/**
@@ -129,6 +130,17 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app['events']->listen('eloquent.deleted:*',        'Bkwld\Decoy\Observers\Encoding@onDeleted');
 		$this->app['events']->listen('decoy::model.validating:*', 'Bkwld\Decoy\Observers\Validation@onValidating');
 	} 
+
+	/**
+	 * Register middlewares
+	 *
+	 * @return void 
+	 */
+	protected function registerMiddlewares() {
+		foreach([
+			'decoy.auth', Middleware\Auth::class,
+		] as $key => $class) $this->app['router']->middleware($key, $class);
+	}
 
 	/**
 	 * Register the service provider.
