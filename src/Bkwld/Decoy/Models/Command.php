@@ -42,14 +42,14 @@ class Command {
 		$commands = array();
 		
 		// Loop through PHP files
-		$dir = app_path().'/commands';
+		$dir = app_path('Console/Commands');
 		$files = scandir($dir);
 		foreach($files as $file) {
 			if (!preg_match('#\w+\.php#', $file)) continue;
 			
 			// Get properties of the command
 			$path = $dir.'/'.$file;
-			$class = basename($path, '.php');
+			$class = 'App\Console\Commands\\'.basename($path, '.php');
 			
 			// Validate command
 			require_once($path);
