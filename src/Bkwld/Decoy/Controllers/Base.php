@@ -446,7 +446,7 @@ class Base extends Controller {
 	/**
 	 * Show an index, listing page.  Sets view via the layout.
 	 * 
-	 * @return void
+	 * @return Illuminate\Contracts\View\Factory
 	 */
 	public function index() {
 
@@ -475,12 +475,15 @@ class Base extends Controller {
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
+
+		// Return the finished layout + view
+		return $this->layout;
 	}
 	
 	/**
 	 * Show the create form.  Sets view via the layout.
 	 * 
-	 * @return void
+	 * @return Illuminate\Contracts\View\Factory
 	 */
 	public function create() {
 
@@ -511,6 +514,9 @@ class Base extends Controller {
 		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
+
+		// Return the finished layout + view
+		return $this->layout;
 	}
 	
 	/**
@@ -539,7 +545,7 @@ class Base extends Controller {
 	 * Show the edit form.  Sets view via the layout.
 	 * 
 	 * @param  int $id Model key
-	 * @return void
+	 * @return Illuminate\Contracts\View\Factory
 	 */
 	public function edit($id) {
 
@@ -575,6 +581,8 @@ class Base extends Controller {
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
+		// Return the finished layout + view
+		return $this->layout;
 	}
 	
 	/**
