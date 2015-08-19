@@ -712,8 +712,7 @@ Article::ordered()->visible()->localize()->paginate(10)
 ```
 
 
-### Custom Validation
-
+### Custom validation
 
 An easy way to add custom validation to models is by specifying an `onValidating` method, taking the `$validation` object, adding errors to it, and returning it.  Special logic in the Base Controller's validate method will see the returned `Validator` and its errors and respond appropriately.
 
@@ -733,3 +732,7 @@ Here's an example of how to set unique exceptions for the current model instance
 		}
 	}
 
+
+### Model duplication
+
+Decoy implements [Cloner](https://github.com/BKWLD/cloner) to allow admins to duplicate models.  A single model and it's files should work right out of the box.  To support cloning relationships, specify a `$cloneable_relations` array on the model.  Read the Cloner docs for more info and some other options.

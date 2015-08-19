@@ -2,6 +2,7 @@
 
 // Imports
 use App;
+use Bkwld\Cloner\Cloneable;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Library\Utils\Collection;
@@ -29,7 +30,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * Adding common traits.  The memory usage of adding additional methods is
 	 * negligible.
 	 */
-	use SupportsUploads, SluggableTrait {
+	use SupportsUploads, Cloneable, SluggableTrait {
 		needsSlugging as traitNeedsSlugging;
 	}
 	
@@ -62,6 +63,36 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @var boolean
 	 */
 	static public $localizable;
+
+	/**
+	 * If false, this model cannot be cloned
+	 *
+	 * @var boolean 
+	 */
+	public $cloneable = true;
+
+	/**
+	 * Specify columns that shouldn't be duplicated by Bkwld\Cloner.  Include
+	 * slug by default so that Sluggable will automatically generate a new one.
+	 * 
+	 * @var array
+	 */
+	protected $clone_exempt_attributes = ['slug'];
+
+	/**
+	 * Relations to follow when models are duplicated
+	 * 
+	 * @var array
+	 */
+	protected $cloneable_relations;
+
+	/**
+	 * If populated, these will be used instead of the files that are found
+	 * automatically by getCloneableFileAttributes()
+	 * 
+	 * @var array
+	 */
+	protected $cloneable_file_attributes;
 	
 	/**
 	 * Constructor registers events and configures mass assignment
@@ -219,6 +250,19 @@ abstract class Base extends Eloquent implements SluggableInterface {
 
 		// Return array of attributes
 		return $attributes;
+	}
+
+	/**
+	 * Use getFileAttributesAttribute() to get the files that should be cloned
+	 * by Bkwld\Cloner
+	 * 
+	 * @return array The keys of all the attributes that store file references
+	 */
+	public function getCloneableFileAttributes() {
+		if (isset($this->cloneable_file_attributes)) {
+			return $this->cloneable_file_attributes;
+		}
+		return $this->getFileAttributesAttribute();
 	}
 
 	/**

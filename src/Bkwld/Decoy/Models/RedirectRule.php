@@ -8,6 +8,13 @@ use Request;
 class RedirectRule extends Base {
 
 	/**
+	 * Don't allow cloning because the "from" is unique
+	 *
+	 * @var boolean 
+	 */
+	public $cloneable = false;
+
+	/**
 	 * Validation rules
 	 * 
 	 * @var array

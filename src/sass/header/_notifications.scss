@@ -61,10 +61,15 @@
 	// make sure it's below the header
 	z-index:0;
 	
-
+	// Contains the message
 	p {
 		padding: ($main-padding/2) 0;
 		margin: 0;
+
+		// Ineherit the right color
+		a {
+			color: inherit;
+		}
 
 		// Push text off the glyph
 		.glyphicon {
