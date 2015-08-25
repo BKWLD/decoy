@@ -153,7 +153,46 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	public function changes() { 
 		return $this->morphMany('Bkwld\Decoy\Models\Change', 'loggable', 'model', 'key'); 
 	}
-	
+
+	//---------------------------------------------------------------------------
+	// Cloning
+	//---------------------------------------------------------------------------
+
+	/**
+	 * Track whether the model is currently being cloned
+	 * 
+	 * @var boolean
+	 */
+	protected $is_cloning = false;
+
+	/**
+	 * Use the Cloner callbacks to keep track of whether a model is currently
+	 * being cloned
+	 *
+	 * @return void 
+	 */
+	public function onCloning() {
+		$this->is_cloning = true;
+	}
+
+	/**
+	 * Return whether the model is currenting being cloned
+	 *
+	 * @return boolean 
+	 */
+	public function isCloning() {
+		return $this->is_cloning;
+	}
+
+	/**
+	 * Clear the cloning state once cloning is finished
+	 *
+	 * @return void 
+	 */
+	public function onCloned() {
+		$this->is_cloning = false;
+	}
+
 	//---------------------------------------------------------------------------
 	// Slug creation via cviebrock/eloquent-sluggable
 	//---------------------------------------------------------------------------
