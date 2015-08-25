@@ -13,12 +13,6 @@ class Encoding {
 	 */
 	public function onSaving($model) {
 		if (!$this->isEncodable($model)) return;
-
-		// If cloning, we're copying over the previous encodes and thus don't need
-		// to re-encode.
-		if ($model->isCloning()) return;
-
-		// Loop through encodeable fields have changed
 		foreach($model->getDirtyEncodableAttributes() as $attribute) {
 
 			// If the attribute has a value, encode the attribute
