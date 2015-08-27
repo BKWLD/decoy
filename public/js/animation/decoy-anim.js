@@ -23,8 +23,8 @@
       		baseColor       (string|'#67bfb6') - the base color of the screen
       		spawnRate       (int|3) - the number of frames before a cell spawn trigger
       		cellRate        (int|3) - the number of animating cells to spawn on the trigger
-      		cellBrightness  (int|15) - this amount to brighten the animating cells from the base color
-      		colorRange      (int|13) - the depth of variation in the random grid background
+      		cellBrightness  (int|1) - this amount to brighten the animating cells from the base color
+      		colorRange      (int|0.5) - the depth of variation in the random grid background
       		flashSpeedIn    (float|0.01) - incremental alpha change in the cell animation
       		flashSpeedOut   (float|0.02) - decremental alpha change in the cell animation
        */
@@ -33,8 +33,8 @@
       this.baseColor = chroma(options.color || '#67bfb6');
       this.spawnRate = options.spawnRate || 3;
       this.cellRate = options.cellRate || 3;
-      this.cellBrightness = options.cellBrightness || 15;
-      this.colorRange = options.colorRange || 13;
+      this.cellBrightness = options.cellBrightness || 1;
+      this.colorRange = options.colorRange || 0.5;
       this.flashSpeedIn = options.flashSpeedIn || 0.01;
       this.flashSpeedOut = options.flashSpeedOut || 0.02;
 
