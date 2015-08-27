@@ -82,7 +82,7 @@
       var x, y, _i, _j, _ref, _ref1;
       for (x = _i = 0, _ref = this.count.x; 0 <= _ref ? _i <= _ref : _i >= _ref; x = 0 <= _ref ? ++_i : --_i) {
         for (y = _j = 0, _ref1 = this.count.y; 0 <= _ref1 ? _j <= _ref1 : _j >= _ref1; y = 0 <= _ref1 ? ++_j : --_j) {
-          this.graphics.beginFill(parseInt('0x' + this.baseColor.darker(Math.floor(Math.random() * this.colorRange)).hex().replace('#', '')));
+          this.graphics.beginFill(parseInt('0x' + this.baseColor.darker(Math.random() * this.colorRange).hex().replace('#', '')));
           this.graphics.drawRect(this.squareSize * x, this.squareSize * y, this.squareSize, this.squareSize);
           this.graphics.endFill();
         }
