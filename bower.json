@@ -12,7 +12,7 @@
     "bootstrap-datepicker": "~1",
     "bootstrap-3-timepickr": "~0",
     "bkwld": "bkwld/js-library#~0",
-    "chroma-js" : "*",
+    "chroma-js" : "1.1.1",
     "fastclick" : "~1",
     "imagesloaded": "~3",
     "jcrop": "master",
