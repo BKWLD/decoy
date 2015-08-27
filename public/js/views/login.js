@@ -42,8 +42,8 @@ define(function (require) {
 				size: 25,
 				spawnRate: 1,
 				cellRate: 1,
-				cellBrightness: 15,
-				colorRange: 10,
+				cellBrightness: 1,
+				colorRange: 0.5,
 				flashSpeedIn: 0.04,
 				flashSpeedOut: 0.02
 			});
