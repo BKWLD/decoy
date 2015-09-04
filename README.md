@@ -640,7 +640,9 @@ You may want to add an accessor for building the video tag like:
 
 ```php
 	public function getVideoTagAttribute() {
-		return (string) $this->encoding()->tag->preload();
+		if (($encoding = $this->encoding()) && ($tag = $encoding->tag)) {
+			return (string) $tag->preload();
+		}
 	}
 ```
 
