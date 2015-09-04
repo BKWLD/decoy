@@ -136,12 +136,12 @@ class Filters {
 		return $path === parse_url(route('decoy'), PHP_URL_PATH)               // Login
 			|| $path === parse_url(route('decoy::account@forgot'), PHP_URL_PATH) // Forgot
 			|| Str::startsWith($path, '/'.$this->dir.'/reset/')                  // Reset
-			|| Route::is('decoy::encode@notify')                                 // Notification handler from encoder
+			|| Route::is('decoy::encode@notify', 'decoy::encode@progress')       // Notification handler from encoder
 		;
 	}
 
 	/**
-	 * Get the actino and controller from an explicilty defined route
+	 * Get the action and controller from an explicilty defined route
 	 *
 	 * @return array action,controller
 	 */
