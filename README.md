@@ -611,7 +611,7 @@ The following additional fields come with Decoy.  They are implemented through F
 		- `sidebar` - A narrow view like shown in an edit view's related column.
 		- `form` - A full width view designed to be show in a horizontal form.
 	- `take()` - A integer; how many rows to display.
-	- You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
+	- `scope()` - You may adjust the query that fetches related objects by passing a `callable` to `scope()` which will recieve the query (an `Illuminate\Database\Eloquent\Builder` instance) as it's first argument.
 
 			!= Former::listing('Author')->take(30)->layout('form')
 
