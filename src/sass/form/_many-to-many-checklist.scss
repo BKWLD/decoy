@@ -3,7 +3,7 @@
 
 	// Make the checkboxes vertically centered if there are images
 	// as part of the label titles
-	input[type="checkbox"] {
+	input[type="checkbox"], input[type="radio"] {
 		position: relative;
 		margin-right: 8px;
 	}
@@ -21,7 +21,7 @@
 	}
 
 	// Only show the edit link on hover
-	.checkbox:hover .edit {
+	.checkbox:hover .edit, .radio:hover .edit {
 		display: inline-block;
 	}
 
@@ -29,7 +29,7 @@
 	&.two-col {
 
 		// Make cols
-		.checkbox {
+		.checkbox, .radio {
 			display: inline-block;
 			width: 50%;
 			padding: 0 5px 0 0;
@@ -76,7 +76,7 @@
 		}
 
 		// Make the bkgd darker so it isn't over powered by hover
-		&:hover .checkbox label {
+		&:hover .checkbox label, &:hover .radio label {
 			background: darken($bkgd, 3%);
 		}
 	}
