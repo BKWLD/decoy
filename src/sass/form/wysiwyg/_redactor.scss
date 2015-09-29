@@ -46,6 +46,16 @@
 
 		// Clear the decoy link styling
 		a { border: none; }
+		
+		// Clear the Lato bold height hack
+		b, strong { font-size: inherit; }
+		
+		// Use the body font for headers
+		h1, h2, h3, h4, h5, h6 {
+			font-family: inherit;
+			font-weight: inherit;
+			line-height: inherit;
+		}
 	}
 
 	// Improve styling of code editor view
