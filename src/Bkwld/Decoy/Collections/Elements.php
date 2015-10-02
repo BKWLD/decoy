@@ -388,6 +388,7 @@ class Elements extends Collection {
 	 */
 	public function setModel($element) {
 		$this->model = $element;
+		$this->model->created([$this, 'onModelUpdate']);
 		$this->model->updated([$this, 'onModelUpdate']);
 		return $this;
 	}
