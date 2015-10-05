@@ -2,6 +2,7 @@
 
 // Deps
 use Bkwld\Library\Utils;
+use Config;
 use DB;
 use Request;
 
@@ -86,9 +87,10 @@ class RedirectRule extends Base {
 		return $query->where(function($query) {
 			$from = $this->pathAndQuery();
 			$escaped_from = DB::connection()->getPdo()->quote($from);
-			$query->where('from', $from)
-				->orWhereRaw("{$escaped_from} LIKE `from`")
-				->orWhereRaw("{$escaped_from} REGEXP `from`");
+			$query->where('from', $from)->orWhereRaw("{$escaped_from} LIKE `from`");
+			if (Config::get('decoy::core.allow_regex_in_redirects')) {
+				$query->orWhereRaw("{$escaped_from} REGEXP `from`");
+			}
 		});
 	}
 
