@@ -14,6 +14,9 @@ class Zencoder extends EncodingProvider {
 
 	/**
 	 * Default outputs configuration
+	 * 
+	 * Regarding internet speeds
+	 * http://gizmodo.com/americas-internet-inequality-a-map-of-whos-got-the-b-1057686215
 	 *
 	 * @var array
 	 */
