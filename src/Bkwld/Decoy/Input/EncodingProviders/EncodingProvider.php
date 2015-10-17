@@ -87,7 +87,7 @@ abstract class EncodingProvider {
 
 			// If user key doesn't exist in the defaults, it's new, and just
 			// straight pass it through
-			else if (!array_key_exists($key, $outputs)) $common[$key] = $config;
+			else if (!array_key_exists($key, $outputs)) $outputs[$key] = $config;
 
 			// Else, merge the user config onto the default for that key
 			else $outputs[$key] = array_merge($outputs[$key], $config);
