@@ -97,11 +97,21 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 	/**
 	 * New admin callbacks
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function onCreating() {
+
+		// Send out email
 		if (Input::has('_send_email')) $this->sendCreateEmail();
+
+		// Make them active
 		$this->active = 1;
+
+		// If the current user can't grant permissions, make the new admin
+		// have the same role as themselves
+		if (!app('decoy.auth')->can('grant', 'admins')) {
+			$this->role = app('decoy.auth')->user()->role;
+		}
 	}
 
 	/**
