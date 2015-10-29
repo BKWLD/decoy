@@ -108,9 +108,11 @@ class Admin extends Base implements UserInterface, RemindableInterface {
 		$this->active = 1;
 
 		// If the current user can't grant permissions, make the new admin
-		// have the same role as themselves
-		if (!app('decoy.auth')->can('grant', 'admins')) {
-			$this->role = app('decoy.auth')->user()->role;
+		// have the same role as themselves.  Admins created from the CLI (like as
+		// part of a migration) won't be logged in.
+		if (($admin = app('decoy.auth')->user())
+			&& !app('decoy.auth')->can('grant', 'admins')) {
+			$this->role = $admin->role;
 		}
 	}
 
