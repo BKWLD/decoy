@@ -62,10 +62,10 @@ class Zencoder extends EncodingProvider {
 			'format' => 'ts',
 			'h264_profile' => 'main',
 			'width' => 640,
-			'decoder_bitrate_cap' => 1500,
-      'decoder_buffer_size' => 4000,
-      'video_bitrate' => 1000,
-      // 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/2E3u1U3C3M1T/Image%202014-09-02%20at%2012.28.00%20PM.png', ],
+			'decoder_bitrate_cap' => 1500,	
+			'decoder_buffer_size' => 4000,
+			'video_bitrate' => 1000,
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/2E3u1U3C3M1T/Image%202014-09-02%20at%2012.28.00%20PM.png', ],
 		],
 		'hls-1540' => [
 			'type' => 'segmented',
@@ -73,9 +73,9 @@ class Zencoder extends EncodingProvider {
 			'h264_profile' => 'high',
 			'width' => 960,
 			'decoder_bitrate_cap' => 2250,
-      'decoder_buffer_size' => 6000,
-      'video_bitrate' => 1500,
-      // 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/11392V0W4421/Image%202014-09-02%20at%2012.28.14%20PM.png', ],
+			'decoder_buffer_size' => 6000,
+			'video_bitrate' => 1500,
+			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/11392V0W4421/Image%202014-09-02%20at%2012.28.14%20PM.png', ],
 		],
 		'hls-2040' => [
 			'type' => 'segmented',
@@ -100,13 +100,13 @@ class Zencoder extends EncodingProvider {
 			'format' => 'm3u8',
 		],
 
-		// Normal HTML5 formats
+		// Normal HTML5 formats.  Webm needs to come first because FF plays it much better
+		'webm' => [
+			'format' => 'webm',
+		],
 		'mp4' => [
 			'format' => 'mp4',
 			'h264_profile' => 'main',
-		],
-		'webm' => [
-			'format' => 'webm',
 		],
 	);
 
