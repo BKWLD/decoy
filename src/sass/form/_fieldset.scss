@@ -52,6 +52,14 @@ fieldset, .fieldset {
 		.legend { margin: 0; }
 		.listing { margin-bottom: 0;}
 
+		// Make sure the table fills the whole container, without this there are
+		// subpixel errors and the header bkgd color doesn't span fully
+		overflow-x: hidden;
+		.listing {
+			width: calc(100% + 1px);
+			max-width: none;
+		}
+
 		// Put padding on the cells so that the normal fieldset padding looks
 		// maintained
 		th:first-child, td:first-child { padding-left: $form-group-margin; }
