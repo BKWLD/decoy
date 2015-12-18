@@ -7,11 +7,9 @@
 // Add vars before bootstrap so they can override
 @import "variables";
 @import url($fonts-url); // Fonts
-@import "vendor/bootstrap/bootstrap/variables";
+@import "vendor/bootstrap/bootstrap";
 
 // Add mixins
-@import "vendor/bootstrap/bootstrap/mixins";
-@import "vendor/bootstrap/bootstrap/buttons";
 @import "vendor/*";
 @import "vendor/bkwld/*"; // Loaded from /resources/assets/sass/vendor
 
