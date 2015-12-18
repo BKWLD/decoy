@@ -149,6 +149,7 @@ class ServiceProvider extends BaseServiceProvider {
 		foreach([
 			'decoy.middlewares.auth' => Middleware\Auth::class,
 			'decoy.middlewares.edit-redirect' => Middleware\EditRedirect::class,
+			'decoy.middlewares.save-redirect' => Middleware\SaveRedirect::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
 	}
 
