@@ -5,7 +5,7 @@ define (require) ->
 	_ = require "underscore"
 	Backbone = require "backbone"
 	PIXI = require "pixi"
-	chroma = require "chroma"
+	chroma = require "chroma-js"
 
 	# Init view
 	Cell = {}
@@ -15,7 +15,7 @@ define (require) ->
 		_.bindAll this
 
 		###
-        properties
+				properties
 		###
 		@isChanging = false
 		@pos =
@@ -28,18 +28,18 @@ define (require) ->
 		@flashSpeedOut = options.flashSpeedOut || 0.02
 
 		###
-        building the pixi object needed to render
-        ###
+				building the pixi object needed to render
+				###
 		@graphics = new PIXI.Graphics()
 		@graphics.alpha = 0
 
 		###
-        used to determine if the alpha anim is going up or coming down
+				used to determine if the alpha anim is going up or coming down
 		###
 		@rising = true;
 
 		###
-        when dead, the cell will be cut out and garbage collected from the manager
+				when dead, the cell will be cut out and garbage collected from the manager
 		###
 		@dead = false
 		@render()
@@ -47,7 +47,7 @@ define (require) ->
 		return
 
 	###
-    draw the cell to the screen
+		draw the cell to the screen
 	###
 	Cell.render = ->
 		@graphics.clear()
@@ -57,7 +57,7 @@ define (require) ->
 		return
 
 	###
-    update the animation color/alpha. called each from from the manager
+		update the animation color/alpha. called each from from the manager
 	###
 	Cell.update = ->
 		@changeColor()
@@ -65,13 +65,13 @@ define (require) ->
 		return
 
 	###
-    util function to strip the # from a string and convert hex characters to color int
+		util function to strip the # from a string and convert hex characters to color int
 	###
 	Cell.stringToColor = (chromaColor) ->
 		return parseInt('0x'+chromaColor.hex().replace('#',''))
 
 	###
-    animation logic for each cell
+		animation logic for each cell
 	###
 	Cell.changeColor = ->
 		if @graphics.alpha < 1 && @rising
@@ -86,7 +86,7 @@ define (require) ->
 		return
 
 	###
-    garbage collection for the cell when removed from the stage
+		garbage collection for the cell when removed from the stage
 	###
 	Cell.close = ->
 		@graphics.clear();
