@@ -1,26 +1,18 @@
-// Vendor dependencies
-@import "compass/css3";
-@import "compass/utilities/general/clearfix";
-@import "ceaser-easing";
-@import "rgbapng";
-
 // Add vars before bootstrap so they can override
 @import "variables";
 @import url($fonts-url); // Fonts
 @import "vendor/bootstrap/bootstrap";
 
 // Add mixins
-@import "vendor/*";
-@import "vendor/bkwld/*"; // Loaded from /resources/assets/sass/vendor
+@import "vendor/**/*.scss";
 
 // Config
-@import "mixins/*";
+@import "mixins/*.scss";
 @import "global";
 
 // Partials
-@import "header/*";
-@import "listing/*";
-@import "form/**/*";
-@import "controllers/*";
-@import "shared/*";
-@import "sidebar/*";
+@import "header/*.scss";
+@import "listing/*.scss";
+@import "form/**/*.scss";
+@import "controllers/*.scss";
+@import "sidebar/*.scss";
