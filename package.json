@@ -21,7 +21,7 @@
   "homepage": "https://github.com/BKWLD/decoy#readme",
   "dependencies": {
     "backbone": "^1",
-    "bkwld": "bkwld/js-library#~0",
+    "bkwld": "bkwld/js-library#^0",
     "bootstrap": "^3",
     "bootstrap-datepicker": "^1",
     "bootstrap-timepicker": "^0",
