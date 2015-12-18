@@ -5,10 +5,11 @@ define(function (require) {
 
 	// Dependencies
 	var $ = require('jquery')
-		, _ = require('underscore')
+		, _ = require('lodash')
 		, Backbone = require('backbone')
 		, FastClick = require('fastclick')
 		, Affixable = require('./modules/affixable')
+		, Sidebar = require('./modules/sidebar')
 		, LocalizeCompare = require('./localize/compare')
 		, manifest = require('./modules/manifest')
 		, bootstrap = require('bootstrap')
