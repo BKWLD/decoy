@@ -10,19 +10,27 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<link rel="stylesheet" href="<?=response()->grunt('/css/admin/vendor.css')?>"/>
-		<link rel="stylesheet" href="<?=response()->grunt('/css/admin/style.css')?>"/>
+
+		<? if (file_exists(public_path('dist/admin.css'))): ?>
+			<link href='/dist/admin.css' rel='stylesheet' charset='utf-8'>
+		<? endif ?>
+
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
-		
+
 		<?// The main page content ?>
 		<? if (isset($content)): ?>
 			<div id="main">
 				<?= $content?>
 			</div>
 		<? endif ?>
+
+		<? if (file_exists(public_path('dist/admin.js'))): ?>
+			<script src='/dist/admin.js' charset='utf-8'></script>
+			%script()
+		<? else: ?>
+			<script src='http://localhost:8080/dist/admin.js' charset='utf-8'></script>
+		<? endif ?>
 		
-	<script src="<?=response()->grunt('/js/vendor/require-jquery.js')?>"></script>
-	<script src="<?=response()->grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>
