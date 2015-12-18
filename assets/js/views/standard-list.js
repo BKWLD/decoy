@@ -2,19 +2,19 @@
 // Editable list view
 // --------------------------------------------------
 define(function (require) {
-	
+
 	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-		
+
 	// Bring in just enough jQuery UI for drag and drop
-	require('decoy/plugins/jquery-ui');
-		
+	require('../plugins/jquery-ui');
+
 	// Bring in the template for new rows.  Currently, the only need to do this
 	// is for many-to-many row insertion
-	var row_template = _.template(require('text!decoy/templates/standard-list-row.html'));
-	
+	var row_template = _.template(require('../templates/standard-list-row.html'));
+
 	// Static vars
 	var app,
 		dataId = 'data-model-id',
@@ -23,7 +23,7 @@ define(function (require) {
 
 	// View
 	var StandardList = Backbone.View.extend({
-		
+
 		initialize: function (options) {
 			_.bindAll(this);
 			app = options.app;
@@ -35,7 +35,7 @@ define(function (require) {
 			if (!this.controllerRoute) {
 				this.controllerRoute = window.location.pathname;
 			}
-			
+
 			// Cache
 			this.$deleteBtn = this.$('.delete-selected');
 			this.$deleteAlert = this.$('.delete-alert');
@@ -45,19 +45,19 @@ define(function (require) {
 			this.parent_controller = this.$el.data('parent-controller');
 			this.position_offset = this.$el.data('position-offset');
 			this.$no_results = this.$('.no-results');
-			
+
 			// Create model collection from table rows.  The URL is fetched from
 			// the controller-route data attribute of the container.
 			this.rows = [];
 			this.collection = new Backbone.Collection();
 			this.collection.url = this.controllerRoute;
 			_.each(this.$trs, this.initRow);
-			
+
 			// listen for collection changes and render view
 			this.collection.on('change', this.render, this);
 			this.collection.on('change:featured', this.updateFeatured, this);
 			this.collection.on('remove', this.onRemove);
-			
+
 			// Add drag and drop if there is position data on the first
 			// row.  It expects the current position of the a row to be stored
 			// as a data value on the row
@@ -65,10 +65,10 @@ define(function (require) {
 				this.$sortContainer = this.initSortable();
 			}
 		},
-		
+
 		// Init an individual row in the list
 		initRow: function (row) {
-			
+
 			// Find vars
 			var $row = $(row),
 				modelId = $row.attr(dataId),
@@ -78,7 +78,7 @@ define(function (require) {
 				visible_state = $visibility.find('.'+visibleIconClass).length > 0,
 				position = $row.data('position'),
 				parent_id = $row.data('parent-id');
-			
+
 			// Define the model data
 			var data = {
 				id: modelId,
@@ -87,18 +87,18 @@ define(function (require) {
 				position: position,
 				parent_id: parent_id
 			};
-			
+
 			// If this item supports visibility, add it to the model
 			if ($visibility.length) {
 				data.visible = visible_state;
 			}
-			
+
 			// If there was a parent_controller, add it to the model so sync
 			// requests can make use of it
 			if (this.parent_controller) {
 				data.parent_controller = this.parent_controller;
 			}
-			
+
 			// Create the model and store a reference
 			var model = new Backbone.Model(data);
 			model.whitelist = ['position']; // Only sync position
@@ -114,15 +114,15 @@ define(function (require) {
 			// reset checkboxes on reload (for Firefox)
 			$inputs.filter('[name=select-row]').prop('checked', false);
 		},
-		
+
 		// Turn on sortability
 		initSortable: function() {
-			
+
 			// Cache some selectors
 			var $sortable = this.$el.find('tbody')
 				, $table = $sortable.parent('table')
 			;
-			
+
 			// Tell the server of the new sorting rules by looping through
 			// all rows, looking up the model for the id, and then updating
 			// it's position attribute.
@@ -134,7 +134,7 @@ define(function (require) {
 					this.collection.get(id).set({position: (i + this.position_offset) });
 				}, this);
 			}, this);
-			
+
 			// Define options
 			var options = {
 				tolerance: 'pointer',
@@ -158,7 +158,7 @@ define(function (require) {
 				// Preserve the widths of columns during dragging by freezing widths
 				// From http://cl.ly/170d0h291V10
 				helper: function(e, $tr) {
-					
+
 					// Take advantage of this being early in the call to fix the height of
 					// the table so that the containment measures the currect height of
 					// the table
@@ -175,14 +175,14 @@ define(function (require) {
 				stop: function(event, ui) {
 					$table.css('height', '');
 				},
-				
+
 				// Callback function after sorting happens.
 				update: update
 			};
-			
+
 			// Turn on sorting
 			$sortable.sortable(options).disableSelection();
-			
+
 			// Listen for changes and persist them to the server
 			this.collection.on('change:position', function(model, position) {
 				model.save();
@@ -191,7 +191,7 @@ define(function (require) {
 			// Return a reference to the sortable item
 			return $sortable;
 		},
-		
+
 		events: {
 			'click .select-all': 'toggleAll',
 			'click .delete-selected': 'deleteSelected',
@@ -206,36 +206,36 @@ define(function (require) {
 			'insert': 'insertNew',
 			'insertEl': 'insertEl'
 		},
-		
+
 		// Delete the row via JS
 		deleteNow: function(e) {
 			e.preventDefault();
-			
+
 			// Find the model
 			var $row = $(e.target).closest('tr'),
 				modelId = $row.attr(dataId),
 				model = this.collection.get(modelId);
-			
+
 			// Hide while waiting
 			if ($row.data('deleting')) return;
 			$row.data('deleting', true);
 			$row.animate({opacity:0.2}, 100);
-			
+
 			// Delete it
 			model.destroy({
-				
+
 				// Fade out on success
 				success: _.bind(function() {
 					this.hideRow($row);
-					
+
 					// Decrement the counter
 					this.$total.text(parseInt(this.$total.first().text(),10) - 1);
 
 					// Notify listeners that there was a change
 					this.$el.trigger('change');
-					
+
 				},this),
-				
+
 				// Show error on failure
 				error:function() {
 					$row.animate({opacity:1}, 300);
@@ -243,7 +243,7 @@ define(function (require) {
 				}
 			});
 		},
-		
+
 		// Remove the pivot row via JS
 		removeNow: function(e) {
 			e.preventDefault();
@@ -253,25 +253,25 @@ define(function (require) {
 				$row = $a.closest('tr'),
 				model_id = $row.attr(dataId),
 				parent_id = $row.data('parent-id');
-				
+
 			// Hide while waiting
 			if ($row.data('removing')) return;
 			$row.data('removing', true);
 			$row.animate({opacity:0.2}, 100);
-			
+
 			// Call the remove route
 			$.ajax(this.controllerRoute+'/'+model_id+'/remove', {
 				data: {
-					parent_controller: this.parent_controller, 
+					parent_controller: this.parent_controller,
 					parent_id: parent_id},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})
-			
+
 			// Fade out on success
 			.done(_.bind(function() {
 				this.hideRow($row);
-				
+
 				// Decrement the counter
 				this.$total.text(parseInt(this.$total.first().text(),10) - 1);
 
@@ -282,21 +282,21 @@ define(function (require) {
 				this.collection.remove(this.collection.get(model_id));
 
 			}, this))
-			
+
 			// Show error on failure
 			.fail(function() {
 				$row.animate({opacity:1}, 300);
 				$row.data('removing', false);
 			});
 		},
-		
+
 		// Hide a row, a in a delete
 		hideRow: function($row) {
 			$row.find('td').each(function() {
-				
+
 				// Animate out the padding of the cells
 				$(this).animate({paddingTop: 0, paddingBottom:0}, 300);
-				
+
 				// Add a div inside the cell and animate the hight going to 0 if it
 				// (since we can't aniamte the row itself)
 				$(this).wrapInner("<div/>").children("div").animate({height: 0}, 300, function() {
@@ -304,51 +304,51 @@ define(function (require) {
 				});
 			});
 		},
-		
+
 		toggleAll: function () {
 			var anyFalse = this.collection.where({ selected: false }).length;
 			this.collection.invoke('set', 'selected', anyFalse ? true : false);
 		},
-		
+
 		deleteSelected: function () {
 			this.$deleteAlert.removeClass('hide');
 			this.render();
 		},
-		
+
 		// Delete rows using ajax.
 		deleteConfirm: function () {
-			
+
 			// Vars
 			var models = this.collection.where({ selected: true }),
 				ids = _.pluck(models, 'id'),
 				$rows = this.findRows(ids);
-			
+
 			// Hide while waiting
 			_.each($rows, function($row) {
 				if ($row.data('deleting')) return;
 				$row.data('deleting', true);
 				$row.animate({opacity:0.2}, 100);
 			}, this);
-			
+
 			// Delete them
 			_.each(models, function(model, i) {
 				model.destroy({
-					
+
 					// Fade out on success
 					success: _.bind(function() {
-						
+
 						// Update the editable list controls
 						this.render();
-						
+
 						// The delay is so it happens after the controls disapear
 						var $row = this.findRows(model.id)[0];
 						_.delay(this.hideRow, i*100 + 300, $row);
-						
+
 						// Decrement the counter
 						this.$total.text(parseInt(this.$total.first().text(),10) - 1);
-						
+
 					},this),
-					
+
 					// Show error on failure
 					error:function() {
 						_.each($rows, function($row) {
@@ -362,49 +362,49 @@ define(function (require) {
 			// Notify listeners that there was a change.  Out here rather than on success
 			// callback so that it doesn't get invoked once for each delete.
 			this.$el.trigger('change');
-	
+
 		},
-		
+
 		// Remove a many-to-many relationship.  This should be dried up so we're just changing
 		// statuses on the model and it's handling the presentation.
 		removeConfirm: function() {
-			
+
 			// Vars
 			var ids = _.pluck(this.collection.where({ selected: true }), 'id'),
 				$rows = this.findRows(ids),
 				url = this.controllerRoute+'/'+ids[0]+'/remove',
 				parent_id = $rows[0].data('parent-id');
-			
+
 			// Hide while waiting
 			_.each($rows, function($row) {
 				if ($row.data('removing')) return;
 				$row.data('removing', true);
 				$row.animate({opacity:0.2}, 100);
 			}, this);
-			
+
 			// Call the bulk remove route
 			$.ajax(url, {
 				data: {
-						parent_controller: this.parent_controller, 
-						parent_id: parent_id, 
+						parent_controller: this.parent_controller,
+						parent_id: parent_id,
 						ids: ids.join(',')
 				},
 				type: 'DELETE',
 				dataType: 'JSON'
 			})
-			
+
 			// Fade out on success
 			.done(_.bind(function() {
-				
+
 				// Remove the models from the collection
 				this.collection.remove(this.collection.where({ selected: true }));
 				this.render();
-				
+
 				// Hide all the rows.  The delay is so it happens after the controls disapear
 				_.each($rows, function($row, i) {
 					_.delay(this.hideRow, i*100 + 300, $row);
 				}, this);
-				
+
 				// Decrement the counter
 				this.$total.text(parseInt(this.$total.first().text(),10) - ids.length);
 
@@ -412,7 +412,7 @@ define(function (require) {
 				this.$el.trigger('change');
 
 			}, this))
-			
+
 			// Show error on failure
 			.fail(function() {
 				_.each($rows, function($row) {
@@ -420,9 +420,9 @@ define(function (require) {
 					$rows.data('removing', false);
 				}, this);
 			});
-			
+
 		},
-		
+
 		// Get all of the DOM elements as jquery elements that have the passed ids
 		findRows: function(ids) {
 			if (!_.isArray(ids)) ids = [ids];
@@ -430,40 +430,40 @@ define(function (require) {
 				return _.contains(ids, $row.attr(dataId));
 			}, this);
 		},
-		
+
 		deleteCancel: function () {
 			this.$deleteAlert.addClass('hide');
 			this.render();
 		},
-		
+
 		toggleSelect: function (e) {
 			var model = $(e.target).data('model');
 			model.set('selected', !model.get('selected'));
 		},
-		
+
 		setFeatured: function (e) {
 			var model = $(e.target).data('model');
 			model.set('featured', true);
 		},
-		
+
 		// Toggle the visibility of the model
 		toggleVisibility: function(e) {
 			e.preventDefault();
-			
+
 			// Find the model
 			var $row = $(e.target).closest('tr'),
 				modelId = $row.attr(dataId),
 				model = this.collection.get(modelId);
-				
+
 			// Set the visibility status
 			model.set('visible', model.get('visible') ? false : true);
 			model.save();
-			
+
 			// Update the UI
 			this.render(model);
-			
+
 		},
-		
+
 		// update featured state and deal with server request
 		updateFeatured: function (model) {
 			// tell other models to not be featured
@@ -475,13 +475,13 @@ define(function (require) {
 			});
 			window.console.log('TODO: tell backend about featured', output);
 		},
-		
+
 		// Insert a new row into the list.  This may be triggered by many-to-many
 		insertNew: function(e, data) {
 
 			// Get all of the column values as an array
 			var columns = _.values(data.columns);
-			
+
 			// Build the row.  Note, the id must be unique for each row.  This means
 			// that we can't insert multiple rows for the same join or the bulk
 			// actions won't work
@@ -491,15 +491,15 @@ define(function (require) {
 				label: columns.shift(),
 				controller: this.controllerRoute
 			}));
-			
+
 			// Add additional columns if we're not in a related sidebar
 			if (!this.$el.closest('.related').length) {
 				_.each(columns, function(html) {
-										
+
 					// Add a new cell before the last one (which is the actions cell)
 					if (!html) html = ''; // Handle NULL
 					$row.find('td:last').before('<td>'+html+'</td>');
-					
+
 				});
 			}
 
@@ -508,7 +508,7 @@ define(function (require) {
 
 			// Fade it in
 			$row.hide().fadeIn();
-			
+
 		},
 
 		// Insert a new row by passing a reference to its DOM element
@@ -531,7 +531,7 @@ define(function (require) {
 
 			// Increment the counter
 			this.$total.text(parseInt(this.$total.first().text(),10) + 1);
-			
+
 			// Enable tooltips
 			$row.find('.js-tooltip').tooltip({ animation: false });
 
@@ -544,7 +544,7 @@ define(function (require) {
 		onRemove: function(model, collection, status) {
 			if (!collection.length) this.$no_results.removeClass('remove');
 		},
-		
+
 		// render view from model changes
 		render: function (model) {
 
@@ -554,7 +554,7 @@ define(function (require) {
 				if ($row.attr(dataId) !== model.get('id')) return;
 				$row.find('input[name=select-row]').prop('checked', model.get('selected'));
 			});
-			
+
 			// Update the visibilty state
 			if (model && model.has('visible')) {
 				var $row = this.findRows(model.id)[0],
@@ -573,7 +573,7 @@ define(function (require) {
 					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
 				}
 			}
-			
+
 			// Update the disabled state of the delete/remove buttons
 			var anySelected = this.collection.where({ selected: true }).length,
 				enableDelete = anySelected && (!this.$deleteAlert.length || this.$deleteAlert.hasClass('hide'));
@@ -584,17 +584,17 @@ define(function (require) {
 				this.$deleteBtn.addClass('disabled');
 				this.$bulkActions.addClass('hide');
 			}
-			
+
 			// Toggle the sortability
 			if (this.$sortContainer) {
 				if (anySelected) this.$sortContainer.sortable('disable');
 				else this.$sortContainer.sortable('enable');
 			}
-			
+
 			// Hide the alert if none are selected
 			if (!anySelected) this.$deleteAlert.addClass('hide');
 		}
 	});
-	
+
 	return StandardList;
 });
