@@ -31,7 +31,6 @@
 	<?// Footer embeds ?>
 	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
 	<script src="<?=response()->grunt('/js/vendor/require-jquery.js')?>"></script>
-	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
 	<script src="<?=response()->grunt('/js/admin/main.js')?>"></script>
 </body>
 </html>
