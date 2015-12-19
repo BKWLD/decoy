@@ -24,7 +24,7 @@
     "bkwld-js-library": "github:bkwld/js-library",
     "bootstrap": "^3",
     "bootstrap-datepicker": "^1",
-    "bootstrap-sass": "^3.3.6",
+    "bootstrap-sass": "^3",
     "bootstrap-timepicker": "^0",
     "chroma-js": "^1",
     "fastclick": "^1",
@@ -34,6 +34,6 @@
     "kizzy": "0.0.5",
     "lodash": "^3",
     "pixi.js": "^3",
-    "typeahead.js": "^0.11.1"
+    "typeahead.js": "^0"
   }
 }
