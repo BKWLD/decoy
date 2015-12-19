@@ -16,7 +16,7 @@
   > .item {
     display: none;
     position: relative;
-    @include transition(.6s ease-in-out left);
+    transition: .6s ease-in-out left;
 
     // Account for jankitude on images
     > img,
@@ -72,7 +72,7 @@
   left: 0;
   bottom: 0;
   width: $carousel-control-width;
-  @include opacity($carousel-control-opacity);
+  opacity: $carousel-control-opacity;
   font-size: $carousel-control-font-size;
   color: $carousel-control-color;
   text-align: center;
@@ -96,7 +96,7 @@
     outline: 0;
     color: $carousel-control-color;
     text-decoration: none;
-    @include opacity(.9);
+    opacity: .9;
   }
 
   // Toggles

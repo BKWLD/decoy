@@ -23,7 +23,7 @@
 
 		// Setup for the closed animation
 		$span: 300ms;
-		@include transition(height $span);
+		transition: height $span;
 		overflow: hidden;
 	}
 
@@ -57,7 +57,7 @@
 
 		// These are clickable
 		cursor: pointer;
-		@include user-select(none);
+		user-select: none;
 
 		// Don't indent on mobile
 		@media(max-width: $screen-sm) {
@@ -87,7 +87,7 @@
 		// These are clickable
 		span {
 			cursor: pointer;
-			@include user-select(none);
+			user-select: none;
 		}
 
 		// Don't allow the text to wrap to multiple lins

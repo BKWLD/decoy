@@ -58,7 +58,7 @@
 				}
 				&:active:after {
 					color: $nav-text-active;
-					@include transition(color 100ms);
+					transition: color 100ms;
 				}
 			}
 
@@ -69,7 +69,7 @@
 					.glyphicon { color: $nav-bkgd-active; }
 					&:active .glyphicon { 
 						color: $nav-text-active; 
-						@include transition(color 100ms);
+						transition: color 100ms;
 					}
 				}
 			}
@@ -111,7 +111,7 @@
 						content: '';
 						border:1px solid darken($nav-text, 30%);
 						background-color: darken($nav-text, 30%);
-						@include border-radius(50%);
+						border-radius: 50%;
 						height:6px;
 						width: 6px;
 						display: block;

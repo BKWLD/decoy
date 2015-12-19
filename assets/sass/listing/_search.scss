@@ -62,7 +62,7 @@
 		// The add/minus buttons
 		.add, .subtract {
 			$radius: 13px;
-			@include border-radius($radius);
+			border-radius: $radius;
 			width: $radius*2;
 			height: $radius*2;
 			padding: 0;
@@ -100,7 +100,7 @@
 		// Make all the inputs the same size
 		$width: 135px;
 		input, select, .input-group {
-			@include box-sizing(border-box);
+			box-sizing: border-box;
 			width: $width;
 			@media (min-width: $screen-sm) and (max-width: 825px) {
 				width: 100px;
@@ -114,7 +114,7 @@
 
 			// Remove some BS3 styling that conflicts
 			border: none;
-			@include box-shadow(none);
+			box-shadow: none;
 
 			// Remove stroke on input-group-btn
 			.btn { 
@@ -216,7 +216,7 @@
 	
 	// Only animate after the initial page load
 	&.initialized .search-toggle.btn {
-		@include transition(margin-right 400ms ease-out);
+		transition: margin-right 400ms ease-out;
 	}
 
 	// Icons look better shifted down an extra px

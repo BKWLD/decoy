@@ -35,7 +35,7 @@
 
 	// Style like a form-group input
 	.standard-list {
-		@include border-radius($input-border-radius);
+		border-radius: $input-border-radius;
 		border: 1px solid $input-border;
 		  overflow: hidden;
 	}

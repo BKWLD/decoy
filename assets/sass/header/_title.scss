@@ -67,7 +67,7 @@
 		line-height: 0; // Clear the title's line height
 		bottom: 4px;
 		background: rgba($theme-primary-color, .9);
-		@include box-shadow(-6px 0 12px $theme-primary-color);
+		box-shadow: -6px 0 12px $theme-primary-color;
 
 		// Add text label automatically
 		.new:after {

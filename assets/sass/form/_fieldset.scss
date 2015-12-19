@@ -88,7 +88,7 @@ fieldset, .fieldset {
 	// A disabled fieldset is used, for instance, for sidebar listings before
 	// the parent is saved
 	&.disabled {
-		@include opacity(.7);
+		opacity: .7;
 		.legend { 
 			background: grayscale($theme-secondary-color);
 			&, > a { color: grayscale($theme-secondary-inverse); }

@@ -9,11 +9,11 @@
 // For recommendations on resolving such conflicts, see
 // http://getbootstrap.com/getting-started/#third-box-sizing
 * {
-  @include box-sizing(border-box);
+  box-sizing: border-box;
 }
 *:before,
 *:after {
-  @include box-sizing(border-box);
+  box-sizing: border-box;
 }
 
 
@@ -96,7 +96,7 @@ img {
   background-color: $thumbnail-bg;
   border: 1px solid $thumbnail-border;
   border-radius: $thumbnail-border-radius;
-  @include transition(all .2s ease-in-out);
+  transition: all .2s ease-in-out;
 
   // Keep them at most 100% wide
   @include img-responsive(inline-block);

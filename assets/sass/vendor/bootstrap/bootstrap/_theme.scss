@@ -21,7 +21,7 @@
 .btn-danger {
   text-shadow: 0 -1px 0 rgba(0,0,0,.2);
   $shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 1px rgba(0,0,0,.075);
-  @include box-shadow($shadow);
+  box-shadow: $shadow;
 
   // Reset the shadow
   &:active,
@@ -114,7 +114,7 @@
   @include reset-filter(); // Remove gradient in IE<10 to fix bug where dropdowns don't get triggered
   border-radius: $navbar-border-radius;
   $shadow: inset 0 1px 0 rgba(255,255,255,.15), 0 1px 5px rgba(0,0,0,.075);
-  @include box-shadow($shadow);
+  box-shadow: $shadow;
 
   .navbar-nav > .active > a {
     @include gradient-vertical($start-color: darken($navbar-default-bg, 5%), $end-color: darken($navbar-default-bg, 2%));
@@ -159,7 +159,7 @@
 .alert {
   text-shadow: 0 1px 0 rgba(255,255,255,.2);
   $shadow: inset 0 1px 0 rgba(255,255,255,.25), 0 1px 2px rgba(0,0,0,.05);
-  @include box-shadow($shadow);
+  box-shadow: $shadow;
 }
 
 // Mixin for generating new styles
@@ -254,5 +254,5 @@
   @include gradient-vertical($start-color: darken($well-bg, 5%), $end-color: $well-bg);
   border-color: darken($well-bg, 10%);
   $shadow: inset 0 1px 3px rgba(0,0,0,.05), 0 1px 0 rgba(255,255,255,.1);
-  @include box-shadow($shadow);
+  box-shadow: $shadow;
 }

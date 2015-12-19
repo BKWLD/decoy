@@ -19,7 +19,7 @@
 
 	// IE 9 requires this or it puts the scrollbar in the wrong place
 	// https://github.com/BKWLD/decoy/issues/395
-	@include box-sizing(content-box);
+	box-sizing: content-box;
 
 	// Start out hidden.  Couldn't use translate in iOS.  I think the fixed
 	// positioning ruled that out.
@@ -55,7 +55,7 @@
 			right: 7px;
 			
 			.close {
-				@include opacity(1);
+				opacity: 1;
 				color: white;
 				font-size: 14px;
 				padding: 1px 0 4px 2px;

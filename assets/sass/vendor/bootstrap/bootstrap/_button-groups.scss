@@ -121,7 +121,7 @@
 
   // Show no shadow for `.btn-link` since it has no other button styles.
   &.btn-link {
-    @include box-shadow(none);
+    box-shadow: none;
   }
 }
 
@@ -236,5 +236,5 @@
 [data-toggle="buttons"] > .btn > input[type="checkbox"] {
   position: absolute;
   z-index: -1;
-  @include opacity(0);
+  opacity: 0;
 }

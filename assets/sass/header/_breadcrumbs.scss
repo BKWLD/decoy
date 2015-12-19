@@ -6,7 +6,7 @@
 	top: 0;
 	z-index: $header-z;
 	font-size: 12px;
-	@include box-shadow($common-shadow);
+	box-shadow: $common-shadow;
 
 	// Sync padding with rest of page
 	@include adjust-for-sidebar;
@@ -66,7 +66,7 @@
 		background: $color;
 		position: relative;
 		z-index: 1;
-		@include box-shadow(-6px 0 12px $color);
+		box-shadow: -6px 0 12px $color;
 	}
 
 	&.affix {

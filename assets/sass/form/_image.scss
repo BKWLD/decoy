@@ -2,7 +2,7 @@
 .image-upload {
 	.img-thumbnail { 
 		z-index: 100;
-		@include box-sizing(border-box);
+		box-sizing: border-box;
 
 		// Don't break out of box on FF
 		max-width: 100%;
@@ -62,8 +62,8 @@
 			line-height: 1em;
 			display: inline-block;
 			border: solid 1px transparent;
-			@include border-corner-radius(top, left, 4px);
-			@include border-corner-radius(top, right, 4px);
+			border-corner-radius: top, left, 4px;
+			border-corner-radius: top, right, 4px;
 			top: 1px; // Overlap the border on the image
 			
 			// The active tab
@@ -84,7 +84,7 @@
 
 		// Remove the rounded corner in the uppwer left
 		~ .imgs .img-thumbnail {
-			@include border-corner-radius(top, left, 0);
+			border-corner-radius: top, left, 0;
 		}
 
 	}
@@ -112,11 +112,11 @@
 		display: none;
 
 		margin-left: 5px;
-		@include opacity(.4);
+		opacity: .4;
 		cursor: pointer;
 		.form-group:hover & {
-			@include opacity(.7);
-			&:hover { @include opacity(1); }
+			opacity: .7;
+			&:hover { opacity: 1; }
 		}
 	}
 }

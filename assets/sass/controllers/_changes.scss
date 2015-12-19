@@ -21,7 +21,7 @@
 
 	// Grey out non-link glyphicons
 	span.glyphicon {
-		@include opacity($light-opacity);
+		opacity: $light-opacity;
 	}
 
 }

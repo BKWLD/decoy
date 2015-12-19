@@ -24,7 +24,7 @@
 	
 	// Column defaults
 	th {
-		@include box-sizing(content-box); // This is required to push the "actions" off the right edge
+		box-sizing: content-box; // This is required to push the "actions" off the right edge
 	}
 	th:first-child {
 		width: 10px;

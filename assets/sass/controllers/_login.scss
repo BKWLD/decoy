@@ -19,7 +19,7 @@ body.login.index {
 			position: relative;
 			z-index: 2;
 			padding: 20px;
-			@include box-sizing(border-box);
+			box-sizing: border-box;
 			
 			.max-width {
 				margin-left: auto;
@@ -41,9 +41,9 @@ body.login.index {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		@include box-sizing(border-box);
+		box-sizing: border-box;
 		background-size: cover;
-		@include opacity(.1);
+		opacity: .1;
 	}
 	
 	// Left side
@@ -64,13 +64,13 @@ body.login.index {
 		}
 
 		@mixin animate {
-			@include transition(all 800ms);
-			@include opacity(0);
+			transition: all 800ms;
+			opacity: 0;
 			position: relative;
 			top: -5px;
 			&.show {
 				top: 0;
-				@include opacity(1);
+				opacity: 1;
 			}
 		}
 		
@@ -100,8 +100,8 @@ body.login.index {
 		float: right;
 		padding: 30px;
 		max-width: 380px;
-		@include border-radius(6px);
-		@include box-sizing(border-box);
+		border-radius: 6px;
+		box-sizing: border-box;
 		
 		@media (max-width: $screen-sm) {
 			padding: 15px;

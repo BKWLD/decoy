@@ -19,16 +19,16 @@
 
 	// Make the dropdown open state not have a dark inset box shadow
 	&.dropdown-toggle[aria-expanded="true"] {
-		@include box-shadow(none);
+		box-shadow: none;
 		background: rgba($text-color, .25);
 	}
 
 	// Scale up the icon on depress
 	&:active {
-		@include box-shadow(none);
-		@include transition(transform 300ms);
+		box-shadow: none;
+		transition: transform 300ms;
 		.glyphicon {
-			@include transition(transform 100ms);
+			transition: transform 100ms;
 			@include scale(1.2);
 		}
 	}

@@ -67,7 +67,7 @@ body.elements.index {
 
 		// Make the fieldset rounded
 		.legend {
-			@include border-radius(4px);
+			border-radius: 4px;
 		}
 
 	}
