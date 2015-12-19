@@ -9,7 +9,7 @@
 		padding: 0;
 		margin: 0;
 		border-top: $border;
-		
+
 		// Contains both top-level links and optional sub-nav container
 		.main-nav {
 			a {
@@ -31,7 +31,7 @@
 			.top-level {
 				position: relative;
 				background-color: lighten($gray-dark, 3%);
-				
+
 				&:active {
 					color: $nav-text-active;
 					background: $nav-bkgd-active;
@@ -46,7 +46,7 @@
 				&.parent {
 					&:after {
 						color: darken($nav-text, 25%);
-						@include transition( all 250ms 0ms ceaser($easeInSine) );
+						transition: all 250ms;
 						content: '›';
 						display: block;
 						position: absolute;
@@ -67,8 +67,8 @@
 				.top-level {
 					color: $nav-text-active;
 					.glyphicon { color: $nav-bkgd-active; }
-					&:active .glyphicon { 
-						color: $nav-text-active; 
+					&:active .glyphicon {
+						color: $nav-text-active;
 						transition: color 100ms;
 					}
 				}
@@ -78,7 +78,7 @@
 				.top-level {
 					// rotate the arrow down when open
 					&.parent:after {
-						@include transform( rotate(90deg) ); 
+						@include transform( rotate(90deg) );
 						bottom: 0;
 					}
 				}
@@ -90,7 +90,7 @@
 				overflow: hidden;
 				//height: 0;
 				max-height: 0px;
-				@include transition(max-height 450ms 0 ceaser($linear));
+				transition: max-height 450ms;
 
 				a {
 					font-size: 12px;
@@ -106,7 +106,7 @@
 						margin-left: -20px;
 					}
 
-					// subnav dots 
+					// subnav dots
 					&:after {
 						content: '';
 						border:1px solid darken($nav-text, 30%);
@@ -149,7 +149,7 @@
 			}
 
 			&.open {
-				
+
 				// have the currently expanded subnav show
 				.subnav {
 					max-height: 500px;

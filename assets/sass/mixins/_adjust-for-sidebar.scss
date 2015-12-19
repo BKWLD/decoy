@@ -8,7 +8,7 @@
 	}
 
 	// Sidebar goes away at break
-	@include transition( #{$property} 250ms 0ms ceaser($easeInQuad));
+	transition: #{$property} 250ms;
 	@media(max-width:$screen-sm) {
 		#{$property}: 0;
 	}

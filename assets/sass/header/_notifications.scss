@@ -82,12 +82,12 @@
 	max-height:0;
 
 	// Collapsed
-	@include transition(max-height 350ms 0ms $easeInOutSine); // no delay on close
+	transition: max-height 350ms;
 	@include gpu-cache();
 
 	// animate the notifcation pane in
 	&.show {
-		@include transition(max-height 350ms 150ms ceaser($easeInOutSine)); // delay on open
+		transition: max-height 350ms 150ms;
 		max-height:300px;
 		border-bottom-style: solid;
 		border-bottom-width: 1px;
