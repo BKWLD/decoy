@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "5.0.4",
+  "version": "5.0.5",
   "description": "The BKWLD CMS framework",
   "main": "assets/js/decoy.js",
   "directories": {
@@ -24,6 +24,7 @@
     "bkwld-js-library": "github:bkwld/js-library",
     "bootstrap": "^3",
     "bootstrap-datepicker": "^1",
+    "bootstrap-sass": "^3.3.6",
     "bootstrap-timepicker": "^0",
     "chroma-js": "^1",
     "fastclick": "^1",
