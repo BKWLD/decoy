@@ -13,15 +13,15 @@
 	$weighting: 1.3;
 	@for $i from 1 through 6 {
 		&.columns-#{$i} {
-						
+
 			// Default width of columns
 			th {  width: 100%/$i/$weighting; }
-			
+
 			// The title column
 			th:first-child + th { width: 100% - 100%/$i/$weighting*($i - 1); }
 		}
 	}
-	
+
 	// Column defaults
 	th {
 		box-sizing: content-box; // This is required to push the "actions" off the right edge
@@ -34,8 +34,8 @@
 		text-align: right;
 
 		// Many non-Chrome browsers need these to be a little wider than normal.  I gave it 4px extra
-		&.actions-1, 
-		&.actions-2 { width: 46px; } 
+		&.actions-1,
+		&.actions-2 { width: 46px; }
 		&.actions-3 { width: 76px; }
 		&.actions-4 { width: 96px; }
 		&.actions-5 { width: 126px; }
@@ -62,7 +62,7 @@
 	// Style the header
 	thead {
 		background: lighten($theme-secondary-color, 10%);
-		
+
 		// Dim the color on the header content and
 		// make the text smaller
 		th {
@@ -107,11 +107,11 @@
 
 		// Pushes subsequent text off the edge of the image, usually a thumbnail
 		margin-right: 5px;
-		
+
 		// Set a default max height for images. This helps images that were uploaded in wysiwyg and
 		// are being displayed in listings
 		max-height: 100px;
-  		max-width: 100%;
+			max-width: 100%;
 		width: auto;
 
 		// Animated gifs won't be cropped by croppa, so give them a default width / height.  Same
@@ -161,7 +161,7 @@
 		}
 		td:first-child + td, td:last-child, th:first-child + th, th:last-child {
 			display: table-cell;
-		}	
+		}
 	}
 
 	// Remove some the actions padding on really small browsers
@@ -172,4 +172,3 @@
 	}
 
 }
-

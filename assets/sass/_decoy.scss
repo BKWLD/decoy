@@ -3,10 +3,8 @@
 @import url($fonts-url); // Fonts
 @import "vendor/bootstrap/bootstrap";
 
-// Add mixins
-@import "vendor/**/*.scss";
-
 // Config
+@import "vendor/**/*.scss";
 @import "mixins/*.scss";
 @import "global";
 

@@ -78,7 +78,7 @@
 				.top-level {
 					// rotate the arrow down when open
 					&.parent:after {
-						@include transform( rotate(90deg) );
+						transform: rotate(90deg);
 						bottom: 0;
 					}
 				}

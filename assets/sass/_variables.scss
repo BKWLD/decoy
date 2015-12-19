@@ -10,7 +10,7 @@ $theme-login-bkgd: '/packages/bkwld/decoy/img/theme/bkgd.jpg' !default;
 
 // Colors
 $body-color: #efefef !default;
-$light-grey: whiteSmoke !default;
+$light-grey: #f5f5f5 !default;
 $lightest-grey: #fdfdfd !default;
 $grey-border: #ddd !default;
 $light-opacity: .3 !default;
@@ -21,9 +21,9 @@ $element-icon-color: $theme-primary-color !default;
 $element-icon-inverse: $theme-primary-inverse !default;
 $element-icon-active: $grey-border !default;
 $form-container-bkgd: #F5F5F5 !default;
-$table-row-hover: #f6f6f6;
-$code-editor-bkgd: #1d1f21;
-$code-editor-text: #36ca0e;
+$table-row-hover: #f6f6f6 !default;
+$code-editor-bkgd: #1d1f21 !default;
+$code-editor-text: #36ca0e !default;
 
 // Sizes
 $main-padding: 30px !default; // Same as $grid-gutter-width
