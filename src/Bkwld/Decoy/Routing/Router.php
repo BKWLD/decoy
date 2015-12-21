@@ -15,33 +15,33 @@ class Router {
 	/**
 	 * Action for current wildcard request
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	private $action;
 
 	/**
 	 * The path "directory" of the admin.  I.e. "admin"
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	private $dir;
 
 	/**
 	 * Constructor
-	 * 
+	 *
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
 	 */
 	public function __construct($dir, $filters) {
 		$this->dir = $dir;
 	}
-	
+
 	/**
 	 * Register all routes
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerAll() {
-		
+
 		// Public routes
 		Route::group([
 			'prefix' => $this->dir,
@@ -75,13 +75,13 @@ class Router {
 		], function() {
 			$this->registerCallbackEndpoints();
 		});
-		
+
 	}
-	
+
 	/**
 	 * Account routes
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerAccount() {
 		Route::get('/', ['as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()]);
@@ -93,14 +93,14 @@ class Router {
 		Route::get('reset/{code}', ['as' => 'decoy::account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
 		Route::post('reset/{code}', 'Bkwld\Decoy\Controllers\Account@postReset');
 	}
-	
+
 	/**
 	 * Setup wilcard routing
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerWildcard() {
-		
+
 		// Setup a wildcarded catch all route
 		Route::any('{path}', ['as' => 'decoy::wildcard', function($path) {
 
@@ -108,7 +108,7 @@ class Router {
 			App::make('events')->listen('wildcard.detection', function($controller, $action) {
 				$this->action($controller.'@'.$action);
 			});
-			
+
 			// Do the detection
 			$router = App::make('decoy.wildcard');
 			$response = $router->detectAndExecute();
@@ -116,35 +116,35 @@ class Router {
 				|| is_a($response, 'Illuminate\View\View')) // Possible when layout is involved
 				return $response;
 			else App::abort(404);
-			
+
 		}])->where('path', '.*');
 
 	}
-	
+
 	/**
 	 * Non-wildcard admin routes
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerAdmins() {
 		Route::get('admins/{id}/disable', ['as' => 'decoy::admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
 		Route::get('admins/{id}/enable', ['as' => 'decoy::admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
 	}
-	
+
 	/**
 	 * Commands / Tasks
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerCommands() {
 		Route::get('commands', ['uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy::commands']);
 		Route::post('commands/{command}', ['uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy::commands@execute']);
 	}
-	
+
 	/**
 	 * Workers
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerWorkers() {
 		Route::get('workers', ['uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy::workers']);
@@ -154,18 +154,26 @@ class Router {
 	/**
 	 * Get the status of an encode
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerEncode() {
-		Route::get('encode/{id}/progress', function($id) {
+
+		// Get the status of an encode
+		Route::get($this->dir.'/encode/{id}/progress', ['as' => 'decoy::encode@progress', function($id) {
 			return Encoding::findOrFail($id)->forProgress();
-		});
+		}]);
+
+		// Make a simply handler for notify callbacks.  The encoding model will pass
+		// the the handling onto whichever provider is registered.
+		Route::post($this->dir.'/encode/notify', ['as' => 'decoy::encode@notify', function() {
+			return Encoding::notify(Input::get());
+		}]);
 	}
 
 	/**
 	 * Elements system
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerElements() {
 		Route::get('elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy::elements@field']);
@@ -178,7 +186,7 @@ class Router {
 	 * Upload handling for Redactor
 	 * http://imperavi.com/redactor/
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function registerRedactor() {
 		Route::post('redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
@@ -189,17 +197,17 @@ class Router {
 	 */
 	public function registerCallbackEndpoints() {
 
-		// Make a simply handler for notify callbacks.  The encoding model will pass 
+		// Make a simply handler for notify callbacks.  The encoding model will pass
 		// the the handling onto whichever provider is registered.
 		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
 			return Encoding::notify(Input::get());
 		}]);
 
 	}
-	
+
 	/**
 	 * Set and get the action for this request
-	 * 
+	 *
 	 * @return string 'Bkwld\Decoy\Controllers\Account@forgot'
 	 */
 	public function action($name = null) {

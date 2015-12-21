@@ -22,7 +22,7 @@ use View;
  * Render a form that allows admins to override language files
  */
 class Elements extends Base {
-	
+
 	protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
 
 	/**
@@ -38,7 +38,7 @@ class Elements extends Base {
 		if (!($locales = Config::get('decoy.site.locales')) || empty($locales)) {
 			$tab = $locale;
 			$locale = null;
-		
+
 		// Otherwise, set a default locale if none was specified
 		} elseif (!$locale) $locale = Decoy::defaultLocale();
 
@@ -91,7 +91,7 @@ class Elements extends Base {
 			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help)->id($id);
 			case 'image': return Former::image($key, $el->label)->blockHelp($el->help)->id($id);
 			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id);
+			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id)->push();
 			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help)->id($id);
 			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help)->id($id);
 			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help)->id($id);
@@ -145,14 +145,14 @@ class Elements extends Base {
 			// If value is an array, like it would be for the "checkboxes" type, make
 			// it a comma delimited string
 			if (is_array($value)) $value = implode(',', $value);
-			
-			// We're removing the carriage returns because YAML won't include them and 
-			// all multiline YAML config values were incorrectly being returned as 
+
+			// We're removing the carriage returns because YAML won't include them and
+			// all multiline YAML config values were incorrectly being returned as
 			// dirty.
 			$value = str_replace("\r", '', $value);
-			
+
 			// Check if the model is dirty, manually.  Laravel's performInsert()
-			// doesn't do this, thus we must check ourselves. 
+			// doesn't do this, thus we must check ourselves.
 			if ($value == $el->value) return;
 
 			// Inform the model as to whether the model already exists in the db.
@@ -182,13 +182,13 @@ class Elements extends Base {
 
 		// Redirect back to index
 		return Redirect::to(URL::current())->with('success', '<b>Elements</b> were successfully saved.');
-		
+
 	}
 
 	/**
 	 * Show the field editor form that will appear in an iframe on
 	 * the frontend
-	 * 
+	 *
 	 * @param  string $key A full Element key
 	 * @return Illuminate\Http\Response
 	 */
@@ -205,7 +205,7 @@ class Elements extends Base {
 	/**
 	 * Update a single field because of a frontend Element editor
 	 * iframe post
-	 * 
+	 *
 	 * @param  string $key A full Element key
 	 * @return Illuminate\Http\Response
 	 */
@@ -229,7 +229,7 @@ class Elements extends Base {
 			// Clear the cache
 			$elements->clearCache();
 		}
-		
+
 		// Return the layout with JUST a script variable with the element value
 		// after saving.  Thus, post any saving callback operations.
 		return View::make('decoy::layouts.blank', [
@@ -240,7 +240,7 @@ class Elements extends Base {
 	/**
 	 * The permissions options are a list of all the tabs
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function getPermissionOptions() {
 

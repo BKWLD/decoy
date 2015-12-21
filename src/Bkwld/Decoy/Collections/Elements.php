@@ -54,11 +54,11 @@ class Elements extends Collection {
 	 * 
 	 * @param Symfony\Component\Yaml\Parser $yaml_parser 
 	 * @param Bkwld\Decoy\Models\Element $model
-	 * @param  Illuminate\Cache\Repository $cache
+	 * @param Illuminate\Cache\Repository $cache
 	 */
 	public function __construct(Parser $yaml_parser, Element $model, Repository $cache) {
 		$this->yaml_parser = $yaml_parser;
-		$this->model = $model;
+		$this->setModel($model);
 		$this->cache = $cache;
 	}
 
@@ -381,13 +381,25 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Replace the model instance being used
+	 * Replace the model class being used (via an instance) and listen for updates.
 	 *
 	 * @param  Bkwld\Decoy\Models\Element $element 
 	 * @return $this
 	 */
 	public function setModel($element) {
 		$this->model = $element;
+		$this->model->created([$this, 'onModelUpdate']);
+		$this->model->updated([$this, 'onModelUpdate']);
 		return $this;
+	}
+
+	/**
+	 * When a model is updated, update the corresponding key-val pair
+	 *
+	 * @param Bkwld\Decoy\Models\Element $element
+	 * @return void 
+	 */
+	public function onModelUpdate($element) {
+		$this->items[$element->getKey()]['value'] = $element->getAttribute('value');
 	}
 }

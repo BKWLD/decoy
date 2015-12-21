@@ -140,10 +140,10 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	public function onUpdated() {}
 	public function onDeleting() {}
 	public function onDeleted() {}
-	public function onAttaching($parent) {}
-	public function onAttached($parent) {}
-	public function onRemoving($ids) {}
-	public function onRemoved($ids) {}
+	public function onAttaching($parent) {} // Eloquent\Model
+	public function onAttached($parent) {} // Eloquent\Model
+	public function onRemoving($parent) {} // Eloquent\Model
+	public function onRemoved($parent) {} // Eloquent\Model
 
 	/**
 	 * Get the polymorphic relationship to Changes
