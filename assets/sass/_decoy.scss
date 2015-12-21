@@ -1,7 +1,9 @@
 // Add vars before bootstrap so they can override
 @import "variables";
-@import url($fonts-url); // Fonts
-@import "vendor/bootstrap/bootstrap";
+
+// Add Boostrap from node_modules
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+@import "~bootstrap-sass/assets/stylesheets/_bootstrap.scss";
 
 // Config
 @import "vendor/**/*.scss";

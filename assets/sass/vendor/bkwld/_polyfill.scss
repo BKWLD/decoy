@@ -13,7 +13,11 @@
 
 // Default to the pie-clearfix
 @mixin clearfix {
-	@include pie-clearfix;
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
 }
 
 // Support background cover in < IE9
