@@ -13,6 +13,7 @@ define (require) ->
 	PIXI = require "pixi"
 	chroma = require "chroma-js"
 	Cell = require "./cell"
+	requestAnimationFrame = require "raf" # Polyfill
 
 	# Init view
 	DecoyAnim = {}
@@ -32,8 +33,8 @@ define (require) ->
 		baseColor       (string|'#67bfb6') - the base color of the screen
 		spawnRate       (int|3) - the number of frames before a cell spawn trigger
 		cellRate        (int|3) - the number of animating cells to spawn on the trigger
-		cellBrightness  (int|15) - this amount to brighten the animating cells from the base color
-		colorRange      (int|13) - the depth of variation in the random grid background
+		cellBrightness  (int|1) - this amount to brighten the animating cells from the base color
+		colorRange      (int|0.5) - the depth of variation in the random grid background
 		flashSpeedIn    (float|0.01) - incremental alpha change in the cell animation
 		flashSpeedOut   (float|0.02) - decremental alpha change in the cell animation
 				###
@@ -42,8 +43,8 @@ define (require) ->
 		@baseColor = chroma(options.color || '#67bfb6')
 		@spawnRate = options.spawnRate || 3
 		@cellRate = options.cellRate || 3
-		@cellBrightness = options.cellBrightness || 15
-		@colorRange = options.colorRange || 13
+		@cellBrightness = options.cellBrightness || 1
+		@colorRange = options.colorRange || 0.5
 		@flashSpeedIn = options.flashSpeedIn || 0.01
 		@flashSpeedOut = options.flashSpeedOut || 0.02
 
@@ -66,7 +67,7 @@ define (require) ->
 			build the stage and setup of the pixi renderer
 		###
 		@stage = new PIXI.Stage 0xFFFFFF, true
-		@stage.setInteractive true
+		@stage.interactive = true
 		@graphics = new PIXI.Graphics()
 		@renderer = PIXI.autoDetectRenderer @$parent.width(), @$parent.height(), null, true, true
 		@renderer.view.id = "decoy-animation"
@@ -77,7 +78,7 @@ define (require) ->
 		###
 				kick off the animation loop
 		###
-		requestAnimFrame @animate
+		requestAnimationFrame @animate
 
 		###
 				listen to resizing events
@@ -92,10 +93,9 @@ define (require) ->
 	DecoyAnim.buildGrid = ->
 		for x in [0..@count.x]
 			for y in [0..@count.y]
-				@graphics.beginFill parseInt('0x'+@baseColor.darker(Math.floor(Math.random()*@colorRange)).hex().replace('#',''))
+				@graphics.beginFill parseInt('0x'+@baseColor.darker(Math.random()*@colorRange).hex().replace('#',''))
 				@graphics.drawRect @squareSize * x, @squareSize * y, @squareSize, @squareSize
 				@graphics.endFill()
-				console.log x + " : " + y
 		@stage.addChild @graphics
 		return
 
@@ -116,7 +116,7 @@ define (require) ->
 				deadcell = null
 
 		if !@paused
-			requestAnimFrame @animate
+			requestAnimationFrame @animate
 
 		return
 
@@ -162,7 +162,7 @@ define (require) ->
 	###
 	DecoyAnim.play = ->
 		@paused = false
-		requestAnimFrame @animate
+		requestAnimationFrame @animate
 		return
 
 	###
@@ -187,9 +187,7 @@ define (require) ->
 		@count =
 			x: Math.ceil(@$parent.width() / @squareSize)
 			y: Math.ceil(@$parent.height() / @squareSize)
-		console.log @count
-		console.log @$parent.width()
-		console.log @$parent.height()
+
 		###
 			paint the random grid initially, once
 		###
