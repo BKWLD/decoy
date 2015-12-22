@@ -1,12 +1,12 @@
 // Paths
-$decoy_img_dir: '/packages/bkwld/decoy/img/';
+$decoy_img_dir: '~decoy/assets/img/';
 
 // Theme
 $theme-primary-color: #67bfb6 !default;
 $theme-primary-inverse: white !default;
 $theme-secondary-color: #ffd7b0 !default;
 $theme-secondary-inverse: darken($theme-secondary-color, 50%) !default;
-$theme-login-bkgd: '/packages/bkwld/decoy/img/theme/bkgd.jpg' !default;
+$theme-login-bkgd: $decoy_img_dir + 'theme/bkgd.jpg' !default;
 
 // Colors
 $body-color: #efefef !default;

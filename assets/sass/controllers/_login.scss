@@ -182,7 +182,7 @@ body.login.index {
 	@media (max-width: $screen-sm) {
 		background: linear-gradient(to top, $theme-primary-color, darken($theme-primary-color, 10%));
 		.bkgd {
-			background-image: url("#{$theme-login-bkgd}");
+			background-image: url($theme-login-bkgd);
 			background-position: cover;
 			background-position: center center;
 		}
