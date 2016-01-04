@@ -29,19 +29,19 @@ define(function (require) {
 	var app = _.extend({}, Backbone.Events),
 		$body = $('body'),
 		$doc = $(document);
-	
+
 	// --------------------------------------------------
 	// Pre-ready init
-	
+
 	// Disable # links because they're not links silly
 	$doc.on('click', '[href="#"]', false);
 
 	// Enable fast click
 	FastClick.attach(document.body);
-	
+
 	// --------------------------------------------------
 	// Configure Backbone
-	
+
 	// Massage attribtues of the sync process
 	var oldSync = Backbone.sync;
 	Backbone.sync = function(method, model, options){
@@ -50,7 +50,7 @@ define(function (require) {
 		// an array, delete all attributes except for the ones from the
 		// whitelist
 		if (model.whitelist && _.isArray(model.whitelist)) {
-			
+
 			// Add id by default, needed in Backbone 1.1.1
 			if (!_.contains(model.whitelist, 'id')) model.whitelist.push('id');
 
@@ -59,7 +59,7 @@ define(function (require) {
 			var oldModel = model;
 			model = oldModel.clone();
 			model.collection = oldModel.collection;
-			
+
 			// Remove attribtues
 			_.each(model.attributes, function(value, key, list) {
 				if (!_.contains(oldModel.whitelist, key)) delete model.attributes[key];
@@ -69,7 +69,7 @@ define(function (require) {
 		// Finish up with the traditional sync
 		return oldSync(method, model, options);
 	};
-	
+
 	// Find all valid data-js-views and create them.  A data-js-view tag may specify
 	// multiple backbone views by seperating them with a space
 	app.initalizeViews = function(manifest) {
