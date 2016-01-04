@@ -4,6 +4,7 @@
 use App;
 use Config;
 use Closure;
+use Request;
 use Route;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -22,8 +23,17 @@ class Auth {
 	*/
 	public function handle($request, Closure $next) {
 
-		// Require a logged in user
+		// White list certain routes that don't require a logged in use
+		if ($this->isPublic()) return $next($request);
+
+		// Otherwise, require a logged in user
 		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
+
+		// White list routes that require a logged in user but are open to all
+		// access levels
+		if (Request::is('admin/logout', 'admin/redactor/upload')) {
+			return $next($request);
+		}
 
 		// Determine the action and controller differently depending on how the
 		// request is routed.
@@ -40,6 +50,24 @@ class Auth {
 
 		// Chain
 		return $next($request);
+	}
+
+	/**
+	 * Return boolean if the current URL is a public one.  Meaning, ACL is not enforced
+	 *
+	 * @return boolean
+	 */
+	public function isPublic() {
+		return Route::is(
+			// Login
+			'decoy', 'decoy::account@login',
+			// Forgot password
+			'decoy::account@forgot', 'decoy::account@postForgot',
+			// Reset password
+			'decoy::account@reset', 'decoy::account@postReset',   
+			// Encode notification endpoint
+			'decoy::encode@notify', 'decoy::encode@progress'
+		);
 	}
 
 	/**
@@ -69,7 +97,7 @@ class Auth {
 	protected function dectectFromWildcardRouter() {
 		$wildcard = App::make('decoy.wildcard');
 
-		// Attach / detach are ACL-ed by the parent controller.  It's the one being touched		
+		// Attach / detach are ACL-ed by the parent controller.  It's the one being touched
 		$action = $wildcard->detectAction();
 		if (in_array($action, ['attach', 'remove'])) {
 			$controller = Input::get('parent_controller');

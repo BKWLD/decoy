@@ -89,9 +89,9 @@ class Router {
 		Route::get('account', ['as' => 'decoy::account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
 		Route::get('forgot', ['as' => 'decoy::account@forgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
-		Route::post('forgot', 'Bkwld\Decoy\Controllers\Account@postForgot');
+		Route::post('forgot', ['as' => 'decoy::account@postForgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@postForgot']);
 		Route::get('reset/{code}', ['as' => 'decoy::account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
-		Route::post('reset/{code}', 'Bkwld\Decoy\Controllers\Account@postReset');
+		Route::post('reset/{code}', ['as' => 'decoy::account@postReset', 'uses' => 'Bkwld\Decoy\Controllers\Account@postReset']);
 	}
 
 	/**
