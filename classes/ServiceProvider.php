@@ -21,7 +21,7 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	public function boot() {
-		
+
 		// Publish config files
 		$this->publishes([
 			 __DIR__.'/../../config' => config_path('decoy')
@@ -43,12 +43,12 @@ class ServiceProvider extends BaseServiceProvider {
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
-		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');		
+		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
 		// Register global and named middlewares
 		$this->registerMiddlewares();
 
-		// Register the routes AFTER all the app routes using the "before" register.  
+		// Register the routes AFTER all the app routes using the "before" register.
 		$this->app['decoy.router']->registerAll();
 
 		// Do bootstrapping that only matters if user has requested an admin URL
@@ -68,14 +68,14 @@ class ServiceProvider extends BaseServiceProvider {
 		// condition.
 		if ($this->app['decoy']->handling() && Config::get('decoy.site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
-		}		
+		}
 	}
 
 	/**
 	 * Things that happen only if the request is for the admin
 	 */
 	public function usingAdmin() {
-		
+
 		// Load all the composers
 		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../../composers/layouts._nav.php');
@@ -94,7 +94,7 @@ class ServiceProvider extends BaseServiceProvider {
 	/**
 	 * Config Former
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	protected function configureFormer() {
 
@@ -114,7 +114,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// namespace and so we can take advantage of sublassing Former's Field class.
 		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
 	}
-	
+
 	/**
 	 * Delegate events to Decoy observers
 	 *
@@ -135,7 +135,7 @@ class ServiceProvider extends BaseServiceProvider {
 	/**
 	 * Register middlewares
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	protected function registerMiddlewares() {
 
@@ -168,7 +168,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Register external packages
 		$this->registerPackages();
-		
+
 		// Register HTML view helpers as "Decoy".  So they get invoked like: `Decoy::title()`
 		$this->app->singleton('decoy', function($app) {
 			return new Helpers;
@@ -185,23 +185,23 @@ class ServiceProvider extends BaseServiceProvider {
 			$dir = $app['config']->get('decoy.core.dir');
 			return new Routing\Router($dir, $app['decoy.filters']);
 		});
-		
+
 		// Wildcard router
 		$this->app->singleton('decoy.wildcard', function($app) {
 			$request = $app['request'];
 			return new Routing\Wildcard(
 				$app['config']->get('decoy.core.dir'),
-				$request->getMethod(), 
+				$request->getMethod(),
 				$request->path()
 			);
 		});
-		
+
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
 			return $app->make('redirect')->guest($app->make('decoy.auth')->deniedUrl())
 				->withErrors([ 'error message' => 'You must login first']);
 		});
-		
+
 		// Register URL Generators as "DecoyURL".
 		$this->app->singleton('decoy.url', function($app) {
 			return new Routing\UrlGenerator($app->make('request')->path());
@@ -211,28 +211,28 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton('decoy.auth', function($app) {
 			return new Auth\Eloquent($app['auth']);
 		});
-		
+
 		// Build the Elements collection
 		$this->app->singleton('decoy.elements', function($app) {
 			return new Collections\Elements(
-				new Parser, 
-				new Models\Element, 
+				new Parser,
+				new Models\Element,
 				$this->app->make('cache')->driver()
 			);
 		});
 
-		// Register Decoy's custom handling of some exception 
+		// Register Decoy's custom handling of some exception
 		$this->app->singleton(ExceptionHandler::class, Exceptions\Handler::class);
 
 		// Register commands
 		$this->commands([Commands\Generate::class]);
 	}
-	
+
 	/**
 	 * Register external dependencies
 	 */
 	private function registerPackages() {
-		
+
 		// Form field generation
 		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
 		$this->app->register('Former\FormerServiceProvider');
@@ -240,7 +240,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// Image resizing
 		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
-		
+
 		// PHP utils
 		$this->app->register('Bkwld\Library\ServiceProvider');
 
@@ -259,9 +259,9 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Support for cloning models
 		$this->app->register('Bkwld\Cloner\ServiceProvider');
-		
+
 	}
-	
+
 	/**
 	 * Get the services provided by the provider.
 	 *
@@ -269,14 +269,14 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function provides() {
 		return array(
-			'decoy', 
-			'decoy.acl_fail', 
+			'decoy',
+			'decoy.acl_fail',
 			'decoy.auth',
 			'decoy.elements',
 			'decoy.filters',
-			'decoy.router', 
-			'decoy.url', 
-			'decoy.wildcard', 
+			'decoy.router',
+			'decoy.url',
+			'decoy.wildcard',
 		);
 	}
 

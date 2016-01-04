@@ -52,7 +52,7 @@
 			"src/migrations"
 		],
 		"psr-4": {
-			"Bkwld\\Decoy\\": "src/Bkwld/Decoy/"
+			"Bkwld\\Decoy\\": "classes/"
 		}
 	}
 }
