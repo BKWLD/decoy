@@ -8,8 +8,8 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	require('bootstrap-3-timepickr');
-	
+	require('bootstrap-timepicker');
+
 	// Define backbone view
 	var TimePicker = Backbone.View.extend({
 

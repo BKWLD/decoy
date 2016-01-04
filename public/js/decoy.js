@@ -8,7 +8,7 @@ define(function (require) {
 		, _ = require('underscore')
 		, Backbone = require('backbone')
 		, FastClick = require('fastclick')
-		, Affixable = require('decoy/modules/affixable')
+		, Affixable = require('modules/affixable')
 		, LocalizeCompare = require('decoy/localize/compare')
 		, manifest = require('decoy/modules/manifest')
 		, bootstrap = require('bootstrap')
