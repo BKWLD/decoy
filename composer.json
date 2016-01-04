@@ -49,7 +49,7 @@
 	},
 	"autoload": {
 		"classmap": [
-			"src/migrations"
+			"migrations"
 		],
 		"psr-4": {
 			"Bkwld\\Decoy\\": "classes/"
