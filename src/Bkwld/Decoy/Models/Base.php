@@ -182,15 +182,6 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	//---------------------------------------------------------------------------
 	// Accessors
 	//---------------------------------------------------------------------------
-	
-	/**
-	 * Deprecated
-	 *
-	 * @return string 
-	 */
-	public function title() {
-		return $this->getAdminTitleHtmlAttribute();
-	}
 
 	/**
 	 * Return the title for the row for the purpose of displaying in admin list 
@@ -204,18 +195,9 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Deprecated
-	 * 
-	 * @return string 
-	 */
-	public function titleText() {
-		return $this->getAdminTitleAttribute();
-	}
-
-	/**
 	 * Deduce the source for the title of the model and return that title
-	 * 
-	 * @return string 
+	 *
+	 * @return string
 	 */
 	public function getAdminTitleAttribute() {
 		return implode(' ', array_map(function($attribute) {
