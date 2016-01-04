@@ -31,7 +31,7 @@ class Router {
 	 *
 	 * @param string $dir The path "directory" of the admin.  I.e. "admin"
 	 */
-	public function __construct($dir, $filters) {
+	public function __construct($dir) {
 		$this->dir = $dir;
 	}
 

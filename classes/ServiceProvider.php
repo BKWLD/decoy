@@ -174,16 +174,10 @@ class ServiceProvider extends BaseServiceProvider {
 			return new Helpers;
 		});
 
-		// Filters is a dependency of router and it's used elsewhere
-		$this->app->singleton('decoy.filters', function($app) {
-			$dir = $app['config']->get('decoy.core.dir');
-			return new Routing\Filters($dir);
-		});
-
 		// Registers explicit rotues and wildcarding routing
 		$this->app->singleton('decoy.router', function($app) {
 			$dir = $app['config']->get('decoy.core.dir');
-			return new Routing\Router($dir, $app['decoy.filters']);
+			return new Routing\Router($dir);
 		});
 
 		// Wildcard router
@@ -273,7 +267,6 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.acl_fail',
 			'decoy.auth',
 			'decoy.elements',
-			'decoy.filters',
 			'decoy.router',
 			'decoy.url',
 			'decoy.wildcard',

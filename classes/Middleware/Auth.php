@@ -53,7 +53,8 @@ class Auth {
 	}
 
 	/**
-	 * Return boolean if the current URL is a public one.  Meaning, ACL is not enforced
+	 * Return boolean if the current URL is a public one.  Meaning, ACL is not
+	 * enforced.
 	 *
 	 * @return boolean
 	 */
@@ -64,7 +65,7 @@ class Auth {
 			// Forgot password
 			'decoy::account@forgot', 'decoy::account@postForgot',
 			// Reset password
-			'decoy::account@reset', 'decoy::account@postReset',   
+			'decoy::account@reset', 'decoy::account@postReset',
 			// Encode notification endpoint
 			'decoy::encode@notify', 'decoy::encode@progress'
 		);
@@ -97,7 +98,8 @@ class Auth {
 	protected function dectectFromWildcardRouter() {
 		$wildcard = App::make('decoy.wildcard');
 
-		// Attach / detach are ACL-ed by the parent controller.  It's the one being touched
+		// Attach / detach are ACL-ed by the parent controller.  It's the one being
+		// touched,
 		$action = $wildcard->detectAction();
 		if (in_array($action, ['attach', 'remove'])) {
 			$controller = Input::get('parent_controller');
