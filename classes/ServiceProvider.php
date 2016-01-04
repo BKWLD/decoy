@@ -24,21 +24,21 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Publish config files
 		$this->publishes([
-			 __DIR__.'/../../config' => config_path('decoy')
+			 __DIR__.'/../config' => config_path('decoy')
 		], 'config');
 
 		// Publish public assets
 		$this->publishes([
-			 __DIR__.'/../../../public' => public_path('packages/bkwld/decoy')
+			 __DIR__.'/../../public' => public_path('packages/bkwld/decoy')
 		], 'assets');
 
 		// Publish migrations
 		$this->publishes([
-			__DIR__.'/../../migrations/' => database_path('migrations')
+			__DIR__.'/../migrations/' => database_path('migrations')
 		], 'migrations');
 
 		// Register views
-		$this->loadViewsFrom(__DIR__.'/../../views', 'decoy');
+		$this->loadViewsFrom(__DIR__.'/../views', 'decoy');
 
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
@@ -77,9 +77,9 @@ class ServiceProvider extends BaseServiceProvider {
 	public function usingAdmin() {
 
 		// Load all the composers
-		require_once(__DIR__.'/../../composers/layouts._breadcrumbs.php');
-		require_once(__DIR__.'/../../composers/layouts._nav.php');
-		require_once(__DIR__.'/../../composers/shared.list._search.php');
+		require_once(__DIR__.'/../composers/layouts._breadcrumbs.php');
+		require_once(__DIR__.'/../composers/layouts._nav.php');
+		require_once(__DIR__.'/../composers/shared.list._search.php');
 
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
