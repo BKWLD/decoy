@@ -1,0 +1,157 @@
+// Styles for cropper and not cropper images
+.image-upload {
+	.img-thumbnail { 
+		z-index: 100;
+		box-sizing: border-box;
+
+		// Don't break out of box on FF
+		max-width: 100%;
+
+		// Looks better with a lil extra.  I think because of line-height stuff
+		margin-top: 5px + 2px;
+
+		// Always put it on it's own line
+		display: block;
+
+		// Make the border color match form-controls
+		border-color: $input-border;
+	}
+	
+	// Add a checkered bkgd behind the non-cropper view for transparent pngs
+	> div > a {
+		background-image: url($decoy_img_dir + 'jcrop/img-bkgd.png');
+		display: block;
+	}
+}
+
+// This container contains multiple instances of images that get turned
+// into jcrop instances.
+.image-upload-cropper {
+	position: relative;
+	display: block;
+	padding-top: 10px;
+
+	// If it follows a block help, reduce the spacing
+	.help-block + & {
+		padding-top: 5px;
+	}
+
+	// Show a checkered background behind the image
+	.jcrop-tracker {
+		background: transparent;
+	}
+	.jcrop-holder {
+		background-color: transparent !important;
+		background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+	}
+	
+	// Remove the margin that we want when no crops are present
+	.img-thumbnail {
+		margin: 0;	
+	}
+	
+	// Setup the tabs
+	.tabs {
+		display: inline-block;
+		margin-bottom: -1px;
+		
+		// The tabs
+		> * {
+			padding: 6px;
+			margin-right: 2px;
+			line-height: 1em;
+			display: inline-block;
+			border: solid 1px transparent;
+			border-corner-radius: top, left, 4px;
+			border-corner-radius: top, right, 4px;
+			top: 1px; // Overlap the border on the image
+			
+			// The active tab
+			&.active {
+				border-color: $input-border;
+				border-bottom: white;
+				background-color: white;
+				position: relative;
+				z-index: 1;
+			}
+			
+			// Rollover
+			&:hover:not(.active) {
+				cursor: pointer;
+				background-color: darken($light-grey, 2%);
+			}
+		}
+
+		// Remove the rounded corner in the uppwer left
+		~ .imgs .img-thumbnail {
+			border-corner-radius: top, left, 0;
+		}
+
+	}
+	
+	// Deactivate all but the first image
+	.imgs > * {
+		display: none;
+	}
+	.imgs > :first-child {
+		display: block;
+	}
+	
+	// Remove a little space that jcrop adds
+	.imgs {
+		line-height: 0;
+		display: block;
+	}
+	
+	// The fullscreen button
+	.fullscreen-toggle {
+
+		// Disabled for now because BS3 columns are position relative and
+		// it's preventing this unit from expanding outside.  It would need
+		// to be done my moving around in the DOM.
+		display: none;
+
+		margin-left: 5px;
+		opacity: .4;
+		cursor: pointer;
+		.form-group:hover & {
+			opacity: .7;
+			&:hover { opacity: 1; }
+		}
+	}
+}
+
+// Make an form element take up the whole page
+.fullscreen {
+	position: absolute !important;
+	width: 96%;
+	z-index: 999;
+	left: 2%;
+	right: 2%;
+	background: rgba(255, 255, 255, .9);
+	@include box-shadow(0 3px 20px rgba(0,0,0,.3));
+	border: 1px solid $light-grey;
+	padding: 0px;
+	
+	// This was on the form-group previously
+	.form-vertical & {
+		margin-top: -8px;
+	}
+
+	// Reset the spacing of the form-group
+	.form-group, &.form-group {
+		margin: 0;
+		padding: 5px;
+	}
+	
+	// A non-related view won't have had this set yet
+	.img-thumbnail {
+		width: 100%;
+	}
+	
+}
+
+.control-group.upload .img-polaroid {
+	background-color: transparent !important;
+	background-image: url($decoy_img_dir + '/jcrop/img-bkgd.png');
+}

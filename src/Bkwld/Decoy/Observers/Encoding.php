@@ -16,10 +16,10 @@ class Encoding {
 		foreach($model->getDirtyEncodableAttributes() as $attribute) {
 
 			// If the attribute has a value, encode the attribute
-			if (isset($model->$attribute)) $model->encodeOnSave($attribute);
+			if ($model->getAttribute($attribute)) $model->encodeOnSave($attribute);
 
 			// Otherwise delete encoding references
-			else $model->encoding($attribute)->delete();
+			else if ($encoding = $model->encoding($attribute)) $encoding->delete();
 		}
 	}
 

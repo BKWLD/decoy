@@ -1,0 +1,70 @@
+// Special settings for when listings are added to control groups
+.list-form-group {
+
+	// Position new button under the label
+	label {
+		position: relative;
+		.btn-group {
+			display: block;
+			margin-top: 5px;
+			float: right;
+
+			// Make it super wide so it's force to go down a line
+			margin-left: 100%;
+		}
+
+		// If mobile layout, make it flush to right side
+		@media(max-width: $screen-md) {
+			
+			// Make the label span full width
+			display: block;
+
+			// Pull button (and listing) up
+			.btn-group {
+				margin-top: -2px;
+				margin-left: 10px;
+
+				// Make the button smaller
+				.btn {
+					padding-top: 0;
+					padding-bottom: 0;
+				}
+			}
+		}
+	}
+
+	// Style like a form-group input
+	.standard-list {
+		border-radius: $input-border-radius;
+		border: 1px solid $input-border;
+		  overflow: hidden;
+	}
+	
+	// Don't add bottom margin
+	table {
+		margin-bottom: 0;
+
+		// Use the same colors as the WYSIWYG control bar
+		thead {
+			background: $light-grey;
+			th { color: #333 !important; }
+			.select-all:hover { color: $theme-primary-color !important; }
+		}
+
+		// Add padding like the related sidebard standard list has. See:
+		// src/sass/form/_fieldset.scss
+		th:first-child, td:first-child { padding-left: $form-group-margin; }
+		th[class*='actions'], td[class*='actions'] { 
+			padding-right: $form-group-margin;
+			@media (max-width: $screen-sm) {
+				padding-right: $table-cell-padding-horizontal;
+			}
+		}
+
+	}
+
+	// Move block help down
+	.help-block { 
+		margin-top: 5px;
+	}
+}

@@ -1,0 +1,95 @@
+// Notification message area on CRUD operations, at the top of main, below breadcrumbs
+.notification-area {
+
+	// Clear Bootstrap .alert styles
+	border: transparent;
+	border-bottom-color: $state-success-border;
+	border-radius: 0;
+	margin: 0;
+
+	// Match width of rest of page
+	@include adjust-for-sidebar();
+	.notification-wrap {
+		max-width: $max-width;
+	}
+
+	// Match main padding
+	padding: 0 $main-padding;
+	@media(max-width:$screen-sm) {
+		padding-left: $main-padding/2;
+		padding-right: $main-padding/2;
+	}
+
+	// On phone, make it even tighter
+	@media(max-width:$screen-xs) {
+		padding-left: $main-padding-mobile;
+		padding-right: $main-padding-mobile;
+	}
+
+	// Fixing spacing around server error messages
+	.message pre {
+		margin: 10px 0 0;
+	}
+
+	// close button
+	.close {
+		margin-top: $main-padding/2;
+		opacity: 0.5;
+
+		&:hover {
+			opacity: 0.7;
+		}
+	}
+
+	// update border for type of notifcations
+	&.alert-success {
+		border-bottom-color: $state-success-border;
+
+		.close {
+			color: $state-success-text;
+		}
+	}
+
+	&.alert-danger {
+		border-bottom-color: $state-danger-border;
+
+		.close {
+			color: $state-danger-text;
+		}
+	}
+
+	// make sure it's below the header
+	z-index:0;
+
+	// Contains the message
+	p {
+		padding: ($main-padding/2) 0;
+		margin: 0;
+
+		// Ineherit the right color
+		a {
+			color: inherit;
+		}
+
+		// Push text off the glyph
+		.glyphicon {
+			margin-right: 5px;
+		}
+	}
+
+	// Limit the height
+	overflow: hidden;
+	max-height:0;
+
+	// Collapsed
+	transition: max-height 350ms;
+	@include gpu-cache();
+
+	// animate the notifcation pane in
+	&.show {
+		transition: max-height 350ms 150ms;
+		max-height:300px;
+		border-bottom-style: solid;
+		border-bottom-width: 1px;
+	}
+}

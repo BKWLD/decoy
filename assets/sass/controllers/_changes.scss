@@ -1,0 +1,46 @@
+/**
+ * The changes listing
+ */
+.changes.index .listing {
+
+	// Reduce the size of the admin icon
+	.activity img {
+		width: 24px;
+	}
+
+	// Fix bolding increasing the font size with this font
+	.activity b {
+		font-size: 13px;
+	}
+
+	// Improve horizontal alignment
+	.glyphicon-filter {
+		position: relative;
+		top: 2px;
+	}
+
+	// Grey out non-link glyphicons
+	span.glyphicon {
+		opacity: $light-opacity;
+	}
+
+}
+
+/**
+ * The changes modal
+ */
+.changes-modal {
+
+	// Shrink the avatar
+	.modal-footer img {
+		width: 22px;
+	  border: 1px solid #ddd;
+		margin-right: 3px;
+	}
+
+	// Hide the bottom margin on the list
+	dl {
+		margin-bottom: 0;
+	}
+
+}

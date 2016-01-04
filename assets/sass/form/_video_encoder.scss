@@ -1,0 +1,26 @@
+
+// Skin video encoder
+.form-group.video-encoder {
+
+	// Format the progress bar
+	.progress {
+		margin-bottom: 0;
+		.progress-bar {
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+			font-size: 12px;
+			text-shadow: none;
+			text-transform: capitalize;
+		}
+	}
+
+	// The video player
+	video {
+
+		// Push off top
+		margin-top: 5px;
+
+		// Make ti scale 
+		max-width: 100%;
+	}
+
+}

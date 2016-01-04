@@ -97,11 +97,23 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * New admin callbacks
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function onCreating() {
+
+		// Send out email
 		if (Input::has('_send_email')) $this->sendCreateEmail();
+
+		// Make them active
 		$this->active = 1;
+
+		// If the current user can't grant permissions, make the new admin
+		// have the same role as themselves.  Admins created from the CLI (like as
+		// part of a migration) won't be logged in.
+		if (($admin = app('decoy.auth')->user())
+			&& !app('decoy.auth')->can('grant', 'admins')) {
+			$this->role = $admin->role;
+		}
 	}
 
 	/**

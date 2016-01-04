@@ -1,0 +1,74 @@
+
+/**
+ * The frontend editor shown via iframe in the Element icon
+ */
+body.elements.field {
+
+	// Make the background the color of the element iframe
+	background: white;
+
+	// Remove padding so it's flush within the iframe
+	#main {
+		padding: 0;
+		margin: 0;
+
+		// Remove styling here because the iframe wrapper has the panel style
+		fieldset {
+			@include no-panel;
+		}
+	}
+
+	// Make the chevrons in the legends smaller
+	.legend .glyphicon-chevron-right {
+		font-size: 7px;
+		top: -2px;
+		margin: 0 3px;
+	}
+
+	// Make the form-actions non-fixed
+	.form-actions {
+		position: static;
+		padding: $form-group-margin-sm;
+		line-height: inherit;
+		height: auto;
+
+		// Make the buttons, NON responsive sized
+		.btn {
+			@include button-size($padding-base-vertical, $padding-base-horizontal, $font-size-base, $line-height-base, $border-radius-base);
+		}
+	}
+
+}
+
+/**
+ * The admin Elements management interface
+ */
+body.elements.index {
+	
+	// Make room for save buttons
+	#main {
+		padding-bottom: $footer-height;
+	}
+
+	// Add sidebar layout
+	@include tab-sidebar;
+
+	// Style the localization selector
+	fieldset.locale {
+		
+		// Style the legend like the header, instead of like the fieldset
+		.legend {
+			color: $theme-primary-inverse;
+			background: $theme-primary-color;
+			.btn.outline {
+				@include outline-btn($theme-primary-inverse);
+			}
+		}
+
+		// Make the fieldset rounded
+		.legend {
+			border-radius: 4px;
+		}
+
+	}
+}

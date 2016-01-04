@@ -1,0 +1,84 @@
+.many-to-many-checklist {
+	$bkgd: #f9f9f9;
+
+	// Make the checkboxes vertically centered if there are images
+	// as part of the label titles
+	input[type="checkbox"], input[type="radio"] {
+		position: relative;
+		margin-right: 8px;
+	}
+
+	// Push the text of the image in titles
+	img {
+		padding-right: 8px;
+		width: 30px;
+	}
+
+	// Push the edit icon off the label
+	.edit {
+		margin-left: 8px;
+		display: none;
+	}
+
+	// Only show the edit link on hover
+	.checkbox:hover .edit, .radio:hover .edit {
+		display: inline-block;
+	}
+
+	// Layout the items in two columns
+	&.two-col {
+
+		// Make cols
+		.checkbox, .radio {
+			display: inline-block;
+			width: 50%;
+			padding: 0 5px 0 0;
+			margin-bottom: 5px;
+			margin-top: 0;
+			
+			// Break columns
+			@media (max-width: $screen-xs) {
+				width: auto;
+				display: block;
+			}
+
+			// Ellipsis long labels
+			label {
+
+				// Wrap in boxes
+				position: relative;
+				display: block;
+				background-color: $bkgd;
+				border-radius: 3px;
+				padding: 7px;
+				padding-left: 30px;
+				white-space: nowrap;
+			}
+
+			// Prevent text from wrapping.  Need to assign to the a tag because
+			// FF was hiding the checkbox
+			// https://github.com/BKWLD/decoy/issues/371
+			.title {
+				display: inline-block;
+				text-overflow: ellipsis;
+				overflow: hidden;
+				vertical-align: middle;
+				width: 100%;
+			}
+
+			// The edit icon
+			.edit {
+				position: absolute;
+				right: 10px;
+				top: 10px;
+			}
+
+		}
+
+		// Make the bkgd darker so it isn't over powered by hover
+		&:hover .checkbox label, &:hover .radio label {
+			background: darken($bkgd, 3%);
+		}
+	}
+
+}

@@ -36,6 +36,11 @@ class Changes {
 		// changes into a single log.
 		if (is_a($model, 'Bkwld\Decoy\Models\Element')) return;
 
+		// Don't log changes to pivot models.  Even though a user may have initiated
+		// this, it's kind of meaningless to them.  These events can happen when a
+		// user messes with drag and drop positioning.
+		if (is_a($model, 'Illuminate\Database\Eloquent\Relations\Pivot')) return;
+
 		// Don't log an admin logging in or out
 		if (Route::is('decoy::account@login', 'decoy::account@logout')) return;
 

@@ -1,0 +1,106 @@
+/**
+ * The autocomplete form for many to manys
+ */
+.many-to-many-form {
+	display: inline-block;
+	position: relative;
+
+	// Reset the line height so it doesn't ineherit something weird
+	line-height: 0;
+
+	// Fade out the button even more
+	.btn.outline[disabled] {
+		opacity: $light-opacity;
+	}
+
+	// Simplify the styling the input more outline-y
+	.form-control {
+		box-shadow: none;
+		-webkit-appearance: none; // Needed for iOS to remove box shadow
+		outline: none;
+		background: none;
+		padding-left: 23px;
+		width: 54px;
+
+		// Apply colors based on where it's located
+		.legend & {
+			border-color: rgba($theme-secondary-inverse, .85);
+			color: $theme-secondary-inverse;
+			// Could not use rgba, wasn't supported by browser
+			@include input-placeholder { color: $theme-secondary-inverse; }
+		}
+		.header & {
+			border-color: rgba($theme-primary-inverse, .85);
+			color: $theme-primary-inverse;
+			@include input-placeholder { color: $theme-primary-inverse; }
+		}
+	}
+
+	// Customize the menu further
+	.tt-dropdown-menu {
+		font-size: 12px;
+		text-align: left;
+
+		// Reduce edge padding
+		.tt-suggestion {
+			padding-left: 8px;
+			padding-right: 8px;
+		}
+	}
+
+	// container for search icon and input field
+
+	.glyphicon-search {
+		font-size: 12px;
+		position: absolute;
+		left: 7px;
+		top: 7px;
+	}
+	.twitter-typeahead {
+		$input-width: 125px;
+
+		input {
+			transition: all .5s ease;
+			
+			&:focus {
+				width: $input-width; // pixel width so the whole field can smoothly transition
+			}
+			&[disabled] {
+				background: none !important; // to override the bootstrap !important background
+				width: $input-width;
+			}
+		}
+	}
+
+	// Tweaks to when it appears in the header
+	.header & {
+		z-index: $header-z + 1; // this is to be on top of the breadcrumbs bar
+
+		// Search icon
+		.glyphicon-search {
+			left: 10px;
+			top: 10px;
+			font-size: 14px;
+		}
+
+		// Size the input and make space for hte search icon
+		.form-control {
+			padding-left: 28px;
+			width: 70px;
+
+			// Pixel width so the whole field can smoothly transition
+			&:focus, &[disabled] {
+				padding-left: 28px;
+				width: 150px; 
+			}
+
+			// Hide the placeholder text on mobile
+			@media (max-width: $screen-sm) {
+				width: 37px; // Small enough to center the question mark and hide placeholder
+				padding-left: 23px;
+			}
+		}
+		
+	}
+
+}

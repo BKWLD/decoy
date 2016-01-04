@@ -771,9 +771,9 @@ class Base extends Controller {
 		if (!($item = Model::find($id))) return Response::json(null, 404);
 		
 		// Do the attach
-		$this->fireEvent('attaching', array($item, $this->parent));
+		$this->fireEvent('attaching', [$item, $this->parent]);
 		$item->{$this->self_to_parent}()->attach($this->parent);
-		$this->fireEvent('attached', array($item, $this->parent));
+		$this->fireEvent('attached', [$item, $this->parent]);
 		
 		// Return the response
 		return Response::json('ok');
@@ -791,10 +791,13 @@ class Base extends Controller {
 		// Support removing many ids at once
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 		
+		// Get the model instances for each id, for the purpose of event firing
+		$items = array_map(function($id) { return Model::find($id); }, $ids);
+
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
-		$this->fireEvent('removing', array($this->parent, $ids));
+		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
 		$this->parentRelation()->detach($ids);
-		$this->fireEvent('removed', array($this->parent, $ids));
+		foreach($items as $item) $this->fireEvent('removed', [$item, $this->parent]);
 		
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.

@@ -1,0 +1,65 @@
+.sidebar {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: $sidebar-width;
+	background-color: $gray-dark;
+	color: lighten($gray-light, 20%);
+	z-index: $header-z + 2;
+	border-top: $nav-top-border-height solid $theme-primary-color;
+	overflow-y: auto;
+	overflow-x: hidden;
+	@include gpu-cache;
+
+	// Make room for the sidebar footer
+	bottom: $footer-height;
+	@media(max-width: $screen-sm) {
+		bottom: $nav-bottom-height-mobile;
+	}
+
+	// IE 9 requires this or it puts the scrollbar in the wrong place
+	// https://github.com/BKWLD/decoy/issues/395
+	box-sizing: content-box;
+
+	// Start out hidden.  Couldn't use translate in iOS.  I think the fixed
+	// positioning ruled that out.
+	transition: left 250ms;
+	@media(max-width:$screen-sm) {
+		left: -$sidebar-width;
+	}
+
+	// when the nav has the class of 'show', it's triggered
+	// by the mobile grabber icon, so it needs to be left: 0
+	// and get a small box shadow
+	&.show {
+		left: 0;
+
+		// only show the box shadow if you're on mobile
+		@media(max-width:$screen-sm) {
+			@include box-shadow(0 0 25px rgba(#333, .4));
+		}
+	}
+
+	a, a:hover {
+		text-decoration: none !important;
+	}
+
+	// toggle to close nav on <= tablet screens
+	.close-nav {
+		display:none;
+
+		@media(max-width:$screen-sm) {
+			display: inline-block;
+			position: absolute;
+			top: 7px;
+			right: 7px;
+
+			.close {
+				opacity: 1;
+				color: white;
+				font-size: 14px;
+				padding: 1px 0 4px 2px;
+			}
+		}
+	}
+}

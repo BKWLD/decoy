@@ -1,0 +1,197 @@
+// The tab ui
+.moderation .nav-tabs {
+
+	// Remove the bottom border because the panel gots it
+	border-bottom: none;
+
+	// Make the inactive text lighter
+	a { 
+		color: $gray-light; 
+		.badge { background-color: $gray-light; }
+	}
+	
+	// Reset the active tab
+	.active a { 
+		color: $gray-dark; 
+		.badge { background-color: $gray-dark; }
+	}
+
+}
+
+// The listing
+.moderation .listing {
+
+	// Put it in a fieldset-type box
+	@include panel;
+	
+	// Customize the box
+	padding: $grid-gutter-width $grid-gutter-width/2 0;
+	border-radius: 0 0 4px 4px;
+
+	// Makes it so the pagination isn't flush wiith the tabs when all photos are approved
+	min-height: 1px; 
+
+	// One of the cells
+	.item {
+		$pad: 8px;
+		padding: $pad;
+		margin-bottom: $grid-gutter-width;
+		position: relative;
+		padding-bottom: 50px;
+		min-height: 100px;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		word-wrap: break-word;
+
+		// Reserve space for borders
+		border: 2px solid $gray-lighter;
+		
+		// Title / caption text
+		.rollover {
+			display: none;
+			position: absolute;
+			z-index: 1;
+			background-color: rgba(0,0,0,.8);
+			color: whiteSmoke;
+			padding: 4px;
+			left: $pad;
+			right: $pad;
+			
+			.stats {
+				opacity: .5;
+				&:hover {
+					opacity: 1;
+				}
+			}
+			
+			.caption {
+				margin-bottom: 5px;
+			}
+			a {
+				color: whiteSmoke;
+			}
+		}
+		
+		// Show the rollver on mouse over
+		&:hover .rollover {
+			display: block;
+		}
+		
+		// The image
+		img {
+			width: 100%;
+		}
+		
+		// Tweaks for a text layout, like a tweet
+		&.text-layout {
+			
+			// Disable rollover and push it down
+			.rollover { 
+				position: inherit;
+				left: inherit;
+				right: inherit;
+			}
+			
+			// Big text feature
+			.text {
+				font-size: 24px;
+				line-height: 1.3;
+				
+				// Font size changes for different media queries
+				@media (max-width: 979px) and (min-width: 768px) {
+					& {font-size: 18px;}
+				}
+			}
+			
+		}
+		
+		// The moderation buttons
+		.actions {
+			position: absolute;
+			left: 0px;
+			bottom: 0px;
+			right: 0px;
+			padding: $pad;
+			text-align: center;
+			> .btn {
+				width: 49%;
+			}
+		}
+		
+		// A pulldown that might follow actions (this is application specific)
+		label {
+			display: none;
+		}
+		select {
+			margin: 0;
+			margin-top: 6px;
+			width: 100%;
+		}
+		
+		// Approved state
+		&.approved {
+			border: 2px solid #7CC27C;
+			
+			// Hide the approve button
+			.actions {
+				.approve {
+					opacity: .3;
+				}
+				.deny {
+				}
+			}
+		}
+		
+		// Denied state
+		&.denied {
+			border: 2px solid #FBB450;
+			
+			// Hide the deny button
+			.actions {
+				.deny { 
+					opacity: .3;
+				}
+			}
+		}
+		
+		// These outro classes are used when an item is clicked and it is
+		// fading out
+		&.approved-outro {
+			border: 2px solid #7CC27C;
+		}
+		&.denied-outro {
+			border: 2px solid #FBB450;
+		}
+	}
+}
+
+// Make the none message be spaced down a bit
+.moderation .none {
+	padding-bottom: $grid-gutter-width;
+	text-align: center;
+}
+
+// A select meny for filtering by category
+.moderation  {
+	position: relative;
+
+	// Override BS 100% width
+	width: auto;
+
+	// Select menu for filtering gallery
+	.categories {
+		position: absolute;
+		right: 0;
+		width: auto;
+
+		// Put above tabs on break
+		@media(max-width: $screen-sm) {
+			position: static;
+		}
+	}
+
+	// Reload message
+	.reload {
+		text-align: center;
+	}
+}

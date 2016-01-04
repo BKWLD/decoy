@@ -1,0 +1,15 @@
+/**
+ * Make room for the sidebar on certain pages
+ */
+@mixin adjust-for-sidebar($property: margin-left) {
+	#{$property}: $sidebar-width;
+	body.forgot &, body.reset & {
+		#{$property}: 0;
+	}
+
+	// Sidebar goes away at break
+	transition: #{$property} 250ms;
+	@media(max-width:$screen-sm) {
+		#{$property}: 0;
+	}
+}

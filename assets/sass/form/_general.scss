@@ -1,0 +1,72 @@
+// All labels on vertical forms are on their own line. This
+// fixes issues with inline radio fields displaying wrong:
+// http://yo.bkwld.com/image/130i1B2o070b
+.form-vertical .control-label {
+	display: block;
+}
+
+// ... however, if a control group is set to form-inline, respect it
+.form-vertical .form-inline .control-label {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+// Stack horizontal forms earlier
+.form-horizontal .control-label {
+	width: $horizontal-label-width;
+	float: left;
+	@media (max-width: $screen-md) { 
+		float: none; 
+
+		// Override BS that has a min-width at $screen-sm
+		text-align: left;
+		margin-bottom: 5px;
+		padding-top: 0;
+
+		// Make their width collapse
+		display: inline-block;
+		width: auto;
+	}
+
+	// This contains the form elements
+	+ div {
+		margin-left: $horizontal-label-margin;
+		@media (max-width: $screen-md) { margin-left: 0; }
+	}
+}
+
+// Required field icons
+.glyphicon.required {
+
+	// Toning down the required icons
+	color: #bbb;
+	&:hover {
+		color: $tooltip-bg;
+	}
+
+	// Fix the tooltips on horizontal forms which were wrapping
+	// to two lines
+	& + .tooltip {
+		white-space: nowrap;
+	}
+}
+
+// Make the Bootstrap tooltips not inherit text shadow
+.tooltip {
+	text-shadow: none;
+}
+
+// Make textareas 4 lines long
+textarea.form-control {
+	height: 6.8em;
+	resize: vertical;
+	&.wysiwyg {
+		height: 16em;
+	}
+}
+
+// Remove glow on form control hovers and use default inner shadow
+// instead.  This is copied out of bootstrap
+.form-control:focus {
+	@include box-shadow(inset 0 1px 1px rgba(darken($input-border-focus, 30%), .075));
+}

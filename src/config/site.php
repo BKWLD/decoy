@@ -17,7 +17,7 @@
 	 * a comma.  The icon name should be the suffix of a Bootstrap Glyphicon.  For example,
 	 * to show the `glyphicon-book` icon, just append `,book` to the end of the label. 
 	 *
-	 * @var array 
+	 * @var callable|array 
 	 */
 	'nav' => [
 		// 'Content,book' => [
@@ -29,11 +29,11 @@
 
 	/**
 	 * After a succesful login, this is the absolute path or url that should be
-	 * redirected to.
+	 * redirected to.  Make falsey to redirect to the first page in the nav
 	 *
-	 * @var string
+	 * @var callable|string|null
 	 */
-	'post_login_redirect' => '/admin/admins',
+	// 'post_login_redirect' => '/admin/admins',
 
 	/**
 	 * Roles that super admins can assign other admins to on the admin edit page.

@@ -1,0 +1,225 @@
+// Settings
+$decoy-el-tween-length: 200ms;
+
+// Spinning animation
+@include keyframes(spin) {
+	0% { rotate: 0deg; }
+	100% { rotate: 360deg; }
+}
+
+
+// The icon the admin clicks on to open the elements editor
+.decoy-el-icon {
+
+	// Positioning
+	position: absolute;
+	cursor: pointer;
+	z-index: $zindex-tooltip;
+
+	// Only apply transitions after it's inited to prevent weird tween in
+	&.decoy-el-pos-tween {
+		transition: left $decoy-el-tween-length, top $decoy-el-tween-length;
+		&:after {
+			transition: border $decoy-el-tween-length;
+		}
+	}
+
+	// Make the round part of icon
+	$size: 20px;
+	.decoy-el-mask {
+
+		// Style like circle
+		display: block;
+		width: $size;
+		height: $size;
+		background: $element-icon-color;
+		border-radius: $size;
+
+		// Hide the iframe
+		overflow: hidden;
+
+		// Put above the arrow
+		position: relative;
+		z-index: 1;
+
+		// Animate
+		border: 1px solid transparent;
+		transition: 
+			border $decoy-el-tween-length, 
+			width $decoy-el-tween-length, 
+			height $decoy-el-tween-length, 
+			box-shadow $decoy-el-tween-length,
+			border-radius $decoy-el-tween-length
+		;
+	}
+
+	// Build the arrow part of icon
+	$arrow-size: 6px;
+	$arrow-offset: 2px - $arrow-size;
+	&:after {
+		content: '';
+		position: absolute;
+		width: 0;
+		height: 0;
+		border-color: transparent;
+		border-style: solid;
+	}
+
+	// Tweak position of icon position
+	&.top    { margin-top:  -$arrow-size; }
+	&.right  { margin-left:  $arrow-size; }
+	&.bottom { margin-top:   $arrow-size; }
+	&.left   { margin-left: -$arrow-size; }
+
+	// Handle different orientations
+	&.top:after {
+		bottom: $arrow-offset;
+		left: 50%;
+		margin-left: -$arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $element-icon-color;
+	}
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
+	&.top-left:after {
+		bottom: $arrow-offset;
+		left: $arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $element-icon-color;
+	}
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
+	&.top-right:after {
+		bottom: $arrow-offset;
+		right: $arrow-size;
+		border-width: $arrow-size $arrow-size 0;
+		border-top-color: $element-icon-color;
+	}
+	&.decoy-el-show.top:after { border-top-color: $element-icon-active }
+	&.right:after {
+		top: 50%;
+		left: $arrow-offset;
+		margin-top: -$arrow-size;
+		border-width: $arrow-size $arrow-size $arrow-size 0;
+		border-right-color: $element-icon-color;
+	}
+	&.decoy-el-show.right:after { border-right-color: $element-icon-active }
+	&.left:after {
+		top: 50%;
+		right: $arrow-offset;
+		margin-top: -$arrow-size;
+		border-width: $arrow-size 0 $arrow-size $arrow-size;
+		border-left-color: $element-icon-color;
+	}
+	&.decoy-el-show.left:after { border-left-color: $element-icon-active }
+	&.bottom:after {
+		top: $arrow-offset;
+		left: 50%;
+		margin-left: -$arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $element-icon-color;
+	}
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
+	&.bottom-left:after {
+		top: $arrow-offset;
+		left: $arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $element-icon-color;
+	}
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
+	&.bottom-right:after {
+		top: $arrow-offset;
+		right: $arrow-size;
+		border-width: 0 $arrow-size $arrow-size;
+		border-bottom-color: $element-icon-color;
+	}
+	&.decoy-el-show.bottom:after { border-bottom-color: $element-icon-active }
+
+	// Make the spinner icon
+	.glyphicon {
+
+		// Style it
+		$size: 10px;
+		font-size: $size;
+		color: $element-icon-inverse;
+
+		// Center it
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		margin-left: -$size/2;
+		margin-top: -$size/2;
+
+		// Put it on top of the mask
+		z-index: 2;
+		
+		// Animate it
+		&.glyphicon-refresh {
+			animation: spin .6s infinite linear;
+		}
+	}
+
+	// Give the iframe a fixed width so the height can be properly calculated
+	iframe {
+		width: 450px;
+		@media (max-width: $screen-xs) {
+			width: 300px;
+		}
+
+		// Hide by default
+		opacity: 0;
+		transition: opacity $decoy-el-tween-length*2;
+	}
+
+	// Opened styles
+	&.decoy-el-open {
+
+		// Put it over closed icons
+		z-index: $zindex-tooltip + 1;
+
+		// Make spinner bigger during the saving, spin moment
+		.glyphicon {
+			$size: 20px;
+			font-size: $size;
+			margin-left: -$size/2;
+			margin-top: -$size/2;
+		}
+
+		// Style the icon like a Decoy @panel when the iframe
+		// is open
+		.decoy-el-mask {
+			border-radius: 4px;
+			@include box-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+		}
+	}
+
+	// Show the iframe
+	&.decoy-el-show {
+
+		// Make the border grey
+		.decoy-el-mask {
+			border: 1px solid $grey-border;
+
+			// Hide the glyphicon
+			& + .glyphicon { display: none; }
+		}
+
+		// Show the iframe
+		iframe {
+			transition: opacity $decoy-el-tween-length;
+			opacity: 1;
+		}
+	}
+}
+
+// The box that highlights the target of the element editor
+.decoy-el-highlight {
+	position: absolute;
+	background: rgba($element-icon-color, .2);
+	border: 1px dashed rgba($element-icon-color, .4);
+	z-index: $zindex-tooltip - 1;
+
+	// Hide it
+	&.decoy-el-hide {
+		transition: opacity $decoy-el-tween-length;
+		opacity: 0;
+	}
+}
