@@ -1,17 +1,17 @@
 define(function (require) {
-	
+
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('lodash')
 		, bootstrap = require('bootstrap')
 		, tpl = _.template(require('text!decoy/templates/changes-modal.html'));
 	;
-	
+
 	/**
 	 * Request the attribtues from the server
 	 *
-	 * @param {MouseEvent} $e 
-	 * @return {void} 
+	 * @param {MouseEvent} $e
+	 * @return {void}
 	 */
 	function open(e) {
 		e.preventDefault();
@@ -23,7 +23,7 @@ define(function (require) {
 	 * Render the content and finish opening the modal
 	 *
 	 * @param {object} data The changes edit response
-	 * @return {void} 
+	 * @return {void}
 	 */
 	function render(data) {
 

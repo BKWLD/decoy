@@ -2,7 +2,7 @@
 // Stuff for the login screen
 // --------------------------------------------------
 define(function (require) {
-	
+
 	// Dependencies
 	var $ = require('jquery')
 		, Backbone = require('backbone')
@@ -10,10 +10,10 @@ define(function (require) {
 		, $win = $(window)
 		, LoginAnimation = require('decoy/animation/decoy-anim')
 	;
-	
+
 	// Create view
 	var View = {};
-	
+
 	// Constructor
 	View.initialize = function() {
 		_.bindAll(this);
@@ -33,7 +33,7 @@ define(function (require) {
 			this.$('h4').addClass('show');
 		}, this), 1000);
 
-		
+
 		//Aadd decoy login animation on screens greater than screen-sm
 		if( $win.width() >= 768 )
 			this.loginAnim = new LoginAnimation({

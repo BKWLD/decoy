@@ -2,7 +2,7 @@
 // Decoy app init and events
 // --------------------------------------------------
 define(function (require) {
-	
+
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('underscore')
@@ -99,32 +99,32 @@ define(function (require) {
 
 		// Initalize views
 		app.initalizeViews(manifest);
-		
+
 		// Add "Required" icons to file input fields where we're manually applying
 		// a required class with Former, which puts it on the input rather than the control group.  We
 		// want these fields to look required but not actually be enforced by the browser.
 		var required_html = ' <span class="glyphicon glyphicon-exclamation-sign js-tooltip required" title="Required field"></span>';
 		$('input.required, textarea.required').closest('.form-group').find('.control-label').append(required_html);
-		
+
 		// And "Help" icons
 		// Disabled cause I'm not sure we really want this
 		// $('.help-block').prepend('<i class="icon-question-sign"></i> ');
-		
+
 		// Enable bootstrap tooltips
-		$body.find('.js-tooltip').tooltip({ 
-			animation: false, 
+		$body.find('.js-tooltip').tooltip({
+			animation: false,
 			html: true,
 			container: '#main' // Add them out here to prevent some z-index issues
 		});
-		
+
 		// Turn WYSIWYGs on.
 		wysiwyg.init('textarea.wysiwyg');
-		
+
 		// Enable affix globally
-		$('.affixable').views(Affixable);		
-		
+		$('.affixable').views(Affixable);
+
 	});
-	
+
 	// Return public module
 	return app;
 });
