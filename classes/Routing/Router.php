@@ -47,6 +47,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'decoy.middlewares.edit-redirect',
+				'decoy.middlewares.headers',
 			],
 		], function() {
 			$this->registerAccount();
@@ -58,6 +59,7 @@ class Router {
 			'middleware' => [
 				'decoy.middlewares.auth',
 				'decoy.middlewares.edit-redirect',
+				'decoy.middlewares.headers',
 			],
 		], function() {
 			$this->registerAdmins();
