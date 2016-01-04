@@ -1,23 +1,23 @@
 <?php return array(
-	
+
 	/**
 	 * The name of the site is shown in the header of all pages
 	 *
 	 * @var string
 	 */
 	'name' => Config::get('site.name') ? Config::get('site.name') : 'Admin',
-	
+
 	/**
 	 * This generates the nav sidebar.  It is key-value pairs.  The key is always the
 	 * label for the nav item.  The value may be either an array of label-url pairs or
-	 * a string URL.  The URL to an index view will use slugs that are the plural of 
+	 * a string URL.  The URL to an index view will use slugs that are the plural of
 	 * the model name.  For instance, the Article model can be found at /admin/articles
-	 * 
+	 *
 	 * In addition, you may append an icon name after a label, delimited by
 	 * a comma.  The icon name should be the suffix of a Bootstrap Glyphicon.  For example,
-	 * to show the `glyphicon-book` icon, just append `,book` to the end of the label. 
+	 * to show the `glyphicon-book` icon, just append `,book` to the end of the label.
 	 *
-	 * @var callable|array 
+	 * @var callable|array
 	 */
 	'nav' => [
 		// 'Content,book' => [
@@ -39,7 +39,7 @@
 	 * Roles that super admins can assign other admins to on the admin edit page.
 	 * If left empty, all admins will be assigned to the default level of "admin".
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	'roles' => [
 		// 'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
@@ -49,7 +49,7 @@
 	/**
 	 * Permissions rules.  These are described in more detail in the README.
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	'permissions' => [
 		// 'general' => [
@@ -67,7 +67,7 @@
 	 * A hash of localization slugs and readable labels for all the locales for this
 	 * site.  Localization UI will only appear if the count > 1.
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	'locales' => [
 		'english' => 'English',
@@ -81,17 +81,9 @@
 	 * have everything localized but that children will inherit the localization
 	 * preference from a parent.
 	 *
-	 * @var boolean 
+	 * @var boolean
 	 */
 	'auto_localize_root_models' => true,
-
-	/**
-	 * Switch to show the front-end decoy tools or not. These include editing of
-	 * Elements, etc
-	 *
-	 * @var boolean 
-	 */
-	'show_frontend_tools' => false,
 
 	/**
 	 * Store an entry in the database of all model changes.
@@ -99,15 +91,15 @@
 	 * 		@var boolean|callable
 	 *
 	 * If a function, it's signature is:
-	 * 
+	 *
 	 *   	@param Illuminate\Database\Eloquent\Model $model The model being touched
 	 *   	@param string $action Generally a CRUD verb: "created", "updated", "deleted"
 	 *   	@param Bkwld\Decoy\Models\Admin $admin The admin acting on the record
-	 *   	@return boolean 
+	 *   	@return boolean
 	 */
 	// 'log_changes' => true,
 	'log_changes' => function($model, $action, $admin_id) {
 		return true;
 	},
-	
+
 );

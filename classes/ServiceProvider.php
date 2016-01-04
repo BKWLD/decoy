@@ -138,14 +138,6 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	protected function registerMiddlewares() {
-
-		// Register public, frontent tools middleware
-		if ($this->app['config']->get('decoy.site.show_frontend_tools')) {
-			$this->app['Illuminate\Contracts\Http\Kernel']
-				->pushMiddleware(Middleware\FrontendTools::class);
-		}
-
-		// Register admin only middleware
 		foreach([
 			'decoy.middlewares.auth' => Middleware\Auth::class,
 			'decoy.middlewares.edit-redirect' => Middleware\EditRedirect::class,
