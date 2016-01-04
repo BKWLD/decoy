@@ -27,10 +27,9 @@
 
 		<? if (file_exists(public_path('dist/admin.js'))): ?>
 			<script src='/dist/admin.js' charset='utf-8'></script>
-			%script()
 		<? else: ?>
 			<script src='http://localhost:8080/dist/admin.js' charset='utf-8'></script>
 		<? endif ?>
-		
+
 </body>
 </html>
