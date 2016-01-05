@@ -47,7 +47,7 @@ class Elements extends Base {
 
 		// If the user has customized permissions, filter the elements to only the
 		// allowed pages of elements.
-		if ($permissions = app('decoy.auth')->user()->getPermissionsAttribute()) {
+		if ($permissions = app('decoy.user')->getPermissionsAttribute()) {
 			$elements->onlyPages($permissions->elements);
 		}
 
@@ -121,7 +121,7 @@ class Elements extends Base {
 
 		// If the user has customized permissions, filter the elements to only the
 		// allowed pages of elements.
-		if ($permissions = app('decoy.auth')->user()->getPermissionsAttribute()) {
+		if ($permissions = app('decoy.user')->getPermissionsAttribute()) {
 			$elements->onlyPages($permissions->elements);
 		}
 

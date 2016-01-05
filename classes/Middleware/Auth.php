@@ -24,7 +24,7 @@ class Auth {
 	public function handle($request, Closure $next) {
 
 		// Require a logged in user
-		if (!$admin = App::make('decoy.auth')) return App::make('decoy.acl_fail');
+		if (!$admin = app('decoy.user')) return App::make('decoy.acl_fail');
 
 		// Determine the action and controller differently depending on how the
 		// request is routed.

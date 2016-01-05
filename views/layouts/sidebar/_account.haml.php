@@ -1,4 +1,4 @@
--$auth = App::make('decoy.auth')
+-$auth = app('decoy.user')
 .top
 	%a.dashboard(href=$auth->getUserUrl())
 		%img.gravatar(src=$auth->getUserPhoto())

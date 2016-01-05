@@ -217,7 +217,7 @@ class ServiceProvider extends BaseServiceProvider {
 		});
 
 		// Return the active user account
-		$this->app->singleton('decoy.auth', function($app) {
+		$this->app->singleton('decoy.user', function($app) {
 			$guard = Config::get('decoy.core.guard');
 			return $app['auth']->guard($guard)->user();
 		});
@@ -293,7 +293,7 @@ class ServiceProvider extends BaseServiceProvider {
 		return array(
 			'decoy',
 			'decoy.acl_fail',
-			'decoy.auth',
+			'decoy.user',
 			'decoy.elements',
 			'decoy.router',
 			'decoy.url',

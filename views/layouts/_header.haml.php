@@ -12,12 +12,12 @@
 		%br.mobile-break
 		%span.controller != $title
 
-		-if(!empty($many_to_many) && app('decoy.auth')->can('update', $controller))
+		-if(!empty($many_to_many) && app('decoy.user')->can('update', $controller))
 			-# If we've declared this relationship a many to many one, show the autocomplete
 			.pull-right.btn-toolbar
 				!=View::make('decoy::shared.form.relationships._many_to_many', $__data)->render()
 
-		-else if(app('decoy.auth')->can('create', $controller) && !Route::is('decoy::elements', 'decoy::workers', 'decoy::commands') && !Request::is('admin/changes'))
+		-else if(app('decoy.user')->can('create', $controller) && !Route::is('decoy::elements', 'decoy::workers', 'decoy::commands') && !Request::is('admin/changes'))
 
 			-# Controller actions
 			.pull-right.btn-toolbar

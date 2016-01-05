@@ -15,7 +15,7 @@
 
 	!= Former::image('image') 
 
-	-if (app('decoy.auth')->can('grant', $controller) && ($roles = Config::get('decoy.site.roles')) && !empty($roles))
+	-if (app('decoy.user')->can('grant', $controller) && ($roles = Config::get('decoy.site.roles')) && !empty($roles))
 		!= Former::radios('role')->radios(Bkwld\Library\Laravel\Former::radioArray($roles))
 		!= View::make('decoy::admins._permissions', $__data)
 
@@ -23,7 +23,7 @@
 
 	-# Create moderation actions
 	-ob_start()
-	-if (!empty($item) && app('decoy.auth')->can('grant', $controller))
+	-if (!empty($item) && app('decoy.user')->can('grant', $controller))
 
 		-# Disable admin
 		-if (!$item->disabled())

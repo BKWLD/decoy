@@ -30,10 +30,10 @@ if ($listing->count()) {
 		}))
 
 			// ... and whether the user can delete this item
-			&& (app('decoy.auth')->can('destroy', $controller)
+			&& (app('decoy.user')->can('destroy', $controller)
 
 			// ... or, if many to many, update the parent
-			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)));
+			|| ($many_to_many && app('decoy.user')->can('update', $parent_controller)));
 }
 ?>
 

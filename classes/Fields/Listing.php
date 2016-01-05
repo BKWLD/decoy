@@ -257,7 +257,7 @@ class Listing extends Field {
 		}
 
 		// Add create button if we have permission and if there is a parent item
-		if (app('decoy.auth')->can('create', $this->controller)) {
+		if (app('decoy.user')->can('create', $this->controller)) {
 			$this->group->setLabel(
 				'<a href="'.$this->getIndexURL().'">'
 				.$this->label_text
@@ -279,7 +279,7 @@ class Listing extends Field {
 	public function getContent() {
 
 		// Check that the current user has permission to access this controller
-		if (!app('decoy.auth')->can('read', $this->controller)) return;
+		if (!app('decoy.user')->can('read', $this->controller)) return;
 
 		// If in a sidebar and there is no parent (like if you are on a create page)
 		// then don't show a special message

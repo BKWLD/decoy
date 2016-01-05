@@ -5,7 +5,7 @@ $help = (!empty($item) && $uri = $item->getUriAttribute()) ?
 	'If "Draft", this content will be completely inaccessible.';
 
 // Check if they have permission
-if (!app('decoy.auth')->can('publish', $controller)) {
+if (!app('decoy.user')->can('publish', $controller)) {
 	$status =  $item && $item->visible ? 'Published' : 'Draft';
 	echo Former::note('Status', $status)->blockHelp($help);
 	return;

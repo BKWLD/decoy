@@ -1,4 +1,4 @@
--$auth = App::make('decoy.auth')
+-$auth = app('decoy.user')
 .navigation
 	.top-level-nav
 		-foreach($pages as $page)

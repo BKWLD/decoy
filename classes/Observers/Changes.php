@@ -50,7 +50,7 @@ class Changes {
 		if (!in_array($action, $this->supported)) return;
 
 		// Get the admin acting on the record
-		$admin = app('decoy.auth')->user();
+		$admin = app('decoy.user');
 
 		// If `log_changes` was configed as a callable, see if this model event
 		// should not be logged

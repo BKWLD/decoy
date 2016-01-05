@@ -49,7 +49,7 @@ class Change extends Base {
 	public static function enabled() {
 		if ($check = Config::get('decoy.site.log_changes')) {
 			if (is_bool($check)) return $check;
-			if (is_callable($check)) return call_user_func($check, $model, $action, app('decoy.auth')->user());
+			if (is_callable($check)) return call_user_func($check, $model, $action, app('decoy.user'));
 		}
 		return false;
 	}
@@ -65,7 +65,7 @@ class Change extends Base {
 	public static function log(Model $model, $action, Admin $admin = null) {
 
 		// If no admin provided, get the current one. And if no admin, abort.
-		if (!$admin) $admin = app('decoy.auth')->user();
+		if (!$admin) $admin = app('decoy.user');
 		if (!$admin) return;
 
 		// Get the changed attributes

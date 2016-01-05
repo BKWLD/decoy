@@ -78,7 +78,7 @@ class Helpers {
 		array_push($classes, $controller, $action);
 
 		// Add the admin roles
-		if ($admin = app('decoy.auth')) $classes[] = 'role-'.$admin->role;
+		if ($admin = app('decoy.user')) $classes[] = 'role-'.$admin->role;
 
 		// Return the list of classes
 		return implode(' ', $classes);

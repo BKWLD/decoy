@@ -27,7 +27,7 @@ class Account extends Base {
 	 * @return Illuminate\View\View
 	 */
 	public function index() {
-		return Redirect::to(App::make('decoy.auth')->getUserUrl());
+		return Redirect::to(app('decoy.user')->getUserUrl());
 	}
 
 	/**
@@ -42,7 +42,7 @@ class Account extends Base {
 		if (Session::has('login_redirect')) Session::keep('login_redirect');
 
 		// If the user is logged in, take them to whatever the home controller should be
-		if (App::make('decoy.auth')->check()) return Redirect::to($this->getHome());
+		if (app('decoy.user')->check()) return Redirect::to($this->getHome());
 
 		// Pass validation rules
 		Former::withRules(array(
@@ -67,7 +67,7 @@ class Account extends Base {
 
 		// Vars
 		$config = Config::get('decoy.site.post_login_redirect');
-		$auth = App::make('decoy.auth');
+		$auth = app('decoy.user');
 
 		// Make the config optional
 		if ($config) {

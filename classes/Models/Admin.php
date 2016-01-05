@@ -116,8 +116,8 @@ class Admin extends Base implements
 		// If the current user can't grant permissions, make the new admin
 		// have the same role as themselves.  Admins created from the CLI (like as
 		// part of a migration) won't be logged in.
-		if (($admin = app('decoy.auth')->user())
-			&& !app('decoy.auth')->can('grant', 'admins')) {
+		if (($admin = app('decoy.user'))
+			&& !app('decoy.user')->can('grant', 'admins')) {
 			$this->role = $admin->role;
 		}
 	}
@@ -159,7 +159,7 @@ class Admin extends Base implements
 	public function sendCreateEmail() {
 
 		// Prepare data for mail
-		$admin = app('decoy.auth')->user();
+		$admin = app('decoy.user');
 		$email = array(
 			'first_name' => $admin->first_name,
 			'last_name' => $admin->last_name,
@@ -185,7 +185,7 @@ class Admin extends Base implements
 	public function sendUpdateEmail() {
 
 		// Prepare data for mail
-		$admin = app('decoy.auth')->user();
+		$admin = app('decoy.user');
 		$email = array(
 			'editor_first_name' => $admin->first_name,
 			'editor_last_name' => $admin->last_name,
@@ -239,7 +239,7 @@ class Admin extends Base implements
 		}
 
 		// If row is you
-		if ($this->id == app('decoy.auth')->user()->id) {
+		if ($this->id == app('decoy.user')->id) {
 			$html .= '<span class="label label-info">You</span>';
 		}
 
@@ -337,13 +337,13 @@ class Admin extends Base implements
 						// Set the initial checked state based on the admin's permissions, if
 						// one is set.  Or based on the first role.
 						'checked' => $admin ?
-							app('decoy.auth')->can($action, $class, $admin) :
-							app('decoy.auth')->can($action, $class, $roles[0]),
+							app('decoy.user')->can($action, $class, $admin) :
+							app('decoy.user')->can($action, $class, $roles[0]),
 
 						// Filter the list of roles to just the roles that allow the
 						// permission currently being iterated through
 						'roles' => array_filter($roles, function($role) use ($action, $class) {
-							return app('decoy.auth')->can($action, $class, $role);
+							return app('decoy.user')->can($action, $class, $role);
 						}),
 
 					];

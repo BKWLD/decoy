@@ -286,7 +286,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 
 		// Check if this model supports editing the visibility
 		if ($many_to_many
-			|| !app('decoy.auth')->can('publish', $controller)
+			|| !app('decoy.user')->can('publish', $controller)
 			|| !array_key_exists('visible', $this->attributes)) return;
 
 		// Create the markup
@@ -352,8 +352,8 @@ abstract class Base extends Eloquent implements SluggableInterface {
 
 		// Check if this model can be deleted.  This mirrors code found in the table
 		//  partial for generating the edit link on the title
-		if (!(app('decoy.auth')->can('destroy', $controller)
-			|| ($many_to_many && app('decoy.auth')->can('update', $parent_controller)))) return;
+		if (!(app('decoy.user')->can('destroy', $controller)
+			|| ($many_to_many && app('decoy.user')->can('update', $parent_controller)))) return;
 
 		// Return markup
 		return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">

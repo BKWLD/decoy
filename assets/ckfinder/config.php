@@ -45,7 +45,7 @@ function CheckAuthentication() {
 	$app->boot();
 
 	// Verify the user
-	return $app->make('decoy.auth')->check();
+	return $app->make('decoy.user')->check();
 }
 
 // LicenseKey : Paste your license key here. If left blank, CKFinder will be

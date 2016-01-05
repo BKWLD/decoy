@@ -72,8 +72,8 @@ class Admins extends Base {
 	 * @return Symfony\Component\HttpFoundation\Response | void
 	 */
 	public function index() {
-		if (!app('decoy.auth')->can('read', 'admins')) {
-			return Redirect::to(app('decoy.auth')->getUserUrl());
+		if (!app('decoy.user')->can('read', 'admins')) {
+			return Redirect::to(app('decoy.user')->getUserUrl());
 		}
 		return parent::index();
 	}
@@ -99,7 +99,7 @@ class Admins extends Base {
 	public function update($id) {
 
 		// Encorce permissions on updating ones own role
-		if (!app('decoy.auth')->can('update', 'admins') && Input::has('role')) {
+		if (!app('decoy.user')->can('update', 'admins') && Input::has('role')) {
 			throw new AccessDeniedHttpException;
 		}
 
@@ -118,7 +118,7 @@ class Admins extends Base {
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function disable($id) {
-		if (!app('decoy.auth')->can('grant', 'admins')) throw new AccessDeniedHttpException;
+		if (!app('decoy.user')->can('grant', 'admins')) throw new AccessDeniedHttpException;
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = null;
 		$admin->save();
@@ -131,7 +131,7 @@ class Admins extends Base {
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function enable($id) {
-		if (!app('decoy.auth')->can('grant', 'admins')) throw new AccessDeniedHttpException;
+		if (!app('decoy.user')->can('grant', 'admins')) throw new AccessDeniedHttpException;
 		if (!($admin = Admin::find($id))) return App::abort(404);
 		$admin->active = 1;
 		$admin->save();
