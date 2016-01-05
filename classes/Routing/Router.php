@@ -58,6 +58,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'decoy.middlewares.auth',
+				'decoy.middlewares.save-redirect',
 				'decoy.middlewares.edit-redirect',
 				'decoy.middlewares.headers',
 				'web', // Defined in the Kernel
@@ -68,15 +69,18 @@ class Router {
 			$this->registerWorkers();
 			$this->registerEncode();
 			$this->registerElements();
-			$this->registerRedactor();
 			$this->registerWildcard(); // Must be last
 		});
 
-		// Web service callback endpoints and don't require CSRF filtering
+		// Routes that require auth but no CSRF
 		Route::group([
 			'prefix' => $this->dir,
+			'middleware' => [
+				'decoy.middlewares.auth',
+				'api',
+			],
 		], function() {
-			$this->registerCallbackEndpoints();
+			$this->registerRedactor();
 		});
 
 		// Routes that don't require auth or CSRF
@@ -95,14 +99,22 @@ class Router {
 	 * @return void
 	 */
 	public function registerAccount() {
-		Route::get('/', ['as' => 'decoy', 'uses' => App::make('decoy.auth')->loginAction()]);
-		Route::post('/', ['as' => 'decoy::account@login', 'uses' => 'Bkwld\Decoy\Controllers\Account@post']);
-		Route::get('account', ['as' => 'decoy::account', 'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
-		Route::get('logout', ['as' => 'decoy::account@logout', 'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
-		Route::get('forgot', ['as' => 'decoy::account@forgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
-		Route::post('forgot', ['as' => 'decoy::account@postForgot', 'uses' => 'Bkwld\Decoy\Controllers\Account@postForgot']);
-		Route::get('reset/{code}', ['as' => 'decoy::account@reset', 'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
-		Route::post('reset/{code}', ['as' => 'decoy::account@postReset', 'uses' => 'Bkwld\Decoy\Controllers\Account@postReset']);
+		Route::get('/', ['as' => 'decoy',
+			'uses' => App::make('decoy.auth')->loginAction()]);
+		Route::post('/', ['as' => 'decoy::account@login',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@post']);
+		Route::get('account', ['as' => 'decoy::account',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
+		Route::get('logout', ['as' => 'decoy::account@logout',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
+		Route::get('forgot', ['as' => 'decoy::account@forgot',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
+		Route::post('forgot', ['as' => 'decoy::account@postForgot',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@postForgot']);
+		Route::get('reset/{code}', ['as' => 'decoy::account@reset',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
+		Route::post('reset/{code}', ['as' => 'decoy::account@postReset',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@postReset']);
 	}
 
 	/**
@@ -138,8 +150,10 @@ class Router {
 	 * @return void
 	 */
 	public function registerAdmins() {
-		Route::get('admins/{id}/disable', ['as' => 'decoy::admins@disable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
-		Route::get('admins/{id}/enable', ['as' => 'decoy::admins@enable', 'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
+		Route::get('admins/{id}/disable', ['as' => 'decoy::admins@disable',
+			'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
+		Route::get('admins/{id}/enable', ['as' => 'decoy::admins@enable',
+			'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
 	}
 
 	/**
@@ -148,8 +162,10 @@ class Router {
 	 * @return void
 	 */
 	public function registerCommands() {
-		Route::get('commands', ['uses' => 'Bkwld\Decoy\Controllers\Commands@index', 'as' => 'decoy::commands']);
-		Route::post('commands/{command}', ['uses' => 'Bkwld\Decoy\Controllers\Commands@execute', 'as' => 'decoy::commands@execute']);
+		Route::get('commands', ['as' => 'decoy::commands',
+			'uses' => 'Bkwld\Decoy\Controllers\Commands@index']);
+		Route::post('commands/{command}', ['as' => 'decoy::commands@execute',
+			'uses' => 'Bkwld\Decoy\Controllers\Commands@execute']);
 	}
 
 	/**
@@ -158,8 +174,10 @@ class Router {
 	 * @return void
 	 */
 	public function registerWorkers() {
-		Route::get('workers', ['uses' => 'Bkwld\Decoy\Controllers\Workers@index', 'as' => 'decoy::workers']);
-		Route::get('workers/tail/{worker}', ['uses' => 'Bkwld\Decoy\Controllers\Workers@tail', 'as' => 'decoy::workers@tail']);
+		Route::get('workers', ['as' => 'decoy::workers',
+			'uses' => 'Bkwld\Decoy\Controllers\Workers@index']);
+		Route::get('workers/tail/{worker}', ['as' => 'decoy::workers@tail',
+			'uses' => 'Bkwld\Decoy\Controllers\Workers@tail']);
 	}
 
 	/**
@@ -187,10 +205,14 @@ class Router {
 	 * @return void
 	 */
 	public function registerElements() {
-		Route::get('elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@field', 'as' => 'decoy::elements@field']);
-		Route::post('elements/field/{key}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate', 'as' => 'decoy::elements@field-update']);
-		Route::get('elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@index', 'as' => 'decoy::elements']);
-		Route::post('elements/{locale?}/{tab?}', ['uses' => 'Bkwld\Decoy\Controllers\Elements@store', 'as' => 'decoy::elements@store']);
+		Route::get('elements/field/{key}', ['as' => 'decoy::elements@field',
+			'uses' => 'Bkwld\Decoy\Controllers\Elements@field']);
+		Route::post('elements/field/{key}', ['as' => 'decoy::elements@field-update',
+			'uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate']);
+		Route::get('elements/{locale?}/{tab?}', ['as' => 'decoy::elements',
+			'uses' => 'Bkwld\Decoy\Controllers\Elements@index']);
+		Route::post('elements/{locale?}/{tab?}', ['as' => 'decoy::elements@store',
+			'uses' => 'Bkwld\Decoy\Controllers\Elements@store']);
 	}
 
 	/**
@@ -206,10 +228,10 @@ class Router {
 	/**
 	 * Web service callback endpoints
 	 */
-	public function registerCallbackEndpoints() {
+	public function registgerEncodingHooks() {
 
-		// Make a simply handler for notify callbacks.  The encoding model will pass
-		// the the handling onto whichever provider is registered.
+		// Make a simple handler for encoding notification hooks.  The encoding
+		// model will pass the the handling onto whichever provider is registered.
 		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
 			return Encoding::notify(Input::get());
 		}]);
