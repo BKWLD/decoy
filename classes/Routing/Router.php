@@ -46,8 +46,8 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
-				'decoy.middlewares.edit-redirect',
 				'decoy.middlewares.headers',
+				'web', // Defined in the Kernel
 			],
 		], function() {
 			$this->registerAccount();
@@ -60,6 +60,7 @@ class Router {
 				'decoy.middlewares.auth',
 				'decoy.middlewares.edit-redirect',
 				'decoy.middlewares.headers',
+				'web', // Defined in the Kernel
 			],
 		], function() {
 			$this->registerAdmins();
@@ -76,6 +77,14 @@ class Router {
 			'prefix' => $this->dir,
 		], function() {
 			$this->registerCallbackEndpoints();
+		});
+
+		// Routes that don't require auth or CSRF
+		Route::group([
+			'prefix' => $this->dir,
+			'middleware' => ['api'],
+		], function() {
+			$this->registgerEncodingHooks();
 		});
 
 	}
