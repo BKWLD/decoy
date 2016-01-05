@@ -68,12 +68,12 @@ class Admins extends Base {
 
 	/**
 	 * If the user can't read admins, bounce them to their profile page
-	 * 
+	 *
 	 * @return Symfony\Component\HttpFoundation\Response | void
 	 */
 	public function index() {
 		if (!app('decoy.auth')->can('read', 'admins')) {
-			return Redirect::to(app('decoy.auth')->userUrl());
+			return Redirect::to(app('decoy.auth')->getUserUrl());
 		}
 		return parent::index();
 	}
@@ -81,7 +81,7 @@ class Admins extends Base {
 	/**
 	 * Make password optional
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function edit($id) {
 		unset(Admin::$rules['password']);
@@ -114,7 +114,7 @@ class Admins extends Base {
 
 	/**
 	 * Disable the admin
-	 * 
+	 *
 	 * @return Illuminate\Http\RedirectResponse
 	 */
 	public function disable($id) {
@@ -124,7 +124,7 @@ class Admins extends Base {
 		$admin->save();
 		return Redirect::back();
 	}
-	
+
 	/**
 	 * Enable the admin
 	 *

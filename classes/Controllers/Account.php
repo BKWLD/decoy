@@ -27,7 +27,7 @@ class Account extends Base {
 	 * @return Illuminate\View\View
 	 */
 	public function index() {
-		return Redirect::to(App::make('decoy.auth')->userUrl());
+		return Redirect::to(App::make('decoy.auth')->getUserUrl());
 	}
 
 	/**
@@ -86,7 +86,7 @@ class Account extends Base {
 		}
 
 		// Default to their account page, which all can access
-		return $auth->userUrl();
+		return $auth->getUserUrl();
 	}
 
 	/**
@@ -173,7 +173,7 @@ class Account extends Base {
 
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
-			route('decoy') => 'Login',
+			route('decoy::account@login') => 'Login',
 			URL::current() => 'Forgot Password',
 		));
 
@@ -235,7 +235,7 @@ class Account extends Base {
 
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
-			route('decoy') => 'Login',
+			route('decoy::account@login') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));

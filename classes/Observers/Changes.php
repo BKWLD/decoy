@@ -20,8 +20,8 @@ class Changes {
 
 	/**
 	 * Handle all Eloquent model events
-	 * 
-	 * @param Bkwld\Decoy\Models\Base $model 
+	 *
+	 * @param Bkwld\Decoy\Models\Base $model
 	 */
 	public function handle($model) {
 
@@ -42,7 +42,7 @@ class Changes {
 		if (is_a($model, 'Illuminate\Database\Eloquent\Relations\Pivot')) return;
 
 		// Don't log an admin logging in or out
-		if (Route::is('decoy::account@login', 'decoy::account@logout')) return;
+		if (Route::is('decoy::account@postLogin', 'decoy::account@logout')) return;
 
 		// Get the action of the event
 		preg_match('#eloquent\.(\w+)#', Event::firing(), $matches);

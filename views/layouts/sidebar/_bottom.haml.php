@@ -5,7 +5,7 @@
 
 	.controls
 		.left
-			%a.logout(href=App::make('decoy.auth')->logoutUrl()) 
+			%a.logout(href=route('decoy::account@logout')) 
 				%span.glyphicon.glyphicon-log-out
 				Logout
 			.subtitle
@@ -15,5 +15,3 @@
 		%a.right(href="/")
 			.glyphicon.glyphicon-globe
 			.subtitle Open site
-
-		

@@ -23,8 +23,8 @@ class Auth {
 	*/
 	public function handle($request, Closure $next) {
 
-		// Otherwise, require a logged in user
-		if (!App::make('decoy.auth')->check()) return App::make('decoy.acl_fail');
+		// Require a logged in user
+		if (!$admin = App::make('decoy.auth')) return App::make('decoy.acl_fail');
 
 		// Determine the action and controller differently depending on how the
 		// request is routed.
@@ -35,11 +35,11 @@ class Auth {
 		}
 
 		// If they don't hvae permission, throw an error
-		if (!App::make('decoy.auth')->can($action, $controller)) {
+		if ($admin->cannot('decoy.auth', [$action, $controller])) {
 			throw new AccessDeniedHttpException;
 		}
 
-		// Chain
+		// Continue, the admin has permission.
 		return $next($request);
 	}
 

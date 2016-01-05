@@ -100,12 +100,12 @@ class Router {
 	 * @return void
 	 */
 	public function registerAccount() {
-		Route::get('/', ['as' => 'decoy',
+		Route::get('/', ['as' => 'decoy::account@login',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
-		Route::post('/', ['as' => 'decoy::account@login',
+		Route::post('/', ['as' => 'decoy::account@postLogin',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@postLogin']);
-		// Route::get('account', ['as' => 'decoy::account',
-		// 	'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
+		Route::get('account', ['as' => 'decoy::account',
+			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
 		Route::get('forgot', ['as' => 'decoy::account@forgot',

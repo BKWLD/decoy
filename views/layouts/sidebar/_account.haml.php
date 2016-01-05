@@ -1,11 +1,11 @@
 -$auth = App::make('decoy.auth')
 .top
-	%a.dashboard(href=$auth->userUrl())
-		%img.gravatar(src=$auth->userPhoto())
+	%a.dashboard(href=$auth->getUserUrl())
+		%img.gravatar(src=$auth->getUserPhoto())
 		%span.name
-			-if($auth->userName() == "Default")
+			-if(($name = $auth->getShortName()) == "Default")
 				Hi there!
 			-else
-				!='Hi, '.$auth->userName()
+				!='Hi, '.$name
 	%a.btn.outline.close-nav
 		%span.glyphicon.close.glyphicon-remove

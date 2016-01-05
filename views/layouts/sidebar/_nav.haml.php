@@ -2,7 +2,7 @@
 .navigation
 	.top-level-nav
 		-foreach($pages as $page)
-		
+
 			-if (!empty($page->children))
 				.main-nav(class=$page->active?'active open':null)
 					%a.top-level.parent
@@ -18,7 +18,7 @@
 									-if($child->icon != 'default')
 										%span.glyphicon(class="glyphicon-#{$child->icon}")
 									=$child->label
-		
+
 			-else if($auth->can('read', $page->url))
 				.main-nav(class=$page->active?'active':null)
 					%a.top-level(href=$page->url)
@@ -36,7 +36,7 @@
 				-if($auth->can('read', 'admins'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
 				-else
-					%a(href=$auth->userUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
+					%a(href=$auth->getUserUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
 
 				-if ($auth->can('read', 'changes'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null)) Changes
@@ -46,4 +46,3 @@
 
 				-if($auth->can('read', 'workers') && count(Bkwld\Decoy\Models\Worker::all()))
 					%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
-						

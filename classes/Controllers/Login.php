@@ -19,14 +19,6 @@ class Login extends Base {
   }
 
   /**
-   * Use the admin guard settings, which are injected into the config by the
-   * Decoy ServiceProvider
-   *
-   * @var string
-   */
-  protected $guard = 'admin';
-
-  /**
    * Path to redirect to after login
    *
    * @var string
@@ -43,6 +35,15 @@ class Login extends Base {
 
     // Redirects to $redirectTo when authenticated
     $this->middleware('guest', ['except' => 'getLogout']);
+  }
+
+  /**
+   * Get the guard to be used during authentication.
+   *
+   * @return string|null
+   */
+  protected function getGuard() {
+    return Config::get('decoy.core.guard');
   }
 
   /**
@@ -79,7 +80,7 @@ class Login extends Base {
 
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
-			route('decoy') => 'Login',
+			route('decoy::account@login') => 'Login',
 			URL::current() => 'Forgot Password',
 		));
 
@@ -114,7 +115,7 @@ class Login extends Base {
 
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
-			route('decoy') => 'Login',
+			route('decoy::account@login') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));

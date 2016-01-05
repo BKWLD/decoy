@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Deps
+use Bkwld\Decoy\Auth\AuthInterface;
 use Bkwld\Upchuck\SupportsUploads;
 use Bkwld\Library\Utils\String;
 use Config;
@@ -18,7 +19,9 @@ use Mail;
 use Request;
 use URL;
 
-class Admin extends Base implements AuthenticatableContract,
+class Admin extends Base implements
+	AuthInterface,
+	AuthenticatableContract,
 	AuthorizableContract,
 	CanResetPasswordContract {
 	use Authenticatable, Authorizable, CanResetPassword;
@@ -357,5 +360,42 @@ class Admin extends Base implements AuthenticatableContract,
 	public function disabled() {
 		return !$this->active;
 	}
+
+	/**
+	 * Check if a developer
+	 *
+	 * @return boolean
+	 */
+	public function isDeveloper() {
+		return $user->role == 'developer' || strpos($user->email, 'bkwld.com');
+	}
+
+	/**
+	 * Avatar photo for the header
+	 *
+	 * @return string
+	 */
+	public function getUserPhoto() {
+		return $this->croppa(80, 80) ?: response()->gravatar($this->email);
+	}
+
+	/**
+	 * Name to display in the header for the user
+	 *
+	 * @return string
+	 */
+	public function getShortName() {
+		return $this->first_name;
+	}
+
+	/**
+	 * URL to the user's profile page in the admin
+	 *
+	 * @return string
+	 */
+	public function getUserUrl() {
+		return $this->getAdminEditAttribute();
+	}
+
 
 }

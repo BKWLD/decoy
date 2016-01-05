@@ -18,11 +18,11 @@ use View;
  * used to invoke them from views.
  */
 class Helpers {
-	
+
 	/**
 	 * The current locale, cached in memory
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	private $locale;
 
@@ -32,7 +32,7 @@ class Helpers {
 	 * @return string
 	 */
 	public function title() {
-		
+
 		// If no title has been set, try to figure it out based on
 		// default breadcrumbs
 		$title = View::yieldContent('title');
@@ -78,12 +78,7 @@ class Helpers {
 		array_push($classes, $controller, $action);
 
 		// Add the admin roles
-		if (($roles = app('decoy.auth')->roles())
-			&& (is_array($roles) || class_implements($roles, 'Illuminate\Support\Contracts\ArrayableInterface'))) {
-			foreach($roles as $role) {
-				array_push($classes, 'role-'.$role);
-			}
-		}
+		if ($admin = app('decoy.auth')) $classes[] = 'role-'.$admin->role;
 
 		// Return the list of classes
 		return implode(' ', $classes);
@@ -94,8 +89,8 @@ class Helpers {
 	 * named with dot syntax (i.e. 'types.marquee.video]').  The latter is how fields
 	 * will be stored in the db
 	 *
-	 * @param string $attribute 
-	 * @return string 
+	 * @param string $attribute
+	 * @return string
 	 */
 	public function convertToDotSyntax($key) {
 		return str_replace(['[', ']'], ['.', ''], $key);
@@ -104,8 +99,8 @@ class Helpers {
 	/**
 	 * Do the reverse of convertKeyToDotSyntax()
 	 *
-	 * @param string $attribute 
-	 * @return string 
+	 * @param string $attribute
+	 * @return string
 	 */
 	public function convertToArraySyntax($key) {
 		if (strpos($key, '.') === false) return $key;
@@ -125,14 +120,14 @@ class Helpers {
 	 * wouldn't let me.
 	 */
 	public function renderListColumn($item, $column, $convert_dates) {
-		
+
 		// Date formats
 		$date_formats = array(
 			'date'     => FORMAT_DATE,
 			'datetime' => FORMAT_DATETIME,
 			'time'     => FORMAT_TIME,
 		);
-		
+
 		// Convert the item to an array so I can test for values
 		$attributes = $item->getAttributes();
 
@@ -147,20 +142,20 @@ class Helpers {
 		// If the object has a method defined with the column value, use it
 		} elseif (method_exists($item, $column)) {
 			return call_user_func(array($item, $column));
-		
+
 		// Else if the column is a property, echo it
 		} elseif (array_key_exists($column, $attributes)) {
 
 			// Format date if appropriate
 			if ($convert_dates && preg_match('/^\d{4}-\d{2}-\d{2}( \d{2}:\d{2}:\d{2})?$/', $item->$column)) {
 				return date($date_formats[$convert_dates], strtotime($item->$column));
-			
+
 			// If the column name has a plural form as a static array or method on the model, use the key
 			// against that array and pull the value.  This is designed to handle my convention
 			// of setting the source for pulldowns, radios, and checkboxes as static arrays
 			// on the model.
 			} else if (($plural = Str::plural($column))
-				&& (isset($class::$$plural) && is_array($class::$$plural) && ($ar = $class::$$plural) 
+				&& (isset($class::$$plural) && is_array($class::$$plural) && ($ar = $class::$$plural)
 					|| (method_exists($class, $plural) && ($ar = forward_static_call(array($class, $plural))))
 				)) {
 
@@ -168,7 +163,7 @@ class Helpers {
 				// if the key exists in the array
 				return join(', ', array_map(function($key) use ($ar, $class, $plural) {
 					if (array_key_exists($key, $ar)) return $ar[$key];
-					else return $key; 
+					else return $key;
 				}, explode(',', $item->$column)));
 
 			// Just display the column value
@@ -179,13 +174,13 @@ class Helpers {
 
 		// Else, just display it as a string
 		return $column;
-		
+
 	}
 
 	/**
 	 * Get the value of an Element given it's key
 	 *
-	 * @param  string $key 
+	 * @param  string $key
 	 * @return mixed
 	 */
 	public function el($key) {
@@ -195,7 +190,7 @@ class Helpers {
 	/**
 	 * Is Decoy handling the request?  Check if the current path is exactly "admin" or if
 	 * it contains admin/*
-	 * @return boolean 
+	 * @return boolean
 	 */
 	private $is_handling;
 	public function handling() {
@@ -206,24 +201,24 @@ class Helpers {
 
 	/**
 	 * Force Decoy to believe that it's handling or not handling the request
-	 * @param boolean $bool 
-	 * @return void 
+	 * @param boolean $bool
+	 * @return void
 	 */
 	public function forceHandling($bool) {
 		$this->is_handling = $bool;
 	}
 
 	/**
-	 * Set or return the current locale.  Default to the first key from 
+	 * Set or return the current locale.  Default to the first key from
 	 * `decoy::site.locale`.
 	 *
 	 * @param string $locale A key from the `decoy::site.locale` array
-	 * @return string 
+	 * @return string
 	 */
 	public function locale($locale = null) {
 
 		// Set the locale if a valid local is passed
-		if ($locale 
+		if ($locale
 			&& ($locales = Config::get('decoy.site.locales'))
 			&& is_array($locales)
 			&& isset($locales[$locale])) return Session::set('locale', $locale);
@@ -238,7 +233,7 @@ class Helpers {
 	/**
 	 * Get the default locale, aka, the first locales array key
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function defaultLocale() {
 		if (($locales = Config::get('decoy.site.locales'))
@@ -258,13 +253,13 @@ class Helpers {
 
 		// Swap out the namespace if decoy
 		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $controller, $is_decoy);
-		
+
 		// Remove the Controller suffix app classes may have
 		$model = preg_replace('#Controller$#', '', $model);
-		
+
 		// Assume that non-decoy models want the first namespace (aka Admin) removed
 		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
-		
+
 		// Make it singular
 		$model = Str::singular($model);
 		return $model;

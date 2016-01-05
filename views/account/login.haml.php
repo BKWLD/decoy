@@ -3,9 +3,9 @@
 		.branding
 			%h1 = Decoy::site()
 			%h4 Powered by <a href="http://bkwld.com">Decoy</a>
-		
-		!=Former::open_vertical(route('decoy::account@login'))->addClass('form')
-		
+
+		!=Former::open_vertical(route('decoy::account@postLogin'))->addClass('form')
+
 		-# Erorrs
 		-if($errors->any())
 			.alert.alert-danger
@@ -17,7 +17,7 @@
 			.alert.alert-danger
 				%button( type="button" class="close" data-dismiss="alert") x
 				=Session::get('notice') ?: Session::get('login_notice')
-		
+
 		!= Former::text('email')->addGroupClass('form-inline')
 		!= Former::password('password')->addGroupClass('form-inline')
 		!= Former::checkbox('remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
@@ -26,7 +26,7 @@
 			.buttons
 				%button.btn.btn-primary(type="submit") Login
 				%a.btn.btn-default(href=route('decoy::account@forgot')) Forgot Password
-			
+
 		!=Former::close()
 
 .bkgd

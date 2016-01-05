@@ -1,5 +1,6 @@
 <?php namespace Bkwld\Decoy;
 
+// Dependencies
 use App;
 use Bkwld\Decoy\Observers\NotFound;
 use Bkwld\Decoy\Observers\Validation;
@@ -22,38 +23,16 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function boot() {
 
-		// Publish config files
-		$this->publishes([
-			 __DIR__.'/../config' => config_path('decoy')
-		], 'config');
-
-		// Publish public assets
-		$this->publishes([
-			 __DIR__.'/../../public' => public_path('packages/bkwld/decoy')
-		], 'assets');
-
-		// Publish migrations
-		$this->publishes([
-			__DIR__.'/../migrations/' => database_path('migrations')
-		], 'migrations');
-
-		// Register views
-		$this->loadViewsFrom(__DIR__.'/../views', 'decoy');
-
 		// Define constants that Decoy uses
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
-		// Inject Decoy's auth config
-		Config::set('auth.guards.admin', [
-			'driver' => 'session',
-			'provider' => 'decoy',
-		]);
-		Config::set('auth.providers.decoy', [
-			'driver' => 'eloquent',
-			'model' => Models\Admin::class,
-		]);
+		// Register configs, migrations, etc
+		$this->registerDirs();
+
+		// Boot auth
+		$this->bootAuth();
 
 		// Register global and named middlewares
 		$this->registerMiddlewares();
@@ -79,6 +58,50 @@ class ServiceProvider extends BaseServiceProvider {
 		if ($this->app['decoy']->handling() && Config::get('decoy.site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
 		}
+	}
+
+	/**
+	 * Register configs, migrations, etc
+	 *
+	 * @return void
+	 */
+	public function registerDirs() {
+
+		// Publish config files
+		$this->publishes([
+			 __DIR__.'/../config' => config_path('decoy')
+		], 'config');
+
+		// Publish migrations
+		$this->publishes([
+			__DIR__.'/../migrations/' => database_path('migrations')
+		], 'migrations');
+
+		// Register views
+		$this->loadViewsFrom(__DIR__.'/../views', 'decoy');
+	}
+
+	/**
+	 * Boot Decoy's auth integration
+	 *
+	 * @return void
+	 */
+	public function bootAuth() {
+
+		// Inject Decoy's auth config
+		Config::set('auth.guards.decoy', [
+			'driver' => 'session',
+			'provider' => 'decoy',
+		]);
+		Config::set('auth.providers.decoy', [
+			'driver' => 'eloquent',
+			'model' => Models\Admin::class,
+		]);
+
+		// Point to the Gate policy
+		$this->app['Illuminate\Contracts\Auth\Access\Gate']
+			->define('decoy.auth', Config::get('decoy.core.policy'));
+
 	}
 
 	/**
@@ -122,7 +145,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Add Decoy's custom Fields to Former so they can be invoked using the "Former::"
 		// namespace and so we can take advantage of sublassing Former's Field class.
-		$this->app->make('former.dispatcher')->addRepository('Bkwld\Decoy\Fields\\');
+		$this->app['former.dispatcher']->addRepository('Bkwld\Decoy\Fields\\');
 	}
 
 	/**
@@ -179,7 +202,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Registers explicit rotues and wildcarding routing
 		$this->app->singleton('decoy.router', function($app) {
-			$dir = $app['config']->get('decoy.core.dir');
+			$dir = Config::get('decoy.core.dir');
 			return new Routing\Router($dir);
 		});
 
@@ -187,26 +210,28 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton('decoy.wildcard', function($app) {
 			$request = $app['request'];
 			return new Routing\Wildcard(
-				$app['config']->get('decoy.core.dir'),
+				Config::get('decoy.core.dir'),
 				$request->getMethod(),
 				$request->path()
 			);
 		});
 
+		// Return the active user account
+		$this->app->singleton('decoy.auth', function($app) {
+			$guard = Config::get('decoy.core.guard');
+			return $app['auth']->guard($guard)->user();
+		});
+
 		// Return a redirect response with extra stuff
 		$this->app->singleton('decoy.acl_fail', function($app) {
-			return $app->make('redirect')->guest($app->make('decoy.auth')->deniedUrl())
+			return $app['redirect']
+				->guest(route('decoy::account@login'))
 				->withErrors([ 'error message' => 'You must login first']);
 		});
 
 		// Register URL Generators as "DecoyURL".
 		$this->app->singleton('decoy.url', function($app) {
-			return new Routing\UrlGenerator($app->make('request')->path());
-		});
-
-		// Build the default auth instance
-		$this->app->singleton('decoy.auth', function($app) {
-			return new Auth\Eloquent($app['auth']);
+			return new Routing\UrlGenerator($app['request']->path());
 		});
 
 		// Build the Elements collection
@@ -214,7 +239,7 @@ class ServiceProvider extends BaseServiceProvider {
 			return new Collections\Elements(
 				new Parser,
 				new Models\Element,
-				$this->app->make('cache')->driver()
+				$this->app['cache']->driver()
 			);
 		});
 
