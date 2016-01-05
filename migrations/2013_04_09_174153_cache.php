@@ -13,7 +13,7 @@ class Cache extends Migration {
 	{
 		Schema::create('cache', function($t) {
 			$t->string('key')->unique();
-			$t->text('value');
+			$t->mediumtext('value');
 			$t->integer('expiration');
 	});
 	}

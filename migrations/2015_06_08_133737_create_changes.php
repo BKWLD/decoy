@@ -10,17 +10,17 @@ class CreateChanges extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
-	{
+	public function up() {
 		Schema::create('changes', function($table) {
+			$table->engine = 'InnoDB';
 			$table->increments('id');
-			
+
 			$table->string('model');
 			$table->string('key');
 			$table->string('action');
 			$table->string('title')->nullable();
 			$table->longText('changed')->nullable();
-			
+
 			$table->integer('admin_id')->unsigned();
 			$table->longText('meta')->nullable();
 			$table->boolean('deleted')->nullable();
@@ -41,8 +41,7 @@ class CreateChanges extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
-	{
+	public function down() {
 		Schema::drop('changes');
 	}
 

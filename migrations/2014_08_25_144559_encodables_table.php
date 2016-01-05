@@ -10,14 +10,12 @@ class EncodablesTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
-	{
-		Schema::create('encodings', function(Blueprint $table)
-		{
+	public function up() {
+		Schema::create('encodings', function(Blueprint $table) {
 			$table->engine = 'InnoDB';
 			$table->increments('id');
 			$table->string('encodable_type');
-			$table->integer('encodable_id')->unsigned();
+			$table->string('encodable_id'); // String for Elements
 			$table->string('encodable_attribute');
 			$table->string('status')->index();
 			$table->string('job_id')->nullable()->index();
@@ -25,9 +23,9 @@ class EncodablesTable extends Migration {
 			$table->text('message')->nullable();
 			$table->timestamps();
 
-			$table->index(array('encodable_id', 'encodable_type', 'encodable_attribute'));
-			$table->index(array('encodable_type', 'encodable_id', 'encodable_attribute'));
-			$table->index(array('encodable_attribute', 'encodable_id', 'encodable_type'));
+			$table->index(['encodable_id', 'encodable_type', 'encodable_attribute']);
+			$table->index(['encodable_type', 'encodable_id', 'encodable_attribute']);
+			$table->index(['encodable_attribute', 'encodable_id', 'encodable_type']);
 		});
 	}
 
@@ -36,8 +34,7 @@ class EncodablesTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
-	{
+	public function down() {
 		Schema::drop('encodings');
 	}
 

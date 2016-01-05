@@ -10,17 +10,16 @@ class CreateRedirectRules extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
-	{
-		Schema::create('redirect_rules', function(Blueprint $table)
-		{
+	public function up() {
+		Schema::create('redirect_rules', function(Blueprint $table) {
+			$table->engine = 'InnoDB';
 			$table->increments('id');
 
 			$table->string('from')->index();
 			$table->string('to');
 			$table->string('code');
 			$table->string('label')->nullable();
-			
+
 			$table->timestamps();
 		});
 	}
@@ -30,8 +29,7 @@ class CreateRedirectRules extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
-	{
+	public function down() {
 		Schema::drop('redirect_rules');
 	}
 

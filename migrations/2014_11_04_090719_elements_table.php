@@ -10,14 +10,17 @@ class ElementsTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function up()
-	{
+	public function up() {
 		Schema::create('elements', function($table){
 			$table->engine = 'InnoDB';
-			
-			$table->string('key')->primary();
+
+			$table->string('key');
 			$table->string('type');
 			$table->mediumtext('value')->nullable();
+			$table->string('locale');
+
+			$table->primary(['key', 'locale']);
+			$table->index(['locale', 'key']);
 
 		});
 	}
@@ -27,8 +30,7 @@ class ElementsTable extends Migration {
 	 *
 	 * @return void
 	 */
-	public function down()
-	{
+	public function down() {
 		Schema::drop('elements');
 	}
 
