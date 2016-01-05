@@ -9,16 +9,19 @@ use DecoyURL;
 use HTML;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-use Hash;
 use Input;
 use Mail;
 use Request;
 use URL;
 
-class Admin extends Base implements AuthenticatableContract, CanResetPasswordContract {
-	use Authenticatable, CanResetPassword;
+class Admin extends Base implements AuthenticatableContract,
+	AuthorizableContract,
+	CanResetPasswordContract {
+	use Authenticatable, Authorizable, CanResetPassword;
 
 	/**
 	 * The table associated with the model.  Explicitly declaring so that sub
@@ -30,7 +33,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Uploadable attributes
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $upload_attributes = ['image'];
@@ -38,7 +41,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Don't allow cloning because duplicate emails are not allowed.
 	 *
-	 * @var boolean 
+	 * @var boolean
 	 */
 	public $cloneable = false;
 
@@ -51,7 +54,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Validation rules
-	 * 
+	 *
 	 * @var array
 	 */
 	public static $rules = [
@@ -65,7 +68,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Orders instances of this model in the admin
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
@@ -89,7 +92,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 		// Ignore the current record when validating email
 		$rules['email'] .= ','.$this->id;
-		
+
 		// Update rules
 		$validation->setRules($rules);
 	}
@@ -119,7 +122,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Admin updating callbacks
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function onUpdating() {
 		if (Input::has('_send_email')) $this->sendUpdateEmail();
@@ -128,19 +131,19 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Callbacks regardless of new or old
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function onSaving() {
 
 		// If the password is changing, hash it
 		if ($this->isDirty('password')) {
-			$this->password = Hash::make($this->password);
+			$this->password = bcrypt($this->password);
 		}
 
 		// Save or clear permission choices if the form had a "custom permissions"
 		// pushed checkbox
 		if (Input::exists('_custom_permissions')) {
-			$this->permissions = Input::get('_custom_permissions') ? 
+			$this->permissions = Input::get('_custom_permissions') ?
 				json_encode(Input::get('_permission')) : null;
 		}
 	}
@@ -148,7 +151,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Send creation email
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function sendCreateEmail() {
 
@@ -162,7 +165,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 			'root' => Request::root(),
 			'password' => Input::get('password'),
 		);
-	
+
 		// Send the email
 		Mail::send('decoy::emails.create', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
@@ -174,10 +177,10 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Send update email
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function sendUpdateEmail() {
-		
+
 		// Prepare data for mail
 		$admin = app('decoy.auth')->user();
 		$email = array(
@@ -190,7 +193,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 			'url' => Request::root().'/'.Config::get('decoy.core.dir'),
 			'root' => Request::root(),
 		);
-		
+
 		// Send the email
 		Mail::send('decoy::emails.update', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
@@ -202,7 +205,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * A shorthand for getting the admin name as a string
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function getNameAttribute() {
 		return $this->getAdminTitleAttribute();
@@ -210,7 +213,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Produce the title for the list view
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getAdminTitleHtmlAttribute() {
@@ -221,12 +224,12 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Show a badge if the user is the currently logged in
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getAdminStatusAttribute() {
 		$html ='';
-		
+
 		// Add the role
 		if (($roles = static::getRoleTitles()) && count($roles)) {
 			$html .= '<span class="label label-primary">'.$roles[$this->role].'</span>';
@@ -249,7 +252,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	/**
 	 * Get the URL to edit the admin
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function getAdminEditAttribute() {
 		return DecoyURL::action('Bkwld\Decoy\Controllers\Admins@edit', $this->id);
@@ -266,7 +269,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 	}
 
 	/**
-	 * Make a list of the role titles by getting just the text between bold tags 
+	 * Make a list of the role titles by getting just the text between bold tags
 	 * in the roles config array, which is a common convention in Decoy 4.x
 	 *
 	 * @return array
@@ -320,7 +323,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 				'title' => $obj->title(),
 				'description' => $obj->description(),
 
-				// Add permission options for the controller 
+				// Add permission options for the controller
 				'permissions' => array_map(function($value, $action) use ($class, $admin) {
 					$roles = array_keys(Config::get('decoy.site.roles'));
 					return (object) [
@@ -330,7 +333,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 						// Set the initial checked state based on the admin's permissions, if
 						// one is set.  Or based on the first role.
-						'checked' => $admin ? 
+						'checked' => $admin ?
 							app('decoy.auth')->can($action, $class, $admin) :
 							app('decoy.auth')->can($action, $class, $roles[0]),
 
@@ -348,7 +351,7 @@ class Admin extends Base implements AuthenticatableContract, CanResetPasswordCon
 
 	/**
 	 * Check if admin is banned
-	 * 
+	 *
 	 * @return boolean true if banned
 	 */
 	public function disabled() {

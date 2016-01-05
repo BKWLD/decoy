@@ -100,21 +100,21 @@ class Router {
 	 */
 	public function registerAccount() {
 		Route::get('/', ['as' => 'decoy',
-			'uses' => App::make('decoy.auth')->loginAction()]);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
 		Route::post('/', ['as' => 'decoy::account@login',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@post']);
-		Route::get('account', ['as' => 'decoy::account',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@postLogin']);
+		// Route::get('account', ['as' => 'decoy::account',
+		// 	'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@logout']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
 		Route::get('forgot', ['as' => 'decoy::account@forgot',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@forgot']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@getEmail']);
 		Route::post('forgot', ['as' => 'decoy::account@postForgot',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@postForgot']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@postEmail']);
 		Route::get('reset/{code}', ['as' => 'decoy::account@reset',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@reset']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@getReset']);
 		Route::post('reset/{code}', ['as' => 'decoy::account@postReset',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@postReset']);
+			'uses' => 'Bkwld\Decoy\Controllers\Login@postReset']);
 	}
 
 	/**

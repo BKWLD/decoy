@@ -45,6 +45,16 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
+		// Inject Decoy's auth config
+		Config::set('auth.guards.admin', [
+			'driver' => 'session',
+			'provider' => 'decoy',
+		]);
+		Config::set('auth.providers.decoy', [
+			'driver' => 'eloquent',
+			'model' => Models\Admin::class,
+		]);
+
 		// Register global and named middlewares
 		$this->registerMiddlewares();
 
