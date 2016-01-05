@@ -37,42 +37,42 @@ use View;
  * It's not abstract because it can't be instantiated with PHPUnit like that
  */
 class Base extends Controller {
-	
+
 	//---------------------------------------------------------------------------
 	// Default settings
 	//---------------------------------------------------------------------------
-	
+
 	/**
 	 * Amount of results to return per page
-	 * 
+	 *
 	 * @var integer
 	 */
 	static public $per_page = 20;
 
 	/**
 	 * Amount of results to show in the sidebar layout
-	 * 
+	 *
 	 * @var integer
 	 */
 	static public $per_sidebar = 6;
 
 	/**
 	 * The model class name that the contorller manages. Ex: Post
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $model;
 
 	/**
 	 * The controller class name. Ex: Admin\PostsController
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $controller;
 
 	/**
 	 * The HTML title, shown in header of the vie. Ex: News Posts
-	 * 
+	 *
 	 * @var sting
 	 */
 	protected $title;
@@ -80,7 +80,7 @@ class Base extends Controller {
 	/**
 	 * The text description of what this controller manages, shown in the header.
 	 * Ex: "Relevant news about the brand"
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $description;
@@ -89,25 +89,25 @@ class Base extends Controller {
 	 * The columns to show in the listing view.  The keys are the labels in the
 	 * table header.  The value is where to get the content for the cell.  Like a
 	 * database column name or an method name on the model.
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $columns = ['Title' => 'title'];
 
 	/**
 	 * The view-style path to the edit view.  Ex: admin.news.edit
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $show_view;
 
 	/**
 	 * The search configuration.  See the docs for more info
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $search;
-	
+
 	//---------------------------------------------------------------------------
 	// Properties that define relationships
 	//---------------------------------------------------------------------------
@@ -115,46 +115,46 @@ class Base extends Controller {
 	/**
 	 * An instance of the model that is the parent of the controller that is handling
 	 * the request
-	 * 
+	 *
 	 * @var Illuminate\Database\Eloquent\Model
 	 */
 	protected $parent;
-	
+
 	/**
 	 * Model class name i.e. Photo
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $parent_model;
-	
+
 	/**
 	 * Controller class name i.e. Admin\PhotosController
-	 * 
+	 *
 	 * @var sting
 	 */
 	protected $parent_controller;
-	
+
 	/**
 	 * Relationship name on parents i.e. photos
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $parent_to_self;
-	
+
 	/**
 	 * Relationship name on this controller's model to the parent i.e. post
-	 * 
+	 *
 	 * @var string
 	 */
 	protected $self_to_parent;
-	
+
 	//---------------------------------------------------------------------------
 	// Constructing
 	//---------------------------------------------------------------------------
-	
+
 	/**
 	 * A view instance to use as the layout
-	 * 
+	 *
 	 * @var Illuminate\Contracts\View\Factory
 	 */
 	protected $layout;
@@ -167,14 +167,14 @@ class Base extends Controller {
 	public function __construct() {
 		if ($this->injectDependencies()) $this->init();
 	}
-	
+
 	/**
 	 * Inject dependencies.  When used in normal execution, these are pulled automatically
 	 * from the facaded App.  When this is not available, say when being run by unit tests,
 	 * this method takes the dependencies in this array.
-	 * 
+	 *
 	 * Note, not all dependencies are currently injected
-	 * 
+	 *
 	 * @param Config $config
 	 * @param Illuminate\Routing\Router $route
 	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
@@ -183,7 +183,7 @@ class Base extends Controller {
 	private $route;
 	private $url;
 	public function injectDependencies($dependencies = null) {
-		
+
 		// Set manually passed dependencies
 		if ($dependencies) {
 			$this->config = $dependencies['config'];
@@ -191,7 +191,7 @@ class Base extends Controller {
 			$this->url = $dependencies['url'];
 			return true;
 		}
-		
+
 		// Set dependencies automatically
 		if (class_exists('App')) {
 			$this->config = App::make('config');
@@ -200,41 +200,41 @@ class Base extends Controller {
 			$this->route = App::make('router');
 			return true;
 		}
-		
+
 		// No dependencies found
 		return false;
 	}
-	
+
 	/**
 	 * Populate the controller's protected properties
-	 * 
+	 *
 	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
 	 */
 	private function init($class = null) {
-		
+
 		// Set the layout from the Config file
 		$this->layout = View::make($this->config->get('decoy.core.layout'));
 
 		// Store the controller class for routing
 		if ($class) $this->controller = $class;
 		elseif (empty($this->controller)) $this->controller = get_class($this);
-		
+
 		// Get the controller name
 		$controller_name = $this->controllerName($this->controller);
-		
+
 		// Make a default title based on the controller name
 		if (empty($this->title)) $this->title = $this->title($controller_name);
-		
-		// Figure out what the show view should be.  This is the path to the show 
+
+		// Figure out what the show view should be.  This is the path to the show
 		// view file.  Such as 'admin.news.edit'
 		if (empty($this->show_view)) $this->show_view = $this->detailPath($this->controller);
-		
+
 		// Try to suss out the model by singularizing the controller
 		if (empty($this->model)) {
 			$this->model = $this->model($this->controller);
 			if (!class_exists($this->model)) $this->model = NULL;
 		}
-		
+
 		// This allows us to refer to the default model for a controller using the
 		// generic term of "Model"
 		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
@@ -244,7 +244,7 @@ class Base extends Controller {
 		}
 
 		// If the input contains info on the parent, immediately instantiate
-		// the parent instance.  These are populated by some AJAX calls like 
+		// the parent instance.  These are populated by some AJAX calls like
 		// autocomplete on a many to many and the attach method.
 		if (($parent_id = Input::get('parent_id'))
 			&& ($parent_controller = Input::get('parent_controller'))) {
@@ -253,10 +253,10 @@ class Base extends Controller {
 		}
 
 	}
-	
+
 	/**
 	 * Make a new instance of the base class for the purposes of testing
-	 * 
+	 *
 	 * @param string $path A request path, i.e. 'admin/news/create'
 	 * @param string $verb i.e. GET,POST
 	 */
@@ -265,15 +265,15 @@ class Base extends Controller {
 		$class = $wildcard->detectController();
 		$this->init($class);
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Getter/setter
 	//---------------------------------------------------------------------------
-	
+
 	/**
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
-	 * 
+	 *
 	 * @param string $class ex: Admin\NewsController
 	 * @return string ex: News
 	 */
@@ -283,11 +283,11 @@ class Base extends Controller {
 		$name = preg_replace('#Controller$#', '', $name);
 		return $name;
 	}
-	
+
 	/**
 	 * Get the title for the controller based on the controller name.  Basically, it's
 	 * a de-studdly-er
-	 * 
+	 *
 	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
@@ -299,7 +299,7 @@ class Base extends Controller {
 
 	/**
 	 * Get the description for a controller
-	 * 
+	 *
 	 * @return string
 	 */
 	public function description() {
@@ -308,16 +308,16 @@ class Base extends Controller {
 
 	/**
 	 * Get the columns for a controller
-	 * 
+	 *
 	 * @return array
 	 */
 	public function columns() {
 		return $this->columns;
 	}
-	
+
 	/**
 	 * Get the search settings for a controller
-	 * 
+	 *
 	 * @return array
 	 */
 	public function search() {
@@ -331,29 +331,29 @@ class Base extends Controller {
 	 * @return string ex: admins.edit or car_lovers.edit
 	 */
 	public function detailPath($class) {
-		
+
 		// Remove Decoy from the class
 		$path = str_replace('Bkwld\Decoy\Controllers\\', '', $class, $is_decoy);
-		
+
 		// Remove the Controller suffix app classes may have
 		$path = preg_replace('#Controller$#', '', $path);
-		
+
 		// Break up all the remainder of the class and de-study them (which is what
 		// title() does)
 		$parts = explode('\\', $path);
 		foreach ($parts as &$part) $part = str_replace(' ', '_', strtolower($this->title($part)));
 		$path = implode('.', $parts);
-		
+
 		// If the controller is part of Decoy, add it to the path
 		if ($is_decoy) $path = 'decoy::'.$path;
-	
+
 		// Done
-		return $path.'.edit';	
+		return $path.'.edit';
 	}
-	
+
 	/**
 	 * Figure out the model for a controller class or return the current model class
-	 * 
+	 *
 	 * @param string $class ex: "Admin\SlidesController"
 	 * @return string ex: "Slide"
 	 */
@@ -361,13 +361,13 @@ class Base extends Controller {
 		if ($class) return Decoy::modelForController($class);
 		return $this->model;
 	}
-	
+
 	/**
 	 * Give this controller a parent model instance.  For instance, this makes the index
 	 * view a listing of just the children of the parent.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $parent
-	 * @return this 
+	 * @return this
 	 */
 	public function parent($parent) {
 
@@ -399,23 +399,23 @@ class Base extends Controller {
 		// is a many to many.
 		} else {
 			$relationship = lcfirst(get_class($this->parent));
-			$this->self_to_parent = $this->isChildInManyToMany()? 
-				Str::plural($relationship): 
+			$this->self_to_parent = $this->isChildInManyToMany()?
+				Str::plural($relationship):
 				$relationship;
 		}
 
 		// Make chainable
 		return $this;
 	}
-	
+
 	/**
 	 * Determine whether the relationship between the parent to this controller
 	 * is a many to many
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function isChildInManyToMany() {
-		return is_a($this->parentRelation(), 
+		return is_a($this->parentRelation(),
 			'Illuminate\Database\Eloquent\Relations\BelongsToMany');
 
 	}
@@ -438,29 +438,29 @@ class Base extends Controller {
 			'destroy' => ['Delete', 'Delete items permanently'],
 		];
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Basic CRUD methods
 	//---------------------------------------------------------------------------
-	
+
 	/**
 	 * Show an index, listing page.  Sets view via the layout.
-	 * 
+	 *
 	 * @return Illuminate\Contracts\View\Factory
 	 */
 	public function index() {
 
 		// Look for overriden views
 		$this->overrideViews();
-		
+
 		// Open up the query. We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model.
 		$query = $this->parent ? $this->parentRelation()->ordered() : Model::ordered();
 
-		// Run the query. 
+		// Run the query.
 		$search = new Search();
 		$results = $search->apply($query, $this->search())->paginate($this->perPage());
-		
+
 		// Render the view using the `listing` builder.
 		$listing = Listing::createFromController($this, $results);
 		if ($this->parent) {
@@ -470,19 +470,16 @@ class Base extends Controller {
 			$this->layout->with($this->autocompleteViewVars());
 		}
 
-		// Render view
-		$this->populateView($listing);
-		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
-		// Return the finished layout + view
-		return $this->layout;
+		// Render view
+		return $this->populateView($listing);
 	}
-	
+
 	/**
 	 * Show the create form.  Sets view via the layout.
-	 * 
+	 *
 	 * @return Illuminate\Contracts\View\Factory
 	 */
 	public function create() {
@@ -502,30 +499,25 @@ class Base extends Controller {
 		$sidebar = new Sidebar;
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
 
-		// Return view
-		$this->populateView($this->show_view, [
-			'item' => null,
-			'localize' => $localize,
-			'sidebar' => $sidebar,
-		]);
-		
-		// Pass parent_id
-		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
-		
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
-		// Return the finished layout + view
-		return $this->layout;
+		// Render view
+		return $this->populateView($this->show_view, [
+			'item' => null,
+			'localize' => $localize,
+			'sidebar' => $sidebar,
+			'parent_id' => $this->parent ? $this->parent->getKey() : null,
+		]);
 	}
-	
+
 	/**
 	 * Store a new record
-	 * 
+	 *
 	 * @return Symfony\Component\HttpFoundation\Response Redirect to edit view
 	 */
 	public function store() {
-		
+
 		// Create a new object and hydrate
 		$item = new Model();
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
@@ -534,16 +526,16 @@ class Base extends Controller {
 		$this->validate($item);
 		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
 		else $item->save();
-		
+
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
 		else return Redirect::to($this->url->relative('edit', $item->id))
 			->with('success', $this->successMessage($item, 'created') );
 	}
-	
+
 	/**
 	 * Show the edit form.  Sets view via the layout.
-	 * 
+	 *
 	 * @param  int $id Model key
 	 * @return Illuminate\Contracts\View\Factory
 	 */
@@ -568,26 +560,21 @@ class Base extends Controller {
 		$sidebar = new Sidebar($item);
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
 
-		// Render the view
-		$this->populateView($this->show_view, [
-			'item' => $item,
-			'localize' => $localize,
-			'sidebar' => $sidebar,
-		]);
-
-		// Figure out the parent_id
-		if ($this->parent) $this->layout->content->parent_id = $this->parent->getKey();
-
 		// Inform the breadcrumbs
 		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
-		// Return the finished layout + view
-		return $this->layout;
+		// Render view
+		return $this->populateView($this->show_view, [
+			'item' => $item,
+			'localize' => $localize,
+			'sidebar' => $sidebar,
+			'parent_id' => $this->parent ? $this->parent->getKey() : null,
+		]);
 	}
-	
+
 	/**
 	 * Update a record
-	 * 
+	 *
 	 * @param  int $id Model key
 	 * @return Symfony\Component\HttpFoundation\Response Redirect to edit view
 	 */
@@ -600,10 +587,10 @@ class Base extends Controller {
 		}
 
 		// Hydrate for drag-and-drop sorting
-		if (Request::ajax() 
-			&& ($position = new Position($item, $this->self_to_parent)) 
-			&& $position->has()) $position->fill(); 
-		
+		if (Request::ajax()
+			&& ($position = new Position($item, $this->self_to_parent))
+			&& $position->has()) $position->fill();
+
 		// ... else hydrate normally
 		else {
 			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
@@ -621,23 +608,23 @@ class Base extends Controller {
 		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::to(URL::current())
 			->with('success', $this->successMessage($item) );
-		
+
 	}
-	
+
 	/**
 	 * Destroy a record
-	 * 
+	 *
 	 * @param  int $id Model key
 	 * @return Symfony\Component\HttpFoundation\Response Redirect to listing
 	 */
 	public function destroy($id) {
-		
+
 		// Find the item
 		if (!($item = Model::find($id))) return App::abort(404);
-		
+
 		// Delete row (this should trigger file attachment deletes as well)
 		$item->delete();
-	
+
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::to($this->url->relative('index'))
@@ -679,21 +666,21 @@ class Base extends Controller {
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
 			->with('success', $this->successMessage($src, 'duplicated') );
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Many To Many CRUD
 	//---------------------------------------------------------------------------
-	
+
 	/**
 	 * List as JSON for autocomplete widgets
-	 * 
+	 *
 	 * @return Illuminate\Http\Response JSON
 	 */
 	public function autocomplete() {
-		
+
 		// Do nothing if the query is too short
 		if (strlen(Input::get('query')) < 1) return Response::json(null);
-		
+
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
 		if (!$model = Model::first()) {
@@ -704,40 +691,40 @@ class Base extends Controller {
 		$query = Model::titleContains(Input::get('query'))
 			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
-		
-		// Don't return any rows already attached to the parent.  So make sure the 
+
+		// Don't return any rows already attached to the parent.  So make sure the
 		// id is not already in the pivot table for the parent
 		if ($this->isChildInManyToMany()) {
-			
-			// See if there is an exact match on what's been entered.  This is useful 
-			// for many to manys with tags because we want to know if the reason that 
-			// autocomplete returns no results on an exact match that is already 
-			// attached is because it already exists.  Otherwise, it would allow the 
+
+			// See if there is an exact match on what's been entered.  This is useful
+			// for many to manys with tags because we want to know if the reason that
+			// autocomplete returns no results on an exact match that is already
+			// attached is because it already exists.  Otherwise, it would allow the
 			// user to create the tag
 			if ($this->parentRelation()
 				->titleContains(Input::get('query'), true)
 				->count()) {
 				return Response::json(array('exists' => true));
 			}
-			
-			// Get the ids of already attached rows through the relationship function.  
-			// There are ways to do just in SQL but then we lose the ability for the 
-			// relationship function to apply conditions, like is done in polymoprhic 
+
+			// Get the ids of already attached rows through the relationship function.
+			// There are ways to do just in SQL but then we lose the ability for the
+			// relationship function to apply conditions, like is done in polymoprhic
 			// relationships.
 			$siblings = $this->parentRelation()->get();
 			if (count($siblings)) {
 				$sibling_ids = array();
-				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;	
-				
+				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;
+
 				// Add condition to query
 				$model = new Model;
 				$query = $query->whereNotIn($model->getQualifiedKeyName(), $sibling_ids);
 			}
 		}
-		
+
 		// Return result
 		return Response::json($this->formatAutocompleteResponse($query->get()));
-		
+
 	}
 
 	/**
@@ -757,29 +744,29 @@ class Base extends Controller {
 			'many_to_many' => $this->isChildInManyToMany(),
 		];
 	}
-	
+
 	/**
 	 * Attach a model to a parent_id, like with a many to many style
 	 * autocomplete widget
-	 * 
+	 *
 	 * @param int $id The id of the parent model
 	 * @return Illuminate\Http\Response JSON
 	 */
 	public function attach($id) {
-		
+
 		// Require there to be a parent id and a valid id for the resource
 		if (!($item = Model::find($id))) return Response::json(null, 404);
-		
+
 		// Do the attach
 		$this->fireEvent('attaching', [$item, $this->parent]);
 		$item->{$this->self_to_parent}()->attach($this->parent);
 		$this->fireEvent('attached', [$item, $this->parent]);
-		
+
 		// Return the response
 		return Response::json('ok');
-		
+
 	}
-	
+
 	/**
 	 * Remove a relationship.  Very similar to delete, except that we're
 	 * not actually deleting from the database
@@ -790,7 +777,7 @@ class Base extends Controller {
 
 		// Support removing many ids at once
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
-		
+
 		// Get the model instances for each id, for the purpose of event firing
 		$items = array_map(function($id) { return Model::find($id); }, $ids);
 
@@ -798,21 +785,21 @@ class Base extends Controller {
 		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
 		$this->parentRelation()->detach($ids);
 		foreach($items as $item) $this->fireEvent('removed', [$item, $this->parent]);
-		
+
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
 		if (Request::ajax()) return Response::json('ok');
 		else return Redirect::back();
 	}
-	
+
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
-	
-	// 
+
+	//
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
-	 * 
+	 *
 	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
@@ -821,29 +808,29 @@ class Base extends Controller {
 	 */
 	protected function validate($model = null, $rules = null, $messages = array()) {
 
-		// Pull the input including files.  We manually merge files in because 
-		// Laravel's Input::all()	does a recursive merge which results in file 
-		// fields containing BOTH the string version of the previous file plus the 
-		// new File instance when the user is replacing a file during	an update.  
-		// The array_filter() is there to strip out empties from the files array.  
-		// This prevents empty file fields from overriding the contents of the 
-		// hidden field that stores	the previous file name.		
+		// Pull the input including files.  We manually merge files in because
+		// Laravel's Input::all()	does a recursive merge which results in file
+		// fields containing BOTH the string version of the previous file plus the
+		// new File instance when the user is replacing a file during	an update.
+		// The array_filter() is there to strip out empties from the files array.
+		// This prevents empty file fields from overriding the contents of the
+		// hidden field that stores	the previous file name.
 		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
 
 		// Get the rules if they were not passed in
 		if ($model && empty($rules)) $rules = $model::$rules;
-		
-		// If an AJAX update, don't require all fields to be present. Pass just the 
+
+		// If an AJAX update, don't require all fields to be present. Pass just the
 		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
 			$rules = array_only($rules, array_keys($input));
 		}
 
-		// If a model instance was passed, merge the input on top of that.  This 
-		// allows data that may already be set on the model to be validated.  The 
-		// input will override anything already set on the model.  In particular, 
-		// this is done so that auto generated fields like the slug can be 
-		// validated.  This intentionally comes after the AJAX conditional so that 
+		// If a model instance was passed, merge the input on top of that.  This
+		// allows data that may already be set on the model to be validated.  The
+		// input will override anything already set on the model.  In particular,
+		// this is done so that auto generated fields like the slug can be
+		// validated.  This intentionally comes after the AJAX conditional so that
 		// we still only validate fields that were present in the AJAX request.
 		if ($model && method_exists($model, 'getAttributes')) {
 			$input = array_merge($model->getAttributes(), $input);
@@ -856,11 +843,11 @@ class Base extends Controller {
 		// Run the validation.  If it fails, throw an exception that will get handled
 		// by Routing\Filters.
 		if ($validation->fails()) throw new ValidationFail($validation);
-		
+
 		// Fire completion event
 		$this->fireEvent('validated', array($model, $validation));
 	}
-	
+
 	/**
 	 * Take an array of key / value (url/label) pairs and pass it where
 	 * it needs to go to make the breadcrumbs
@@ -871,41 +858,41 @@ class Base extends Controller {
 			'breadcrumbs' => $links
 		));
 	}
-	
+
 	/**
-	 * Fire an event.  Actually, two are fired, one for the event and one that 
+	 * Fire an event.  Actually, two are fired, one for the event and one that
 	 * mentions the model for this controller
-	 * 
+	 *
 	 * @param $string  event The name of this event
 	 * @param $array   args  An array of params that will be passed to the handler
 	 * @param $boolean until Whether to fire an "until" event or not
-	 * @return object 
+	 * @return object
 	 */
 	protected function fireEvent($event, $args = null) {
-		
+
 		// Create the event name
 		$event = "decoy::model.{$event}: ".$this->model;
-		
+
 		// Fire event
 		return Event::fire($event, $args);
 	}
-	
+
 	/**
-	 * Format the results of a query in the format needed for the autocomplete 
+	 * Format the results of a query in the format needed for the autocomplete
 	 * responses
-	 * 
-	 * @param  array $results 
+	 *
+	 * @param  array $results
 	 * @return array
 	 */
 	public function formatAutocompleteResponse($results) {
 		$output = array();
 		foreach($results as $row) {
-			
+
 			// Only keep the id and title fields
 			$item = new stdClass;
 			$item->id = $row->getKey();
 			$item->title = $row->getAdminTitleAttribute();
-			
+
 			// Add properties for the columns mentioned in the list view within the
 			// 'columns' property of this row in the response.  Use the same logic
 			// found in Decoy::renderListColumn();
@@ -917,13 +904,13 @@ class Base extends Controller {
 					else $item->columns[$column] = $row->$column;
 				} else $item->columns[$column] = null;
 			}
-			
+
 			// Add the item to the output
 			$output[] = $item;
 		}
 		return $output;
 	}
-	
+
 	// Return the per_page based on the input
 	public function perPage() {
 		$per_page = Input::get('count', static::$per_page);
@@ -934,12 +921,12 @@ class Base extends Controller {
 	/**
 	 * Run the parent relationship function for the active model, returning the Relation
 	 * object. Returns false if none found.
-	 * 
+	 *
 	 * @return Illuminate\Database\Eloquent\Relations\Relation | false
 	 */
 	private function parentRelation() {
 		if ($this->parent
-			&& method_exists($this->parent, $this->parent_to_self)) 
+			&& method_exists($this->parent, $this->parent_to_self))
 			return $this->parent->{$this->parent_to_self}();
 		else return false;
 	}
@@ -949,7 +936,7 @@ class Base extends Controller {
 	 * on a controller-level basis, the app can customize elements of an admin
 	 * view through it's partials.
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	protected function overrideViews() {
 		$dir = Str::snake($this->controllerName());
@@ -963,7 +950,7 @@ class Base extends Controller {
 	 *
 	 * @param mixed $content string view name or an HtmlObject / View object
 	 * @param array $vars Key value pairs passed to the content view
-	 * @return void 
+	 * @return Illuminate\View\View
 	 */
 	protected function populateView($content, $vars = []) {
 
@@ -975,20 +962,22 @@ class Base extends Controller {
 		$this->layout->title = $this->title;
 		$this->layout->description = $this->description();
 		View::share('controller', $this->controller);
-		
-		// Make sure that the content is a Laravel view before applying vars.  
-		// to it.  In the case of the index view, `content` is a Fields\Listing 
+
+		// Make sure that the content is a Laravel view before applying vars.
+		// to it.  In the case of the index view, `content` is a Fields\Listing
 		// instance, not a Laravel view
 		if (is_a($this->layout->content, 'Illuminate\View\View')) {
 			$this->layout->content->with($vars);
 		}
 
+		// Return the layout View
+		return $this->layout;
 	}
 
 	/**
 	 * Creates a success message for CRUD commands
-	 * 
-	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is being worked on 
+	 *
+	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is being worked on
 	 *                                              or a string containing the title
 	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
 	 * @return  string The CRUD success message string

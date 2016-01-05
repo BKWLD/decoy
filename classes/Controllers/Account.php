@@ -171,17 +171,16 @@ class Account extends Base {
 			'email' => 'required|email',
 		));
 
-		// Show the page
-		$this->title = 'Forgot Password';
-		$this->description = 'You know the drill.';
-		$this->populateView('decoy::account.forgot');
-
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
 			route('decoy') => 'Login',
 			URL::current() => 'Forgot Password',
 		));
 
+		// Show the page
+		$this->title = 'Forgot Password';
+		$this->description = 'You know the drill.';
+		return $this->populateView('decoy::account.forgot');
 	}
 
 	/**
@@ -234,19 +233,19 @@ class Account extends Base {
 			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
 			->firstOrFail();
 
-		// Show the page
-		$this->title = 'Reset Password';
-		$this->description = 'Almost done.';
-		$this->populateView('decoy::account.reset', [
-			'user' => $user,
-		]);
-
 		// Set the breadcrumbs
 		$this->breadcrumbs(array(
 			route('decoy') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			URL::current() => 'Reset Password',
 		));
+
+		// Show the page
+		$this->title = 'Reset Password';
+		$this->description = 'Almost done.';
+		return $this->populateView('decoy::account.reset', [
+			'user' => $user,
+		]);
 	}
 
 	/**
