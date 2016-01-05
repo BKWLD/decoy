@@ -28,10 +28,7 @@ class SaveRedirect {
 			Session::keep(['success', 'errors']);
 			return Redirect::to(Session::get('save_redirect'));
 		}
-		
-		// Only act on save values of 'back' or 'new'
-		if (!Input::has('_save') || Input::get('_save') == 'save') return;
-		
+
 		// Go back to the listing
 		if (Input::get('_save') == 'back') {
 			Session::flash('save_redirect', Breadcrumbs::smartBack());
