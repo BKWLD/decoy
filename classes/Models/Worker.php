@@ -184,13 +184,13 @@ class Worker extends \Illuminate\Console\Command {
 	 * Override the Command output functions so that output also gets put
 	 * in the log file
 	 */
-	public function line($str) {     $this->log('info', $str);   parent::line($str); }
-	public function info($str) {     $this->log('info', $str);   parent::info($str); }
-	public function comment($str) {  $this->log('debug', $str);  parent::comment($str); }
-	public function question($str) { $this->log('notice', $str); parent::question($str); }
-	public function error($str) {    $this->log('error', $str);  parent::error($str); }
-	
-	
+	// public function line($str) {     $this->log('info', $str);   parent::line($str); }
+	// public function info($str) {     $this->log('info', $str);   parent::info($str); }
+	// public function comment($str) {  $this->log('debug', $str);  parent::comment($str); }
+	// public function question($str) { $this->log('notice', $str); parent::question($str); }
+	// public function error($str) {    $this->log('error', $str);  parent::error($str); }
+
+
 	//---------------------------------------------------------------------------
 	// Queries
 	//---------------------------------------------------------------------------
