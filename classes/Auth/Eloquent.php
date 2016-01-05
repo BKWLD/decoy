@@ -13,19 +13,19 @@ use Request;
 class Eloquent implements AuthInterface {
 
 	/**
-	 * @var Illuminate\Auth\AuthManager 
+	 * @var Illuminate\Auth\AuthManager
 	 */
 	private $auth;
 
 	/**
 	 * Dependency injection
-	 * 
+	 *
 	 */
 	public function __construct(AuthManager $auth) {
 		$this->auth = $auth;
 
 		// Tell Laravel that we want to use a different admin model.  Putting this
-		// logic here so that Decoy\Auth usage from outside the admin (like the 
+		// logic here so that Decoy\Auth usage from outside the admin (like the
 		// disabling until live filter check) will use the right model.
 		Config::set('auth.model', 'Bkwld\Decoy\Models\Admin');
 		Config::set('auth.reminder.email', 'decoy::emails.reset');
@@ -39,7 +39,7 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Boolean for whether the user is logged in and an admin
-	 * 
+	 *
 	 * @return boolean
 	 */
 	public function check() {
@@ -49,7 +49,7 @@ class Eloquent implements AuthInterface {
 	/**
 	 * Get a list of all roles
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function roles() {
 		$roles = Config::get('decoy.site.permissions');
@@ -59,7 +59,7 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Check if a user is in a specific role or return the list of all roles
-	 * 
+	 *
 	 * @param  string $role
 	 * @return boolean
 	 */
@@ -69,9 +69,9 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Check if the user has permission to do something
-	 * 
+	 *
 	 * @param string $action ex: destroy
-	 * @param string $controller 
+	 * @param string $controller
 	 *        - controller instance
 	 *        - controller name (Admin\ArticlesController)
 	 *        - URL (/admin/articles)
@@ -94,7 +94,7 @@ class Eloquent implements AuthInterface {
 		if (is_object($controller)) $controller = get_class($controller);
 
 		// Get the slug version of the controller.  Test if a URL was passed first
-		// and, if not, treat it like a full controller name.  URLs are used in the 
+		// and, if not, treat it like a full controller name.  URLs are used in the
 		// nav. Also, an already slugified controller name will work fine too.
 		if (preg_match('#/'.Config::get('decoy.core.dir').'/([^/]+)#', $controller, $matches)) {
 			$controller = $matches[1];
@@ -102,8 +102,8 @@ class Eloquent implements AuthInterface {
 
 		// Always allow an admin to edit themselves for changing password.  Other
 		// features will be disabled from the view file.
-		if ($controller == 'admins' 
-			&& ($action == 'read' 
+		if ($controller == 'admins'
+			&& ($action == 'read'
 			|| ($action == 'update' && Request::segment(3) == $this->user()->id))) {
 			return true;
 		}
@@ -116,13 +116,13 @@ class Eloquent implements AuthInterface {
 		// If no `who` (and using logged in user) or the `who` is an admin and if
 		// that admin has permissiosn, test if they have access to the action using
 		// the array of permitted actions.
-		if ((is_a($who, 'Bkwld\Decoy\Models\Admin') 
+		if ((is_a($who, 'Bkwld\Decoy\Models\Admin')
 				&& ($permissions = $who->getPermissionsAttribute()))
-			|| (is_null($who) 
+			|| (is_null($who)
 				&& ($permissions = $this->user()->getPermissionsAttribute()))) {
 
 			// Check that the controller was defined in the permissions
-			if (!isset($permissions->$controller) 
+			if (!isset($permissions->$controller)
 				|| !is_array($permissions->$controller)) return false;
 
 			// When interacting with elements, allow as long as there is at least one
@@ -137,7 +137,7 @@ class Eloquent implements AuthInterface {
 			return in_array($action, $permissions->$controller);
 		}
 
-		// If `who` was passed in as a string, treat is as a role.  Otherwise, get 
+		// If `who` was passed in as a string, treat is as a role.  Otherwise, get
 		// the current user's role.
 		if (is_string($who)) $role = $who;
 		elseif (is_a($who, 'Bkwld\Decoy\Models\Admin')) $role = $who->role;
@@ -148,7 +148,7 @@ class Eloquent implements AuthInterface {
 		$can = Config::get('decoy.site.permissions.'.$role.'.can');
 		if (is_callable($can)) $can = call_user_func($can, $action, $controller);
 		if (is_array($can) &&
-			!in_array($action.'.'.$controller, $can) && 
+			!in_array($action.'.'.$controller, $can) &&
 			!in_array('manage.'.$controller, $can)) return false;
 
 		// If the action is listed as "can't" then immediately deny.  Also check for
@@ -168,7 +168,7 @@ class Eloquent implements AuthInterface {
 	 * Methods for inspecting properties of the user
 	 * ---------------------------------------------------------------------------
 	 */
-	
+
 	/**
 	 * Return the authed Admin model
 	 *
@@ -191,7 +191,7 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Avatar photo for the header
-	 * 
+	 *
 	 * @return string
 	 */
 	public function userPhoto() {
@@ -200,7 +200,7 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * Name to display in the header for the user
-	 * 
+	 *
 	 * @return string
 	 */
 	public function userName() {
@@ -209,13 +209,13 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * URL to the user's profile page in the admin
-	 * 
+	 *
 	 * @return string
 	 */
 	public function userUrl() {
 		return $this->user()->getAdminEditAttribute();
 	}
-	
+
 	/**
 	 * ---------------------------------------------------------------------------
 	 * URLs & Routes related to authing
@@ -224,25 +224,25 @@ class Eloquent implements AuthInterface {
 
 	/**
 	 * URL that contains the login page
-	 * 
+	 *
 	 * @return string
 	 */
 	public function loginAction() {
 		return '\Bkwld\Decoy\Controllers\Account@login';
 	}
-	
+
 	/**
 	 * URL to process logging out
-	 * 
+	 *
 	 * @return string
 	 */
 	public function logoutUrl() {
 		return route('decoy::account@logout');
 	}
-	
+
 	/**
 	 * URL to redirect to if a user doesn't have permission for the page
-	 * 
+	 *
 	 * @return string
 	 */
 	public function deniedUrl() {
