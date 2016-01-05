@@ -9,7 +9,7 @@ use Redirect;
 use Session;
 
 /**
- * Handle the redirection after save that depends on what submit button the 
+ * Handle the redirection after save that depends on what submit button the
  * user interacte with
  */
 class SaveRedirect {
@@ -33,7 +33,7 @@ class SaveRedirect {
 		if (Input::get('_save') == 'back') {
 			Session::flash('save_redirect', Breadcrumbs::smartBack());
 		}
-		
+
 		// Go to new form by stripping the last segment from the URL
 		if (Input::get('_save') == 'new') {
 			Session::flash('save_redirect', DecoyURL::relative('create'));
