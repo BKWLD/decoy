@@ -46,8 +46,8 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
-				'decoy.middlewares.headers',
 				'web', // Defined in the Kernel
+				'decoy.middlewares.headers',
 			],
 		], function() {
 			$this->registerAccount();
@@ -57,11 +57,12 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
+				'web', // Defined in the Kernel
 				'decoy.middlewares.auth',
 				'decoy.middlewares.save-redirect',
 				'decoy.middlewares.edit-redirect',
 				'decoy.middlewares.headers',
-				'web', // Defined in the Kernel
+
 			],
 		], function() {
 			$this->registerAdmins();
@@ -76,8 +77,8 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
-				'decoy.middlewares.auth',
 				'api',
+				'decoy.middlewares.auth',
 			],
 		], function() {
 			$this->registerRedactor();
