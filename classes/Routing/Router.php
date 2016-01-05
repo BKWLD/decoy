@@ -47,7 +47,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'web', // Defined in the Kernel
-				'decoy.middlewares.headers',
+				'decoy.headers',
 			],
 		], function() {
 			$this->registerAccount();
@@ -58,10 +58,10 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'web', // Defined in the Kernel
-				'decoy.middlewares.auth',
-				'decoy.middlewares.save-redirect',
-				'decoy.middlewares.edit-redirect',
-				'decoy.middlewares.headers',
+				'decoy.auth',
+				'decoy.save-redirect',
+				'decoy.edit-redirect',
+				'decoy.headers',
 
 			],
 		], function() {
@@ -78,7 +78,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => [
 				'api',
-				'decoy.middlewares.auth',
+				'decoy.auth',
 			],
 		], function() {
 			$this->registerRedactor();
