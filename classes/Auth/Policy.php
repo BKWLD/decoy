@@ -32,10 +32,6 @@ class Policy {
 	 */
 	public function check(Admin $admin, $action, $controller) {
 
-		// If no permissions have been defined do nothing
-		if (!Config::has('decoy.site.permissions')
-			|| !count(Config::get('decoy.site.permissions'))) return true;
-
 		// Convert controller instance to its string name
 		if (is_object($controller)) $controller = get_class($controller);
 
@@ -50,7 +46,7 @@ class Policy {
 		// features will be disabled from the view file.
 		if ($controller == 'admins'
 			&& ($action == 'read'
-			|| ($action == 'update' && Request::segment(3) == $this->user()->id))) {
+			|| ($action == 'update' && Request::segment(3) == $admin->id))) {
 			return true;
 		}
 
