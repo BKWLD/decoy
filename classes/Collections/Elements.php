@@ -299,15 +299,17 @@ class Elements extends Collection {
 	 */
 	protected function loadConfig() {
 
+		// Start with empty config
+		$this->config = [];
+
 		// Build a lit of all the paths
-		$dir = app_path().'/config/packages/bkwld/decoy/';
+		$dir = config_path('decoy').'/';
 		$files = [];
 		if (is_readable($dir.'elements.yaml')) $files[] = $dir.'elements.yaml';
 		if (is_dir($dir.'elements')) $files = array_merge($files, glob($dir.'elements/*.yaml'));
-		if (!count($files)) throw new Exception("No readable elements yaml files found");
+		if (!count($files)) return;
 
 		// Loop though config files and merge them together
-		$this->config = [];
 		foreach($files as $file) {
 
 			// If an array found ...
