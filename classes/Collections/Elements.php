@@ -19,13 +19,13 @@ class Elements extends Collection {
 	/**
 	 * The cache key used for the Elements collection
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	protected $cache_key = 'decoy.elements.data';
 
 	/**
 	 * The parse YAML contents
-	 * 
+	 *
 	 * @var array
 	 */
 	protected $config;
@@ -51,8 +51,8 @@ class Elements extends Collection {
 
 	/**
 	 * Dependency injection
-	 * 
-	 * @param Symfony\Component\Yaml\Parser $yaml_parser 
+	 *
+	 * @param Symfony\Component\Yaml\Parser $yaml_parser
 	 * @param Bkwld\Decoy\Models\Element $model
 	 * @param Illuminate\Cache\Repository $cache
 	 */
@@ -80,7 +80,7 @@ class Elements extends Collection {
 	/**
 	 * Get an element given it's key
 	 *
-	 * @param string $key 
+	 * @param string $key
 	 * @return Bkwld\Decoy\Models\Element
 	 */
 	public function get($key, $default = null) {
@@ -96,14 +96,14 @@ class Elements extends Collection {
 			}
 
 		// Add the key as an attribute
-		} else return $this->model->newInstance(array_merge($this->items[$key], ['key' => $key])); 
+		} else return $this->model->newInstance(array_merge($this->items[$key], ['key' => $key]));
 
 	}
 
 	/**
 	 * Set the locale that should be used for this collection
 	 *
-	 * @param string $locale 
+	 * @param string $locale
 	 * @return $this
 	 */
 	public function localize($locale) {
@@ -116,10 +116,10 @@ class Elements extends Collection {
 	 * But only if not on a local environment (as new Elements are added, you would have
 	 * to keep re-clearing the cache)
 	 *
-	 * @return $this 
+	 * @return $this
 	 */
 	public function hydrate($include_extra = false) {
-		
+
 		// If including extra YAML config vars, neither use the cache NOR allow the cache
 		// to be saved with it
 		if ($include_extra && !$this->has_extra) {
@@ -150,7 +150,7 @@ class Elements extends Collection {
 	/**
 	 * Build the cache key using the locale
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	protected function cacheKey() {
 		if ($this->locale) return $this->cache_key.'.'.$this->locale;
@@ -160,7 +160,7 @@ class Elements extends Collection {
 	/**
 	 * Set the cache key
 	 *
-	 * @param string $key 
+	 * @param string $key
 	 * @return $this
 	 */
 	public function setCacheKey($key) {
@@ -171,7 +171,7 @@ class Elements extends Collection {
 	/**
 	 * Clear the cache
 	 *
-	 * @return $this 
+	 * @return $this
 	 */
 	public function clearCache() {
 		$this->cache->forget($this->cacheKey());
@@ -181,11 +181,11 @@ class Elements extends Collection {
 	/**
 	 * Merge database records and config file into a single, flat associative array.
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	protected function mergeSources() {
 		$assoc = $this->assocConfig();
-		return array_replace_recursive($assoc, 
+		return array_replace_recursive($assoc,
 
 			// Get only the databse records whose keys are present in the YAML.  This removes
 			// entries that may be from older YAML configs.
@@ -194,7 +194,7 @@ class Elements extends Collection {
 	}
 
 	/**
-	 * Massage the YAML config file into a single, flat associative array 
+	 * Massage the YAML config file into a single, flat associative array
 	 *
 	 * @param boolean $include_extra Include attibutes that are only needed by Admin UIs
 	 * @return array
@@ -267,7 +267,7 @@ class Elements extends Collection {
 	/**
 	 * Get admin overrides to Elements from the databse
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	protected function assocAdminChoices() {
 
@@ -295,7 +295,7 @@ class Elements extends Collection {
 	/**
 	 * Load the config file and store it internally
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	protected function loadConfig() {
 
@@ -326,7 +326,7 @@ class Elements extends Collection {
 	 * Check if a key has been stored in the database
 	 *
 	 * @param string $key The key of an element
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function keyUpdated($key) {
 		if ($this->updated_items === null) $this->assocAdminChoices();
@@ -336,8 +336,8 @@ class Elements extends Collection {
 	/**
 	 * Filter the elements to only those allowed in the provided pages
 	 *
-	 * @param  array $pages 
-	 * @return this 
+	 * @param  array $pages
+	 * @return this
 	 */
 	public function onlyPages($pages) {
 		$this->items = array_filter($this->items, function($element) use ($pages) {
@@ -360,12 +360,12 @@ class Elements extends Collection {
 		}
 		return $rules;
 	}
-	
+
 	/**
 	 * Return key-value pairs for use by former to populate the fields.  The
 	 * keys must be converted to the Input safe variant.
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function populate() {
 		return array_combine(array_map(function($key) {
@@ -385,7 +385,7 @@ class Elements extends Collection {
 	/**
 	 * Replace the model class being used (via an instance) and listen for updates.
 	 *
-	 * @param  Bkwld\Decoy\Models\Element $element 
+	 * @param  Bkwld\Decoy\Models\Element $element
 	 * @return $this
 	 */
 	public function setModel($element) {
@@ -399,7 +399,7 @@ class Elements extends Collection {
 	 * When a model is updated, update the corresponding key-val pair
 	 *
 	 * @param Bkwld\Decoy\Models\Element $element
-	 * @return void 
+	 * @return void
 	 */
 	public function onModelUpdate($element) {
 		$this->items[$element->getKey()]['value'] = $element->getAttribute('value');
