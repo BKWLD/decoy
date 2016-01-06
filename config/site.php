@@ -42,7 +42,8 @@
 	 * @var array
 	 */
 	'roles' => [
-		// 'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms)',
+		// 'super' => '<b>Super admin</b> - Can manage all content.',
+		// 'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms).',
 		// 'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
 	],
 

@@ -403,7 +403,7 @@ class Admin extends Base implements
 	 * @return boolean
 	 */
 	public function isDeveloper() {
-		return $user->role == 'developer' || strpos($user->email, 'bkwld.com');
+		return $this->role == 'developer' || strpos($this->email, 'bkwld.com');
 	}
 
 	/**
