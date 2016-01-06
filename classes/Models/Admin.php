@@ -303,7 +303,7 @@ class Admin extends Base implements
 	 * @return stdObject
 	 */
 	public function getPermissionsAttribute() {
-		if (!$this->permissions) return null;
+		if (empty($this->permissions)) return null;
 		return json_decode($this->permissions);
 	}
 
