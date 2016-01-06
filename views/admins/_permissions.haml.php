@@ -23,9 +23,9 @@
 							-foreach($permissions as $permission)
 								%label.controller-permission
 
-									%input(type='checkbox' 
-										name="_permission[#{$controller->slug}][]" 
-										value=$permission->slug 
+									%input(type='checkbox'
+										name="_permission[#{$controller->slug}][]"
+										value=$permission->slug
 										checked=$permission->checked
 										data-roles=implode(',',$permission->roles))
 									%span.js-tooltip(title=$permission->description) = $permission->title
