@@ -373,13 +373,13 @@ class Admin extends Base implements
 						// Set the initial checked state based on the admin's permissions, if
 						// one is set.  Or based on the first role.
 						'checked' => $admin ?
-							app('decoy.user')->can($action, $class, $admin) :
-							app('decoy.user')->can($action, $class, $roles[0]),
+							$admin->can($action, $class) :
+							with(new Admin(['role' => $roles[0]]))->can($action, $class),
 
 						// Filter the list of roles to just the roles that allow the
 						// permission currently being iterated through
 						'roles' => array_filter($roles, function($role) use ($action, $class) {
-							return app('decoy.user')->can($action, $class, $role);
+							return with(new Admin(['role' => $role]))->can($action, $class);
 						}),
 
 					];
