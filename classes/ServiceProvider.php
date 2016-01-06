@@ -7,6 +7,7 @@ use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
 use Config;
 use Former\Former;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\AliasLoader;
@@ -55,7 +56,7 @@ class ServiceProvider extends BaseServiceProvider {
 		// should come after the callbacks in case they modify the record before
 		// being saved.  And we're logging ONLY admin actions, thus the handling
 		// condition.
-		if ($this->app['decoy']->handling() && Config::get('decoy.site.log_changes')) {
+		if ($this->app['decoy']->handling() && config('decoy.site.log_changes')) {
 			$this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
 		}
 	}
@@ -99,8 +100,7 @@ class ServiceProvider extends BaseServiceProvider {
 		]);
 
 		// Point to the Gate policy
-		$this->app['Illuminate\Contracts\Auth\Access\Gate']
-			->define('decoy.auth', Config::get('decoy.core.policy'));
+		$this->app[Gate::class]->define('decoy.auth', config('decoy.core.policy'));
 
 	}
 
@@ -155,11 +155,11 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	protected function delegateAdminObservers() {
 		foreach([
-			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Localize',
-			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Cropping@onSaving',
+			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Localize',
+			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Cropping@onSaving',
 			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Cropping@onDeleted',
-			'eloquent.saved:*'   =>   'Bkwld\Decoy\Observers\ManyToManyChecklist',
-			'eloquent.saving:*'  =>  'Bkwld\Decoy\Observers\Encoding@onSaving',
+			'eloquent.saved:*'   => 'Bkwld\Decoy\Observers\ManyToManyChecklist',
+			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Encoding@onSaving',
 			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
 			'decoy::model.validating:*' => 'Bkwld\Decoy\Observers\Validation@onValidating',
 		] as $key => $method) $this->app['events']->listen($key, $method);
@@ -202,7 +202,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Registers explicit rotues and wildcarding routing
 		$this->app->singleton('decoy.router', function($app) {
-			$dir = Config::get('decoy.core.dir');
+			$dir = config('decoy.core.dir');
 			return new Routing\Router($dir);
 		});
 
@@ -210,7 +210,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->singleton('decoy.wildcard', function($app) {
 			$request = $app['request'];
 			return new Routing\Wildcard(
-				Config::get('decoy.core.dir'),
+				config('decoy.core.dir'),
 				$request->getMethod(),
 				$request->path()
 			);
@@ -218,7 +218,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Return the active user account
 		$this->app->singleton('decoy.user', function($app) {
-			$guard = Config::get('decoy.core.guard');
+			$guard = config('decoy.core.guard');
 			return $app['auth']->guard($guard)->user();
 		});
 

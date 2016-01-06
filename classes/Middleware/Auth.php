@@ -35,7 +35,7 @@ class Auth {
 		}
 
 		// If they don't hvae permission, throw an error
-		if ($admin->cannot('decoy.auth', [$action, $controller])) {
+		if ($admin->cant($action, $controller)) {
 			throw new AccessDeniedHttpException;
 		}
 

@@ -10,9 +10,8 @@ use DecoyURL;
 use HTML;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Foundation\Auth\Access\Authorizable;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Input;
 use Mail;
@@ -22,9 +21,11 @@ use URL;
 class Admin extends Base implements
 	AuthInterface,
 	AuthenticatableContract,
-	AuthorizableContract,
 	CanResetPasswordContract {
-	use Authenticatable, Authorizable, CanResetPassword;
+
+	// Note, not using the Authorizable trait because I've defined my own versions
+	// for backwards compatability with Decoy 4 and also to have a tigher syntax.
+	use Authenticatable, CanResetPassword;
 
 	/**
 	 * The table associated with the model.  Explicitly declaring so that sub
@@ -203,6 +204,41 @@ class Admin extends Base implements
 			$m->subject('Your '.Decoy::site().' admin account info has been updated');
 			$m->from(Config::get('decoy.core.mail_from_address'), Config::get('decoy.core.mail_from_name'));
 		});
+	}
+
+	/**
+	 * Determine if the entity has a given ability.
+	 *
+	 * @param  string $action
+	 * @param  string $controller
+	 * @return bool
+	 */
+	public function can($action, $controller) {
+		return app(Gate::class)
+			->forUser($this)
+			->check('decoy.auth', [$action, $controller]);
+	}
+
+	/**
+	 * Determine if the entity does not have a given ability.
+	 *
+	 * @param  string $action
+	 * @param  string $controller
+	 * @return bool
+	 */
+	public function cant($action, $controller) {
+		return !$this->can($action, $controller);
+	}
+
+	/**
+	 * Determine if the entity does not have a given ability.
+	 *
+	 * @param  string $action
+	 * @param  string $controller
+	 * @return bool
+	 */
+	public function cannot($action, $controller) {
+		return $this->cant($action, $controller);
 	}
 
 	/**

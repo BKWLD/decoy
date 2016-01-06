@@ -1,9 +1,9 @@
--$auth = app('decoy.user')
+-$admin = app('decoy.user')
 .navigation
 	.top-level-nav
 		-foreach($pages as $page)
 
-			-if (!empty($page->children))
+			-if(!empty($page->children))
 				.main-nav(class=$page->active?'active open':null)
 					%a.top-level.parent
 						-if($page->icon)
@@ -13,36 +13,44 @@
 					.subnav
 						-foreach($page->children as $child)
 							-if (!empty($child->divider))
-							-elseif($auth->can('read', $child->url))
+							-elseif($admin->can('read', $child->url))
 								%a(href=$child->url class=$child->active?'active':null)
 									-if($child->icon != 'default')
 										%span.glyphicon(class="glyphicon-#{$child->icon}")
 									=$child->label
 
-			-else if($auth->can('read', $page->url))
+			-elseif ($admin->can('read', $page->url))
 				.main-nav(class=$page->active?'active':null)
 					%a.top-level(href=$page->url)
 						-if($page->icon)
 							%span.glyphicon(class="glyphicon-#{$page->icon}")
 						!=$page->label
 
-		.main-nav(class=(in_array(Request::segment(2), ['admins', 'commands', 'workers', 'changes']))?'active open':null)
+		-# Settings folder
+		:php
+			$open = in_array(Request::segment(2), [
+				'admins',
+				'commands',
+				'workers',
+				'changes'
+			]);
+		.main-nav(class=$open?'active open':null)
 			%a.top-level.parent
 				%span.glyphicon.glyphicon-cog
 				Settings
 
 			.subnav
 
-				-if($auth->can('read', 'admins'))
+				-if($admin->can('read', 'admins'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
 				-else
-					%a(href=$auth->getUserUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
+					%a(href=$admin->getUserUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
 
-				-if ($auth->can('read', 'changes'))
+				-if($admin->can('read', 'changes'))
 					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null)) Changes
 
-				-if($auth->can('read', 'commands'))
+				-if($admin->can('read', 'commands'))
 					%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
 
-				-if($auth->can('read', 'workers') && count(Bkwld\Decoy\Models\Worker::all()))
+				-if($admin->can('read', 'workers') && count(Bkwld\Decoy\Models\Worker::all()))
 					%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers

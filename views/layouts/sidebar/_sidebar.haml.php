@@ -1,4 +1,4 @@
--if(app('decoy.user')) return;
+-if(!app('decoy.user')) return;
 
 .sidebar
 	!= View::make('decoy::layouts.sidebar._account')->render()
