@@ -174,7 +174,6 @@ class Admin extends Base implements
 		Mail::send('decoy::emails.create', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
 			$m->subject('Welcome to the '.Decoy::site().' admin site');
-			$m->from(Config::get('decoy.core.mail_from_address'), Config::get('decoy.core.mail_from_name'));
 		});
 	}
 
@@ -202,7 +201,6 @@ class Admin extends Base implements
 		Mail::send('decoy::emails.update', $email, function($m) use ($email) {
 			$m->to($email['email'], $email['first_name'].' '.$email['last_name']);
 			$m->subject('Your '.Decoy::site().' admin account info has been updated');
-			$m->from(Config::get('decoy.core.mail_from_address'), Config::get('decoy.core.mail_from_name'));
 		});
 	}
 

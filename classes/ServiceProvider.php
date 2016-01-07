@@ -101,6 +101,12 @@ class ServiceProvider extends BaseServiceProvider {
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
 
+		// Set the default mailer settings
+		Config::set('mail.from', [
+			'address' => Config::get('decoy.core.mail_from_address'),
+			'name' => Config::get('decoy.core.mail_from_name'),
+		]);
+
 		// Config Former
 		$this->configureFormer();
 
