@@ -17,9 +17,10 @@
 			$message = '<b>Validation error:</b> The field in conflict is highlighted below. Your submission was <b>not</b> saved.';
 
 	// SUCCESS
-	} else if(Session::has('success')) {
+	// "status" is used by Laravel's auth flow, which we piggyback on.
+	} else if(Session::has('success') || Session::has('status')) {
 		$alert_type = 'success';
-		$message = Session::get('success');
+		$message = Session::get('success', Session::get('status'));
 
 	// NEUTRAL
 	} else $alert_type = 'normal';
