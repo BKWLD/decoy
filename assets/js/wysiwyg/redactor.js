@@ -4,8 +4,10 @@
  * @return {object} An hash of public methods
  */
 define(function(require) {
-	
+
 	// Dependencies
+	require('redactor/redactor.js');
+	require('redactor/redactor.css');
 	var $ = require('jquery')
 		, _ = require('lodash')
 	;
@@ -24,49 +26,49 @@ define(function(require) {
 		maxHeight: $(window).height() * .7
 
 	}
-	
+
 	/**
 	 * Enable file upload fields
-	 * 
+	 *
 	 * @return {void}
 	 */
-	function allowUploads() { 
-		allow_uploads = true; 
+	function allowUploads() {
+		allow_uploads = true;
 	}
-	
+
 	/**
 	 * Return the config
-	 * 
+	 *
 	 * @return {object}
 	 */
-	function getConfig() { 
-		return config; 
+	function getConfig() {
+		return config;
 	}
 
 	/**
 	 * Merge new config into default config
 	 *
-	 * @param {object} config 
+	 * @param {object} config
 	 * @return {object}
 	 */
-	function mergeConfig(_config) { 
-		return config = _.extend(config, _config); 
+	function mergeConfig(_config) {
+		return config = _.extend(config, _config);
 	}
-	
+
 	/**
 	 * Merge new config into default config
 	 *
-	 * @param {object} config 
+	 * @param {object} config
 	 * @return {object}
 	 */
-	function replaceConfig(_config) { 
-		return config = _config; 
+	function replaceConfig(_config) {
+		return config = _config;
 	}
-	
+
 	/**
 	 * Initialize wysiwyg editors
 	 *
-	 * @string {selector} A jquery style selector string 
+	 * @string {selector} A jquery style selector string
 	 * @return {jQuery}
 	 */
 	function init(selector) {
@@ -81,7 +83,7 @@ define(function(require) {
 			});
 		}
 
-		// Loop through items and init redactor 
+		// Loop through items and init redactor
 		return $(selector).each(function() {
 			var $el = $(this);
 			$el.redactor(_.defaults(config, {
@@ -92,7 +94,7 @@ define(function(require) {
 			}));
 		});
 	}
-	
+
 	// Expose public interface
 	return {
 		config: {
@@ -103,5 +105,5 @@ define(function(require) {
 		},
 		init: init
 	};
-	
+
 });

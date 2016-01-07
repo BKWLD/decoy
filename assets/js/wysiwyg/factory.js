@@ -3,10 +3,7 @@
  */
  define(function (require) {
 
-	// CKEditor
-	if (window.CKEDITOR) return require('./ckeditor');
-
-	// Redactor is default
-	else return require('./redactor');
+	// Redactor is default (and, currently, only provider)
+	return require('./redactor');
 
 });
