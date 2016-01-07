@@ -19,6 +19,9 @@
 				%button( type="button" class="close" data-dismiss="alert") x
 				=Session::get('notice') ?: Session::get('login_notice')
 
+		-# Don't show inline errors, cause we're showing them above
+		-Config::set('former.error_messages', false)
+
 		!= Former::text('email')->addGroupClass('form-inline')
 		!= Former::password('password')->addGroupClass('form-inline')
 		!= Former::checkbox('remember', ' ')->text('Remember me?')->check()->addGroupClass('form-inline fake-label')
