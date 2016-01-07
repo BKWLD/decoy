@@ -7,8 +7,6 @@ use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Former;
-use URL;
-use View;
 
 /**
  * Handle logging in of users.  This is based on the AuthController.php and
@@ -42,9 +40,8 @@ class Login extends Base {
 		));
 
 		// Show the login homepage
-		View::inject('title', 'Login');
-		return View::make('decoy::layouts.blank', [
-			'content' => View::make('decoy::account.login')->render(),
+		return view('decoy::layouts.blank', [
+			'content' => view('decoy::account.login'),
 		]);
   }
 

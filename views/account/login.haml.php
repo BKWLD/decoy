@@ -1,3 +1,4 @@
+-View::inject('title', 'Login')
 .ui(data-js-view="login")
 	.max-width
 		.branding
