@@ -5,12 +5,12 @@
 
 	.controls
 		.left
-			%a.logout(href=route('decoy::account@logout')) 
+			%a.logout(href=route('decoy::account@logout'))
 				%span.glyphicon.glyphicon-log-out
 				Logout
 			.subtitle
 				%span.glyphicon.glyphicon-heart
-				Decoy 4.10 by
+				Decoy 5.0 by
 				%a(href="http://bkwld.com" target="_blank") BKWLD
 		%a.right(href="/")
 			.glyphicon.glyphicon-globe
