@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Controllers;
 
 // Dependencies
+use Auth;
 use Bkwld\Decoy\Models\Admin;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -14,27 +15,17 @@ use View;
  * PasswordController that Laravel's `php artisan make:auth` generates.
  */
 class Login extends Base {
-  use AuthenticatesUsers, ThrottlesLogins, ResetsPasswords {
-    AuthenticatesUsers::redirectPath insteadof ResetsPasswords;
-  }
+  use AuthenticatesUsers, ThrottlesLogins;
 
   /**
-   * Path to redirect to after login
-   *
-   * @var string
-   */
-  protected $redirectTo = '/admin/admins';
-
-  /**
-   * Create a new authentication controller instance.
+   * Use the guest middleware to redirect logged in admins away from the login
+   * screen, exepct for the getLogout() action.
    *
    * @return void
    */
   public function __construct() {
     parent::__construct();
-
-    // Redirects to $redirectTo when authenticated
-    $this->middleware('guest', ['except' => 'getLogout']);
+    $this->middleware('decoy.guest', ['except' => 'getLogout']);
   }
 
   /**
@@ -43,7 +34,7 @@ class Login extends Base {
    * @return string|null
    */
   protected function getGuard() {
-    return Config::get('decoy.core.guard');
+    return config('decoy.core.guard');
   }
 
   /**
@@ -67,65 +58,30 @@ class Login extends Base {
   }
 
   /**
-   * Display the form to request a password reset link.
+   * Log the user out of the application.
    *
    * @return \Illuminate\Http\Response
    */
-  public function showLinkRequestForm() {
+  public function logout() {
 
-    // Pass validation rules
-		Former::withRules(array(
-			'email' => 'required|email',
-		));
+    // Logout the session
+    Auth::guard($this->getGuard())->logout();
 
-		// Set the breadcrumbs
-		$this->breadcrumbs(array(
-			route('decoy::account@login') => 'Login',
-			URL::current() => 'Forgot Password',
-		));
-
-		// Show the page
-		$this->title = 'Forgot Password';
-		$this->description = 'You know the drill.';
-		return $this->populateView('decoy::account.forgot');
+    // Redirect back to previous page so that switching users takes you back to
+    // your previous page.
+    $previous = url()->previous();
+    if ($previous == url('/')) return redirect(route('decoy::account@login'));
+    else return redirect($previous);
   }
 
   /**
-   * Display the password reset view for the given token.
+   * Get the post register / login redirect path. This is set to the login route
+   * so that the guest middleware can pick it up and redirect to the proper
+   * start page.
    *
-   * If no token is present, display the link request form.
-   *
-   * @param  \Illuminate\Http\Request  $request
-   * @param  string|null  $token
-   * @return \Illuminate\Http\Response
+   * @return string
    */
-  public function showResetForm(Request $request, $token = null) {
-
-    // Pass validation rules
-		Former::withRules(array(
-			'email'                 => 'required|email',
-			'password'              => 'required',
-			'password_confirmation' => 'required|same:password',
-		));
-
-		// Lookup the admin
-		$user = Admin::where('token', $token)
-			->join('password_reminders', 'password_reminders.email', '=', 'admins.email')
-			->firstOrFail();
-
-		// Set the breadcrumbs
-		$this->breadcrumbs(array(
-			route('decoy::account@login') => 'Login',
-			route('decoy::account@forgot') => 'Forgot Password',
-			URL::current() => 'Reset Password',
-		));
-
-		// Show the page
-		$this->title = 'Reset Password';
-		$this->description = 'Almost done.';
-		return $this->populateView('decoy::account.reset', [
-			'user' => $user,
-		]);
-
+  public function redirectPath() {
+    return route('decoy::account@login');
   }
 }

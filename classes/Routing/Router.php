@@ -50,7 +50,8 @@ class Router {
 				'decoy.headers',
 			],
 		], function() {
-			$this->registerAccount();
+			$this->registerLogin();
+			$this->registerResetPassword();
 		});
 
 		// Protected, admin routes
@@ -99,7 +100,7 @@ class Router {
 	 *
 	 * @return void
 	 */
-	public function registerAccount() {
+	public function registerLogin() {
 		Route::get('/', ['as' => 'decoy::account@login',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
 		Route::post('/', ['as' => 'decoy::account@postLogin',
@@ -108,14 +109,22 @@ class Router {
 			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
+	}
+
+	/**
+	 * Reset password routes
+	 *
+	 * @return void
+	 */
+	public function registerResetPassword() {
 		Route::get('forgot', ['as' => 'decoy::account@forgot',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@getEmail']);
+			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@getEmail']);
 		Route::post('forgot', ['as' => 'decoy::account@postForgot',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@postEmail']);
+			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@postEmail']);
 		Route::get('reset/{code}', ['as' => 'decoy::account@reset',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@getReset']);
+			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@getReset']);
 		Route::post('reset/{code}', ['as' => 'decoy::account@postReset',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@postReset']);
+			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@postReset']);
 	}
 
 	/**
