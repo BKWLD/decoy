@@ -23,7 +23,7 @@
 			.pull-right.btn-toolbar
 				.btn-group
 					%a.btn.outline.new(href=URL::to(DecoyURL::relative('create')))
-						%span.glyphicon.glyphicon-plus 
+						%span.glyphicon.glyphicon-plus
 					!=View::make('decoy::shared.form._create-locales', $__data)->render()
 
 	-# Description of the controller

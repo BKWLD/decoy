@@ -3,17 +3,17 @@
 	$alert_type = '';
 	$message = ' ';
 
-	// Determine the alert type and build any related copy 
+	// Determine the alert type and build any related copy
 
 	// ERROR
 	if($errors->any()) {
 		$alert_type = 'danger';
 
-		if($errors->has('slug')) 
+		if($errors->has('slug'))
 			$message = 'A unique slug could not be formed from the name or title.  You must use a different value.';
-		else if($errors->has('error message')) 
+		else if($errors->has('error message'))
 			$message = $errors->first('error message');
-		else 
+		else
 			$message = '<b>Validation error:</b> The field in conflict is highlighted below. Your submission was <b>not</b> saved.';
 
 	// SUCCESS

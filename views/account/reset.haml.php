@@ -13,4 +13,3 @@
 		%a.btn.btn-default(href=route('decoy::account@login')) Cancel
 
 !=Former::close()
-	
