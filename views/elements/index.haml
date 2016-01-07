@@ -31,15 +31,16 @@
 	%ul.nav.nav-stacked.nav-pills(role="tablist")
 		-$first = 0
 		-foreach($grouped_elements as $page => $sections)
-			-$slug = str_slug($page)
-			-$path = $locale ? $locale.'/'.$slug : $slug
-			-$active = (empty($tab) && $first++==0 ) || $slug == $tab
+			:php
+				$slug = str_slug($page);
+				$path = $locale ? $locale.'/'.$slug : $slug;
+				$active = (empty($tab) && $first++==0 ) || $slug == $tab;
 			%li(class=$active?'active':null)
-				%a.js-tooltip(href='#'.$slug 
-					data-slug=$path 
-					data-toggle="tab" 
-					role="tab" 
-					title=$sections[0]->page_help 
+				%a.js-tooltip(href='#'.$slug
+					data-slug=$path
+					data-toggle="tab"
+					role="tab"
+					title=$sections[0]->page_help
 					data-placement="left")=$page
 
 -# Create pages
@@ -50,7 +51,7 @@
 		-$sections = Collection::make($sections)->groupBy('section_label')
 		-$active = (empty($tab) && $first++==0 ) || $slug == $tab
 		.tab-pane(class=$active?'active':null id=$slug)
-			
+
 			-# Create sections
 			-foreach($sections as $section => $fields)
 				%fieldset
@@ -66,4 +67,4 @@
 		%span.glyphicon.glyphicon-file
 		Save all tabs
 
-!=Former::close() 
+!=Former::close()
