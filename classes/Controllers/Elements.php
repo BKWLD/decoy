@@ -53,9 +53,9 @@ class Elements extends Base {
 
 		// If handling a deep link to a tab, verify that the passed tab
 		// slug is a real key in the data.  Else 404.
-		if ($tab && !in_array($tab, array_map(function($title) {
-			return Str::slug($title);
-		}, $elements->lists('page_label')))) App::abort(404);
+		if ($tab && !in_array($tab, $elements->lists('page_label')
+			->map(function($title) { return Str::slug($title); })
+			->all())) App::abort(404);
 
 		// Populate form
 		Former::withRules($elements->rules());
