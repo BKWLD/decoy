@@ -3,8 +3,9 @@
 %fieldset
 	.legend Reset
 	%p Hey #{$user->first_name}.  Enter a new password and we'll log you in.
-	
-	!=Former::text('email')
+
+	!=Former::hidden('token', $token)
+	!=Former::text('email')->value($user->email)
 	!=Former::password('password')
 	!=Former::password('password_confirmation', 'Password, again')
 
