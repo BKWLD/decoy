@@ -24,22 +24,14 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function boot() {
 
-		// Define constants that Decoy uses
-		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
-		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
-		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
-
 		// Register configs, migrations, etc
 		$this->registerDirs();
 
-		// Boot auth
-		$this->bootAuth();
-
-		// Register global and named middlewares
-		$this->registerMiddlewares();
-
-		// Register the routes AFTER all the app routes using the "before" register.
+		// Register the routes.
 		$this->app['decoy.router']->registerAll();
+
+		// Configure Decoy auth setup
+		$this->bootAuth();
 
 		// Do bootstrapping that only matters if user has requested an admin URL
 		if ($this->app['decoy']->handling()) $this->usingAdmin();
@@ -87,10 +79,18 @@ class ServiceProvider extends BaseServiceProvider {
 	 */
 	public function usingAdmin() {
 
+		// Define constants that Decoy uses
+		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
+		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
+		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
+
 		// Load all the composers
 		require_once(__DIR__.'/../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../composers/layouts._nav.php');
 		require_once(__DIR__.'/../composers/shared.list._search.php');
+
+		// Register global and named middlewares
+		$this->registerMiddlewares();
 
 		// Use Decoy's auth by default, while at an admin path
 		Config::set('auth.defaults', [
