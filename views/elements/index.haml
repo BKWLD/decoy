@@ -3,8 +3,11 @@
 -use Illuminate\Support\Collection
 
 -# Grouped and ordered elements
--$grouped_elements = $elements->groupBy('page_label')->toArray()
--ksort($grouped_elements)
+:php
+	$grouped_elements = $elements->groupBy('page_label')
+		->sortBy(function($val, $key) {
+			return $key;
+		});
 
 -# Form tag
 !=Former::open_vertical_for_files()->addClass('row')

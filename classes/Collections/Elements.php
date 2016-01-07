@@ -5,11 +5,11 @@ use App;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Library\Utils;
-use Illuminate\Cache\Repository;
+use Cache;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
-use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Produces a store of all the site Elements
@@ -39,8 +39,18 @@ class Elements extends Collection {
 
 	/**
 	 * Store the locale that was used to hydrate the collection
+	 *
+	 * @var string
 	 */
 	protected $locale;
+
+	/**
+	 * The model class that should be used for each Element instance
+	 *
+	 * @var string
+	 */
+	protected $model = null;
+
 
 	/**
 	 * An array of Element keys that have been persisted in the DB
@@ -48,19 +58,6 @@ class Elements extends Collection {
 	 * @var null | array
 	 */
 	protected $updated_items = null;
-
-	/**
-	 * Dependency injection
-	 *
-	 * @param Symfony\Component\Yaml\Parser $yaml_parser
-	 * @param Bkwld\Decoy\Models\Element $model
-	 * @param Illuminate\Cache\Repository $cache
-	 */
-	public function __construct(Parser $yaml_parser, Element $model, Repository $cache) {
-		$this->yaml_parser = $yaml_parser;
-		$this->setModel($model);
-		$this->cache = $cache;
-	}
 
 	/**
 	 * Map the items into a collection of Element instances
@@ -72,7 +69,7 @@ class Elements extends Collection {
 		return new ModelCollection(array_map(function($element, $key) {
 
 			// Add the key as an attribute
-			return $this->model->newInstance(array_merge($element, ['key' => $key]));
+			return new $this->model(array_merge($element, ['key' => $key]));
 
 		}, $this->all(), array_keys($this->items)));
 	}
@@ -96,7 +93,7 @@ class Elements extends Collection {
 			}
 
 		// Add the key as an attribute
-		} else return $this->model->newInstance(array_merge($this->items[$key], ['key' => $key]));
+	} else return new $this->model(array_merge($this->items[$key], ['key' => $key]));
 
 	}
 
@@ -138,11 +135,11 @@ class Elements extends Collection {
 		}
 
 		// Else, use the cache if it exists or generate the cache
-		if ($data = $this->cache->get($this->cacheKey())) {
+		if ($data = Cache::get($this->cacheKey())) {
 			$this->items = $data;
 		} else {
 			$this->items = $this->mergeSources();
-			$this->cache->forever($this->cacheKey(), $this->items);
+			Cache::forever($this->cacheKey(), $this->items);
 		}
 		return $this;
 	}
@@ -174,7 +171,7 @@ class Elements extends Collection {
 	 * @return $this
 	 */
 	public function clearCache() {
-		$this->cache->forget($this->cacheKey());
+		Cache::forget($this->cacheKey());
 		return $this;
 	}
 
@@ -272,8 +269,8 @@ class Elements extends Collection {
 	protected function assocAdminChoices() {
 
 		// Build the query
-		$elements = $this->model->query();
-		if ($this->locale) $elements->localize($this->locale);
+		$query = call_user_func([$this->model, 'query']);
+		if ($this->locale) $query->localize($this->locale);
 
 		// Convert models to simple array
 		$elements = array_map(function(Element $element) {
@@ -282,7 +279,7 @@ class Elements extends Collection {
 			return array_except($element->toArray(), ['key']);
 
 		// .. from a dictionary of ALL elements for the locale
-		}, $elements->get()->getDictionary());
+		}, $query->get()->getDictionary());
 
 		// Store the keys of all these elements so we can keep track of which
 		// Elements "exist"
@@ -313,7 +310,7 @@ class Elements extends Collection {
 		foreach($files as $file) {
 
 			// If an array found ...
-			if (($config = $this->yaml_parser->parse(file_get_contents($file)))
+			if (($config = Yaml::parse(file_get_contents($file)))
 				&& is_array($config)) {
 
 				// Merge it in
@@ -370,13 +367,13 @@ class Elements extends Collection {
 	public function populate() {
 		return array_combine(array_map(function($key) {
 			return str_replace('.', '|', $key);
-		}, $this->keys()), $this->lists('value'));
+		}, $this->keys()->all()), $this->pluck('value')->all());
 	}
 
 	/**
 	 * Get the model instance being used
 	 *
-	 * @return Bkwld\Decoy\Models\Element
+	 * @return string
 	 */
 	public function getModel() {
 		return $this->model;
@@ -385,13 +382,13 @@ class Elements extends Collection {
 	/**
 	 * Replace the model class being used (via an instance) and listen for updates.
 	 *
-	 * @param  Bkwld\Decoy\Models\Element $element
+	 * @param  string $class Class name of Elements or a subclasss
 	 * @return $this
 	 */
-	public function setModel($element) {
-		$this->model = $element;
-		$this->model->created([$this, 'onModelUpdate']);
-		$this->model->updated([$this, 'onModelUpdate']);
+	public function setModel($class) {
+		$this->model = $class;
+		call_user_func([$class, 'created'], [$this, 'onModelUpdate']);
+		call_user_func([$class, 'updated'], [$this, 'onModelUpdate']);
 		return $this;
 	}
 

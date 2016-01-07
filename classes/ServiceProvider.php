@@ -254,11 +254,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Build the Elements collection
 		$this->app->singleton('decoy.elements', function($app) {
-			return new Collections\Elements(
-				new Parser,
-				new Models\Element,
-				$this->app['cache']->driver()
-			);
+			return with(new Collections\Elements)->setModel(Models\Element::class);
 		});
 
 		// Register Decoy's custom handling of some exception
