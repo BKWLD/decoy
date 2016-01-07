@@ -83,28 +83,6 @@ class ServiceProvider extends BaseServiceProvider {
 	}
 
 	/**
-	 * Boot Decoy's auth integration
-	 *
-	 * @return void
-	 */
-	public function bootAuth() {
-
-		// Inject Decoy's auth config
-		Config::set('auth.guards.decoy', [
-			'driver' => 'session',
-			'provider' => 'decoy',
-		]);
-		Config::set('auth.providers.decoy', [
-			'driver' => 'eloquent',
-			'model' => Models\Admin::class,
-		]);
-
-		// Point to the Gate policy
-		$this->app[Gate::class]->define('decoy.auth', config('decoy.core.policy'));
-
-	}
-
-	/**
 	 * Things that happen only if the request is for the admin
 	 */
 	public function usingAdmin() {
@@ -114,6 +92,12 @@ class ServiceProvider extends BaseServiceProvider {
 		require_once(__DIR__.'/../composers/layouts._nav.php');
 		require_once(__DIR__.'/../composers/shared.list._search.php');
 
+		// Use Decoy's auth by default, while at an admin path
+		Config::set('auth.defaults', [
+			'guard'     => 'decoy',
+			'passwords' => 'decoy',
+		]);
+
 		// Use the Decoy paginator
 		Config::set('view.pagination', 'decoy::shared.list._paginator');
 
@@ -122,6 +106,33 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Delegate events to Decoy observers
 		$this->delegateAdminObservers();
+	}
+
+	/**
+	 * Boot Decoy's auth integration
+	 *
+	 * @return void
+	 */
+	public function bootAuth() {
+
+		// Inject Decoy's auth config
+		Config::set('auth.guards.decoy', [
+			'driver'   => 'session',
+			'provider' => 'decoy',
+		]);
+		Config::set('auth.providers.decoy', [
+			'driver' => 'eloquent',
+			'model'  => Models\Admin::class,
+		]);
+		Config::set('auth.passwords.decoy', [
+			'provider' => 'decoy',
+			'email'    => 'decoy::emails.reset',
+			'table'    => 'password_resets',
+			'expire'   => 60,
+		]);
+
+		// Point to the Gate policy
+		$this->app[Gate::class]->define('decoy.auth', config('decoy.core.policy'));
 	}
 
 	/**

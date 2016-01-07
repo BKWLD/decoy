@@ -29,15 +29,6 @@ class Login extends Base {
   }
 
   /**
-   * Get the guard to be used during authentication.
-   *
-   * @return string|null
-   */
-  protected function getGuard() {
-    return config('decoy.core.guard');
-  }
-
-  /**
    * Show the application login form.
    *
    * @return \Illuminate\Http\Response
