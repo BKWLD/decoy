@@ -13,10 +13,10 @@ use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
-use Config;
 use Croppa;
 use DB;
 use Decoy;
+use DecoyURL;
 use Event;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
@@ -160,49 +160,10 @@ class Base extends Controller {
 	protected $layout;
 
 	/**
-	 * For the most part, this populates the protected properties.  Constructor
-	 * arguments are intentionally avoided so every controller that extends this
-	 * doesn't have to include params in constructor definitions.
+	 * Populate protected properties on init
 	 */
 	public function __construct() {
-		if ($this->injectDependencies()) $this->init();
-	}
-
-	/**
-	 * Inject dependencies.  When used in normal execution, these are pulled automatically
-	 * from the facaded App.  When this is not available, say when being run by unit tests,
-	 * this method takes the dependencies in this array.
-	 *
-	 * Note, not all dependencies are currently injected
-	 *
-	 * @param Config $config
-	 * @param Illuminate\Routing\Router $route
-	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
-	 */
-	private $config;
-	private $route;
-	private $url;
-	public function injectDependencies($dependencies = null) {
-
-		// Set manually passed dependencies
-		if ($dependencies) {
-			$this->config = $dependencies['config'];
-			$this->route = $dependencies['route'];
-			$this->url = $dependencies['url'];
-			return true;
-		}
-
-		// Set dependencies automatically
-		if (class_exists('App')) {
-			$this->config = App::make('config');
-			$this->url = App::make('decoy.url');
-			$request = App::make('request');
-			$this->route = App::make('router');
-			return true;
-		}
-
-		// No dependencies found
-		return false;
+		$this->init();
 	}
 
 	/**
@@ -213,7 +174,7 @@ class Base extends Controller {
 	private function init($class = null) {
 
 		// Set the layout from the Config file
-		$this->layout = View::make($this->config->get('decoy.core.layout'));
+		$this->layout = View::make(config('decoy.core.layout'));
 
 		// Store the controller class for routing
 		if ($class) $this->controller = $class;
@@ -252,18 +213,6 @@ class Base extends Controller {
 			$this->parent($parent_model_class::findOrFail($parent_id));
 		}
 
-	}
-
-	/**
-	 * Make a new instance of the base class for the purposes of testing
-	 *
-	 * @param string $path A request path, i.e. 'admin/news/create'
-	 * @param string $verb i.e. GET,POST
-	 */
-	public function simulate($path, $verb = 'GET') {
-		$wildcard = new Wildcard($this->config->get('decoy.core.dir'), $verb, $path);
-		$class = $wildcard->detectController();
-		$this->init($class);
 	}
 
 	//---------------------------------------------------------------------------
@@ -529,7 +478,7 @@ class Base extends Controller {
 
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to($this->url->relative('edit', $item->id))
+		else return Redirect::to(DecoyURL::relative('edit', $item->id))
 			->with('success', $this->successMessage($item, 'created') );
 	}
 
@@ -627,7 +576,7 @@ class Base extends Controller {
 
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to($this->url->relative('index'))
+		else return Redirect::to(DecoyURL::relative('index'))
 			->with('success', $this->successMessage($item, 'deleted') );
 	}
 
@@ -663,7 +612,7 @@ class Base extends Controller {
 		}
 
 		// Save the new record and redirect to its edit view
-		return Redirect::to($this->url->relative('edit', $new->getKey()))
+		return Redirect::to(DecoyURL::relative('edit', $new->getKey()))
 			->with('success', $this->successMessage($src, 'duplicated') );
 	}
 
@@ -1000,7 +949,7 @@ class Base extends Controller {
 
 		// Add extra messaging if the creation was begun from the localize UI
 		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-			$message .= " You may begin localizing it for <b>".Config::get('decoy.site.locales')[$input->locale].'</b>.';
+			$message .= " You may begin localizing it for <b>".config('decoy.site.locales')[$input->locale].'</b>.';
 		}
 
 		// Return message
