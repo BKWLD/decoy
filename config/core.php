@@ -7,11 +7,11 @@
 	'layout' => 'decoy::layouts.default',
 
 	// Auth guard and policy to use
-	'guard' => 'decoy',
+	'guard'  => 'decoy',
 	'policy' => 'Bkwld\Decoy\Auth\Policy@check',
 
 	// Default admin credentials
-	'default_login' => 'redacted',
+	'default_login'    => 'redacted',
 	'default_password' => 'redacted',
 
 	// Use a password input field for admins
