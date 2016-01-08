@@ -78,8 +78,8 @@ define(function(require) {
 			config = _.defaults(config, {
 				uploadImageFields: { _token: $('meta[name="csrf"]').attr('content') },
 				uploadFileFields: { _token: $('meta[name="csrf"]').attr('content') },
-				imageUpload: '/admin/redactor/upload',
-				fileUpload: '/admin/redactor/upload'
+				imageUpload: '/admin/redactor',
+				fileUpload: '/admin/redactor'
 			});
 		}
 
