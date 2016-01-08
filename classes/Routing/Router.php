@@ -78,10 +78,7 @@ class Router {
 		Route::group([
 			'prefix' => $this->dir,
 			'middleware' => [
-				\App\Http\Middleware\EncryptCookies::class,
-				\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
 				\Illuminate\Session\Middleware\StartSession::class,
-				\Illuminate\View\Middleware\ShareErrorsFromSession::class,
 				'decoy.auth',
 			],
 		], function() {
@@ -108,8 +105,6 @@ class Router {
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
 		Route::post('/', ['as' => 'decoy::account@postLogin',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@postLogin']);
-		Route::get('account', ['as' => 'decoy::account',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
 	}
@@ -235,7 +230,7 @@ class Router {
 	 * @return void
 	 */
 	public function registerRedactor() {
-		Route::post('redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
+		Route::post('redactor', 'Bkwld\Decoy\Controllers\Redactor@store');
 	}
 
 	/**

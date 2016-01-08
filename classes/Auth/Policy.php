@@ -42,6 +42,9 @@ class Policy {
 		if (preg_match($pattern, $controller, $matches)) $controller = $matches[1];
 		else $controller = DecoyURL::slugController($controller);
 
+		// Allow all admins to upload to redactor
+		if ($controller == 'redactor') return true;
+
 		// Always allow an admin to edit themselves for changing password.  Other
 		// features will be disabled from the view file.
 		if ($controller == 'admins'
