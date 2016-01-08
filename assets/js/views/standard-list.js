@@ -9,7 +9,7 @@ define(function (require) {
 		Backbone = require('backbone');
 
 	// Bring in just enough jQuery UI for drag and drop
-	require('../vendor/jquery-ui');
+	require('jquery-ui');
 
 	// Bring in the template for new rows.  Currently, the only need to do this
 	// is for many-to-many row insertion
