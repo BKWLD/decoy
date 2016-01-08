@@ -18,8 +18,9 @@
 	'obscure_admin_password' => false,
 
 	// Mail FROM info
-	'mail_from_name' => 'Site Admin',
-	'mail_from_address' => 'postmaster@'.parse_url(app()->make('request')->root(), PHP_URL_HOST),
+	'mail_from_name'    => 'Site Admin',
+	'mail_from_address' => 'postmaster@'.(app()->runningInConsole() ?
+		'locahost' : parse_url(url()->current(), PHP_URL_HOST)),
 
 	// Allow regex in redirect rules
 	'allow_regex_in_redirects' => false,
