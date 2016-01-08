@@ -208,7 +208,6 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->mergeConfigFrom(__DIR__.'/../config/core.php',    'decoy.core');
 		$this->mergeConfigFrom(__DIR__.'/../config/encode.php',  'decoy.encode');
 		$this->mergeConfigFrom(__DIR__.'/../config/site.php',    'decoy.site');
-		$this->mergeConfigFrom(__DIR__.'/../config/wysiwyg.php', 'decoy.wysiwyg');
 
 		// Register external packages
 		$this->registerPackages();

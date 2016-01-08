@@ -841,7 +841,7 @@ class Base extends Controller {
 		if ($model) $this->fireEvent('validating', array($model, $validation));
 
 		// Run the validation.  If it fails, throw an exception that will get handled
-		// by Routing\Filters.
+		// by Middleware.
 		if ($validation->fails()) throw new ValidationFail($validation);
 
 		// Fire completion event
