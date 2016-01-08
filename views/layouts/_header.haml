@@ -1,9 +1,11 @@
 .header
 
-	-# Mobile controls
-	.btn-group.nav-hamburger
-		%a.btn.outline
-			%span.glyphicon.glyphicon-th-list
+	-# Mobile controls.  Only show if logged in.  Otherwise, there is nothing to
+	-# show.  This is really only relevant for the forgot password views currently
+	-if (app('decoy.user'))
+		.btn-group.nav-hamburger
+			%a.btn.outline
+				%span.glyphicon.glyphicon-th-list
 
 	%h1.title
 
@@ -17,7 +19,7 @@
 			.pull-right.btn-toolbar
 				!=View::make('decoy::shared.form.relationships._many_to_many', $__data)->render()
 
-		-elseif(app('decoy.user') && app('decoy.user')->can('create', $controller) && !Route::is('decoy::elements', 'decoy::workers', 'decoy::commands') && !Request::is('admin/changes'))
+		-elseif(app('decoy.user') && app('decoy.user')->can('create', $controller) && !Route::is('decoy::elements', 'decoy::workers', 'decoy::commands', 'decoy::account@forgot', 'decoy::account@reset') && !Request::is('admin/changes'))
 
 			-# Controller actions
 			.pull-right.btn-toolbar
