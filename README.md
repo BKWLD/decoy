@@ -48,11 +48,6 @@ If you **are** installing outside of Camo, here are some steps to get you starte
 	```
 
 
-### Tests
-
-Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road.
-
-
 
 ### Config
 
