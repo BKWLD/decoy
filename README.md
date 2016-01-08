@@ -50,7 +50,7 @@ If you **are** installing outside of Camo, here are some steps to get you starte
 
 ### Tests
 
-Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road. 
+Decoy 2.x adds some unit tests.  To run them, first do a composer install in the Decoy directory with dev resources: `composer install --dev` or `composer update`.  Then (still from the Decoy package directory) run `vendor/bin/phpunit`.  I hope that we continue to add tests for any issues we fix down the road.
 
 
 
@@ -84,7 +84,7 @@ Here is an example of how you can set the `position` column to the `MAX` value, 
 
 	/**
 	 * When attached as a related set the position on the pivot column to the end
-	 * 
+	 *
 	 * @param  Illuminate\Database\Eloquent\Model
 	 * @return void
 	 */
@@ -151,7 +151,7 @@ The following protected proprties allow you to customize how Decoy works from th
 		)
 
 		// Creates a pulldown menu
-		'type' => array( 
+		'type' => array(
 			'type' => 'select',
 			'options' => array(
 				'photo' => 'Photo',
@@ -160,7 +160,7 @@ The following protected proprties allow you to customize how Decoy works from th
 		),
 
 		// Creates a pulldowon using static array on Post model
-		'category' => array( 
+		'category' => array(
 			'type' => 'select',
 			'options' => 'Post::$categories'
 		),
@@ -179,7 +179,7 @@ The following protected proprties allow you to customize how Decoy works from th
 		'created_at' => 'date',
 	);
 	```
-	
+
 Several of these properties have accessor functions that can be overrode by subclasses.  This has the advantage of allowing you to generate the configuration programatically or to use closures in the configuration.  For instance:
 
 	```
@@ -192,7 +192,7 @@ Several of these properties have accessor functions that can be overrode by subc
 					'type' => 'select',
 					'options' => 'Article::$types',
 
-					// Any search type supports the `query` parameter for change how the 
+					// Any search type supports the `query` parameter for change how the
 					// field input is applied to the search query
 					'query' => function($query, $condition, $input) {
 						$type = DB::connection()->getPdo()->quote($type);
@@ -230,7 +230,7 @@ Use a `fieldset` and a div of class `.legend` to contain groups of fields in box
 	%fieldset
 		.legend=empty($item)?'New':'Edit'
 		!= Former::text('title')
-		!= Former::textarea('body') 
+		!= Former::textarea('body')
 
 
 ### Overriding a Decoy partial
@@ -246,7 +246,7 @@ The sidebar is primarily designed to house related model listings but you can ac
 
 	- $sidebar->add(Former::listing('Contributor')->take(30))
 	- $sidebar->add('<p>A paragraph</p>')
-	
+
 Note: This must be run **before** the include of the `decoy::shared.form._header` partial.
 
 
@@ -337,7 +337,7 @@ Begin by customizing the `app/config/packages/bkwld/decoy/elements.yaml` file th
 - A page
 	- A section
 		- A field
-		
+
 The syntax has a terse form:
 
 	homepage:
@@ -374,7 +374,7 @@ Call `Decoy::el('key')` in your frontend views to return the value for an Elemen
 To enable frontend ending of an Element, add a `data-decoy-el` attribute to the containing HTML element with a value equal to the Element key.  It is positioned using [Bootstrap Tooltips](http://getbootstrap.com/javascript/#tooltips) and many of its data attribute configs are supported.  For instance `data-placement` will specify on which side of the container the droplet icon is placed.  Here's a HAML example:
 
 	.title(data-decoy-el='homepage.marquee.title') !=Decoy::el('homepage.marquee.title')
-	%img(src=Decoy::el('homepage.marquee.image') data-decoy-el='homepage.marquee.image' data-placement='bottom') 
+	%img(src=Decoy::el('homepage.marquee.image') data-decoy-el='homepage.marquee.image' data-placement='bottom')
 
 ##### Additional notes
 
@@ -397,7 +397,7 @@ In a standard PagodaBox config, you would put these in your Boxile:
 		name: app
 		cron:
 			- "* * * * *": "php artisan <COMMAND> --heartbeat"
-	
+
 	worker1:
 		name: worker
 		exec: "php artisan <COMMAND> --worker"
@@ -469,15 +469,15 @@ In addition, you can make custom permissions and check for them using the same m
 
 The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like "blockhelp", etc.
 
-- `Former::date()` 
+- `Former::date()`
 
 	- Create a [calendar widget](http://cl.ly/image/0m1L2H1i3o12).
 	- Uses [bootstrap-datepicker](http://www.eyecon.ro/bootstrap-datepicker) for the UI. If you set the value to `'now'`, the current date will populate the field``
-	
+
 			!= Former::date('date', 'Start date')->value('now'`
 
 
-- `Former::time()` 
+- `Former::time()`
 
 	- Create a time [selector widget](http://cl.ly/image/22062i19133Y).
 	- Uses [bootstrap-timepicker](http://jdewit.github.io/bootstrap-timepicker/) for the UI. If you set the value to `'now'`, the current date will populate the field.
@@ -485,7 +485,7 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::time('time')->value('now')
 
 
-- `Former::datetime()` 
+- `Former::datetime()`
 
 	- Create a [date-time widget](http://cl.ly/image/3I2G1X1h3s3c), which is like the concatenation of the `date()` and `time()` elements.
 	- You can set attributes of the date and time inputs, respectively, by chaining `->date($attributes)` and `->time($attributes)` where $attributes is an associative array.
@@ -515,7 +515,7 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::upload('file')
 
 
-- `Former::image()` 
+- `Former::image()`
 
 	- Creates an [image upload field](http://cl.ly/image/1M03383E293b) with addtional UI for reviewing the last upload and deleting it.
 
@@ -529,7 +529,7 @@ The following additional fields come with Decoy.  They are implemented through F
 			);
 
 
-- `Former::videoEncoder()` 
+- `Former::videoEncoder()`
 
 	- Creates a [video upload field](http://yo.bkwld.com/image/1R3V1T2o1R1P) with addtional UI for checking the progress of the encoding and then playing back the video.
 	- Review the feature on Encoding from this doc for more information on the setup of the video encoding feature of Decoy.
@@ -547,7 +547,7 @@ The following additional fields come with Decoy.  They are implemented through F
 			!= Former::belongsTo('author_id', 'Author')->route('/admin/admins')->value(app('decoy.user')->id)->title(app('decoy.user')->getAdminTitleAttribute())
 
 
-- `Former::manyToManyChecklist()` 
+- `Former::manyToManyChecklist()`
 
 	- Render a [list of checkboxes](http://cl.ly/image/0b2w0J312z2i) to represent a related many-to-many table.  The underlying Former field `type` is a checkbox.
 	- The relationship name is stored in the field `name`.  This is the name of the relationship method that is defined on the model that is currently being edited in Decoy.
@@ -557,8 +557,8 @@ The following additional fields come with Decoy.  They are implemented through F
 
 			:php
 				echo Former::manyToManyChecklist('hubs')
-					->scope(function($query) use ($product) { 
-						return $query->where('product_id', '=', $product->id); 
+					->scope(function($query) use ($product) {
+						return $query->where('product_id', '=', $product->id);
 					})->decorator(function($html, $model) {
 						return $html.Form::hidden('key', 'val');
 					});
