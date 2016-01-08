@@ -307,34 +307,18 @@ The `auto-toggleable` JS module applies some JS to forms that will allow you to 
 
 ### WYSIWYG
 
-Decoy supports both [Redactor](http://imperavi.com/redactor/) and [CKEditor](http://ckeditor.com/) WYSIWYG editors.  Choose which you want to use in the [wysiwyg](https://github.com/BKWLD/decoy/blob/master/src/config/wysiwyg.php) config file.  To customize the editor, you can get a reference to the wysiwyg adapter from your /js/admin/start.js and customize their config like:
+Decoy uses [Redactor](http://imperavi.com/redactor/) as its WYSIWYG editors.  To customize the editor, you can get a reference to the wysiwyg adapter from your /js/admin/start.js and customize their config like:
 
 ```js
 // Redactor - Enable uploads and add "format" options
-wysiwyg = require('decoy/wysiwyg/factory')
+wysiwyg = require('decoy/assets/js/wysiwyg/factory')
 wysiwyg.config.allowUploads();
 wysiwyg.config.merge({
 	buttons: ['formatting', 'bold', 'italic', 'link', 'file', image', 'horizontalrule', 'orderedlist', 'unorderedlist', 'html'],
 	formatting: ['p', 'h2']
 });
-
-// CKeditor - Enable uploads and add "format" options
-wysiwyg = require('decoy/wysiwyg/factory')
-wysiwyg.config.allowUploads(); // You should populate the `license_name` and `license_name` in the php config
-wysiwyg.config.merge({
-	toolbar : [
-		{ name: 'styles', items: [ 'Format' ] },
-		{ name: 'basicstyles', items : [ 'Bold','Italic' ] },
-		{ name: 'links', items : [ 'Link','Unlink'] },
-		{ name: 'insert', items : [ 'Image', 'HorizontalRule' ] },
-		{ name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
-		{ name: 'clipboard', items : [ 'PasteText','PasteFromWord' ] },
-		{ name: 'source', items : [ 'Source' ] }
-	],
-	format_tags: 'h2;p'
-});
 ```
-		
+
 
 ### Elements
 
