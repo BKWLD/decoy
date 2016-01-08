@@ -380,9 +380,9 @@ class Base extends Controller {
 	 */
 	public function getPermissionOptions() {
 		return [
-			'read' => 'View listing and edit views',
-			'create' => 'Create new items',
-			'update' => 'Update existing items',
+			'read'    => 'View listing and edit views',
+			'create'  => 'Create new items',
+			'update'  => 'Update existing items',
 			'publish' => 'Move from "draft" to "published"',
 			'destroy' => ['Delete', 'Delete items permanently'],
 		];
