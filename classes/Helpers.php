@@ -246,22 +246,28 @@ class Helpers {
 	/**
 	 * Get the model class string from a controller class string
 	 *
-	 * @param  string $controller ex: "Admin\SlidesController"
+	 * @param  string $controller ex: "App\Http\Controllers\Admin\People"
 	 * @return string ex: "Slide"
 	 */
 	public function modelForController($controller) {
 
 		// Swap out the namespace if decoy
-		$model = str_replace('Bkwld\Decoy\Controllers', 'Bkwld\Decoy\Models', $controller, $is_decoy);
+		$model = str_replace('Bkwld\Decoy\Controllers',
+			'Bkwld\Decoy\Models',
+			$controller,
+			$is_decoy);
 
-		// Remove the Controller suffix app classes may have
-		$model = preg_replace('#Controller$#', '', $model);
-
-		// Assume that non-decoy models want the first namespace (aka Admin) removed
-		if (!$is_decoy) $model = preg_replace('#^\w+'.preg_quote('\\').'#', '', $model);
+		// Assume that non-decoy models want the leading namespace removed
+		if (!$is_decoy) {
+			$namespace = ucfirst(Config::get('decoy.core.dir'));
+			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', '', $model);
+		}
 
 		// Make it singular
 		$model = Str::singular($model);
+
+		// Append new namespace
+		$model = 'App\\'.$model;
 		return $model;
 	}
 

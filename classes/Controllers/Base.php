@@ -169,16 +169,15 @@ class Base extends Controller {
 	/**
 	 * Populate the controller's protected properties
 	 *
-	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
+	 * @return void
 	 */
-	private function init($class = null) {
+	private function init() {
 
 		// Set the layout from the Config file
 		$this->layout = View::make(config('decoy.core.layout'));
 
 		// Store the controller class for routing
-		if ($class) $this->controller = $class;
-		elseif (empty($this->controller)) $this->controller = get_class($this);
+		$this->controller = get_class($this);
 
 		// Get the controller name
 		$controller_name = $this->controllerName($this->controller);
@@ -228,20 +227,24 @@ class Base extends Controller {
 	 */
 	public function controllerName($class = null) {
 		$name = $class ? $class : get_class($this);
-		$name = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $name);
-		$name = preg_replace('#Controller$#', '', $name);
+		$name = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\')
+			.'|'.preg_quote('App\Http\Controllers\Admin\\').')#', '', $name);
 		return $name;
 	}
 
 	/**
-	 * Get the title for the controller based on the controller name.  Basically, it's
-	 * a de-studdly-er
+	 * Get the title for the controller based on the controller name.  Basically,
+	 * it's a de-studdly-er
 	 *
 	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
 	public function title($controller_name = null) {
-		if (!$controller_name) return $this->title; // For when this is invoked as a getter for $this->title
+
+		 // For when this is invoked as a getter for $this->title
+		if (!$controller_name) return $this->title;
+
+		// Do the de-studlying
 		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
 		return implode(" ", $matches[0]);
 	}
@@ -276,6 +279,7 @@ class Base extends Controller {
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.
 	 * This is basically a conversion to snake case from studyly case
+	 *
 	 * @param string $class ex: 'Admin\NewsController'
 	 * @return string ex: admins.edit or car_lovers.edit
 	 */
@@ -284,8 +288,8 @@ class Base extends Controller {
 		// Remove Decoy from the class
 		$path = str_replace('Bkwld\Decoy\Controllers\\', '', $class, $is_decoy);
 
-		// Remove the Controller suffix app classes may have
-		$path = preg_replace('#Controller$#', '', $path);
+		// Remove the App controller prefix
+		$path = str_replace('App\Http\Controllers\\', '', $path);
 
 		// Break up all the remainder of the class and de-study them (which is what
 		// title() does)
@@ -312,8 +316,8 @@ class Base extends Controller {
 	}
 
 	/**
-	 * Give this controller a parent model instance.  For instance, this makes the index
-	 * view a listing of just the children of the parent.
+	 * Give this controller a parent model instance.  For instance, this makes the
+	 * index view a listing of just the children of the parent.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $parent
 	 * @return this
@@ -328,24 +332,25 @@ class Base extends Controller {
 		$this->parent_controller = 'Admin\\'.Str::plural($this->parent_model).'Controller';
 
 		// Figure out what the relationship function to the child (this controller's
-		// model) on the parent model .  It will be the plural version of this model's
-		// name.
+		// model) on the parent model .  It will be the plural version of this
+		// model's name.
 		$this->parent_to_self = Str::plural(lcfirst($this->model));
 
-		// If the parent is the same as this controller, assume that it's a many-to-many-to-self
-		// relationship.  Thus, expect a relationship method to be defined on the model
-		// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+		// If the parent is the same as this controller, assume that it's a
+		// many-to-many-to-self relationship.  Thus, expect a relationship method to
+		// be defined on the model called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
 		if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
 			$this->self_to_parent = $this->parent_to_self.'AsChild';
 
-		// If the parent relationship is a polymorphic one-many, then the relationship function
-		// on the child model will be the model name plus "able".  For instance, the Link model would
-		// have it's relationship to parent called "linkable".
+		// If the parent relationship is a polymorphic one-many, then the
+		// relationship function on the child model will be the model name plus
+		// "able".  For instance, the Link model would have it's relationship to
+		// parent called "linkable".
 		} elseif (is_a($this->parentRelation(), 'Illuminate\Database\Eloquent\Relations\MorphMany')) {
 			$this->self_to_parent = lcfirst($this->model).'able';
 
-		// Save out to self to parent relationship.  It will be singular if the relationship
-		// is a many to many.
+		// Save out to self to parent relationship.  It will be singular if the
+		// relationship is a many to many.
 		} else {
 			$relationship = lcfirst(get_class($this->parent));
 			$this->self_to_parent = $this->isChildInManyToMany()?
@@ -404,7 +409,9 @@ class Base extends Controller {
 
 		// Open up the query. We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model.
-		$query = $this->parent ? $this->parentRelation()->ordered() : Model::ordered();
+		$query = $this->parent ?
+			$this->parentRelation()->ordered() :
+			call_user_func([$this->model, 'ordered']);
 
 		// Run the query.
 		$search = new Search();

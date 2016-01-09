@@ -26,9 +26,9 @@ class Generate extends Command {
 	 * The options
 	 */
 	protected function getArguments() {
-		return array(
-			array('model', InputArgument::REQUIRED, 'The class name of the model you are generating CRUD around'),
-		);
+		return [
+			['model', InputArgument::REQUIRED, 'The class name of the model you are generating CRUD around'],
+		];
 	}
 
 	/**
@@ -39,7 +39,7 @@ class Generate extends Command {
 	public function fire() {
 
 		// Figure out the stub directory
-		$this->stubs = __DIR__.'/../../../stubs/generate';
+		$this->stubs = __DIR__.'/../../stubs/generate';
 		if (!is_dir($this->stubs)) throw new Exception('Could not find stubs dir');
 
 		// Generate
@@ -55,7 +55,7 @@ class Generate extends Command {
 
 		// Figure out the naming
 		$model = ucfirst($this->argument('model'));
-		$path = 'app/models/'.$model.'.php';
+		$path = 'app/'.$model.'.php';
 		$file = base_path().'/'.$path;
 
 		// Copy the stub over
@@ -70,7 +70,9 @@ class Generate extends Command {
 	private function generateView() {
 
 		// Figure out the naming
-		$path = 'app/views/admin/'.Str::plural(Str::snake($this->argument('model'))).'/edit.haml.php';
+		$path = 'resources/views/admin/'
+			. Str::plural(Str::snake($this->argument('model')))
+			. '/edit.haml.php';
 		$file = base_path().'/'.$path;
 
 		// Copy the stub over
@@ -87,8 +89,8 @@ class Generate extends Command {
 	private function generateController() {
 
 		// Figure out the naming
-		$controller = Str::plural(ucfirst($this->argument('model'))).'Controller';
-		$path = 'app/controllers/Admin/'.$controller.'.php';
+		$controller = Str::plural(ucfirst($this->argument('model')));
+		$path = 'app/Http/Controllers/Admin/'.$controller.'.php';
 		$file = base_path().'/'.$path;
 
 		// Copy the stub over

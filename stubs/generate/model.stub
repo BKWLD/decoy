@@ -1,10 +1,10 @@
-<?php
+<?php namespace App;
 
 class {{model}} extends Base {
 
 	/**
 	 * Validation rules
-	 * 
+	 *
 	 * @var array
 	 */
 	// public static $rules = [
@@ -14,27 +14,27 @@ class {{model}} extends Base {
 	// 	'date' => 'required',
 	// 	'url' => 'url',
 	// ];
-	
+
 	/**
 	 * Uploadable attributes
-	 * 
+	 *
 	 * @var array
 	 */
 	// protected $upload_attributes = ['image'];
-	
+
 	/**
 	 * Admin cropping tool rules
-	 * 
+	 *
 	 * @var array
 	 */
 	// static public $crops = [
 	// 	'image' => ['default' => '1:1'],
 	// ];
-	
+
 	/**
 	 * Relationships to copy during duplication
 	 *
-	 * @var array 
+	 * @var array
 	 */
 	// protected $cloneable_relations = ['photos'];
 
@@ -47,7 +47,7 @@ class {{model}} extends Base {
 
 	/**
 	 * Put new instances at the end
-	 * 
+	 *
 	 * @return void
 	 */
 	// public function onCreating() {
@@ -58,30 +58,30 @@ class {{model}} extends Base {
 	/**
 	 * Orders instances of this model in the admin as well as default ordering
 	 * to be used by public site implementation.
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
 	// public function scopeOrdered($query) {
 	// 	$query->positioned();
 	// }
-	
+
 	/**
 	 * Return the URI to instances of this model
-	 * 
+	 *
 	 * @return string A URI that the browser can resolve
 	 */
 	// public function getUriAttribute() {
 	// 	return route('article', $this->slug);
 	// }
-		
+
 	/**
 	 * Render markup for the "featured" column in the admin listing
-	 * 
+	 *
 	 * @return string HTML
 	 */
 	// public function getAdminFeaturedAttribute() {
 	// 	return $this->featured ? '<span class="badge">Featured</span>' : '';
 	// }
-	
+
 }
