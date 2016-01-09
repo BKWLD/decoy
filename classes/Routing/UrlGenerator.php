@@ -124,9 +124,9 @@ class UrlGenerator {
 	public function slugController($controller) {
 		
 		// Get the controller name
-		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $controller);
-		$controller = preg_replace('#Controller$#', '', $controller);
-		
+		$controller = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\')
+			.'|'.preg_quote('App\Http\Controllers\Admin\\').')#', '', $controller);
+
 		// Convert study caps to dashes
 		$controller = Str::snake($controller, '-');
 		

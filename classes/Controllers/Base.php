@@ -222,7 +222,7 @@ class Base extends Controller {
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
 	 *
-	 * @param string $class ex: Admin\NewsController
+	 * @param string $class ex: App\Http\Controllers\Admin\News
 	 * @return string ex: News
 	 */
 	public function controllerName($class = null) {

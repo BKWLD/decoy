@@ -330,7 +330,7 @@ class Listing extends Field {
 		if (strpos($model, 'Bkwld\Decoy\Models') === 0) {
 			return Str::plural(str_replace('\Models', '\Controllers', $model));
 		}
-		return 'Admin\\'.Str::plural($model).'Controller';
+		return 'Admin\\'.Str::plural($model);
 	}
 
 
