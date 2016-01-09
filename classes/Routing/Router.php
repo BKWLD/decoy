@@ -54,26 +54,6 @@ class Router {
 			$this->registerResetPassword();
 		});
 
-		// Protected, admin routes
-		Route::group([
-			'prefix' => $this->dir,
-			'middleware' => [
-				'web', // Defined in the Kernel
-				'decoy.auth',
-				'decoy.save-redirect',
-				'decoy.edit-redirect',
-				'decoy.headers',
-
-			],
-		], function() {
-			$this->registerAdmins();
-			$this->registerCommands();
-			$this->registerWorkers();
-			$this->registerEncode();
-			$this->registerElements();
-			$this->registerWildcard(); // Must be last
-		});
-
 		// Routes that require auth but no CSRF
 		Route::group([
 			'prefix' => $this->dir,
@@ -93,6 +73,25 @@ class Router {
 			$this->registgerEncodingHooks();
 		});
 
+		// Protected, admin routes
+		Route::group([
+			'prefix' => $this->dir,
+			'middleware' => [
+				'web', // Defined in the Kernel
+				'decoy.auth',
+				'decoy.save-redirect',
+				'decoy.edit-redirect',
+				'decoy.headers',
+
+			],
+		], function() {
+			$this->registerAdmins();
+			$this->registerCommands();
+			$this->registerWorkers();
+			$this->registerEncode();
+			$this->registerElements();
+			$this->registerWildcard(); // Must be last
+		});
 	}
 
 	/**
