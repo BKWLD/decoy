@@ -51,8 +51,8 @@ class Listing extends Field {
 	/**
 	 * Preserve the items
 	 *
-	 * @var Illuminate\Pagination\Paginator | 
-	 *      Illuminate\Database\Eloquent\Collection 
+	 * @var Illuminate\Pagination\Paginator |
+	 *      Illuminate\Database\Eloquent\Collection
 	 *      string $items
 	 */
 	private $items;
@@ -79,54 +79,54 @@ class Listing extends Field {
 	private $take;
 
 	/**
-   * Set up a Field instance.  Note, the model class name is passed in place of the nemae
-   *
-   * @param Container $app        The Illuminate Container
+	 * Set up a Field instance.  Note, the model class name is passed in place of the nemae
+	 *
+	 * @param Container $app        The Illuminate Container
 	 * @param string    $type       Not really used, but kept for inheritance sake
 	 * @param string    $model      The model class name
 	 * @param string    $label      Its label
 	 * @param string    $value      Its value
 	 * @param array     $attributes Attributes
 	 * @param array     $config      Additional parameters passed by factories
-   */
-  public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
+	 */
+	public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
 
-  	// Get the parent item
-    $this->parent_item = $this->model();
+		// Get the parent item
+		$this->parent_item = $this->model();
 
-  	// Instantiate a controller given the model name
-  	$this->controller(isset($config['controller'])
-  		? $config['controller']
-  		: $this->controllerNameOfModel($model)
-  	);
+		// Instantiate a controller given the model name
+		$this->controller(isset($config['controller'])
+			? $config['controller']
+			: $this->controllerNameOfModel($model)
+		);
 
-  	// If no title is passed, set it to the controller name
-  	if (!$label && $this->controller) $label = $this->controller->title();
-  	elseif (!$label) $label = Str::plural($model);
+		// If no title is passed, set it to the controller name
+		if (!$label && $this->controller) $label = $this->controller->title();
+		elseif (!$label) $label = Str::plural($model);
 
-  	// Add passed items
-  	if (isset($config['items'])) $this->items($config['items']);
+		// Add passed items
+		if (isset($config['items'])) $this->items($config['items']);
 
-  	// Continue instantiation
-    parent::__construct($app, $type, $model, $label, $value, $attributes);
-    
-  }
+		// Continue instantiation
+		parent::__construct($app, $type, $model, $label, $value, $attributes);
 
-  /**
-   * A factory to create an instance using the passed controller.  This is to prevent
-   * duplicate controller instantations when invoked from the base controller.
-   *
-   * @param Bkwld\Decoy\Controllers\Base $controller
-   * @param Illuminate\Pagination\Paginator $items
-   * @return Bkwld\Decoy\Field\Listing
-   */
-  public static function createFromController($controller, $items) {
-  	$model = $controller->model();
-  	return Former::listing($model, null, null, null, array(
-  		'controller' => $controller,
-  		'items' => $items,
-  	));
-  }
+	}
+
+	/**
+	 * A factory to create an instance using the passed controller.  This is to prevent
+	 * duplicate controller instantations when invoked from the base controller.
+	 *
+	 * @param Bkwld\Decoy\Controllers\Base $controller
+	 * @param Illuminate\Pagination\Paginator $items
+	 * @return Bkwld\Decoy\Field\Listing
+	 */
+	public static function createFromController($controller, $items) {
+		$model = $controller->model();
+		return Former::listing($model, null, null, null, array(
+			'controller' => $controller,
+			'items' => $items,
+		));
+	}
 
 	/**
 	 * Replace the controller
@@ -154,7 +154,7 @@ class Listing extends Field {
 			$this->controller_name = get_class($controller);
 			$this->controller = $controller;
 		}
-		
+
 		// Chain
 		return $this;
 	}
@@ -162,8 +162,8 @@ class Listing extends Field {
 	/**
 	 * Store the items that will be displayed in the list
 	 *
-	 * @param  Illuminate\Pagination\Paginator | 
-	 *         Illuminate\Database\Eloquent\Collection 
+	 * @param  Illuminate\Pagination\Paginator |
+	 *         Illuminate\Database\Eloquent\Collection
 	 *         string $items
 	 * @return Field This field
 	 */
@@ -352,8 +352,8 @@ class Listing extends Field {
 	 * @return string URL
 	 */
 	protected function getIndexURL() {
-		return $this->controller->isChildInManyToMany() ? 
-			DecoyURL::action($this->controller_name.'@index') : 
+		return $this->controller->isChildInManyToMany() ?
+			DecoyURL::action($this->controller_name.'@index') :
 			DecoyURL::relative('index', null, $this->controller_name);
 	}
 
@@ -363,8 +363,8 @@ class Listing extends Field {
 	 * @return string URL
 	 */
 	protected function getCreateURL() {
-		return $this->controller->isChildInManyToMany() ? 
-			DecoyURL::action($this->controller_name.'@create') : 
+		return $this->controller->isChildInManyToMany() ?
+			DecoyURL::action($this->controller_name.'@create') :
 			DecoyURL::relative('create', null, $this->controller_name);
 	}
 
@@ -439,7 +439,7 @@ class Listing extends Field {
 
 		// If the user specified a limit, use it
 		if ($this->take) return $this->take;
-		
+
 		// If a sidebar, use the default
 		else if ($this->layout == 'sidebar') {
 			$name = $this->controller_name;
