@@ -47,6 +47,9 @@ class Handler extends AppHandler {
 		if ($rule = RedirectRule::matchUsingRequest()->first()) {
 			return redirect($rule->to, $rule->code);
 		}
+
+		// Return header only on AJAX
+		if ($request->ajax()) return response(null, 404);
 	}
 
 	/**
