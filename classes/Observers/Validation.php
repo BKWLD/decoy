@@ -37,7 +37,7 @@ class Validation {
 	public function allowValidatingOfExistingFiles($validation) {
 
 		// Only act on locally hosted files
-		if (Config::get('upchuck::disk.driver') != 'local') return;
+		if (Config::get('upchuck.disk.driver') != 'local') return;
 
 		// Get all the file related rules
 		// https://regex101.com/r/oP4kD2/1
@@ -58,7 +58,7 @@ class Validation {
 			if (isset($files[$attribute]) || empty($data[$attribute])) continue;
 
 			// Create the file instance and clear the data instance
-			$data[$attribute] = new File(Config::get('upchuck::disk.path')
+			$data[$attribute] = new File(Config::get('upchuck.disk.path')
 				.'/'.app('upchuck')->path($data[$attribute]));
 		}
 
