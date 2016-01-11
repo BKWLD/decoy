@@ -50,8 +50,8 @@ class Position {
 		} else if (isset($this->item->position)) {
 			
 			// Visiblity may be set at the same time and would be ignored otherwise
-			if (Input::has('visible')) $this->item->visible = Input::get('visible');
-			
+			if (Input::has('public')) $this->item->public = Input::get('public');
+
 			// Do position
 			$this->item->position = Input::get('position');
 		

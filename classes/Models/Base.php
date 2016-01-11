@@ -99,7 +99,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	public function __construct(array $attributes = array()) {
 
-		// Remove any settings the affect JSON conversion (visible / hidden) and
+		// Remove any settings that affect JSON conversion (visible / hidden) and
 		// mass assignment protection (fillable / guarded) while in the admin
 		if (Decoy::handling()) {
 			$this->visible = $this->hidden = $this->fillable = $this->guarded = [];
@@ -276,7 +276,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Make the visibility action
+	 * Make the visibility state action
 	 *
 	 * @param array $data The data passed to a listing view
 	 * @return string
@@ -287,15 +287,15 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		// Check if this model supports editing the visibility
 		if ($many_to_many
 			|| !app('decoy.user')->can('publish', $controller)
-			|| !array_key_exists('visible', $this->attributes)) return;
+			|| !array_key_exists('public', $this->attributes)) return;
 
 		// Create the markup
-		$is_visible = $this->getAttribute('visible');
+		$public = $this->getAttribute('public');
 		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
 				<span class="glyphicon glyphicon-eye-%s"></span>
 			</a>',
-			$is_visible ? 'Make draft' : 'Publish',
-			$is_visible ? 'open' : 'close'
+			$public ? 'Make <b>private</b>' : 'Make <b>public</b>',
+			$public ? 'open' : 'close'
 		);
 
 	}
@@ -405,27 +405,27 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Get visible items
+	 * Get public visible items
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeVisible($query) {
-		return $query->where($this->getTable().'.visible', '1');
+	public function scopePublic($query) {
+		return $query->where($this->getTable().'.public', '1');
 	}
 
 	/**
-	 * Get all visible items by the default order
+	 * Get all public items by the default order
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeOrderedAndVisible($query) {
-		return $query->ordered()->visible();
+	public function scopeOrderedAndPublic($query) {
+		return $query->ordered()->public();
 	}
 
 	/**
-	 * Get all visible items by the default order.  This is a good thing to
+	 * Get all public items by the default order.  This is a good thing to
 	 * subclass to define special listing scopes used ONLY on the frontend.  As
 	 * compared with scopeOrdered().
 	 *
@@ -433,7 +433,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeListing($query) {
-		return $query->orderedAndVisible();
+		return $query->orderedAndPublic();
 	}
 
 	/**

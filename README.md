@@ -630,9 +630,9 @@ Here is an example migration schema:
 Schema::create('articles', function(Blueprint $table) {
 	$table->string('locale');
 	$table->string('locale_group')->index();
-	$table->boolean('visible')->nullable(); // Not required, just an example
-	$table->index(['locale', 'visible']); // You'll want to use locale in indexes
-	$table->index(['visible', 'locale']);
+	$table->boolean('public')->nullable(); // Not required, just an example
+	$table->index(['locale', 'public']); // You'll want to use locale in indexes
+	$table->index(['public', 'locale']);
 });
 ```
 
@@ -668,7 +668,7 @@ Route::get('locale/{locale}', ['as' => 'change locale', function($locale) {
 You can get the current locale by calling `Decoy::locale()` with no argument.  The Decoy Base Model provides a scope for restricting queries by the current locale by chaining `->localize()` onto your query.  For instance:
 
 ```php
-Article::ordered()->visible()->localize()->paginate(10)
+Article::ordered()->public()->localize()->paginate(10)
 ```
 
 
