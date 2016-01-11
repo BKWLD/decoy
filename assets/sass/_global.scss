@@ -1,9 +1,9 @@
 /* apply a natural box layout model to all elements, but allowing components to change */
 html {
-  box-sizing: border-box;
+	box-sizing: border-box;
 }
 *, *:before, *:after {
-  box-sizing: inherit;
+	box-sizing: inherit;
 }
 
 // Allow for things to be 100% height
@@ -19,7 +19,7 @@ body {
 // Make the label font size bigger again
 .label {
 	font-size: 12px;
-	
+
 	// Make the text look a lil more v-centered
 	padding-bottom: .25em;
 }
@@ -107,7 +107,7 @@ h1, h2, h3, h4, h5, h6,
 // An outline button has no fill but has a stroke
 .btn.outline {
 	@include outline-btn($theme-primary-inverse);
-	
+
 	// Make it secondarily colored
 	.legend &, .search &, &.secondary {
 		@include outline-btn($theme-secondary-inverse);

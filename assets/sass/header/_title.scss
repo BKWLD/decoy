@@ -133,12 +133,12 @@
 			}
 		}
 
-		// + New button in header sit in top right 
+		// + New button in header sit in top right
 		.pull-right {
 			top: $main-padding-mobile;
 			bottom: auto;
 			right: -$main-padding + $main-padding/2; // Compensate for padding affecting the title
-			
+
 			// Remove label on new button
 			.new:after {
 				content: '';
