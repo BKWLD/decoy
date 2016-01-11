@@ -18,8 +18,8 @@ define(function (require) {
 	// Static vars
 	var app,
 		dataId = 'data-model-id',
-		visibleIconClass = 'glyphicon-eye-open',
-		hiddenIconClass = 'glyphicon-eye-close';
+		publicIconClass = 'glyphicon-eye-open',
+		privateIconClass = 'glyphicon-eye-close';
 
 	// View
 	var StandardList = Backbone.View.extend({
@@ -75,7 +75,7 @@ define(function (require) {
 				$inputs = $row.find('input'),
 				featured = $inputs.filter('[name=set-featured]').prop('checked'),
 				$visibility = $row.find('.visibility'),
-				visible_state = $visibility.find('.'+visibleIconClass).length > 0,
+				visible_state = $visibility.find('.'+publicIconClass).length > 0,
 				position = $row.data('position'),
 				parent_id = $row.data('parent-id');
 
@@ -90,7 +90,7 @@ define(function (require) {
 
 			// If this item supports visibility, add it to the model
 			if ($visibility.length) {
-				data.visible = visible_state;
+				data.public = visible_state;
 			}
 
 			// If there was a parent_controller, add it to the model so sync
@@ -102,7 +102,7 @@ define(function (require) {
 			// Create the model and store a reference
 			var model = new Backbone.Model(data);
 			model.whitelist = ['position']; // Only sync position
-			if ($visibility.length) model.whitelist.push('visible');
+			if ($visibility.length) model.whitelist.push('public');
 			if (this.parent_controller) model.whitelist.push('parent_controller');
 			if (parent_id) model.whitelist.push('parent_id');
 
@@ -456,7 +456,7 @@ define(function (require) {
 				model = this.collection.get(modelId);
 
 			// Set the visibility status
-			model.set('visible', model.get('visible') ? false : true);
+			model.set('public', model.get('public') ? false : true);
 			model.save();
 
 			// Update the UI
@@ -556,21 +556,21 @@ define(function (require) {
 			});
 
 			// Update the visibilty state
-			if (model && model.has('visible')) {
+			if (model && model.has('public')) {
 				var $row = this.findRows(model.id)[0],
 					$icon = $row.find('.visibility .glyphicon');
 
 				// Toggle icon
-				if (model.get('visible')) {
-					$icon.addClass(visibleIconClass);
-					$icon.removeClass(hiddenIconClass);
-					$icon.attr('title', 'Make draft');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make draft');
+				if (model.get('public')) {
+					$icon.addClass(publicIconClass);
+					$icon.removeClass(privateIconClass);
+					$icon.attr('title', 'Make private');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make <b>private</b>');
 				} else {
-					$icon.removeClass(visibleIconClass);
-					$icon.addClass(hiddenIconClass);
-					$icon.attr('title', 'Publish');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
+					$icon.removeClass(publicIconClass);
+					$icon.addClass(privateIconClass);
+					$icon.attr('title', 'Make public');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make <b>public</b>');
 				}
 			}
 
