@@ -14,7 +14,7 @@ class Zencoder extends EncodingProvider {
 
 	/**
 	 * Default outputs configuration
-	 * 
+	 *
 	 * Regarding internet speeds
 	 * http://gizmodo.com/americas-internet-inequality-a-map-of-whos-got-the-b-1057686215
 	 *
@@ -38,7 +38,7 @@ class Zencoder extends EncodingProvider {
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
-	 * @return void 
+	 * @return void
 	 */
 	public function encode($source) {
 
@@ -46,7 +46,7 @@ class Zencoder extends EncodingProvider {
 		try {
 			$outputs = $this->outputsConfig();
 			$job = $this->sdk()->jobs->create(array(
-				'input' => $source, 
+				'input' => $source,
 				'output' => $this->outputsConfig($outputs),
 			));
 
@@ -65,7 +65,7 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Create the outputs config by merging the `outputs` config of the encode config
 	 * file in with $this->defaults and then massaging into Zencoder's expected forat
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function outputsConfig() {
@@ -85,7 +85,7 @@ class Zencoder extends EncodingProvider {
 	 * @return array
 	 */
 	protected function filterHLS($config) {
-		
+
 		// Do not allow any outputs that have a type of "segmented" or "playlist"
 		if (empty($config['playlist'])) return array_filter($config, function($output) {
 			return !(isset($output['type']) && in_array($output['type'], ['segmented', 'playlist']));
@@ -98,8 +98,8 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Update the config with properties that are common to all outputs
 	 *
-	 * @param array $config 
-	 * @return array 
+	 * @param array $config
+	 * @return array
 	 */
 	protected function addCommonProps($outputs) {
 
@@ -149,7 +149,7 @@ class Zencoder extends EncodingProvider {
 
 	/**
 	 * Massage the outputs from Zencoder into a key-val associative array
-	 * 
+	 *
 	 * @param array $outputs
 	 * @return array
 	 */
@@ -171,7 +171,7 @@ class Zencoder extends EncodingProvider {
 	 * Handle notification requests from the SDK
 	 *
 	 * @param array $input Input::get()
-	 * @return mixed Reponse to the API 
+	 * @return mixed Reponse to the API
 	 */
 	public function handleNotification($input) {
 
@@ -197,23 +197,23 @@ class Zencoder extends EncodingProvider {
 
 		// Update the model
 		switch($state) {
-			
+
 			// Simple passthru of status
 			case 'processing';
 			case 'cancelled';
-				$model->status($job->state); 
+				$model->status($job->state);
 				break;
-			
+
 			// Massage name
 			case 'finished':
-				$model->status('complete'); 
+				$model->status('complete');
 				break;
-			
+
 			// Find error messages on the output
 			case 'failed':
 				$model->status('error', $errors);
 				break;
-			
+
 			// Default
 			default:
 				$model->status('error', 'Unkown Zencoder state: '.$job->state);
@@ -249,7 +249,7 @@ class Zencoder extends EncodingProvider {
 	 * Convert a Services_Zencoder_Object object to an array
 	 *
 	 * @param Services_Zencoder_Object|array $obj
-	 * @return array 
+	 * @return array
 	 */
 	public function zencoderArray($obj) {
 		if (is_array($obj)) return $obj;
