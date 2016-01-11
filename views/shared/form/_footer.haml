@@ -41,8 +41,8 @@
 				%a.btn.btn-default.js-tooltip(title="Public view" href=$uri target="_blank")
 					%span.glyphicon.glyphicon-bookmark
 
-// CLose the form
-!=Former::close()
+-# Close the form
+!= Former::close()
 
 -# Close first column, show sidebar, and then close the row
 -if(isset($sidebar) && !$sidebar->isEmpty())
