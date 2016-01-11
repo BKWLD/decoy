@@ -261,13 +261,13 @@ class Helpers {
 		if (!$is_decoy) {
 			$namespace = ucfirst(Config::get('decoy.core.dir'));
 			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', '', $model);
+
+			// Append App namespace
+			$model = 'App\\'.$model;
 		}
 
 		// Make it singular
 		$model = Str::singular($model);
-
-		// Append new namespace
-		$model = 'App\\'.$model;
 		return $model;
 	}
 
