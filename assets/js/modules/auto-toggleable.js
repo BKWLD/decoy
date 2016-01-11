@@ -1,9 +1,9 @@
 /**
- * Automatically create toggleable sets using data attributes on elements.  Currently, 
+ * Automatically create toggleable sets using data attributes on elements.  Currently,
  * the triggers must be radio buttons, like often used for type selectors.
  *
  * Example usage:
- * 
+ *
  * 	!= Former::radios('type')
  * 		->radios(Bkwld\Library\Laravel\Former::radioArray([
  * 			'internal' => 'Internal',
@@ -16,7 +16,7 @@
  * the toggleable fields.
  */
 define(function (require) {
-  
+
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('lodash')
@@ -27,7 +27,7 @@ define(function (require) {
 	 * Get all the elements with a "toggleable" data element and group them
 	 * by their values.  We'll be producing seperate toggleable sets using each
 	 * unique group
-	 * 
+	 *
 	 * @param  DOMElement el An element with a `data-toggleable` attribute
 	 * @return The value of `data-toggleable` on `el`
 	 */
@@ -37,7 +37,7 @@ define(function (require) {
 	/**
 	 * Loop through all toggleable triggers, now grouped by their data-toggleable
 	 * value
-	 * 
+	 *
 	 * @param  array triggers An array of DOMElements of the triggers
 	 * @param  string key The toggleable data value that groups sets
 	 * @return void
@@ -50,7 +50,7 @@ define(function (require) {
 		 * Specifically, it is passed an array of objects in the format it expects, by
 		 * running the triggers through _.map() and looking up the elements to be toggled
 		 * using the key for the set.
-		 * 
+		 *
 		 * @param  DOMElement trigger A specific on click trigger for the set
 		 * @return object
 		 */
@@ -78,11 +78,9 @@ define(function (require) {
 			};
 		}));
 
-		// Enable the selected item on page load.  Assuming all triggers are the same 
+		// Enable the selected item on page load.  Assuming all triggers are the same
 		// type of element here.
 		if ($triggers.is(':radio')) $triggers.filter(':checked').trigger('click');
 
 	});
-	
-
 });
