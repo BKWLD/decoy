@@ -20,7 +20,7 @@ class Validation {
 	 *
 	 * @param Bkwld\Decoy\Models\Base $model
 	 * @param Illuminate\Validation\Validator $validation
-	 * @return void 
+	 * @return void
 	 */
 	public function onValidating($model, $validation) {
 		$this->allowValidatingOfExistingFiles($validation);
@@ -32,7 +32,7 @@ class Validation {
 	 * for them that can be validated
 	 *
 	 * @param Illuminate\Validation\Validator $validation
-	 * @return void 
+	 * @return void
 	 */
 	public function allowValidatingOfExistingFiles($validation) {
 
@@ -53,7 +53,7 @@ class Validation {
 		$data = $validation->getData();
 		foreach($rules as $attribute => $rules) {
 
-			// Skip if a file was uploaded for this attribtue or if the existing data 
+			// Skip if a file was uploaded for this attribtue or if the existing data
 			// is undefined
 			if (isset($files[$attribute]) || empty($data[$attribute])) continue;
 
