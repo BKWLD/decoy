@@ -476,7 +476,7 @@ class Base extends Controller {
 		else $item->save();
 
 		// Redirect to edit view
-		if (Request::ajax()) return Response::json(array('id' => $item->id));
+		if (Request::ajax()) return Response::json(['id' => $item->id]);
 		else return Redirect::to(DecoyURL::relative('edit', $item->id))
 			->with('success', $this->successMessage($item, 'created') );
 	}
@@ -550,7 +550,7 @@ class Base extends Controller {
 		$item->save();
 
 		// Redirect to the edit view
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::make();
 		else return Redirect::to(URL::current())
 			->with('success', $this->successMessage($item) );
 
@@ -571,7 +571,7 @@ class Base extends Controller {
 		$item->delete();
 
 		// As long as not an ajax request, go back to the parent directory of the referrer
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::make();
 		else return Redirect::to(DecoyURL::relative('index'))
 			->with('success', $this->successMessage($item, 'deleted') );
 	}
@@ -625,7 +625,7 @@ class Base extends Controller {
 	public function autocomplete() {
 
 		// Do nothing if the query is too short
-		if (strlen(Input::get('query')) < 1) return Response::json(null);
+		if (strlen(Input::get('query')) < 1) return Response::make();
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
@@ -650,7 +650,7 @@ class Base extends Controller {
 			if ($this->parentRelation()
 				->titleContains(Input::get('query'), true)
 				->count()) {
-				return Response::json(array('exists' => true));
+				return Response::json(['exists' => true]);
 			}
 
 			// Get the ids of already attached rows through the relationship function.
@@ -709,7 +709,7 @@ class Base extends Controller {
 		$this->fireEvent('attached', [$item, $this->parent]);
 
 		// Return the response
-		return Response::json('ok');
+		return Response::make();
 
 	}
 
@@ -734,7 +734,7 @@ class Base extends Controller {
 
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::make();
 		else return Redirect::back();
 	}
 
