@@ -27,11 +27,6 @@
 		opacity: .7;
 		background: mix(white, $body-color, 70%); // This matches disabled fielset backg
 	}
-
-	// The font we are using, Lato, renders bolds a little taller
-	b, strong {
-		font-size: $font-size-base - 1px;
-	}
 }
 
 // Clear the border on the last item in a fieldset
