@@ -13,18 +13,16 @@ define(function (require) {
 		, LocalizeCompare = require('./localize/compare')
 		, manifest = require('./modules/manifest')
 		, bootstrap = require('bootstrap')
-		, console = require('bkwld/console')
-		, csrf = require('bkwld/csrf')
-		, jqv = require('bkwld/jquery-views')
 	;
 
 	// Modules that add mojo globally
+	require('console-polyfill'); // Console polyfill for older IEs
+	require('jquery-backbone-views'); // Add backbone views plugin for jquery
 	require('./modules/datepicker'); // Init datepickers created with Former::date()
-	require('./modules/timepicker'); // Init datepickers created with Former::time()
+	require('./modules/timepicker'); // Init timepickers created with Former::time()
 	require('./modules/datetimepicker'); // Init datepickers created with Former::datetime()
 	require('./modules/auto-toggleable'); // Scan make for attributes that enable toggling
 	require('./modules/chicken-switch').register(); // Enable chicken switches on delete
-	var wysiwyg = require('./wysiwyg/factory');
 
 	// Private static vars
 	var app = _.extend({}, Backbone.Events),
@@ -39,6 +37,10 @@ define(function (require) {
 
 	// Enable fast click
 	FastClick.attach(document.body);
+
+	// Pass CSRF token with all ajax requests
+	var csrfToken = $('meta[name="csrf-token"]').attr('content');
+	$.ajaxPrefilter(require('jquery-csrf-prefilter')(csrfToken));
 
 	// --------------------------------------------------
 	// Configure Backbone
@@ -119,7 +121,7 @@ define(function (require) {
 		});
 
 		// Turn WYSIWYGs on.
-		wysiwyg.init('textarea.wysiwyg');
+		require('./wysiwyg/factory').init('textarea.wysiwyg');
 
 		// Enable affix globally
 		$('.affixable').views(Affixable);

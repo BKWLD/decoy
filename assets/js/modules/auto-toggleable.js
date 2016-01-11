@@ -20,7 +20,7 @@ define(function (require) {
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('lodash')
-		, toggleable = require('bkwld/toggleable')
+		, toggleable = require('toggleable')
 	;
 
 	/**

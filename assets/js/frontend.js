@@ -6,9 +6,8 @@
 define('frontend', function (require) {
 	
 	// Dependencies
-	var $ = require('jquery')
-		, jqv = require('bkwld/jquery-views')
-	;
+	var $ = require('jquery');
+	require('jquery-backbone-views');
 
 	// Enable elements icons
 	$('[data-decoy-el]').views(require('../packages/bkwld/decoy/js/elements/icon'));
