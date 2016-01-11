@@ -294,7 +294,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
 				<span class="glyphicon glyphicon-eye-%s"></span>
 			</a>',
-			$public ? 'Make <b>private</b>' : 'Make <b>public</b>',
+			$public ? 'Make private' : 'Publish',
 			$public ? 'open' : 'close'
 		);
 
