@@ -72,13 +72,17 @@ class Wildcard {
 
 	/**
 	 * Get the full namespaced controller
-	 * @return string i.e. Admin\ArticlesController or Bkwld\Decoy\Controllers\Admins
+	 *
+	 * @return string i.e. App\Http\Controllers\Admin\People or
+	 *                Bkwld\Decoy\Controllers\Admins
 	 */
 	public function detectController($class_name = null) {
 
 		// Setup the two schemes
 		if (!$class_name) $class_name = $this->detectControllerClass();
-		$app = Str::studly($this->dir).'\\'.$class_name.'Controller';
+		$app = 'App\\Http\\Controllers\\'
+			. ucfirst(Str::studly($this->dir))
+			. '\\'.$class_name;
 		$decoy = 'Bkwld\Decoy\Controllers\\'.$class_name;
 
 		// Find the right one
@@ -90,6 +94,7 @@ class Wildcard {
 	/**
 	 * Detect the controller for a path.  Which is the last non-action
 	 * string in the path
+	 *
 	 * @return string The controller class, i.e. Articles
 	 */
 	public function detectControllerClass($name = null) {

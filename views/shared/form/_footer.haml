@@ -12,19 +12,19 @@
 				%span.glyphicon.glyphicon-file.glyphicon
 				Save
 		-if (app('decoy.user')->can('update', $controller) && app('decoy.user')->can('create', $controller))
-			%button.btn.btn-success.js-tooltip.save-new(name="_save" value="new" type="submit" title="Go to create form after saving") &amp; New
+			%button.btn.btn-success.js-tooltip.save-new(name="_save" value="new" type="submit" title=trans('decoy::form.actions.save_new')) &amp; New
 		-if (app('decoy.user')->can('update', $controller))
-			%button.btn.btn-success.js-tooltip.save-back(name="_save" value="back" type="submit" title="Return to listing after saving") &amp; Back
+			%button.btn.btn-success.js-tooltip.save-back(name="_save" value="back" type="submit" title=trans('decoy::form.actions.save_back')) &amp; Back
 
 	-# Additional buttons
 	-if (isset($actions)) echo $actions
-		
+
 	-# Delete
 	-if (!empty($item) && app('decoy.user')->can('destroy', $controller))
 		%a.btn.btn-danger.delete(href=DecoyURL::relative('destroy', $item->id))
 			%span.glyphicon.glyphicon-trash.glyphicon
 			Delete
-	
+
 	-# Cancel
 	%a.btn.btn-default.back(href=Breadcrumbs::smartBack()) Cancel
 
@@ -41,8 +41,8 @@
 				%a.btn.btn-default.js-tooltip(title="Public view" href=$uri target="_blank")
 					%span.glyphicon.glyphicon-bookmark
 
-// CLose the form
-!=Former::close()
+-# Close the form
+!= Former::close()
 
 -# Close first column, show sidebar, and then close the row
 -if(isset($sidebar) && !$sidebar->isEmpty())

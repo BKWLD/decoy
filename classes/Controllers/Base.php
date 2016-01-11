@@ -13,10 +13,10 @@ use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
-use Config;
 use Croppa;
 use DB;
 use Decoy;
+use DecoyURL;
 use Event;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
@@ -160,64 +160,24 @@ class Base extends Controller {
 	protected $layout;
 
 	/**
-	 * For the most part, this populates the protected properties.  Constructor
-	 * arguments are intentionally avoided so every controller that extends this
-	 * doesn't have to include params in constructor definitions.
+	 * Populate protected properties on init
 	 */
 	public function __construct() {
-		if ($this->injectDependencies()) $this->init();
-	}
-
-	/**
-	 * Inject dependencies.  When used in normal execution, these are pulled automatically
-	 * from the facaded App.  When this is not available, say when being run by unit tests,
-	 * this method takes the dependencies in this array.
-	 *
-	 * Note, not all dependencies are currently injected
-	 *
-	 * @param Config $config
-	 * @param Illuminate\Routing\Router $route
-	 * @param Bkwld\Decoy\Routing\UrlGenerator $url
-	 */
-	private $config;
-	private $route;
-	private $url;
-	public function injectDependencies($dependencies = null) {
-
-		// Set manually passed dependencies
-		if ($dependencies) {
-			$this->config = $dependencies['config'];
-			$this->route = $dependencies['route'];
-			$this->url = $dependencies['url'];
-			return true;
-		}
-
-		// Set dependencies automatically
-		if (class_exists('App')) {
-			$this->config = App::make('config');
-			$this->url = App::make('decoy.url');
-			$request = App::make('request');
-			$this->route = App::make('router');
-			return true;
-		}
-
-		// No dependencies found
-		return false;
+		$this->init();
 	}
 
 	/**
 	 * Populate the controller's protected properties
 	 *
-	 * @param string $class This would only be populated when mocking, ex: Admin\NewsController
+	 * @return void
 	 */
-	private function init($class = null) {
+	private function init() {
 
 		// Set the layout from the Config file
-		$this->layout = View::make($this->config->get('decoy.core.layout'));
+		$this->layout = View::make(config('decoy.core.layout'));
 
 		// Store the controller class for routing
-		if ($class) $this->controller = $class;
-		elseif (empty($this->controller)) $this->controller = get_class($this);
+		$this->controller = get_class($this);
 
 		// Get the controller name
 		$controller_name = $this->controllerName($this->controller);
@@ -235,14 +195,6 @@ class Base extends Controller {
 			if (!class_exists($this->model)) $this->model = NULL;
 		}
 
-		// This allows us to refer to the default model for a controller using the
-		// generic term of "Model"
-		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
-			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) {
-				throw new Exception('Class alias failed');
-			}
-		}
-
 		// If the input contains info on the parent, immediately instantiate
 		// the parent instance.  These are populated by some AJAX calls like
 		// autocomplete on a many to many and the attach method.
@@ -254,18 +206,6 @@ class Base extends Controller {
 
 	}
 
-	/**
-	 * Make a new instance of the base class for the purposes of testing
-	 *
-	 * @param string $path A request path, i.e. 'admin/news/create'
-	 * @param string $verb i.e. GET,POST
-	 */
-	public function simulate($path, $verb = 'GET') {
-		$wildcard = new Wildcard($this->config->get('decoy.core.dir'), $verb, $path);
-		$class = $wildcard->detectController();
-		$this->init($class);
-	}
-
 	//---------------------------------------------------------------------------
 	// Getter/setter
 	//---------------------------------------------------------------------------
@@ -274,25 +214,29 @@ class Base extends Controller {
 	 * Get the controller name only, without the namespace (like Admin\) or
 	 * suffix (like Controller).
 	 *
-	 * @param string $class ex: Admin\NewsController
+	 * @param string $class ex: App\Http\Controllers\Admin\News
 	 * @return string ex: News
 	 */
 	public function controllerName($class = null) {
 		$name = $class ? $class : get_class($this);
-		$name = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\').'|'.preg_quote('Admin\\').')#', '', $name);
-		$name = preg_replace('#Controller$#', '', $name);
+		$name = preg_replace('#^('.preg_quote('Bkwld\Decoy\Controllers\\')
+			.'|'.preg_quote('App\Http\Controllers\Admin\\').')#', '', $name);
 		return $name;
 	}
 
 	/**
-	 * Get the title for the controller based on the controller name.  Basically, it's
-	 * a de-studdly-er
+	 * Get the title for the controller based on the controller name.  Basically,
+	 * it's a de-studdly-er
 	 *
 	 * @param string $controller_name ex: 'Admins' or 'CarLovers'
 	 * @return string ex: 'Admins' or 'Car Lovers'
 	 */
 	public function title($controller_name = null) {
-		if (!$controller_name) return $this->title; // For when this is invoked as a getter for $this->title
+
+		 // For when this is invoked as a getter for $this->title
+		if (!$controller_name) return $this->title;
+
+		// Do the de-studlying
 		preg_match_all('#[a-z]+|[A-Z][a-z]*#', $controller_name, $matches);
 		return implode(" ", $matches[0]);
 	}
@@ -327,6 +271,7 @@ class Base extends Controller {
 	/**
 	 * Get the directory for the detail views.  It's based off the controller name.
 	 * This is basically a conversion to snake case from studyly case
+	 *
 	 * @param string $class ex: 'Admin\NewsController'
 	 * @return string ex: admins.edit or car_lovers.edit
 	 */
@@ -335,8 +280,8 @@ class Base extends Controller {
 		// Remove Decoy from the class
 		$path = str_replace('Bkwld\Decoy\Controllers\\', '', $class, $is_decoy);
 
-		// Remove the Controller suffix app classes may have
-		$path = preg_replace('#Controller$#', '', $path);
+		// Remove the App controller prefix
+		$path = str_replace('App\Http\Controllers\\', '', $path);
 
 		// Break up all the remainder of the class and de-study them (which is what
 		// title() does)
@@ -363,8 +308,8 @@ class Base extends Controller {
 	}
 
 	/**
-	 * Give this controller a parent model instance.  For instance, this makes the index
-	 * view a listing of just the children of the parent.
+	 * Give this controller a parent model instance.  For instance, this makes the
+	 * index view a listing of just the children of the parent.
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $parent
 	 * @return this
@@ -379,24 +324,25 @@ class Base extends Controller {
 		$this->parent_controller = 'Admin\\'.Str::plural($this->parent_model).'Controller';
 
 		// Figure out what the relationship function to the child (this controller's
-		// model) on the parent model .  It will be the plural version of this model's
-		// name.
+		// model) on the parent model .  It will be the plural version of this
+		// model's name.
 		$this->parent_to_self = Str::plural(lcfirst($this->model));
 
-		// If the parent is the same as this controller, assume that it's a many-to-many-to-self
-		// relationship.  Thus, expect a relationship method to be defined on the model
-		// called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
+		// If the parent is the same as this controller, assume that it's a
+		// many-to-many-to-self relationship.  Thus, expect a relationship method to
+		// be defined on the model called "RELATIONSHIPAsChild".  I.e. "postsAsChild"
 		if ($this->parent_controller == $this->controller && method_exists($this->model, $this->parent_to_self.'AsChild')) {
 			$this->self_to_parent = $this->parent_to_self.'AsChild';
 
-		// If the parent relationship is a polymorphic one-many, then the relationship function
-		// on the child model will be the model name plus "able".  For instance, the Link model would
-		// have it's relationship to parent called "linkable".
+		// If the parent relationship is a polymorphic one-many, then the
+		// relationship function on the child model will be the model name plus
+		// "able".  For instance, the Link model would have it's relationship to
+		// parent called "linkable".
 		} elseif (is_a($this->parentRelation(), 'Illuminate\Database\Eloquent\Relations\MorphMany')) {
 			$this->self_to_parent = lcfirst($this->model).'able';
 
-		// Save out to self to parent relationship.  It will be singular if the relationship
-		// is a many to many.
+		// Save out to self to parent relationship.  It will be singular if the
+		// relationship is a many to many.
 		} else {
 			$relationship = lcfirst(get_class($this->parent));
 			$this->self_to_parent = $this->isChildInManyToMany()?
@@ -431,9 +377,9 @@ class Base extends Controller {
 	 */
 	public function getPermissionOptions() {
 		return [
-			'read' => 'View listing and edit views',
-			'create' => 'Create new items',
-			'update' => 'Update existing items',
+			'read'    => 'View listing and edit views',
+			'create'  => 'Create new items',
+			'update'  => 'Update existing items',
 			'publish' => 'Move from "draft" to "published"',
 			'destroy' => ['Delete', 'Delete items permanently'],
 		];
@@ -455,7 +401,9 @@ class Base extends Controller {
 
 		// Open up the query. We can assume that Model has an ordered() function
 		// because it's defined on Decoy's Base_Model.
-		$query = $this->parent ? $this->parentRelation()->ordered() : Model::ordered();
+		$query = $this->parent ?
+			$this->parentRelation()->ordered() :
+			call_user_func([$this->model, 'ordered']);
 
 		// Run the query.
 		$search = new Search();
@@ -488,7 +436,7 @@ class Base extends Controller {
 		$this->overrideViews();
 
 		// Pass validation through
-		Former::withRules(Model::$rules);
+		Former::withRules($this->getRules());
 
 		// Initialize localization
 		with($localize = new Localize)
@@ -519,7 +467,7 @@ class Base extends Controller {
 	public function store() {
 
 		// Create a new object and hydrate
-		$item = new Model();
+		$item = new $this->model;
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 
 		// Validate and save.
@@ -529,7 +477,7 @@ class Base extends Controller {
 
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(array('id' => $item->id));
-		else return Redirect::to($this->url->relative('edit', $item->id))
+		else return Redirect::to(DecoyURL::relative('edit', $item->id))
 			->with('success', $this->successMessage($item, 'created') );
 	}
 
@@ -542,14 +490,14 @@ class Base extends Controller {
 	public function edit($id) {
 
 		// Get the model instance
-		if (!($item = Model::find($id))) return App::abort(404);
+		$item = $this->findOrFail($id);
 
 		// Look for overriden views
 		$this->overrideViews();
 
 		// Populate form
 		Former::populate($item);
-		Former::withRules(Model::$rules);
+		Former::withRules($this->getRules());
 
 		// Initialize localization
 		with($localize = new Localize)
@@ -581,10 +529,7 @@ class Base extends Controller {
 	public function update($id) {
 
 		// Get the model instance
-		if (!($item = Model::find($id))) {
-			if (Request::ajax()) return Response::json(null, 404);
-			else return App::abort(404);
-		}
+		$item = $this->findOrFail($id);
 
 		// Hydrate for drag-and-drop sorting
 		if (Request::ajax()
@@ -620,14 +565,14 @@ class Base extends Controller {
 	public function destroy($id) {
 
 		// Find the item
-		if (!($item = Model::find($id))) return App::abort(404);
+		$item = $this->findOrFail($id);
 
 		// Delete row (this should trigger file attachment deletes as well)
 		$item->delete();
 
 		// As long as not an ajax request, go back to the parent directory of the referrer
 		if (Request::ajax()) return Response::json('ok');
-		else return Redirect::to($this->url->relative('index'))
+		else return Redirect::to(DecoyURL::relative('index'))
 			->with('success', $this->successMessage($item, 'deleted') );
 	}
 
@@ -640,7 +585,8 @@ class Base extends Controller {
 	public function duplicate($id) {
 
 		// Find the source item
-		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
+		$src = $this->findOrFail($id);
+		if (empty($src->cloneable)) return App::abort(404);
 
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();
@@ -663,7 +609,7 @@ class Base extends Controller {
 		}
 
 		// Save the new record and redirect to its edit view
-		return Redirect::to($this->url->relative('edit', $new->getKey()))
+		return Redirect::to(DecoyURL::relative('edit', $new->getKey()))
 			->with('success', $this->successMessage($src, 'duplicated') );
 	}
 
@@ -683,12 +629,12 @@ class Base extends Controller {
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
-		if (!$model = Model::first()) {
+		if (!$model = call_user_func([$this->model, 'first'])) {
 			return Response::json($this->formatAutocompleteResponse([]));
 		}
 
 		// Get data matching the query
-		$query = Model::titleContains(Input::get('query'))
+		$query = call_user_func([$this->model, 'titleContains'], Input::get('query'))
 			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
 
@@ -717,7 +663,7 @@ class Base extends Controller {
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;
 
 				// Add condition to query
-				$model = new Model;
+				$model = new $this->model;
 				$query = $query->whereNotIn($model->getQualifiedKeyName(), $sibling_ids);
 			}
 		}
@@ -755,7 +701,7 @@ class Base extends Controller {
 	public function attach($id) {
 
 		// Require there to be a parent id and a valid id for the resource
-		if (!($item = Model::find($id))) return Response::json(null, 404);
+		$item = $this->findOrFail($id);
 
 		// Do the attach
 		$this->fireEvent('attaching', [$item, $this->parent]);
@@ -779,7 +725,7 @@ class Base extends Controller {
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 
 		// Get the model instances for each id, for the purpose of event firing
-		$items = array_map(function($id) { return Model::find($id); }, $ids);
+		$items = array_map(function($id) { return $this->findOrFail($id); }, $ids);
 
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
 		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
@@ -796,7 +742,26 @@ class Base extends Controller {
 	// Utility methods
 	//---------------------------------------------------------------------------
 
-	//
+	/**
+	 * Helper for getting a model instance by ID
+	 *
+	 * @param scalar $id
+	 * @return Eloquent\Model
+	 */
+	protected function findOrFail($id) {
+		return call_user_func([$this->model, 'findOrFail'], $id);
+	}
+
+	/**
+	 * Get the rules for the model
+	 *
+	 * @return array
+	 */
+	protected function getRules() {
+		$class = $this->model; // PHP won't allow as a one-liner
+		return $class::$rules;
+	}
+
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
 	 *
@@ -898,7 +863,7 @@ class Base extends Controller {
 			// found in Decoy::renderListColumn();
 			$item->columns = array();
 			foreach($this->columns() as $column) {
-				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
+				if (method_exists($row, $column)) $item->columns[$column] = call_user_func([$row, $column]);
 				elseif (isset($row->$column)) {
 					if (is_a($row->$column, 'Carbon\Carbon')) $item->columns[$column] = $row->$column->format(FORMAT_DATE);
 					else $item->columns[$column] = $row->$column;
@@ -977,9 +942,10 @@ class Base extends Controller {
 	/**
 	 * Creates a success message for CRUD commands
 	 *
-	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is being worked on
-	 *                                              or a string containing the title
-	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
+	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is
+	 *                                              being worked on  or a string
+	 *                                              containing the title
+	 * @param  string $verb  Default: 'saved'. Past tense CRUD verb (created, saved, etc)
 	 * @return  string The CRUD success message string
 	 */
 	protected function successMessage($input = '', $verb = 'saved') {
@@ -1000,7 +966,7 @@ class Base extends Controller {
 
 		// Add extra messaging if the creation was begun from the localize UI
 		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-			$message .= " You may begin localizing it for <b>".Config::get('decoy.site.locales')[$input->locale].'</b>.';
+			$message .= " You may begin localizing it for <b>".config('decoy.site.locales')[$input->locale].'</b>.';
 		}
 
 		// Return message

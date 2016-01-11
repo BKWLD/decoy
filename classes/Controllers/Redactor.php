@@ -2,7 +2,6 @@
 
 // Deps
 use Illuminate\Routing\Controller;
-use Request;
 
 /**
  * Actions that support Redactor WYSIWYG integration
@@ -12,12 +11,14 @@ class Redactor extends Controller {
 
 	/**
 	 * Handle uploads of both images and files.  Relying on Decoy to enforce
-	 * auth and csrf checks.
+	 * auth checks.
 	 *
 	 * @return array This array gets auto-converted to JSON by Laravel
 	 */
-	public function upload() {
-		return ['filelink' => app('upchuck.storage')->moveUpload(Request::file('file'))];	
+	public function store() {
+		return response()->json([
+			'filelink' => app('upchuck.storage')->moveUpload(request()->file('file'))
+		]);
 	}
 
 }

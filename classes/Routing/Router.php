@@ -54,6 +54,25 @@ class Router {
 			$this->registerResetPassword();
 		});
 
+		// Routes that require auth but no CSRF
+		Route::group([
+			'prefix' => $this->dir,
+			'middleware' => [
+				\Illuminate\Session\Middleware\StartSession::class,
+				'decoy.auth',
+			],
+		], function() {
+			$this->registerRedactor();
+		});
+
+		// Routes that don't require auth or CSRF
+		Route::group([
+			'prefix' => $this->dir,
+			'middleware' => ['api'],
+		], function() {
+			$this->registgerEncodingHooks();
+		});
+
 		// Protected, admin routes
 		Route::group([
 			'prefix' => $this->dir,
@@ -73,29 +92,6 @@ class Router {
 			$this->registerElements();
 			$this->registerWildcard(); // Must be last
 		});
-
-		// Routes that require auth but no CSRF
-		Route::group([
-			'prefix' => $this->dir,
-			'middleware' => [
-				\App\Http\Middleware\EncryptCookies::class,
-				\Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
-				\Illuminate\Session\Middleware\StartSession::class,
-				\Illuminate\View\Middleware\ShareErrorsFromSession::class,
-				'decoy.auth',
-			],
-		], function() {
-			$this->registerRedactor();
-		});
-
-		// Routes that don't require auth or CSRF
-		Route::group([
-			'prefix' => $this->dir,
-			'middleware' => ['api'],
-		], function() {
-			$this->registgerEncodingHooks();
-		});
-
 	}
 
 	/**
@@ -108,8 +104,6 @@ class Router {
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
 		Route::post('/', ['as' => 'decoy::account@postLogin',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@postLogin']);
-		Route::get('account', ['as' => 'decoy::account',
-			'uses' => 'Bkwld\Decoy\Controllers\Account@index']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
 			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
 	}
@@ -235,7 +229,7 @@ class Router {
 	 * @return void
 	 */
 	public function registerRedactor() {
-		Route::post('redactor/upload', 'Bkwld\Decoy\Controllers\Redactor@upload');
+		Route::post('redactor', 'Bkwld\Decoy\Controllers\Redactor@store');
 	}
 
 	/**

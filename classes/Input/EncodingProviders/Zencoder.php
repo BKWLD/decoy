@@ -14,7 +14,7 @@ class Zencoder extends EncodingProvider {
 
 	/**
 	 * Default outputs configuration
-	 * 
+	 *
 	 * Regarding internet speeds
 	 * http://gizmodo.com/americas-internet-inequality-a-map-of-whos-got-the-b-1057686215
 	 *
@@ -22,91 +22,15 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected $defaults = array(
 
-		// For HLS encoding, inspired by:
-		// https://app.zencoder.com/docs/guides/encoding-settings/http-live-streaming
-		// This is intentionally before the normal HTML5 formats so the eventual
-		// video tag has the playlist source first.
-		'hls-240' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'baseline',
-			'width' => 400,
-			'decoder_bitrate_cap' => 300,
-			'decoder_buffer_size' => 800,
-			'video_bitrate' => 200,
-			'max_frame_rate' => 15,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/0s1n2T0F0800/Image%202014-09-02%20at%2012.27.14%20PM.png', ],
-		],
-		'hls-440' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'baseline',
-			'width' => 400,
-			'decoder_bitrate_cap' => 600,
-			'decoder_buffer_size' => 1600,
-			'video_bitrate' => 400,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/0V1S2z1w1J0k/Image%202014-09-02%20at%2012.27.39%20PM.png', ],
-		],
-		'hls-640' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'main',
-			'width' => 480,
-			'decoder_bitrate_cap' => 900,
-			'decoder_buffer_size' => 2400,
-			'video_bitrate' => 600,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/131Z3e2j0V13/Image%202014-09-02%20at%2012.27.50%20PM.png', ],
-		],
-		'hls-1040' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'main',
-			'width' => 640,
-			'decoder_bitrate_cap' => 1500,	
-			'decoder_buffer_size' => 4000,
-			'video_bitrate' => 1000,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/2E3u1U3C3M1T/Image%202014-09-02%20at%2012.28.00%20PM.png', ],
-		],
-		'hls-1540' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'high',
-			'width' => 960,
-			'decoder_bitrate_cap' => 2250,
-			'decoder_buffer_size' => 6000,
-			'video_bitrate' => 1500,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/11392V0W4421/Image%202014-09-02%20at%2012.28.14%20PM.png', ],
-		],
-		'hls-2040' => [
-			'type' => 'segmented',
-			'format' => 'ts',
-			'h264_profile' => 'high',
-			'width' => 1024,
-			'decoder_bitrate_cap' => 3000,
-			'decoder_buffer_size' => 8000,
-			'video_bitrate' => 2000,
-			// 'watermarks' => [ 'url' => 'http://yo.bkwld.com/image/1W0K1x1d2X2c/Image%202014-09-02%20at%2012.28.23%20PM.png', ],
-		],
-		'playlist' => [
-			'streams' => [
-				[ 'bandwidth' => 2040, 'path' => 'hls-2040.m3u8'],
-				[ 'bandwidth' => 1540, 'path' => 'hls-1540.m3u8'],
-				[ 'bandwidth' => 1040, 'path' => 'hls-1040.m3u8'],
-				[ 'bandwidth' => 640, 'path' => 'hls-640.m3u8'],
-				[ 'bandwidth' => 440, 'path' => 'hls-440.m3u8'],
-				[ 'bandwidth' => 240, 'path' => 'hls-240.m3u8'],
-			],
-			'type' => 'playlist',
-			'format' => 'm3u8',
-		],
-
-		// Normal HTML5 formats.  Webm needs to come first because FF plays it much better
+		// Normal HTML5 formats.  Webm needs to come first because FF plays it much
+		// better. 
 		'webm' => [
 			'format' => 'webm',
 		],
 		'mp4' => [
 			'format' => 'mp4',
 			'h264_profile' => 'main',
+			'tuning' => 'film',
 		],
 	);
 
@@ -114,7 +38,7 @@ class Zencoder extends EncodingProvider {
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
-	 * @return void 
+	 * @return void
 	 */
 	public function encode($source) {
 
@@ -122,7 +46,7 @@ class Zencoder extends EncodingProvider {
 		try {
 			$outputs = $this->outputsConfig();
 			$job = $this->sdk()->jobs->create(array(
-				'input' => $source, 
+				'input' => $source,
 				'output' => $this->outputsConfig($outputs),
 			));
 
@@ -141,7 +65,7 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Create the outputs config by merging the `outputs` config of the encode config
 	 * file in with $this->defaults and then massaging into Zencoder's expected forat
-	 * 
+	 *
 	 * @return array
 	 */
 	protected function outputsConfig() {
@@ -161,7 +85,7 @@ class Zencoder extends EncodingProvider {
 	 * @return array
 	 */
 	protected function filterHLS($config) {
-		
+
 		// Do not allow any outputs that have a type of "segmented" or "playlist"
 		if (empty($config['playlist'])) return array_filter($config, function($output) {
 			return !(isset($output['type']) && in_array($output['type'], ['segmented', 'playlist']));
@@ -174,16 +98,20 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Update the config with properties that are common to all outputs
 	 *
-	 * @param array $config 
-	 * @return array 
+	 * @param array $config
+	 * @return array
 	 */
 	protected function addCommonProps($outputs) {
 
 		// Common settings
 		$common = [
 
-			// Default width (960x540 at 16:9)
-			'width' => 960,
+			// Default size, 1080p
+			'height' => 1080,
+
+			// The quailty to encodeat, 1-5
+			// https://app.zencoder.com/docs/api/encoding/rate-control/quality
+			'quality' => 4,
 
 			// Destination location as a directory
 			'base_url' => $this->destination(),
@@ -221,7 +149,7 @@ class Zencoder extends EncodingProvider {
 
 	/**
 	 * Massage the outputs from Zencoder into a key-val associative array
-	 * 
+	 *
 	 * @param array $outputs
 	 * @return array
 	 */
@@ -243,7 +171,7 @@ class Zencoder extends EncodingProvider {
 	 * Handle notification requests from the SDK
 	 *
 	 * @param array $input Input::get()
-	 * @return mixed Reponse to the API 
+	 * @return mixed Reponse to the API
 	 */
 	public function handleNotification($input) {
 
@@ -269,23 +197,23 @@ class Zencoder extends EncodingProvider {
 
 		// Update the model
 		switch($state) {
-			
+
 			// Simple passthru of status
 			case 'processing';
 			case 'cancelled';
-				$model->status($job->state); 
+				$model->status($job->state);
 				break;
-			
+
 			// Massage name
 			case 'finished':
-				$model->status('complete'); 
+				$model->status('complete');
 				break;
-			
+
 			// Find error messages on the output
 			case 'failed':
 				$model->status('error', $errors);
 				break;
-			
+
 			// Default
 			default:
 				$model->status('error', 'Unkown Zencoder state: '.$job->state);
@@ -321,7 +249,7 @@ class Zencoder extends EncodingProvider {
 	 * Convert a Services_Zencoder_Object object to an array
 	 *
 	 * @param Services_Zencoder_Object|array $obj
-	 * @return array 
+	 * @return array
 	 */
 	public function zencoderArray($obj) {
 		if (is_array($obj)) return $obj;

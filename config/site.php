@@ -71,9 +71,9 @@
 	 * @var array
 	 */
 	'locales' => [
-		'english' => 'English',
-		// 'spanish' => 'Spanish',
-		// 'italian' => 'Italian',
+		'en' => 'English',
+		// 'es' => 'Spanish',
+		// 'fr' => 'French',
 	],
 
 	/**

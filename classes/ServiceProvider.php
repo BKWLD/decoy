@@ -25,7 +25,7 @@ class ServiceProvider extends BaseServiceProvider {
 	public function boot() {
 
 		// Register configs, migrations, etc
-		$this->registerDirs();
+		$this->registerDirectories();
 
 		// Register the routes.
 		$this->app['decoy.router']->registerAll();
@@ -58,7 +58,7 @@ class ServiceProvider extends BaseServiceProvider {
 	 *
 	 * @return void
 	 */
-	public function registerDirs() {
+	public function registerDirectories() {
 
 		// Publish config files
 		$this->publishes([
@@ -72,6 +72,9 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Register views
 		$this->loadViewsFrom(__DIR__.'/../views', 'decoy');
+
+		// Load translations
+		$this->loadTranslationsFrom(__DIR__.'/../lang', 'decoy');
 	}
 
 	/**

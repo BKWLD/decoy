@@ -20,7 +20,7 @@ class Validation {
 	 *
 	 * @param Bkwld\Decoy\Models\Base $model
 	 * @param Illuminate\Validation\Validator $validation
-	 * @return void 
+	 * @return void
 	 */
 	public function onValidating($model, $validation) {
 		$this->allowValidatingOfExistingFiles($validation);
@@ -32,12 +32,12 @@ class Validation {
 	 * for them that can be validated
 	 *
 	 * @param Illuminate\Validation\Validator $validation
-	 * @return void 
+	 * @return void
 	 */
 	public function allowValidatingOfExistingFiles($validation) {
 
 		// Only act on locally hosted files
-		if (Config::get('upchuck::disk.driver') != 'local') return;
+		if (Config::get('upchuck.disk.driver') != 'local') return;
 
 		// Get all the file related rules
 		// https://regex101.com/r/oP4kD2/1
@@ -53,12 +53,12 @@ class Validation {
 		$data = $validation->getData();
 		foreach($rules as $attribute => $rules) {
 
-			// Skip if a file was uploaded for this attribtue or if the existing data 
+			// Skip if a file was uploaded for this attribtue or if the existing data
 			// is undefined
 			if (isset($files[$attribute]) || empty($data[$attribute])) continue;
 
 			// Create the file instance and clear the data instance
-			$data[$attribute] = new File(Config::get('upchuck::disk.path')
+			$data[$attribute] = new File(Config::get('upchuck.disk.path')
 				.'/'.app('upchuck')->path($data[$attribute]));
 		}
 

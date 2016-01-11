@@ -1,6 +1,6 @@
-<?php namespace Admin;
+<?php namespace App\Http\Controllers\Admin;
 
-class {{controller}} extends BaseController {
+class {{controller}} extends Base {
 
 	/*
 	 * Example settings
@@ -28,7 +28,7 @@ class {{controller}} extends BaseController {
 		],
 		'date' => 'date',
 	];
-	
+
 	 *
 	 */
 
