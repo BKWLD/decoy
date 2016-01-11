@@ -7,10 +7,4 @@
 // Reduce padding on autocomplete
 .tt-dropdown-menu .tt-suggestion {
 	padding: 4px 12px;
-
-	// The bold for this font is too big, this makes it look
-	// less jerky
-	.belongs-to & .tt-highlight {
-		font-size: $font-size-base - 1px;
-	}
 }
