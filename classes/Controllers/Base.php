@@ -195,14 +195,6 @@ class Base extends Controller {
 			if (!class_exists($this->model)) $this->model = NULL;
 		}
 
-		// This allows us to refer to the default model for a controller using the
-		// generic term of "Model"
-		if ($this->model && !class_exists('Bkwld\Decoy\Controllers\Model')) {
-			if (!class_alias($this->model, 'Bkwld\Decoy\Controllers\Model')) {
-				throw new Exception('Class alias failed');
-			}
-		}
-
 		// If the input contains info on the parent, immediately instantiate
 		// the parent instance.  These are populated by some AJAX calls like
 		// autocomplete on a many to many and the attach method.
@@ -444,7 +436,7 @@ class Base extends Controller {
 		$this->overrideViews();
 
 		// Pass validation through
-		Former::withRules(Model::$rules);
+		Former::withRules($this->getRules());
 
 		// Initialize localization
 		with($localize = new Localize)
@@ -475,7 +467,7 @@ class Base extends Controller {
 	public function store() {
 
 		// Create a new object and hydrate
-		$item = new Model();
+		$item = new $this->model;
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
 
 		// Validate and save.
@@ -498,14 +490,14 @@ class Base extends Controller {
 	public function edit($id) {
 
 		// Get the model instance
-		if (!($item = Model::find($id))) return App::abort(404);
+		$item = $this->findOrFail($id);
 
 		// Look for overriden views
 		$this->overrideViews();
 
 		// Populate form
 		Former::populate($item);
-		Former::withRules(Model::$rules);
+		Former::withRules($this->getRules());
 
 		// Initialize localization
 		with($localize = new Localize)
@@ -537,10 +529,7 @@ class Base extends Controller {
 	public function update($id) {
 
 		// Get the model instance
-		if (!($item = Model::find($id))) {
-			if (Request::ajax()) return Response::json(null, 404);
-			else return App::abort(404);
-		}
+		$item = $this->findOrFail($id);
 
 		// Hydrate for drag-and-drop sorting
 		if (Request::ajax()
@@ -576,7 +565,7 @@ class Base extends Controller {
 	public function destroy($id) {
 
 		// Find the item
-		if (!($item = Model::find($id))) return App::abort(404);
+		$item = $this->findOrFail($id);
 
 		// Delete row (this should trigger file attachment deletes as well)
 		$item->delete();
@@ -596,7 +585,8 @@ class Base extends Controller {
 	public function duplicate($id) {
 
 		// Find the source item
-		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
+		$src = $this->findOrFail($id);
+		if (empty($src->cloneable)) return App::abort(404);
 
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();
@@ -639,12 +629,12 @@ class Base extends Controller {
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
-		if (!$model = Model::first()) {
+		if (!$model = call_user_func([$this->model, 'first'])) {
 			return Response::json($this->formatAutocompleteResponse([]));
 		}
 
 		// Get data matching the query
-		$query = Model::titleContains(Input::get('query'))
+		$query = call_user_func([$this->model, 'titleContains'], Input::get('query'))
 			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
 
@@ -673,7 +663,7 @@ class Base extends Controller {
 				foreach($siblings as $sibling) $sibling_ids[] = $sibling->id;
 
 				// Add condition to query
-				$model = new Model;
+				$model = new $this->model;
 				$query = $query->whereNotIn($model->getQualifiedKeyName(), $sibling_ids);
 			}
 		}
@@ -711,7 +701,7 @@ class Base extends Controller {
 	public function attach($id) {
 
 		// Require there to be a parent id and a valid id for the resource
-		if (!($item = Model::find($id))) return Response::json(null, 404);
+		$item = $this->findOrFail($id);
 
 		// Do the attach
 		$this->fireEvent('attaching', [$item, $this->parent]);
@@ -735,7 +725,7 @@ class Base extends Controller {
 		$ids = Input::has('ids') ? explode(',', Input::get('ids')) : array($id);
 
 		// Get the model instances for each id, for the purpose of event firing
-		$items = array_map(function($id) { return Model::find($id); }, $ids);
+		$items = array_map(function($id) { return $this->findOrFail($id); }, $ids);
 
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
 		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
@@ -752,7 +742,26 @@ class Base extends Controller {
 	// Utility methods
 	//---------------------------------------------------------------------------
 
-	//
+	/**
+	 * Helper for getting a model instance by ID
+	 *
+	 * @param scalar $id
+	 * @return Eloquent\Model
+	 */
+	protected function findOrFail($id) {
+		return call_user_func([$this->model, 'findOrFail'], $id);
+	}
+
+	/**
+	 * Get the rules for the model
+	 *
+	 * @return array
+	 */
+	protected function getRules() {
+		$class = $this->model; // PHP won't allow as a one-liner
+		return $class::$rules;
+	}
+
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
 	 *
@@ -854,7 +863,7 @@ class Base extends Controller {
 			// found in Decoy::renderListColumn();
 			$item->columns = array();
 			foreach($this->columns() as $column) {
-				if (method_exists($row, $column)) $item->columns[$column] = call_user_func(array($row, $column));
+				if (method_exists($row, $column)) $item->columns[$column] = call_user_func([$row, $column]);
 				elseif (isset($row->$column)) {
 					if (is_a($row->$column, 'Carbon\Carbon')) $item->columns[$column] = $row->$column->format(FORMAT_DATE);
 					else $item->columns[$column] = $row->$column;
@@ -933,9 +942,10 @@ class Base extends Controller {
 	/**
 	 * Creates a success message for CRUD commands
 	 *
-	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is being worked on
-	 *                                              or a string containing the title
-	 * @param  string $verb  (Default is 'saved') Past tense CRUD verb (created, saved, etc)
+	 * @param  Bkwld\Decoy\Model\Base|string $title The model instance that is
+	 *                                              being worked on  or a string
+	 *                                              containing the title
+	 * @param  string $verb  Default: 'saved'. Past tense CRUD verb (created, saved, etc)
 	 * @return  string The CRUD success message string
 	 */
 	protected function successMessage($input = '', $verb = 'saved') {
