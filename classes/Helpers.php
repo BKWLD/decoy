@@ -257,17 +257,16 @@ class Helpers {
 			$controller,
 			$is_decoy);
 
-		// Assume that non-decoy models want the leading namespace removed
+		// Replace non-decoy controller's with the standard model namespace
 		if (!$is_decoy) {
 			$namespace = ucfirst(Config::get('decoy.core.dir'));
 			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', '', $model);
-
-			// Append App namespace
 			$model = 'App\\'.$model;
 		}
 
 		// Make it singular
-		$model = Str::singular($model);
+		$offset = strrpos($model, '\\') + 1;
+		$model = substr($model, 0, $offset).Str::singular(substr($model, $offset));
 		return $model;
 	}
 
