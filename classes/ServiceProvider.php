@@ -272,11 +272,11 @@ class ServiceProvider extends BaseServiceProvider {
 	private function registerPackages() {
 
 		// Form field generation
-		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
+		AliasLoader::getInstance()->alias('Former', \Former\Facades\Former::class);
 		$this->app->register('Former\FormerServiceProvider');
 
 		// Image resizing
-		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
+		AliasLoader::getInstance()->alias('Croppa', \Bkwld\Croppa\Facade::class);
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 
 		// PHP utils
@@ -286,7 +286,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
 
 		// BrowserDetect
-		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
+		AliasLoader::getInstance()->alias('Agent', \Jenssegers\Agent\Facades\Agent::class);
 		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
 
 		// File uploading
@@ -298,6 +298,9 @@ class ServiceProvider extends BaseServiceProvider {
 		// Support for cloning models
 		$this->app->register('Bkwld\Cloner\ServiceProvider');
 
+		// Probably already registered by the App, but just in case
+		AliasLoader::getInstance()->alias('Camo', \Bkwld\Camo\Facade::class);
+		$this->app->register('Bkwld\Camo\ServiceProvider');
 	}
 
 	/**
