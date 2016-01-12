@@ -1,4 +1,4 @@
-<?php namespace Bkwld\Decoy\Routing;
+<?php namespace Bkwld\Decoy\Layout;
 
 // Imports
 use Bkwld\Decoy\Routing\Wildcard;

@@ -88,7 +88,6 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
 		// Load all the composers
-		require_once(__DIR__.'/../composers/layouts._nav.php');
 		require_once(__DIR__.'/../composers/shared.list._search.php');
 
 		// Register global and named middlewares
@@ -260,7 +259,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Build the Breadcrumbs store
 		$this->app->singleton('decoy.breadcrumbs', function($app) {
-			$breadcrumbs = new Routing\Breadcrumbs();
+			$breadcrumbs = new Layout\Breadcrumbs();
 			$breadcrumbs->set($breadcrumbs->parseURL());
 			return $breadcrumbs;
 		});
