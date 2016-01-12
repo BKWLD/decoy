@@ -23,7 +23,7 @@
 
 		-# Header
 		!= view('decoy::layouts._header', $__data)
-		!= empty($breadcrumbs) ? view('decoy::layouts._breadcrumbs', $__data) : $breadcrumbs
+		!= view('decoy::layouts._breadcrumbs', $__data)
 		!= view('decoy::layouts._notifications', $__data)
 
 		-# The main page content

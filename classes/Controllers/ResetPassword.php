@@ -28,10 +28,10 @@ class ResetPassword extends Base {
 		));
 
 		// Set the breadcrumbs
-		$this->breadcrumbs(array(
+		app('decoy.breadcrumbs')->set([
 			route('decoy::account@login') => 'Login',
 			url()->current() => 'Forgot Password',
-		));
+		]);
 
 		// Show the page
 		$this->title = 'Forgot Password';
@@ -72,11 +72,11 @@ class ResetPassword extends Base {
 			->firstOrFail();
 
 		// Set the breadcrumbs
-		$this->breadcrumbs(array(
+		app('decoy.breadcrumbs')->set([
 			route('decoy::account@login') => 'Login',
 			route('decoy::account@forgot') => 'Forgot Password',
 			url()->current() => 'Reset Password',
-		));
+		]);
 
 		// Show the page
 		$this->title = 'Reset Password';

@@ -1,8 +1,8 @@
-<?// Populated in part by controllers and a composer?>
-
 <?
-// If no breacrumbs, show nothing
-if (empty($breadcrumbs)) return;
+
+$back = app('decoy.breadcrumbs')->back();
+$breadcrumbs = app('decoy.breadcrumbs')->get();
+$breadcrumb_count = count($breadcrumbs);
 ?>
 
 <div class="breadcrumbs affixable" data-top="0">
@@ -10,7 +10,7 @@ if (empty($breadcrumbs)) return;
 	<div class="inner">
 
 		<?// Back button is first so floating works correctly ?>
-		<? if (!empty($back) && !str_is('decoy::account*', Route::currentRouteName())): ?>
+		<? if ($back && !Route::is('decoy::account@forgot', 'decoy::account@reset')): ?>
 			<a href="<?=$back?>" class="back">
 				<span class="glyphicon glyphicon-arrow-left"></span>
 				Back to listing

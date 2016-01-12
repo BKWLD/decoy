@@ -88,7 +88,6 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
 		// Load all the composers
-		require_once(__DIR__.'/../composers/layouts._breadcrumbs.php');
 		require_once(__DIR__.'/../composers/layouts._nav.php');
 		require_once(__DIR__.'/../composers/shared.list._search.php');
 
@@ -259,6 +258,13 @@ class ServiceProvider extends BaseServiceProvider {
 			return with(new Collections\Elements)->setModel(Models\Element::class);
 		});
 
+		// Build the Breadcrumbs store
+		$this->app->singleton('decoy.breadcrumbs', function($app) {
+			$breadcrumbs = new Routing\Breadcrumbs();
+			$breadcrumbs->set($breadcrumbs->parseURL());
+			return $breadcrumbs;
+		});
+
 		// Register Decoy's custom handling of some exception
 		$this->app->singleton(ExceptionHandler::class, Exceptions\Handler::class);
 
@@ -312,10 +318,11 @@ class ServiceProvider extends BaseServiceProvider {
 		return array(
 			'decoy',
 			'decoy.acl_fail',
-			'decoy.user',
+			'decoy.breadcrumbs',
 			'decoy.elements',
 			'decoy.router',
 			'decoy.url',
+			'decoy.user',
 			'decoy.wildcard',
 		);
 	}

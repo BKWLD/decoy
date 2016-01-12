@@ -418,9 +418,6 @@ class Base extends Controller {
 			$this->layout->with($this->autocompleteViewVars());
 		}
 
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
-
 		// Render view
 		return $this->populateView($listing);
 	}
@@ -446,9 +443,6 @@ class Base extends Controller {
 		// Make the sidebar
 		$sidebar = new Sidebar;
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
-
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
 		// Render view
 		return $this->populateView($this->show_view, [
@@ -507,9 +501,6 @@ class Base extends Controller {
 		// Make the sidebar
 		$sidebar = new Sidebar($item);
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
-
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
 		// Render view
 		return $this->populateView($this->show_view, [
@@ -811,17 +802,6 @@ class Base extends Controller {
 
 		// Fire completion event
 		$this->fireEvent('validated', array($model, $validation));
-	}
-
-	/**
-	 * Take an array of key / value (url/label) pairs and pass it where
-	 * it needs to go to make the breadcrumbs
-	 * @param $array links
-	 */
-	protected function breadcrumbs($links) {
-		$this->layout->nest('breadcrumbs', 'decoy::layouts._breadcrumbs', array(
-			'breadcrumbs' => $links
-		));
 	}
 
 	/**

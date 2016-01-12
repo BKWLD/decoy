@@ -33,10 +33,9 @@ class Helpers {
 	 */
 	public function title() {
 
-		// If no title has been set, try to figure it out based on
-		// default breadcrumbs
+		// If no title has been set, try to figure it out based on breadcrumbs
 		$title = View::yieldContent('title');
-		if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
+		if (empty($title)) $title = app('decoy.breadcrumbs')->title();
 
 		// Set the title
 		$site = $this->site();
