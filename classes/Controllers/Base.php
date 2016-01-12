@@ -192,7 +192,7 @@ class Base extends Controller {
 		// Try to suss out the model by singularizing the controller
 		if (empty($this->model)) {
 			$this->model = $this->model($this->controller);
-			if (!class_exists($this->model)) $this->model = NULL;
+			if (!class_exists($this->model)) $this->model = null;
 		}
 
 		// If the input contains info on the parent, immediately instantiate

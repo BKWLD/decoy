@@ -21,7 +21,8 @@ use Input;
 use Log;
 use Request;
 use Session;
-use Illuminate\Support\Str;
+use Str;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use URL;
 
 abstract class Base extends Eloquent implements SluggableInterface {
@@ -405,7 +406,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Get public visible items
+	 * Get publically visible items
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
@@ -489,16 +490,37 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 *
 	 * @param string $string
 	 * @return Illuminate\Database\Eloquent\Model
+	 *
 	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
-		if ($item = static::findBySlug($slug)) return $item;
-		throw (new ModelNotFoundException)->setModel(get_called_class());
+
+		// Model not found, throw exception
+		if (!$item = static::findBySlug($slug)) {
+			throw (new ModelNotFoundException)->setModel(get_called_class());
+		}
+
+		// Return the model if visible
+		$item->enforceVisibility();
+		return $item;
 	}
 
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
+
+	/**
+	 * Throw exception if not public and no admin session
+	 *
+	 * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+	 */
+	public function enforceVisibility() {
+		if (array_key_exists('public', $this->getAttributes())
+			&& !$this->getAttribute('public')
+			&& !app('decoy.user')) {
+				throw new AccessDeniedHttpException;
+		}
+	}
 
 	/**
 	 * Deduce the source for the title of the model

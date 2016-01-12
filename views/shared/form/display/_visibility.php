@@ -1,7 +1,7 @@
 <?
 // Make help
 $help = (!empty($item) && $uri = $item->getUriAttribute()) ?
-	'If "Private", this content will be accessible via it\'s <a href="'.$uri.'">URI</a> but not in lists.' :
+	'If "Private", this content will be accessible to logged in Admins via it\'s <a href="'.$uri.'">URI</a> but will not show in lists.' :
 	'If "Private", this content will be completely inaccessible.';
 
 // Check if they have permission
