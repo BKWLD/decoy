@@ -21,7 +21,7 @@ use Input;
 use Log;
 use Request;
 use Session;
-use Str;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use URL;
 
