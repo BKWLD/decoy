@@ -87,9 +87,6 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
 
-		// Load all the composers
-		require_once(__DIR__.'/../composers/shared.list._search.php');
-
 		// Register global and named middlewares
 		$this->registerMiddlewares();
 
