@@ -168,8 +168,8 @@ class Change extends Base {
 	 * @return string HTML
 	 */
 	public function getModelAttribute() {
-		$class = call_user_func($this->model.'::adminControllerClass');
-		
+		$class = Decoy::controllerForModel($this->model);
+
 		// There is not a controller for the model
 		if (!$class) return sprintf('<b><a href="%s">%s</a></b>',
 			$this->filterUrl(['model' => $this->model]),

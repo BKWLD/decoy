@@ -246,7 +246,7 @@ class Helpers {
 	 * Get the model class string from a controller class string
 	 *
 	 * @param  string $controller ex: "App\Http\Controllers\Admin\People"
-	 * @return string ex: "Slide"
+	 * @return string ex: "App\Person"
 	 */
 	public function modelForController($controller) {
 
@@ -259,14 +259,37 @@ class Helpers {
 		// Replace non-decoy controller's with the standard model namespace
 		if (!$is_decoy) {
 			$namespace = ucfirst(Config::get('decoy.core.dir'));
-			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', '', $model);
-			$model = 'App\\'.$model;
+			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', 'App\\', $model);
 		}
 
 		// Make it singular
 		$offset = strrpos($model, '\\') + 1;
-		$model = substr($model, 0, $offset).Str::singular(substr($model, $offset));
-		return $model;
+		return substr($model, 0, $offset).Str::singular(substr($model, $offset));
+	}
+
+	/**
+	 * Get the controller class string from a model class string
+	 *
+	 * @param  string $controller ex: "App\Person"
+	 * @return string ex: "App\Http\Controllers\Admin\People"
+	 */
+	public function controllerForModel($model) {
+
+		// Swap out the namespace if decoy
+		$controller = str_replace('Bkwld\Decoy\Models',
+			'Bkwld\Decoy\Controllers',
+			$model,
+			$is_decoy);
+
+		// Replace non-decoy controller's with the standard model namespace
+		if (!$is_decoy) {
+			$namespace = ucfirst(Config::get('decoy.core.dir'));
+			$controller = str_replace('App\\', 'App\Http\Controllers\\'.$namespace.'\\', $controller);
+		}
+
+		// Make it plural
+		$offset = strrpos($controller, '\\') + 1;
+		return substr($controller, 0, $offset).Str::plural(substr($controller, $offset));
 	}
 
 }
