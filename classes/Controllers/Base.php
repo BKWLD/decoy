@@ -541,7 +541,7 @@ class Base extends Controller {
 		$item->save();
 
 		// Redirect to the edit view
-		if (Request::ajax()) return Response::make();
+		if (Request::ajax()) return Response::json();
 		else return Redirect::to(URL::current())
 			->with('success', $this->successMessage($item) );
 
@@ -562,7 +562,7 @@ class Base extends Controller {
 		$item->delete();
 
 		// As long as not an ajax request, go back to the parent directory of the referrer
-		if (Request::ajax()) return Response::make();
+		if (Request::ajax()) return Response::json();
 		else return Redirect::to(DecoyURL::relative('index'))
 			->with('success', $this->successMessage($item, 'deleted') );
 	}
@@ -616,7 +616,7 @@ class Base extends Controller {
 	public function autocomplete() {
 
 		// Do nothing if the query is too short
-		if (strlen(Input::get('query')) < 1) return Response::make();
+		if (strlen(Input::get('query')) < 1) return Response::json();
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
@@ -700,7 +700,7 @@ class Base extends Controller {
 		$this->fireEvent('attached', [$item, $this->parent]);
 
 		// Return the response
-		return Response::make();
+		return Response::json();
 
 	}
 
@@ -725,7 +725,7 @@ class Base extends Controller {
 
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
-		if (Request::ajax()) return Response::make();
+		if (Request::ajax()) return Response::json();
 		else return Redirect::back();
 	}
 
