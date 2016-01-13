@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use App\Providers\RouteServiceProvider;
 use Bkwld\Decoy\Observers\NotFound;
 use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
@@ -28,7 +29,9 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->registerDirectories();
 
 		// Register the routes.
-		$this->app['decoy.router']->registerAll();
+		if (!$this->app->routesAreCached()) {
+			$this->app['decoy.router']->registerAll();
+		}
 
 		// Configure Decoy auth setup
 		$this->bootAuth();
@@ -186,6 +189,8 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	protected function registerMiddlewares() {
+
+		// Register middleware individually
 		foreach([
 			'decoy.auth'          => Middleware\Auth::class,
 			'decoy.edit-redirect' => Middleware\EditRedirect::class,
@@ -193,6 +198,32 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.headers'       => Middleware\Headers::class,
 			'decoy.save-redirect' => Middleware\SaveRedirect::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
+
+		// This group is used by public decoy routes
+		$this->app['router']->middlewareGroup('decoy.public', [
+			'web',
+			'decoy.headers',
+		]);
+
+		// The is the starndard auth protected group
+		$this->app['router']->middlewareGroup('decoy.protected', [
+			'web',
+			'decoy.auth',
+			'decoy.save-redirect',
+			'decoy.edit-redirect',
+			'decoy.headers',
+		]);
+
+		// Require a logged in admin session but no CSRF token
+		$this->app['router']->middlewareGroup('decoy.protected_endpoint', [
+			\Illuminate\Session\Middleware\StartSession::class,
+			'decoy.auth',
+		]);
+
+		// An open endpoint, like used by Zendcoder
+		$this->app['router']->middlewareGroup('decoy.endpoint', [
+			'api'
+		]);
 	}
 
 	/**
