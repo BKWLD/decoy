@@ -49,9 +49,6 @@
 		"anahkiasen/html-object": "1.4.1"
 	},
 	"autoload": {
-		"classmap": [
-			"migrations"
-		],
 		"psr-4": {
 			"Bkwld\\Decoy\\": "classes/"
 		}
