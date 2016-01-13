@@ -9,6 +9,7 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone');
 	require('bootstrap-datepicker');
+	require('bootstrap-datepicker/dist/css/bootstrap-datepicker3.css')
 
 	// Define backbone view
 	var DatePicker = Backbone.View.extend({
