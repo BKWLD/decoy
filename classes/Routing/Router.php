@@ -45,10 +45,7 @@ class Router {
 		// Public routes
 		Route::group([
 			'prefix' => $this->dir,
-			'middleware' => [
-				'web', // Defined in the Kernel
-				'decoy.headers',
-			],
+			'middleware' => 'decoy.public',
 		], function() {
 			$this->registerLogin();
 			$this->registerResetPassword();
@@ -57,10 +54,7 @@ class Router {
 		// Routes that require auth but no CSRF
 		Route::group([
 			'prefix' => $this->dir,
-			'middleware' => [
-				\Illuminate\Session\Middleware\StartSession::class,
-				'decoy.auth',
-			],
+			'middleware' => 'decoy.protected_endpoint',
 		], function() {
 			$this->registerRedactor();
 		});
@@ -68,7 +62,7 @@ class Router {
 		// Routes that don't require auth or CSRF
 		Route::group([
 			'prefix' => $this->dir,
-			'middleware' => ['api'],
+			'middleware' => 'decoy.endpoint',
 		], function() {
 			$this->registgerEncodingHooks();
 		});
@@ -76,14 +70,7 @@ class Router {
 		// Protected, admin routes
 		Route::group([
 			'prefix' => $this->dir,
-			'middleware' => [
-				'web', // Defined in the Kernel
-				'decoy.auth',
-				'decoy.save-redirect',
-				'decoy.edit-redirect',
-				'decoy.headers',
-
-			],
+			'middleware' => 'decoy.protected',
 		], function() {
 			$this->registerAdmins();
 			$this->registerCommands();

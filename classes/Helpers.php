@@ -33,10 +33,9 @@ class Helpers {
 	 */
 	public function title() {
 
-		// If no title has been set, try to figure it out based on
-		// default breadcrumbs
+		// If no title has been set, try to figure it out based on breadcrumbs
 		$title = View::yieldContent('title');
-		if (empty($title)) $title = Breadcrumbs::title(Breadcrumbs::defaults());
+		if (empty($title)) $title = app('decoy.breadcrumbs')->title();
 
 		// Set the title
 		$site = $this->site();
@@ -247,7 +246,7 @@ class Helpers {
 	 * Get the model class string from a controller class string
 	 *
 	 * @param  string $controller ex: "App\Http\Controllers\Admin\People"
-	 * @return string ex: "Slide"
+	 * @return string ex: "App\Person"
 	 */
 	public function modelForController($controller) {
 
@@ -257,18 +256,40 @@ class Helpers {
 			$controller,
 			$is_decoy);
 
-		// Assume that non-decoy models want the leading namespace removed
+		// Replace non-decoy controller's with the standard model namespace
 		if (!$is_decoy) {
 			$namespace = ucfirst(Config::get('decoy.core.dir'));
-			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', '', $model);
+			$model = str_replace('App\Http\Controllers\\'.$namespace.'\\', 'App\\', $model);
 		}
 
 		// Make it singular
-		$model = Str::singular($model);
+		$offset = strrpos($model, '\\') + 1;
+		return substr($model, 0, $offset).Str::singular(substr($model, $offset));
+	}
 
-		// Append new namespace
-		$model = 'App\\'.$model;
-		return $model;
+	/**
+	 * Get the controller class string from a model class string
+	 *
+	 * @param  string $controller ex: "App\Person"
+	 * @return string ex: "App\Http\Controllers\Admin\People"
+	 */
+	public function controllerForModel($model) {
+
+		// Swap out the namespace if decoy
+		$controller = str_replace('Bkwld\Decoy\Models',
+			'Bkwld\Decoy\Controllers',
+			$model,
+			$is_decoy);
+
+		// Replace non-decoy controller's with the standard model namespace
+		if (!$is_decoy) {
+			$namespace = ucfirst(Config::get('decoy.core.dir'));
+			$controller = str_replace('App\\', 'App\Http\Controllers\\'.$namespace.'\\', $controller);
+		}
+
+		// Make it plural
+		$offset = strrpos($controller, '\\') + 1;
+		return substr($controller, 0, $offset).Str::plural(substr($controller, $offset));
 	}
 
 }

@@ -25,4 +25,9 @@
 	// Allow regex in redirect rules
 	'allow_regex_in_redirects' => false,
 
+	// Register routes automatically in ServiceProvider->boot().  You might set
+	// this to false if the App needed to register some /admin routes and didn't
+	// want them to get trampled by the Decoy wildcard capture.
+	'register_routes' => true,
+
 );

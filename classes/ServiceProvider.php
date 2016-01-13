@@ -2,6 +2,7 @@
 
 // Dependencies
 use App;
+use App\Providers\RouteServiceProvider;
 use Bkwld\Decoy\Observers\NotFound;
 use Bkwld\Decoy\Observers\Validation;
 use Bkwld\Decoy\Fields\Former\MethodDispatcher;
@@ -28,7 +29,10 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->registerDirectories();
 
 		// Register the routes.
-		$this->app['decoy.router']->registerAll();
+		if (config('decoy.core.register_routes')
+			&& !$this->app->routesAreCached()) {
+			$this->app['decoy.router']->registerAll();
+		}
 
 		// Configure Decoy auth setup
 		$this->bootAuth();
@@ -86,11 +90,6 @@ class ServiceProvider extends BaseServiceProvider {
 		if (!defined('FORMAT_DATE'))     define('FORMAT_DATE', 'm/d/y');
 		if (!defined('FORMAT_DATETIME')) define('FORMAT_DATETIME', 'm/d/y g:i a T');
 		if (!defined('FORMAT_TIME'))     define('FORMAT_TIME', 'g:i a T');
-
-		// Load all the composers
-		require_once(__DIR__.'/../composers/layouts._breadcrumbs.php');
-		require_once(__DIR__.'/../composers/layouts._nav.php');
-		require_once(__DIR__.'/../composers/shared.list._search.php');
 
 		// Register global and named middlewares
 		$this->registerMiddlewares();
@@ -191,6 +190,8 @@ class ServiceProvider extends BaseServiceProvider {
 	 * @return void
 	 */
 	protected function registerMiddlewares() {
+
+		// Register middleware individually
 		foreach([
 			'decoy.auth'          => Middleware\Auth::class,
 			'decoy.edit-redirect' => Middleware\EditRedirect::class,
@@ -198,6 +199,32 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.headers'       => Middleware\Headers::class,
 			'decoy.save-redirect' => Middleware\SaveRedirect::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
+
+		// This group is used by public decoy routes
+		$this->app['router']->middlewareGroup('decoy.public', [
+			'web',
+			'decoy.headers',
+		]);
+
+		// The is the starndard auth protected group
+		$this->app['router']->middlewareGroup('decoy.protected', [
+			'web',
+			'decoy.auth',
+			'decoy.save-redirect',
+			'decoy.edit-redirect',
+			'decoy.headers',
+		]);
+
+		// Require a logged in admin session but no CSRF token
+		$this->app['router']->middlewareGroup('decoy.protected_endpoint', [
+			\Illuminate\Session\Middleware\StartSession::class,
+			'decoy.auth',
+		]);
+
+		// An open endpoint, like used by Zendcoder
+		$this->app['router']->middlewareGroup('decoy.endpoint', [
+			'api'
+		]);
 	}
 
 	/**
@@ -259,6 +286,13 @@ class ServiceProvider extends BaseServiceProvider {
 			return with(new Collections\Elements)->setModel(Models\Element::class);
 		});
 
+		// Build the Breadcrumbs store
+		$this->app->singleton('decoy.breadcrumbs', function($app) {
+			$breadcrumbs = new Layout\Breadcrumbs();
+			$breadcrumbs->set($breadcrumbs->parseURL());
+			return $breadcrumbs;
+		});
+
 		// Register Decoy's custom handling of some exception
 		$this->app->singleton(ExceptionHandler::class, Exceptions\Handler::class);
 
@@ -272,11 +306,11 @@ class ServiceProvider extends BaseServiceProvider {
 	private function registerPackages() {
 
 		// Form field generation
-		AliasLoader::getInstance()->alias('Former', 'Former\Facades\Former');
+		AliasLoader::getInstance()->alias('Former', \Former\Facades\Former::class);
 		$this->app->register('Former\FormerServiceProvider');
 
 		// Image resizing
-		AliasLoader::getInstance()->alias('Croppa', 'Bkwld\Croppa\Facade');
+		AliasLoader::getInstance()->alias('Croppa', \Bkwld\Croppa\Facade::class);
 		$this->app->register('Bkwld\Croppa\ServiceProvider');
 
 		// PHP utils
@@ -286,7 +320,7 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->app->register('Bkwld\LaravelHaml\ServiceProvider');
 
 		// BrowserDetect
-		AliasLoader::getInstance()->alias('Agent', 'Jenssegers\Agent\Facades\Agent');
+		AliasLoader::getInstance()->alias('Agent', \Jenssegers\Agent\Facades\Agent::class);
 		$this->app->register('Jenssegers\Agent\AgentServiceProvider');
 
 		// File uploading
@@ -298,6 +332,9 @@ class ServiceProvider extends BaseServiceProvider {
 		// Support for cloning models
 		$this->app->register('Bkwld\Cloner\ServiceProvider');
 
+		// Probably already registered by the App, but just in case
+		AliasLoader::getInstance()->alias('Camo', \Bkwld\Camo\Facade::class);
+		$this->app->register('Bkwld\Camo\ServiceProvider');
 	}
 
 	/**
@@ -309,10 +346,11 @@ class ServiceProvider extends BaseServiceProvider {
 		return array(
 			'decoy',
 			'decoy.acl_fail',
-			'decoy.user',
+			'decoy.breadcrumbs',
 			'decoy.elements',
 			'decoy.router',
 			'decoy.url',
+			'decoy.user',
 			'decoy.wildcard',
 		);
 	}

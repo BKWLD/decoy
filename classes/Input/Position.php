@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  * Handle drag-and-drop position updates
  */
 class Position {
-	
+
 	/**
 	 * Constructor
 	 * @param Eloquent $item A model isntance
@@ -25,7 +25,7 @@ class Position {
 			}
 		}
 	}
-	
+
 	/**
 	 * Check if we have all dependencies for an position change
 	 */
@@ -35,7 +35,7 @@ class Position {
 		else if (!empty($this->pivot) && isset($this->pivot->position)) return true;
 		return false;
 	}
-	
+
 	/**
 	 * Set new position
 	 */
@@ -48,15 +48,15 @@ class Position {
 
 		// Write position value to the item
 		} else if (isset($this->item->position)) {
-			
+
 			// Visiblity may be set at the same time and would be ignored otherwise
-			if (Input::has('visible')) $this->item->visible = Input::get('visible');
-			
+			if (Input::has('public')) $this->item->public = Input::get('public');
+
 			// Do position
 			$this->item->position = Input::get('position');
-		
+
 		}
-		
+
 	}
-	
+
 }

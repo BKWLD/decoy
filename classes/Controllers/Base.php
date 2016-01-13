@@ -192,7 +192,7 @@ class Base extends Controller {
 		// Try to suss out the model by singularizing the controller
 		if (empty($this->model)) {
 			$this->model = $this->model($this->controller);
-			if (!class_exists($this->model)) $this->model = NULL;
+			if (!class_exists($this->model)) $this->model = null;
 		}
 
 		// If the input contains info on the parent, immediately instantiate
@@ -418,9 +418,6 @@ class Base extends Controller {
 			$this->layout->with($this->autocompleteViewVars());
 		}
 
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
-
 		// Render view
 		return $this->populateView($listing);
 	}
@@ -446,9 +443,6 @@ class Base extends Controller {
 		// Make the sidebar
 		$sidebar = new Sidebar;
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
-
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
 		// Render view
 		return $this->populateView($this->show_view, [
@@ -476,7 +470,7 @@ class Base extends Controller {
 		else $item->save();
 
 		// Redirect to edit view
-		if (Request::ajax()) return Response::json(array('id' => $item->id));
+		if (Request::ajax()) return Response::json(['id' => $item->id]);
 		else return Redirect::to(DecoyURL::relative('edit', $item->id))
 			->with('success', $this->successMessage($item, 'created') );
 	}
@@ -507,9 +501,6 @@ class Base extends Controller {
 		// Make the sidebar
 		$sidebar = new Sidebar($item);
 		if (!$localize->hidden()) $sidebar->addToEnd($localize);
-
-		// Inform the breadcrumbs
-		$this->breadcrumbs(Breadcrumbs::fromUrl());
 
 		// Render view
 		return $this->populateView($this->show_view, [
@@ -550,7 +541,7 @@ class Base extends Controller {
 		$item->save();
 
 		// Redirect to the edit view
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::json();
 		else return Redirect::to(URL::current())
 			->with('success', $this->successMessage($item) );
 
@@ -571,7 +562,7 @@ class Base extends Controller {
 		$item->delete();
 
 		// As long as not an ajax request, go back to the parent directory of the referrer
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::json();
 		else return Redirect::to(DecoyURL::relative('index'))
 			->with('success', $this->successMessage($item, 'deleted') );
 	}
@@ -625,7 +616,7 @@ class Base extends Controller {
 	public function autocomplete() {
 
 		// Do nothing if the query is too short
-		if (strlen(Input::get('query')) < 1) return Response::json(null);
+		if (strlen(Input::get('query')) < 1) return Response::json();
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
@@ -650,7 +641,7 @@ class Base extends Controller {
 			if ($this->parentRelation()
 				->titleContains(Input::get('query'), true)
 				->count()) {
-				return Response::json(array('exists' => true));
+				return Response::json(['exists' => true]);
 			}
 
 			// Get the ids of already attached rows through the relationship function.
@@ -709,7 +700,7 @@ class Base extends Controller {
 		$this->fireEvent('attached', [$item, $this->parent]);
 
 		// Return the response
-		return Response::json('ok');
+		return Response::json();
 
 	}
 
@@ -734,7 +725,7 @@ class Base extends Controller {
 
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
-		if (Request::ajax()) return Response::json('ok');
+		if (Request::ajax()) return Response::json();
 		else return Redirect::back();
 	}
 
@@ -811,17 +802,6 @@ class Base extends Controller {
 
 		// Fire completion event
 		$this->fireEvent('validated', array($model, $validation));
-	}
-
-	/**
-	 * Take an array of key / value (url/label) pairs and pass it where
-	 * it needs to go to make the breadcrumbs
-	 * @param $array links
-	 */
-	protected function breadcrumbs($links) {
-		$this->layout->nest('breadcrumbs', 'decoy::layouts._breadcrumbs', array(
-			'breadcrumbs' => $links
-		));
 	}
 
 	/**

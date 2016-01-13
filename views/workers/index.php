@@ -16,17 +16,16 @@
 
 		</div>
 		<div class="worker-entry">
-			
-			<?=response()->tag($worker->getDescription())?>
-			
+
+			<p><?=$worker->getDescription()?></p>
+
 			<ul>
 				<li>Last worker execution: <?=$worker->lastHeartbeat()?></li>
 				<li>Last heartbeat<?if(!$worker->isRunning()):?> (and execution)<?endif?>: <?=$worker->lastHeartbeatCheck()?></li>
 				<li>Currently executing every: <?=$worker->currentInterval()?></li>
 			</ul>
-			
+
 			<div class="log closed">Loading...</div>
 		</div>
 	</fieldset>
 <? endforeach ?>
-

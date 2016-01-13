@@ -255,8 +255,15 @@ class Admin extends Base implements
 	 */
 	public function getAdminTitleHtmlAttribute() {
 		if (isset($this->image)) return parent::getAdminTitleHtmlAttribute();
-		return "<img src='".response()->gravatar($this->email)."' class='gravatar'/> "
+		return "<img src='".$this->getGravatarAttribute()."' class='gravatar'/> "
 			.$this->getAdminTitleAttribute();
+	}
+
+	/**
+	 * Return the gravatar URL for the admin
+	 */
+	public function getGravatarAttribute() {
+		return '//www.gravatar.com/avatar/'.md5(strtolower(trim($this->email)));
 	}
 
 	/**
@@ -410,7 +417,7 @@ class Admin extends Base implements
 	 * @return string
 	 */
 	public function getUserPhoto() {
-		return $this->croppa(80, 80) ?: response()->gravatar($this->email);
+		return $this->croppa(80, 80) ?: $this->getGravatarAttribute();
 	}
 
 	/**

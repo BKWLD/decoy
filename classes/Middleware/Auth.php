@@ -20,6 +20,8 @@ class Auth {
 	* @param  Illuminate\Http\Request  $request
 	* @param  Closure  $next
 	* @return mixed
+	*
+	* @throws AccessDeniedHttpException
 	*/
 	public function handle($request, Closure $next) {
 
@@ -44,11 +46,19 @@ class Auth {
 	}
 
 	/**
-	 * Get the actino and controller from an explicilty defined route
+	 * Get the action and controller from an explicilty defined route
 	 *
 	 * @return array action,controller
+	 *
+	 * @throws Exception
 	 */
 	protected function dectectFromExplicitRoute() {
+
+		// Get the action
+		$action = Route::current()->getActionName();
+		if ($action == 'Closure') {
+			throw new \Exception('decoy.auth requires routing to controllers.');
+		}
 
 		// Get parse the `uses` from the route definition
 		preg_match('#(.+)@(.+)#', Route::current()->getActionName(), $matches);

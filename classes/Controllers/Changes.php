@@ -13,7 +13,6 @@ class Changes extends Base {
 	protected $description = 'A log of actions that can be used to audit <b>Admin</b> activity or recover content.';
 	protected $columns = [
 		'Activity' => 'getAdminTitleHtmlAttribute',
-		// 'Credit' => 'getCreditAttribute',
 	];
 	protected $search = [
 		'model' => [

@@ -1,4 +1,5 @@
 -$admin = app('decoy.user')
+-$pages = (new Bkwld\Decoy\Layout\Nav)->generate();
 .navigation
 	.top-level-nav
 		-foreach($pages as $page)

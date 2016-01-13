@@ -22,6 +22,7 @@ use Log;
 use Request;
 use Session;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use URL;
 
 abstract class Base extends Eloquent implements SluggableInterface {
@@ -99,7 +100,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	public function __construct(array $attributes = array()) {
 
-		// Remove any settings the affect JSON conversion (visible / hidden) and
+		// Remove any settings that affect JSON conversion (visible / hidden) and
 		// mass assignment protection (fillable / guarded) while in the admin
 		if (Decoy::handling()) {
 			$this->visible = $this->hidden = $this->fillable = $this->guarded = [];
@@ -276,7 +277,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Make the visibility action
+	 * Make the visibility state action
 	 *
 	 * @param array $data The data passed to a listing view
 	 * @return string
@@ -287,15 +288,15 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		// Check if this model supports editing the visibility
 		if ($many_to_many
 			|| !app('decoy.user')->can('publish', $controller)
-			|| !array_key_exists('visible', $this->attributes)) return;
+			|| !array_key_exists('public', $this->attributes)) return;
 
 		// Create the markup
-		$is_visible = $this->getAttribute('visible');
+		$public = $this->getAttribute('public');
 		return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
 				<span class="glyphicon glyphicon-eye-%s"></span>
 			</a>',
-			$is_visible ? 'Make draft' : 'Publish',
-			$is_visible ? 'open' : 'close'
+			$public ? 'Make private' : 'Publish',
+			$public ? 'open' : 'close'
 		);
 
 	}
@@ -405,27 +406,27 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Get visible items
+	 * Get publically visible items
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeVisible($query) {
-		return $query->where($this->getTable().'.visible', '1');
+	public function scopePublic($query) {
+		return $query->where($this->getTable().'.public', '1');
 	}
 
 	/**
-	 * Get all visible items by the default order
+	 * Get all public items by the default order
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopeOrderedAndVisible($query) {
-		return $query->ordered()->visible();
+	public function scopeOrderedAndPublic($query) {
+		return $query->ordered()->public();
 	}
 
 	/**
-	 * Get all visible items by the default order.  This is a good thing to
+	 * Get all public items by the default order.  This is a good thing to
 	 * subclass to define special listing scopes used ONLY on the frontend.  As
 	 * compared with scopeOrdered().
 	 *
@@ -433,7 +434,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeListing($query) {
-		return $query->orderedAndVisible();
+		return $query->orderedAndPublic();
 	}
 
 	/**
@@ -489,16 +490,37 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 *
 	 * @param string $string
 	 * @return Illuminate\Database\Eloquent\Model
+	 *
 	 * @throws Illuminate\Database\Eloquent\ModelNotFoundException
 	 */
 	static public function findBySlugOrFail($slug) {
-		if ($item = static::findBySlug($slug)) return $item;
-		throw (new ModelNotFoundException)->setModel(get_called_class());
+
+		// Model not found, throw exception
+		if (!$item = static::findBySlug($slug)) {
+			throw (new ModelNotFoundException)->setModel(get_called_class());
+		}
+
+		// Return the model if visible
+		$item->enforceVisibility();
+		return $item;
 	}
 
 	//---------------------------------------------------------------------------
 	// Utility methods
 	//---------------------------------------------------------------------------
+
+	/**
+	 * Throw exception if not public and no admin session
+	 *
+	 * @throws Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException
+	 */
+	public function enforceVisibility() {
+		if (array_key_exists('public', $this->getAttributes())
+			&& !$this->getAttribute('public')
+			&& !app('decoy.user')) {
+				throw new AccessDeniedHttpException;
+		}
+	}
 
 	/**
 	 * Deduce the source for the title of the model
@@ -621,27 +643,6 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	public function croppaBkgd($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
 		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
 		return "background-image:url('{$url}')";
-	}
-
-	/**
-	 * Get the admin controller class for this model.
-	 *
-	 * @return string ex: Admin\ArticlesController
-	 */
-	static public function adminControllerClass() {
-		$class = get_called_class();
-
-		// Decoy controller
-		if (strpos($class, 'Bkwld\Decoy\Models') !== false) {
-			$controller = Str::plural(str_replace('Bkwld\Decoy\Models', 'Bkwld\Decoy\Controllers', $class));
-
-		// App controller
-		} else {
-			$controller = ucfirst(Config::get('decoy.core.dir')).'\\'.Str::plural($class).'Controller';
-		}
-
-		// Check if class exists before returning
-		if (class_exists($controller)) return $controller;
 	}
 
 	/**

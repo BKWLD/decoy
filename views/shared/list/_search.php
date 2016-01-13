@@ -1,5 +1,8 @@
 <?// The UI for the collapsable search menu for full listings?>
-<? if (empty($search)) return ?>
+<?
+if (empty($search)) return;
+$search = (new Bkwld\Decoy\Input\Search)->longhand($search);
+?>
 
 <form class="form-inline search" data-js-view="search" data-schema='<?=json_encode($search)?>' data-title='<?=strtolower($title)?>' >
 	<div class="conditions">

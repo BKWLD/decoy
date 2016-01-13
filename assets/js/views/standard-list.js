@@ -565,12 +565,12 @@ define(function (require) {
 					$icon.addClass(publicIconClass);
 					$icon.removeClass(privateIconClass);
 					$icon.attr('title', 'Make private');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make <b>private</b>');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make private');
 				} else {
 					$icon.removeClass(publicIconClass);
 					$icon.addClass(privateIconClass);
-					$icon.attr('title', 'Make public');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make <b>public</b>');
+					$icon.attr('title', 'Publish');
+					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
 				}
 			}
 

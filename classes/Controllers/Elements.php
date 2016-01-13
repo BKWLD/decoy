@@ -65,7 +65,9 @@ class Elements extends Base {
 		$elements = $elements->asModels();
 
 		// Set the breadcrumbs NOT include the locale/tab
-		$this->breadcrumbs([route('decoy::elements') => 'Elements']);
+		app('decoy.breadcrumbs')->set([
+			route('decoy::elements') => 'Elements',
+		]);
 
 		// Render the view
 		return $this->populateView('decoy::elements.index', [
