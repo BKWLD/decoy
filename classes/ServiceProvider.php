@@ -29,7 +29,8 @@ class ServiceProvider extends BaseServiceProvider {
 		$this->registerDirectories();
 
 		// Register the routes.
-		if (!$this->app->routesAreCached()) {
+		if (config('decoy.core.register_routes')
+			&& !$this->app->routesAreCached()) {
 			$this->app['decoy.router']->registerAll();
 		}
 
