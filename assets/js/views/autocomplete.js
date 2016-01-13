@@ -5,11 +5,12 @@
 define(function (require) {
 
 	// dependencies
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		Backbone = require('backbone');
-	require('typeahead.js');
-			
+	var $ = require('jquery')
+		, _ = require('underscore')
+		, Backbone = require('backbone')
+		, Bloodhound = require('typeahead.js')
+	;
+
 	// public view module
 	var Autocomplete = Backbone.View.extend({
 
