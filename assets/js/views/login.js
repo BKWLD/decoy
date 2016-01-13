@@ -33,19 +33,32 @@ define(function (require) {
 			this.$('h4').addClass('show');
 		}, this), 1000);
 
-		//Aadd decoy login animation on screens greater than screen-sm
-		if( $win.width() >= 768 )
-			this.loginAnim = new LoginAnimation({
-				el: '#main',
-				color: rgb2hex($('body').css('background-color')),
-				size: 25,
-				spawnRate: 1,
-				cellRate: 1,
-				cellBrightness: 1,
-				colorRange: 0.5,
-				flashSpeedIn: 0.04,
-				flashSpeedOut: 0.02
-			});
+
+		//Add decoy login animation on screens greater than screen-sm
+		if( $win.width() >= 768 ) {
+
+			// If using hot module reloading, wait an arbitrary amount to styles have
+			// been loaded.  I couldn't figure out a way to know when the styles were
+			// injected https://github.com/webpack/style-loader/issues/83
+			if (module && module.hot) _.delay(this.start, 100);
+			else this.start();
+		}
+
+	};
+
+	// Init the animation
+	View.start = function() {
+		new LoginAnimation({
+			el: '#main',
+			color: rgb2hex($('body').css('background-color')),
+			size: 25,
+			spawnRate: 1,
+			cellRate: 1,
+			cellBrightness: 1,
+			colorRange: 0.5,
+			flashSpeedIn: 0.04,
+			flashSpeedOut: 0.02
+		});
 	};
 
 	// Fix the size of the branding piece
@@ -57,7 +70,7 @@ define(function (require) {
 	// http://stackoverflow.com/a/3627747
 	function rgb2hex(rgb) {
 		if (/^#[0-9A-F]{6}$/i.test(rgb)) return rgb;
-		rgb = rgb.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+		rgb = rgb.match(/^rgba?\((\d+),\s*(\d+),\s*(\d+)/);
 		function hex(x) { return ("0" + parseInt(x).toString(16)).slice(-2); }
 		return "#" + hex(rgb[1]) + hex(rgb[2]) + hex(rgb[3]);
 	}
