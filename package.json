@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "5.0.7",
+  "version": "5.0.8",
   "description": "The BKWLD CMS framework",
   "main": "assets/js/decoy.js",
   "directories": {

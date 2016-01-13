@@ -1,5 +1,10 @@
 .table {
 
+	// Give them all pointers
+	.actions > a {
+		cursor: pointer;
+	}
+
 	// This is the icon that indicates whether a row is visible or not
 	.visibility {
 		width: 18px;
