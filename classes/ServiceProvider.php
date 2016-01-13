@@ -196,14 +196,13 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.auth'          => Middleware\Auth::class,
 			'decoy.edit-redirect' => Middleware\EditRedirect::class,
 			'decoy.guest'         => Middleware\Guest::class,
-			'decoy.headers'       => Middleware\Headers::class,
 			'decoy.save-redirect' => Middleware\SaveRedirect::class,
 		] as $key => $class) $this->app['router']->middleware($key, $class);
 
 		// This group is used by public decoy routes
 		$this->app['router']->middlewareGroup('decoy.public', [
 			'web',
-			'decoy.headers',
+			'camo.ua-compatibility',
 		]);
 
 		// The is the starndard auth protected group
@@ -212,7 +211,7 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.auth',
 			'decoy.save-redirect',
 			'decoy.edit-redirect',
-			'decoy.headers',
+			'camo.ua-compatibility',
 		]);
 
 		// Require a logged in admin session but no CSRF token
