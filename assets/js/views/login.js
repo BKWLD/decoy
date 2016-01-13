@@ -33,7 +33,6 @@ define(function (require) {
 			this.$('h4').addClass('show');
 		}, this), 1000);
 
-
 		//Aadd decoy login animation on screens greater than screen-sm
 		if( $win.width() >= 768 )
 			this.loginAnim = new LoginAnimation({

@@ -701,7 +701,6 @@ class Base extends Controller {
 
 		// Return the response
 		return Response::json();
-
 	}
 
 	/**
