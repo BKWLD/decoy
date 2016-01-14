@@ -75,8 +75,8 @@ class Date extends Field {
 		$html = parent::render();
 
 		// Convert the value to a mysql friendly format or leave null.
-		$mysql_date = $this->value ? 
-			date(Library\Utils\Constants::MYSQL_DATE, strtotime($this->value)) : 
+		$mysql_date = $this->value ?
+			date(Library\Utils\Constants::MYSQL_DATE, strtotime($this->value)) :
 			null;
 
 		// Add a hidden field that will contain the mysql value, for storing in db

@@ -22,16 +22,16 @@ class Sidebar {
 	private $ending_items = [];
 
 	/**
-	 * The model instance currently being worked on by Decoy 
-	 * 
-	 * @var Illuminate\Database\Eloquent\Model 
+	 * The model instance currently being worked on by Decoy
+	 *
+	 * @var Illuminate\Database\Eloquent\Model
 	 */
 	private $parent;
 
 	/**
 	 * Inject dependencies
 	 *
-	 * @param Illuminate\Database\Eloquent\Model $parent The model instance 
+	 * @param Illuminate\Database\Eloquent\Model $parent The model instance
 	 *        currently being worked on by Decoy
 	 */
 	public function __construct($parent = null) {
@@ -64,7 +64,7 @@ class Sidebar {
 	/**
 	 * Return whether the sidebar is empty or not
 	 *
-	 * @return boolean 
+	 * @return boolean
 	 */
 	public function isEmpty() {
 		return empty($this->items) && empty($this->ending_items);
