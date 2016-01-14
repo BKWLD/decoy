@@ -42,7 +42,8 @@ define(function (require) {
 				limit: 15, // Note, this is also enforced in the base controller
 				remote: {
 					url: this.url(),
-					rateLimitWait: this.throttle
+					rateLimitWait: this.throttle,
+					wildcard: '%QUERY'
 				},
 				datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.val); },
 				queryTokenizer: Bloodhound.tokenizers.whitespace
