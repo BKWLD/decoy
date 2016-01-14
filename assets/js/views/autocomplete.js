@@ -5,11 +5,12 @@
 define(function (require) {
 
 	// dependencies
-	var $ = require('jquery'),
-		_ = require('underscore'),
-		Backbone = require('backbone');
-	require('typeahead.js');
-			
+	var $ = require('jquery')
+		, _ = require('underscore')
+		, Backbone = require('backbone')
+		, Bloodhound = require('typeahead.js')
+	;
+
 	// public view module
 	var Autocomplete = Backbone.View.extend({
 
@@ -41,7 +42,8 @@ define(function (require) {
 				limit: 15, // Note, this is also enforced in the base controller
 				remote: {
 					url: this.url(),
-					rateLimitWait: this.throttle
+					rateLimitWait: this.throttle,
+					wildcard: '%QUERY'
 				},
 				datumTokenizer: function(d) { return Bloodhound.tokenizers.whitespace(d.val); },
 				queryTokenizer: Bloodhound.tokenizers.whitespace
@@ -59,15 +61,15 @@ define(function (require) {
 			});
 
 			// When typeahead is open, listen for selections
-			this.$input.on('typeahead:opened', _.bind(function() {
+			this.$input.on('typeahead:open', _.bind(function() {
 				this.$input.off('input change', this.match);
-				this.$input.on('typeahead:selected typeahead:autocompleted', this.match);
+				this.$input.on('typeahead:select typeahead:autocomplete', this.match);
 			}, this));
 
 			// When it's closed, look for input changes that may invalidate
 			// previous selections
-			this.$input.on('typeahead:closed', _.bind(function() {
-				this.$input.off('typeahead:selected typeahead:autocompleted', this.match);
+			this.$input.on('typeahead:close', _.bind(function() {
+				this.$input.off('typeahead:select typeahead:autocomplete', this.match);
 				this.$input.on('input change', this.match);
 			}, this));
 
