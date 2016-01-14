@@ -3,13 +3,14 @@
 // Dependencies
 use Bkwld\Library;
 use Bkwld\Decoy\Exceptions\Exception;
-use Former\Traits\Field;
-use HtmlObject\Input as HtmlInput;
-use Illuminate\Container\Container;
-use Illuminate\Database\Eloquent\Collection;
+use Decoy;
 use DecoyURL;
 use Former;
+use Former\Traits\Field;
+use HtmlObject\Input as HtmlInput;
 use Input;
+use Illuminate\Container\Container;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use View;
 use URL;
@@ -97,7 +98,7 @@ class Listing extends Field {
 		// Instantiate a controller given the model name
 		$this->controller(isset($config['controller'])
 			? $config['controller']
-			: $this->controllerNameOfModel($model)
+			: Decoy::controllerForModel($model)
 		);
 
 		// If no title is passed, set it to the controller name
@@ -321,20 +322,6 @@ class Listing extends Field {
 	}
 
 	/**
-	 * Make the controller name given the model
-	 *
-	 * @param string $model The name of a model class
-	 * @return string
-	 */
-	protected function controllerNameOfModel($model) {
-		if (strpos($model, 'Bkwld\Decoy\Models') === 0) {
-			return Str::plural(str_replace('\Models', '\Controllers', $model));
-		}
-		return 'Admin\\'.Str::plural($model);
-	}
-
-
-	/**
 	 * Make the create button for control group listing
 	 *
 	 * @return string HTML
@@ -416,7 +403,7 @@ class Listing extends Field {
 		// If there is a parent, run the query through the relationship to this model
 		// from the parent
 		if ($this->parent_item) {
-			$relationship = lcfirst(Str::plural($this->name));
+			$relationship = Decoy::hasManyName($this->name);
 			$query = $this->parent_item->$relationship()->ordered();
 		}
 
