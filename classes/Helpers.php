@@ -7,6 +7,7 @@ use Bkwld\Library;
 use Config;
 use Croppa;
 use Former;
+use ReflectionClass;
 use Request;
 use Session;
 use Illuminate\Support\Str;
@@ -290,6 +291,27 @@ class Helpers {
 		// Make it plural
 		$offset = strrpos($controller, '\\') + 1;
 		return substr($controller, 0, $offset).Str::plural(substr($controller, $offset));
+	}
+
+	/**
+	 * Get the belongsTo relationship name given a model class name
+	 *
+	 * @param string $model "App\SuperMan"
+	 * @return string "superMan"
+	 */
+	public function belongsToName($model) {
+		$reflection = new ReflectionClass($model);
+		return lcfirst($reflection->getShortName());
+	}
+
+	/**
+	 * Get the belongsTo relationship name given a model class name
+	 *
+	 * @param string $model "App\SuperMan"
+	 * @return string "superMen"
+	 */
+	public function hasManyName($model) {
+		return Str::plural($this->belongsToName($model));
 	}
 
 }

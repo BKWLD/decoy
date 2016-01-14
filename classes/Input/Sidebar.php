@@ -82,7 +82,7 @@ class Sidebar {
 
 			// If a listing instance, apply defaults common to all sidebar instances
 			if (is_a($item, 'Bkwld\Decoy\Fields\Listing')) {
-				return $item->layout('sidebar')->parent($this->parent);
+				return $item->layout('sidebar')->parent($this->parent)->__toString();
 
 			// Anything else will be converted to a string in the next step
 			} else return $item;

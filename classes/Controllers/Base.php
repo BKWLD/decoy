@@ -321,12 +321,12 @@ class Base extends Controller {
 
 		// Save out sub properties that I hope to deprecate
 		$this->parent_model = get_class($this->parent);
-		$this->parent_controller = 'Admin\\'.Str::plural($this->parent_model).'Controller';
+		$this->parent_controller = Decoy::controllerForModel($this->parent_model);
 
 		// Figure out what the relationship function to the child (this controller's
 		// model) on the parent model .  It will be the plural version of this
 		// model's name.
-		$this->parent_to_self = Str::plural(lcfirst($this->model));
+		$this->parent_to_self = Decoy::hasManyName($this->model);
 
 		// If the parent is the same as this controller, assume that it's a
 		// many-to-many-to-self relationship.  Thus, expect a relationship method to
@@ -339,7 +339,7 @@ class Base extends Controller {
 		// "able".  For instance, the Link model would have it's relationship to
 		// parent called "linkable".
 		} elseif (is_a($this->parentRelation(), 'Illuminate\Database\Eloquent\Relations\MorphMany')) {
-			$this->self_to_parent = lcfirst($this->model).'able';
+			$this->self_to_parent = Decoy::belongsToName($this->model).'able';
 
 		// Save out to self to parent relationship.  It will be singular if the
 		// relationship is a many to many.
