@@ -60,7 +60,7 @@ class Wildcard {
 		$controller = new $controller();
 		if ($parent = $this->detectParent()) {
 			list($parent_slug, $parent_id) = $parent;
-			$parent_model = Str::singular(Str::studly($parent_slug));
+			$parent_model = 'App\\'.Str::singular(Str::studly($parent_slug));
 			$controller->parent($parent_model::findOrFail($parent_id));
 		}
 
