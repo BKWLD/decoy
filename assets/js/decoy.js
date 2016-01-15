@@ -91,6 +91,8 @@ define(function (require) {
 	$('body > .sidebar').views(Sidebar); // The nav sidebar
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
 	$('.admin-permissions').views(require('./views/admin-permissions'));
+	$('.image-upload').views(require('./views/image-upload/preview.js'));
+	$('.image-upload img').views(require('./views/image-upload/image-upload.js'));
 
 	// Launch change modal
 	var changes_modal = require('./modules/changes-modal');
