@@ -11,6 +11,22 @@ use Bkwld\Decoy\Models\Image;
 trait Imageable {
 
 	/**
+	 * Boot events
+	 *
+	 * @return void
+	 */
+	public static function bootImageable() {
+
+		// Delete all Images if the parent is deleted.  Need to use "each" to get
+		// the Image deleted events to fire.
+		static::deleted(function($model) {
+			$model->images->each(function($image) {
+				$image->delete();
+			});
+		});
+	}
+
+	/**
 	 * Polymorphic relationship
 	 */
 	public function images() {
