@@ -31,7 +31,9 @@ class Image extends Base {
 
 		// Need to process file meta before Upchuck converts the UploadFile object
 		// to a URL string
-		static::saving(function(Image $image) { $image->populateFileMeta(); });
+		static::saving(function(Image $image) {
+			$image->populateFileMeta();
+		}, config('upchuck.priority', 0) + 1);
 	}
 
 	/**
