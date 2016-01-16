@@ -8,6 +8,7 @@ use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Localize;
 use Bkwld\Decoy\Input\Position;
+use Bkwld\Decoy\Input\RelatedModels;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Routing\Wildcard;
@@ -469,6 +470,9 @@ class Base extends Controller {
 		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
 		else $item->save();
 
+		// Insert related model data
+		(new RelatedModels)->relateTo($item);
+
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(['id' => $item->id]);
 		else return Redirect::to(DecoyURL::relative('edit', $item->id))
@@ -539,6 +543,9 @@ class Base extends Controller {
 		// Save the record
 		$this->validate($item);
 		$item->save();
+
+		// Insert related model data
+		(new RelatedModels)->relateTo($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json();
