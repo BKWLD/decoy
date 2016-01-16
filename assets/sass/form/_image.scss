@@ -60,6 +60,10 @@
 
   .file {
     margin-bottom: 15px;
+
+    &.hidden {
+      display: none;
+    }
   }
 
   .toolbar {
@@ -77,4 +81,11 @@
     float: right;
   }
 
+  .image-holder {
+    display: none;
+
+    &.visible {
+      display: block;
+    }
+  }
 }
