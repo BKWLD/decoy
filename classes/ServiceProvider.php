@@ -180,7 +180,8 @@ class ServiceProvider extends BaseServiceProvider {
 			'eloquent.saved:*'   => 'Bkwld\Decoy\Observers\ManyToManyChecklist',
 			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Encoding@onSaving',
 			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
-			'decoy::model.validating:*' => 'Bkwld\Decoy\Observers\Validation@onValidating',
+			'decoy::model.validating:*' =>
+				'Bkwld\Decoy\Observers\ValidateExistingFiles@onValidating',
 		] as $key => $method) $this->app['events']->listen($key, $method);
 	}
 
