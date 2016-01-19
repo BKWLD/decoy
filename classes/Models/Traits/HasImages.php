@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Builder;
  * used by the Base Model.  This logic lives as a trait mostly to keep the
  * base model cleaner.
  */
-trait Imageable {
+trait HasImages {
 
 	/**
 	 * Boot events
