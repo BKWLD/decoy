@@ -11,6 +11,7 @@ use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\RelatedModels;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
+use Bkwld\Decoy\Models\Base as BaseModel;
 use Bkwld\Decoy\Routing\Wildcard;
 use Bkwld\Library;
 use Bkwld\Library\Utils\File;
@@ -463,7 +464,7 @@ class Base extends Controller {
 
 		// Create a new object and hydrate
 		$item = new $this->model;
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+		$item->fill(Library\Utils\Collection::nullEmpties(Input::all()));
 
 		// Validate and save.
 		$this->validate($item);
@@ -533,7 +534,7 @@ class Base extends Controller {
 
 		// ... else hydrate normally
 		else {
-			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+			$item->fill(Library\Utils\Collection::nullEmpties(Input::all()));
 			if (isset($item::$rules['slug'])) {
 				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
 				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
@@ -762,44 +763,31 @@ class Base extends Controller {
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
 	 *
-	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param BaseModel|array $data The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
-	 * @throws Bkwld\Decoy\Exception\ValidationFail
 	 * @return void
+	 *
+	 * @throws Bkwld\Decoy\Exception\ValidationFail
 	 */
-	protected function validate($model = null, $rules = null, $messages = array()) {
+	protected function validate($data, $rules = null, $messages = array()) {
 
-		// Pull the input including files.  We manually merge files in because
-		// Laravel's Input::all()	does a recursive merge which results in file
-		// fields containing BOTH the string version of the previous file plus the
-		// new File instance when the user is replacing a file during	an update.
-		// The array_filter() is there to strip out empties from the files array.
-		// This prevents empty file fields from overriding the contents of the
-		// hidden field that stores	the previous file name.
-		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
-
-		// Get the rules if they were not passed in
-		if ($model && empty($rules)) $rules = $model::$rules;
+		// If $data is a model instance, get validation rules and data from it
+		$model = null;
+		if (is_a($data, BaseModel::class)) {
+			$model = $data;
+			if (empty($rules)) $rules = $model::$rules;
+			$data = $model->getAttributes();
+		}
 
 		// If an AJAX update, don't require all fields to be present. Pass just the
 		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
-			$rules = array_only($rules, array_keys($input));
-		}
-
-		// If a model instance was passed, merge the input on top of that.  This
-		// allows data that may already be set on the model to be validated.  The
-		// input will override anything already set on the model.  In particular,
-		// this is done so that auto generated fields like the slug can be
-		// validated.  This intentionally comes after the AJAX conditional so that
-		// we still only validate fields that were present in the AJAX request.
-		if ($model && method_exists($model, 'getAttributes')) {
-			$input = array_merge($model->getAttributes(), $input);
+			$rules = array_only($rules, array_keys($data));
 		}
 
 		// Build the validation instance and fire the intiating event.
-		$validation = Validator::make($input, $rules, $messages);
+		$validation = Validator::make($data, $rules, $messages);
 		if ($model) $this->fireEvent('validating', array($model, $validation));
 
 		// Run the validation.  If it fails, throw an exception that will get handled
