@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\Relation;
  * Check the input during a store or update for nested models in the input and
  * process thos models
  */
-class RelatedModels {
+class NestedModels {
 
 	/**
 	 * Check the input for related models.

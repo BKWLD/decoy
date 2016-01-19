@@ -9,7 +9,7 @@ use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Localize;
 use Bkwld\Decoy\Input\ModelValidator;
 use Bkwld\Decoy\Input\Position;
-use Bkwld\Decoy\Input\RelatedModels;
+use Bkwld\Decoy\Input\NestedModels;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Base as BaseModel;
@@ -473,7 +473,7 @@ class Base extends Controller {
 		else $item->save();
 
 		// Insert related model data
-		(new RelatedModels)->relateTo($item);
+		(new NestedModels)->relateTo($item);
 
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(['id' => $item->id]);
@@ -547,7 +547,7 @@ class Base extends Controller {
 		$item->save();
 
 		// Insert related model data
-		(new RelatedModels)->relateTo($item);
+		(new NestedModels)->relateTo($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json();
