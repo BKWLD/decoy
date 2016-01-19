@@ -41,7 +41,7 @@ trait HasImages {
 
 	/**
 	 * Get a specific Image by searching the eager loaded Images collection for
-	 * one matching the name.
+	 * one matching the name.  If $name can't be found, return an empty Image.
 	 *
 	 * @param string $name The "name" field from the db
 	 * @return Image
@@ -49,7 +49,10 @@ trait HasImages {
 	public function image($name = null) {
 		return $this->images->first(function($key, Image $image) use ($name) {
 			return $image->getAttribute('name') == $name;
-		});
+
+		// When the $name isn't found, return an empty Image object so all the
+		// accessors can be invoked and will return an empty string.
+		}) ?: new Image;
 	}
 
 }
