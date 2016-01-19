@@ -150,8 +150,17 @@ define(function (require) {
 				y : pointY / image.outerHeight()
 			};
 
+			var cropVal = this.input_to_json(this.$crop);
+			var selection = cropVal[this.style] ? this.convert_from_perc(cropVal[this.style]) : undefined;
+
 			this.$focus.val(JSON.stringify(location));
 			this.$el.next('div').find('.focal-point').css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight() });
+
+			if(!$.isEmptyObject(cropVal)) {
+				if(pointX < selection[0] || pointY < selection[1] || pointX > selection[2] || pointY > selection[3]) {
+					console.log('set it!');
+				}
+			}
 		},
 
 		// Remove jcrop from the element
