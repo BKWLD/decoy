@@ -1,5 +1,6 @@
 .image-upload {
   $height: 33px;
+  position: relative;
 
   .title {
     display: inline-block;
@@ -75,6 +76,13 @@
   .img-thumbnail {
     border-top: 0;
     border-radius: 0 0 4px 4px;
+    position: relative;
+  }
+
+  .focal-point {
+    position: absolute;
+    z-index: 1000;
+    color: white;
   }
 
   .delete {

@@ -15,6 +15,7 @@ define(function (require) {
 
 		// Instance vars
 		jcrop: null, // A jcrop API instance
+		activeCrop: false,
 		width: null,
 		height: null,
 		style: null, // The style of the crop
@@ -27,10 +28,10 @@ define(function (require) {
 			_.bindAll(this);
 
 			// Cache selectors
-			this.$input = this.$el.closest('.image-upload').find(':hidden[name*="_crops"]');
+			this.$crop = this.$el.closest('.image-upload').find(':hidden[name*="_crops"]');
+			this.$focus = this.$el.closest('.image-upload').find(':hidden[name*="_focus"]');
 			this.$cropTool = this.$el.closest('.image-upload').find('.crop.btn');
-			this.$focusTool = this.$el.closest('.image-upload').find('.focus.btn');
-
+			this.$focusTool = this.$el.closest('.image-upload').find('.focal.btn');
 
 			// Remove clicking on the parent a tag
 			this.$el.parent('a').click(function(e) { e.preventDefault(); });
@@ -49,7 +50,9 @@ define(function (require) {
 			var $window = $(window), delay = 400;
 			$window.resize(_.debounce(this.destroy, delay, true));
 			$window.resize(_.debounce(this.init, delay, false));
+
 			this.$cropTool.on('click', this.beginCrop);
+			this.$focusTool.on('click', this.beginFocus);
 
 			// Start jcrop up once the images loaded
 			this.$el.imagesLoaded(this.init);
@@ -80,9 +83,9 @@ define(function (require) {
 			this.width = this.$el.width();
 			this.height = this.$el.height();
 
-			// Check if there is any selection defined
-			var val = this.input_to_json();
-			var selection = val[this.style] ? this.convert_from_perc(val[this.style]) : undefined;
+			// Check if there is any crop selection defined
+			var cropVal = this.input_to_json(this.$crop);
+			var selection = cropVal[this.style] ? this.convert_from_perc(cropVal[this.style]) : undefined;
 
 			// Init jcrop
 			var self = this;
@@ -96,16 +99,60 @@ define(function (require) {
 			// Store a reference to jcrop and call the ready function
 			}, function() {
 				self.jcrop = this;
+				activeCrop = true;
 
 				// Put all of the jcrop instances in a parent to give them the polariod effecast
 				self.$el.siblings('.jcrop-holder').wrap('<div class="img-thumbnail" style="display: inline-block;"/>');
 			});
 
+			// Check if focal point is set
+			var focalVal = this.input_to_json(this.$focus);
+			this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
+			this.$el.next('div').find('.focal-point').css({'left' : focalVal.x * this.$el.outerWidth(), 'top' : focalVal.y * this.$el.outerHeight() });
+
 		},
 
 		// Set up cropping when crop tool is clicked
 		beginCrop: function() {
-			console.log('cropping');
+			// remove the set focus listener
+			this.$el.next('div').unbind();
+
+			// make the crop tool active
+			this.$cropTool.addClass('active');
+			this.$focusTool.removeClass('active');
+			$('.jcrop-holder').css('pointer-events', 'auto');
+
+			this.jcrop.enable();
+			activeCrop = true;
+		},
+
+		// Switch to set focal point
+		beginFocus: function() {
+			this.$cropTool.removeClass('active');
+			this.$focusTool.addClass('active');
+			$('.jcrop-holder').css('pointer-events', 'none');
+
+			this.jcrop.disable();
+			this.activeCrop = false;
+
+			this.$el.next('div').on('click', this.setFocus);
+		},
+
+		setFocus: function(e) {
+			var image = $(e.currentTarget);
+			var offset = image.offset();
+
+			var pointX = e.pageX - offset.left;
+			var pointY = e.pageY - offset.top;
+
+			var location = {
+				x : pointX / image.outerWidth(),
+				y : pointY / image.outerHeight()
+			};
+
+			this.$focus.val(JSON.stringify(location));
+
+			this.$el.next('div').find('.focal-point').css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight() });
 		},
 
 		// Remove jcrop from the element
@@ -133,9 +180,9 @@ define(function (require) {
 			if (c) c = this.convert_to_perc(c);
 
 			// Add the coordinates to the input's value
-			var val = this.input_to_json();
+			var val = this.input_to_json(this.$crop);
 			val[this.style] = c;
-			this.$input.val(JSON.stringify(val));
+			this.$crop.val(JSON.stringify(val));
 
 		},
 
@@ -168,8 +215,8 @@ define(function (require) {
 		},
 
 		// Get JSON from the $input
-		input_to_json: function() {
-			var val = this.$input.val();
+		input_to_json: function(input) {
+			var val = $(input).val();
 			if (!val) return {};
 			else return JSON.parse(val);
 		}
