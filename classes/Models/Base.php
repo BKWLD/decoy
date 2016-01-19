@@ -31,7 +31,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * Adding common traits.  The memory usage of adding additional methods is
 	 * negligible.
 	 */
-	use SupportsUploads, Cloneable, SluggableTrait, Traits\Imageable {
+	use SupportsUploads, Cloneable, SluggableTrait {
 		needsSlugging as traitNeedsSlugging;
 	}
 

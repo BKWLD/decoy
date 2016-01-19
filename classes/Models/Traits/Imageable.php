@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Models\Image;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * All models that should support images should inherit this trait.  This gets
@@ -24,6 +25,11 @@ trait Imageable {
 				$image->delete();
 			});
 		});
+
+		// Automatically eager load the images relationship
+		static::addGlobalScope('age', function(Builder $builder) {
+			$builder->with('images');
+		});
 	}
 
 	/**
@@ -31,6 +37,19 @@ trait Imageable {
 	 */
 	public function images() {
 		return $this->morphMany(Image::class, 'imageable');
+	}
+
+	/**
+	 * Get a specific Image by searching the eager loaded Images collection for
+	 * one matching the name.
+	 *
+	 * @param string $name The "name" field from the db
+	 * @return Image
+	 */
+	public function image($name = null) {
+		return $this->images->first(function($key, Image $image) use ($name) {
+			return $image->getAttribute('name') == $name;
+		});
 	}
 
 }
