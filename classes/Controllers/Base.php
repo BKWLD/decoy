@@ -7,6 +7,7 @@ use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Localize;
+use Bkwld\Decoy\Input\ModelValidator;
 use Bkwld\Decoy\Input\Position;
 use Bkwld\Decoy\Input\RelatedModels;
 use Bkwld\Decoy\Input\Sidebar;
@@ -703,9 +704,9 @@ class Base extends Controller {
 		$item = $this->findOrFail($id);
 
 		// Do the attach
-		$this->fireEvent('attaching', [$item, $this->parent]);
+		$item->fireDecoyEvent('attaching', [$item, $this->parent]);
 		$item->{$this->self_to_parent}()->attach($this->parent);
-		$this->fireEvent('attached', [$item, $this->parent]);
+		$item->fireDecoyEvent('attached', [$item, $this->parent]);
 
 		// Return the response
 		return Response::json();
@@ -726,9 +727,9 @@ class Base extends Controller {
 		$items = array_map(function($id) { return $this->findOrFail($id); }, $ids);
 
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
-		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
+		foreach($items as $item) $item->fireDecoyEvent('removing', [$item, $this->parent]);
 		$this->parentRelation()->detach($ids);
-		foreach($items as $item) $this->fireEvent('removed', [$item, $this->parent]);
+		foreach($items as $item) $item->fireDecoyEvent('removed', [$item, $this->parent]);
 
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
@@ -768,16 +769,15 @@ class Base extends Controller {
 	 * @param array $messages Special error messages
 	 * @return void
 	 *
-	 * @throws Bkwld\Decoy\Exception\ValidationFail
+	 * @throws ValidationFail
 	 */
-	protected function validate($data, $rules = null, $messages = array()) {
+	protected function validate($data, $rules = null, $messages = []) {
 
-		// If $data is a model instance, get validation rules and data from it
+		// Get validation rules from model
 		$model = null;
 		if (is_a($data, BaseModel::class)) {
 			$model = $data;
 			if (empty($rules)) $rules = $model::$rules;
-			$data = $model->getAttributes();
 		}
 
 		// If an AJAX update, don't require all fields to be present. Pass just the
@@ -787,33 +787,11 @@ class Base extends Controller {
 		}
 
 		// Build the validation instance and fire the intiating event.
-		$validation = Validator::make($data, $rules, $messages);
-		if ($model) $this->fireEvent('validating', array($model, $validation));
-
-		// Run the validation.  If it fails, throw an exception that will get handled
-		// by Middleware.
-		if ($validation->fails()) throw new ValidationFail($validation);
-
-		// Fire completion event
-		$this->fireEvent('validated', array($model, $validation));
-	}
-
-	/**
-	 * Fire an event.  Actually, two are fired, one for the event and one that
-	 * mentions the model for this controller
-	 *
-	 * @param $string  event The name of this event
-	 * @param $array   args  An array of params that will be passed to the handler
-	 * @param $boolean until Whether to fire an "until" event or not
-	 * @return object
-	 */
-	protected function fireEvent($event, $args = null) {
-
-		// Create the event name
-		$event = "decoy::model.{$event}: ".$this->model;
-
-		// Fire event
-		return Event::fire($event, $args);
+		if ($model) (new ModelValidator)->validate($model, $rules, $messages);
+		else {
+			$validation = Validator::make($data, $rules, $messages);
+			if ($validation->fails()) throw new ValidationFail($validation);
+		}
 	}
 
 	/**

@@ -1,6 +1,8 @@
 <?php namespace Bkwld\Decoy\Input;
 
 // Deps
+use Bkwld\Decoy\Exceptions\ValidationFail;
+use Bkwld\Decoy\Input\ModelValidator;
 use Input;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -73,12 +75,10 @@ class RelatedModels {
 	 * @return void
 	 */
 	protected function storeChild($relation, $input) {
-
-		// Create a new instance
 		$child = $relation->getRelated()->newInstance();
-
-		// Save it via the relationship
-		$relation->save($child->fill($input));
+		$child->fill($input);
+		(new ModelValidator)->validate($child);
+		$relation->save($child);
 	}
 
 	/**
@@ -90,12 +90,10 @@ class RelatedModels {
 	 * @return void
 	 */
 	protected function updateChild($relation, $id, $input) {
-
-		// Lookup the existing model
 		$child = $relation->getRelated()->findOrFail($id);
-
-		// Update the data and save it
-		$child->fill($input)->save();
+		$child->fill($input);
+		(new ModelValidator)->validate($child);
+		$child->save();
 	}
 
 }

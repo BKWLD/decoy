@@ -523,6 +523,18 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
+	 * Fire an Decoy model event.
+	 *
+	 * @param $string  event The name of this event
+	 * @param $array   args  An array of params that will be passed to the handler
+	 * @return object
+	 */
+	public function fireDecoyEvent($event, $args = null) {
+		$event = "decoy::model.{$event}: ".get_class($this);
+		return Event::fire($event, $args);
+	}
+
+	/**
 	 * Deduce the source for the title of the model
 	 *
 	 * @return array
