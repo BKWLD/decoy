@@ -30,7 +30,6 @@ class Image extends Base {
 		'focal_point' => 'object',
 	];
 
-
 	/**
 	 * Validation rules
 	 *
@@ -123,21 +122,38 @@ class Image extends Base {
 
 	/**
 	 * Get the config, merging defaults in so that all keys in the array are
-	 * present
+	 * present.  This also applies the crop choices from the DB.
 	 *
 	 * @return array
 	 */
 	public function getConfig() {
-		return array_merge([
+
+		// Create default keys for the config
+		$config = array_merge([
 			'width'   => null,
 			'height'  => null,
 			'options' => null,
 		], $this->config);
+
+		// Add crops
+		if ($crop = $this->getAttribute('crop')) {
+			if (!is_array($config['options'])) $config['options'] = [];
+			$config['options']['trim_perc'] = [
+				round($crop->x1, 4),
+				round($crop->y1, 4),
+				round($crop->x2, 4),
+				round($crop->y2, 4),
+			];
+		}
+
+		// Return config
+		return $config;
 	}
 
 	/**
 	 * Output the image URL with any queued Croppa transformations.  Note, it's
 	 * possible that "file" is empty, in which case this returns an empty string.
+	 * This clears the stored config on every call.
 	 *
 	 * @return string
 	 */
