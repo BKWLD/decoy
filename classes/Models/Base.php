@@ -9,7 +9,6 @@ use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Upchuck\SupportsUploads;
 use Config;
-use Croppa;
 use Cviebrock\EloquentSluggable\SluggableInterface;
 use Cviebrock\EloquentSluggable\SluggableTrait;
 use DB;
@@ -57,16 +56,6 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @var array
 	 */
 	static public $rules = [];
-
-	/**
-	 * This is should be overriden like so to specify crops that the image
-	 * cropping widget should make UI.  Example:
-	 *
-	 * array('image' => array('marquee' => '4:3', 'feature'))
-	 *
-	 * @var array
-	 */
-	static public $crops = [];
 
 	/**
 	 * Should this model be localizable in the admin.  If not undefined, will
@@ -203,7 +192,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return string
 	 */
 	public function getAdminTitleHtmlAttribute() {
-		return $this->croppaTag(40, 40).$this->getAdminTitleAttribute();
+		return $this->getAdminThumbTagAttribute().$this->getAdminTitleAttribute();
 	}
 
 	/**
@@ -215,6 +204,32 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return implode(' ', array_map(function($attribute) {
 			return $this->$attribute;
 		}, $this->titleAttributes())) ?: 'Untitled';
+	}
+
+	/**
+	 * Add a thumbnail img tag to the title
+	 *
+	 * @return string IMG tag
+	 */
+	public function getAdminThumbTagAttribute() {
+		if (!$url = $this->getAdminThumbAttribute()) return;
+		return sprintf('<img src="%s" alt="">', $url);
+	}
+
+	/**
+	 * The URL for the thumbnail
+	 *
+	 * @return string URL
+	 */
+	public function getAdminThumbAttribute($width = 40, $height = 40) {
+
+		// Check if there are images for the model
+		if (!method_exists($this, 'images')) return;
+		$images = $this->images;
+		if ($images->isEmpty()) return;
+
+		// Get null-named (default) images first
+		return $images->sortBy('name')->first()->crop($width, $height)->url;
 	}
 
 	/**

@@ -79,7 +79,7 @@ class Image extends Base {
 	 * @return void
 	 */
 	public function populateFileMeta() {
-		$file = $this->getAttribute('file');
+		$file = $this->getAttributeValue('file');
 		$size = getimagesize($file->getPathname());
 		$this->fill([
 			'file_type' => $this->guessFileType($file),
@@ -136,7 +136,7 @@ class Image extends Base {
 		], $this->config);
 
 		// Add crops
-		if ($crop = $this->getAttribute('crop')) {
+		if ($crop = $this->getAttributeValue('crop')) {
 			if (!is_array($config['options'])) $config['options'] = [];
 			$config['options']['trim_perc'] = [
 				round($crop->x1, 4),
@@ -164,7 +164,7 @@ class Image extends Base {
 		$this->config = [];
 
 		// Return the URL
-		return Croppa::url($this->getAttribute('file'),
+		return Croppa::url($this->getAttributeValue('file'),
 			$config['width'],
 			$config['height'],
 			$config['options']
@@ -225,7 +225,7 @@ class Image extends Base {
 	 * @return string
 	 */
 	public function getBackgroundPositionAttribute() {
-		if (!$point = $this->getAttribute('focal_point')) return;
+		if (!$point = $this->getAttributeValue('focal_point')) return;
 		return sprintf('%s%% %s%%', $point->x*100, $point->y*100);
 	}
 
@@ -235,7 +235,7 @@ class Image extends Base {
 	 * @return string
 	 */
 	public function getAltAttribute() {
-		return $this->getAttribute('title');
+		return $this->getAttributeValue('title');
 	}
 
 	/**
@@ -245,7 +245,7 @@ class Image extends Base {
 	 */
 	public function getLowAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttribute('file'),
+		return Croppa::url($this->getAttributeValue('file'),
 			round($config['width']/2),
 			round($config['height']/2),
 			$config['options']
@@ -259,7 +259,7 @@ class Image extends Base {
 	 */
 	public function getMediumAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttribute('file'),
+		return Croppa::url($this->getAttributeValue('file'),
 			$config['width'],
 			$config['height'],
 			$config['options']
@@ -273,7 +273,7 @@ class Image extends Base {
 	 */
 	public function getHighAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttribute('file'),
+		return Croppa::url($this->getAttributeValue('file'),
 			$config['width']*2,
 			$config['height']*2,
 			$config['options']
