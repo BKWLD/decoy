@@ -16,7 +16,7 @@ trait HasImages {
 	 *
 	 * @return void
 	 */
-	public static function bootImageable() {
+	public static function bootHasImages() {
 
 		// Delete all Images if the parent is deleted.  Need to use "each" to get
 		// the Image deleted events to fire.
@@ -27,7 +27,7 @@ trait HasImages {
 		});
 
 		// Automatically eager load the images relationship
-		static::addGlobalScope('age', function(Builder $builder) {
+		static::addGlobalScope('images', function(Builder $builder) {
 			$builder->with('images');
 		});
 	}
