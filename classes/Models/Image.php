@@ -10,6 +10,28 @@ use Bkwld\Decoy\Markup\ImageElement;
 class Image extends Base {
 
 	/**
+	 * JSON serialization
+	 *
+	 * @var array
+	 */
+	protected $visible = ['low', 'medium', 'high', 'background_position', 'title'];
+	protected $appends = ['low', 'medium', 'high', 'background_position'];
+
+	/**
+	 * The attributes that should be cast to native types.
+	 *
+	 * @var array
+	 */
+	protected $casts = [
+		'file_size'   => 'integer',
+		'width'       => 'integer',
+		'height'      => 'integer',
+		'crop'        => 'object',
+		'focal_point' => 'object',
+	];
+
+
+	/**
 	 * Validation rules
 	 *
 	 * @return array
@@ -85,6 +107,9 @@ class Image extends Base {
 	/**
 	 * Set the crop dimenions
 	 *
+	 * @param  integer $width
+	 * @param  integer $height
+	 * @param  array   $options Croppa options array
 	 * @return $this
 	 */
 	public function crop($width = null, $height = null, $options = null) {
@@ -97,6 +122,20 @@ class Image extends Base {
 	}
 
 	/**
+	 * Get the config, merging defaults in so that all keys in the array are
+	 * present
+	 *
+	 * @return array
+	 */
+	public function getConfig() {
+		return array_merge([
+			'width'   => null,
+			'height'  => null,
+			'options' => null,
+		], $this->config);
+	}
+
+	/**
 	 * Output the image URL with any queued Croppa transformations.  Note, it's
 	 * possible that "file" is empty, in which case this returns an empty string.
 	 *
@@ -104,14 +143,8 @@ class Image extends Base {
 	 */
 	public function getUrlAttribute() {
 
-		// Merge the config with defaults
-		$config = array_merge([
-			'width'   => null,
-			'height'  => null,
-			'options' => null,
-		], $this->config);
-
 		// Clear the instance config so that subsequent calls don't inherit anything
+		$config = $this->getConfig();
 		$this->config = [];
 
 		// Return the URL
@@ -129,7 +162,7 @@ class Image extends Base {
 	 */
 	public function getBkgdAttribute() {
 		return sprintf('background-image: url(\'%s\');', $this->getUrlAttribute())
-			.$this->getBackgroundPositionAttribute();
+			.$this->getBkgdPosAttribute();
 	}
 
 	/**
@@ -159,25 +192,76 @@ class Image extends Base {
 	}
 
 	/**
-	 * Convert the focal_point attribute to a CSS background-position
+	 * Convert the focal_point attribute to a CSS background-position.
 	 *
-	 * @return String
+	 * @return string
+	 */
+	public function getBkgdPosAttribute() {
+		if (!$value = $this->getBackgroundPositionAttribute()) return;
+		return sprintf('background-position: %s;', $value);
+	}
+
+	/**
+	 * Convert the focal point to the VALUE portion of the CSS
+	 * background-position.  This is also used in the serialization conversion
+	 * and is named to be friendly to that format.
+	 *
+	 * @return string
 	 */
 	public function getBackgroundPositionAttribute() {
-		$point = $this->getAttribute('focal_point');
-		if (empty($point)) return null;
-		$point = json_decode($point);
-		return sprintf('background-position: %s%% %s%%;',
-			$point->x*100, $point->y*100);
+		if (!$point = $this->getAttribute('focal_point')) return;
+		return sprintf('%s%% %s%%', $point->x*100, $point->y*100);
 	}
 
 	/**
 	 * Convenience accessor for the title attribute
 	 *
-	 * @return String
+	 * @return string
 	 */
 	public function getAltAttribute() {
 		return $this->getAttribute('title');
+	}
+
+	/**
+	 * Generate the .5x image URL
+	 *
+	 * @return string
+	 */
+	public function getLowAttribute() {
+		$config = $this->getConfig();
+		return Croppa::url($this->getAttribute('file'),
+			round($config['width']/2),
+			round($config['height']/2),
+			$config['options']
+		);
+	}
+
+	/**
+	 * Generate the 1x image URL
+	 *
+	 * @return string
+	 */
+	public function getMediumAttribute() {
+		$config = $this->getConfig();
+		return Croppa::url($this->getAttribute('file'),
+			$config['width'],
+			$config['height'],
+			$config['options']
+		);
+	}
+
+	/**
+	 * Generate the 2x image URL
+	 *
+	 * @return string
+	 */
+	public function getHighAttribute() {
+		$config = $this->getConfig();
+		return Croppa::url($this->getAttribute('file'),
+			$config['width']*2,
+			$config['height']*2,
+			$config['options']
+		);
 	}
 
 }

@@ -3,6 +3,7 @@
 // Imports
 use App;
 use Bkwld\Cloner\Cloneable;
+use Bkwld\Decoy\Collections\Base as BaseCollection;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Library\Utils\Collection;
@@ -33,6 +34,16 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	use SupportsUploads, Cloneable, SluggableTrait {
 		needsSlugging as traitNeedsSlugging;
+	}
+
+	/**
+	 * Use the Decoy Base Collection
+	 *
+	 * @param  array  $models
+	 * @return Images
+	 */
+	public function newCollection(array $models = []) {
+		return new BaseCollection($models);
 	}
 
 	//---------------------------------------------------------------------------
