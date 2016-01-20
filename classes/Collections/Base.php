@@ -99,17 +99,27 @@ class Base extends Collection {
 				throw new Exception(get_class($model).' needs HasImages trait');
 			}
 
-			// Lookup up the image by name and set crop.  Then convert it to an array
-			// because Laravel won't automatically do it during collection
-			// serialization. Another, more complicated approach could have been to use
-			// the Decoy Base model to add a cast type of "model" and then call
-			// toArray() on it when casting the attribute.
-			$image = $model->image($name)
-				->crop($width, $height, $options)
-				->toArray();
+			// Lookup up the image by name and set crop.
+			$image = $model->image($name)->crop($width, $height, $options);
 
-			// Add the image as an attribute of the model
-			$model->setAttribute($property, $image)->addVisible($property);
+			// Create or fetch the container for all images on the model. The
+			// container could not be "images" because that is used by the
+			// relationship function and leads to trouble.
+			if (!$model->getAttribute('imgs')) {
+				$imgs = [];
+				$model->addVisible('imgs');
+			} else {
+				$imgs = $model->getAttribute('imgs');
+			}
+
+			// Add the image to the container and set it.  Then return the model. It
+			// must be explicitly converted to an array because Laravel won't
+			// automatically do it during collection serialization. Another, more
+			// complicated approach could have been to use the Decoy Base model to add
+			// a cast type of "model" and then call toArray() on it when casting the
+			// attribute.
+			$imgs[$property] = $image->toArray();
+			$model->setAttribute('imgs', $imgs);
 			return $model;
 		});
 
