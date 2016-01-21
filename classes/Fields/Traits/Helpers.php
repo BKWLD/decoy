@@ -11,7 +11,7 @@ trait Helpers {
 
 	/**
 	 * Allow passing in of a model when inferring doesn't work
-	 * 
+	 *
 	 * @var Illuminate\Database\Eloquent\Model
 	 */
 	private $model;
@@ -20,7 +20,7 @@ trait Helpers {
 	 * Set the model
 	 *
 	 * @param Illuminate\Database\Eloquent\Model $model
-	 * @return this 
+	 * @return this
 	 */
 	public function setModel($model) {
 		$this->model = $model;
@@ -28,7 +28,7 @@ trait Helpers {
 	}
 
 	/**
-	 * Get the model instance for the form from Former's populator.  This takes 
+	 * Get the model instance for the form from Former's populator.  This takes
 	 * advantage of Populator extending from Collection
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
@@ -48,7 +48,7 @@ trait Helpers {
 	/**
 	 * If there is a span class on the field, return it
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function span() {
 		if (!isset($this->attributes['class'])) return;
@@ -56,4 +56,4 @@ trait Helpers {
 		return $matches[0];
 	}
 
-} 
+}
