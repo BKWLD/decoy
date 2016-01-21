@@ -27,8 +27,9 @@ class NestedModels {
 			// detected because the id begins with an underscore (aka, doesn't reflect)
 			// a true record in the database.
 			foreach($data as $id => $input) {
-				if (starts_with($id, '_')) $this->storeChild($relation, $input);
-				else $this->updateChild($relation, $id, $input);
+				$prefix = $name.'.'.$id.'.';
+				if (starts_with($id, '_')) $this->storeChild($relation, $input, $prefix);
+				else $this->updateChild($relation, $id, $input, $prefix);
 			}
 		}
 	}
@@ -37,9 +38,9 @@ class NestedModels {
 	 * Check if the input is a relation and, if it is, return the relationship
 	 * object
 	 *
-	 * @param Eloquent\Model $model
-	 * @param string $name
-	 * @param mixed $data
+	 * @param  Model  $model
+	 * @param  string $name The input name, like from <input name="$name">
+	 * @param  mixed  $data
 	 * @return false|Relation
 	 */
 	protected function makeRelation($model, $name, $data) {
@@ -70,29 +71,31 @@ class NestedModels {
 	/**
 	 * Create a new child record
 	 *
-	 * @param Relation $relation
-	 * @param array $input
+	 * @param  Relation $relation
+	 * @param  array    $input    The data for the nested model
+	 * @param  string   $prefix   The input name prefix, for validation
 	 * @return void
 	 */
-	protected function storeChild($relation, $input) {
+	protected function storeChild($relation, $input, $prefix) {
 		$child = $relation->getRelated()->newInstance();
 		$child->fill($input);
-		(new ModelValidator)->validate($child);
+		(new ModelValidator)->validateAndPrefixErrors($prefix, $child);
 		$relation->save($child);
 	}
 
 	/**
 	 * Update an existing child record
 	 *
-	 * @param Relation $relation
-	 * @param integer $id
-	 * @param array $input
+	 * @param  Relation $relation
+	 * @param  integer  $id
+	 * @param  array    $input    The data for the nested model
+	 * @param  string   $prefix   The input name prefix, for validation
 	 * @return void
 	 */
-	protected function updateChild($relation, $id, $input) {
+	protected function updateChild($relation, $id, $input, $prefix) {
 		$child = $relation->getRelated()->findOrFail($id);
 		$child->fill($input);
-		(new ModelValidator)->validate($child);
+		(new ModelValidator)->validateAndPrefixErrors($prefix, $child);
 		$child->save();
 	}
 
