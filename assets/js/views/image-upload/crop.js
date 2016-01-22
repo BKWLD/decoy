@@ -28,21 +28,20 @@ define(function (require) {
 			_.bindAll(this);
 
 			// Cache selectors
-			this.$crop = this.$el.closest('.image-upload').find('.input-crop');
-			this.$focus = this.$el.closest('.image-upload').find('.input-focal_point');
-			this.$cropTool = this.$el.closest('.image-upload').find('.crop.btn');
-			this.$focusTool = this.$el.closest('.image-upload').find('.focal.btn');
+			this.$upload = this.$el.closest('.image-upload');
+			this.$crop = this.$upload.find('.input-crop');
+			this.$focus = this.$upload.find('.input-focal_point');
+			this.$cropTool = this.$upload.find('.crop.btn');
+			this.$focusTool = this.$upload.find('.focal.btn');
+			this.$file = this.$upload.find('[type="file"]');
 
 			// Remove clicking on the parent a tag
 			this.$el.parent('a').click(function(e) { e.preventDefault(); });
 
 			// Cache configruation variables
 			this.style = this.$el.data('style');
-			var ratio = this.$el.data('ratio');
-			if (ratio) {
-				ratio = ratio.split(':');
-				this.ratio = ratio[0]/ratio[1];
-			}
+			var ratio = this.$file.data('aspect-ratio');
+			this.ratio = ratio;
 
 			// Listen for window resizing as a way to check whether the img has been resized
 			// since it resizes responsively.  We listen on the leading edge for the start
