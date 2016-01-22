@@ -28,8 +28,8 @@ define(function (require) {
 			_.bindAll(this);
 
 			// Cache selectors
-			this.$crop = this.$el.closest('.image-upload').find(':hidden[name*="_crops"]');
-			this.$focus = this.$el.closest('.image-upload').find(':hidden[name*="_focus"]');
+			this.$crop = this.$el.closest('.image-upload').find('.input-crop');
+			this.$focus = this.$el.closest('.image-upload').find('.input-focal_point');
 			this.$cropTool = this.$el.closest('.image-upload').find('.crop.btn');
 			this.$focusTool = this.$el.closest('.image-upload').find('.focal.btn');
 
