@@ -175,8 +175,6 @@ class ServiceProvider extends BaseServiceProvider {
 	protected function delegateAdminObservers() {
 		foreach([
 			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Localize',
-			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Cropping@onSaving',
-			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Cropping@onDeleted',
 			'eloquent.saved:*'   => 'Bkwld\Decoy\Observers\ManyToManyChecklist',
 			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Encoding@onSaving',
 			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
