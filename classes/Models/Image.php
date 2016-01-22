@@ -62,16 +62,38 @@ class Image extends Base {
 		parent::boot();
 
 		// Need to process file meta before Upchuck converts the UploadFile object
-		// to a URL string
+		// to a URL string.  If the image file attribute has been set to empty,
+		// stop the save and immediately delete.
 		static::saving(function(Image $image) {
+			if ($image->deletedBecauseEmpty()) return false;
 			$image->populateFileMeta();
 		}, config('upchuck.priority', 0) + 1);
+
+		// If the image is deleted, delete Croppa crops
+		static::updating(function(Image $image) {
+			if ($image->isDirty('file')) $image->deleteCrops();
+		});
+		static::deleted(function(Image $image) {
+			$image->deleteCrops();
+		});
 	}
 
 	/**
 	 * Polymorphic relationship
 	 */
 	public function imageable() { return $this->morphTo(); }
+
+	/**
+	 * If the file attribtue is empty, this Image has been marked for deletion.
+	 * Return true to signal the image was deleted
+	 *
+	 * @return bool
+	 */
+	public function deletedBecauseEmpty() {
+		if ($file = $this->getAttributeValue('file')) return false;
+		if ($this->exists) $this->delete();
+		return true;
+	}
 
 	/**
 	 * Store file meta info in the database
@@ -87,6 +109,21 @@ class Image extends Base {
 			'width'     => $size[0],
 			'height'    => $size[1],
 		]);
+	}
+
+	/**
+	 * Delete the crops that Croppa has made for the image
+	 *
+	 * @return void
+	 */
+	public function deleteCrops() {
+
+		// Get at the file path using "original" so this function can be called as
+		// part of an "updating" callback
+		$file = $this->getOriginal('file');
+
+		// Tell Croppa to delete the crops
+		Croppa::reset($file);
 	}
 
 	/**
