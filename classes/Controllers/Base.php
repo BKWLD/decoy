@@ -463,8 +463,13 @@ class Base extends Controller {
 	 */
 	public function store() {
 
-		// Create a new object and hydrate
+		// Create a new object
 		$item = new $this->model;
+
+		// Remove nested model data from input and prepare to insert on save
+		(new NestedModel)->relateTo($item);
+
+		// Hydrate the object
 		$item->fill(Library\Utils\Collection::nullEmpties(Input::all()));
 
 		// Validate and save.
@@ -528,6 +533,9 @@ class Base extends Controller {
 		// Get the model instance
 		$item = $this->findOrFail($id);
 
+		// Remove nested model data from input and prepare to insert on save
+		(new NestedModels)->relateTo($item);
+
 		// Hydrate for drag-and-drop sorting
 		if (Request::ajax()
 			&& ($position = new Position($item, $this->self_to_parent))
@@ -545,9 +553,6 @@ class Base extends Controller {
 		// Save the record
 		$this->validate($item);
 		$item->save();
-
-		// Insert related model data
-		(new NestedModels)->relateTo($item);
 
 		// Redirect to the edit view
 		if (Request::ajax()) return Response::json();

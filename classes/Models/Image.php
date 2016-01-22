@@ -3,6 +3,7 @@
 // Deps
 use Croppa;
 use Bkwld\Decoy\Markup\ImageElement;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Polymorphic one to many class that stores images for any model.
@@ -96,12 +97,13 @@ class Image extends Base {
 	}
 
 	/**
-	 * Store file meta info in the database
+	 * Store file meta info in the database if a new File object is present
 	 *
 	 * @return void
 	 */
 	public function populateFileMeta() {
 		$file = $this->getAttributeValue('file');
+		if (!is_a($file,  UploadedFile::class)) return;
 		$size = getimagesize($file->getPathname());
 		$this->fill([
 			'file_type' => $this->guessFileType($file),
@@ -122,17 +124,18 @@ class Image extends Base {
 		// part of an "updating" callback
 		$file = $this->getOriginal('file');
 
-		// Tell Croppa to delete the crops
+		// Tell Croppa to delete the crops.  The actual file will be deleted by
+		// Upchuck automatically.
 		Croppa::reset($file);
 	}
 
 	/**
 	 * Get file type
 	 *
-	 * @param Symfony\Component\HttpFoundation\File\UploadedFile
+	 * @param UploadedFile
 	 * @return string
 	 */
-	protected function guessFileType($file) {
+	protected function guessFileType(UploadedFile $file) {
 		$type = $file->guessClientExtension();
 		switch($type) {
 			case 'jpeg': return 'jpg';
