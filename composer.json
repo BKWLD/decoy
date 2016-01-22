@@ -45,6 +45,12 @@
 		"phpunit/phpunit": "^4.0",
 		"mockery/mockery": "^0.9"
 	},
+	"repositories": [
+    {
+			"type": "vcs",
+			"url":  "git@github.com:BKWLD/camo.git"
+		}
+	],
 	"conflict": {
 		"anahkiasen/html-object": "1.4.1"
 	},

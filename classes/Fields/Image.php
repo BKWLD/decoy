@@ -1,37 +1,38 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
-use Bkwld\Library;
 use Croppa;
 use Former;
+use Former\Form\Fields\File;
 use Illuminate\Container\Container;
 
 /**
- * Creates an image file upload field with addtional UI for displaing previously uploaded
- * images, setting crop bounds, and deleting them.
+ * Creates an image file upload field with addtional UI for displaing previously
+ * uploaded images, setting crop bounds, and deleting them.
  */
-class Image extends Upload {
-	use Traits\Helpers;
+class Image extends File {
+	use Traits\InsertMarkup, Traits\Helpers;
 
 	/**
-	 * The maximum width images are presented as in Decoy.  This is 820x2.  820 is max width
-	 * of a horizontal layout with the a site wide max width of 1280.
-	 */
-	const MAX_WIDTH = 1640;
-
-	/**
-	 * Preserve crop data
+	 * Whether to show the focal point UI
 	 *
-	 * @var array
+	 * @var bool
 	 */
-	private $crops;
+	private $add_focal_point = false;
 
 	/**
-	 * Track whether the field has blockhelp
+	 * The unique id for this Image instance
 	 *
-	 * @var boolean
+	 * @var string
 	 */
-	private $has_blockhelp = false;
+	private $input_id;
+
+	/**
+	 * The aspect ratio jCrop should use
+	 *
+	 * @var number
+	 */
+	private $ratio;
 
 	/**
 	 * Create an image upload field
@@ -46,39 +47,40 @@ class Image extends Upload {
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
 
-		// Add an extra class to allow styles to tweak ontop of the main "uploads" class
+		// Add an extra class to allow styles to tweak ontop of the main "uploads"
+		// class
 		$this->addGroupClass('image-upload');
-		$this->group->setAttribute('data-js-view', 'image-fullscreen');
 
 		// Make it accept only images
-		$this->accept('image');		
+		$this->accept('image');
 	}
 
 	/**
-	 * Override the basic blockhelp function to keep track of whether it's
-	 * been provided.  Former doesn't provide an API for this.
-	 */
-	public function blockhelp() {
-		$this->has_blockhelp = true;
-		return call_user_func_array(array('parent', 'blockhelp'), func_get_args());
-	}
-
-	/**
-	 * Show the preview UI with a delete checkbox
+	 * Give the file input the prefixed name
 	 *
-	 * @return string HTML
+	 * @return string An input tag
 	 */
-	protected function renderDestuctableReview() {
-		return $this->renderImageReview().parent::renderDestuctableReview();
+	public function render() {
+		$this->name = $this->inputName('file');
+		return parent::render();
 	}
 
 	/**
-	 * Should only the image review with no checkbox
+	 * Prints out the field, wrapped in its group.  Additional review UI is tacked
+	 * on here.
 	 *
-	 * @return string HTML
+	 * @return string
 	 */
-	protected function renderIndestructibleReview() {
-		return $this->renderImageReview();
+	public function wrapAndRender() {
+
+		// Get additional UI first so it can modify the normal form-group UI.
+		$html = $this->renderEditor();
+
+		// Add the aspect ratio choice
+		$this->dataAspectRatio($this->ratio);
+
+		// Add extra markup
+		return $this->appendToGroup(parent::wrapAndRender(), $html);
 	}
 
 	/**
@@ -86,133 +88,117 @@ class Image extends Upload {
 	 *
 	 * @return string HTML
 	 */
-	protected function renderImageReview() {
+	protected function renderEditor() {
+		$html = '';
 
-		// Check for a crops defintion.  The defintion is named after the model
-		// attribute, not the input name
-		if (($item = $this->model()) && method_exists($item, 'getUploadMap')) {
+		// Will store the name
+		$html .= $this->createHidden('name', $this->name);
 
-			// Convert array-like names to dot notation to match the supportsUploads
-			// map
-			$name = preg_match('#\]$#', $this->name) ? 
-				trim(str_replace(array('[', ']'), array('.', ''), $this->name), '.') : 
-				$this->name;
+		// Will store the crop coordinates
+		$html .= $this->createHidden('crop',
+			$this->image()->getAttributeValue('crop'));
 
-			// Get the model attribute for the name
-			$map = $item->getUploadMap();
-			$this->crops = @$item::$crops[$map[$name]];
+		// Begin the image upload section
+		$html .= '
+			<div class="image-holder">
+				<div class="toolbar input-group">
+					<div class="btn-group btn-group-sm">
+						<div class="crop btn js-tooltip active" title="Click a point in the
+							image that should stay in view despite browser resizing">
+							<div class="glyphicon glyphicon-scissors"></div></div>';
+
+		// Will add the focal point ui
+		if ($this->add_focal_point) {
+			$html .= '<div class="focal btn js-tooltip" title="Click a point in the
+				image that should stay in view despite browser resizing">
+					<div class="glyphicon glyphicon-screenshot"></div></div>';
+
+			// Will store the focal point
+			$html .= $this->createHidden('focal_point',
+				$this->image()->getAttributeValue('focal_point'));
 		}
 
-		// Show cropper
-		if ($this->crops && $this->isInUploads()) return $this->renderCropper();
+		// Will close out the button group
+		$html .= '</div>';
 
-		// Else there were no crops defined, so display the single image
-		else if ($this->isInUploads()) return $this->renderImageWithCroppa();
+		// Add the title input
+		$html .= '<input class="title js-tooltip" placeholder="Title" type="text"
+			title="Title">';
 
-		// Else, it's not in the uploads directory, so we can't use croppa
-		else return $this->renderImageWithoutCroppa();
+		// Close out all divs and add image holder
+		$html .= '</div><img class="img-thumbnail no-help" src=""></div>';
 
-	}
-
-	/**
-	 * Add markup needed for the cropping UI
-	 *
-	 * @return string HTML
-	 */
-	protected function renderCropper() {
-
-		// Open container
-		$html = '<div class="image-upload-cropper">';
-			
-		// Add the tabs
-		if (count($this->crops) > 1) {
-			$html .= '<div class="tabs" data-js-view="crop-styles">';
-			$active = 'active';
-			foreach($this->crops as $key => $val) {
-				$label = is_numeric($key) ? $val : $key;
-				$html .= '<span class="'.$active.'">'
-					.Library\Utils\String::titleFromKey($label)
-					.'</span>';
-				$active = null;
-			}
-			$html .= '</div>';
-		}
-	
-		// Add fullscreen button
-		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
-		
-		// Add the images
-		$html .= '<div class="imgs js-tooltip" title="Click and drag on the image to create cropping bounds.">';
-		foreach($this->crops as $key => $val) {
-			
-			// Figure out the raio and crop name
-			if (is_numeric($key)) {
-				$style = $val;
-				$ratio = null;
-			} else {
-				$style = $key;
-				$ratio = $val;
-			}
-			
-			// Create the HTML
-			$html .= '<a href="'.$this->value.'">
-				<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
-					class="'.$this->imgTag().'" 
-					data-ratio="'.$ratio.'" 
-					data-style="'.$style.'" 
-					data-js-view="crop">
-				</a>';
-	
-		}
-
-		// Close
-		$html .= '</div></div>';
-
-		// Add hidden field to store cropping choices. If the field use array-like
-		// naming, insert the _crops suffix inside the last bracket. 
-		$name = preg_match('#\]$#', $this->name) ? 
-			substr_replace($this->name, '_crops', -1, 0) : 
-			$this->name.'_crops';
-		$html .= Former::hidden($name);
-
-		// After rendering a new Former field, the active former field must be reset 
-		// for form validation errors to work.
-		$this->app['former.field'] = $this;
-
-		// Return HTML
 		return $html;
 	}
-	
+
 	/**
-	 * Render the review image with croppa
+	 * Make a hidden field
 	 *
-	 * @return string HTML
+	 * @param  string $name
+	 * @param  string $value
+	 * @return string
 	 */
-	protected function renderImageWithCroppa() {
-		return '<a href="'.$this->value.'">
-			<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
-				class="'.$this->imgTag().' fullscreen-toggle">
-			</a>';
+	protected function createHidden($name, $value) {
+		return sprintf('<input type="hidden" name="%s" value="%s" class="input-%s">',
+			$this->inputName($name), $value, $name);
 	}
-	
+
+
 	/**
-	 * Render the 
+	 * Wrap an input name in the nested / array-like structure
 	 *
-	 * @return string HTML
+	 * @param  string $name
+	 * @return string
 	 */
-	protected function renderImageWithoutCroppa() {
-		return '<a href="'.$this->value.'">
-			<img src="'.$this->value.'" 
-				class="'.$this->imgTag().' fullscreen-toggle">
-			</a>';
+	protected function inputName($name) {
+		return sprintf('_images[%s][%s]', $this->inputId(), $name);
 	}
 
 	/**
-	 * Make the class for the image tag
+	 * Get the id to use in all inputs for this Image
+	 *
+	 * @return string Either a model id or an arbitrary number prefixed by _
 	 */
-	protected function imgTag() {
-		if ($this->has_blockhelp) return 'img-thumbnail';
-		else return 'img-thumbnail no-help';
+	protected function inputId() {
+
+		// If we're editing an already existing image, return it's Image id
+		if (($image = $this->image()) && $image->id) return $image->id;
+
+		// Otherwise, use a unique id for this image instance.  It must be unique
+		// compared to other Former:image() instances on this page.
+		if (!$this->input_id) $this->input_id = '_'.str_random(4);
+		return $this->input_id;
+	}
+
+	/**
+	 * Get the Image model we're editing or an empty Image class
+	 *
+	 * @return Image
+	 */
+	protected function image() {
+		return $this->model()->image($this->name);
+	}
+
+	/**
+	 * Store the aspect ratio to use with jCrop
+	 *
+	 * @param  number $ratio The result of an expression like 16/9
+	 * @return $this
+	 */
+	public function aspect($ratio) {
+		$this->ratio = $ratio;
+		return $this;
+	}
+
+	/**
+	 * Toggle the presence of the focal point ui
+	 *
+	 * @param  bool $bool
+	 * @return $this
+	 */
+	public function addFocalPoint($bool = true) {
+			$this->add_focal_point = $bool;
+			return $this;
 	}
 
 }

@@ -14,7 +14,7 @@ define (require) ->
     initialize: ->
 
       _.bindAll this
-      @$file = @$el.find('.file')
+      @$file = @$el.find('[type="file"]')
       @$holder = @$el.find('.image-holder')
       @$imagePreview = @$holder.find('.img-thumbnail')
       @$delete = @$el.find('.delete')
@@ -34,7 +34,7 @@ define (require) ->
           @$holder.addClass 'visible'
           @$imagePreview.attr 'src', e.target.result
           @trigger 'previewImage'
-          
+
           return
 
         reader.readAsDataURL @$file[0].files[0]
