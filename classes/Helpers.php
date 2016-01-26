@@ -314,4 +314,17 @@ class Helpers {
 		return Str::plural($this->belongsToName($model));
 	}
 
+	/**
+	 * Get all input but filter out empty file fields. This prevents empty file
+	 * fields from overriding existing files on a model. Using this assumes that
+	 * we are filling a model and then validating the model attributes.
+	 *
+	 * @return array
+	 */
+	public function filteredInput() {
+		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+		return Library\Utils\Collection::nullEmpties($input);
+	}
+
+
 }

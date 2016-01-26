@@ -3,6 +3,7 @@
 // Deps
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Input\ModelValidator;
+use Decoy;
 use Input;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
@@ -27,10 +28,8 @@ class NestedModels {
 	 */
 	public function relateTo($model) {
 
-		$input = array_replace_recursive(request()->files->all(), request()->input());
-
 		// Loop through the input, looking for relationships
-		foreach($input as $name => $data) {
+		foreach(Decoy::filteredInput() as $name => $data) {
 			if (!$relation = $this->makeRelation($model, $name, $data)) continue;
 
 			// Remove the Input data, since it shouldn't be `filled()` on the model
@@ -91,7 +90,7 @@ class NestedModels {
 	 * @return void
 	 */
 	protected function writeOnSaved($relation, $name, $data) {
-		
+
 		// Loop through the data and create or update model records. A create is
 		// detected because the id begins with an underscore (aka, doesn't reflect)
 		// a true record in the database.

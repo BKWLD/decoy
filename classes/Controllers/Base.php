@@ -14,7 +14,6 @@ use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Base as BaseModel;
 use Bkwld\Decoy\Routing\Wildcard;
-use Bkwld\Library;
 use Bkwld\Library\Utils\File;
 use Croppa;
 use DB;
@@ -470,7 +469,7 @@ class Base extends Controller {
 		(new NestedModel)->relateTo($item);
 
 		// Hydrate the object
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::all()));
+		$item->fill(Decoy::filteredInput());
 
 		// Validate and save.
 		$this->validate($item);
@@ -543,7 +542,7 @@ class Base extends Controller {
 
 		// ... else hydrate normally
 		else {
-			$item->fill(Library\Utils\Collection::nullEmpties(Input::all()));
+			$item->fill(Decoy::filteredInput());
 			if (isset($item::$rules['slug'])) {
 				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
 				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
