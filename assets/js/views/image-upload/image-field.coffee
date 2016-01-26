@@ -6,7 +6,6 @@ define (require) ->
   Backbone = require "backbone"
   Preview = require "./preview"
   Crop = require "./crop"
-  # ImageCrop = require "./image-crop"
 
   # Init view
   View =
@@ -15,7 +14,6 @@ define (require) ->
 
       @preview = new Preview { el: @el, parent: @ }
       @crop = new Crop { el: @$('.img-thumbnail') }
-      # @imageCrop = new ImageCrop { el: @$('.img-thumbnail') }
 
       @preview.on 'previewImage', @onPreviewImage
       @preview.on 'deleteImage', @onDeleteImage
