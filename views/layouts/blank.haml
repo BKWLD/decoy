@@ -14,7 +14,7 @@
 		%meta(name='csrf-token' content=csrf_token())
 
 		-# Stylesheets
-		!= Camo::webpackAssetTag('admin.css')
+		!= Layout::webpackAssetTag('admin.css')
 
 	%body(class=Decoy::bodyClass())
 
@@ -22,4 +22,4 @@
 		#main!= $content
 
 		-# JS
-		!= Camo::webpackAssetTag('admin.js')
+		!= Layout::webpackAssetTag('admin.js')
