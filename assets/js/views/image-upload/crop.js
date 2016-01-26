@@ -84,7 +84,7 @@ define(function (require) {
 
 			// Check if there is any crop selection defined
 			var cropVal = this.input_to_json(this.$crop);
-			var selection = cropVal[this.style] ? this.convert_from_perc(cropVal[this.style]) : undefined;
+			var selection = cropVal ? this.convert_from_perc(cropVal) : undefined;
 
 			// Init jcrop
 			var self = this;
@@ -106,8 +106,16 @@ define(function (require) {
 
 			// Check if focal point is set
 			var focalVal = this.input_to_json(this.$focus);
-			this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
-			this.$el.next('div').find('.focal-point').css({'left' : focalVal.x * this.$el.outerWidth(), 'top' : focalVal.y * this.$el.outerHeight() });
+			console.log(focalVal);
+			if(this.$focusTool.length != 0) {
+				this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
+				this.$focalPoint = this.$el.next('div').find('.focal-point');
+				this.$focalPoint.css({'left' : focalVal.x * this.$el.outerWidth(), 'top' : focalVal.y * this.$el.outerHeight()});
+
+				if(!$.isEmptyObject(focalVal)) {
+					this.$focalPoint.css('opacity', 1);
+				}
+			}
 
 		},
 
@@ -151,15 +159,16 @@ define(function (require) {
 
 			var cropVal = this.input_to_json(this.$crop);
 			var selection = cropVal[this.style] ? this.convert_from_perc(cropVal[this.style]) : undefined;
-
 			this.$focus.val(JSON.stringify(location));
-			this.$el.next('div').find('.focal-point').css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight() });
 
 			if(!$.isEmptyObject(cropVal)) {
 				if(pointX < selection[0] || pointY < selection[1] || pointX > selection[2] || pointY > selection[3]) {
-					console.log('set it!');
+					console.log('Focal point must be inside crop')
+					return;
 				}
 			}
+
+			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
 		},
 
 		// Remove jcrop from the element

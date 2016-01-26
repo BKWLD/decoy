@@ -83,6 +83,8 @@
     position: absolute;
     z-index: 1000;
     color: white;
+    opacity: 0;
+    transition: opacity 300ms;
   }
 
   .delete {
