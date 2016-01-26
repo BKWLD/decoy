@@ -62,6 +62,11 @@ class Image extends Base {
 	protected static function boot() {
 		parent::boot();
 
+		// Convert input strings to objects for casted attributes
+		static::saving(function(Image $image) {
+			$image->convertCastedJson();
+		});
+
 		// Need to process file meta before Upchuck converts the UploadFile object
 		// to a URL string.  If the image file attribute has been set to empty,
 		// stop the save and immediately delete.
@@ -83,6 +88,22 @@ class Image extends Base {
 	 * Polymorphic relationship
 	 */
 	public function imageable() { return $this->morphTo(); }
+
+	/**
+	 * Convert strings that may have been `fill()`ed but need to be objects to
+	 * work with Laravel casting
+	 *
+	 * @return void
+	 */
+	public function convertCastedJson() {
+		foreach($this->casts as $attribute => $cast) {
+			if ($cast != 'object') continue;
+			if (($val = $this->getAttributeValue($attribute))
+				&& is_string($val)) {
+					$this->setAttribute($attribute, json_decode($val));
+			}
+		}
+	}
 
 	/**
 	 * If the file attribtue is empty, this Image has been marked for deletion.
