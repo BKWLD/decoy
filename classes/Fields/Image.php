@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
+use Bkwld\Decoy\Models\Image as ImageModel;
 use Croppa;
 use Former;
 use Former\Form\Fields\File;
@@ -56,7 +57,7 @@ class Image extends File {
 	}
 
 	/**
-	 * Give the file input the prefixed name
+	 * Give the file input the prefixed name.
 	 *
 	 * @return string An input tag
 	 */
@@ -77,7 +78,12 @@ class Image extends File {
 		$html = $this->renderEditor();
 
 		// Add the aspect ratio choice
-		$this->dataAspectRatio($this->ratio);
+		$this->group->dataAspectRatio($this->ratio);
+
+		// Inform whether there is an existing image to preview
+		if (Former::getValue($this->inputName('file'))) {
+			$this->group->addClass('has-image');
+		}
 
 		// Add extra markup
 		return $this->appendToGroup(parent::wrapAndRender(), $html);
@@ -122,11 +128,22 @@ class Image extends File {
 		$html .= '</div>';
 
 		// Add the title input
-		$html .= '<input class="title js-tooltip" placeholder="Title" type="text"
-			title="Title">';
+		$html .= Former::text($this->inputName('title'))
+			->class('title js-tooltip')
+			->placeholder('Title')
+			->render();
 
-		// Close out all divs and add image holder
-		$html .= '</div><img class="img-thumbnail no-help" src=""></div>';
+		// Add delete button
+		$html .= '<div class="delete btn-sm js-tooltip">
+								<div class="glyphicon glyphicon-trash"></div>
+							</div>';
+
+		// Close out all divs and add image holder.  Make the old image no wider
+		// than the max available width of forms (1050)
+		if ($src = Former::getValue($this->inputName('file'))) {
+				$src = Croppa::url($src, 1050);
+		}
+		$html .= sprintf('</div><img class="img-thumbnail" src="%s"></div>', $src);
 
 		return $html;
 	}
@@ -138,9 +155,13 @@ class Image extends File {
 	 * @param  string $value
 	 * @return string
 	 */
-	protected function createHidden($name, $value) {
-		return sprintf('<input type="hidden" name="%s" value="%s" class="input-%s">',
-			$this->inputName($name), $value, $name);
+	protected function createHidden($name, $value = null) {
+		$field = Former::hidden($this->inputName($name))->class('input-'.$name);
+		if ($value) {
+			if (!is_scalar($value)) $value = json_encode($value);
+			$field->forceValue($value);
+		}
+		return $field->render();
 	}
 
 
@@ -151,7 +172,7 @@ class Image extends File {
 	 * @return string
 	 */
 	protected function inputName($name) {
-		return sprintf('_images[%s][%s]', $this->inputId(), $name);
+		return sprintf('images[%s][%s]', $this->inputId(), $name);
 	}
 
 	/**
@@ -176,6 +197,7 @@ class Image extends File {
 	 * @return Image
 	 */
 	protected function image() {
+		if (!$this->model()) return new ImageModel;
 		return $this->model()->image($this->name);
 	}
 

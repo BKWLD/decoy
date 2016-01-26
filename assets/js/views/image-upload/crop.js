@@ -18,7 +18,6 @@ define(function (require) {
 		activeCrop: false,
 		width: null,
 		height: null,
-		style: null, // The style of the crop
 		ratio: undefined,
 		initted: false,
 		$input: null, // The hidden field that stores the output
@@ -39,8 +38,7 @@ define(function (require) {
 			this.$el.parent('a').click(function(e) { e.preventDefault(); });
 
 			// Cache configruation variables
-			this.style = this.$el.data('style');
-			var ratio = this.$file.data('aspect-ratio');
+			var ratio = this.$upload.data('aspect-ratio');
 			this.ratio = ratio;
 
 			// Listen for window resizing as a way to check whether the img has been resized
@@ -84,7 +82,7 @@ define(function (require) {
 
 			// Check if there is any crop selection defined
 			var cropVal = this.input_to_json(this.$crop);
-			var selection = cropVal ? this.convert_from_perc(cropVal) : undefined;
+			var selection = this.convert_from_perc(cropVal);
 
 			// Init jcrop
 			var self = this;
@@ -158,7 +156,7 @@ define(function (require) {
 			};
 
 			var cropVal = this.input_to_json(this.$crop);
-			var selection = cropVal[this.style] ? this.convert_from_perc(cropVal[this.style]) : undefined;
+			var selection = this.convert_from_perc(cropVal);
 			this.$focus.val(JSON.stringify(location));
 
 			if(!$.isEmptyObject(cropVal)) {
@@ -197,15 +195,15 @@ define(function (require) {
 
 			// Add the coordinates to the input's value
 			var val = this.input_to_json(this.$crop);
-			val[this.style] = c;
+			val = c;
 			this.$crop.val(JSON.stringify(val));
 
 		},
 
 		// Clear out the hidden input values for a new image
 		clear: function() {
-			this.$crop.val('');
-			this.$focus.val('');
+			this.$crop.val("");
+			this.$focus.val("");
 			this.$focusTool.removeClass('active');
 			this.$cropTool.addClass('active');
 		},

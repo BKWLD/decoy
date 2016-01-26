@@ -2,6 +2,21 @@
   $height: 33px;
   position: relative;
 
+  .image-holder {
+    display: none;
+  }
+
+  &.has-image {
+
+    .image-holder {
+      display: block;
+    }
+
+    input[type="file"] {
+      display: none;
+    }
+  }
+
   .title {
     display: inline-block;
     vertical-align: middle;
@@ -89,13 +104,5 @@
 
   .delete {
     float: right;
-  }
-
-  .image-holder {
-    display: none;
-
-    &.visible {
-      display: block;
-    }
   }
 }

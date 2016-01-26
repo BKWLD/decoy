@@ -31,7 +31,7 @@ define (require) ->
 
         reader.onload = (e) =>
           @$file.addClass 'hidden'
-          @$holder.addClass 'visible'
+          @$el.addClass 'has-image'
           @$imagePreview.attr 'src', e.target.result
           @trigger 'previewImage'
 
@@ -43,7 +43,7 @@ define (require) ->
 
     onDelete: () ->
       @$imagePreview.attr 'src', ''
-      @$holder.removeClass 'visible'
+      @$el.removeClass 'has-image'
       @$file.removeClass 'hidden'
       @$file.val ''
       @trigger 'deleteImage'

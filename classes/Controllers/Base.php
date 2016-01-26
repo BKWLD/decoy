@@ -466,7 +466,7 @@ class Base extends Controller {
 		$item = new $this->model;
 
 		// Remove nested model data from input and prepare to insert on save
-		(new NestedModel)->relateTo($item);
+		(new NestedModels)->relateTo($item);
 
 		// Hydrate the object
 		$item->fill(Decoy::filteredInput());
