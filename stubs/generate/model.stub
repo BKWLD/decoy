@@ -1,6 +1,7 @@
 <?php namespace App;
 
 class {{model}} extends Base {
+	use \Bkwld\Decoy\Models\Traits\HasImages;
 
 	/**
 	 * Validation rules
@@ -20,16 +21,7 @@ class {{model}} extends Base {
 	 *
 	 * @var array
 	 */
-	// protected $upload_attributes = ['image'];
-
-	/**
-	 * Admin cropping tool rules
-	 *
-	 * @var array
-	 */
-	// static public $crops = [
-	// 	'image' => ['default' => '1:1'],
-	// ];
+	// protected $upload_attributes = ['pdf'];
 
 	/**
 	 * Relationships to copy during duplication
@@ -43,7 +35,7 @@ class {{model}} extends Base {
 	 *
 	 * @return Illuminate\Database\Eloquent\Relations\Relation
 	 */
-	// public function photos() { return $this->hasMany('Photo'); }
+	// public function blocks() { return $this->hasMany('Block'); }
 
 	/**
 	 * Put new instances at the end

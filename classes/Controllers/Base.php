@@ -7,11 +7,14 @@ use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Fields\Listing;
 use Bkwld\Decoy\Input\Localize;
+use Bkwld\Decoy\Input\ModelValidator;
 use Bkwld\Decoy\Input\Position;
+use Bkwld\Decoy\Input\NestedModels;
 use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
+use Bkwld\Decoy\Models\Base as BaseModel;
 use Bkwld\Decoy\Routing\Wildcard;
-use Bkwld\Library;
+use Bkwld\Library\Laravel\Validator as BkwldLibraryValidator;
 use Bkwld\Library\Utils\File;
 use Croppa;
 use DB;
@@ -460,14 +463,22 @@ class Base extends Controller {
 	 */
 	public function store() {
 
-		// Create a new object and hydrate
+		// Create a new object
 		$item = new $this->model;
-		$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+
+		// Remove nested model data from input and prepare to insert on save
+		(new NestedModels)->relateTo($item);
+
+		// Hydrate the object
+		$item->fill(Decoy::filteredInput());
 
 		// Validate and save.
 		$this->validate($item);
 		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
 		else $item->save();
+
+		// Insert related model data
+		(new NestedModels)->relateTo($item);
 
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(['id' => $item->id]);
@@ -522,6 +533,9 @@ class Base extends Controller {
 		// Get the model instance
 		$item = $this->findOrFail($id);
 
+		// Remove nested model data from input and prepare to insert on save
+		(new NestedModels)->relateTo($item);
+
 		// Hydrate for drag-and-drop sorting
 		if (Request::ajax()
 			&& ($position = new Position($item, $this->self_to_parent))
@@ -529,7 +543,7 @@ class Base extends Controller {
 
 		// ... else hydrate normally
 		else {
-			$item->fill(Library\Utils\Collection::nullEmpties(Input::get()));
+			$item->fill(Decoy::filteredInput());
 			if (isset($item::$rules['slug'])) {
 				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
 				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
@@ -695,9 +709,9 @@ class Base extends Controller {
 		$item = $this->findOrFail($id);
 
 		// Do the attach
-		$this->fireEvent('attaching', [$item, $this->parent]);
+		$item->fireDecoyEvent('attaching', [$item, $this->parent]);
 		$item->{$this->self_to_parent}()->attach($this->parent);
-		$this->fireEvent('attached', [$item, $this->parent]);
+		$item->fireDecoyEvent('attached', [$item, $this->parent]);
 
 		// Return the response
 		return Response::json();
@@ -718,9 +732,9 @@ class Base extends Controller {
 		$items = array_map(function($id) { return $this->findOrFail($id); }, $ids);
 
 		// Lookup up the parent model so we can bulk remove multiple of THIS model
-		foreach($items as $item) $this->fireEvent('removing', [$item, $this->parent]);
+		foreach($items as $item) $item->fireDecoyEvent('removing', [$item, $this->parent]);
 		$this->parentRelation()->detach($ids);
-		foreach($items as $item) $this->fireEvent('removed', [$item, $this->parent]);
+		foreach($items as $item) $item->fireDecoyEvent('removed', [$item, $this->parent]);
 
 		// Redirect.  We can use back cause this is never called from a "show"
 		// page like get_delete is.
@@ -755,70 +769,35 @@ class Base extends Controller {
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
 	 *
-	 * @param Bkwld\Decoy\Model\Base $model The model instance that is being worked on
+	 * @param BaseModel|array $data The model instance that is being worked on
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
-	 * @throws Bkwld\Decoy\Exception\ValidationFail
 	 * @return void
+	 *
+	 * @throws ValidationFail
 	 */
-	protected function validate($model = null, $rules = null, $messages = array()) {
+	protected function validate($data, $rules = null, $messages = []) {
 
-		// Pull the input including files.  We manually merge files in because
-		// Laravel's Input::all()	does a recursive merge which results in file
-		// fields containing BOTH the string version of the previous file plus the
-		// new File instance when the user is replacing a file during	an update.
-		// The array_filter() is there to strip out empties from the files array.
-		// This prevents empty file fields from overriding the contents of the
-		// hidden field that stores	the previous file name.
-		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
-
-		// Get the rules if they were not passed in
-		if ($model && empty($rules)) $rules = $model::$rules;
+		// Get validation rules from model
+		$model = null;
+		if (is_a($data, BaseModel::class)) {
+			$model = $data;
+			if (empty($rules)) $rules = $model::$rules;
+		}
 
 		// If an AJAX update, don't require all fields to be present. Pass just the
 		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
-			$rules = array_only($rules, array_keys($input));
-		}
-
-		// If a model instance was passed, merge the input on top of that.  This
-		// allows data that may already be set on the model to be validated.  The
-		// input will override anything already set on the model.  In particular,
-		// this is done so that auto generated fields like the slug can be
-		// validated.  This intentionally comes after the AJAX conditional so that
-		// we still only validate fields that were present in the AJAX request.
-		if ($model && method_exists($model, 'getAttributes')) {
-			$input = array_merge($model->getAttributes(), $input);
+			$rules = array_only($rules, array_keys($data));
 		}
 
 		// Build the validation instance and fire the intiating event.
-		$validation = Validator::make($input, $rules, $messages);
-		if ($model) $this->fireEvent('validating', array($model, $validation));
-
-		// Run the validation.  If it fails, throw an exception that will get handled
-		// by Middleware.
-		if ($validation->fails()) throw new ValidationFail($validation);
-
-		// Fire completion event
-		$this->fireEvent('validated', array($model, $validation));
-	}
-
-	/**
-	 * Fire an event.  Actually, two are fired, one for the event and one that
-	 * mentions the model for this controller
-	 *
-	 * @param $string  event The name of this event
-	 * @param $array   args  An array of params that will be passed to the handler
-	 * @param $boolean until Whether to fire an "until" event or not
-	 * @return object
-	 */
-	protected function fireEvent($event, $args = null) {
-
-		// Create the event name
-		$event = "decoy::model.{$event}: ".$this->model;
-
-		// Fire event
-		return Event::fire($event, $args);
+		if ($model) (new ModelValidator)->validate($model, $rules, $messages);
+		else {
+			$messages = array_merge(BkwldLibraryValidator::$messages, $messages);
+			$validation = Validator::make($data, $rules, $messages);
+			if ($validation->fails()) throw new ValidationFail($validation);
+		}
 	}
 
 	/**

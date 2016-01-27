@@ -175,12 +175,11 @@ class ServiceProvider extends BaseServiceProvider {
 	protected function delegateAdminObservers() {
 		foreach([
 			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Localize',
-			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Cropping@onSaving',
-			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Cropping@onDeleted',
 			'eloquent.saved:*'   => 'Bkwld\Decoy\Observers\ManyToManyChecklist',
 			'eloquent.saving:*'  => 'Bkwld\Decoy\Observers\Encoding@onSaving',
 			'eloquent.deleted:*' => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
-			'decoy::model.validating:*' => 'Bkwld\Decoy\Observers\Validation@onValidating',
+			'decoy::model.validating:*' =>
+				'Bkwld\Decoy\Observers\ValidateExistingFiles@onValidating',
 		] as $key => $method) $this->app['events']->listen($key, $method);
 	}
 

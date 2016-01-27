@@ -417,7 +417,8 @@ class Admin extends Base implements
 	 * @return string
 	 */
 	public function getUserPhoto() {
-		return $this->croppa(80, 80) ?: $this->getGravatarAttribute();
+		return $this->getAdminThumbAttribute(80, 80)
+			?: $this->getGravatarAttribute();
 	}
 
 	/**

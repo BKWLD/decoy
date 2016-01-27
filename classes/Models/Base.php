@@ -3,12 +3,12 @@
 // Imports
 use App;
 use Bkwld\Cloner\Cloneable;
+use Bkwld\Decoy\Collections\Base as BaseCollection;
 use Bkwld\Decoy\Input\ManyToManyChecklist;
 use Bkwld\Decoy\Exceptions\Exception;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Upchuck\SupportsUploads;
 use Config;
-use Croppa;
 use Cviebrock\EloquentSluggable\SluggableInterface;
 use Cviebrock\EloquentSluggable\SluggableTrait;
 use DB;
@@ -35,6 +35,16 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		needsSlugging as traitNeedsSlugging;
 	}
 
+	/**
+	 * Use the Decoy Base Collection
+	 *
+	 * @param  array  $models
+	 * @return Images
+	 */
+	public function newCollection(array $models = []) {
+		return new BaseCollection($models);
+	}
+
 	//---------------------------------------------------------------------------
 	// Overrideable properties
 	//---------------------------------------------------------------------------
@@ -46,16 +56,6 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @var array
 	 */
 	static public $rules = [];
-
-	/**
-	 * This is should be overriden like so to specify crops that the image
-	 * cropping widget should make UI.  Example:
-	 *
-	 * array('image' => array('marquee' => '4:3', 'feature'))
-	 *
-	 * @var array
-	 */
-	static public $crops = [];
 
 	/**
 	 * Should this model be localizable in the admin.  If not undefined, will
@@ -192,7 +192,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return string
 	 */
 	public function getAdminTitleHtmlAttribute() {
-		return $this->croppaTag(40, 40).$this->getAdminTitleAttribute();
+		return $this->getAdminThumbTagAttribute().$this->getAdminTitleAttribute();
 	}
 
 	/**
@@ -204,6 +204,32 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return implode(' ', array_map(function($attribute) {
 			return $this->$attribute;
 		}, $this->titleAttributes())) ?: 'Untitled';
+	}
+
+	/**
+	 * Add a thumbnail img tag to the title
+	 *
+	 * @return string IMG tag
+	 */
+	public function getAdminThumbTagAttribute() {
+		if (!$url = $this->getAdminThumbAttribute()) return;
+		return sprintf('<img src="%s" alt="">', $url);
+	}
+
+	/**
+	 * The URL for the thumbnail
+	 *
+	 * @return string URL
+	 */
+	public function getAdminThumbAttribute($width = 40, $height = 40) {
+
+		// Check if there are images for the model
+		if (!method_exists($this, 'images')) return;
+		$images = $this->images;
+		if ($images->isEmpty()) return;
+
+		// Get null-named (default) images first
+		return $images->sortBy('name')->first()->crop($width, $height)->url;
 	}
 
 	/**
@@ -523,6 +549,18 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
+	 * Fire an Decoy model event.
+	 *
+	 * @param $string  event The name of this event
+	 * @param $array   args  An array of params that will be passed to the handler
+	 * @return object
+	 */
+	public function fireDecoyEvent($event, $args = null) {
+		$event = "decoy::model.{$event}: ".get_class($this);
+		return Event::fire($event, $args);
+	}
+
+	/**
 	 * Deduce the source for the title of the model
 	 *
 	 * @return array
@@ -552,97 +590,6 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		if (!empty($this->pivot->id)) return $this->pivot->id;
 		else if (!empty($this->pivot_id)) return $this->pivot_id;
 		else return null;
-	}
-
-	/**
-	 * Form a croppa URL, taking advantage of being able to set more columns null.  Also,
-	 * provides an easier way to inform the source crops
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
-	 *                      string of the column name in the database
-	 * @param string $crop_style A key from the $crops property of the model
-	 * @param array $options Croppa-style options
-	 * @return string A croppa URL
-	 */
-	public function croppa($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-
-		// Get the image src path
-		if (method_exists($this, $field)) $src = call_user_func(array($this, $field));
-		else $src = $this->getOriginal($field); // Get un-mutated value
-		if (empty($src)) return;
-
-		// Check if the image field has crops
-		if ($crop_style && !array_key_exists($field, static::$crops)) {
-			throw new \Exception("A crop style was passed for $field but no crops are defined for that field.");
-		}
-
-		// Check if the crop style is valid
-		if ($crop_style && !Collection::keyOrValueExists($crop_style, static::$crops[$field])) {
-			throw new \Exception("Crop style '$crop_style' is not defined for the field: $field");
-		}
-
-		// Default crop style is 'default'
-		if (!$crop_style && !empty(static::$crops[$field]) && Collection::keyOrValueExists('default', static::$crops[$field])) {
-			$crop_style = 'default';
-		}
-
-		// If there is a crop value, add it to the options
-		if ($crop_style) {
-			$crops = json_decode($this->{$field.'_crops'});
-
-			// Check if a crop style was set in the admin for this crop style
-			if (!empty($crops->$crop_style)) {
-				if (!is_array($options)) $options = array();
-
-				// Add the trim instructions to the croppa options
-				$options = array_merge($options, array(
-					'trim_perc' => array(
-						round($crops->$crop_style->x1,4),
-						round($crops->$crop_style->y1,4),
-						round($crops->$crop_style->x2,4),
-						round($crops->$crop_style->y2,4),
-					),
-				));
-			}
-		}
-
-		// Return the Croppa URL
-		return Croppa::url($src, $width, $height, $options);
-
-	}
-
-	/**
-	 * Return an image tag using croppa data
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
-	 *                      string of the column name in the database
-	 * @param string $crop_style A key from the $crops property of the model
-	 * @param array $options Croppa-style options
-	 * @return string An image tag
-	 */
-	public function croppaTag($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
-		return "<img src='{$url}' alt=''/>";
-	}
-
-	/**
-	 * Return inline, background style elements using croppa data
-	 *
-	 * @param int $width
-	 * @param int $height
-	 * @param string $crop_style A key from the $crops property of the model
-	 * @param string $field Where to find the source image.  May be a method name, defined on the model or a simple
-	 *                      string of the column name in the database
-	 * @param array $options Croppa-style options
-	 * @return string An image tag
-	 */
-	public function croppaBkgd($width = null, $height = null, $field = 'image', $crop_style = null, $options = null) {
-		if (!($url = $this->croppa($width, $height, $field, $crop_style, $options))) return;
-		return "background-image:url('{$url}')";
 	}
 
 	/**

@@ -11,9 +11,11 @@ use Response;
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
- * Handle failed validations by redirecting or returning a special response
+ * When a form is updated (as opposed to created) the previous files are
+ * strings and their mime validations would fail.  This creates file instances
+ * for them that can be validated
  */
-class Validation {
+class ValidateExistingFiles {
 
 	/**
 	 * Massage validation handling
@@ -23,18 +25,6 @@ class Validation {
 	 * @return void
 	 */
 	public function onValidating($model, $validation) {
-		$this->allowValidatingOfExistingFiles($validation);
-	}
-
-	/**
-	 * When a form is updated (as opposed to created) the previous files are
-	 * strings and their mime validations would fail.  This creates file instances
-	 * for them that can be validated
-	 *
-	 * @param Illuminate\Validation\Validator $validation
-	 * @return void
-	 */
-	public function allowValidatingOfExistingFiles($validation) {
 
 		// Only act on locally hosted files
 		if (Config::get('upchuck.disk.driver') != 'local') return;
