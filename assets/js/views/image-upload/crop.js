@@ -30,6 +30,7 @@ define(function (require) {
 			this.$upload = this.$el.closest('.image-upload');
 			this.$crop = this.$upload.find('.input-crop');
 			this.$focus = this.$upload.find('.input-focal_point');
+			this.$title = this.$upload.find('input.title');
 			this.$cropTool = this.$upload.find('.crop.btn');
 			this.$focusTool = this.$upload.find('.focal.btn');
 			this.$file = this.$upload.find('[type="file"]');
@@ -204,6 +205,7 @@ define(function (require) {
 		clear: function() {
 			this.$crop.val("");
 			this.$focus.val("");
+			this.$title.val("");
 			this.$focusTool.removeClass('active');
 			this.$cropTool.addClass('active');
 		},
