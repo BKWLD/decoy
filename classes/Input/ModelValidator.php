@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Models\Base as BaseModel;
+use Bkwld\Library\Laravel\Validator as BkwldLibraryValidator;
 use Illuminate\Support\Arr;
 use Validator;
 
@@ -44,6 +45,9 @@ class ModelValidator {
 
 		// Get rules from model
 		if ($rules === null) $rules = $model::$rules;
+
+		// Merge additional messages in
+		$messages = array_merge(BkwldLibraryValidator::$messages, $messages);
 
 		// Apply prefixes
 		if ($prefix) {
