@@ -14,6 +14,7 @@ use Bkwld\Decoy\Input\Sidebar;
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Base as BaseModel;
 use Bkwld\Decoy\Routing\Wildcard;
+use Bkwld\Library\Laravel\Validator as BkwldLibraryValidator;
 use Bkwld\Library\Utils\File;
 use Croppa;
 use DB;
@@ -793,6 +794,7 @@ class Base extends Controller {
 		// Build the validation instance and fire the intiating event.
 		if ($model) (new ModelValidator)->validate($model, $rules, $messages);
 		else {
+			$messages = array_merge(BkwldLibraryValidator::$messages, $messages);
 			$validation = Validator::make($data, $rules, $messages);
 			if ($validation->fails()) throw new ValidationFail($validation);
 		}
