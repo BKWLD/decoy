@@ -48,6 +48,10 @@ class Image extends File {
 	public function __construct(Container $app, $type, $name, $label, $value, $attributes) {
 		parent::__construct($app, 'file', $name, $label, $value, $attributes);
 
+		// Set a default label if there is a NULL name (which is encouraged for
+		// models with only one image)
+		if (!$name) $this->group->setLabel('Image');
+
 		// Add an extra class to allow styles to tweak ontop of the main "uploads"
 		// class
 		$this->addGroupClass('image-upload');
@@ -198,7 +202,7 @@ class Image extends File {
 	 */
 	protected function image() {
 		if (!$this->model()) return new ImageModel;
-		return $this->model()->image($this->name);
+		return $this->model()->img($this->name);
 	}
 
 	/**

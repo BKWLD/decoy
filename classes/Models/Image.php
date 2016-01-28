@@ -248,7 +248,7 @@ class Image extends Base {
 	 *
 	 * @return Element
 	 */
-	public function getImgAttribute() {
+	public function getTagAttribute() {
 		return ImageElement::img()
 			->isSelfClosing()
 			->src($this->getUrlAttribute() ?: false)
