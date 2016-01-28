@@ -95,12 +95,12 @@ class Base extends Collection {
 			$name, $property, $width, $height, $options) {
 
 			// Make sure that the model uses the HasImages trait
-			if (!method_exists($model, 'image')) {
+			if (!method_exists($model, 'img')) {
 				throw new Exception(get_class($model).' needs HasImages trait');
 			}
 
 			// Lookup up the image by name and set crop.
-			$image = $model->image($name)->crop($width, $height, $options);
+			$image = $model->img($name)->crop($width, $height, $options);
 
 			// Create or fetch the container for all images on the model. The
 			// container could not be "images" because that is used by the
