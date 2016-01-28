@@ -83,7 +83,7 @@ define(function (require) {
 
 			// Check if there is any crop selection defined
 			var cropVal = this.input_to_json(this.$crop);
-			var selection = this.convert_from_perc(cropVal);
+			if (cropVal['x1'] != null) var selection = this.convert_from_perc(cropVal);			
 
 			// Init jcrop
 			var self = this;
@@ -105,7 +105,6 @@ define(function (require) {
 
 			// Check if focal point is set
 			var focalVal = this.input_to_json(this.$focus);
-			console.log(focalVal);
 			if(this.$focusTool.length != 0) {
 				this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
 				this.$focalPoint = this.$el.next('div').find('.focal-point');
