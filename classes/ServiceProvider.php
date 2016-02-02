@@ -215,6 +215,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Require a logged in admin session but no CSRF token
 		$this->app['router']->middlewareGroup('decoy.protected_endpoint', [
+			\App\Http\Middleware\EncryptCookies::class,
 			\Illuminate\Session\Middleware\StartSession::class,
 			'decoy.auth',
 		]);
