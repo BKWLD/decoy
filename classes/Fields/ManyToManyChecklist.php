@@ -93,7 +93,8 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	public function getRelations() {
-		$query = call_user_func(ucfirst(Str::singular($this->name)).'::ordered');
+		$class = ucfirst('App\\'.Str::singular($this->name));
+		$query = call_user_func([$class, 'ordered']);
 		if ($this->scope) call_user_func($this->scope, $query);
 		return $query->get();
 	}
@@ -138,7 +139,7 @@ class ManyToManyChecklist extends Checkbox {
 	protected function generateBoxLabel($row) {
 
 		// Generate the title
-		$html = '<span class="title">'.$row->title().'</span>';
+		$html = '<span class="title">'.$row->getAdminTitleHtmlAttribute().'</span>';
 
 		// Add link to edit
 		$url = '/'.Config::get('decoy.core.dir').'/'.Str::snake($this->name,'-')
