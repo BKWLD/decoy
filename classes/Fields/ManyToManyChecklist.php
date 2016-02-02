@@ -9,9 +9,9 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 
 /**
- * Render a list of checkboxes to represent a related many-to-many table.  The 
- * underlying Former field type is a checkbox.  The relationship names is stored 
- * in the name.  The relationship instance that is being represented is stored 
+ * Render a list of checkboxes to represent a related many-to-many table.  The
+ * underlying Former field type is a checkbox.  The relationship names is stored
+ * in the name.  The relationship instance that is being represented is stored
  * in the value.
  */
 class ManyToManyChecklist extends Checkbox {
@@ -29,7 +29,7 @@ class ManyToManyChecklist extends Checkbox {
 	 *
 	 *
 	 * Example:
-	 * 
+	 *
 	 *    echo Former::manyToManyChecklist('categories')
 	 *    	->decorate(function($html, $model) {
 	 *    		return $html;
@@ -46,7 +46,7 @@ class ManyToManyChecklist extends Checkbox {
 	/**
 	 * Prints out the field, wrapped in its group.  This is the opportunity
 	 * to tack additional stuff onto the control group
-	 * 
+	 *
 	 * @return string
 	 */
 	public function wrapAndRender() {
@@ -67,7 +67,7 @@ class ManyToManyChecklist extends Checkbox {
 	 */
 	public function render() {
 
-		// Get an array of formatted data for Former checkboxes 
+		// Get an array of formatted data for Former checkboxes
 		$boxes = array();
 		foreach($this->getRelations() as $row) {
 			$boxes[$this->generateBoxLabel($row)] = $this->generateBox($row);
@@ -81,8 +81,8 @@ class ManyToManyChecklist extends Checkbox {
 
 		// There are no relations yet, show a message to that effect
 		} else {
-			return '<span class="glyphicon glyphicon-info-sign"></span> 
-				You have not <a href="/admin/'.Str::snake($this->name,'-').'">created</a> 
+			return '<span class="glyphicon glyphicon-info-sign"></span>
+				You have not <a href="/admin/'.Str::snake($this->name,'-').'">created</a>
 				any <b>'.ucfirst($this->label_text).'</b>.';
 		}
 	}
@@ -103,7 +103,7 @@ class ManyToManyChecklist extends Checkbox {
 	 * Generate the checkbox name using a special prefix that tells
 	 * Decoy to treat it has a many to many checkbox
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	protected function boxName() {
 		return ManyToManyChecklistObserver::PREFIX.$this->name.'[]';
@@ -119,7 +119,7 @@ class ManyToManyChecklist extends Checkbox {
 		return array(
 			'name' => $this->boxName(),
 			'value' => $row->getKey(),
-			'checked' => ($children = $this->children()) 
+			'checked' => ($children = $this->children())
 				&& $children->contains($row->getKey()),
 
 			// Former is giving these a class of "form-control" which isn't correct
@@ -148,7 +148,7 @@ class ManyToManyChecklist extends Checkbox {
 			$html .= '<a href="'.$url.'"><span class="glyphicon glyphicon-pencil edit"></span></a>';
 		}
 
-		// The str_replace fixes Former's auto conversion of underscores into spaces. 
+		// The str_replace fixes Former's auto conversion of underscores into spaces.
 		$html = str_replace('_', '&#95;', $html);
 		return $html;
 	}
@@ -183,11 +183,11 @@ class ManyToManyChecklist extends Checkbox {
 		// Render the checkbox as per normal
 		$html = parent::createCheckable($item, $fallbackValue);
 
-		// Mutate a checkable using user defined 
+		// Mutate a checkable using user defined
 		if ($this->decorator) {
 			$html = call_user_func($this->decorator, $html, $model);
 		}
-	
+
 		// Return html
 		return $html;
 	}
