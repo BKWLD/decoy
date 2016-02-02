@@ -347,10 +347,9 @@ class Base extends Controller {
 		// Save out to self to parent relationship.  It will be singular if the
 		// relationship is a many to many.
 		} else {
-			$relationship = lcfirst(get_class($this->parent));
 			$this->self_to_parent = $this->isChildInManyToMany()?
-				Str::plural($relationship):
-				$relationship;
+				Decoy::hasManyName($this->parent_model):
+				Decoy::belongsToName($this->parent_model);
 		}
 
 		// Make chainable
