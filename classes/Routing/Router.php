@@ -2,8 +2,6 @@
 
 // Dependencies
 use App;
-use Bkwld\Decoy\Models\Encoding;
-use Input;
 use Route;
 
 /**
@@ -57,6 +55,7 @@ class Router {
 			'middleware' => 'decoy.protected_endpoint',
 		], function() {
 			$this->registerRedactor();
+			$this->registerEncode();
 		});
 
 		// Routes that don't require auth or CSRF
@@ -64,7 +63,7 @@ class Router {
 			'prefix' => $this->dir,
 			'middleware' => 'decoy.endpoint',
 		], function() {
-			$this->registgerEncodingHooks();
+			$this->registerExternalEndpoints();
 		});
 
 		// Protected, admin routes
@@ -75,7 +74,6 @@ class Router {
 			$this->registerAdmins();
 			$this->registerCommands();
 			$this->registerWorkers();
-			$this->registerEncode();
 			$this->registerElements();
 			$this->registerWildcard(); // Must be last
 		});
@@ -180,17 +178,8 @@ class Router {
 	 * @return void
 	 */
 	public function registerEncode() {
-
-		// Get the status of an encode
-		Route::get($this->dir.'/encode/{id}/progress', ['as' => 'decoy::encode@progress', function($id) {
-			return Encoding::findOrFail($id)->forProgress();
-		}]);
-
-		// Make a simply handler for notify callbacks.  The encoding model will pass
-		// the the handling onto whichever provider is registered.
-		Route::post($this->dir.'/encode/notify', ['as' => 'decoy::encode@notify', function() {
-			return Encoding::notify(Input::get());
-		}]);
+		Route::get('encode/{id}/progress', ['as' => 'decoy::encode@notify',
+			'uses' => 'Bkwld\Decoy\Controllers\Encoder@progress']);
 	}
 
 	/**
@@ -221,15 +210,12 @@ class Router {
 
 	/**
 	 * Web service callback endpoints
+	 *
+	 * @return void
 	 */
-	public function registgerEncodingHooks() {
-
-		// Make a simple handler for encoding notification hooks.  The encoding
-		// model will pass the the handling onto whichever provider is registered.
-		Route::post('encode/notify', ['as' => 'decoy::encode@notify', function() {
-			return Encoding::notify(Input::get());
-		}]);
-
+	public function registerExternalEndpoints() {
+		Route::post('encode/notify', ['as' => 'decoy::encode@notify',
+			'uses' => 'Bkwld\Decoy\Controllers\Encoder@notify']);
 	}
 
 	/**
