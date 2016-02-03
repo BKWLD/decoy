@@ -93,7 +93,7 @@ class ManyToManyChecklist extends Checkbox {
 	 * @return Illuminate\Database\Eloquent\Collection
 	 */
 	public function getRelations() {
-		$class = ucfirst('App\\'.Str::singular($this->name));
+		$class = ucfirst('App\\'.ucfirst(Str::singular($this->name)));
 		$query = call_user_func([$class, 'ordered']);
 		if ($this->scope) call_user_func($this->scope, $query);
 		return $query->get();
