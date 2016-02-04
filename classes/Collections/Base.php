@@ -14,11 +14,11 @@ use Illuminate\Database\Eloquent\Model;
 class Base extends Collection {
 
 	/**
-	 * Stores pending transformations
+	 * Stores pending serialization transformations
 	 *
 	 * @var array
 	 */
-	protected $transforms = [];
+	protected $serialize_transforms = [];
 
 	/**
 	 * Add a serialization transformer.  The transformer should return the model
@@ -28,8 +28,8 @@ class Base extends Collection {
 	 * @param callable $func
 	 * @return $this
 	 */
-	public function transform(callable $func) {
-		$this->transforms[] = $func;
+	public function serializeTransform(callable $func) {
+		$this->serialize_transforms[] = $func;
 		return $this;
 	}
 
@@ -91,7 +91,7 @@ class Base extends Collection {
 		if (empty($property)) $property = 'default';
 
 		// Add a transform that adds and whitelisted the attribute as named
-		$this->transform(function(Model $model) use (
+		$this->serializeTransform(function(Model $model) use (
 			$name, $property, $width, $height, $options) {
 
 			// Make sure that the model uses the HasImages trait
@@ -133,7 +133,7 @@ class Base extends Collection {
 	 * @return array
 	 */
 	public function toArray() {
-		$this->runTransforms();
+		$this->runSerializeTransforms();
 		return parent::toArray();
 	}
 
@@ -144,7 +144,7 @@ class Base extends Collection {
 	 * @return array
 	 */
 	public function toJson($options = 0) {
-		$this->runTransforms();
+		$this->runSerializeTransforms();
 		return parent::toJson($options);
 	}
 
@@ -154,11 +154,11 @@ class Base extends Collection {
 	 *
 	 * @return void
 	 */
-	public function runTransforms() {
+	public function runSerializeTransforms() {
 		$this->items = $this->map(function(Model $model) {
 
 			// Loop through all the transform functions
-			foreach($this->transforms as $transform) {
+			foreach($this->serialize_transforms as $transform) {
 
 				// Call the transform and if nothing is retuned, clear that model
 				// from the collection
