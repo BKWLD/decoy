@@ -225,11 +225,11 @@ class Image extends Base {
 		$this->config = [];
 
 		// Return the URL
-		return Croppa::url($this->getAttributeValue('file'),
+		return asset(Croppa::url($this->getAttributeValue('file'),
 			$config['width'],
 			$config['height'],
 			$config['options']
-		);
+		));
 	}
 
 	/**
@@ -306,11 +306,11 @@ class Image extends Base {
 	 */
 	public function getLowAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttributeValue('file'),
+		return asset(Croppa::url($this->getAttributeValue('file'),
 			round($config['width']/2),
 			round($config['height']/2),
 			$config['options']
-		);
+		));
 	}
 
 	/**
@@ -320,11 +320,11 @@ class Image extends Base {
 	 */
 	public function getMediumAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttributeValue('file'),
+		return asset(Croppa::url($this->getAttributeValue('file'),
 			$config['width'],
 			$config['height'],
 			$config['options']
-		);
+		));
 	}
 
 	/**
@@ -334,11 +334,11 @@ class Image extends Base {
 	 */
 	public function getHighAttribute() {
 		$config = $this->getConfig();
-		return Croppa::url($this->getAttributeValue('file'),
+		return asset(Croppa::url($this->getAttributeValue('file'),
 			$config['width']*2,
 			$config['height']*2,
 			$config['options']
-		);
+		));
 	}
 
 }
