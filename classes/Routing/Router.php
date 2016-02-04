@@ -49,15 +49,6 @@ class Router {
 			$this->registerResetPassword();
 		});
 
-		// Routes that require auth but no CSRF
-		Route::group([
-			'prefix' => $this->dir,
-			'middleware' => 'decoy.protected_endpoint',
-		], function() {
-			$this->registerRedactor();
-			$this->registerEncode();
-		});
-
 		// Routes that don't require auth or CSRF
 		Route::group([
 			'prefix' => $this->dir,
@@ -73,8 +64,10 @@ class Router {
 		], function() {
 			$this->registerAdmins();
 			$this->registerCommands();
-			$this->registerWorkers();
 			$this->registerElements();
+			$this->registerEncode();
+			$this->registerRedactor();
+			$this->registerWorkers();
 			$this->registerWildcard(); // Must be last
 		});
 	}
@@ -178,7 +171,7 @@ class Router {
 	 * @return void
 	 */
 	public function registerEncode() {
-		Route::get('encode/{id}/progress', ['as' => 'decoy::encode@notify',
+		Route::get('encode/{id}/progress', ['as' => 'decoy::encode@progress',
 			'uses' => 'Bkwld\Decoy\Controllers\Encoder@progress']);
 	}
 
