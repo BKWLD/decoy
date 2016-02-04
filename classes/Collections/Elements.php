@@ -92,8 +92,8 @@ class Elements extends Collection {
 				throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
 			}
 
-		// Add the key as an attribute
-	} else return new $this->model(array_merge($this->items[$key], ['key' => $key]));
+			// Add the key as an attribute
+		} else return new $this->model(array_merge($this->items[$key], ['key' => $key]));
 
 	}
 
