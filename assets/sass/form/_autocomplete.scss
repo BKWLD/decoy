@@ -1,0 +1,10 @@
+// Make autocompletes go above header-z-ed items, like the `.form-actions`.  This
+// fixes cases where there is an autocomplete at the bototm of a form
+.tt-dropdown-menu {
+	z-index: $header-z + 1 !important;
+}
+
+// Reduce padding on autocomplete
+.tt-dropdown-menu .tt-suggestion {
+	padding: 4px 12px;
+}

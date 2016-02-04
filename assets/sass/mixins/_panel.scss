@@ -1,0 +1,37 @@
+/**
+ * Styles a div like the fieldset boxes
+ */
+@mixin panel {
+
+	// Make a box
+	background: white;
+	border: 1px solid $grey-border;
+	box-shadow: $common-shadow;
+	border-radius: 4px;
+
+	// Just in case
+	@include clearfix;
+
+	// Push them vertically apart
+	margin-bottom: $main-padding;
+	@media(max-width:$screen-sm) {
+		margin-bottom: $main-padding/2;
+	}
+	@media(max-width:$screen-xs) {
+		margin-bottom: $main-padding-mobile;
+	}
+
+	// Make sure long words (like filenames on mobile) to bust outside the
+	// container
+	word-wrap: break-word;
+}
+
+/**
+ * Remove panel styling
+ */
+@mixin no-panel {
+	background: none;
+	border: none;
+	margin: 0;
+	box-shadow: none;
+}

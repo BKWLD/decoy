@@ -1,0 +1,7 @@
+/**
+ * Default transitions applied to links
+ */
+@mixin link-transitions {
+	transition: background 300ms, color 300ms;
+	&:hover, &:focus, &:active { transition: background 100ms, color 100ms; }
+}

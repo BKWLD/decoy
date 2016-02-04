@@ -1,0 +1,41 @@
+/**
+ * Mixins to apply various polyfills. It's assumed that the
+ * referrenced HTCs are already in the css directory.
+ */
+@mixin pie {
+	-ms-behavior: stylesheet-url('pie.htc');
+}
+
+@mixin box-sizing-ie($type) {
+	box-sizing: $type;
+	-ms-behavior: stylesheet-url('boxsizing.htc');
+}
+
+// Default to the pie-clearfix
+@mixin clearfix {
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
+}
+
+// Support background cover in < IE9
+@mixin background-size-ie($type) {
+	background-size: $type;
+
+	// Quarantine in this selector because otherwise it was running
+	// in IE9 which actually DOES support background-size
+	.lt-ie9 & {
+		-ms-behavior: stylesheet-url('backgroundsize.htc');
+	}
+}
+
+
+// Fix text text being clipped without adjusting line height
+// http://stackoverflow.com/a/699659/59160
+@mixin ie-fix-clipping() {
+	.lt-ie8 & {
+		line-height: normal;
+	}
+}

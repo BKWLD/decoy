@@ -1,0 +1,26 @@
+// The progress bar (and makes a nice shadow when not animating)
+#ajax-progress {
+		
+	$preloader-height: 3px;
+
+	// Remove the rounding so it's flush with edges and reduce the height
+	border-radius: 0;
+	height: $preloader-height;
+	margin: 0;
+	
+	// Make the background invisible
+	background: none;
+	box-shadow: none;
+	
+	// Pin it to the bottom of the nav var
+	position: absolute;
+	width: 100%;
+	top: -$preloader-height;
+	left: 0;
+
+	// make the progress bar be the theme color
+	.progress-bar-info {
+		background-color: $theme-primary-color;
+	}
+	
+}

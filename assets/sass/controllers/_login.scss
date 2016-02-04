@@ -1,0 +1,223 @@
+// The login page
+body.login.index {
+	margin: 0;
+	padding: 0;
+
+	// Vertical center
+	#main {
+		display: table;
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		margin:0;
+		padding:0;
+		max-width: none;
+
+		.ui {
+			display: table-cell;
+			vertical-align: middle;
+			position: relative;
+			z-index: 2;
+			padding: 20px;
+			box-sizing: border-box;
+
+			.max-width {
+				margin-left: auto;
+				margin-right: auto;
+				max-width: 840px;
+				position: relative;
+				@media (max-width: $screen-sm) {
+					top: 0;
+				}
+			}
+		}
+	}
+
+	// Background image
+	.bkgd {
+		position: absolute;
+		z-index: 1;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		box-sizing: border-box;
+		background-size: cover;
+		opacity: .1;
+	}
+
+	// Left side
+	.branding {
+		width: 50%;
+		position: relative;
+		float: left;
+		@media (max-width: $screen-sm) {
+			width: 100% !important; // Override jquery
+			padding-bottom: 40px; // When stacked, push apart
+			position: static;
+			max-width: 380px;
+			margin: 0 auto;
+			float: none;
+		}
+		@media (max-width: $screen-xs) {
+			padding-bottom: 20px;
+		}
+
+		@mixin animate {
+			transition: all 800ms;
+			opacity: 0;
+			position: relative;
+			top: -5px;
+			&.show {
+				top: 0;
+				opacity: 1;
+			}
+		}
+
+		h1 {
+			font-weight: 400;
+			font-size: 75px;
+			line-height: .85em;
+			margin-top: 0;
+			margin-bottom: 15px; // Put it a smidge of padding between h4 and descenders on h1
+			@media (max-width: $screen-sm) {
+				margin-top: 0;
+			}
+			@media (max-width: $screen-xs) {
+				font-size: 58px;
+			}
+			@include animate();
+
+		}
+		h4 {
+			margin-left: 4px;
+			@include animate();
+		}
+	}
+
+	// Right side
+	.form {
+		float: right;
+		padding: 30px;
+		max-width: 380px;
+		border-radius: 6px;
+		box-sizing: border-box;
+
+		@media (max-width: $screen-sm) {
+			padding: 15px;
+			float: none;
+		}
+
+		// Reduce gaps
+		.form-group {
+			margin-bottom: 5px;
+			padding: 5px;
+			border-bottom: none;
+		}
+
+		// Align the labels
+		.control-label {
+			width: 100px;
+			text-align: right;
+		}
+
+		// Make the inputs wider
+		.form-control {
+			width: 190px;
+		}
+
+		// Push label off of checkbox
+		.checkbox input { margin-right: 5px; }
+
+		// The submit buttons
+		.form-actions {
+			margin-bottom: 0;
+			.buttons { display: inline-block; }
+			.btn { margin-bottom: 0; }
+		}
+
+		.buttons {
+			margin-left: 110px;
+		}
+
+		// Stack
+		@media (max-width: $screen-sm) {
+			position: static;
+			width: 100%;
+			margin: 0 auto;
+
+			// Left align labels
+			.control-label {
+				text-align: left;
+			}
+
+			// Span the width
+			.form-control {
+				width: 100%;
+			}
+
+			// Hide labels with no content
+			.fake-label .control-label {
+				display: none;
+			}
+
+			// Fix extra padidng on checkbox
+			.checkbox {
+				margin: 0;
+			}
+
+			.buttons {
+				margin-left: 0;
+			}
+
+		}
+	}
+}
+
+// The login page - theme
+body.login.index {
+	background: $theme-primary-color;
+
+	// Bkgd image is shown on break, when the animation goes away
+	@media (max-width: $screen-sm) {
+		background: linear-gradient(to top, $theme-primary-color, darken($theme-primary-color, 10%));
+		.bkgd {
+			background-image: url($theme-login-bkgd);
+			background-position: cover;
+			background-position: center center;
+		}
+		#decoy-animation {
+			display: none !important;
+		}
+	}
+
+	// Left side
+	.branding {
+
+		h1 {
+			color: $theme-primary-inverse;
+			text-shadow: 1px 2px 1px darken($theme-primary-color, 15%);
+		}
+		h4, h4 a {
+			color: $theme-primary-inverse;
+			color: rgba($theme-primary-inverse, .5);
+			& a:hover {
+				text-decoration: none;
+				color: rgba($theme-primary-inverse, .7);
+			}
+		}
+	}
+
+	// Right side
+	.form {
+		background: #fff;
+		box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3);
+		border: 1px solid darken($theme-primary-color, 10%);
+
+		// Disable the autofill bkgd color
+		// http://stackoverflow.com/a/14205994/59160
+		input:-webkit-autofill {
+			-webkit-box-shadow: 0 0 0 1000px white inset;
+		}
+	}
+}

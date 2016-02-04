@@ -1,0 +1,24 @@
+.table {
+
+	// Give them all pointers
+	.actions > a {
+		cursor: pointer;
+	}
+
+	// This is the icon that indicates whether a row is visible or not
+	.visibility {
+		width: 18px;
+		height: 18px;
+		padding: 1px;
+		display: inline-block;
+		line-height: 0;
+		font-size: 13px;
+		vertical-align: middle;
+
+		// hidden list items will show the closed eye icon that's greyed out
+		.glyphicon-eye-close {
+			color: #ccc;
+		}
+	}
+
+}

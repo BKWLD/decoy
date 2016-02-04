@@ -1,7 +1,0 @@
-/**
- * Forces GPU acceleration of the item, speeding up performance
- */
-@mixin gpu-cache {
-  @include backface-visibility(hidden);
-  @include translate3d(0,0,0);
-}

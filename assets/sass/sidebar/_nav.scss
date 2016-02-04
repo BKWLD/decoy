@@ -1,0 +1,165 @@
+// Contains the top navbar
+.navigation {
+
+	// Common settings
+	$sub-hover-bkgd: darken($gray-dark, 2%);
+	$border: 1px solid $sub-hover-bkgd;
+
+	.top-level-nav {
+		padding: 0;
+		margin: 0;
+		border-top: $border;
+
+		// Contains both top-level links and optional sub-nav container
+		.main-nav {
+			a {
+				display: block;
+				border-bottom: $border;
+				color: $nav-text;
+				font-weight: $headings-font-weight;
+				font-weight: 700;
+				font-size: 12px;
+				padding: $nav-pad;
+				cursor: pointer;
+
+				.glyphicon {
+					display: inline-block;
+					padding-right: 5px;
+				}
+			}
+
+			.top-level {
+				position: relative;
+				background-color: lighten($gray-dark, 3%);
+
+				&:active {
+					color: $nav-text-active;
+					background: $nav-bkgd-active;
+				}
+
+				&:hover {
+					color: $nav-text-active;
+					.glyphicon { color: $nav-text-active; }
+				}
+
+				// top level links with children show and arrow indicating children
+				&.parent {
+					&:after {
+						color: darken($nav-text, 25%);
+						transition: all 250ms;
+						content: '›';
+						display: block;
+						position: absolute;
+						font-size: 24px;
+						font-weight: normal;
+						right: $nav-pad;
+						bottom: 4px;
+					}
+				}
+				&:active:after {
+					color: $nav-text-active;
+					transition: color 100ms;
+				}
+			}
+
+			// Active main-navs
+			&.active {
+				.top-level {
+					color: $nav-text-active;
+					.glyphicon { color: $nav-bkgd-active; }
+					&:active .glyphicon {
+						color: $nav-text-active;
+						transition: color 100ms;
+					}
+				}
+			}
+
+			&.open {
+				.top-level {
+					// rotate the arrow down when open
+					&.parent:after {
+						transform: rotate(90deg);
+						bottom: 0;
+					}
+				}
+			}
+
+			// the nested nav items within the parent
+			.subnav {
+				background-color: darken($gray-dark, 6%);
+				overflow: hidden;
+				//height: 0;
+				max-height: 0px;
+				transition: max-height 450ms;
+
+				a {
+					font-size: 12px;
+					font-weight: 300;
+					padding: 8px;
+					position:relative;
+					border-bottom: 1px solid darken($gray-dark, 4%);
+					padding-left: 29px;
+
+					// if there's a glyphicon, give it a negative left margin
+					// so that the subnavs line up better
+					.glyphicon {
+						margin-left: -20px;
+					}
+
+					// subnav dots
+					&:after {
+						content: '';
+						border:1px solid darken($nav-text, 30%);
+						background-color: darken($nav-text, 30%);
+						border-radius: 50%;
+						height:6px;
+						width: 6px;
+						display: block;
+						position: absolute;
+						left: 13px;
+						bottom: $nav-pad + 2;
+					}
+
+					&:hover {
+						background-color: $sub-hover-bkgd;
+						color: $nav-text-active;
+
+						&:after {
+							border:1px solid $nav-text-active;
+							background-color: $nav-text-active;
+						}
+					}
+
+					&:active {
+						background: $nav-bkgd-active;
+					}
+
+					// highlight the active page
+					&.active {
+						color: $nav-text-active;
+						background-color: $sub-hover-bkgd;
+
+						// set nav dots to the active color
+						&:after {
+							border:1px solid $nav-bkgd-active;
+							background-color: $nav-bkgd-active;
+						}
+					}
+				}
+			}
+
+			&.open {
+
+				// have the currently expanded subnav show
+				.subnav {
+					max-height: 500px;
+				}
+			}
+		}
+	}
+
+	// hide the nav when you're on mobile widths
+	@media(max-width:$screen-sm) {
+		left: -200px;
+	}
+}

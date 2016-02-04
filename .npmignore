@@ -1,0 +1,6 @@
+# npm should just install frontend assets
+src
+tests
+.travis.yml
+composer.json
+phpunit.xml

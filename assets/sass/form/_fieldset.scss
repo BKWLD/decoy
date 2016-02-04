@@ -1,0 +1,115 @@
+/**
+ * Fix firefox issue with fieldsets. This fixes issues with images in the image
+ * crop forcing the fieldset too wide
+ * http://thatemil.com/blog/2015/01/03/reset-your-fieldset/
+ */
+body:not(:-moz-handler-blocked) fieldset {
+	display: table-cell;
+}
+
+/**
+ * Fieldset group blocks of fields with a legend for a title
+ */
+fieldset, .fieldset {
+
+	// Surround sections in a white box
+	@include panel;
+
+	// Clear the rule on breaking text from panel
+	word-wrap: normal;
+
+	// Don't use an actual legend because it inherits weird positioning
+	// from the browser when put in a fieldset
+	.legend {
+		font-size: 16px;
+		font-weight: $headings-font-weight;
+		font-family: $headings-font-family;
+
+		// Set the font color so links get it too
+		&, > a {
+			color: $theme-secondary-inverse;
+		}
+
+		// Give it a background
+		background: $theme-secondary-color;
+		padding: 7px $form-group-margin; // 7px makes it about as high as table th's
+		@media(max-width: $screen-sm) {
+			padding-left: $form-group-margin-sm;
+			padding-right: $form-group-margin-sm;
+		}
+
+		// If something is pulled-right, give it a max width.  This is designed to
+		// constrain the autocomplete form on many to manys but may of other,
+		// useful, ramifications
+		> .pull-right {
+			max-width: 50%;
+
+			// Also, nudge it up a bit to make it vertically centered
+			margin-top: -2px;
+
+			// Reset the font
+			font-family: $font-family-sans-serif;
+
+			// And, move it right so the right gap is the same as the top-bottom one
+			margin-right: -10px;
+			@media(max-width: $screen-sm) {
+				margin-right: -3px;
+			}
+		}
+	}
+
+	// Make the related tables flush
+	&.standard-list {
+		padding: 0;
+		.legend { margin: 0; }
+		.listing { margin-bottom: 0;}
+
+		// Make sure the table fills the whole container, without this there are
+		// subpixel errors and the header bkgd color doesn't span fully
+		overflow-x: hidden;
+		.listing {
+			width: calc(100% + 1px);
+			max-width: none;
+		}
+
+		// Put padding on the cells so that the normal fieldset padding looks
+		// maintained
+		th:first-child, td:first-child { padding-left: $form-group-margin; }
+		th[class*='actions'], td[class*='actions'] {
+			padding-right: $form-group-margin;
+			@media (max-width: $screen-sm) {
+				padding-right: $table-cell-padding-horizontal;
+			}
+		}
+
+		// Give the controller name a hover effect
+		.legend > a {
+			&:hover, &:focus {
+				$color: mix($theme-secondary-inverse, $theme-secondary-color, 60%);
+				color:  $color;
+				border-bottom-color: $color;
+			}
+		}
+
+	}
+
+	// A disabled fieldset is used, for instance, for sidebar listings before
+	// the parent is saved
+	&.disabled {
+		opacity: .7;
+		.legend {
+			background: grayscale($theme-secondary-color);
+			&, > a { color: grayscale($theme-secondary-inverse); }
+		}
+
+		// This is the message
+		p {
+			text-align: center;
+			padding: 50px $form-group-margin;
+
+			// Clear the important icon, it made the text centering feel weird
+			.glyphicon { display: none; }
+		}
+	}
+
+}

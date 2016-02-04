@@ -1,0 +1,60 @@
+// High specifity to override stuff
+.listing.table tbody .no-results {
+
+	// Remove the hover
+	&:hover, &:nth-child(even):hover {
+		background: none;
+	}
+
+	// Remove draggable move cursor
+	cursor: auto;
+
+	// Remove inheritted padding
+	td:first-child {
+		padding: 0;
+	}
+
+	// Container for the message
+	p {
+		overflow: hidden;
+
+		// Pad and position it like disabled fieldsets
+		text-align: center;
+		padding: 50px $form-group-margin;
+		margin: 0;
+
+		// Remove the listings overflow ellipsis rules
+		width: auto;
+		white-space: normal;
+
+		// Make the text the color of help-block text
+		&, & a {
+			color: lighten($text-color, 25%);
+		}
+
+		// Style links
+		a {
+			border-bottom: $link-border;
+			&:hover {
+				color: $theme-primary-color;
+			}
+		}
+	}
+
+	// Keep titles of thinsg together
+	.nowrap {
+		white-space: nowrap;
+	}
+
+	// Hide the row
+	p { transition: padding 300ms, height 300ms, opacity 300ms; }
+	&.remove td {
+		border-top: none;
+		p {
+			padding: 0;
+			height: 0;
+			opacity: 0;
+		}
+	}
+
+}

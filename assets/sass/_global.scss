@@ -1,0 +1,157 @@
+/* apply a natural box layout model to all elements, but allowing components to change */
+html {
+	box-sizing: border-box;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+// Allow for things to be 100% height
+html {
+	min-height: 100%;
+}
+
+// Set body color
+body {
+	background-color: $body-color;
+}
+
+// Make the label font size bigger again
+.label {
+	font-size: 12px;
+
+	// Make the text look a lil more v-centered
+	padding-bottom: .25em;
+}
+
+// All dropdowns should look interactive
+.dropdown {
+	cursor: pointer;
+}
+
+// Shift icons that are in labels down a smidge
+.control-label, .btn {
+	.glyphicon {
+		position: relative;
+		top: 1px;
+	}
+}
+
+// Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
+a, .btn { outline: none !important; }
+
+// Don't underline on rollver
+a, a:hover {
+	text-decoration: none;
+}
+
+// Animate links
+a {
+	@include link-transitions;
+}
+
+// Set the active state for links to be the active color
+a:active {
+	color: $theme-primary-color;
+}
+
+// Underline links in paragraphs
+p a, .help-block a {
+	border-bottom: $link-border;
+}
+
+// Fix Roboto bold to not use faux-bold because it loses rgba opacity in FF
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+	b, strong {
+		font-weight: 400;
+	}
+}
+
+// The main container
+#main {
+	position: relative;
+	padding: $main-padding;
+	padding-bottom: $footer-height; // this is to clear the fixed button controls
+	@include adjust-for-sidebar();
+
+	// Max width
+	max-width: $max-width + $main-padding * 2;
+
+	// On tablet widths, have main span the entire width of the screen
+	@media(max-width:$screen-sm) {
+		padding-left: $main-padding/2;
+		padding-right: $main-padding/2;
+		padding-top: $main-padding/2;
+	}
+
+	// On phone, make it even tighter
+	@media(max-width:$screen-xs) {
+		padding-left: $main-padding-mobile;
+		padding-right: $main-padding-mobile;
+		padding-top: $main-padding-mobile;
+
+		// Without this, horizontall scrolling is introduced.  This is assumed to be
+		// working on the main columns of the edit view
+		.row {
+			margin-left: -$main-padding-mobile;
+			margin-right: -$main-padding-mobile;
+			[class*='col-'], .padded-col {
+				padding-left: $main-padding-mobile;
+				padding-right: $main-padding-mobile;
+			}
+		}
+	}
+}
+
+// An outline button has no fill but has a stroke
+.btn.outline {
+	@include outline-btn($theme-primary-inverse);
+
+	// Make it secondarily colored
+	.legend &, .search &, &.secondary {
+		@include outline-btn($theme-secondary-inverse);
+	}
+}
+
+// Fix popover inheriting form-actions line height
+.popover {
+	line-height: 1;
+}
+
+// Clear inherited styles on tool-tips
+.tooltip {
+	font-weight: normal;
+	font-family: $font-family-base;
+}
+
+// Make dropdowns inside of pull-right be justified right
+.pull-right .dropdown-menu {
+	left: auto;
+	right: 0;
+}
+
+// Support putting check marks in pulldowns
+.dropdown-menu {
+	.glyphicon-ok {
+		margin-left: -15px;
+		font-size: 12px;
+		left: -1px;
+	}
+}
+
+// Tweak button padding to better center text
+.btn, .form-control {
+	padding-top: $padding-base-vertical + 1px;
+	padding-bottom: $padding-base-vertical - 1px;
+}
+.btn-sm, .input-sm {
+	padding-top: $padding-small-vertical + 1px;
+	padding-bottom: $padding-small-vertical - 1px;
+}
+
+// Shift close buttons up a bit so they look like they are on the same line as
+// the text in alert boxes
+button.close {
+	margin-top: -3px;
+}

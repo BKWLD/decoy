@@ -1,0 +1,249 @@
+// The search interface
+.search {
+
+	// Set a breakpoint optimized for the search bar to fit on mobile
+	$break-search: 585px;
+
+	// The container for the form
+	background: mix($theme-secondary-color, $theme-secondary-inverse, 93%);
+	text-align: center;
+	overflow: hidden;
+	display: none;
+	
+	// Specifying padding an inside container so it doesn't animate
+	.conditions {
+		padding: 2px;
+		display: inline-block;
+		position: relative;
+		text-align: right;
+		box-sizing: border-box;
+		margin-right: 92px; // Compensate for the submit button in centering
+
+		// Making the conditions box full width on break and reset the alignment
+		@media (max-width: $break-search) {
+			text-align: initial;
+			margin-right: 0px;
+			width: 100%;
+		}
+		
+		// Center the labels on the left
+		.intro {
+			position: relative;
+			top: 2px;
+			color: $theme-secondary-inverse;
+		}
+		 
+		// Line spacing
+		.condition { 
+			margin: 6px;
+
+			// Push contents off the right side of the container to make room
+			// for the add buttons.  And do alternating colors for each row
+			@media (max-width: $break-search) {
+				margin: 0px;
+				padding: 5px 43px 5px 5px;
+				position: relative;
+
+				// Adding background color on every other condition to make it more
+				// noticeable where the sections are
+				&:nth-child(even) {
+					background: mix($theme-secondary-color, $theme-secondary-inverse, 98%);
+				}
+			}
+		}
+		
+		// The labels (label tags and selectors are used by bootstrap)
+		@media (max-width: $screen-md) {
+			.intro {
+				display: none;
+			}
+		}
+		
+		// The add/minus buttons
+		.add, .subtract {
+			$radius: 13px;
+			border-radius: $radius;
+			width: $radius*2;
+			height: $radius*2;
+			padding: 0;
+
+			// When stacked, position vertically between the stack and on the right
+			@media (max-width: $break-search) {
+				position: absolute;
+				right: 5px;
+				top: 50%;
+				margin-top: -$radius !important; // this is important to override a margin on all elements in the conditions element
+			}
+		}
+
+		// Tweak centering
+		.subtract .glyphicon { top: 2px; }
+		
+		// The search button
+		button[type="submit"] {
+			position: absolute;
+			bottom: 11px;
+			right: -61px; // Harcoded estimation of width ... wish i had a smarter approach
+
+			// When the search fields expand on mobile, position the serach button below them
+			// and make it match the width of fields
+			@media (max-width: $break-search) {
+				position: relative;
+				bottom: 0px;
+				right: 0;
+				left: -1px;
+				width: 98%;
+				margin: 5px;
+			}
+		}
+		
+		// Make all the inputs the same size
+		$width: 135px;
+		input, select, .input-group {
+			box-sizing: border-box;
+			width: $width;
+			@media (min-width: $screen-sm) and (max-width: 825px) {
+				width: 100px;
+			}
+			@media (max-width: $screen-sm) {
+				width: 135px;
+			}
+			@media (max-width: $break-search) {
+				width: 100%;
+			}
+
+			// Remove some BS3 styling that conflicts
+			border: none;
+			box-shadow: none;
+
+			// Remove stroke on input-group-btn
+			.btn { 
+				border: none;
+				line-height: 22px; // Required to make it fill out the space
+			}
+		}
+		
+		// Override BS which wants to break to block earlier than we want to
+		input, select { display: inline-block; }
+		.input-group { 
+			display: inline-table; 
+			vertical-align: middle;
+			.input-field { width: 100%; }
+		}
+
+		// Space out the inputs, which are butted right up to each other cause of JS
+		.condition > * {
+			margin: 0 3px;
+			
+			// After the first break, remove the left margin on the first item to make
+			// the rows horiztonally center better
+			@media (max-width: $screen-md) {
+				&.fields {
+					margin-left: 0;
+				}
+			}
+
+			// Space out vertically stacked
+			@media (max-width: $break-search) {
+				margin: 2px 0;
+			}
+		}
+		// make sure the fields all fit the same
+		.comparisons {
+			@media (max-width: $break-search) {
+				width: 46%;
+				margin-right: 1%;
+			}
+		}
+		.input-field {
+			
+			// Reduce text field padding.  This loosk best on Chrome
+			&[type="text"] {
+				padding-left: 8px; 
+				padding-right: 8px; 
+			}
+			
+			// Break
+			@media (max-width: $break-search) {
+				width: 52%;
+				margin-left: 1%;
+			}
+		}
+
+		// mobile date picker input
+		@media (max-width: $break-search) {
+			.date-field {
+				margin: 0;
+			}
+			.date-field {
+				width: 52%;
+			}
+			.input-group .input-group-addon {
+				position: relative;
+				right: 25px;
+			}
+		}
+	}
+}
+
+// The controls that open
+.search-controls {
+
+	// Search icon
+	.search-toggle.btn {
+		z-index: 2;
+		margin-right: 27px;
+
+		// Give it a solid background so it will overlap the reset
+		background: $theme-secondary-color;
+		&.btn.outline:hover { background: mix($theme-secondary-color, $theme-secondary-inverse, 85%); }
+	}
+
+	// Reset icon
+	.search-clear.btn {
+		z-index: 1;
+		position: absolute;
+		right: 0;
+	}
+	&.closed {
+		.search-toggle.btn { margin-right: 0;}
+
+		// When closed, don't look like a button group
+		.btn { 
+			border-radius: $border-radius-base !important; 
+		}
+	}
+	
+	// Only animate after the initial page load
+	&.initialized .search-toggle.btn {
+		transition: margin-right 400ms ease-out;
+	}
+
+	// Icons look better shifted down an extra px
+	.glyphicon {
+		top: 1px;
+	}
+}
+
+// Setting the datepicker field to be visible when viewed on mobile, and not get pushed
+// off the right of the screen
+.datepicker {
+  @media (max-width: 577px) {
+    left: initial !important;
+    right: 14%;
+  }
+}
+.datepicker:before {
+  @media (max-width: 577px) {
+    right: 36px;
+    left: initial;
+  }
+}
+.datepicker:after {
+  @media (max-width: 577px) {
+    right: 37px;
+    left: initial;
+  }
+}
+
+

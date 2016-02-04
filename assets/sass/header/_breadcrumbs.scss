@@ -1,0 +1,81 @@
+.breadcrumbs {
+	background: rgba(#fff, .93);
+	position: relative;
+	left: 0;
+	right: 0;
+	top: 0;
+	z-index: $header-z;
+	font-size: 12px;
+	box-shadow: $common-shadow;
+
+	// Sync padding with rest of page
+	@include adjust-for-sidebar;
+	padding: 0 $main-padding;
+	@media(max-width: $screen-sm) {
+		padding: 0 $main-padding/2;
+	}
+	@media(max-width:$screen-xs) {
+		padding-left: 0 $main-padding-mobile;
+	}
+
+	// Add a border so that when it goes fixed, it lines up with the border on the nav
+	border-top: $nav-top-border-height solid $theme-primary-color;
+
+	// Set a height and vertical center
+	//height: $breadcrumb-height;
+	line-height: $breadcrumb-height - $nav-top-border-height;
+
+	// Wrap the contents in this div so I can set a max-width
+	.inner {
+		max-width: $max-width;
+
+		// Keep it one line at all times
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	a, span {
+		color: $gray-light;
+		.glyphicon { display: inline-block; padding: 0 2px; }
+	}
+	a, a span {
+		&:hover, &:focus { color: $text-color; }
+		&:active { color: $theme-primary-color; }
+	}
+
+	// Some breadcrumb titles make include thumbnails
+	img {
+		height: 12px;
+
+		// Push label off of it
+		margin-right: 4px;
+
+		// Vertical centering
+		position: relative;
+		top: -2px;
+	}
+
+	// The back button
+	.back {
+		float: right;
+
+		// Put it on top of the breadcrumbs and overlap the icons with
+		// a background color
+		$color: #fefefe;
+		background: $color;
+		position: relative;
+		z-index: 1;
+		box-shadow: -6px 0 12px $color;
+	}
+
+	&.affix {
+		position: fixed;
+
+		// Push content down now that it's out of the flow
+		+ * {
+			margin-top: $breadcrumb-height;
+		}
+
+	}
+}

@@ -1,0 +1,38 @@
+// Center the pagination on the page
+.pagination-wrapper {
+	margin: $main-padding 0;
+
+	@media(max-width: $screen-sm) {
+		margin: $main-padding-mobile 0;
+	}
+
+	text-align: center;
+
+	// Selector for the number to show per page
+	ul {
+		margin: 0 7px;
+	}
+
+	.pagination-mobile { 
+		display: none;
+	}
+
+	// hide large pagination on mobile
+	@media(max-width: $screen-sm) {
+		.pagination-desktop {
+			display: none;
+		}
+		.pagination-mobile { 
+			display: inline-block;
+		}
+	}
+}
+
+// The related sidebar "more" button
+.standard-list .btn.full-list {
+	border-bottom: none;
+	border-left: none;
+	border-right: none;
+	border-top-style: dashed;
+	border-radius: 0;
+}

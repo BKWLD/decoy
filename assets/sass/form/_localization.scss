@@ -1,0 +1,87 @@
+
+/**
+ * The locale field in the edit form
+ */
+.form-group.locale {
+
+	// Make the whole label for a disabled radio look disabled
+	.radio input[disabled] + .locale-label {
+		color: rgba($text-color, $light-opacity);
+
+		// Make the link more legible
+		a {
+			color: rgba($text-color, $light-opacity*2);
+			border-bottom: $link-border;
+			&:hover {
+				color: $text-color;
+			}
+			&:active {
+				color: $theme-primary-color;
+			}
+		}
+	}
+
+}
+
+/**
+ * The sidebar localization UI
+ */
+fieldset.localize {
+
+	// Put a link on the compare model reference
+	.compare .radio a {
+		border-bottom: $link-border;
+	}
+
+	// Push the submit button away from the help text
+	.create .btn {
+		margin-top: 10px;
+	}
+
+}
+
+/**
+ * Styles common to both UIs
+ */
+.form-group.locale, fieldset.localize {
+
+	// Tweak images that are part of titles to other articles
+	.radio label img {
+		width: 15px;
+
+		// Looks better with this little margin
+		margin-left: 2px;
+
+		// Push text over to the right with a border so that it
+		// overlappes the dotted line that indicates the link
+		border-right: 4px solid white;
+		box-sizing: content-box;
+	}
+}
+
+/**
+ * The localization compare tooltip
+ */
+.popover.localize-compare {
+
+	// The title
+	.popover-title {
+		font-weight: bold;
+	}
+
+	// The body
+	.popover-content {
+		line-height: $line-height-base;
+		color: $input-color;
+
+		// Litle hard coded tweaks to make it look like the editor
+		.wysiwyg {
+			p { margin: 0; }
+		}
+
+		// Make images fit
+		img {
+			max-width: 100%;
+		}
+	}
+}

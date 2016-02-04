@@ -1,0 +1,75 @@
+body.workers.index {
+
+	// The right justifed actions
+	.actions {
+
+		// The status display
+		.status {
+			display: inline-block;
+			padding: 3px 7px;
+			margin-bottom: 0;
+			font-size: 12px;
+			line-height: 1.5;
+			color: $theme-secondary-inverse;
+			border: 1px dashed $theme-secondary-inverse;
+			border-radius: 3px;
+			margin-right: 2px;
+		}
+		
+		@media(max-width: $screen-xs) {
+			max-width: none;
+			float: none !important;
+			margin-top: 10px;
+		}
+	}
+	
+	// Each worker
+	.worker-entry {
+		padding: $form-group-margin;
+		
+		// The title
+		h3 {
+			margin: 0;
+		}
+		
+		// Labels
+		p {
+			margin-bottom: 5px;
+		}
+		
+		// Stats
+		> ul {
+			color: #999;
+			margin-bottom: 5px;
+		}
+		
+		// The log interface
+		.log {
+			word-break: break-all;
+			word-wrap: break-word;
+			white-space: pre;
+			white-space: pre-wrap;
+			font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
+			background: $code-editor-bkgd;
+			color: $code-editor-text;
+			padding: 8px;
+			border-radius: 4px;
+			font-size: 12px;
+			overflow: hidden;
+			height: 400px;
+			margin-top: $form-group-margin;
+			transition: all 300ms;
+			overflow: scroll;
+			
+			&.closed {
+				display: block; // Override bootstrap
+				padding-top: 0;
+				padding-bottom: 0;
+				margin-top: 0;
+				height: 0;
+				overflow: hidden;
+			}
+		}
+		
+	}
+}

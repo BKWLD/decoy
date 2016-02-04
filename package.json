@@ -1,0 +1,42 @@
+{
+  "name": "decoy",
+  "version": "5.0.8",
+  "description": "The BKWLD CMS framework",
+  "main": "assets/js/decoy.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BKWLD/decoy.git"
+  },
+  "author": "info@bkwld.com",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/BKWLD/decoy/issues"
+  },
+  "homepage": "https://github.com/BKWLD/decoy#readme",
+  "dependencies": {
+    "backbone": "^1",
+    "bootstrap-datepicker": "^1",
+    "bootstrap-sass": "^3",
+    "bootstrap-timepicker": "^0",
+    "chroma-js": "^1",
+    "console-polyfill": "^0.2.2",
+    "fastclick": "^1",
+    "imagesloaded": "^3",
+    "jcrop-0.9.12": "^0",
+    "jquery": "^1",
+    "jquery-backbone-views": "bkwld/jquery-backbone-views",
+    "jquery-csrf-prefilter": "^1.1.0",
+    "kizzy": "0.0.5",
+    "lodash": "^3",
+    "pixi.js": "^2",
+    "raf": "^3",
+    "toggleable": "bkwld/toggleable",
+    "typeahead.js": "^0"
+  }
+}

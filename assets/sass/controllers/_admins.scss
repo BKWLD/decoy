@@ -1,0 +1,98 @@
+// Style the name of the group
+.admins.index .listing .group {
+	text-transform: capitalize;
+}
+
+// The permissions UI
+.admin-permissions {
+
+	// Width of one of the permission blocks
+	$w: 120px;
+
+	// Contains the list of permissions
+	.permissions-list {
+
+		// An extra push off the label.  This div is also used to measure the
+		// height from JS.
+		.permissions-list-inner {
+			padding-top: 6px; 
+			@media(max-width: $screen-sm) {
+				padding-top: 0;
+			}
+		}
+
+		// Setup for the closed animation
+		$span: 300ms;
+		transition: height $span;
+		overflow: hidden;
+	}
+
+	// The permissions list if the customize checkbox is unchecked
+	&.closed .permissions-list {
+		height: 0 !important;
+	}
+
+	// A row of permissions for a specific controller
+	.controller {
+		@include clearfix;
+		padding-top: 6px;
+		border-bottom: 1px dashed $grey-border;
+
+		// Clear the last border
+		&:last-of-type {
+			border-bottom: none;
+		}
+	}
+
+	// The title of the controller
+	.controller .title {
+		font-weight: bold;
+		float: left;
+		max-width: $w - 10px;
+
+		// Don't allow the text to wrap to multiple lins
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+
+		// These are clickable
+		cursor: pointer;
+		user-select: none;
+
+		// Don't indent on mobile
+		@media(max-width: $screen-sm) {
+			float: none;
+			width: auto;
+		  margin-bottom: 2px;
+		  display: block;
+		}
+	}
+
+	// Container for permissions
+	.controller-permissions {
+		margin-left: $w;
+
+		// Don't indent on mobile
+		@media(max-width: $screen-sm) {
+			margin-left: 0;
+		}
+	}
+
+	// The permission types
+	.controller-permission {
+		font-weight: normal;
+		width: $w;
+		margin-bottom: 1px;
+
+		// These are clickable
+		span {
+			cursor: pointer;
+			user-select: none;
+		}
+
+		// Don't allow the text to wrap to multiple lins
+		white-space: nowrap;
+		text-overflow: ellipsis;
+		overflow: hidden;
+	}
+}

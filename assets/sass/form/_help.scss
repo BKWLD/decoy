@@ -1,0 +1,22 @@
+// Help text config
+.help-block {
+
+	// Change the margins on the help block
+	margin-bottom: 0;
+
+	// Restore the color of manual help text during a validation error
+	.has-error & + .help-block {
+		color: lighten($text-color, 25%); // This is copied from BS3
+		margin-top: 0px; // Looks better with reduced spacing
+	}
+
+	// Push it up if following a `note` field
+	.form-control-static + & {
+		margin-top: -5px;
+	}
+}
+
+// Fix the color of links in error blocks
+.has-error .help-block:first-of-type a {
+	color: $state-danger-text;
+}

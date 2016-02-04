@@ -1,0 +1,184 @@
+// The header is designed to have both the title and breadcrumbs
+// stacked, then on scroll the headline block goes away, but the
+// breadgrumbs stay fixed with a semi-transparent white bg
+// In addition, the header will have a fixed height with the content
+// within it vertically centered
+.header {
+	background-color: $theme-primary-color;
+	padding: $main-padding;
+	@include gpu-cache();
+	position: relative;
+	z-index: $header-z + 1; // Put above breadcrumbs so autocomplete menu goes above
+
+	// Apply left offset
+	@include adjust-for-sidebar();
+
+	// Reduce the bottom by the border on breadcrumbs which has
+	// the same bkgd
+	padding-bottom: $main-padding - $nav-top-border-height;
+
+	// The site and controller
+	.title {
+		font-size: 46px;
+		color: $theme-primary-inverse;
+		margin: 0; // Reset BS
+		max-width: $max-width;
+		position: relative; // For the pull-right pos:absolute
+
+		// Reduce font size a little so there is less pull-right overlap
+		@media(max-width: $screen-md) {
+			font-size: 39px;
+		}
+
+		// line break for mobile header is hidden by default
+		br.mobile-break {
+			display: none;
+		}
+
+		// The site name
+		.site {
+			font-weight: 400;
+
+			&:after {
+				content: ' /';
+			}
+		}
+
+		// The controller title
+		.controller {
+			font-weight: 100;
+		}
+	}
+
+	// Count of posts
+	.badge {
+		position: relative;
+		top: -5px;
+		background-color: $gray-dark;
+	}
+
+	// Buttons on the far right right should be vertically
+	// justified with the title.  And positioned absolutely, rather than
+	// float, so that they overlap when the page is too narrow
+	.pull-right {
+		float: none !important; // Override BS
+		position: absolute;
+		right: 0;
+		line-height: 0; // Clear the title's line height
+		bottom: 4px;
+		background: rgba($theme-primary-color, .9);
+		box-shadow: -6px 0 12px $theme-primary-color;
+
+		// Add text label automatically
+		.new:after {
+			content: 'New';
+		}
+	}
+
+	// Description
+	.description {
+		font-size: 22px;
+		color: rgba($theme-primary-inverse, .5);
+		margin: 0; // Reset BS
+		margin-top: 3px;
+		line-height: 1.5em;
+		max-width: $max-width;
+
+		// Reduce font size a little so there is less pull-right overlap
+		@media(max-width: $screen-md) {
+			font-size: 18px;
+		}
+
+		// Links in the description
+		a {
+			color: rgba($theme-primary-inverse, .5);
+			border-bottom: $link-border;
+			&:hover {
+				color: rgba($theme-primary-inverse, .7);
+			}
+			&:active {
+				color: $theme-primary-inverse;
+			}
+		}
+	}
+
+	// nav hamburger hidden on desktop sizes
+	.nav-hamburger {
+		display: none;
+	}
+
+	// tablet-portrait styles
+	@media(max-width:$screen-sm) {
+		padding-top: 0;
+		padding-bottom: 12px;
+
+		.title {
+			text-align: center;
+
+			.site {
+				font-size: 20px;
+				font-weight: 200;
+				padding-top: 16px;
+				display: block;
+
+				// Remove the slash
+				&:after { content: none; }
+			}
+			.controller {
+				font-weight: 400;
+				font-size: 30px;
+				display: block;
+				padding-top: 10px;
+				padding-bottom: 12px;
+			}
+		}
+
+		// + New button in header sit in top right
+		.pull-right {
+			top: $main-padding-mobile;
+			bottom: auto;
+			right: -$main-padding + $main-padding/2; // Compensate for padding affecting the title
+
+			// Remove label on new button
+			.new:after {
+				content: '';
+			}
+
+			// display line break for mobile header
+			.mobile-break {
+				display: block;
+			}
+		}
+
+		// nav hamburger displayed on mobile
+		.nav-hamburger {
+			display: block;
+			position: absolute;
+			left: $main-padding/2;
+			top: 10px;
+			z-index: 1;
+		}
+
+		.description {
+			font-size: 18px;
+			margin: 0 10%;
+			line-height: 1.2em;
+			text-align: center;
+		}
+	}
+
+	// Mobile
+	@media(max-width:$screen-xs) {
+		.nav-hamburger {
+			left: $main-padding-mobile;
+		}
+		.pull-right {
+			right: -$main-padding + $main-padding-mobile;
+		}
+		.description {
+			font-size: 16px;
+			margin: 0;
+		}
+	}
+
+}
