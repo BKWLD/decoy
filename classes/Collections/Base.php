@@ -93,10 +93,31 @@ class Base extends Collection {
 		// Add a transform that adds and whitelisted the attribute as named
 		$this->serializeTransform(function(Model $model) use (
 			$name, $property, $width, $height, $options) {
+			$base_model = $model;
 
 			// Make sure that the model uses the HasImages trait
 			if (!method_exists($model, 'img')) {
 				throw new Exception(get_class($model).' needs HasImages trait');
+			}
+
+			// If the name contains a period, treat it as dot notation to get at an
+			// image on a related model
+			if (strpos($name, '.') > -1) {
+				$relations = explode('.', $name);
+
+				// If the name and property are identical, use just the image name for
+				// the property.
+				if ($name == $property) $name = $property = array_pop($relations);
+				else $name = array_pop($relations);
+
+				// Step through the relationship chain to get at the model with the
+				// image. If a relationship is absent, don't add the image.
+				foreach($relations as $relation) {
+					if (!$model = $model->$relation) return $base_model;
+				}
+
+				// If the name is "default", look for it with a NULL name
+				if ($name == 'default') $name = null;
 			}
 
 			// Lookup up the image by name and set crop.
@@ -120,7 +141,7 @@ class Base extends Collection {
 			// attribute.
 			$imgs[$property] = $image->toArray();
 			$model->setAttribute('imgs', $imgs);
-			return $model;
+			return $base_model;
 		});
 
 		// Support chaining
