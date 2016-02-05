@@ -2,6 +2,7 @@
 
 // Deps
 use Bkwld\Decoy\Exceptions\Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -70,12 +71,15 @@ trait SerializeWithImages {
 		// Add a transform that adds and whitelisted the attribute as named
 		$this->serializeTransform(function(Model $model) use (
 			$name, $property, $width, $height, $options) {
-			$base_model = $model;
 
 			// Make sure that the model uses the HasImages trait
 			if (!method_exists($model, 'img')) {
 				throw new Exception(get_class($model).' needs HasImages trait');
 			}
+
+			// Prepare for future applying
+			$transforming_model = $model;
+			$models = [$model];
 
 			// If the name contains a period, treat it as dot notation to get at an
 			// image on a related model
@@ -87,26 +91,57 @@ trait SerializeWithImages {
 				if ($name == $property) $name = $property = array_pop($relations);
 				else $name = array_pop($relations);
 
-				// Step through the relationship chain to get at the model with the
-				// image. If a relationship is absent, don't add the image.
-				foreach($relations as $relation) {
-					if (!$model = $model->$relation) return $base_model;
-				}
-
 				// If the name is "default", look for it with a NULL name
 				if ($name == 'default') $name = null;
+
+				// Step through the relationship chain until we have an array of all
+				// of the children models.
+				foreach($relations as $relation) {
+					$models = $this->getRelatedModelsWithImages($models, $relation);
+				}
 			}
 
-			// Lookup up the image by name and set crop and append it to the model
-			$image = $model->img($name)->crop($width, $height, $options);
-			$model->appendToImgs($image, $property);
+			// For each model that shoudl be touched, append the named image to it's
+			// `imgs` attribute, keyed by $proprety
+			foreach($models as $model) {
+				$image = $model->img($name)->crop($width, $height, $options);
+				$model->appendToImgs($image, $property);
+			}
 
 			// Return the model being transformed
-			return $base_model;
+			return $transforming_model;
 		});
 
 		// Support chaining
 		return $this;
+	}
+
+	/**
+	 * Take an array of parent models and return a new array of the children of
+	 * all parents in one array
+	 *
+	 * @param  array $parents   Array of eloquent models
+	 * @param  string $relation Relation name
+	 * @return array
+	 */
+	protected function getRelatedModelsWithImages($parents, $relation) {
+		$models = [];
+		foreach($parents as $parent) {
+
+			// Get the related object
+			$related = $parent->$relation;
+
+			// The related object is a model (like in a belongsTo setup), add it to
+			// the array
+			if (is_a($related, Model::class)) $models[] = $related;
+
+			// Otherwise, if the relation returns a collection (like a hasMany), add
+			// all the related models to the growing array.
+			elseif (is_a($related, Collection::class)) {
+				$models = array_merge($models, $related->all());
+			}
+		}
+		return $models;
 	}
 
 }
