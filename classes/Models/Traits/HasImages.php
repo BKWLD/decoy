@@ -55,4 +55,19 @@ trait HasImages {
 		}) ?: new Image;
 	}
 
+	/**
+	 * Generate the configuration used by roumen/sitemap for generating sitemap
+	 * xml files
+	 *
+	 * @return array
+	 */
+	public function getSitemapImagesAttribute() {
+		return $this->images->map(function($image) {
+			return [
+				'url' => $image->url,
+				'title' => $image->title,
+			];
+		})->all();
+	}
+
 }

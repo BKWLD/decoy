@@ -781,6 +781,7 @@ class Base extends Controller {
 		$model = null;
 		if (is_a($data, BaseModel::class)) {
 			$model = $data;
+			$data = $model->getAttributes();
 			if (empty($rules)) $rules = $model::$rules;
 		}
 

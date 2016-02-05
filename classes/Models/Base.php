@@ -432,12 +432,13 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Get publically visible items
+	 * Get publically visible items. The scope couldn't be `public` because PHP
+	 * took issue with it as a function name.
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopePublic($query) {
+	public function scopeIsPublic($query) {
 		return $query->where($this->getTable().'.public', '1');
 	}
 
@@ -448,7 +449,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrderedAndPublic($query) {
-		return $query->ordered()->public();
+		return $query->ordered()->isPublic();
 	}
 
 	/**
