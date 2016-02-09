@@ -476,9 +476,6 @@ class Base extends Controller {
 		if ($this->parent) $this->parent->{$this->parent_to_self}()->save($item);
 		else $item->save();
 
-		// Insert related model data
-		(new NestedModels)->relateTo($item);
-
 		// Redirect to edit view
 		if (Request::ajax()) return Response::json(['id' => $item->id]);
 		else return Redirect::to(DecoyURL::relative('edit', $item->id))
