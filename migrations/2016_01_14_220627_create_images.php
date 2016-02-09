@@ -17,7 +17,7 @@ class CreateImages extends Migration
 			$table->increments('id');
 
 			$table->string('imageable_type');
-			$table->integer('imageable_id')->unsigned();
+			$table->string('imageable_id');
 
 			$table->string('file');
 			$table->string('file_type');
