@@ -88,16 +88,53 @@ class Elements extends Base {
 		if (!$key) $key = $el->inputName();
 		$id = str_replace('|', '-', $key);
 		switch($el->type) {
-			case 'text': return Former::text($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'textarea': return Former::textarea($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'wysiwyg': return Former::wysiwyg($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'image': return Former::image($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'file': return Former::upload($key, $el->label)->blockHelp($el->help)->id($id);
-			case 'boolean': return Former::checkbox($key, false)->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))->blockHelp($el->help)->id($id)->push();
-			case 'select': return Former::select($key, $el->label)->options($el->options)->blockHelp($el->help)->id($id);
-			case 'radios': return Former::radios($key, $el->label)->radios(FormerUtils::radioArray($el->options))->blockHelp($el->help)->id($id);
-			case 'checkboxes': return Former::checkboxes($key, $el->label)->checkboxes(FormerUtils::checkboxArray($key, $el->options))->blockHelp($el->help)->id($id);
-			case 'video-encoder': return Former::videoEncoder($key, $el->label)->blockHelp($el->help)->setModel($el)->id($id);
+
+			case 'text': return Former::text($key, $el->label)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'textarea': return Former::textarea($key, $el->label)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'wysiwyg': return Former::wysiwyg($key, $el->label)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'image': return Former::image($key, $el->label)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'file': return Former::upload($key, $el->label)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'boolean': return Former::checkbox($key, false)
+				->checkboxes(array("<b>{$el->label}</b>" => array('name' => $key, 'value' => 1)))
+				->blockHelp($el->help)
+				->id($id)
+				->push();
+
+			case 'select': return Former::select($key, $el->label)
+				->options($el->options)
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'radios': return Former::radios($key, $el->label)
+				->radios(FormerUtils::radioArray($el->options))
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'checkboxes': return Former::checkboxes($key, $el->label)
+				->checkboxes(FormerUtils::checkboxArray($key, $el->options))
+				->blockHelp($el->help)
+				->id($id);
+
+			case 'video-encoder': return Former::videoEncoder($key, $el->label)
+				->blockHelp($el->help)
+				->setModel($el)
+				->id($id);
+				
 			/**
 			 * Not ported yet from Frags:
 			 */
@@ -175,7 +212,9 @@ class Elements extends Base {
 			]));
 
 			// Save it
-			$el->value = Input::hasFile($key) ? app('upchuck.storage')->moveUpload(Input::file($key)) : $value;
+			$el->value = Input::hasFile($key) ?
+				app('upchuck.storage')->moveUpload(Input::file($key)) :
+				$value;
 			$el->save();
 		});
 
@@ -183,7 +222,8 @@ class Elements extends Base {
 		$elements->clearCache();
 
 		// Redirect back to index
-		return Redirect::to(URL::current())->with('success', '<b>Elements</b> were successfully saved.');
+		return Redirect::to(URL::current())->with('success',
+			'<b>Elements</b> were successfully saved.');
 
 	}
 
