@@ -32,6 +32,7 @@ class ImageElement extends Element {
 			// Img tags use the src
 			case 'img':
 				if (empty($this->getAttribute('src'))) return '';
+				break;
 
 			// Divs have the image as a background-image
 			// https://regex101.com/r/eF0oD0/1
