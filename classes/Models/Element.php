@@ -17,7 +17,7 @@ class Element extends Base {
 
 	/**
 	 * Enable encoding
-	 * 
+	 *
 	 * @var array
 	 */
 	private $encodable_attributes = ['value'];
@@ -28,7 +28,7 @@ class Element extends Base {
 	 * @var string
 	 */
 	protected $primaryKey = 'key';
-	
+
 	/**
 	 * Indicates if the IDs are NOT auto-incrementing.
 	 *
@@ -60,7 +60,7 @@ class Element extends Base {
 	/**
 	 * Subclass setAttribute so that we can automatically set validation
 	 * rules based on the Element type
-	 * 
+	 *
 	 * @param  string  $key
 	 * @param  mixed   $value
 	 * @return void
@@ -79,10 +79,10 @@ class Element extends Base {
 	/**
 	 * Format the value before returning it based on the type
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function value() {
-		
+
 		// Must return a string
 		if (empty($this->value)) return '';
 
@@ -93,14 +93,14 @@ class Element extends Base {
 			case 'textarea': return nl2br($this->value);
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
 			case 'checkboxes': return explode(',', $this->value);
-			case 'video-encoder': return $this->encoding('value')->tag; 
+			case 'video-encoder': return $this->encoding('value')->tag;
 			default: return $this->value;
 		}
 	}
 
 	/**
-	 * Check if the value looks like an image.  If it does, copy it to the uploads dir
-	 * so Croppa can work on it and return the modified path
+	 * Check if the value looks like an image.  If it does, copy it to the uploads
+	 * dir so Croppa can work on it and return the modified path
 	 *
 	 * @return string The new URL
 	 */
@@ -108,24 +108,27 @@ class Element extends Base {
 
 		// Return nothing if empty
 		if (!$this->value) return '';
-		
+
 		// If customized already, use the customized version
 		if (app('upchuck')->manages($this->value)) return $this->value;
 
-		// All src images must live in the /img (relative) directory.  I'm not throwing an exception
-		// here because Laravel's view exception handler doesn't display the message.
-		if (!Str::is('/img/*', $this->value)) return 'All Element images must be stored in the public/img directory';
-		
+		// All src images must live in the /img (relative) directory.  I'm not
+		// throwing an exception here because Laravel's view exception handler
+		// doesn't display the message.
+		if (!Str::is('/img/*', $this->value)) {
+			return 'All Element images must be stored in the public/img directory';
+		}
+
 		// Check if the image already exists in the uploads directory
 		$path = str_replace('/img/', '/elements/', $this->value);
 		if (!app('upchuck.disk')->has($path)) {
-			
+
 			// Copy it to the disk
 			$stream = fopen(public_path().$this->value, 'r+');
 			app('upchuck.disk')->writeStream($path, $stream);
 			fclose($stream);
 		}
-		
+
 		// Return the new URL
 		return app('upchuck')->url($path);
 	}
@@ -145,14 +148,14 @@ class Element extends Base {
 	 * Prevent locale group from being set by overriding the method and making it
 	 * a no-op
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function setLocaleGroup() { }
 
 	/**
 	 * Render the element in a view
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	public function __toString() {
 		$value = $this->value();
