@@ -3,6 +3,7 @@
 // Dependencies
 use Config;
 use Bkwld\Decoy\Models\Traits\Encodable;
+use Bkwld\Decoy\Models\Traits\HasImages;
 use Bkwld\Library\Utils\File;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -13,7 +14,7 @@ use Illuminate\Support\Str;
  * YAML and DB Element sources
  */
 class Element extends Base {
-	use Encodable;
+	use Encodable, HasImages;
 
 	/**
 	 * Enable encoding

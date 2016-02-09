@@ -5,6 +5,7 @@ use App;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Collections\Elements as ElementsCollection;
 use Bkwld\Decoy\Exceptions\ValidationFail;
+use Bkwld\Decoy\Models\Image;
 use Bkwld\Library\Laravel\Former as FormerUtils;
 use Bkwld\Library\Utils\File;
 use Cache;
@@ -59,7 +60,7 @@ class Elements extends Base {
 
 		// Populate form
 		Former::withRules($elements->rules());
-		Former::populate($elements->populate());
+		Former::populate($this->populateWithImages($elements));
 
 		// Convert the collection to models for simpler manipulation
 		$elements = $elements->asModels();
@@ -75,6 +76,20 @@ class Elements extends Base {
 			'locale' => $locale,
 			'tab' => $tab,
 		]);
+	}
+
+	/**
+	 * Merge the element collection's populate data with the data needed for the
+	 * Image field instances.
+	 *
+	 * @param  Elements $elements collection
+	 * @return array
+	 */
+	protected function populateWithImages($elements) {
+		return array_merge(
+			$elements->populate(),
+			['images' => Image::where('imageable_type', Element::class)->get()]
+		);
 	}
 
 	/**
@@ -102,6 +117,7 @@ class Elements extends Base {
 				->id($id);
 
 			case 'image': return Former::image($key, $el->label)
+				->setModel($el)
 				->blockHelp($el->help)
 				->id($id);
 
@@ -134,7 +150,7 @@ class Elements extends Base {
 				->blockHelp($el->help)
 				->setModel($el)
 				->id($id);
-				
+
 			/**
 			 * Not ported yet from Frags:
 			 */
@@ -165,7 +181,7 @@ class Elements extends Base {
 		}
 
 		// Get all the input such that empty file fields are removed from the input.
-		$input = array_replace_recursive(Input::get(), array_filter(Input::file()));
+		$input = Decoy::filteredInput();
 
 		// Validate the input
 		$validator = Validator::make($input, $elements->rules());
@@ -174,10 +190,24 @@ class Elements extends Base {
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
 		$elements->asModels()->each(function(Element $el) use ($locale, $elements, $input) {
-			$key = $el->inputName();
 
-			// Empty file fields will have no key as a result of the above
-			// array_replace_recursive()
+			// Whitelist only the attributes that actually exist in the table.  This
+			// cleans up after the hydrate(true)
+			$el->setRawAttributes(array_only($el->getAttributes(), [
+				'key', 'type', 'value', 'locale',
+			]));
+
+			// Inform the model as to whether the model already exists in the db.
+			if ($el->exists = $elements->keyUpdated($el->key)) $el->syncOriginal();
+
+			// If a new record, add the locale
+			else $el->locale = $locale;
+
+			// Handle images differently, since they get saved in the Images table
+			if ($el->type == 'image') return $this->storeImage($el, $input, $locale);
+
+			// Empty file fields will have no key as a result of the above filtering
+			$key = $el->inputName();
 			if (!array_key_exists($key, $input)) return;
 			$value = $input[$key];
 
@@ -194,22 +224,10 @@ class Elements extends Base {
 			// doesn't do this, thus we must check ourselves.
 			if ($value == $el->value) return;
 
-			// Inform the model as to whether the model already exists in the db.
-			if ($el->exists = $elements->keyUpdated($el->key)) $el->syncOriginal();
-
-			// If a new record, add the locale
-			else $el->locale = $locale;
-
 			// If type is a video encoder and the value is empty, delete the row to
 			// force the encoding row to also delete.  This is possible because
 			// videos cannot have a YAML set default value.
 			if (!$value && $el->type == 'video-encoder') return $el->delete();
-
-			// Whitelist only the attributes that actually exist in the table.  This
-			// cleans up after the hydrate(true)
-			$el->setRawAttributes(array_only($el->getAttributes(), [
-				'key', 'type', 'value', 'locale',
-			]));
 
 			// Save it
 			$el->value = Input::hasFile($key) ?
@@ -224,6 +242,37 @@ class Elements extends Base {
 		// Redirect back to index
 		return Redirect::to(URL::current())->with('success',
 			'<b>Elements</b> were successfully saved.');
+	}
+
+	/**
+	 * Handle storage of image Element types
+	 *
+	 * @param  Element $el
+	 * @param  array $input
+	 * @return void
+	 */
+	protected function storeImage(Element $el, $input) {
+
+		// Do nothing if no images
+		if (!is_array($input['images'])) return;
+
+		// Check for the image in the input.  If isn't found, make no changes.
+		$name = $el->inputName();
+		if (!$data = array_first($input['images'],
+			function($id, $data) use ($name) {
+				return $data['name'] == $name;
+		})) return;
+
+		// Update an existing image
+		if ($image = $el->images()->first()) {
+			$image->fill($data)->save();
+
+		// Or create a new image, if file data was supplied
+		} else if (!empty($data['file'])) {
+			$el->value = null;
+			$el->save();
+			$el->images()->save(new Image($data));
+		}
 
 	}
 

@@ -275,8 +275,12 @@ class Elements extends Collection {
 		// Convert models to simple array
 		$elements = array_map(function(Element $element) {
 
-			// Don't need the key as an attribute
-			return array_except($element->toArray(), ['key']);
+			// Don't need the key as an attribute because of the dictionary conversion
+			$ar = array_except($element->toArray(), ['key']);
+
+			// Restore relationships
+			$ar['images'] = $element->images;
+			return $ar;
 
 		// .. from a dictionary of ALL elements for the locale
 		}, $query->get()->getDictionary());
