@@ -2,6 +2,7 @@
 
 // Dependencies
 use Config;
+use Bkwld\Decoy\Models\Image;
 use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Decoy\Models\Traits\HasImages;
 use Bkwld\Library\Utils\File;
@@ -14,7 +15,9 @@ use Illuminate\Support\Str;
  * YAML and DB Element sources
  */
 class Element extends Base {
-	use Encodable, HasImages;
+	use Encodable, HasImages {
+		img as parentImg;
+	}
 
 	/**
 	 * Enable encoding
@@ -90,48 +93,13 @@ class Element extends Base {
 		// Different outputs depending on type
 		switch($this->type) {
 			case 'boolean': return !empty($this->value);
-			case 'image': return $this->copyImage();
+			case 'image': return $this->img()->url;
 			case 'textarea': return nl2br($this->value);
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
 			case 'checkboxes': return explode(',', $this->value);
 			case 'video-encoder': return $this->encoding('value')->tag;
 			default: return $this->value;
 		}
-	}
-
-	/**
-	 * Check if the value looks like an image.  If it does, copy it to the uploads
-	 * dir so Croppa can work on it and return the modified path
-	 *
-	 * @return string The new URL
-	 */
-	protected function copyImage() {
-
-		// Return nothing if empty
-		if (!$this->value) return '';
-
-		// If customized already, use the customized version
-		if (app('upchuck')->manages($this->value)) return $this->value;
-
-		// All src images must live in the /img (relative) directory.  I'm not
-		// throwing an exception here because Laravel's view exception handler
-		// doesn't display the message.
-		if (!Str::is('/img/*', $this->value)) {
-			return 'All Element images must be stored in the public/img directory';
-		}
-
-		// Check if the image already exists in the uploads directory
-		$path = str_replace('/img/', '/elements/', $this->value);
-		if (!app('upchuck.disk')->has($path)) {
-
-			// Copy it to the disk
-			$stream = fopen(public_path().$this->value, 'r+');
-			app('upchuck.disk')->writeStream($path, $stream);
-			fclose($stream);
-		}
-
-		// Return the new URL
-		return app('upchuck')->url($path);
 	}
 
 	/**
@@ -152,6 +120,74 @@ class Element extends Base {
 	 * @return void
 	 */
 	public function setLocaleGroup() { }
+
+	/**
+	 * Look for default iamges using a named key. It was a lot simpler in the
+	 * integeration with the Elements admin UI to store the input name in the
+	 * "name" attribute
+	 *
+	 * @param  string $name
+	 * @return Image
+	 */
+	public function img($name = null) {
+
+		// Check for an uploaded image
+		if (($image = $this->parentImg($this->inputName()))
+			&& $image->file) return $image;
+
+		// Else return a default image
+		return $this->defaultImage();
+	}
+
+	/**
+	 * Check if the value looks like an image.  If it does, copy it to the uploads
+	 * dir so Croppa can work on it and return the modified path
+	 *
+	 * @return Image
+	 */
+	public function defaultImage() {
+
+		// Return an empty Image object if no default value
+		if (!$this->value) return new Image;
+
+		// If customized already, use the customized version
+		if (app('upchuck')->manages($this->value)) {
+			return new Image(['file' => $this->value]);
+		}
+
+		// All src images must live in the /img (relative) directory.  I'm not
+		// throwing an exception here because Laravel's view exception handler
+		// doesn't display the message.
+		if (!Str::is('/img/*', $this->value)) {
+			return 'All Element images must be stored in the public/img directory';
+		}
+
+		// Check if the image already exists in the uploads directory
+		$path = str_replace('/img/', '/elements/', $this->value);
+		if (!app('upchuck.disk')->has($path)) {
+
+			// Copy it to the disk
+			$stream = fopen(public_path($this->value), 'r+');
+			app('upchuck.disk')->writeStream($path, $stream);
+			fclose($stream);
+		}
+
+
+		// An image instance using that URL
+		return new Image([
+			'file' => app('upchuck')->url($path),
+		]);
+	}
+
+	/**
+	 * Forward crop calls to the img instance, for simpler referencing
+	 *
+	 * @param  args...
+	 * @return Image
+	 */
+	public function crop() {
+		return call_user_func_array([$this->img(), 'crop'], func_get_args());
+	}
 
 	/**
 	 * Render the element in a view

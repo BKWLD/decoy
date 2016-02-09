@@ -264,16 +264,22 @@ class Elements extends Base {
 		})) return;
 
 		// Update an existing image
-		if ($image = $el->images()->first()) {
+		if ($image = $el->images->first()) {
 			$image->fill($data)->save();
 
 		// Or create a new image, if file data was supplied
 		} else if (!empty($data['file'])) {
 			$el->value = null;
 			$el->save();
-			$el->images()->save(new Image($data));
-		}
+			$image = new Image($data);
+			$el->images()->save($image);
 
+		// Othweise, nothing to do
+		} else return;
+
+		// Update the element with the path to the image
+		$el->value = $image->file;
+		$el->save();
 	}
 
 	/**
