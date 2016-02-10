@@ -28,7 +28,7 @@ define(function (require) {
 
 			// Cache selectors
 			this.$upload = this.$el.closest('.image-upload');
-			this.$crop = this.$upload.find('.input-crop');
+			this.$crop = this.$upload.find('.input-crop_box');
 			this.$focus = this.$upload.find('.input-focal_point');
 			this.$title = this.$upload.find('input.title');
 			this.$cropTool = this.$upload.find('.crop.btn');
