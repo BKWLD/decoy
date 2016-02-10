@@ -25,7 +25,7 @@ class CreateImages extends Migration
 
 			$table->string('name')->nullable(); // Key used to refer to it in code
 			$table->string('title')->nullable(); // Alt title
-			$table->text('crop')->nullable();
+			$table->text('crop_box')->nullable();
 			$table->string('focal_point')->nullable();
 
 			$table->integer('width')->unsigned();

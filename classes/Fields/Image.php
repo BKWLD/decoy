@@ -105,8 +105,8 @@ class Image extends File {
 		$html .= $this->createHidden('name', $this->name);
 
 		// Will store the crop coordinates
-		$html .= $this->createHidden('crop',
-			$this->image()->getAttributeValue('crop'));
+		$html .= $this->createHidden('crop_box',
+			$this->image()->getAttributeValue('crop_box'));
 
 		// Begin the image upload section
 		$html .= '

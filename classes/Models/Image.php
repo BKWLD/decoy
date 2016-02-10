@@ -27,7 +27,7 @@ class Image extends Base {
 		'file_size'   => 'integer',
 		'width'       => 'integer',
 		'height'      => 'integer',
-		'crop'        => 'object',
+		'crop_box'    => 'object',
 		'focal_point' => 'object',
 	];
 
@@ -197,7 +197,7 @@ class Image extends Base {
 		], $this->config);
 
 		// Add crops
-		if ($crop = $this->getAttributeValue('crop')) {
+		if ($crop = $this->getAttributeValue('crop_box')) {
 			if (!is_array($config['options'])) $config['options'] = [];
 			$config['options']['trim_perc'] = [
 				round($crop->x1, 4),
