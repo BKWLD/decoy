@@ -31,7 +31,10 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * Adding common traits.  The memory usage of adding additional methods is
 	 * negligible.
 	 */
-	use SupportsUploads, Cloneable, SluggableTrait {
+	use Cloneable,
+		SluggableTrait,
+		SupportsUploads,
+		Traits\CanSerializeTransform {
 		needsSlugging as traitNeedsSlugging;
 	}
 
@@ -432,12 +435,13 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	}
 
 	/**
-	 * Get publically visible items
+	 * Get publically visible items. The scope couldn't be `public` because PHP
+	 * took issue with it as a function name.
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return Illuminate\Database\Query\Builder
 	 */
-	public function scopePublic($query) {
+	public function scopeIsPublic($query) {
 		return $query->where($this->getTable().'.public', '1');
 	}
 
@@ -448,7 +452,7 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 * @return Illuminate\Database\Query\Builder
 	 */
 	public function scopeOrderedAndPublic($query) {
-		return $query->ordered()->public();
+		return $query->ordered()->isPublic();
 	}
 
 	/**

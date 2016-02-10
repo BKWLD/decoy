@@ -45,10 +45,11 @@ define (require) ->
       @$imagePreview.attr 'src', ''
       @$el.removeClass 'has-image'
       @$file.removeClass 'hidden'
-      @$file.val ''
+      @$file.replaceWith @$file = @$file.clone(true)
       @trigger 'deleteImage'
 
       return
+
   )
 
   Preview
