@@ -294,6 +294,16 @@ class Elements extends Collection {
 	}
 
 	/**
+	 * Return the YAML config, as associative array
+	 *
+	 * @return array
+	 */
+	public function getConfig() {
+		if (!$this->config) $this->loadConfig();
+		return $this->config;
+	}
+
+	/**
 	 * Load the config file and store it internally
 	 *
 	 * @return void

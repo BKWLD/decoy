@@ -60,7 +60,7 @@ class Elements extends Base {
 
 		// Populate form
 		Former::withRules($elements->rules());
-		Former::populate($this->populateWithImages($elements));
+		Former::populate($elements->populate());
 
 		// Convert the collection to models for simpler manipulation
 		$elements = $elements->asModels();
@@ -76,20 +76,6 @@ class Elements extends Base {
 			'locale' => $locale,
 			'tab' => $tab,
 		]);
-	}
-
-	/**
-	 * Merge the element collection's populate data with the data needed for the
-	 * Image field instances.
-	 *
-	 * @param  Elements $elements collection
-	 * @return array
-	 */
-	protected function populateWithImages($elements) {
-		return array_merge(
-			$elements->populate(),
-			['images' => Image::where('imageable_type', Element::class)->get()]
-		);
 	}
 
 	/**
@@ -117,8 +103,7 @@ class Elements extends Base {
 				->id($id);
 
 			case 'image': return Former::image($key, $el->label)
-				->setModel($el)
-				->blockHelp($el->help)
+				->forElement($el)
 				->id($id);
 
 			case 'file': return Former::upload($key, $el->label)
@@ -189,22 +174,13 @@ class Elements extends Base {
 
 		// Merge the input into the elements and save them.  Key must be converted back
 		// from the | delimited format necessitated by PHP
-		$elements->asModels()->each(function(Element $el) use ($locale, $elements, $input) {
-
-			// Whitelist only the attributes that actually exist in the table.  This
-			// cleans up after the hydrate(true)
-			$el->setRawAttributes(array_only($el->getAttributes(), [
-				'key', 'type', 'value', 'locale',
-			]));
+		$elements->asModels()->each(function(Element $el) use ($elements, $input) {
 
 			// Inform the model as to whether the model already exists in the db.
 			if ($el->exists = $elements->keyUpdated($el->key)) $el->syncOriginal();
 
-			// If a new record, add the locale
-			else $el->locale = $locale;
-
 			// Handle images differently, since they get saved in the Images table
-			if ($el->type == 'image') return $this->storeImage($el, $input, $locale);
+			if ($el->type == 'image') return $this->storeImage($el, $input);
 
 			// Empty file fields will have no key as a result of the above filtering
 			$key = $el->inputName();

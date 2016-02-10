@@ -1,6 +1,7 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
+use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Models\Image as ImageModel;
 use Croppa;
 use Former;
@@ -82,7 +83,7 @@ class Image extends File {
 		$html = $this->renderEditor();
 
 		// Add the aspect ratio choice
-		$this->group->dataAspectRatio($this->ratio);
+		$this->group->dataAspectRatio($this->ratio ?: false);
 
 		// Inform whether there is an existing image to preview
 		if (Former::getValue($this->inputName('file'))) {
@@ -225,6 +226,27 @@ class Image extends File {
 	public function addFocalPoint($bool = true) {
 			$this->add_focal_point = $bool;
 			return $this;
+	}
+
+	/**
+	 * Logic for rendering an Image field for editing Element images
+	 *
+	 * @param  Element $element
+	 * @return $this
+	 */
+	public function forElement(Element $el) {
+
+		// Add help
+		$this->setModel($el)->blockhelp($el->help);
+
+		// Populate the image array with the image instance.  This will create an
+		// Image instance from the default value if it doesn't exist.
+		$pop = app('former.populator')->all();
+		$pop['images'][$this->inputId()] = $el->img();
+		app('former.populator')->replace($pop);
+
+		// Support chaining
+		return $this;
 	}
 
 }

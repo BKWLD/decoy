@@ -6,6 +6,8 @@ use Bkwld\Decoy\Models\Image;
 use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Decoy\Models\Traits\HasImages;
 use Bkwld\Library\Utils\File;
+use Decoy;
+use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
@@ -46,6 +48,31 @@ class Element extends Base {
 	 * @var bool
 	 */
 	public $timestamps = false;
+
+	/**
+	 * Register events
+	 *
+	 * @return void
+	 */
+	protected static function boot() {
+		parent::boot();
+
+		// Set the locale automatically using the locale key in the URL or the
+		// default.
+		static::creating(function(Element $el) {
+			$el->setAttribute('locale', request()->segment(3) ?: Decoy::defaultLocale());
+		});
+
+		// A lot of extra stuff gets added to attributes with how I am hydrating
+		// models with stuff from the YAML.  So, before, save, remove extra
+		// attributes.
+		static::saving(function(Element $el) {
+			$el->setRawAttributes(array_only($el->getAttributes(), [
+				'key', 'type', 'value', 'locale',
+			]));
+		});
+
+	}
 
 	/**
 	 * Enforce the composite key while saving. Element has a composite primary
@@ -131,11 +158,52 @@ class Element extends Base {
 	 */
 	public function img($name = null) {
 
-		// Check for an uploaded image
+		// Check for an existing Image relation
 		if (($image = $this->parentImg($this->inputName()))
-			&& $image->file) return $image;
+			&& $image->exists) {
+
+			// If the Image represents a default image, but doesn't match the current
+			// item from the config, trash the current one and build the new default
+			// image.
+			if ($replacement = $this->getReplacementImage($image)) {
+				return $replacement;
+			}
+
+			// Return the found image
+			return $image;
+		}
 
 		// Else return a default image
+		return $this->defaultImage();
+	}
+
+	/**
+	 * Check if the Image represents a default image but is out of date
+	 *
+	 * @param  Image $image
+	 * @return Image|void
+	 */
+	protected function getReplacementImage(Image $image) {
+
+		// Check that the image is in the elements dir, which means it's
+		// a default image
+		if (!strpos($image->file, '/elements/')) return;
+
+		// Get the current file value form the YAML.  Need to check for the
+		// shorthand with the type suffix as well.
+		$yaml = app('decoy.elements')->getConfig();
+		$replacement = array_get($yaml, $this->key)
+			?: array_get($yaml, $this->key.',image');
+
+		// Check if the filenames are the same
+		if (pathinfo($image->file, PATHINFO_BASENAME)
+			== pathinfo($replacement, PATHINFO_BASENAME)) return;
+
+		// Since the filenames are not the same, remove the old image and generate
+		// a new one
+		$image->delete();
+		$this->exists = true; // It actually does exist if there was an Image
+		$this->value = $replacement;
 		return $this->defaultImage();
 	}
 
@@ -148,35 +216,49 @@ class Element extends Base {
 	public function defaultImage() {
 
 		// Return an empty Image object if no default value
-		if (!$this->value) return new Image;
-
-		// If customized already, use the customized version
-		if (app('upchuck')->manages($this->value)) {
-			return new Image(['file' => $this->value]);
-		}
+		if (empty($this->value)) return new Image;
 
 		// All src images must live in the /img (relative) directory.  I'm not
 		// throwing an exception here because Laravel's view exception handler
 		// doesn't display the message.
 		if (!Str::is('/img/*', $this->value)) {
-			return 'All Element images must be stored in the public/img directory';
+			throw new Exception('All Element images must be stored in public/img');
 		}
 
 		// Check if the image already exists in the uploads directory
-		$path = str_replace('/img/', '/elements/', $this->value);
+		$src = $this->value;
+		$src_abs = public_path($src);
+		$path = str_replace('/img/', '/elements/', $src);
 		if (!app('upchuck.disk')->has($path)) {
 
 			// Copy it to the disk
-			$stream = fopen(public_path($this->value), 'r+');
+			$stream = fopen($src_abs, 'r+');
 			app('upchuck.disk')->writeStream($path, $stream);
 			fclose($stream);
 		}
 
+		// Update or create this Element instance
+		$this->value = app('upchuck')->url($path);
+		$this->save();
 
-		// An image instance using that URL
-		return new Image([
-			'file' => app('upchuck')->url($path),
+		// Create and return new Image instance. The Image::populateFileMeta()
+		// requires an UploadedFile, so we need to do it manually here.
+		$size = getimagesize($src_abs);
+		$image = new Image([
+			'file' => $this->value,
+			'name' => $this->inputName(),
+			'file_type' => pathinfo($src_abs, PATHINFO_EXTENSION),
+			'file_size' => filesize($src_abs),
+			'width'     => $size[0],
+			'height'    => $size[1],
 		]);
+		$this->images()->save($image);
+
+		// Clear cached image relations
+		unset($this->relations['images']);
+
+		// Return the image
+		return $image;
 	}
 
 	/**
