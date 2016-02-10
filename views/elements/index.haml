@@ -63,7 +63,7 @@
 
 					-# Create pairs
 					-foreach($fields as $el)
-						!= Elements::renderField($el)
+						!= Elements::renderField($el)->wrapAndRender()
 
 .controls.form-actions
 	%button.btn.btn-success.save(type="submit")
