@@ -83,7 +83,7 @@ define(function (require) {
 
 			// Check if there is any crop selection defined
 			var cropVal = this.input_to_json(this.$crop);
-			if (cropVal['x1'] != null) var selection = this.convert_from_perc(cropVal);			
+			if (cropVal['x1'] != null) var selection = this.convert_from_perc(cropVal);
 
 			// Init jcrop
 			var self = this;
