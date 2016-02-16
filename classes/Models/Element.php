@@ -110,7 +110,7 @@ class Element extends Base {
 	/**
 	 * Format the value before returning it based on the type
 	 *
-	 * @return string
+	 * @return mixed Stringable
 	 */
 	public function value() {
 
@@ -125,8 +125,21 @@ class Element extends Base {
 			case 'wysiwyg': return Str::startsWith($this->value, '<') ? $this->value : "<p>{$this->value}</p>";
 			case 'checkboxes': return explode(',', $this->value);
 			case 'video-encoder': return $this->encoding('value')->tag;
+			case 'model': return $this->relatedModel();
 			default: return $this->value;
 		}
+	}
+
+	/**
+	 * Get the model referenced in a "model" field
+	 *
+	 * @return Model
+	 */
+	protected function relatedModel() {
+		$yaml = app('decoy.elements')->getConfig();
+		$model = array_get($yaml, $this->key.'.class')
+			?: array_get($yaml, $this->key.',model.class');
+		return $model::find($this->value);
 	}
 
 	/**
@@ -279,7 +292,7 @@ class Element extends Base {
 	public function __toString() {
 		$value = $this->value();
 		if (is_array($value)) return implode(',', $value);
-		return $value;
+		return (string) $value;
 	}
 
 }

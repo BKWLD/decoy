@@ -71,8 +71,12 @@ other:
         # they must be supplied through upload a video in the admin
         video,video-encoder:
 
+        # A autocomplete that points to a specfici model
+        project,model:
+          class: App\Project
+
         # ----------------------------------------------------------------------
-        # The following all require additional attributes and, thus, can't be 
+        # The following all require additional attributes and, thus, can't be
         # invoked using the shorthand method
 
         # A select menu
@@ -102,4 +106,3 @@ other:
             two: Two
             three: Three
           value: two,three
-

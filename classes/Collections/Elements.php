@@ -258,7 +258,12 @@ class Elements extends Collection {
 		if (isset($data['label']) && $data['label'] === false) $el[$prefix.'label'] = false;
 		else $el[$prefix.'label'] = empty($data['label']) || $skip ? Utils\String::titleFromKey($key) : $data['label'];
 		$el[$prefix.'help'] = empty($data['help']) || $skip ? null : $data['help'];
+
+		// Used by radio, select, and checkboxes types
 		$el[$prefix.'options'] = empty($data['options']) || $skip ? null : $data['options'];
+
+		// Used by belongs to but maybe others in the future
+		$el[$prefix.'class'] = empty($data['class']) || $skip ? null : $data['class'];
 	}
 
 	/**

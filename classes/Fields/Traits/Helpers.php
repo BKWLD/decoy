@@ -19,7 +19,8 @@ trait Helpers {
 	/**
 	 * Set the model
 	 *
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @param Illuminate\Database\Eloquent\Model $model
+	 * @return $this
 	 */
 	public function model($model) {
 		$this->model = $model;

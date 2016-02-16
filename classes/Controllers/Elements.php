@@ -136,10 +136,10 @@ class Elements extends Base {
 				->model($el)
 				->id($id);
 
-			/**
-			 * Not ported yet from Frags:
-			 */
-			// case 'belongs_to': return Former::belongsTo($key, $el->label)->route($el->value)->blockHelp($el->help);
+			case 'model': return Former::belongsTo($key, $el->label)
+				->parent($el->class)
+				->blockHelp($el->help)
+				->id($id);
 		}
 	}
 

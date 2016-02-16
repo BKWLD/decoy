@@ -1,6 +1,8 @@
 <?php namespace Bkwld\Decoy\Fields;
 
 // Dependencies
+use Decoy;
+use DecoyURL;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
@@ -88,6 +90,16 @@ class BelongsTo extends Field {
 	}
 
 	/**
+	 * Use the parent class to set the route
+	 *
+	 * @param string $class
+	 */
+	public function parent($class) {
+		$this->route(DecoyURL::action(Decoy::controllerForModel($class)));
+		return $this;
+	}
+
+	/**
 	 * Store the title for the autocomplete, useful if pre-populating the
 	 * autocomplete on the create page.
 	 *
@@ -112,7 +124,9 @@ class BelongsTo extends Field {
 		// Add control group attributes
 		$this->addGroupClass('belongs-to');
 		$this->group->setAttribute('data-js-view', 'belongs-to');
-		if ($this->route) $this->group->setAttribute('data-controller-route', $this->route);
+		if ($this->route) {
+			$this->group->setAttribute('data-controller-route', $this->route);
+		}
 
 		// Continue doing normal wrapping
 		return parent::wrapAndRender();
@@ -148,12 +162,14 @@ class BelongsTo extends Field {
 		$hidden = $this->renderHidden();
 
 		// If there is a value and the field name matches a relationship on function
-		// on the current item, then get and display the title text for the related record
-		if ($parent = $this->parent()) $this->value = $parent->getAdminTitleAttribute();
+		// on the current item, then get and display the title text for the related
+		// record
+		if ($parent = $this->parentModel()) {
+			$this->value = $parent->getAdminTitleAttribute();
 
 		// Else, if there is no parent (it's a create page), set the value if a
 		// title was set
-		else if ($this->title) $this->value = $this->title;
+		} else if ($this->title) $this->value = $this->title;
 
 		// Add the hidden field and return
 		return parent::render().$hidden;
@@ -164,7 +180,7 @@ class BelongsTo extends Field {
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function parent() {
+	public function parentModel() {
 		if ($this->value
 			&& ($relation = $this->guessRelation())
 			&& ($model = $this->getModel())
