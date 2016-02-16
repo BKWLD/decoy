@@ -54,18 +54,6 @@ define(function (require) {
 
 			// Start jcrop up once the images loaded
 			this.$el.imagesLoaded(this.init);
-
-		},
-
-		// Events
-		events: {
-			'active': 'activate' // This image has now been activated
-		},
-
-		// Activated, meaning a tab has been clicked to reveal it.  Note: the first
-		// image is assumed to be activated on load.
-		activate: function() {
-			if (!this.initted) this.init();
 		},
 
 		// Add jcrop to the element
@@ -97,7 +85,7 @@ define(function (require) {
 			// Store a reference to jcrop and call the ready function
 			}, function() {
 				self.jcrop = this;
-				activeCrop = true;
+				self.activeCrop = true;
 
 				// Put all of the jcrop instances in a parent to give them the polariod effecast
 				self.$el.siblings('.jcrop-holder').wrap('<div class="img-thumbnail" style="display: inline-block;"/>');
