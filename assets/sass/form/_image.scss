@@ -1,9 +1,12 @@
 .image-upload {
   $height: 33px;
+  $bkgd: #f5f5f5;
+  $border: 1px solid #ccc;
   position: relative;
 
   .image-holder {
     display: none;
+    margin-top: 5px;
   }
 
   &.has-image {
@@ -21,12 +24,24 @@
     display: inline-block;
     vertical-align: middle;
     width: 50%;
-    padding: 2px 10px;
-    margin: 0 0 0 20px;
-    border: 0;
+    margin-left: 10px;
+    padding: 2px 5px;
     border-radius: 4px;
     outline: none;
-    background-color: #ddd;
+    background: transparent;
+
+    // Center the title
+    position: absolute;
+    right: 50%;
+    transform: translateX(50%);
+    text-align: center;
+    top: 4px;
+
+    border: 1px solid transparent;
+    transition: border-color 200ms;
+    &:focus {
+      border: $border;
+    }
   }
 
   .btn-default {
@@ -42,7 +57,7 @@
         padding: 9px 10px;
         border-radius: 0;
         height: $height;
-        @include transition(background-color 250ms, color 250ms);
+        transition: background-color 250ms, color 250ms;
 
         &:hover {
           background-color: $theme-primary-color;
@@ -65,7 +80,7 @@
       border-radius: 0 4px 0 0;
       top: 0;
       height: $height;
-      @include transition(background-color 250ms, color 250ms);
+      transition: background-color 250ms, color 250ms;
 
       &:hover {
         background-color: red;
@@ -83,8 +98,8 @@
   }
 
   .toolbar {
-    background: #f5f5f5;
-    border: 1px solid #ccc;
+    background: $bkgd;
+    border: $border;
     border-radius: 4px 4px 0 0;
   }
 
