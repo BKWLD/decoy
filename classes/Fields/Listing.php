@@ -122,7 +122,7 @@ class Listing extends Field {
 	 * @return Bkwld\Decoy\Field\Listing
 	 */
 	public static function createFromController($controller, $items) {
-		$model = $controller->getModel();
+		$model = $controller->model();
 		return Former::listing($model, null, null, null, array(
 			'controller' => $controller,
 			'items' => $items,
