@@ -19,21 +19,19 @@ trait Helpers {
 	/**
 	 * Set the model
 	 *
-	 * @param Illuminate\Database\Eloquent\Model $model
-	 * @return this
+	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function setModel($model) {
+	public function model($model) {
 		$this->model = $model;
 		return $this;
 	}
 
 	/**
-	 * Get the model instance for the form from Former's populator.  This takes
-	 * advantage of Populator extending from Collection
+	 * Get the model
 	 *
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
-	public function model() {
+	public function getModel() {
 
 		// Use explicilty set model
 		if ($this->model) return $this->model;

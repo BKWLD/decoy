@@ -93,7 +93,7 @@ class Listing extends Field {
 	public function __construct(Container $app, $type, $model, $label, $value, $attributes, $config) {
 
 		// Get the parent item
-		$this->parent_item = $this->model();
+		$this->parent_item = $this->getModel();
 
 		// Instantiate a controller given the model name
 		$this->controller(isset($config['controller'])
@@ -122,7 +122,7 @@ class Listing extends Field {
 	 * @return Bkwld\Decoy\Field\Listing
 	 */
 	public static function createFromController($controller, $items) {
-		$model = $controller->model();
+		$model = $controller->getModel();
 		return Former::listing($model, null, null, null, array(
 			'controller' => $controller,
 			'items' => $items,

@@ -167,14 +167,14 @@ class BelongsTo extends Field {
 	public function parent() {
 		if ($this->value
 			&& ($relation = $this->guessRelation())
-			&& ($model = $this->model())
+			&& ($model = $this->getModel())
 			&& method_exists($model, $relation)) return $model->$relation;
 	}
 
 /**
 	 * Guess at the relationship name by removing id from the name and camel casing
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	protected function guessRelation() {
 		if ($this->relation) return $this->relation;

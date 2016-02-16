@@ -202,8 +202,8 @@ class Image extends File {
 	 * @return Image
 	 */
 	protected function image() {
-		if (!$this->model()) return new ImageModel;
-		return $this->model()->img($this->name);
+		if (!$model = $this->getModel()) return new ImageModel;
+		return $model->img($this->name);
 	}
 
 	/**

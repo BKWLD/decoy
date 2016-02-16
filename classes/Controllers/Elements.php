@@ -133,7 +133,7 @@ class Elements extends Base {
 
 			case 'video-encoder': return Former::videoEncoder($key, $el->label)
 				->blockHelp($el->help)
-				->setModel($el)
+				->model($el)
 				->id($id);
 
 			/**
