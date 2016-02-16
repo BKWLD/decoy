@@ -107,6 +107,8 @@ define(function (require) {
 
 		// Set up cropping when crop tool is clicked
 		beginCrop: function() {
+			if (this.activeCrop == true) return;
+
 			// remove the set focus listener
 			this.$el.next('div').unbind();
 
@@ -121,6 +123,8 @@ define(function (require) {
 
 		// Switch to set focal point
 		beginFocus: function() {
+			if (this.activeCrop != true) return;
+
 			this.$cropTool.removeClass('active');
 			this.$focusTool.addClass('active');
 			$('.jcrop-holder').css('pointer-events', 'none');

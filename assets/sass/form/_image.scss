@@ -59,7 +59,7 @@
         height: $height;
         transition: background-color 250ms, color 250ms;
 
-        &:hover {
+        &:not(.active):hover {
           background-color: $theme-primary-color;
           color: white;
         }
