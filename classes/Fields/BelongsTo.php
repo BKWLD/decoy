@@ -7,7 +7,7 @@ use Illuminate\Container\Container;
 use Illuminate\Support\Str;
 
 /**
- * Create an autocomplete field that populates a foreign key in a 
+ * Create an autocomplete field that populates a foreign key in a
  * belongs to relationship
  */
 class BelongsTo extends Field {
@@ -16,7 +16,7 @@ class BelongsTo extends Field {
 	/**
 	 * Preserve the relation
 	 *
-	 * @var string 
+	 * @var string
 	 */
 	private $relation;
 
@@ -68,7 +68,7 @@ class BelongsTo extends Field {
 	/**
 	 * Allow the relation to be explicitly specified if guessing won't work.
 	 *
-	 * @param string $route 
+	 * @param string $route
 	 */
 	public function relation($relation) {
 		$this->relation = $relation;
@@ -76,11 +76,11 @@ class BelongsTo extends Field {
 	}
 
 	/**
-	 * Store the The GET route that will return data for the autocomplete. The 
-	 * response  should be an array of key / value pairs where the key is what 
+	 * Store the The GET route that will return data for the autocomplete. The
+	 * response  should be an array of key / value pairs where the key is what
 	 * will get submitted and the value is the title that is displayed to users.
 	 *
-	 * @param string $route 
+	 * @param string $route
 	 */
 	public function route($route) {
 		$this->route = $route;
@@ -91,7 +91,7 @@ class BelongsTo extends Field {
 	 * Store the title for the autocomplete, useful if pre-populating the
 	 * autocomplete on the create page.
 	 *
-	 * @param string $title 
+	 * @param string $title
 	 */
 	public function title($title) {
 		$this->title = $title;
@@ -101,7 +101,7 @@ class BelongsTo extends Field {
 	/**
 	 * Prints out the field, wrapped in its group.  This is the opportunity
 	 * to tack additional stuff onto the control group
-	 * 
+	 *
 	 * @return string
 	 */
 	public function wrapAndRender() {

@@ -30,6 +30,7 @@ class UrlGenerator {
 	/**
 	 * Construct a route that takes into account the current url path as well
 	 * as the function arguments
+	 * 
 	 * @param string $action The action we're linking to: index/edit/etc
 	 * @param integer $id Optional id that we're linking to.  Required for actions like edit.
 	 * @param string $child The name (or full class) of a child controller
@@ -81,6 +82,7 @@ class UrlGenerator {
 	/**
 	 * Make a URL given a fully namespaced controller.  This only generates routes
 	 * as if the controller is in the root level; as if it has no parents.
+	 *
 	 * @param string $controller ex: Bkwld\Decoy\Controllers\Admins@create
 	 * @param integer $id
 	 * @return string ex: http://admin/admins/create
