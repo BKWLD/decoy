@@ -42,10 +42,20 @@ define (require) ->
       return
 
     onDelete: () ->
+
+      # Clear the old preview
       @$imagePreview.attr 'src', ''
       @$el.removeClass 'has-image'
       @$file.removeClass 'hidden'
+
+      # Replace the file input with a clone because you can't clear a file field
       @$file.replaceWith @$file = @$file.clone(true)
+
+      # Add a hidden field of the same name that tells Decoy to delete the
+      # previous.
+      $('<input type="hidden" value="">')
+        .attr('name', @$file.attr('name'))
+        .insertBefore(@$file)
       @trigger 'deleteImage'
 
       return
