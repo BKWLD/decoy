@@ -112,17 +112,17 @@ class Image extends File {
 		// Begin the image upload section
 		$html .= '
 			<div class="image-holder">
-				<div class="toolbar input-group">
-					<div class="btn-group btn-group-sm">
-						<div class="crop btn js-tooltip active" title="Click a point in the
-							image that should stay in view despite browser resizing">
-							<div class="glyphicon glyphicon-scissors"></div></div>';
+			<div class="toolbar input-group">
+			<div class="btn-group btn-group-sm">
+			<div class="crop btn js-tooltip active" title="Click and drag on the
+				image to set cropping bounds">
+			<div class="glyphicon glyphicon-scissors"></div></div>';
 
 		// Will add the focal point ui
 		if ($this->add_focal_point) {
-			$html .= '<div class="focal btn js-tooltip" title="Click a point in the
-				image that should stay in view despite browser resizing">
-					<div class="glyphicon glyphicon-screenshot"></div></div>';
+			$html .= '<div class="focal btn js-tooltip" title="Click a point that
+				should stay in view despite browser resizing">
+				<div class="glyphicon glyphicon-screenshot"></div></div>';
 
 			// Will store the focal point
 			$html .= $this->createHidden('focal_point',
@@ -135,20 +135,23 @@ class Image extends File {
 		// Add the title input
 		$html .= Former::text($this->inputName('title'))
 			->class('title js-tooltip')
-			->placeholder('Title')
+			->placeholder('Enter image title')
+			->title('Used for the img tag &quot;alt&quot; attribute')
 			->render();
 
 		// Add delete button
 		$html .= '<div class="delete btn-sm js-tooltip">
-								<div class="glyphicon glyphicon-trash"></div>
-							</div>';
+				<div class="glyphicon glyphicon-trash"></div>
+			</div>';
 
 		// Close out all divs and add image holder.  Make the old image no wider
 		// than the max available width of forms (1050)
 		if ($src = Former::getValue($this->inputName('file'))) {
 				$src = Croppa::url($src, 1050);
 		}
-		$html .= sprintf('</div><img class="img-thumbnail" src="%s"></div>', $src);
+		$html .= sprintf('</div>
+			<div class="preview"><img class="source" src="%s"></div>
+			</div>', $src);
 
 		return $html;
 	}
