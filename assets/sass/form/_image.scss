@@ -7,6 +7,11 @@
   .image-holder {
     display: none;
     margin-top: 5px;
+
+    // Add border around the region
+    border: $border;
+    border-radius: 4px;
+    overflow: hidden;
   }
 
   &.has-image {
@@ -23,7 +28,6 @@
   .title {
     display: inline-block;
     vertical-align: middle;
-    width: 50%;
     margin-left: 10px;
     padding: 2px 5px;
     border-radius: 4px;
@@ -32,8 +36,8 @@
 
     // Center the title
     position: absolute;
-    right: 50%;
-    transform: translateX(50%);
+    width: 50%;
+    left: 25%;
     text-align: center;
     top: 4px;
 
@@ -48,44 +52,42 @@
     background: none;
   }
 
-  .input-group {
-    width: 100%;
 
-    .btn-group {
 
-      .btn {
-        padding: 9px 10px;
-        border-radius: 0;
-        height: $height;
-        transition: background-color 250ms, color 250ms;
+  .input-group .btn-group {
 
-        &:not(.active):hover {
-          background-color: $theme-primary-color;
-          color: white;
-        }
+    .btn {
+      padding: 9px 10px;
+      border-radius: 0;
+      height: $height;
+      transition: background-color 250ms, color 250ms;
 
-        &:active {
-          box-shadow: none;
-        }
+      &:not(.active):hover {
+        background-color: $theme-primary-color;
+        color: white;
       }
 
-      .active {
-        background-color: #ccc;
+      &:active {
         box-shadow: none;
       }
     }
 
-    .delete {
-      padding: 9px 10px;
-      border-radius: 0 4px 0 0;
-      top: 0;
-      height: $height;
-      transition: background-color 250ms, color 250ms;
+    .active {
+      background-color: #ccc;
+      box-shadow: none;
+    }
+  }
 
-      &:hover {
-        background-color: red;
-        color: white;
-      }
+  .delete {
+    padding: 9px 10px;
+    border-radius: 0 4px 0 0;
+    top: 0;
+    height: $height;
+    transition: background-color 250ms, color 250ms;
+
+    &:hover {
+      background-color: red;
+      color: white;
     }
   }
 
@@ -99,8 +101,9 @@
 
   .toolbar {
     background: $bkgd;
-    border: $border;
+    border-bottom: $border;
     border-radius: 4px 4px 0 0;
+    width: calc(100% + 1px); // Correct for some subpixel issues
   }
 
   .img-thumbnail {
@@ -119,5 +122,23 @@
 
   .delete {
     float: right;
+  }
+
+  // Contains the source image and the jcrop instance
+  .preview {
+
+    // Add checkered bkgd
+    background: url($decoy_img_dir + 'jcrop/img-bkgd.png');
+
+    // Make images fit
+    .source {
+      max-width: 100%;
+    }
+
+    // Remove the default black bkgd
+    .jcrop-holder {
+      background: none !important;
+    }
+
   }
 }

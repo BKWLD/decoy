@@ -16,7 +16,7 @@ define (require) ->
       _.bindAll this
       @$file = @$el.find('[type="file"]')
       @$holder = @$el.find('.image-holder')
-      @$imagePreview = @$holder.find('.img-thumbnail')
+      @$imagePreview = @$holder.find('.source')
       @$delete = @$el.find('.delete')
 
       # Listener
@@ -56,8 +56,8 @@ define (require) ->
       $('<input type="hidden" value="">')
         .attr('name', @$file.attr('name'))
         .insertBefore(@$file)
-      @trigger 'deleteImage'
 
+      @trigger 'deleteImage'
       return
 
   )

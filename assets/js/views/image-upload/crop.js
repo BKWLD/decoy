@@ -86,9 +86,6 @@ define(function (require) {
 			}, function() {
 				self.jcrop = this;
 				self.activeCrop = true;
-
-				// Put all of the jcrop instances in a parent to give them the polariod effecast
-				self.$el.siblings('.jcrop-holder').wrap('<div class="img-thumbnail" style="display: inline-block;"/>');
 			});
 
 			// Check if focal point is set
@@ -169,7 +166,6 @@ define(function (require) {
 
 			// Unset everything
 			this.jcrop.destroy();
-			this.$el.siblings('.img-thumbnail').remove();
 			this.jcrop = null;
 			this.initted = false;
 
