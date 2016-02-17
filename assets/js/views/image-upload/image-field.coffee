@@ -13,7 +13,7 @@ define (require) ->
       _.bindAll @
 
       @preview = new Preview { el: @el, parent: @ }
-      @crop = new Crop { el: @$('.img-thumbnail') }
+      @crop = new Crop { el: @$('img.source') }
 
       @preview.on 'previewImage', @onPreviewImage
       @preview.on 'deleteImage', @onDeleteImage

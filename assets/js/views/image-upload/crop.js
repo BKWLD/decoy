@@ -54,18 +54,6 @@ define(function (require) {
 
 			// Start jcrop up once the images loaded
 			this.$el.imagesLoaded(this.init);
-
-		},
-
-		// Events
-		events: {
-			'active': 'activate' // This image has now been activated
-		},
-
-		// Activated, meaning a tab has been clicked to reveal it.  Note: the first
-		// image is assumed to be activated on load.
-		activate: function() {
-			if (!this.initted) this.init();
 		},
 
 		// Add jcrop to the element
@@ -97,10 +85,7 @@ define(function (require) {
 			// Store a reference to jcrop and call the ready function
 			}, function() {
 				self.jcrop = this;
-				activeCrop = true;
-
-				// Put all of the jcrop instances in a parent to give them the polariod effecast
-				self.$el.siblings('.jcrop-holder').wrap('<div class="img-thumbnail" style="display: inline-block;"/>');
+				self.activeCrop = true;
 			});
 
 			// Check if focal point is set
@@ -119,6 +104,8 @@ define(function (require) {
 
 		// Set up cropping when crop tool is clicked
 		beginCrop: function() {
+			if (this.activeCrop == true) return;
+
 			// remove the set focus listener
 			this.$el.next('div').unbind();
 
@@ -133,6 +120,8 @@ define(function (require) {
 
 		// Switch to set focal point
 		beginFocus: function() {
+			if (this.activeCrop != true) return;
+
 			this.$cropTool.removeClass('active');
 			this.$focusTool.addClass('active');
 			$('.jcrop-holder').css('pointer-events', 'none');
@@ -177,7 +166,6 @@ define(function (require) {
 
 			// Unset everything
 			this.jcrop.destroy();
-			this.$el.siblings('.img-thumbnail').remove();
 			this.jcrop = null;
 			this.initted = false;
 

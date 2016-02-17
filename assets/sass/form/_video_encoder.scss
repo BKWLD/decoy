@@ -19,8 +19,12 @@
 		// Push off top
 		margin-top: 5px;
 
-		// Make ti scale 
+		// Make it scale
 		max-width: 100%;
+
+		// Add a border
+    border: 1px solid #ddd;
+		border-radius: 4px;
 	}
 
 }
