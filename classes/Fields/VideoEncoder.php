@@ -44,8 +44,7 @@ class VideoEncoder extends Upload {
 		$this->group->data_js_view('video-encoder');
 
 		// Set the model_attribute for the encoding
-		$this->model_attribute = Route::is('decoy::fragments')
-			|| Route::is('decoy::elements') ? 'value' : $this->name;
+		$this->model_attribute = Route::is('decoy::elements') ? 'value' : $this->name;
 	}
 
 	/**
