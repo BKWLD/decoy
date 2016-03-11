@@ -33,7 +33,7 @@ class ValidateExistingFiles {
 		// https://regex101.com/r/oP4kD2/1
 		$rules = array_filter($validation->getRules(), function($rules) {
 			foreach($rules as $rule) {
-				if (preg_match('#^image|file|video|mimes\:[\w,]+$#', $rule)) return true;
+				if (preg_match('#^(image|file|video|mimes)#', $rule)) return true;
 			}
 		});
 
