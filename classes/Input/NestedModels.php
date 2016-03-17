@@ -24,17 +24,19 @@ class NestedModels {
 	 * exists.  And then listen for the model to be saved and write the related
 	 * models.
 	 *
-	 * @param Eloquent\Model $model
+	 * @param  Eloquent\Model $model
+	 * @return array The input with attributes that were relations removed
 	 */
 	public function relateTo($model) {
 
-		// Loop through the input, looking for relationships
-		foreach(Decoy::filteredInput() as $name => $data) {
-			if (!$relation = $this->makeRelation($model, $name, $data)) continue;
+		// Vars
+		$relation_attributes = [];
+		$input = Decoy::filteredInput();
 
-			// Remove the Input data, since it shouldn't be `filled()` on the model
-			request()->offsetUnset($name);
-			request()->files->remove($name);
+		// Loop through the input, looking for relationships
+		foreach($input as $name => $data) {
+			if (!$relation = $this->makeRelation($model, $name, $data)) continue;
+			$relation_attributes[] = $name;
 
 			// Write child data when the model is saved.  Because of how the saved
 			// listener works, we need to explicitly make sure the saved model is
@@ -44,6 +46,9 @@ class NestedModels {
 				$this->writeOnSaved($relation, $name, $data);
 			});
 		}
+
+		// Returning all input without the related attribtues
+		return array_except($input, $relation_attributes);
 	}
 
 	/**
