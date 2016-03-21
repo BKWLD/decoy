@@ -95,7 +95,7 @@ class Elements extends Collection {
 				// will return an empty string.
 				} else {
 					\Log::error("Element key '{$key}' is not declared in elements.yaml.");
-					return $this->model->newInstance();
+					return new $this->model();
 				}
 			}
 
