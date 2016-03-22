@@ -11,6 +11,7 @@ use HtmlObject\Input as HtmlInput;
 use Input;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Str;
 use View;
 use URL;
@@ -52,9 +53,7 @@ class Listing extends Field {
 	/**
 	 * Preserve the items
 	 *
-	 * @var Illuminate\Pagination\Paginator |
-	 *      Illuminate\Database\Eloquent\Collection
-	 *      string $items
+	 * @var LengthAwarePaginator | Collection string $items
 	 */
 	private $items;
 
@@ -118,7 +117,7 @@ class Listing extends Field {
 	 * duplicate controller instantations when invoked from the base controller.
 	 *
 	 * @param Bkwld\Decoy\Controllers\Base $controller
-	 * @param Illuminate\Pagination\Paginator $items
+	 * @param LengthAwarePaginator $items
 	 * @return Bkwld\Decoy\Field\Listing
 	 */
 	public static function createFromController($controller, $items) {
@@ -163,9 +162,7 @@ class Listing extends Field {
 	/**
 	 * Store the items that will be displayed in the list
 	 *
-	 * @param  Illuminate\Pagination\Paginator |
-	 *         Illuminate\Database\Eloquent\Collection
-	 *         string $items
+	 * @param  LengthAwarePaginator | Collection | $items
 	 * @return Field This field
 	 */
 	public function items($items) {
@@ -307,7 +304,8 @@ class Listing extends Field {
 			'parent_controller' => null,
 			'many_to_many'      => false,
 			'listing'           => $items,
-			'count'             => is_a($items, 'Illuminate\Pagination\Paginator') ? $items->getTotal() : $items->count(),
+			'count'             => is_a($items, LengthAwarePaginator::class) ?
+				$items->total() : $items->count(),
 			'paginator_from'    => (Input::get('page', 1)-1) * $this->perPage(),
 		);
 
@@ -382,7 +380,7 @@ class Listing extends Field {
 	/**
 	 * Create the list of items to display
 	 *
-	 * @return Illuminate\Pagination\Paginator | Illuminate\Database\Eloquent\Collection
+	 * @return LengthAwarePaginator | Collection
 	 */
 	protected function getItems() {
 
@@ -396,7 +394,7 @@ class Listing extends Field {
 	/**
 	 * Write an execute a query to get the list of items
 	 *
-	 * @return Illuminate\Pagination\Paginator
+	 * @return LengthAwarePaginator
 	 */
 	protected function queryForItems() {
 
