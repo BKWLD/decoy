@@ -88,8 +88,15 @@ class Elements extends Collection {
 		if (!$this->has($key)) {
 			if ($default) return $default;
 			else {
-				\Log::debug('Keys are: ',$this->keys());
-				throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
+				if (App::isLocal()) {
+					throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
+
+				// If running on a server, return an empty Element, whose ->toString()
+				// will return an empty string.
+				} else {
+					\Log::error("Element key '{$key}' is not declared in elements.yaml.");
+					return new $this->model();
+				}
 			}
 
 			// Add the key as an attribute
