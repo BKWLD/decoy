@@ -15,8 +15,23 @@ class Image extends Base {
 	 *
 	 * @var array
 	 */
-	protected $visible = ['low', 'medium', 'high', 'background_position', 'title'];
-	protected $appends = ['low', 'medium', 'high', 'background_position'];
+	protected $visible = [
+		'xs', 'xs2x',
+		's', 's2x',
+		'm', 'm2x',
+		'l', 'l2x',
+		'xl', 'xl2x',
+		'bkgd_pos',
+		'title',
+	];
+	protected $appends = [
+		'xs', 'xs2x',
+		's', 's2x',
+		'm', 'm2x',
+		'l', 'l2x',
+		'xl', 'xl2x',
+		'bkgd_pos',
+	];
 
 	/**
 	 * The attributes that should be cast to native types.
@@ -220,16 +235,14 @@ class Image extends Base {
 	 */
 	public function getUrlAttribute() {
 
+		// Figure out the URL
+		$url = $this->urlify(1);
+
 		// Clear the instance config so that subsequent calls don't inherit anything
-		$config = $this->getConfig();
 		$this->config = [];
 
-		// Return the URL
-		return $this->urlify(Croppa::url($this->getAttributeValue('file'),
-			$config['width'],
-			$config['height'],
-			$config['options']
-		));
+		// Return the url
+		return $url;
 	}
 
 	/**
@@ -239,7 +252,7 @@ class Image extends Base {
 	 */
 	public function getBkgdAttribute() {
 		return sprintf('background-image: url(\'%s\');', $this->getUrlAttribute())
-			.$this->getBkgdPosAttribute();
+			.$this->getBackgroundPositionAttribute();
 	}
 
 	/**
@@ -273,7 +286,7 @@ class Image extends Base {
 	 *
 	 * @return string
 	 */
-	public function getBkgdPosAttribute() {
+	public function getBackgroundPositionAttribute() {
 		if (!$value = $this->getBackgroundPositionAttribute()) return;
 		return sprintf('background-position: %s;', $value);
 	}
@@ -285,7 +298,7 @@ class Image extends Base {
 	 *
 	 * @return string
 	 */
-	public function getBackgroundPositionAttribute() {
+	public function getBkgdPosAttribute() {
 		if (!$point = $this->getAttributeValue('focal_point')) return;
 		return sprintf('%s%% %s%%', $point->x*100, $point->y*100);
 	}
@@ -300,55 +313,37 @@ class Image extends Base {
 	}
 
 	/**
-	 * Generate the .5x image URL
+	 * Accessors for different sizes.  They are calculated has percentages of
+	 * 1366, which we take to be the 1x "desktop" resolution.  1366 is currently
+	 * the most popular desktop resolution.
 	 *
 	 * @return string
 	 */
-	public function getLowAttribute() {
-		$config = $this->getConfig();
-		return $this->urlify(Croppa::url($this->getAttributeValue('file'),
-			round($config['width']/2),
-			round($config['height']/2),
-			$config['options']
-		));
-	}
-
-	/**
-	 * Generate the 1x image URL
-	 *
-	 * @return string
-	 */
-	public function getMediumAttribute() {
-		$config = $this->getConfig();
-		return $this->urlify(Croppa::url($this->getAttributeValue('file'),
-			$config['width'],
-			$config['height'],
-			$config['options']
-		));
-	}
-
-	/**
-	 * Generate the 2x image URL
-	 *
-	 * @return string
-	 */
-	public function getHighAttribute() {
-		$config = $this->getConfig();
-		return $this->urlify(Croppa::url($this->getAttributeValue('file'),
-			$config['width']*2,
-			$config['height']*2,
-			$config['options']
-		));
-	}
+	public function getXsAttribute()   { return $this->urlify(420/1366); }
+	public function getXs2xAttribute() { return $this->urlify(840/1366); }
+	public function getSAttribute()    { return $this->urlify(768/1366); }
+	public function getS2xAttribute()  { return $this->urlify(1536/1366); }
+	public function getMAttribute()    { return $this->urlify(1024/1366); }
+	public function getM2xAttribute()  { return $this->urlify(2048/1366); }
+	public function getLAttribute()    { return $this->urlify(1366/1366); }
+	public function getL2xAttribute()  { return $this->urlify(2732/1366); }
+	public function getXlAttribute()   { return $this->urlify(1920/1366); }
+	public function getXl2xAttribute() { return $this->urlify(3840/1366); }
 
 	/**
 	 * Make paths full URLs so these can be used directly in APIs or for Open
 	 * Graph tags, for example.
 	 *
-	 * @param  string $path
+	 * @param  float $scale How much to scale
 	 * @return string url
 	 */
-	public function urlify($path) {
+	public function urlify($scale = 1) {
+		$config = $this->getConfig();
+		$path = Croppa::url($this->getAttributeValue('file'),
+			$config['width'] * $scale,
+			$config['height'] * $scale,
+			$config['options']
+		);
 		if ($path) return asset($path);
 	}
 
