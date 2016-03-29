@@ -31,7 +31,7 @@ abstract class EncodingProvider {
 
 	/**
 	 * Inject dependencies
-	 * 
+	 *
 	 * @param Bkwld\Decoy\Models\Encoding $model
 	 */
 	public function __construct(Encoding $model = null) {
@@ -41,7 +41,7 @@ abstract class EncodingProvider {
 	/**
 	 * Produce the destination directory
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	protected function destination() {
 		return Config::get('decoy.encode.destination').'/'.Str::random(32).'/';
@@ -51,15 +51,15 @@ abstract class EncodingProvider {
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
-	 * @return void 
+	 * @return void
 	 */
 	abstract public function encode($source);
-	
+
 	/**
 	 * Handle notification requests from the SDK
 	 *
 	 * @param array $input Input::get()
-	 * @return mixed Reponse to the API 
+	 * @return mixed Reponse to the API
 	 */
 	abstract public function handleNotification($input);
 
@@ -104,17 +104,17 @@ abstract class EncodingProvider {
 	/**
 	 * Get the notifications URL
 	 *
-	 * @return string 
+	 * @return string
 	 */
 	protected function notificationURL() {
 
 		// Get the host name from env variable if running through CLI
-		$host = App::runningInConsole() && isset($_SERVER['SERVER_NAME']) 
-			? $_SERVER['SERVER_NAME'] 
+		$host = App::runningInConsole() && isset($_SERVER['SERVER_NAME'])
+			? $_SERVER['SERVER_NAME']
 			: Request::getHost();
 
 		// Verify that the host is public
-		if (!($ip = gethostbyname($host)) || preg_match('#^(127|10|192\.168)#', $ip)) {
+		if (!($ip = gethostbyname($host)) || preg_match('#^(127|10|192\.168)\.#', $ip)) {
 			throw new Exception('The server name ('.$host.') does not appear to be publicly accessible.  It is recommended to use <a href="https://ngrok.com/">ngrok</a> to access your localhost.  If running from CLI, pass the server name in via ENV variable like: `SERVER_NAME=10147f98.ngrok.com php artisan your:command`.');
 		}
 

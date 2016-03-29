@@ -466,10 +466,10 @@ class Base extends Controller {
 		$item = new $this->model;
 
 		// Remove nested model data from input and prepare to insert on save
-		(new NestedModels)->relateTo($item);
+		$input = (new NestedModels)->relateTo($item);
 
 		// Hydrate the object
-		$item->fill(Decoy::filteredInput());
+		$item->fill($input);
 
 		// Validate and save.
 		$this->validate($item);
@@ -530,7 +530,7 @@ class Base extends Controller {
 		$item = $this->findOrFail($id);
 
 		// Remove nested model data from input and prepare to insert on save
-		(new NestedModels)->relateTo($item);
+		$input = (new NestedModels)->relateTo($item);
 
 		// Hydrate for drag-and-drop sorting
 		if (Request::ajax()
@@ -539,7 +539,7 @@ class Base extends Controller {
 
 		// ... else hydrate normally
 		else {
-			$item->fill(Decoy::filteredInput());
+			$item->fill($input);
 			if (isset($item::$rules['slug'])) {
 				$pattern = '#(unique:\w+)(,slug)?(,(NULL|\d+))?#';
 				$item::$rules['slug'] = preg_replace($pattern, '$1,slug,'.$id, $item::$rules['slug']);
