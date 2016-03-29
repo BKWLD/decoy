@@ -124,15 +124,17 @@ define(function (require) {
 
 			this.$cropTool.removeClass('active');
 			this.$focusTool.addClass('active');
-			$('.jcrop-holder').css('pointer-events', 'none');
+			// $('.jcrop-holder').css('pointer-events', 'none');
 
 			this.jcrop.disable();
 			this.activeCrop = false;
 
 			this.$el.next('div').on('click', this.setFocus);
+			console.log(this.$el);
 		},
 
 		setFocus: function(e) {
+			console.log('setting focus');
 			var image = $(e.currentTarget);
 			var offset = image.offset();
 
@@ -156,6 +158,8 @@ define(function (require) {
 			}
 
 			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
+
+			console.log(this.$focalPoint);
 		},
 
 		// Remove jcrop from the element
