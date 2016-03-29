@@ -124,7 +124,7 @@ define(function (require) {
 
 			this.$cropTool.removeClass('active');
 			this.$focusTool.addClass('active');
-			$('.jcrop-holder').css('pointer-events', 'none');
+			// $('.jcrop-holder').css('pointer-events', 'none');
 
 			this.jcrop.disable();
 			this.activeCrop = false;
