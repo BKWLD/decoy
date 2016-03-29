@@ -130,11 +130,9 @@ define(function (require) {
 			this.activeCrop = false;
 
 			this.$el.next('div').on('click', this.setFocus);
-			console.log(this.$el);
 		},
 
 		setFocus: function(e) {
-			console.log('setting focus');
 			var image = $(e.currentTarget);
 			var offset = image.offset();
 
