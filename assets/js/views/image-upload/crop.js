@@ -155,7 +155,7 @@ define(function (require) {
 				}
 			}
 
-			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
+			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth() - 7, 'top' : location.y * this.$el.outerHeight() - 7, 'opacity' : 1 });
 		},
 
 		// Remove jcrop from the element
