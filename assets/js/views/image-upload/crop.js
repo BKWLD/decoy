@@ -136,8 +136,8 @@ define(function (require) {
 			var image = $(e.currentTarget);
 			var offset = image.offset();
 
-			var pointX = e.pageX - offset.left;
-			var pointY = e.pageY - offset.top;
+			var pointX = e.pageX - offset.left - 7;
+			var pointY = e.pageY - offset.top - 7;
 
 			var location = {
 				x : pointX / image.outerWidth(),
@@ -155,7 +155,7 @@ define(function (require) {
 				}
 			}
 
-			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth() - 7, 'top' : location.y * this.$el.outerHeight() - 7, 'opacity' : 1 });
+			this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
 		},
 
 		// Remove jcrop from the element
