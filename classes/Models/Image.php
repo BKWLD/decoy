@@ -63,6 +63,26 @@ class Image extends Base {
 	protected $upload_attributes = ['file'];
 
 	/**
+	 * Target aspect ratios for the different break points
+	 *
+	 * @var array
+	 */
+	protected $sizes = [
+		'xs' => [480, 768],    // Phone portrait
+		's'  => [768, 1024],   // Tablet portrait
+		'm'  => [1024, 768],   // Tablet landscape
+		'l'  => [1366, 768],   // Laptop
+		'xl' => [1920, 1080],  // Desktop
+	];
+
+	/**
+	 * Laptop width is the default size that is used to produce scale percentages
+	 *
+	 * @var number
+	 */
+	protected $bench = 1366;
+
+	/**
 	 * Stores config from chained transformations while a url or tag is generated
 	 *
 	 * @var array
@@ -236,7 +256,7 @@ class Image extends Base {
 	public function getUrlAttribute() {
 
 		// Figure out the URL
-		$url = $this->urlify(1);
+		$url = $this->getLAttribute(); // The benchmark
 
 		// Clear the instance config so that subsequent calls don't inherit anything
 		$this->config = [];
@@ -319,32 +339,69 @@ class Image extends Base {
 	 *
 	 * @return string
 	 */
-	public function getXsAttribute()   { return $this->urlify(420/1366); }
-	public function getXs2xAttribute() { return $this->urlify(840/1366); }
-	public function getSAttribute()    { return $this->urlify(768/1366); }
-	public function getS2xAttribute()  { return $this->urlify(1536/1366); }
-	public function getMAttribute()    { return $this->urlify(1024/1366); }
-	public function getM2xAttribute()  { return $this->urlify(2048/1366); }
-	public function getLAttribute()    { return $this->urlify(1366/1366); }
-	public function getL2xAttribute()  { return $this->urlify(2732/1366); }
-	public function getXlAttribute()   { return $this->urlify(1920/1366); }
-	public function getXl2xAttribute() { return $this->urlify(3840/1366); }
+	public function getXsAttribute()   { return $this->urlify('xs'); }
+	public function getXs2xAttribute() { return $this->urlify('xs', 2); }
+	public function getSAttribute()    { return $this->urlify('s'); }
+	public function getS2xAttribute()  { return $this->urlify('s', 2); }
+	public function getMAttribute()    { return $this->urlify('m'); }
+	public function getM2xAttribute()  { return $this->urlify('m', 2); }
+	public function getLAttribute()    { return $this->urlify('l'); }
+	public function getL2xAttribute()  { return $this->urlify('l', 2); }
+	public function getXlAttribute()   { return $this->urlify('xl'); }
+	public function getXl2xAttribute() { return $this->urlify('xl', 2); }
 
 	/**
 	 * Make paths full URLs so these can be used directly in APIs or for Open
 	 * Graph tags, for example.
 	 *
-	 * @param  float $scale How much to scale
+	 * @param  string $size
+	 * @param  number $scale
 	 * @return string url
 	 */
-	public function urlify($scale = 1) {
+	public function urlify($size, $multiplier = 1) {
+
+		// Get fluent config
 		$config = $this->getConfig();
+
+		// Setup vars
+		$size = $this->sizes[$size];
+		$scale = $size[0] / $this->bench;
+		$width = $height = null;
+
+		// Figure out percentage sizes.  First one of the dimensnios is tested
+		// to see if it looks a percentage.  If so, make it a percentage of one of
+		// the hard coded sizes.  Otherwise, scale the dimension by comaring the
+		// size to a the benchmark (laptop).
+		if (($perc = $this->perc($config['width'])) && $perc <= 1) {
+			$width = $perc * $size[0] * $multiplier;
+		} else if ($config['width']) {
+			$width = $config['width'] * $scale * $multiplier;
+		}
+		if (($perc = $this->perc($config['height'])) && $perc <= 1) {
+			$height = $perc * $size[1] * $multiplier;
+		} else if ($config['height']) {
+			$height = $config['height'] * $scale * $multiplier;
+		}
+
+		// Produce the Croppa URL
 		$path = Croppa::url($this->getAttributeValue('file'),
-			$config['width'] * $scale,
-			$config['height'] * $scale,
+			$width,
+			$height,
 			$config['options']
 		);
 		if ($path) return asset($path);
+	}
+
+	/**
+	 * Get a percent number from a string
+	 *
+	 * @param string|number val
+	 * @return float
+	 */
+	protected function perc($val) {
+		if (preg_match('#([\d\.]+)%$#', $val, $matches)) {
+			return floatval($matches[1])/100;
+		} else return floatval($val);
 	}
 
 }
