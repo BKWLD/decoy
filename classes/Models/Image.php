@@ -372,12 +372,12 @@ class Image extends Base {
 		// to see if it looks a percentage.  If so, make it a percentage of one of
 		// the hard coded sizes.  Otherwise, scale the dimension by comaring the
 		// size to a the benchmark (laptop).
-		if (($perc = $this->perc($config['width'])) && $perc <= 1) {
+		if ($perc = $this->perc($config['width'])) {
 			$width = $perc * $size[0] * $multiplier;
 		} else if ($config['width']) {
 			$width = $config['width'] * $scale * $multiplier;
 		}
-		if (($perc = $this->perc($config['height'])) && $perc <= 1) {
+		if ($perc = $this->perc($config['height'])) {
 			$height = $perc * $size[1] * $multiplier;
 		} else if ($config['height']) {
 			$height = $config['height'] * $scale * $multiplier;
@@ -401,7 +401,7 @@ class Image extends Base {
 	protected function perc($val) {
 		if (preg_match('#([\d\.]+)%$#', $val, $matches)) {
 			return floatval($matches[1])/100;
-		} else return floatval($val);
+		}
 	}
 
 }
