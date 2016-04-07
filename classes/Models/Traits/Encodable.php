@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Models\Encoding;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * Mix this into models that join to the Encoding model to
@@ -47,11 +48,11 @@ trait Encodable {
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
 	public function encoding($field = 'video') {
-		if ($encodings = $this->encodings) {
-			return $encodings->first(function($encoding) use ($field) {
-				return data_get($encoding, 'encodable_attribute') == $field;
-			});
-		}
+		$encodings = $this->encodings;
+		if (!is_a($encodings, Collection::class)) $encodings = new Collection($encodings);
+		return $encodings->first(function($encoding) use ($field) {
+			return data_get($encoding, 'encodable_attribute') == $field;
+		});
 	}
 
 	/**
