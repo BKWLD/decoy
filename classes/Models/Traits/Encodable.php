@@ -2,6 +2,7 @@
 
 // Dependencies
 use Bkwld\Decoy\Models\Encoding;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Mix this into models that join to the Encoding model to
@@ -16,6 +17,19 @@ trait Encodable {
 	 * 			'video',
 	 * 		];
 	 */
+
+	 /**
+ 	 * Boot events
+ 	 *
+ 	 * @return void
+ 	 */
+ 	public static function bootEncodable() {
+
+ 		// Automatically eager load the images relationship
+ 		static::addGlobalScope('encodings', function(Builder $builder) {
+ 			$builder->with('encodings');
+ 		});
+ 	}
 
 	/**
 	 * Polymorphic relationship definition
@@ -33,7 +47,9 @@ trait Encodable {
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
 	public function encoding($field = 'video') {
-		return $this->encodings()->where('encodable_attribute', '=', $field)->first();
+		return $this->encodings->first(function($encoding) use ($field) {
+			return data_get($encoding, 'encodable_attribute') == $field;
+		});
 	}
 
 	/**
