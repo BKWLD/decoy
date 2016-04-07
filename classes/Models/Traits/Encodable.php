@@ -47,9 +47,11 @@ trait Encodable {
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
 	public function encoding($field = 'video') {
-		return $this->encodings->first(function($encoding) use ($field) {
-			return data_get($encoding, 'encodable_attribute') == $field;
-		});
+		if ($encodings = $this->encodings) {
+			return $encodings->first(function($encoding) use ($field) {
+				return data_get($encoding, 'encodable_attribute') == $field;
+			});
+		}
 	}
 
 	/**
