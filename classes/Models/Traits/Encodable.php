@@ -36,13 +36,13 @@ trait Encodable {
 	 *
 	 * @return Illuminate\Database\Eloquent\Relations\MorphMany
 	 */
-	public function encodings() { 
-		return $this->morphMany('Bkwld\Decoy\Models\Encoding', 'encodable'); 
+	public function encodings() {
+		return $this->morphMany('Bkwld\Decoy\Models\Encoding', 'encodable');
 	}
 
 	/**
 	 * Find the encoding for a given database field
-	 * 
+	 *
 	 * @param  string $field
 	 * @return Illuminate\Database\Eloquent\Model
 	 */
@@ -55,7 +55,7 @@ trait Encodable {
 	/**
 	 * Get all the attributes on a model who support video encodes and are dirty
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function getDirtyEncodableAttributes() {
 		if (empty($this->encodable_attributes)) return [];
@@ -63,7 +63,7 @@ trait Encodable {
 			return $this->isDirty($attribute);
 		});
 	}
-			
+
 	/**
 	 * A utitliy function to create status badges for Decoy listings
 	 *
@@ -82,11 +82,11 @@ trait Encodable {
 	}
 
 	/**
-	 * Create an encoding instance which, in affect, begins an encode.  This 
-	 * should be invoked before the model is saved.  For instance, from saving() 
+	 * Create an encoding instance which, in affect, begins an encode.  This
+	 * should be invoked before the model is saved.  For instance, from saving()
 	 * handler
 	 *
-	 * @param  string $attribute The name of the attribtue on the model that 
+	 * @param  string $attribute The name of the attribtue on the model that
 	 *                           contains the source for the encode
 	 * @return void
 	 */
@@ -97,8 +97,8 @@ trait Encodable {
 		// and the `saved()` callback.
 		$key = $this->getKey();
 
-		// Create a new encoding model instance. It's callbacks will talk to the 
-		// encoding provider. Save it after the model is fully saved so the foreign 
+		// Create a new encoding model instance. It's callbacks will talk to the
+		// encoding provider. Save it after the model is fully saved so the foreign
 		// id is available for the  polymorphic relationship.
 		$this->saved(function($model) use ($attribute, $key) {
 
@@ -121,7 +121,7 @@ trait Encodable {
 	/**
 	 * Delete all the encodings individually so model callbacks can respond
 	 *
-	 * @return void 
+	 * @return void
 	 */
 	public function deleteEncodings() {
 		$this->encodings()->get()->each(function($encode) {
