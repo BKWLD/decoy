@@ -49,8 +49,9 @@ trait Encodable {
 	 */
 	public function encoding($field = 'video') {
 		$encodings = $this->encodings;
-		if (!is_a($encodings, Collection::class)) $encodings = new Collection($encodings);
-		return $encodings->first(function($encoding) use ($field) {
+		if (!is_a($encodings, Collection::class))
+			$encodings = Encoding::hydrate($encodings);
+		return $encodings->first(function($i, $encoding) use ($field) {
 			return data_get($encoding, 'encodable_attribute') == $field;
 		});
 	}
