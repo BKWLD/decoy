@@ -27,7 +27,6 @@ define(function (require) {
 				keyboardNavigation: false, // Makes it possible to manually type in
 				todayHighlight: true,
 				orientation: 'top left'
-			});
 
 			// Update the hidden field whenver the datepicker updates.  Need both
 			// hide and changeDate because the plugin keeps touching our hidden field,
