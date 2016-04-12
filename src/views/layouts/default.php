@@ -28,7 +28,7 @@
 		</div>
 	
 	<?// Footer embeds ?>
-	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
 	<?= HTML::webpackAssetTag('admin.js') ?>
+	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
 </body>
 </html>
