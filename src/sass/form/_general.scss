@@ -53,7 +53,7 @@
 
 // Make the Bootstrap tooltips not inherit text shadow
 .tooltip {
-	@include text-shadow(none);
+	text-shadow: none;
 }
 
 // Make textareas 4 lines long

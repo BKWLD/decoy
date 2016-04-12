@@ -55,7 +55,7 @@ fieldset.localize {
 		// Push text over to the right with a border so that it
 		// overlappes the dotted line that indicates the link
 		border-right: 4px solid white;
-		@include box-sizing(content-box);
+		box-sizing: content-box;
 	}
 }
 

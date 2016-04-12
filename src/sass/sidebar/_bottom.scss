@@ -10,15 +10,15 @@
 	// Set a default color
 	font-size: 16px;
 	&, a { color: $nav-text; }
-	
+
 	// Give it a fixed size
 	width: $sidebar-width;
 	height: $footer-height;
 
 	// Animate in on mobile
 	left: 0;
-	@include transition( left 250ms 0ms ceaser($easeInQuad));
-	&.show { left: 0; }	
+	transition: left 250ms;
+	&.show { left: 0; }
 	@media(max-width:$screen-sm) {
 		left: -$sidebar-width;
 	}

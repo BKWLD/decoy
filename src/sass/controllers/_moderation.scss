@@ -26,7 +26,7 @@
 	
 	// Customize the box
 	padding: $grid-gutter-width $grid-gutter-width/2 0;
-	@include border-radius(0 0 4px 4px);
+	border-radius: 0 0 4px 4px;
 
 	// Makes it so the pagination isn't flush wiith the tabs when all photos are approved
 	min-height: 1px; 
@@ -58,9 +58,9 @@
 			right: $pad;
 			
 			.stats {
-				@include opacity(.5);
+				opacity: .5;
 				&:hover {
-					@include opacity(1);
+					opacity: 1;
 				}
 			}
 			
@@ -135,7 +135,7 @@
 			// Hide the approve button
 			.actions {
 				.approve {
-					@include opacity(.3);
+					opacity: .3;
 				}
 				.deny {
 				}
@@ -149,7 +149,7 @@
 			// Hide the deny button
 			.actions {
 				.deny { 
-					@include opacity(.3);
+					opacity: .3;
 				}
 			}
 		}

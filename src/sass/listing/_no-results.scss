@@ -39,12 +39,6 @@
 				color: $theme-primary-color;
 			}
 		}
-		
-	}
-
-	// The bold text is a BIT too big
-	b {
-		font-size: $font-size-base - 1px;
 	}
 
 	// Keep titles of thinsg together
@@ -53,13 +47,13 @@
 	}
 
 	// Hide the row
-	p { @include transition(padding 300ms, height 300ms, opacity 300ms); }
+	p { transition: padding 300ms, height 300ms, opacity 300ms; }
 	&.remove td {
 		border-top: none;
 		p {
 			padding: 0;
 			height: 0;
-			@include opacity(0);
+			opacity: 0;
 		}
 	}
 

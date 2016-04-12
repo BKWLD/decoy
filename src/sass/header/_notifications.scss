@@ -1,4 +1,4 @@
-// Notification message area on CRUD operations, at the top of main, below breadcrumbs 
+// Notification message area on CRUD operations, at the top of main, below breadcrumbs
 .notification-area {
 
 	// Clear Bootstrap .alert styles
@@ -34,10 +34,10 @@
 	// close button
 	.close {
 		margin-top: $main-padding/2;
-		@include opacity(0.5);
+		opacity: 0.5;
 
 		&:hover {
-			@include opacity(0.7);
+			opacity: 0.7;
 		}
 	}
 
@@ -60,7 +60,7 @@
 
 	// make sure it's below the header
 	z-index:0;
-	
+
 	// Contains the message
 	p {
 		padding: ($main-padding/2) 0;
@@ -78,16 +78,16 @@
 	}
 
 	// Limit the height
-	overflow: hidden; 
+	overflow: hidden;
 	max-height:0;
 
 	// Collapsed
-	@include transition(max-height 350ms 0ms ceaser($easeInOutSine)); // no delay on close
+	transition: max-height 350ms;
 	@include gpu-cache();
 
 	// animate the notifcation pane in
 	&.show {
-		@include transition(max-height 350ms 150ms ceaser($easeInOutSine)); // delay on open
+		transition: max-height 350ms 150ms;
 		max-height:300px;
 		border-bottom-style: solid;
 		border-bottom-width: 1px;

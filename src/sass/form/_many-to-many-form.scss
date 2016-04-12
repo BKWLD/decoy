@@ -10,12 +10,12 @@
 
 	// Fade out the button even more
 	.btn.outline[disabled] {
-		@include opacity($light-opacity);
+		opacity: $light-opacity;
 	}
 
 	// Simplify the styling the input more outline-y
 	.form-control {
-		@include box-shadow(none);
+		box-shadow: none;
 		-webkit-appearance: none; // Needed for iOS to remove box shadow
 		outline: none;
 		background: none;
@@ -60,7 +60,7 @@
 		$input-width: 125px;
 
 		input {
-			@include transition(all .5s ease);
+			transition: all .5s ease;
 			
 			&:focus {
 				width: $input-width; // pixel width so the whole field can smoothly transition

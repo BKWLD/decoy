@@ -2,7 +2,7 @@
 body.login.index {
 	margin: 0;
 	padding: 0;
-	
+
 	// Vertical center
 	#main {
 		display: table;
@@ -12,15 +12,15 @@ body.login.index {
 		margin:0;
 		padding:0;
 		max-width: none;
-		
+
 		.ui {
 			display: table-cell;
 			vertical-align: middle;
 			position: relative;
 			z-index: 2;
 			padding: 20px;
-			@include box-sizing(border-box);
-			
+			box-sizing: border-box;
+
 			.max-width {
 				margin-left: auto;
 				margin-right: auto;
@@ -30,7 +30,7 @@ body.login.index {
 					top: 0;
 				}
 			}
-		}	
+		}
 	}
 
 	// Background image
@@ -41,11 +41,11 @@ body.login.index {
 		left: 0;
 		right: 0;
 		bottom: 0;
-		@include box-sizing(border-box);
+		box-sizing: border-box;
 		background-size: cover;
-		@include opacity(.1);
+		opacity: .1;
 	}
-	
+
 	// Left side
 	.branding {
 		width: 50%;
@@ -64,16 +64,16 @@ body.login.index {
 		}
 
 		@mixin animate {
-			@include transition(all 800ms);
-			@include opacity(0);
+			transition: all 800ms;
+			opacity: 0;
 			position: relative;
 			top: -5px;
 			&.show {
 				top: 0;
-				@include opacity(1);
+				opacity: 1;
 			}
 		}
-		
+
 		h1 {
 			font-weight: 400;
 			font-size: 75px;
@@ -94,20 +94,20 @@ body.login.index {
 			@include animate();
 		}
 	}
-	
+
 	// Right side
 	.form {
 		float: right;
 		padding: 30px;
 		max-width: 380px;
-		@include border-radius(6px);
-		@include box-sizing(border-box);
-		
+		border-radius: 6px;
+		box-sizing: border-box;
+
 		@media (max-width: $screen-sm) {
 			padding: 15px;
 			float: none;
 		}
-		
+
 		// Reduce gaps
 		.form-group {
 			margin-bottom: 5px;
@@ -116,8 +116,8 @@ body.login.index {
 		}
 
 		// Align the labels
-		.control-label { 
-			width: 100px; 
+		.control-label {
+			width: 100px;
 			text-align: right;
 		}
 
@@ -139,7 +139,7 @@ body.login.index {
 		.buttons {
 			margin-left: 110px;
 		}
-		
+
 		// Stack
 		@media (max-width: $screen-sm) {
 			position: static;
@@ -177,12 +177,12 @@ body.login.index {
 // The login page - theme
 body.login.index {
 	background: $theme-primary-color;
-	
+
 	// Bkgd image is shown on break, when the animation goes away
 	@media (max-width: $screen-sm) {
-		@include background(linear-gradient(top, $theme-primary-color, darken($theme-primary-color, 10%)));
-		.bkgd { 
-			background-image: url("#{$theme-login-bkgd}");
+		background: linear-gradient(to top, $theme-primary-color, darken($theme-primary-color, 10%));
+		.bkgd {
+			background-image: url($theme-login-bkgd);
 			background-position: cover;
 			background-position: center center;
 		}
@@ -193,10 +193,10 @@ body.login.index {
 
 	// Left side
 	.branding {
-		
+
 		h1 {
 			color: $theme-primary-inverse;
-			@include text-shadow(1px 2px 1px darken($theme-primary-color, 15%));
+			text-shadow: 1px 2px 1px darken($theme-primary-color, 15%);
 		}
 		h4, h4 a {
 			color: $theme-primary-inverse;
@@ -207,11 +207,11 @@ body.login.index {
 			}
 		}
 	}
-	
+
 	// Right side
 	.form {
 		background: #fff;
-		@include box-shadow(inset 0 3px 8px rgba(0, 0, 0, 0.3));
+		box-shadow: inset 0 3px 8px rgba(0, 0, 0, 0.3);
 		border: 1px solid darken($theme-primary-color, 10%);
 
 		// Disable the autofill bkgd color

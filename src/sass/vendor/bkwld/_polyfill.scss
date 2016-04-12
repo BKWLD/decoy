@@ -7,18 +7,22 @@
 }
 
 @mixin box-sizing-ie($type) {
-	@include box-sizing($type);
+	box-sizing: $type;
 	-ms-behavior: stylesheet-url('boxsizing.htc');
 }
 
 // Default to the pie-clearfix
 @mixin clearfix {
-	@include pie-clearfix;
+	&:after {
+		content: "";
+		display: table;
+		clear: both;
+	}
 }
 
 // Support background cover in < IE9
 @mixin background-size-ie($type) {
-	@include background-size($type);
+	background-size: $type;
 
 	// Quarantine in this selector because otherwise it was running
 	// in IE9 which actually DOES support background-size

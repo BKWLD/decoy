@@ -20,13 +20,13 @@ fieldset, .fieldset {
 
 	// Don't use an actual legend because it inherits weird positioning
 	// from the browser when put in a fieldset
-	.legend {	
+	.legend {
 		font-size: 16px;
 		font-weight: $headings-font-weight;
 		font-family: $headings-font-family;
 
 		// Set the font color so links get it too
-		&, > a { 
+		&, > a {
 			color: $theme-secondary-inverse;
 		}
 
@@ -64,10 +64,18 @@ fieldset, .fieldset {
 		.legend { margin: 0; }
 		.listing { margin-bottom: 0;}
 
+		// Make sure the table fills the whole container, without this there are
+		// subpixel errors and the header bkgd color doesn't span fully
+		overflow-x: hidden;
+		.listing {
+			width: calc(100% + 1px);
+			max-width: none;
+		}
+
 		// Put padding on the cells so that the normal fieldset padding looks
 		// maintained
 		th:first-child, td:first-child { padding-left: $form-group-margin; }
-		th[class*='actions'], td[class*='actions'] { 
+		th[class*='actions'], td[class*='actions'] {
 			padding-right: $form-group-margin;
 			@media (max-width: $screen-sm) {
 				padding-right: $table-cell-padding-horizontal;
@@ -76,7 +84,7 @@ fieldset, .fieldset {
 
 		// Give the controller name a hover effect
 		.legend > a {
-			&:hover, &:focus { 
+			&:hover, &:focus {
 				$color: mix($theme-secondary-inverse, $theme-secondary-color, 60%);
 				color:  $color;
 				border-bottom-color: $color;
@@ -88,8 +96,8 @@ fieldset, .fieldset {
 	// A disabled fieldset is used, for instance, for sidebar listings before
 	// the parent is saved
 	&.disabled {
-		@include opacity(.7);
-		.legend { 
+		opacity: .7;
+		.legend {
 			background: grayscale($theme-secondary-color);
 			&, > a { color: grayscale($theme-secondary-inverse); }
 		}

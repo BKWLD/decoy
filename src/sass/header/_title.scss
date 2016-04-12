@@ -46,7 +46,7 @@
 
 		// The controller title
 		.controller {
-			font-weight: 200;
+			font-weight: 100;
 		}
 	}
 
@@ -67,7 +67,7 @@
 		line-height: 0; // Clear the title's line height
 		bottom: 4px;
 		background: rgba($theme-primary-color, .9);
-		@include box-shadow(-6px 0 12px $theme-primary-color);
+		box-shadow: -6px 0 12px $theme-primary-color;
 
 		// Add text label automatically
 		.new:after {
@@ -133,12 +133,12 @@
 			}
 		}
 
-		// + New button in header sit in top right 
+		// + New button in header sit in top right
 		.pull-right {
 			top: $main-padding-mobile;
 			bottom: auto;
 			right: -$main-padding + $main-padding/2; // Compensate for padding affecting the title
-			
+
 			// Remove label on new button
 			.new:after {
 				content: '';

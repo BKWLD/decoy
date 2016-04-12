@@ -3,8 +3,8 @@ $decoy-el-tween-length: 200ms;
 
 // Spinning animation
 @include keyframes(spin) {
-	0% { @include rotate(0deg); }
-	100% { @include rotate(360deg); }
+	0% { rotate: 0deg; }
+	100% { rotate: 360deg; }
 }
 
 
@@ -18,9 +18,9 @@ $decoy-el-tween-length: 200ms;
 
 	// Only apply transitions after it's inited to prevent weird tween in
 	&.decoy-el-pos-tween {
-		@include transition(left $decoy-el-tween-length, top $decoy-el-tween-length);
+		transition: left $decoy-el-tween-length, top $decoy-el-tween-length;
 		&:after {
-			@include transition(border $decoy-el-tween-length);
+			transition: border $decoy-el-tween-length;
 		}
 	}
 
@@ -33,7 +33,7 @@ $decoy-el-tween-length: 200ms;
 		width: $size;
 		height: $size;
 		background: $element-icon-color;
-		@include border-radius($size);
+		border-radius: $size;
 
 		// Hide the iframe
 		overflow: hidden;
@@ -44,13 +44,13 @@ $decoy-el-tween-length: 200ms;
 
 		// Animate
 		border: 1px solid transparent;
-		@include transition(
+		transition: 
 			border $decoy-el-tween-length, 
 			width $decoy-el-tween-length, 
 			height $decoy-el-tween-length, 
 			box-shadow $decoy-el-tween-length,
 			border-radius $decoy-el-tween-length
-		);
+		;
 	}
 
 	// Build the arrow part of icon
@@ -153,7 +153,7 @@ $decoy-el-tween-length: 200ms;
 		
 		// Animate it
 		&.glyphicon-refresh {
-			@include animation(spin .6s infinite linear);
+			animation: spin .6s infinite linear;
 		}
 	}
 
@@ -165,8 +165,8 @@ $decoy-el-tween-length: 200ms;
 		}
 
 		// Hide by default
-		@include opacity(0);
-		@include transition(opacity $decoy-el-tween-length*2);
+		opacity: 0;
+		transition: opacity $decoy-el-tween-length*2;
 	}
 
 	// Opened styles
@@ -186,7 +186,7 @@ $decoy-el-tween-length: 200ms;
 		// Style the icon like a Decoy @panel when the iframe
 		// is open
 		.decoy-el-mask {
-			@include border-radius(4px);
+			border-radius: 4px;
 			@include box-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
 		}
 	}
@@ -204,8 +204,8 @@ $decoy-el-tween-length: 200ms;
 
 		// Show the iframe
 		iframe {
-			@include transition(opacity $decoy-el-tween-length);
-			@include opacity(1);
+			transition: opacity $decoy-el-tween-length;
+			opacity: 1;
 		}
 	}
 }
@@ -219,7 +219,7 @@ $decoy-el-tween-length: 200ms;
 
 	// Hide it
 	&.decoy-el-hide {
-		@include transition(opacity $decoy-el-tween-length);
-		@include opacity(0);
+		transition: opacity $decoy-el-tween-length;
+		opacity: 0;
 	}
 }
