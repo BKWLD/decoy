@@ -10,8 +10,7 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/vendor.css')?>"/>
-		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
+		<?= HTML::webpackAssetTag('admin.css') ?>
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
 		
@@ -29,9 +28,7 @@
 		</div>
 	
 	<?// Footer embeds ?>
-	<? if (App:: isLocal()): ?><script> var require = { urlArgs: "bust=" + (new Date()).getTime() }; </script><? endif ?>
-	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
 	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
-	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
+	<?= HTML::webpackAssetTag('admin.js') ?>
 </body>
 </html>

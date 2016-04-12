@@ -9,8 +9,7 @@
 		<?= Decoy::title() ?>
 		<meta name="viewport" content="width=device-width"/>
 		<meta name="csrf" content="<?=Session::getToken()?>"/>
-		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/vendor.css')?>"/>
-		<link rel="stylesheet" href="<?=HTML::grunt('/css/admin/style.css')?>"/>
+		<?= HTML::webpackAssetTag('admin.css') ?>
 		<script src="/packages/bkwld/decoy/ckeditor/ckeditor.js"></script>
 		<script src="/packages/bkwld/decoy/ckfinder/ckfinder.js"></script>
 	</head>
@@ -22,8 +21,7 @@
 				<?= $content?>
 			</div>
 		<? endif ?>
-		
-	<script src="<?=HTML::grunt('/js/vendor/require-jquery.js')?>"></script>
-	<script src="<?=HTML::grunt('/js/admin/main.js')?>"></script>
+
+		<?= HTML::webpackAssetTag('admin.js') ?>
 </body>
 </html>
