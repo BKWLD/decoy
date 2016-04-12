@@ -13,7 +13,7 @@
 		<?= HTML::webpackAssetTag('admin.css') ?>
 	</head>
 	<body class="<?=Decoy::bodyClass()?>">
-		
+
 		<?// Sidebar ?>
 		<?= View::make('decoy::layouts.sidebar._sidebar')->render() ?>
 
@@ -26,9 +26,8 @@
 		<div id="main">
 			<?= $content?>
 		</div>
-	
+
 	<?// Footer embeds ?>
 	<?= HTML::webpackAssetTag('admin.js') ?>
-	<?= View::make('decoy::layouts._wysiwyg')->render() ?>
 </body>
 </html>
