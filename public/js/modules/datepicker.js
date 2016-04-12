@@ -9,7 +9,8 @@ define(function (require) {
 		_ = require('underscore'),
 		Backbone = require('backbone');
 	require('bootstrap-datepicker');
-	
+	require('bootstrap-datepicker/dist/css/bootstrap-datepicker3.css')
+
 	// Define backbone view
 	var DatePicker = Backbone.View.extend({
 		
@@ -28,10 +29,10 @@ define(function (require) {
 				orientation: 'top left'
 			});
 
-			// Add events
-			this.$input.on('change', this.update);
-			this.$input.on('blur', this.blur);
-			
+			// Update the hidden field whenver the datepicker updates.  Need both
+			// hide and changeDate because the plugin keeps touching our hidden field,
+			// probably because it has the same selector.
+			}).on('changeDate hide', this.update);
 		},
 		
 		// Listen for changes to the datepicker and update the related hidden field
@@ -60,11 +61,6 @@ define(function (require) {
 			this.parts = parts;
 		},
 		
-		// Update the input field on blur with the formatted value
-		blur: function() {
-			if (!this.parts) return;
-			this.$input.val(this.parts[1]+'/'+this.parts[2]+'/'+this.parts[3]);
-		}
 		
 	});
 	
