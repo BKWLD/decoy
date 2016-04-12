@@ -4,7 +4,7 @@ define(function (require) {
 	var $ = require('jquery')
 		, _ = require('lodash')
 		, bootstrap = require('bootstrap')
-		, tpl = _.template(require('text!decoy/templates/changes-modal.html'));
+		, tpl = _.template(require('decoy/templates/changes-modal.html'));
 	;
 	
 	/**
