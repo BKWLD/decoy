@@ -8,7 +8,7 @@ define(function (require) {
 	var $ = require('jquery')
 		, _ = require('underscore')
 		, Backbone = require('backbone')
-		, Bloodhound = require('typeahead.js')
+		, Bloodhound = require('exports?Bloodhound!typeahead.js')
 	;
 	// public view module
 	var Autocomplete = Backbone.View.extend({
