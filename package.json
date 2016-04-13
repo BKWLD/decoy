@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "4.11.3",
+  "version": "4.11.4",
   "description": "The BKWLD CMS framework",
   "main": "public/js/decoy.js",
   "directories": {
@@ -35,6 +35,6 @@
     "lodash": "^3",
     "pixi.js": "^2",
     "raf": "^3",
-    "typeahead.js": "^0"
+    "typeahead.js": "^0.10"
   }
 }
