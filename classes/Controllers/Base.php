@@ -785,8 +785,11 @@ class Base extends Controller {
 		// If an AJAX update, don't require all fields to be present. Pass just the
 		// keys of the input to the array_only function to filter the rules list.
 		if (Request::ajax() && Request::getMethod() == 'PUT') {
-			$rules = array_only($rules, array_keys($data));
+			$rules = array_only($rules, array_keys(request()->input()));
 		}
+
+		// Stop if no rules
+		if (empty($rules)) return;
 
 		// Build the validation instance and fire the intiating event.
 		if ($model) (new ModelValidator)->validate($model, $rules, $messages);
