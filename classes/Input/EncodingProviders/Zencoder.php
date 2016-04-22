@@ -22,15 +22,16 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected $defaults = array(
 
-		// Normal HTML5 formats.  Webm needs to come first because FF plays it much
-		// better. 
-		'webm' => [
-			'format' => 'webm',
-		],
+		// Normal HTML5 formats.  Mp4 is first because it generally looks better
+		// though often weighs more.  FF once needed webm first, but appears to be
+		// no longer the case.
 		'mp4' => [
 			'format' => 'mp4',
 			'h264_profile' => 'main',
 			'tuning' => 'film',
+		],
+		'webm' => [
+			'format' => 'webm',
 		],
 	);
 
