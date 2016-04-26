@@ -129,7 +129,7 @@ class VideoEncoder extends Upload {
 
 		// Make the hidden field
 		$hidden = '<input type="hidden"
-			name="_preset['.$this->name.']" 
+			name="_preset['.$this->name.']"
 			value="'.$this->presetValue().'">';
 
 		// Renturn the total markup
@@ -204,7 +204,46 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderPlayer() {
-		return $this->encoding->getAdminPlayerAttribute();
+		return '<div class="player">'
+			.$this->encoding->getAdminPlayerAttribute()
+			.$this->statsMarkup()
+			.'</div>';
+	}
+
+	/**
+	 * Get stats as labels with badges
+	 *
+	 * @return string html
+	 */
+	protected function statsMarkup() {
+		if (!$stats = $this->stats()) return '';
+		return '<div class="stats">'
+			.implode('', array_map(function($val, $key) {
+				return sprintf('<span class="label">
+					<span>%s</span>
+					<span class="badge">%s</span>
+					</span>',
+					$key, $val);
+			}, $stats, array_keys($stats)))
+			.'</div>';
+	}
+
+	/**
+	 * Read an array of stats from the response
+	 *
+	 * @return array
+	 */
+	protected function stats() {
+		if (!$this->encoding || empty($this->encoding->response['output'])) return;
+		$o = $this->encoding->response['output'];
+		return array_filter([
+			'Bitrate' => number_format($o['video_bitrate_in_kbps']
+				+ $o['audio_bitrate_in_kbps']).' kbps',
+			'Filesize' => number_format($o['file_size_in_bytes']/1024/1024, 1).' mb',
+			'Duration' => number_format($o['duration_in_ms']/1000, 1).' s',
+			'Dimensions' => number_format($o['width']).' x '.number_format($o['height']),
+			'Download' => '<a href="'.$this->encoding->outputs['mp4'].'" target="_blank">MP4</a>'
+		]);
 	}
 
 	/**
