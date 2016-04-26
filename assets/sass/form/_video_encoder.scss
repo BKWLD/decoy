@@ -15,16 +15,42 @@
 
 	// The video player
 	video {
-
-		// Push off top
-		margin-top: 5px;
-
-		// Make it scale
 		max-width: 100%;
+	}
 
-		// Add a border
-    border: 1px solid #ddd;
-		border-radius: 4px;
+	// Collpase the player and make the stats flush
+	.player {
+		margin-top: 5px;
+		display: inline-block;
+		line-height: 0;
+		border: 1px solid #ddd;
+		border-radius: 0 0 4px 4px;
+	}
+
+	// The stats
+	.stats {
+		$pad: 4px;
+		background: $light-grey;
+		padding-right: $pad;
+		padding-bottom: $pad;
+
+		span {
+			vertical-align: middle;
+		}
+
+		.label {
+			display: inline-block;
+			margin-top: $pad;
+			margin-left: $pad;
+			color: #737373;
+			font-weight: normal;
+		}
+
+		.badge {
+			background: #aaa;
+			margin-left: 2px;
+			a { color: white;	 }
+		}
 	}
 
 }
