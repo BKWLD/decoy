@@ -128,7 +128,9 @@ class VideoEncoder extends Upload {
 		}, $config, $presets));
 
 		// Make the hidden field
-		$hidden = '<input type="hidden" name="_preset" value="'.$this->presetValue().'">';
+		$hidden = '<input type="hidden"
+			name="_preset['.$this->name.']" 
+			value="'.$this->presetValue().'">';
 
 		// Renturn the total markup
 		return '<div class="input-group-btn js-tooltip"

@@ -57,15 +57,32 @@ trait Encodable {
 	}
 
 	/**
-	 * Get all the attributes on a model who support video encodes and are dirty
+	 * Get all the attributes on a model who support video encodes and are dirty.
+	 * An encode is considered dirty if a file is uploaded, replaced, marked for
+	 * deletion OR if it's preset has changed.
 	 *
 	 * @return array
 	 */
 	public function getDirtyEncodableAttributes() {
 		if (empty($this->encodable_attributes)) return [];
 		return array_filter($this->encodable_attributes, function($attribute) {
-			return $this->isDirty($attribute);
+
+			// The file has changed
+			if ($this->isDirty($attribute)) return true;
+
+			// The encoding preset is changing
+			if (($encoding = $this->encoding($attribute))
+				&& $encoding->preset != $this->encodingPresetFromInput($attribute)) return true;
 		});
+	}
+
+	/**
+	 * Get the preset value from the input
+	 *
+	 * @return string
+	 */
+	public function encodingPresetFromInput($attribute) {
+		return request('_preset.'.$attribute);
 	}
 
 	/**
@@ -115,9 +132,7 @@ trait Encodable {
 			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
-			$model->encodings()->save(new Encoding([
-				'encodable_attribute' => $attribute,
-			]));
+			$this->encode($attribute, $this->encodingPresetFromInput($attribute));
 		});
 	}
 
