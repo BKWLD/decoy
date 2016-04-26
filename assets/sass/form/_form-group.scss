@@ -34,3 +34,22 @@
 fieldset > :last-child {
 	border-bottom: none;
 }
+
+// If a form group is insider another, like is the case with the preset
+// selector in the video enoder, de-emphasize the inner one.  Currently assuming
+// that form-inline was added to the group as well
+.form-group .form-group.form-inline {
+	border-bottom: none;
+  padding: 0;
+	padding-top: 10px;
+
+	// Make the label inline
+	.control-label {
+		width: auto;
+		font-weight: normal;
+		margin-right: 10px;
+		+ div {
+			margin-left: 0
+		}
+	}
+}

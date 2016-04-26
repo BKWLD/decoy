@@ -92,6 +92,7 @@ define(function (require) {
 	if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
 	$('.admin-permissions').views(require('./views/admin-permissions'));
 	$('.image-upload').views(require('./views/image-upload/image-field'));
+	$('input[type="file"]').views(require('./views/bootstrap-file'));
 
 	// Launch change modal
 	var changes_modal = require('./modules/changes-modal');
