@@ -60,6 +60,15 @@ class VideoEncoder extends Upload {
 	}
 
 	/**
+	 * Hook into the rendering of the input to append the presets
+	 *
+	 * @return string
+	 */
+	public function render() {
+		return parent::render().$this->renderPresets();
+	}
+
+	/**
 	 * Prints out the field, wrapped in its group.
 	 *
 	 * @return string
@@ -83,6 +92,42 @@ class VideoEncoder extends Upload {
 	}
 
 	/**
+	 * Render the presets select menu
+	 *
+	 * @return string
+	 */
+	protected function renderPresets() {
+
+		// Create the dropdown menu options
+		$config = config('decoy.encode.presets');
+		$dropdown = implode('', array_map(function($config, $preset) {
+			return '<li>
+				<a href="#" data-val="'.$preset.'">
+					'.$config['title'].'
+				</a>
+			</li>';
+		}, $config, array_keys($config)));
+
+		// Make the hidden field
+		$hidden = '<input type="hidden" name="_preset">';
+
+		// Renturn the total markup
+		return '<div class="input-group-btn js-tooltip"
+			title="<b>Encoding quality.</b><br>Can be use to re-encode videos.">
+			'.$hidden.'
+			<button type="button"
+				class="btn btn-default dropdown-toggle"
+				data-toggle="dropdown" >
+					1080p, Quality: 2
+					<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right">
+				'.$dropdown.'
+			</ul>
+		</div>';
+	}
+
+	/**
 	 * Show the video player with a delete checkbox
 	 *
 	 * @return string HTML
@@ -97,8 +142,11 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderIndestructibleReview() {
-		if ($this->encoding && $this->encoding->status == 'complete') return $this->renderPlayerOrStatus();
-		else return $this->renderPlayerOrStatus().parent::renderIndestructibleReview();
+		if ($this->encoding && $this->encoding->status == 'complete') {
+			return $this->renderPlayerOrStatus();
+		} else {
+			return $this->renderPlayerOrStatus().parent::renderIndestructibleReview();
+		}
 	}
 
 	/**
