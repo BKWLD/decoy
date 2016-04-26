@@ -31,8 +31,7 @@
 	.stats {
 		$pad: 4px;
 		background: $light-grey;
-		padding-right: $pad;
-		padding-bottom: $pad;
+		padding: 4px;
 
 		span {
 			vertical-align: middle;
@@ -40,8 +39,6 @@
 
 		.label {
 			display: inline-block;
-			margin-top: $pad;
-			margin-left: $pad;
 			color: #737373;
 			font-weight: normal;
 		}
