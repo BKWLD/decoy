@@ -28,14 +28,22 @@ module.exports = Backbone.View.extend
 	# Wrap the elemnt in bootstrap styling classes
 	render: ->
 
+		# Check if there are any input-group-btns that follow the element.  They
+		# might exist if the Field render adds them.  The VideoEncoder does this.
+		$btns = @$el.nextAll('.input-group-btn')
+
 		# Wrap the file
 		@$el.wrap('<div class="input-group bootstrap-file"></div>')
 		.wrap('<span class="input-group-btn"></span>')
 		.wrap('<span class="btn btn-default btn-file">Browse&hellip; </span>')
+		$inputGroup = @$el.closest('.input-group')
 
 		# Add the filename readonly textfield
 		@$filename = $('<input type="text" class="form-control" readonly>')
-		.appendTo(@$el.closest('.input-group'))
+		.appendTo($inputGroup)
+
+		# Add other btns that may have been rendered by php
+		$inputGroup.append($btns)
 
 	# When the user selects a file, update the filename preview
 	onChange: (e) ->
