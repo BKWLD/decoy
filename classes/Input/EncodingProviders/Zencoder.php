@@ -25,9 +25,6 @@ class Zencoder extends EncodingProvider {
 		// Most everything plays mp4
 		'format' => 'mp4',
 
-		// Default size, 1080p
-		'height' => 1080,
-
 		// The quailty to encodeat, 1-5
 		// https://app.zencoder.com/docs/api/encoding/rate-control/quality
 		'quality' => 2,
