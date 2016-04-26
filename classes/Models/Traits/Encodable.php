@@ -44,15 +44,15 @@ trait Encodable {
 	/**
 	 * Find the encoding for a given database field
 	 *
-	 * @param  string $field
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @param  string $attribute
+	 * @return Encoding|false
 	 */
-	public function encoding($field = 'video') {
+	public function encoding($attribute = 'video') {
 		$encodings = $this->encodings;
 		if (!is_a($encodings, Collection::class))
 			$encodings = Encoding::hydrate($encodings);
-		return $encodings->first(function($i, $encoding) use ($field) {
-			return data_get($encoding, 'encodable_attribute') == $field;
+		return $encodings->first(function($i, $encoding) use ($attribute) {
+			return data_get($encoding, 'encodable_attribute') == $attribute;
 		});
 	}
 
@@ -115,11 +115,27 @@ trait Encodable {
 			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
-			$model->encodings()->save(new Encoding(array(
+			$model->encodings()->save(new Encoding([
 				'encodable_attribute' => $attribute,
-			)));
+			]));
 		});
+	}
 
+	/**
+	 * Delete any existing encoding for the attribute and then encode from the
+	 * source.  The deleting happens automatically onCreating.
+	 *
+	 * @param string $attribute The attribute on the model to use as source
+	 * @param string $preset   The output config key
+	 * @return Encoding         The new output instance
+	 */
+	public function encode($attribute, $preset) {
+		$encoding = new Encoding([
+			'encodable_attribute' => $attribute,
+			'preset' => $preset,
+		]);
+		$this->encodings()->save($encoding);
+		return $encoding;
 	}
 
 	/**

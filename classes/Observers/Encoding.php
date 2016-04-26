@@ -7,9 +7,9 @@ class Encoding {
 
 	/**
 	 * Start a new encode if a new encodable file was uploaded
-	 * 
-	 * @param Bkwld\Decoy\Models\Base $model 
-	 * @return void 
+	 *
+	 * @param Bkwld\Decoy\Models\Base $model
+	 * @return void
 	 */
 	public function onSaving($model) {
 		if (!$this->isEncodable($model)) return;
@@ -26,8 +26,8 @@ class Encoding {
 	/**
 	 * Delete all encodes on the model
 	 *
-	 * @param Bkwld\Decoy\Models\Base $model 
-	 * @return void 
+	 * @param Bkwld\Decoy\Models\Base $model
+	 * @return void
 	 */
 	public function onDeleted($model) {
 		if (!$this->isEncodable($model)) return;
@@ -37,12 +37,12 @@ class Encoding {
 	/**
 	 * Check if a model should be encoded
 	 *
-	 * @param Bkwld\Decoy\Models\Base $model 
-	 * @return boolean 
+	 * @param Bkwld\Decoy\Models\Base $model
+	 * @return boolean
 	 */
 	public function isEncodable($model) {
 		if (!method_exists($model, 'getDirtyEncodableAttributes')) return false;
-		if (is_a($model, 'Bkwld\Decoy\Models\Element') 
+		if (is_a($model, 'Bkwld\Decoy\Models\Element')
 			&& $model->getAttribute('type') != 'video-encoder') return false;
 		return true;
 	}

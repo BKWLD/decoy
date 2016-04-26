@@ -51,9 +51,10 @@ abstract class EncodingProvider {
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
+	 * @param string $preset The key to the preset function
 	 * @return void
 	 */
-	abstract public function encode($source);
+	abstract public function encode($source, $preset);
 
 	/**
 	 * Handle notification requests from the SDK
@@ -66,68 +67,26 @@ abstract class EncodingProvider {
 	/**
 	 * Update the default configwith the user config
 	 *
+	 * @param  string $preset
 	 * @return array
-	 */
-	protected function mergeConfigWithDefaults() {
-
-		// Store config options that should be applied to all outputs
-		$common = [];
-
-		// Loop though user config and modify the defaults
-		$outputs = $this->defaults;
-		foreach(Config::get('decoy.encode.outputs') as $key => $config) {
-
-			// If there is a user key for one of the defaults but no value, then
-			// the delete the output
-			if (empty($config)) unset($outputs[$key]);
-
-			// If there the config option is not not an array, then it is a setting
-			// for ALL outputs
-			else if (!is_array($config)) $common[$key] = $config;
-
-			// If user key doesn't exist in the defaults, it's new, and just
-			// straight pass it through
-			else if (!array_key_exists($key, $outputs)) $outputs[$key] = $config;
-
-			// Else, merge the user config onto the default for that key
-			else $outputs[$key] = array_merge($outputs[$key], $config);
-		}
-
-		// Apply common settings to all outputs
-		foreach($outputs as &$output) $output = array_merge($output, $common);
-
-		// Return the massaged outputs
-		return $outputs;
-
-	}
-
-	/**
-	 * Get the notifications URL
 	 *
-	 * @return string
+	 * @throws Excpeption
 	 */
-	protected function notificationURL() {
+	protected function mergeConfigWithDefaults($preset) {
 
-		// Get the host name from env variable if running through CLI
-		$host = App::runningInConsole() && isset($_SERVER['SERVER_NAME'])
-			? $_SERVER['SERVER_NAME']
-			: Request::getHost();
-
-		// Verify that the host is public
-		if (!($ip = gethostbyname($host)) || preg_match('#^(127|10|192\.168)\.#', $ip)) {
-			throw new Exception('The server name ('.$host.') does not appear to be publicly accessible.  It is recommended to use <a href="https://ngrok.com/">ngrok</a> to access your localhost.  If running from CLI, pass the server name in via ENV variable like: `SERVER_NAME=10147f98.ngrok.com php artisan your:command`.');
+		// Get the preset settings
+		if (!$settings = Config::get('decoy.encode.presets.'.$preset.'.settings')) {
+			throw new Exception('Encoding preset not found: '.$preset);
 		}
 
-		// Produce the route, passing in the host explicitly.  This allows CLI invocations to
-		// be supported.
-		if (!App::runningInConsole()) return route('decoy::encode@notify');
-		else {
-			$generator = app('url');
-			$generator->forceRootUrl('http://'.$host);
-			$url = $generator->route('decoy::encode@notify');
-			$generator->forceRootUrl(null);
-			return $url;
-		}
+		// If the settings are an assoc array, then there is only one output and it
+		// needs to be wrapped in an array
+		if (!is_numeric(array_keys($settings)[0])) $settings = ['mp4' => $settings];
+
+		// Merge defaults with each output in the settings
+		return array_map(function($output) {
+			return array_merge($this->defaults, $output);
+		}, $settings);
 	}
 
 	/**

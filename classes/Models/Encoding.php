@@ -15,6 +15,16 @@ use URL;
 class Encoding extends Base {
 
 	/**
+		* The attributes that should be casted to native types.
+		*
+		* @var array
+		*/
+	 protected $casts = [
+		 'outputs' => 'array',
+		 'response' => 'array',
+	 ];
+
+	/**
 	 * Comprehensive list of states
 	 */
 	static private $states = array(
@@ -72,7 +82,7 @@ class Encoding extends Base {
 	 * @return void
 	 */
 	public function onCreated() {
-		static::encoder($this)->encode($this->source());
+		static::encoder($this)->encode($this->source(), $this->preset);
 	}
 
 	/**
@@ -82,7 +92,6 @@ class Encoding extends Base {
 
 		// Get the sources
 		if (!$sources = $this->outputs) return;
-		$sources = (array) json_decode($sources);
 
 		// Get the directory of an output
 		if (count($sources)                          // If there are sources
@@ -118,8 +127,7 @@ class Encoding extends Base {
 	/**
 	 * Get the source video for the encode
 	 *
-	 * @return string The path to the video relative to the
-	 *                document root
+	 * @return string The path to the video relative to the document root
 	 */
 	public function source() {
 		$val = $this->encodable->{$this->encodable_attribute};
@@ -139,7 +147,7 @@ class Encoding extends Base {
 	public function storeJob($job_id, $outputs = null) {
 		$this->status = 'queued';
 		$this->job_id = $job_id;
-		$this->outputs = json_encode($outputs);
+		$this->outputs = $outputs;
 		$this->save();
 	}
 
@@ -206,7 +214,6 @@ class Encoding extends Base {
 
 		// Require sources and for the encoding to be complete
 		if (!($sources = $this->outputs) || $this->status != 'complete') return;
-		$sources = json_decode($sources);
 
 		// Start the tag
 		$tag = HtmlElement::video();
