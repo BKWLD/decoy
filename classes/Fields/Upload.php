@@ -31,12 +31,13 @@ class Upload extends File {
 
 		// Add the max upload info
 		$this->addClass('js-tooltip');
-		$this->title('Max upload size: <b>'.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</b>');
+		$this->title('Max upload size: <b>'
+			.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</b>');
 	}
 
 	/**
 	 * Prints out the field, wrapped in its group.  Additional review UI is tacked on here.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function wrapAndRender() {
@@ -80,8 +81,8 @@ class Upload extends File {
 	}
 
 	/**
-	 * Check if the file is in the uploads directory. The use case for this arose 
-	 * with the Elements system where the default images would usually be in the 
+	 * Check if the file is in the uploads directory. The use case for this arose
+	 * with the Elements system where the default images would usually be in the
 	 * img directory
 	 *
 	 * @return boolean
