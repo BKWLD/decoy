@@ -31,13 +31,19 @@ module.exports = Backbone.View.extend
 		# Wrap the file
 		@$el.wrap('<div class="input-group bootstrap-file"></div>')
 		.wrap('<span class="input-group-btn"></span>')
-		.wrap('<span class="btn btn-primary btn-file">Browse&hellip; </span>')
+		.wrap('<span class="btn btn-default btn-file">Browse&hellip; </span>')
 
 		# Add the filename readonly textfield
 		@$filename = $('<input type="text" class="form-control" readonly>')
 		.appendTo(@$el.closest('.input-group'))
 
 	# When the user selects a file, update the filename preview
-	onChange: ->
+	onChange: (e) ->
+
+		# The image UI will clone the element and replace it to clear it's value.
+		# This updates this view with the new element
+		@setElement(e.currentTarget) if e?.currentTarget and @el != e.currentTarget
+
+		# Update the name
 		name = @$el.val().replace(/\\/g, '/').replace(/.*\//, '')
 		@$filename.val name

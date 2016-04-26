@@ -20,7 +20,7 @@
       display: block;
     }
 
-    input[type="file"] {
+    .bootstrap-file {
       display: none;
     }
   }
@@ -88,14 +88,6 @@
     &:hover {
       background-color: red;
       color: white;
-    }
-  }
-
-  .file {
-    margin-bottom: 15px;
-
-    &.hidden {
-      display: none;
     }
   }
 
