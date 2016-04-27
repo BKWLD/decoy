@@ -70,6 +70,7 @@ other:
         # A video encoder instance.  Video encoders can't have a default value,
         # they must be supplied through upload a video in the admin
         video,video-encoder:
+          preset: example
 
         # A autocomplete that points to a specfici model
         project,model:

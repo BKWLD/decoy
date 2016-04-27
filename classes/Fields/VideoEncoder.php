@@ -27,6 +27,13 @@ class VideoEncoder extends Upload {
 	protected $model_attribute;
 
 	/**
+	 * The default preset
+	 *
+	 * @var string
+	 */
+	protected $preset;
+
+	/**
 	 * Create a regular file type field
 	 *
 	 * @param Container $app        The Illuminate Container
@@ -51,11 +58,22 @@ class VideoEncoder extends Upload {
 	 * Inform VideoEncoder of the attribtue name on the encodings to find the encode.  This is
 	 * necessary if the form field is named different than the db column.
 	 *
-	 * @param string $name
+	 * @param  string $name
 	 * @return this
 	 */
 	public function setModelAttribute($name) {
 		$this->model_attribute = $name;
+		return $this;
+	}
+
+	/**
+	 * Set a default preset
+	 *
+	 * @param  string $preset
+	 * @return $this
+	 */
+	public function preset($preset) {
+		$this->preset = $preset;
 		return $this;
 	}
 
@@ -100,31 +118,45 @@ class VideoEncoder extends Upload {
 
 		// Create the dropdown menu options
 		$config = config('decoy.encode.presets');
+		$presets = array_keys($config);
 		$dropdown = implode('', array_map(function($config, $preset) {
 			return '<li>
 				<a href="#" data-val="'.$preset.'">
 					'.$config['title'].'
 				</a>
 			</li>';
-		}, $config, array_keys($config)));
+		}, $config, $presets));
 
 		// Make the hidden field
-		$hidden = '<input type="hidden" name="_preset">';
+		$hidden = '<input type="hidden"
+			name="_preset['.$this->name.']"
+			value="'.$this->presetValue().'">';
 
 		// Renturn the total markup
 		return '<div class="input-group-btn js-tooltip"
-			title="<b>Encoding quality.</b><br>Can be use to re-encode videos.">
+			title="<b>Encoding quality.</b><br>Change to re-encode videos.">
 			'.$hidden.'
 			<button type="button"
 				class="btn btn-default dropdown-toggle"
 				data-toggle="dropdown" >
-					1080p, Quality: 2
+					<span class="selected">Presets</span>
 					<span class="caret"></span>
 			</button>
-			<ul class="dropdown-menu dropdown-menu-right">
+			<ul class="dropdown-menu dropdown-menu-right presets">
 				'.$dropdown.'
 			</ul>
 		</div>';
+	}
+
+	/**
+	 * Get the preset value
+	 *
+	 * @return string
+	 */
+	protected function presetValue() {
+		if ($this->encoding) return $this->encoding->preset;
+		if ($this->preset) return $this->preset;
+		return array_keys(config('decoy.encode.presets'))[0];
 	}
 
 	/**

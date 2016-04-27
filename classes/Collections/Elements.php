@@ -271,6 +271,9 @@ class Elements extends Collection {
 
 		// Used by belongs to but maybe others in the future
 		$el[$prefix.'class'] = empty($data['class']) || $skip ? null : $data['class'];
+
+		// Used by videoEncoder
+		$el[$prefix.'preset'] = empty($data['preset']) || $skip ? null : $data['preset'];
 	}
 
 	/**

@@ -134,6 +134,7 @@ class Elements extends Base {
 			case 'video-encoder': return Former::videoEncoder($key, $el->label)
 				->blockHelp($el->help)
 				->model($el)
+				->preset($el->preset)
 				->id($id);
 
 			case 'model': return Former::belongsTo($key, $el->label)
@@ -184,7 +185,15 @@ class Elements extends Base {
 
 			// Empty file fields will have no key as a result of the above filtering
 			$key = $el->inputName();
-			if (!array_key_exists($key, $input)) return;
+			if (!array_key_exists($key, $input)) {
+
+				// If no new video was uploaded but the preset was changed, re-encode
+				if ($el->type == 'video-encoder' && $el->hasDirtyPreset('value')) {
+					$el->encode('value', $el->encodingPresetFromInput('value'));
+				}
+
+				return;
+			}
 			$value = $input[$key];
 
 			// If value is an array, like it would be for the "checkboxes" type, make
