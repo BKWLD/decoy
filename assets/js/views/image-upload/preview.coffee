@@ -1,65 +1,58 @@
 # --------------------------------------------------
 # Preview the selected image to upload
 # --------------------------------------------------
-define (require) ->
 
-	# Dependencies
-  $ = require('jquery')
-  _ = require('underscore')
-  Backbone = require('backbone')
+# Dependencies
+$ = require('jquery')
+_ = require('underscore')
+Backbone = require('backbone')
 
-  # Define a backbone view for each image
-  Preview = Backbone.View.extend(
+module.exports = Backbone.View.extend
 
-    initialize: ->
+  initialize: ->
+    _.bindAll @
 
-      _.bindAll this
-      @$file = @$el.find('[type="file"]')
-      @$holder = @$el.find('.image-holder')
-      @$imagePreview = @$holder.find('.source')
-      @$delete = @$el.find('.delete')
+    @$file = @$el.find('[type="file"]')
+    @$holder = @$el.find('.image-holder')
+    @$imagePreview = @$holder.find('.source')
+    @$delete = @$el.find('.delete')
 
-      # Listener
-      @$file.on 'change', @onImageChange
-      @$delete.on 'click', @onDelete
+    # Listener
+    @$file.on 'change', @onImageChange
+    @$delete.on 'click', @onDelete
+    return
 
-      return
+  onImageChange: (input) ->
+    if @$file[0].files and @$file[0].files[0]
+      reader = new FileReader
 
-    onImageChange: (input) ->
-      if @$file[0].files and @$file[0].files[0]
-        reader = new FileReader
+      reader.onload = (e) =>
+        @$file.addClass 'hidden'
+        @$el.addClass 'has-image'
+        @$imagePreview.attr 'src', e.target.result
+        @trigger 'previewImage'
 
-        reader.onload = (e) =>
-          @$file.addClass 'hidden'
-          @$el.addClass 'has-image'
-          @$imagePreview.attr 'src', e.target.result
-          @trigger 'previewImage'
+        return
 
-          return
+      reader.readAsDataURL @$file[0].files[0]
+    return
 
-        reader.readAsDataURL @$file[0].files[0]
+  onDelete: () ->
 
-      return
+    # Clear the old preview
+    @$imagePreview.attr 'src', ''
+    @$el.removeClass 'has-image'
+    @$file.removeClass 'hidden'
 
-    onDelete: () ->
+    # Replace the file input with a clone because you can't clear a file field
+    @$file.replaceWith @$file = @$file.clone(true)
+    @$file.trigger 'change'
 
-      # Clear the old preview
-      @$imagePreview.attr 'src', ''
-      @$el.removeClass 'has-image'
-      @$file.removeClass 'hidden'
+    # Add a hidden field of the same name that tells Decoy to delete the
+    # previous.
+    $('<input type="hidden" value="">')
+      .attr('name', @$file.attr('name'))
+      .insertBefore(@$file)
 
-      # Replace the file input with a clone because you can't clear a file field
-      @$file.replaceWith @$file = @$file.clone(true)
-
-      # Add a hidden field of the same name that tells Decoy to delete the
-      # previous.
-      $('<input type="hidden" value="">')
-        .attr('name', @$file.attr('name'))
-        .insertBefore(@$file)
-
-      @trigger 'deleteImage'
-      return
-
-  )
-
-  Preview
+    @trigger 'deleteImage'
+    return

@@ -27,6 +27,13 @@ class VideoEncoder extends Upload {
 	protected $model_attribute;
 
 	/**
+	 * The default preset
+	 *
+	 * @var string
+	 */
+	protected $preset;
+
+	/**
 	 * Create a regular file type field
 	 *
 	 * @param Container $app        The Illuminate Container
@@ -51,12 +58,32 @@ class VideoEncoder extends Upload {
 	 * Inform VideoEncoder of the attribtue name on the encodings to find the encode.  This is
 	 * necessary if the form field is named different than the db column.
 	 *
-	 * @param string $name
+	 * @param  string $name
 	 * @return this
 	 */
 	public function setModelAttribute($name) {
 		$this->model_attribute = $name;
 		return $this;
+	}
+
+	/**
+	 * Set a default preset
+	 *
+	 * @param  string $preset
+	 * @return $this
+	 */
+	public function preset($preset) {
+		$this->preset = $preset;
+		return $this;
+	}
+
+	/**
+	 * Hook into the rendering of the input to append the presets
+	 *
+	 * @return string
+	 */
+	public function render() {
+		return parent::render().$this->renderPresets();
 	}
 
 	/**
@@ -83,6 +110,56 @@ class VideoEncoder extends Upload {
 	}
 
 	/**
+	 * Render the presets select menu
+	 *
+	 * @return string
+	 */
+	protected function renderPresets() {
+
+		// Create the dropdown menu options
+		$config = config('decoy.encode.presets');
+		$presets = array_keys($config);
+		$dropdown = implode('', array_map(function($config, $preset) {
+			return '<li>
+				<a href="#" data-val="'.$preset.'">
+					'.$config['title'].'
+				</a>
+			</li>';
+		}, $config, $presets));
+
+		// Make the hidden field
+		$hidden = '<input type="hidden"
+			name="_preset['.$this->name.']"
+			value="'.$this->presetValue().'">';
+
+		// Renturn the total markup
+		return '<div class="input-group-btn js-tooltip"
+			title="<b>Encoding quality.</b><br>Change to re-encode videos.">
+			'.$hidden.'
+			<button type="button"
+				class="btn btn-default dropdown-toggle"
+				data-toggle="dropdown" >
+					<span class="selected">Presets</span>
+					<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu dropdown-menu-right presets">
+				'.$dropdown.'
+			</ul>
+		</div>';
+	}
+
+	/**
+	 * Get the preset value
+	 *
+	 * @return string
+	 */
+	protected function presetValue() {
+		if ($this->encoding) return $this->encoding->preset;
+		if ($this->preset) return $this->preset;
+		return array_keys(config('decoy.encode.presets'))[0];
+	}
+
+	/**
 	 * Show the video player with a delete checkbox
 	 *
 	 * @return string HTML
@@ -97,8 +174,11 @@ class VideoEncoder extends Upload {
 	 * @return string HTML
 	 */
 	protected function renderIndestructibleReview() {
-		if ($this->encoding && $this->encoding->status == 'complete') return $this->renderPlayerOrStatus();
-		else return $this->renderPlayerOrStatus().parent::renderIndestructibleReview();
+		if ($this->encoding && $this->encoding->status == 'complete') {
+			return $this->renderPlayerOrStatus();
+		} else {
+			return $this->renderPlayerOrStatus().parent::renderIndestructibleReview();
+		}
 	}
 
 	/**

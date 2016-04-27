@@ -44,28 +44,58 @@ trait Encodable {
 	/**
 	 * Find the encoding for a given database field
 	 *
-	 * @param  string $field
-	 * @return Illuminate\Database\Eloquent\Model
+	 * @param  string $attribute
+	 * @return Encoding|false
 	 */
-	public function encoding($field = 'video') {
+	public function encoding($attribute = 'video') {
 		$encodings = $this->encodings;
 		if (!is_a($encodings, Collection::class))
 			$encodings = Encoding::hydrate($encodings);
-		return $encodings->first(function($i, $encoding) use ($field) {
-			return data_get($encoding, 'encodable_attribute') == $field;
+		return $encodings->first(function($i, $encoding) use ($attribute) {
+			return data_get($encoding, 'encodable_attribute') == $attribute;
 		});
 	}
 
 	/**
-	 * Get all the attributes on a model who support video encodes and are dirty
+	 * Get all the attributes on a model who support video encodes and are dirty.
+	 * An encode is considered dirty if a file is uploaded, replaced, marked for
+	 * deletion OR if it's preset has changed.
 	 *
 	 * @return array
 	 */
 	public function getDirtyEncodableAttributes() {
 		if (empty($this->encodable_attributes)) return [];
 		return array_filter($this->encodable_attributes, function($attribute) {
-			return $this->isDirty($attribute);
+
+			// The file has changed
+			if ($this->isDirty($attribute)) return true;
+
+			// The encoding preset is changing
+			return $this->hasDirtyPreset($attribute);
 		});
+	}
+
+	/**
+	 * Check if the preset choice is dirty
+	 *
+	 * @param  string $attribute
+	 * @return boolean
+	 */
+	public function hasDirtyPreset($attribute) {
+		return ($encoding = $this->encoding($attribute))
+			&& $encoding->preset != $this->encodingPresetFromInput($attribute);
+	}
+
+	/**
+	 * Get the preset value from the input
+	 *
+	 * @param  string $attribute
+	 * @return string
+	 */
+	public function encodingPresetFromInput($attribute) {
+		$key = is_a($this, 'Bkwld\Decoy\Models\Element')
+			? $this->inputName() : $attribute;
+		return request('_preset.'.$key);
 	}
 
 	/**
@@ -115,11 +145,25 @@ trait Encodable {
 			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
-			$model->encodings()->save(new Encoding(array(
-				'encodable_attribute' => $attribute,
-			)));
+			$this->encode($attribute, $this->encodingPresetFromInput($attribute));
 		});
+	}
 
+	/**
+	 * Delete any existing encoding for the attribute and then encode from the
+	 * source.  The deleting happens automatically onCreating.
+	 *
+	 * @param string $attribute The attribute on the model to use as source
+	 * @param string $preset   The output config key
+	 * @return Encoding         The new output instance
+	 */
+	public function encode($attribute, $preset) {
+		$encoding = new Encoding([
+			'encodable_attribute' => $attribute,
+			'preset' => $preset,
+		]);
+		$this->encodings()->save($encoding);
+		return $encoding;
 	}
 
 	/**

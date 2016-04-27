@@ -22,10 +22,35 @@
 	'destination_root' => '',
 
 	/**
-	 * A associative array that can be used to remove or override the default
-	 * output configuration that is defined in the specified encoding provider
+	 * Settings that can be applied uniquely to each video instance.
 	 */
-	'outputs' => array(),
+	'presets' => [
+
+		'1080p' => [
+			'title' => '1080p (quality: 2)',
+			'settings' => [
+				'quality' => 2,
+				'height' => '1080',
+			],
+		],
+
+		'1080pq3' => [
+			'title' => '1080p (quality: 3)',
+			'settings' => [
+				'quality' => 3,
+				'height' => '1080',
+			],
+		],
+
+		'720p' => [
+			'title' => '1080p (quality: 2)',
+			'settings' => [
+				'quality' => 2,
+				'height' => '720',
+			],
+		],
+
+	],
 
 	/**
 	 * A class that implements the Bkwld\Decoy\Input\EncodingProviders\EncoderInterface

@@ -15,6 +15,16 @@ use URL;
 class Encoding extends Base {
 
 	/**
+		* The attributes that should be casted to native types.
+		*
+		* @var array
+		*/
+	 protected $casts = [
+		 'outputs' => 'object',
+		 'response' => 'object',
+	 ];
+
+	/**
 	 * Comprehensive list of states
 	 */
 	static private $states = array(
@@ -40,8 +50,8 @@ class Encoding extends Base {
 	 * @return Bkwld\Decoy\Models\Encoding
 	 */
 	public function forProgress() {
-		$this->setVisible(array('status', 'message', 'admin_player', 'progress'));
-		$this->setAppends(array('admin_player', 'progress'));
+		$this->setVisible(['status', 'message', 'admin_player', 'progress']);
+		$this->setAppends(['admin_player', 'progress']);
 		return $this;
 	}
 
@@ -72,7 +82,7 @@ class Encoding extends Base {
 	 * @return void
 	 */
 	public function onCreated() {
-		static::encoder($this)->encode($this->source());
+		static::encoder($this)->encode($this->source(), $this->preset);
 	}
 
 	/**
@@ -80,12 +90,9 @@ class Encoding extends Base {
 	 */
 	public function onDeleted() {
 
-		// Get the sources
-		if (!$sources = $this->outputs) return;
-		$sources = (array) json_decode($sources);
-
 		// Get the directory of an output
-		if (count($sources)                          // If there are sources
+		if (($sources = (array) $this->outputs)      // Convert sources to an array
+			&& count($sources)                         // If there are sources
 			&& ($first = array_pop($sources))          // Get the last source
 			&& preg_match('#^/(?!/)#', $first)         // Make sure it's a local path
 			&& ($dir = public_path().dirname($first))  // Get the path of the filename
@@ -118,8 +125,7 @@ class Encoding extends Base {
 	/**
 	 * Get the source video for the encode
 	 *
-	 * @return string The path to the video relative to the
-	 *                document root
+	 * @return string The path to the video relative to the document root
 	 */
 	public function source() {
 		$val = $this->encodable->{$this->encodable_attribute};
@@ -139,7 +145,7 @@ class Encoding extends Base {
 	public function storeJob($job_id, $outputs = null) {
 		$this->status = 'queued';
 		$this->job_id = $job_id;
-		$this->outputs = json_encode($outputs);
+		$this->outputs = $outputs;
 		$this->save();
 	}
 
@@ -176,12 +182,59 @@ class Encoding extends Base {
 	 * @return string
 	 */
 	public function getAdminPlayerAttribute() {
+		return '<div class="player">'
+			.$this->getAdminVideoTagAttribute()
+			.$this->getAdminStatsMarkupAttribute()
+			.'</div>';
+	}
+
+	/**
+	 * Generate an HTML5 video tag with extra elements for displaying in the admin
+	 *
+	 * @return string html
+	 */
+	public function getAdminVideoTagAttribute() {
 		if (!$tag = $this->getTagAttribute()) return;
-		return $tag
-			->controls()
-			->width(580) // Matches the default width of image field preview
-			->render()
-		;
+		$tag->controls();
+		if (isset($this->response->output->width))
+			$tag->width($this->response->output->width);
+		return $tag->render();
+	}
+
+	/**
+	 * Get stats as labels with badges
+	 *
+	 * @return string html
+	 */
+	protected function getAdminStatsMarkupAttribute() {
+		if (!$stats = $this->getStatsAttribute()) return '';
+		return '<div class="stats">'
+			.implode('', array_map(function($val, $key) {
+				return sprintf('<span class="label">
+					<span>%s</span>
+					<span class="badge">%s</span>
+					</span>',
+					$key, $val);
+			}, $stats, array_keys($stats)))
+			.'</div>';
+	}
+
+	/**
+	 * Read an array of stats from the response
+	 *
+	 * @return array|void
+	 */
+	protected function getStatsAttribute() {
+		if (empty($this->response->output)) return;
+		$o = $this->response->output;
+		return array_filter([
+			'Bitrate' => number_format($o->video_bitrate_in_kbps
+				+ $o->audio_bitrate_in_kbps).' kbps',
+			'Filesize' => number_format($o->file_size_in_bytes/1024/1024, 1).' mb',
+			'Duration' => number_format($o->duration_in_ms/1000, 1).' s',
+			'Dimensions' => number_format($o->width).' x '.number_format($o->height),
+			'Download' => '<a href="'.$this->outputs->mp4.'" target="_blank">MP4</a>'
+		]);
 	}
 
 	/**
@@ -205,8 +258,7 @@ class Encoding extends Base {
 	public function getTagAttribute() {
 
 		// Require sources and for the encoding to be complete
-		if (!($sources = $this->outputs) || $this->status != 'complete') return;
-		$sources = json_decode($sources);
+		if (!$sources = $this->getOutputsValue()) return;
 
 		// Start the tag
 		$tag = HtmlElement::video();
@@ -230,6 +282,21 @@ class Encoding extends Base {
 
 		// Return the tag
 		return $tag;
+	}
+
+	/**
+	 * Get the outputs value.  I made this to work around an issue where Laravel
+	 * was double casting the outputs.  I'm not sure why this was happening after
+	 * some lengthy digging but it seemed unique to Encodings on Elements. So I'm
+	 * testing whether the attribute value has already been casted.
+	 *
+	 * @return object
+	 */
+	public function getOutputsValue() {
+		if ($this->status != 'complete') return;
+		$val = $this->getAttributeFromArray('outputs');
+		if (is_string($val)) return $this->outputs;
+		else return $val;
 	}
 
 }

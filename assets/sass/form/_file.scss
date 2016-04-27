@@ -2,17 +2,6 @@
 // look better than the 5px that is generally the spacing on the help block.
 .form-group.upload {
 
-	// Don't make it block because it pushes max off it
-	input[type="file"] {
-		display: inline;
-		max-width: 100%; // Prevent breaking out on mobile
-
-		// On horizontal forms, needs a little push down
-		.form-horizontal & {
-			margin-top: $padding-base-vertical + 2px;
-		}
-	}
-	
 	// This the styling for generic file uploads
 	.download {
 		color: inherit;

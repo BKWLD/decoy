@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Models\Image as ImageModel;
+use Bkwld\Library\Utils;
 use Croppa;
 use Former;
 use Former\Form\Fields\File;
@@ -59,6 +60,11 @@ class Image extends File {
 
 		// Make it accept only images
 		$this->accept('image');
+
+		// Add the max upload info
+		$this->addClass('js-tooltip');
+		$this->title('Max upload size: <b>'
+			.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</b>');
 	}
 
 	/**

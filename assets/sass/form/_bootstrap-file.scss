@@ -1,0 +1,30 @@
+/**
+ * Adapted from:
+ * http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
+ */
+
+.bootstrap-file {
+
+	.btn-file {
+	  position: relative;
+	  overflow: hidden;
+	}
+
+	.btn-file input[type=file] {
+	  position: absolute;
+	  top: 0;
+	  left: 0;
+	  width: 100%;
+	  height: 100%;
+	  font-size: 100px;
+	  opacity: 0;
+	  cursor: inherit;
+	  display: block;
+	}
+
+	input[readonly] {
+	  background-color: white !important;
+	  cursor: text !important;
+	}
+
+}

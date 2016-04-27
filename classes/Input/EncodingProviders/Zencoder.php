@@ -22,33 +22,46 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected $defaults = array(
 
-		// Normal HTML5 formats.  Mp4 is first because it generally looks better
-		// though often weighs more.  FF once needed webm first, but appears to be
-		// no longer the case.
-		'mp4' => [
-			'format' => 'mp4',
-			'h264_profile' => 'main',
-			'tuning' => 'film',
-		],
-		'webm' => [
-			'format' => 'webm',
-		],
+		// Most everything plays mp4
+		'format' => 'mp4',
+
+		// The quailty to encodeat, 1-5
+		// https://app.zencoder.com/docs/api/encoding/rate-control/quality
+		'quality' => 2,
+
+		// Going with main for less CPU intensive decoding
+		'h264_profile' => 'main',
+
+		// Typically live action content
+		'tuning' => 'film',
+
+		// Make the outputs web readable on S3
+		'public' => 1,
+
+		// Slower encodes for better quality.  Their docs recommended this
+		// which is why I'm using it instead of "1".
+		'speed' => 2,
+
+		// Normalize audio
+		'audio_bitrate' => 56,
+		'audio_sample_rate' => 22050,
 	);
 
 	/**
 	 * Tell the service to encode an asset it's source
 	 *
 	 * @param string $source A full URL for the source asset
+	 * @param string $preset The key to the preset function
 	 * @return void
 	 */
-	public function encode($source) {
+	public function encode($source, $preset) {
 
 		// Tell the Zencoder SDK to create a job
 		try {
-			$outputs = $this->outputsConfig();
+			$outputs = $this->outputsConfig($preset);
 			$job = $this->sdk()->jobs->create(array(
 				'input' => $source,
-				'output' => $this->outputsConfig($outputs),
+				'output' => $outputs,
 			));
 
 			// Store the response from the SDK
@@ -67,12 +80,13 @@ class Zencoder extends EncodingProvider {
 	 * Create the outputs config by merging the `outputs` config of the encode config
 	 * file in with $this->defaults and then massaging into Zencoder's expected forat
 	 *
+	 * @param  string $preset
 	 * @return array
 	 */
-	protected function outputsConfig() {
+	protected function outputsConfig($preset) {
 		return $this->addCommonProps(
 			$this->filterHLS(
-				$this->mergeConfigWithDefaults()
+				$this->mergeConfigWithDefaults($preset)
 		));
 	}
 
@@ -104,32 +118,15 @@ class Zencoder extends EncodingProvider {
 	 */
 	protected function addCommonProps($outputs) {
 
-		// Common settings
+		// Decoy settings
 		$common = [
-
-			// Default size, 1080p
-			'height' => 1080,
-
-			// The quailty to encodeat, 1-5
-			// https://app.zencoder.com/docs/api/encoding/rate-control/quality
-			'quality' => 4,
 
 			// Destination location as a directory
 			'base_url' => $this->destination(),
 
-			// Make the outputs web readable on S3
-			'public' => 1,
-
-			// Slower encodes for better quality.  Their docs recommended this
-			// which is why I'm using it instead of "1".
-			'speed' => 2,
-
-			// Normalize audio
-			'audio_bitrate' => 56,
-			'audio_sample_rate' => 22050,
-
-			// Register for notifications for when the conding is done
-			'notifications' => array($this->notificationURL()),
+			// Register for notifications for when the conding is done. If testing
+			// from CLI, just set the app.url config to a ngork domain.
+			'notifications' => [route('decoy::encode@notify')],
 
 		];
 
@@ -207,6 +204,7 @@ class Zencoder extends EncodingProvider {
 
 			// Massage name
 			case 'finished':
+				$model->response = $input;
 				$model->status('complete');
 				break;
 
