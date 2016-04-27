@@ -71,14 +71,25 @@ trait Encodable {
 			if ($this->isDirty($attribute)) return true;
 
 			// The encoding preset is changing
-			if (($encoding = $this->encoding($attribute))
-				&& $encoding->preset != $this->encodingPresetFromInput($attribute)) return true;
+			return $this->hasDirtyPreset($attribute);
 		});
+	}
+
+	/**
+	 * Check if the preset choice is dirty
+	 *
+	 * @param  string $attribute
+	 * @return boolean
+	 */
+	public function hasDirtyPreset($attribute) {
+		return ($encoding = $this->encoding($attribute))
+			&& $encoding->preset != $this->encodingPresetFromInput($attribute);
 	}
 
 	/**
 	 * Get the preset value from the input
 	 *
+	 * @param  string $attribute
 	 * @return string
 	 */
 	public function encodingPresetFromInput($attribute) {
