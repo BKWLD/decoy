@@ -185,11 +185,10 @@ class Encoding extends Base {
 	 */
 	public function getAdminPlayerAttribute() {
 		if (!$tag = $this->getTagAttribute()) return;
-		return $tag
-			->controls()
-			->width(580) // Matches the default width of image field preview
-			->render()
-		;
+		$tag->controls();
+		if (isset($this->response->output->width))
+			$tag->width($this->response->output->width);
+		return $tag->render();
 	}
 
 	/**
