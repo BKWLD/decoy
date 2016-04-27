@@ -18,7 +18,6 @@ define(function (require) {
 		this.$progress = this.$status.find('.progress');
 		this.$bar = this.$progress.find('.progress-bar');
 		this.$help = this.$('.help-block');
-		this.$currently = this.$help.find('.download, .upload-delete');
 		this.$presetLabel = this.$('.dropdown-toggle .selected');
 		this.$presetValue = this.$('[name^="_preset"]');
 		this.$presetChoices = this.$('.presets a');
@@ -56,10 +55,8 @@ define(function (require) {
 
 	// Show the player
 	View.renderPlayer = function(tag) {
+		this.$status.after(tag);
 		this.$status.remove();
-		this.$currently.remove();
-		if (this.$help.length) this.$help.after(tag);
-		else this.$file.after(tag);
 	};
 
 	// Update progress
