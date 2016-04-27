@@ -213,7 +213,7 @@ class Encoding extends Base {
 	public function getTagAttribute() {
 
 		// Require sources and for the encoding to be complete
-		if (!($sources = $this->outputs) || $this->status != 'complete') return;
+		if (!$sources = $this->getOutputsValue()) return;
 
 		// Start the tag
 		$tag = HtmlElement::video();
@@ -237,6 +237,21 @@ class Encoding extends Base {
 
 		// Return the tag
 		return $tag;
+	}
+
+	/**
+	 * Get the outputs value.  I made this to work around an issue where Laravel
+	 * was double casting the outputs.  I'm not sure why this was happening after
+	 * some lengthy digging but it seemed unique to Encodings on Elements. So I'm
+	 * testing whether the attribute value has already been casted.
+	 *
+	 * @return object
+	 */
+	public function getOutputsValue() {
+		if ($this->status != 'complete') return;
+		$val = $this->getAttributeFromArray('outputs');
+		if (is_string($val)) return $this->outputs;
+		else return $val;
 	}
 
 }
