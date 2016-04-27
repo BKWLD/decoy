@@ -50,8 +50,8 @@ class Encoding extends Base {
 	 * @return Bkwld\Decoy\Models\Encoding
 	 */
 	public function forProgress() {
-		$this->setVisible(array('status', 'message', 'admin_player', 'progress'));
-		$this->setAppends(array('admin_player', 'progress'));
+		$this->setVisible(['status', 'message', 'admin_player', 'progress']);
+		$this->setAppends(['admin_player', 'progress']);
 		return $this;
 	}
 
@@ -184,11 +184,59 @@ class Encoding extends Base {
 	 * @return string
 	 */
 	public function getAdminPlayerAttribute() {
+		return '<div class="player">'
+			.$this->getAdminVideoTagAttribute()
+			.$this->getAdminStatsMarkupAttribute()
+			.'</div>';
+	}
+
+	/**
+	 * Generate an HTML5 video tag with extra elements for displaying in the admin
+	 *
+	 * @return string html
+	 */
+	public function getAdminVideoTagAttribute() {
 		if (!$tag = $this->getTagAttribute()) return;
 		$tag->controls();
 		if (isset($this->response->output->width))
 			$tag->width($this->response->output->width);
 		return $tag->render();
+	}
+
+	/**
+	 * Get stats as labels with badges
+	 *
+	 * @return string html
+	 */
+	protected function getAdminStatsMarkupAttribute() {
+		if (!$stats = $this->getStatsAttribute()) return '';
+		return '<div class="stats">'
+			.implode('', array_map(function($val, $key) {
+				return sprintf('<span class="label">
+					<span>%s</span>
+					<span class="badge">%s</span>
+					</span>',
+					$key, $val);
+			}, $stats, array_keys($stats)))
+			.'</div>';
+	}
+
+	/**
+	 * Read an array of stats from the response
+	 *
+	 * @return array|void
+	 */
+	protected function getStatsAttribute() {
+		if (empty($this->response->output)) return;
+		$o = $this->response->output;
+		return array_filter([
+			'Bitrate' => number_format($o->video_bitrate_in_kbps
+				+ $o->audio_bitrate_in_kbps).' kbps',
+			'Filesize' => number_format($o->file_size_in_bytes/1024/1024, 1).' mb',
+			'Duration' => number_format($o->duration_in_ms/1000, 1).' s',
+			'Dimensions' => number_format($o->width).' x '.number_format($o->height),
+			'Download' => '<a href="'.$this->outputs->mp4.'" target="_blank">MP4</a>'
+		]);
 	}
 
 	/**
