@@ -1,36 +1,29 @@
-define (require) ->
+# Dependencies
+$ = require "jquery"
+_ = require "lodash"
+Backbone = require "backbone"
+Preview = require "./preview"
+Crop = require "./crop"
 
-  # Dependencies
-  $ = require "jquery"
-  _ = require "lodash"
-  Backbone = require "backbone"
-  Preview = require "./preview"
-  Crop = require "./crop"
+module.exports = Backbone.View.extend
 
-  # Init view
-  View =
-    initialize: (options) ->
-      _.bindAll @
+  initialize: (options) ->
+    _.bindAll @
 
-      @preview = new Preview { el: @el, parent: @ }
-      @crop = new Crop { el: @$('img.source') }
+    @preview = new Preview { el: @el, parent: @ }
+    @crop = new Crop { el: @$('img.source') }
 
-      @preview.on 'previewImage', @onPreviewImage
-      @preview.on 'deleteImage', @onDeleteImage
+    @preview.on 'previewImage', @onPreviewImage
+    @preview.on 'deleteImage', @onDeleteImage
+    return
 
-      return
+  onPreviewImage: () ->
+    @crop.destroy()
+    @crop.initialize()
+    return
 
-    onPreviewImage: () ->
-      @crop.destroy()
-      @crop.initialize()
-
-      return
-
-    onDeleteImage: () ->
-      @crop.destroy()
-      @crop.initialize()
-      @crop.clear()
-
-      return
-
-  return Backbone.View.extend View
+  onDeleteImage: () ->
+    @crop.destroy()
+    @crop.initialize()
+    @crop.clear()
+    return
