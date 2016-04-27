@@ -82,7 +82,9 @@ trait Encodable {
 	 * @return string
 	 */
 	public function encodingPresetFromInput($attribute) {
-		return request('_preset.'.$attribute);
+		$key = is_a($this, 'Bkwld\Decoy\Models\Element')
+			? $this->inputName() : $attribute;
+		return request('_preset.'.$key);
 	}
 
 	/**
