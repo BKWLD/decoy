@@ -90,11 +90,9 @@ class Encoding extends Base {
 	 */
 	public function onDeleted() {
 
-		// Get the sources
-		if (!$sources = $this->outputs) return;
-
 		// Get the directory of an output
-		if (count($sources)                          // If there are sources
+		if (($sources = (array) $this->outputs)      // Convert sources to an array
+			&& count($sources)                         // If there are sources
 			&& ($first = array_pop($sources))          // Get the last source
 			&& preg_match('#^/(?!/)#', $first)         // Make sure it's a local path
 			&& ($dir = public_path().dirname($first))  // Get the path of the filename
