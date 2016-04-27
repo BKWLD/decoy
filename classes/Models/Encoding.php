@@ -20,8 +20,8 @@ class Encoding extends Base {
 		* @var array
 		*/
 	 protected $casts = [
-		 'outputs' => 'array',
-		 'response' => 'array',
+		 'outputs' => 'object',
+		 'response' => 'object',
 	 ];
 
 	/**

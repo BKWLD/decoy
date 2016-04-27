@@ -234,15 +234,15 @@ class VideoEncoder extends Upload {
 	 * @return array
 	 */
 	protected function stats() {
-		if (!$this->encoding || empty($this->encoding->response['output'])) return;
-		$o = $this->encoding->response['output'];
+		if (!$this->encoding || empty($this->encoding->response->output)) return;
+		$o = $this->encoding->response->output;
 		return array_filter([
-			'Bitrate' => number_format($o['video_bitrate_in_kbps']
-				+ $o['audio_bitrate_in_kbps']).' kbps',
-			'Filesize' => number_format($o['file_size_in_bytes']/1024/1024, 1).' mb',
-			'Duration' => number_format($o['duration_in_ms']/1000, 1).' s',
-			'Dimensions' => number_format($o['width']).' x '.number_format($o['height']),
-			'Download' => '<a href="'.$this->encoding->outputs['mp4'].'" target="_blank">MP4</a>'
+			'Bitrate' => number_format($o->video_bitrate_in_kbps
+				+ $o->audio_bitrate_in_kbps).' kbps',
+			'Filesize' => number_format($o->file_size_in_bytes/1024/1024, 1).' mb',
+			'Duration' => number_format($o->duration_in_ms/1000, 1).' s',
+			'Dimensions' => number_format($o->width).' x '.number_format($o->height),
+			'Download' => '<a href="'.$this->encoding->outputs->mp4.'" target="_blank">MP4</a>'
 		]);
 	}
 
