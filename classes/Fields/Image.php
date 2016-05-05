@@ -246,7 +246,7 @@ class Image extends File {
 	public function forElement(Element $el) {
 
 		// Add help
-		$this->setModel($el)->blockhelp($el->help);
+		$this->model($el)->blockhelp($el->help);
 
 		// Populate the image array with the image instance.  This will create an
 		// Image instance from the default value if it doesn't exist.
