@@ -7,7 +7,7 @@ class RedirectRules extends Base {
 	protected $title = 'Redirects';
 	protected $description = 'Rules that redirect an internal URL path to another.';
 	protected $columns = array(
-		'Rule' => 'title',
+		'Rule' => 'getAdminTitleAttribute',
 	);
 	protected $search = array(
 		'from',
