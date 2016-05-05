@@ -11,13 +11,13 @@ class RedirectRule extends Base {
 	/**
 	 * Don't allow cloning because the "from" is unique
 	 *
-	 * @var boolean 
+	 * @var boolean
 	 */
 	public $cloneable = false;
 
 	/**
 	 * Validation rules
-	 * 
+	 *
 	 * @var array
 	 */
 	public static $rules = array(
@@ -27,7 +27,7 @@ class RedirectRule extends Base {
 
 	/**
 	 * Redirection codes
-	 * 
+	 *
 	 * @var array
 	 */
 	public static $codes = array(
@@ -37,7 +37,7 @@ class RedirectRule extends Base {
 
 	/**
 	 * Generate the admin title
-	 * 
+	 *
 	 * @return string
 	 */
 	public function getAdminTitleAttribute() {
@@ -57,7 +57,7 @@ class RedirectRule extends Base {
 	 * @return null
 	 */
 	public function onValidating($validation) {
-		
+
 		// Clean up "from" route, stripping host and leading slash
 		$this->from = preg_replace('#^([^/]*//[^/]+)?/?#', '', $this->from);
 
@@ -75,7 +75,7 @@ class RedirectRule extends Base {
 	/**
 	 * Orders instances of this model in the admin as well as default ordering
 	 * to be used by public site implementation.
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
@@ -86,7 +86,7 @@ class RedirectRule extends Base {
 	/**
 	 * See if the current request matches the "FROM" using progressively more
 	 * expensive ways to match the from column.
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
@@ -103,7 +103,7 @@ class RedirectRule extends Base {
 
 	/**
 	 * Get the path and query from the request
-	 * 
+	 *
 	 * @return string
 	 */
 	public function pathAndQuery() {
