@@ -765,7 +765,7 @@ class Base extends Controller {
 	/**
 	 * All actions validate in basically the same way.  This is shared logic for that
 	 *
-	 * @param BaseModel|array $data The model instance that is being worked on
+	 * @param BaseModel|Request|array $data
 	 * @param array A Laravel rules array. If null, will be pulled from model
 	 * @param array $messages Special error messages
 	 * @return void
@@ -773,6 +773,10 @@ class Base extends Controller {
 	 * @throws ValidationFail
 	 */
 	protected function validate($data, $rules = null, $messages = []) {
+
+		// A request may be passed in when using Laravel traits, like how resetting
+		// passwords work.  Get the input from it
+		if (is_a($data, \Illuminate\Http\Request::class)) $data = $data->input();
 
 		// Get validation rules from model
 		$model = null;
