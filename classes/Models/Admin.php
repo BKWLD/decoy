@@ -25,7 +25,7 @@ class Admin extends Base implements
 
 	// Note, not using the Authorizable trait because I've defined my own versions
 	// for backwards compatability with Decoy 4 and also to have a tigher syntax.
-	use Authenticatable, CanResetPassword;
+	use Authenticatable, CanResetPassword, Traits\HasImages;
 
 	/**
 	 * The table associated with the model.  Explicitly declaring so that sub
@@ -34,13 +34,6 @@ class Admin extends Base implements
 	 * @var string
 	 */
 	protected $table = 'admins';
-
-	/**
-	 * Uploadable attributes
-	 *
-	 * @var array
-	 */
-	protected $upload_attributes = ['image'];
 
 	/**
 	 * Don't allow cloning because duplicate emails are not allowed.
@@ -254,7 +247,7 @@ class Admin extends Base implements
 	 * @return string
 	 */
 	public function getAdminTitleHtmlAttribute() {
-		if (isset($this->image)) return parent::getAdminTitleHtmlAttribute();
+		if ($this->getAdminThumbTagAttribute()) return parent::getAdminTitleHtmlAttribute();
 		return "<img src='".$this->getGravatarAttribute()."' class='gravatar'/> "
 			.$this->getAdminTitleAttribute();
 	}
