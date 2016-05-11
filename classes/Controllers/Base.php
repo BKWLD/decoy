@@ -95,7 +95,7 @@ class Base extends Controller {
 	 *
 	 * @var array
 	 */
-	protected $columns = ['Title' => 'title'];
+	protected $columns = ['Title' => 'getAdminTitleHtmlAttribute'];
 
 	/**
 	 * The view-style path to the edit view.  Ex: admin.news.edit
