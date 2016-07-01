@@ -10,7 +10,7 @@
 				Logout
 			.subtitle
 				%span.glyphicon.glyphicon-heart
-				Decoy 4.10 by
+				Decoy 4.11 by
 				%a(href="http://bkwld.com" target="_blank") BKWLD
 		%a.right(href="/")
 			.glyphicon.glyphicon-globe
