@@ -26,11 +26,11 @@ define(function (require) {
 				keyboardNavigation: false, // Makes it possible to manually type in
 				todayHighlight: true,
 				orientation: 'top left'
-			});
 
-			// Add events
-			this.$input.on('change', this.update);
-			this.$input.on('blur', this.blur);
+			// Update the hidden field whenver the datepicker updates.  Need both
+			// hide and changeDate because the plugin keeps touching our hidden field,
+			// probably because it has the same selector.
+			}).on('changeDate hide', this.update);
 
 		},
 
@@ -57,14 +57,7 @@ define(function (require) {
 			// Update hidden field
 			this.$hidden.val(parts[3]+'-'+parts[1]+'-'+parts[2]);
 			this.$hidden.trigger('change');
-			this.parts = parts;
 		},
-
-		// Update the input field on blur with the formatted value
-		blur: function() {
-			if (!this.parts) return;
-			this.$input.val(this.parts[1]+'/'+this.parts[2]+'/'+this.parts[3]);
-		}
 
 	});
 
