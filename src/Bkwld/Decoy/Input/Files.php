@@ -80,7 +80,13 @@ class Files {
 	public function save($item) {
 		$fields = $item->file_attributes;
 		$files = App::make('request')->files;
-		$files_array = $files->all();
+
+		// Filter out NULL files.  Without this, empty file fields will throw exceptions
+		// during $files->replace().  Also, skips some unnecessary iterations.
+		$files_array = array_filter($files->all());
+
+		// Loop through the arrays, converting their multidimensional arrays to dot notation
+		// for simpler parsing.
 		foreach(array_dot($files_array) as $field => $file) {
 
 			// If files isn't a file object, ignore it.  This may happen if there is a file input
