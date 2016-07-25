@@ -114,7 +114,7 @@ abstract class EncodingProvider {
 			: Request::getHost();
 
 		// Verify that the host is public
-		if (!($ip = gethostbyname($host)) || preg_match('#^(127|10|192\.168)#', $ip)) {
+		if (!($ip = gethostbyname($host)) || preg_match('#^(127|10|192\.168)\.#', $ip)) {
 			throw new Exception('The server name ('.$host.') does not appear to be publicly accessible.  It is recommended to use <a href="https://ngrok.com/">ngrok</a> to access your localhost.  If running from CLI, pass the server name in via ENV variable like: `SERVER_NAME=10147f98.ngrok.com php artisan your:command`.');
 		}
 
