@@ -6,6 +6,7 @@ use Bkwld\Decoy\Models\Image as ImageModel;
 use Bkwld\Library\Utils;
 use Croppa;
 use Former;
+use Former\LiveValidation;
 use Former\Form\Fields\File;
 use Illuminate\Container\Container;
 
@@ -66,11 +67,26 @@ class Image extends File {
 		$this->title('Max upload size: <b>'
 			.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</b>');
 
-		// Add required status
-		$required_rule = 'images.' . ($name ?: 'default');
-		if (array_key_exists($required_rule, $this->getRules() ?: [])) {
-			$this->addClass('required');
-		}
+		// Add validation rules
+		$this->applyRules();
+	}
+
+	/**
+	 * Apply validation rules
+	 *
+	 * @return void
+	 */
+	protected function applyRules() {
+
+		// Check if there are rules for this field
+		$rules_key = 'images.' . ($this->name ?: 'default');
+		if (!array_key_exists($rules_key, $this->getRules() ?: [])) return;
+		$rules = $this->getRules()[$rules_key];
+
+		// Apply rules using Former's LiveValidation
+		$live = new LiveValidation($this);
+		$live->apply($rules);
+
 	}
 
 	/**
