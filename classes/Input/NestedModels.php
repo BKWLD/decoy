@@ -3,6 +3,7 @@
 // Deps
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Input\ModelValidator;
+use Bkwld\Decoy\Models\Image;
 use Decoy;
 use Input;
 use Illuminate\Database\Eloquent\Relations\Relation;
@@ -117,7 +118,8 @@ class NestedModels {
 	protected function storeChild($relation, $input, $prefix) {
 		$child = $relation->getRelated()->newInstance();
 		$child->fill($input);
-		(new ModelValidator)->validateAndPrefixErrors($prefix, $child);
+		$rules = $this->getRules($relation, $input);
+		(new ModelValidator)->validateAndPrefixErrors($prefix, $child, $rules);
 		$relation->save($child);
 	}
 
@@ -133,8 +135,36 @@ class NestedModels {
 	protected function updateChild($relation, $id, $input, $prefix) {
 		$child = $relation->getRelated()->findOrFail($id);
 		$child->fill($input);
-		(new ModelValidator)->validateAndPrefixErrors($prefix, $child);
+		$rules = $this->getRules($relation, $input);
+		(new ModelValidator)->validateAndPrefixErrors($prefix, $child, $rules);
 		$child->save();
+	}
+
+	/**
+	 * Get the validation rules.  They are generally on the child except for
+	 * in the special case of Images
+	 *
+	 * @param  Relation $relation
+	 * @param  array    $input    The data for the nested model
+	 * @return array
+	 */
+	public function getRules($relation, $input) {
+		$child = $relation->getRelated();
+
+		// If nested is not an Image, don't do anything special.  This will result
+		// in the default validation behavior which gets the rules off of the child.
+		if (!is_a($child, Image::class)) return;
+
+		// Check for image rules on the parent
+		$parent = $relation->getParent();
+		$rules_key = 'images.' . ($input['name'] ?: 'default');
+		if (!array_key_exists($rules_key, $parent::$rules)) return;
+
+		// Return the parent rules concatenated on the default rules for an Image
+		// (those are essentially hardocded here but I don't expect them to change)
+		return [
+			'file' => 'image|' . $parent::$rules[$rules_key],
+		];
 	}
 
 }

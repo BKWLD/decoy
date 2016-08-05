@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Models\Base as BaseModel;
+use Bkwld\Decoy\Models\Image;
 use Bkwld\Library\Laravel\Validator as BkwldLibraryValidator;
 use Illuminate\Support\Arr;
 use Validator;
@@ -21,7 +22,7 @@ class ModelValidator {
 	 * @return Validator
 	 */
 	public function validate(BaseModel $model, $rules = null, $messages = []) {
-		return $this->validateAndPrefixErrors(null, $model);
+		return $this->validateAndPrefixErrors(null, $model, $rules, $messages);
 	}
 
 	/**
@@ -46,6 +47,9 @@ class ModelValidator {
 		// Get rules from model
 		if ($rules === null) $rules = $model::$rules;
 
+		// Handle special case of images
+		$rules = $this->handleImageRules($model, $rules);
+
 		// Merge additional messages in
 		$messages = array_merge(BkwldLibraryValidator::$messages, $messages);
 
@@ -69,6 +73,27 @@ class ModelValidator {
 		// Fire completion event
 		$model->fireDecoyEvent('validated', [$model, $validator]);
 		return $validator;
+	}
+
+	/**
+	 * Handle the Images feature, which is special because you define the rules
+	 * on the parent model.
+	 *
+	 * @param BaseModel $data
+	 * @param array     $rules A Laravel rules array. If null, will be pulled from model
+	 * @return array
+	 */
+	public function handleImageRules($model, $rules) {
+
+		// If the model is an image, the rules were passed in by NestedModles and
+		// are good to go
+		if (is_a($model, Image::class)) return $rules;
+
+		// Otherwise, remove any image rules because this is a non-Image and these
+		// rules will get applied by NestedModels
+		return array_where($rules, function($key, $val) {
+			return !starts_with($key, 'images.');
+		});
 	}
 
 	/**
