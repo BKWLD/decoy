@@ -65,6 +65,12 @@ class Image extends File {
 		$this->addClass('js-tooltip');
 		$this->title('Max upload size: <b>'
 			.Utils\String::humanSize(Utils\File::maxUpload(), 1).'</b>');
+
+		// Add required status
+		$required_rule = 'images.' . ($name ?: 'default');
+		if (array_key_exists($required_rule, $this->getRules() ?: [])) {
+			$this->addClass('required');
+		}
 	}
 
 	/**
