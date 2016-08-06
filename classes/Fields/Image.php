@@ -83,10 +83,15 @@ class Image extends File {
 		if (!array_key_exists($rules_key, $this->getRules() ?: [])) return;
 		$rules = $this->getRules()[$rules_key];
 
+		// If there already is an image, drop the forced requirement
+		if ($this->hasImage() && array_key_exists('required', $rules)) {
+			unset($rules['required']);
+			$this->addClass('required'); // So the icon shows up
+		}
+
 		// Apply rules using Former's LiveValidation
 		$live = new LiveValidation($this);
 		$live->apply($rules);
-
 	}
 
 	/**
@@ -114,7 +119,7 @@ class Image extends File {
 		$this->group->dataAspectRatio($this->ratio ?: false);
 
 		// Inform whether there is an existing image to preview
-		if (Former::getValue($this->inputName('file'))) {
+		if ($this->hasImage()) {
 			$this->group->addClass('has-image');
 		}
 
@@ -182,6 +187,15 @@ class Image extends File {
 			</div>', $src);
 
 		return $html;
+	}
+
+	/**
+	 * Check if there is already an upload
+	 *
+	 * @return boolean
+	 */
+	protected function hasImage() {
+		return Former::getValue($this->inputName('file'));
 	}
 
 	/**
