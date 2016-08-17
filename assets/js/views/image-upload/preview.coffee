@@ -47,6 +47,7 @@ module.exports = Backbone.View.extend
     # Replace the file input with a clone because you can't clear a file field
     @$file.replaceWith @$file = @$file.clone(true)
     @$file.trigger 'change'
+    @$file.prop('required', true) if @$file.hasClass('required')
 
     # Add a hidden field of the same name that tells Decoy to delete the
     # previous.

@@ -3,7 +3,7 @@
 // Deps
 use Bkwld\Decoy\Auth\AuthInterface;
 use Bkwld\Upchuck\SupportsUploads;
-use Bkwld\Library\Utils\String;
+use Bkwld\Library\Utils\Text;
 use Config;
 use Decoy;
 use DecoyURL;
@@ -365,7 +365,7 @@ class Admin extends Base implements
 					$roles = array_keys(Config::get('decoy.site.roles'));
 					return (object) [
 						'slug' => $action,
-						'title' => is_array($value) ? $value[0] : String::titleFromKey($action),
+						'title' => is_array($value) ? $value[0] : Text::titleFromKey($action),
 						'description' => is_array($value) ? $value[1] : $value,
 
 						// Set the initial checked state based on the admin's permissions, if
