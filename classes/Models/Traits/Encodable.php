@@ -82,20 +82,29 @@ trait Encodable {
 	 * @return boolean
 	 */
 	public function hasDirtyPreset($attribute) {
+
+		// Require a previous encoding instance
 		return ($encoding = $this->encoding($attribute))
-			&& $encoding->preset != $this->encodingPresetFromInput($attribute);
+
+			// Make sure the input actually contains a preset.  It won't in cases like
+			// the AJAX PUT during listing drag and drop sorting or visibility toggle
+			&& ($preset_key = $this->encodingPresetInputKey($attribute))
+			&& request()->exists($preset_key)
+
+			// Check if the preset has changed
+			&& request($preset_key) != $encoding->preset;
 	}
 
 	/**
-	 * Get the preset value from the input
+	 * Make the encoding preset input key for an encodable attribute
 	 *
 	 * @param  string $attribute
 	 * @return string
 	 */
-	public function encodingPresetFromInput($attribute) {
+	public function encodingPresetInputKey($attribute) {
 		$key = is_a($this, 'Bkwld\Decoy\Models\Element')
 			? $this->inputName() : $attribute;
-		return request('_preset.'.$key);
+		return '_preset.'.$key;
 	}
 
 	/**
