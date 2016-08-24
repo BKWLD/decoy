@@ -20,8 +20,13 @@ class Wildcard {
 	private $path;
 	
 	// These are action suffixes on paths
-	private $actions = array('create', 'edit', 'destroy', 'attach', 'remove', 'autocomplete', 'duplicate');
-	
+	private $actions = [
+		'create', 'edit', 'destroy',
+		'attach', 'remove',
+		'autocomplete',
+		'duplicate', 'copy'
+	];
+
 	/**
 	 * Constructor
 	 * @param $string dir The path "directory" of the admin.  I.e. "admin"

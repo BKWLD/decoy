@@ -629,7 +629,54 @@ class Base extends Controller {
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
 			->with('success', $message);
 	}
-	
+
+	/**
+	 * Duplicate a record to a different database
+	 *
+	 * @param  int $id Model key
+	 * @return Symfony\Component\HttpFoundation\Response Redirect to new record
+	 */
+	public function copy($id) {
+
+		// Find the source item
+		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
+
+		// Get the enviroment that will be copied to
+		if (!$env = Input::get('env')) return App::abort(404);
+
+		// Configure attachment destination on Cloner
+		app('cloner.attachment-adapter')
+			->setDestination(Config::get("decoy::site.copy_to.{$env}.disk"));
+
+		// Duplicate using Cloner
+		$new = $src->duplicateTo(Config::get("decoy::site.copy_to.{$env}.connection"));
+
+		// Make success message
+		$message = $this->successMessage($src, 'copied');
+		$message .= ' You are viewing the <b>original</b>.';
+
+		// If a host was defined, make a URL to the edit view in the other env and
+		// include it in the success message.
+		if ($host = Config::get("decoy::site.copy_to.{$env}.host")) {
+
+			// Change the path to be the edit action with the new key
+			$url = preg_replace('#\d+/copy#', $new->getKey().'/edit', Request::url());
+
+			// Change the host to the other env's host
+			$url = str_replace(Request::getHost(), $host, $url);
+
+			// Make the message
+			$env_title = ucwords(preg_replace('#-|_#', ' ', $env));
+			$message .= " The copy can be found <a href='{$url}'>on <b>{$env_title}</b></a>.";
+		}
+
+		// Redirect to original record's edit view so it's easier for admin to
+		// duplicate many records
+		return Redirect::to($this->url->relative('edit', $src->getKey()))
+			->with('success', $message );
+
+	}
+
 	//---------------------------------------------------------------------------
 	// Many To Many CRUD
 	//---------------------------------------------------------------------------

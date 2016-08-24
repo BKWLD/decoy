@@ -17,8 +17,11 @@ class UrlGenerator {
 	private $path;
 	
 	// Possible actions in path that would process a view that would be generating URLs
-	private $actions = array('edit', 'create', 'destroy', 'duplicate');
-	
+	private $actions = [
+		'edit', 'create', 'destroy',
+		'duplicate', 'copy',
+	];
+
 	/**
 	 * Inject dependencies
 	 * @param string $path A Request::path()

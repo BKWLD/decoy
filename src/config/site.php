@@ -109,5 +109,30 @@
 	'log_changes' => function($model, $action, $admin_id) {
 		return true;
 	},
-	
+
+	/**
+	 * Configure copying of root models between databases, including attached
+	 * files and relationships.  The environment names should match the names
+	 * of Laravel environments so that admins are offered to copy to their
+	 * current environemnt.
+	 */
+	'copy_to' => [
+		// 'staging' => [ // Environment slug, converted to a title and displayed
+		// 	'host' => 'example.stage.bkwld.com', // The hostname of environment
+		// 	'connection' => 'staging', // Laravel database connection name
+		// 	'disk' => new League\Flysystem\Filesystem(
+		// 		new League\Flysystem\Adapter\Local(
+		// 			base_path('../../staging/current/uploads')
+		// 	)),
+		// ],
+		// 'production' => [
+		// 	'host' => null,
+		// 	'connection' => 'production',
+		// 	'disk' => new League\Flysystem\Filesystem(
+		// 		new League\Flysystem\Adapter\Local(
+		// 			base_path('../../production/current/uploads')
+		// 	)),
+		// ],
+	],
+
 );
