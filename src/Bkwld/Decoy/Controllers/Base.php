@@ -28,6 +28,7 @@ use Request;
 use Response;
 use Route;
 use stdClass;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use URL;
 use Validator;
 use View;
@@ -593,6 +594,7 @@ class Base extends Controller {
 
 		// Find the source item
 		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
+		if (!$src->isCloneable()) throw new AccessDeniedHttpException;
 
 		// Duplicate using Bkwld\Cloner
 		$new = $src->duplicate();
@@ -640,6 +642,7 @@ class Base extends Controller {
 
 		// Find the source item
 		if (!($src = Model::find($id)) || empty($src->cloneable)) return App::abort(404);
+		if (!$src->isCopyable()) throw new AccessDeniedHttpException;
 
 		// Get the enviroment that will be copied to
 		if (!$env = Input::get('env')) return App::abort(404);

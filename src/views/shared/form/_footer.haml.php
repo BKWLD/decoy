@@ -32,13 +32,13 @@
 		.btn-group
 
 			-# Duplicate via Cloner
-			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty($item->cloneable))
+			-if (isset($item) && $item->isCloneable())
 				%a.btn.btn-default.js-tooltip(title="Duplicate"
 					href=DecoyURL::relative('duplicate', $item->id))
 					%span.glyphicon.glyphicon-duplicate
 
 			-# Copy to different environment via Cloner
-			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty(Config::get('decoy::site.copy_to')))
+			-if (isset($item) && $item->isCopyable())
 				-foreach(Config::get('decoy::site.copy_to') as $env => $config)
 					-if (App::environment() == $env) continue # Don't show current env
 					-$title = ucwords(preg_replace('#-|_#', ' ', $env))

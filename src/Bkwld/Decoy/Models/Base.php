@@ -296,6 +296,30 @@ abstract class Base extends Eloquent implements SluggableInterface {
 	 */
 	public function getAdminRowClassAttribute() { }
 
+	/**
+	 * Return whether a model should be cloneable in the admin
+	 *
+	 * @return boolean
+	 */
+	public function isCloneable() {
+		return app('decoy.auth')->can('create', static::adminControllerClass())
+			&& !empty($this->cloneable);
+	}
+
+	/**
+	 * Return whether a model should be copyable to another environment
+	 *
+	 * @return boolean
+	 */
+	public function isCopyable() {
+		return $this->isCloneable()
+			&& !empty(Config::get('decoy::site.copy_to'))
+
+			// Only allow root models, copying a child could easily break if the
+			// parent has a different foreign key in the foreign environment.
+			&& count(Request::segments()) <= 4;
+	}
+
 	//---------------------------------------------------------------------------
 	// Listing view, action-column accessors
 	//---------------------------------------------------------------------------
