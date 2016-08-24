@@ -492,6 +492,9 @@ class Base extends Controller {
 
 		// Get the model instance
 		$item = $this->findOrFail($id);
+		
+		// Respond to AJAX requests for a single item with JSON
+		if (Request::ajax()) return Response::json($item);
 
 		// Look for overriden views
 		$this->overrideViews();
