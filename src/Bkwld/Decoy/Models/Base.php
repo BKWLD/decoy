@@ -179,6 +179,30 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		return $this->traitNeedsSlugging();
 	}
 
+	/**
+	 * Subclass the getExistingSlugs method to support models on other connections
+	 * until https://github.com/cviebrock/eloquent-sluggable/pull/306 is merged
+	 *
+	 * @param  string $slug
+	 * @return array
+	 */
+	protected function getExistingSlugs($slug) {
+		$save_to         = $this->sluggable['save_to'];
+		$include_trashed = $this->sluggable['include_trashed'];
+
+		// Start query
+		$query = $this->newQuery()->where( $save_to, 'LIKE', $slug.'%' );
+
+		// include trashed models if required
+		$instance = new static;
+		if ($include_trashed && $instance->usesSoftDeleting()) {
+			$query = $query->withTrashed();
+		}
+
+		// Get a list of all matching slugs
+		return $query->lists($save_to, $this->getKeyName());
+	}
+
 	//---------------------------------------------------------------------------
 	// Accessors
 	//---------------------------------------------------------------------------
