@@ -30,13 +30,29 @@
 
 	.pull-right
 		.btn-group
+
+			-# Duplicate via Cloner
 			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty($item->cloneable))
-				%a.btn.btn-default.js-tooltip(title="Duplicate" href=DecoyURL::relative('duplicate', $item->id))
+				%a.btn.btn-default.js-tooltip(title="Duplicate"
+					href=DecoyURL::relative('duplicate', $item->id))
 					%span.glyphicon.glyphicon-duplicate
+
+			-# Copy to different environment via Cloner
+			-if (isset($item) && app('decoy.auth')->can('create', $controller) && !empty(Config::get('decoy::site.copy_to')))
+				-foreach(Config::get('decoy::site.copy_to') as $env => $config)
+					-if (App::environment() == $env) continue # Don't show current env
+					-$title = ucwords(preg_replace('#-|_#', ' ', $env))
+					%a.btn.btn-default.js-tooltip(title="Copy to <b>#{$title}</b>"
+						href=DecoyURL::relative('copy', $item->id).'?env='.$env)
+						%span.glyphicon.glyphicon-transfer
+
+			-# View changes history
 			-if (isset($item) && app('decoy.auth')->can('read', 'changes'))
 				-$url = DecoyURL::action('changes').'?'.Search::query([ 'model' => get_class($item), 'key' => $item->getKey()])
 				%a.btn.btn-default.js-tooltip(title="<b>Changes</b> history" href=$url)
 					%span.glyphicon.glyphicon-list-alt
+
+			-# View on public site
 			-if (isset($item) && ($uri = $item->getUriAttribute()))
 				%a.btn.btn-default.js-tooltip(title="Public view" href=$uri target="_blank")
 					%span.glyphicon.glyphicon-bookmark
