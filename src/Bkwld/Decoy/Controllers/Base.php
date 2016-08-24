@@ -614,9 +614,20 @@ class Base extends Controller {
 			$new->save();
 		}
 
-		// Save the new record and redirect to its edit view
+		// Make success message
+		$message = $this->successMessage($src, 'duplicated');
+		$url = preg_replace('#/duplicate#', '/edit', Request::url());
+		$message .= " You are viewing a <b>copy</b> of the <a href='{$url}'>original</a>.";
+
+		// Add locale part to the message
+		if (!empty($input->locale)) {
+			$locale = Config::get('decoy::site.locales')[$input->locale];
+			$message .= " You may begin localizing it for <b>{$locale}</b>.";
+		}
+
+		// Redirect to its edit view
 		return Redirect::to($this->url->relative('edit', $new->getKey()))
-			->with('success', $this->successMessage($src, 'duplicated') );
+			->with('success', $message);
 	}
 	
 	//---------------------------------------------------------------------------
@@ -941,20 +952,7 @@ class Base extends Controller {
 		if ($title && is_string($title)) $title =  '"'.$title.'"';
 
 		// Render the message
-		$message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
-
-		// Add extra messaging for copies
-		if ($verb == 'duplicated') {
-			$url = preg_replace('#/duplicate#', '/edit', Request::url());
-			$message .= ' You are viewing a <b>copy</b> of the <a href="'.$url.'">original</a>.';
-		}
-
-		// Add extra messaging if the creation was begun from the localize UI
-		if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-			$message .= " You may begin localizing it for <b>".Config::get('decoy::site.locales')[$input->locale].'</b>.';
-		}
-
-		// Return message
-		return $message;
+		return "The <b>".Str::singular($this->title)."</b> {$title} was
+			successfully {$verb}.";
 	}
 }
