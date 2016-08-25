@@ -116,7 +116,7 @@
 	 * of Laravel environments so that admins are offered to copy to their
 	 * current environemnt.
 	 */
-	'copy_to' => [
+	'copy_to' => app()->isLocal() ? null [
 		// 'staging' => [ // Environment slug, converted to a title and displayed
 		// 	'host' => 'example.stage.bkwld.com', // The hostname of environment
 		// 	'connection' => 'staging', // Laravel database connection name
