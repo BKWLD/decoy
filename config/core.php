@@ -10,10 +10,6 @@
 	'guard'  => 'decoy',
 	'policy' => 'Bkwld\Decoy\Auth\Policy@check',
 
-	// Default admin credentials
-	'default_login'    => 'redacted',
-	'default_password' => 'redacted',
-
 	// Use a password input field for admins
 	'obscure_admin_password' => false,
 
