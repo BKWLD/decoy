@@ -27,27 +27,9 @@ class CreateAdmins extends Migration {
 			$table->text('permissions')->nullable();
 			$table->rememberToken();
 			$table->boolean('active');
-			
+
 			$table->timestamps();
 		});
-
-		// Make a default admin
-		$this->makeDefaultAdmin();
-	}
-
-	/**
-	 * Make a default admin.  The password will be hashed automatically by an
-	 * onSaving callback on the model.
-	 */
-	public function makeDefaultAdmin() {
-		Bkwld\Decoy\Models\Admin::create([
-			'first_name' => 'Default',
-			'last_name' => 'Admin',
-			'email' => Config::get('decoy.core.default_login'),
-			'password' => Config::get('decoy.core.default_password'),
-			'role' => 'super',
-			'active' => 1,
-		]);
 	}
 
 	/**
