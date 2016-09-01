@@ -297,6 +297,7 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Register commands
 		$this->commands([Commands\Generate::class]);
+		$this->commands([Commands\Admin::class]);
 	}
 
 	/**

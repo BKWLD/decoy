@@ -24,6 +24,8 @@ class Generate extends Command {
 
 	/**
 	 * The options
+	 *
+	 * @return array
 	 */
 	protected function getArguments() {
 		return [
