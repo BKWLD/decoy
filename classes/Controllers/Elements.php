@@ -189,7 +189,7 @@ class Elements extends Base {
 
 				// If no new video was uploaded but the preset was changed, re-encode
 				if ($el->type == 'video-encoder' && $el->hasDirtyPreset('value')) {
-					$el->encode('value', $el->encodingPresetFromInput('value'));
+					$el->encode('value', $el->encodingPresetInputVal('value'));
 				}
 
 				return;
