@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<!--[if lt IE 7 ]><html class="no-js ie6"><![endif]-->
+<!--[if IE 7 ]><html class="no-js ie7"><![endif]-->
+<!--[if IE 8 ]><html class="no-js ie8"><![endif]-->
+<!--[if IE 9 ]><html class="no-js ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
+    
+      
+        <title>Custom Form Fields - Decoy 5</title>
+      
+      
+      
+      
+    
+    <meta property="og:url" content="None">
+    <meta property="og:title" content="Decoy 5">
+    <meta property="og:image" content="None/../images/decoy-logo-placeholder.png">
+    <meta name="apple-mobile-web-app-title" content="Decoy 5">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    
+      <link rel="apple-touch-icon" href="../images/decoy-logo-placeholder.png">
+    
+    
+    <link rel="shortcut icon" type="image/x-icon" href="../assets/images/favicon-e565ddfa3b.ico">
+    <link rel="icon" type="image/x-icon" href="../assets/images/favicon-e565ddfa3b.ico">
+    <style>
+      @font-face {
+      	font-family: 'Icon';
+      	src: url('../assets/fonts/icon.eot?52m981');
+      	src: url('../assets/fonts/icon.eot?#iefix52m981')
+               format('embedded-opentype'),
+      		   url('../assets/fonts/icon.woff?52m981')
+               format('woff'),
+      		   url('../assets/fonts/icon.ttf?52m981')
+               format('truetype'),
+      		   url('../assets/fonts/icon.svg?52m981#icon')
+               format('svg');
+      	font-weight: normal;
+      	font-style: normal;
+      }
+    </style>
+    <link rel="stylesheet" href="../assets/stylesheets/application-a422ff04cc.css">
+    
+    
+      
+      
+      
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:400,700|Ubuntu+Mono">
+      <style>
+        body, input {
+          font-family: 'Raleway', Helvetica, Arial, sans-serif;
+        }
+        pre, code {
+          font-family: 'Ubuntu Mono', 'Courier New', 'Courier', monospace;
+        }
+      </style>
+    
+    
+      <link rel="stylesheet" href="../css/style.css">
+    
+    <script src="../assets/javascripts/modernizr-4ab42b99fd.js"></script>
+    
+  </head>
+  
+  
+  
+  <body class=" ">
+    
+    <div class="backdrop">
+      <div class="backdrop-paper"></div>
+    </div>
+    <input class="toggle" type="checkbox" id="toggle-drawer">
+    <input class="toggle" type="checkbox" id="toggle-search">
+    <label class="toggle-button overlay" for="toggle-drawer"></label>
+    <header class="header">
+      <nav aria-label="Header">
+  <div class="bar default">
+    <div class="button button-menu" role="button" aria-label="Menu">
+      <label class="toggle-button icon icon-menu" for="toggle-drawer">
+        <span></span>
+      </label>
+    </div>
+    <div class="stretch">
+      <div class="title">
+        
+          <span class="path">
+            
+              
+                Features <i class="icon icon-link"></i>
+              
+            
+          </span>
+        
+        Custom Form Fields
+      </div>
+    </div>
+    
+      
+      <div class="button button-twitter" role="button" aria-label="Twitter">
+        <a href="https://twitter.com/bkwld" title="@bkwld on Twitter" target="_blank" class="toggle-button icon icon-twitter"></a>
+      </div>
+    
+    
+      
+      <div class="button button-github" role="button" aria-label="GitHub">
+        <a href="https://github.com/bkwld" title="@bkwld on GitHub" target="_blank" class="toggle-button icon icon-github"></a>
+      </div>
+    
+    <div class="button button-search" role="button" aria-label="Search">
+      <label class="toggle-button icon icon-search" title="Search" for="toggle-search"></label>
+    </div>
+  </div>
+  <div class="bar search">
+    <div class="button button-close" role="button" aria-label="Close">
+      <label class="toggle-button icon icon-back" for="toggle-search"></label>
+    </div>
+    <div class="stretch">
+      <div class="field">
+        <input class="query" type="text" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck>
+      </div>
+    </div>
+    <div class="button button-reset" role="button" aria-label="Search">
+      <button class="toggle-button icon icon-close" id="reset-search"></button>
+    </div>
+  </div>
+</nav>
+    </header>
+    <main class="main">
+      
+      <div class="drawer">
+        <nav aria-label="Navigation">
+  
+  <a href="/" class="project">
+    <div class="banner">
+      
+        <div class="logo">
+          <img src="../images/decoy-logo-placeholder.png">
+        </div>
+      
+      <div class="name">
+        <strong>
+          Decoy 5
+          <span class="version">
+            
+          </span>
+        </strong>
+        
+      </div>
+    </div>
+  </a>
+  <div class="scrollable">
+    <div class="wrapper">
+      
+      <div class="toc">
+        <ul>
+          
+            
+  <li>
+    <a class="" title="Home" href="..">
+      Home
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Setup" href="../setup/">
+      Setup
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Getting Started" href="../getting_started/">
+      Getting Started
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Models" href="../models/">
+      Models
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Views" href="../views/">
+      Views
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <a class="" title="Controllers" href="../controllers/">
+      Controllers
+    </a>
+    
+  </li>
+
+          
+            
+  <li>
+    <span class="section">Features</span>
+    <ul>
+      
+        
+  <li>
+    <a class="current" title="Custom Form Fields" href="./">
+      Custom Form Fields
+    </a>
+    
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="Date" href="#date">
+                Date
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Time" href="#time">
+                Time
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="DateTime" href="#datetime">
+                DateTime
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Note" href="#note">
+                Note
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Wysiwyg" href="#wysiwyg">
+                Wysiwyg
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Upload" href="#upload">
+                Upload
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Image" href="#image">
+                Image
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Video Encoder" href="#video-encoder">
+                Video Encoder
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Belongs To" href="#belongs-to">
+                Belongs To
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Many To Many Checklist" href="#many-to-many-checklist">
+                Many To Many Checklist
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Listing" href="#listing">
+                Listing
+              </a>
+            </li>
+          
+        </ul>
+      
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Elements" href="../elements/">
+      Elements
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Images" href="../images/">
+      Images
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Localization" href="../localization/">
+      Localization
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Model Duplication" href="../model_duplication/">
+      Model Duplication
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Permissions" href="../permissions/">
+      Permissions
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Slugs" href="../slugs/">
+      Slugs
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Validation" href="../validation/">
+      Validation
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Video Encoding" href="../video_encoding/">
+      Video Encoding
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="Workers" href="../workers/">
+      Workers
+    </a>
+    
+  </li>
+
+      
+        
+  <li>
+    <a class="" title="WYSIWYG" href="../wysiwyg/">
+      WYSIWYG
+    </a>
+    
+  </li>
+
+      
+    </ul>
+  </li>
+
+          
+        </ul>
+        
+          <hr>
+          <span class="section">The author</span>
+          <ul>
+            
+              
+              <li>
+                <a href="https://twitter.com/bkwld" target="_blank" title="@bkwld on Twitter">
+                  @bkwld on Twitter
+                </a>
+              </li>
+            
+            
+              
+              <li>
+                <a href="https://github.com/bkwld" target="_blank" title="@bkwld on GitHub">
+                  @bkwld on GitHub
+                </a>
+              </li>
+            
+          </ul>
+        
+      </div>
+    </div>
+  </div>
+</nav>
+      </div>
+      <article class="article">
+        <div class="wrapper">
+          
+            <h1>Custom Form Fields</h1>
+          
+          <p>The following additional fields come with Decoy.  They are implemented through Former so you can chain any of the standard Former method calls onto them like &ldquo;blockhelp&rdquo;, etc.</p>
+<h3 id="date">Date</h3>
+<ul>
+<li>
+<p><code>Former::date()</code></p>
+<ul>
+<li>Create a <a href="http://cl.ly/image/0m1L2H1i3o12">calendar widget</a>.</li>
+<li>Uses <a href="http://www.eyecon.ro/bootstrap-datepicker">bootstrap-datepicker</a> for the UI. If you set the value to <code>'now'</code>, the current date will populate the field``<div class="code"><pre><span></span>!= Former::date(&#39;date&#39;, &#39;Start date&#39;)-&gt;value(&#39;now&#39;`
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="time">Time</h3>
+<ul>
+<li>
+<p><code>Former::time()</code></p>
+<ul>
+<li>Create a time <a href="http://cl.ly/image/22062i19133Y">selector widget</a>.</li>
+<li>Uses <a href="http://jdewit.github.io/bootstrap-timepicker/">bootstrap-timepicker</a> for the UI. If you set the value to <code>'now'</code>, the current date will populate the field.<div class="code"><pre><span></span>!= Former::time(&#39;time&#39;)-&gt;value(&#39;now&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="datetime">DateTime</h3>
+<ul>
+<li>
+<p><code>Former::datetime()</code></p>
+<ul>
+<li>Create a <a href="http://cl.ly/image/3I2G1X1h3s3c">date-time widget</a>, which is like the concatenation of the <code>date()</code> and <code>time()</code> elements.</li>
+<li>You can set attributes of the date and time inputs, respectively, by chaining <code>-&gt;date($attributes)</code> and <code>-&gt;time($attributes)</code> where $attributes is an associative array.</li>
+<li>To access the Former <code>Field</code> instances for each field, access the public properties <code>$date</code> and <code>$time</code>.<div class="code"><pre><span></span>!= Former::datetime(&#39;when&#39;)-&gt;date(array(&#39;data-example&#39;, &#39;Hey&#39;))-&gt;value(&#39;now&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="note">Note</h3>
+<ul>
+<li>
+<p><code>Former::note()</code></p>
+<ul>
+<li>A note field has no actual input elements.  It&rsquo;s a control group with just the passed html value where the inputs would be.<div class="code"><pre><span></span><span class="x">!= Former::note(&#39;Creator&#39;, </span><span class="p">$</span><span class="nv">author</span><span class="x">-&gt;name)</span>
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="wysiwyg">Wysiwyg</h3>
+<ul>
+<li>
+<p><code>Former::wysiwyg()</code></p>
+<ul>
+<li>Create a textarea that will be wrapped in a WYSIWYG editor by Decoy JS.<div class="code"><pre><span></span>!= Former::wysiwyg(&#39;body&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="upload">Upload</h3>
+<ul>
+<li>
+<p><code>Former::upload()</code></p>
+<ul>
+<li>Creates a <a href="http://cl.ly/image/1a0q0C0p3V3y">file upload field</a> with addtional UI for reviewing the last upload and deleting it.<div class="code"><pre><span></span>!= Former::upload(&#39;file&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="image">Image</h3>
+<ul>
+<li>
+<p><code>Former::image()</code></p>
+<ul>
+<li>Creates an image upload with additional UI for reviewing the last upload, cropping it, setting the focal point, entering a title, and deleting it.</li>
+<li>Specify aspect ratio fro cropping tool with <code>aspect(number)</code></li>
+<li>Add focal point selection UI by chaining <code>addFocalPoint()</code><div class="code"><pre><span></span>!= Former::image(&#39;image&#39;, &#39;Profile image&#39;)-&gt;aspect(16/9)-&gt;addFocalPoint()
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="video-encoder">Video Encoder</h3>
+<ul>
+<li>
+<p><code>Former::videoEncoder()</code></p>
+<ul>
+<li>Creates a <a href="http://yo.bkwld.com/image/1R3V1T2o1R1P">video upload field</a> with addtional UI for checking the progress of the encoding and then playing back the video.</li>
+<li>Review the feature on Encoding from this doc for more information on the setup of the video encoding feature of Decoy.<div class="code"><pre><span></span>!= Former::videoEncoder(&#39;video&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="belongs-to">Belongs To</h3>
+<ul>
+<li>
+<p><code>Former::belongsTo()</code></p>
+<ul>
+<li>Creates an <a href="http://cl.ly/image/2e3D3E2o2U2K">autocomplete field</a> that populates a foreign key in a belongs to relationship.</li>
+<li>You must chain either <code>route($route)</code> or <code>parent($model)</code> to provide the route that can be AJAX GET requested to serve data to the autocomplete.</li>
+<li>If you want to prepopulate, chain, for example, <code>-&gt;value(2)-&gt;title("Example")</code>.<div class="code"><pre><span></span>!= Former::belongsTo(&#39;related_product_id&#39;, &#39;Related product&#39;)-&gt;route(&#39;/admin/products&#39;)
+!= Former::belongsTo(&#39;related_product_id&#39;, &#39;Related product&#39;)-&gt;parent(App\Project::class)
+!= Former::belongsTo(&#39;author_id&#39;, &#39;Author&#39;)-&gt;route(&#39;/admin/admins&#39;)-&gt;value(app(&#39;decoy.user&#39;)-&gt;id)-&gt;title(app(&#39;decoy.user&#39;)-&gt;getAdminTitleAttribute())
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="many-to-many-checklist">Many To Many Checklist</h3>
+<ul>
+<li>
+<p><code>Former::manyToManyChecklist()</code></p>
+<ul>
+<li>Render a <a href="http://cl.ly/image/0b2w0J312z2i">list of checkboxes</a> to represent a related many-to-many table.  The underlying Former field <code>type</code> is a checkbox.</li>
+<li>The relationship name is stored in the field <code>name</code>.  This is the name of the relationship method that is defined on the model that is currently being edited in Decoy.</li>
+<li>You may adjust the query that fetches related objects by passing a <code>callable</code> to <code>scope()</code> which will recieve the query (an <code>Illuminate\Database\Eloquent\Builder</code> instance) as it&rsquo;s first argument.</li>
+<li>You can display the results in two columns rather than one by chaining <code>addGroupClass('two-col')</code></li>
+<li>You can chain <code>decorator($callable)</code> to pass a function that recieves each checkboxes HTML and model instance and expects you to return transformed HTML for the checkbox.<div class="code"><pre><span></span><span class="nd">:php</span>
+    <span class="nt">echo</span> <span class="nt">Former</span><span class="o">:</span><span class="nd">:manyToManyChecklist</span><span class="o">(</span><span class="s1">&#39;hubs&#39;</span><span class="o">)</span>
+        <span class="nt">-</span><span class="o">&gt;</span><span class="nt">scope</span><span class="o">(</span><span class="nt">function</span><span class="o">($</span><span class="nt">query</span><span class="o">)</span> <span class="nt">use</span> <span class="o">($</span><span class="nt">product</span><span class="o">)</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="err">$</span><span class="n">query</span><span class="o">-&gt;</span><span class="n">where</span><span class="p">(</span><span class="s1">&#39;product_id&#39;</span><span class="o">,</span> <span class="s1">&#39;=&#39;</span><span class="o">,</span> <span class="err">$</span><span class="n">product</span><span class="o">-&gt;</span><span class="n">id</span><span class="p">);</span>
+        <span class="p">}</span><span class="o">)</span><span class="nt">-</span><span class="o">&gt;</span><span class="nt">decorator</span><span class="o">(</span><span class="nt">function</span><span class="o">($</span><span class="nt">html</span><span class="o">,</span> <span class="o">$</span><span class="nt">model</span><span class="o">)</span> <span class="p">{</span>
+            <span class="n">return</span> <span class="err">$</span><span class="n">html</span><span class="o">.</span><span class="n">Form</span><span class="o">::</span><span class="nb">hidden</span><span class="p">(</span><span class="s1">&#39;key&#39;</span><span class="o">,</span> <span class="s1">&#39;val&#39;</span><span class="p">);</span>
+        <span class="p">}</span><span class="o">);</span>
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="listing">Listing</h3>
+<ul>
+<li>
+<p><code>Former::listing()</code></p>
+<ul>
+<li>Creates an table of model instances like shown in Decoy&rsquo;s index view.  The <code>name</code> for the field should be the model class that is being rendered.  Like <code>Article</code>.</li>
+<li><code>controller()</code> specifies the controller name if it can&rsquo;t be automatically determined.  You may also pass it an instance of a controller class.</li>
+<li><code>items()</code> stores a collection of model instances to display in the list.  This is optional, <code>listing()</code> will try and make a query using the model name to form a query.</li>
+<li><code>layout()</code> allows you to specify the layout.  This is automatically set when passing a <code>Listing</code> instance to <code>$sidebar-&gt;add()</code> from a view.<ul>
+<li><code>full</code> - A full width view like shown on Decoy&rsquo;s index view.</li>
+<li><code>sidebar</code> - A narrow view like shown in an edit view&rsquo;s related column.</li>
+<li><code>form</code> - A full width view designed to be show in a horizontal form.</li>
+</ul>
+</li>
+<li><code>take()</code> - A integer; how many rows to display.</li>
+<li><code>scope()</code> - You may adjust the query that fetches related objects by passing a <code>callable</code> to <code>scope()</code> which will recieve the query (an <code>Illuminate\Database\Eloquent\Builder</code> instance) as it&rsquo;s first argument.<div class="code"><pre><span></span>!= Former::listing(&#39;Author&#39;)-&gt;take(30)-&gt;layout(&#39;form&#39;)
+</pre></div>
+
+
+</li>
+</ul>
+</li>
+</ul>
+          <aside class="copyright" role="note">
+            
+            Documentation built with
+            <a href="http://www.mkdocs.org" target="_blank">MkDocs</a>
+            using the
+            <a href="http://squidfunk.github.io/mkdocs-material/" target="_blank">
+              Material
+            </a>
+            theme.
+          </aside>
+          
+            <footer class="footer">
+              
+  <nav class="pagination" aria-label="Footer">
+    <div class="previous">
+      
+        <a href="../controllers/" title="Controllers">
+          <span class="direction">
+            Previous
+          </span>
+          <div class="page">
+            <div class="button button-previous" role="button" aria-label="Previous">
+              <i class="icon icon-back"></i>
+            </div>
+            <div class="stretch">
+              <div class="title">
+                Controllers
+              </div>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+    <div class="next">
+      
+        <a href="../elements/" title="Elements">
+          <span class="direction">
+            Next
+          </span>
+          <div class="page">
+            <div class="stretch">
+              <div class="title">
+                Elements
+              </div>
+            </div>
+            <div class="button button-next" role="button" aria-label="Next">
+              <i class="icon icon-forward"></i>
+            </div>
+          </div>
+        </a>
+      
+    </div>
+  </nav>
+
+            </footer>
+          
+        </div>
+      </article>
+      <div class="results" role="status" aria-live="polite">
+        <div class="scrollable">
+          <div class="wrapper">
+            <div class="meta"></div>
+            <div class="list"></div>
+          </div>
+        </div>
+      </div>
+    </main>
+    <script>
+      var base_url = '..';
+      var repo_id  = '';
+    </script>
+    <script src="../assets/javascripts/application-997097ee0c.js"></script>
+    
+    
+  </body>
+</html>

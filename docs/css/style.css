@@ -1,0 +1,46 @@
+.header, .footer, body {
+  background: #947cb0;
+}
+
+@media only screen and (max-width: 959px) {
+  .project {
+    background: #947cb0;
+  }
+}
+
+.article h1, .article a, .article h2 {
+  color: #947cb0;
+}
+
+.drawer .toc a.current, .drawer .toc a:focus, .drawer .toc a:hover {
+  color: #947cb0;
+}
+
+.drawer .anchor a {
+  border-left-color: #947cb0;
+}
+
+.backdrop {
+  background: white;
+}
+
+.copyright {
+  opacity: 0;
+}
+
+.article li .code pre {
+  margin: 1.5em -24px 0 -41px;
+}
+
+.article code pre {
+  margin: 1.5em -24px 0;
+}
+
+@media(min-width: 961px) {
+
+  .backdrop-paper:after {
+    box-shadow: none;
+    border-right: 1px solid rgba(0,0,0,0.1);
+    border-left: 1px solid rgba(0,0,0,0.1);
+  }
+}
