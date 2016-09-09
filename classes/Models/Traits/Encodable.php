@@ -96,6 +96,16 @@ trait Encodable {
 	}
 
 	/**
+	 * Get the value of an encoding preset given the encoding attribute
+	 *
+	 * @param  string $attribute
+	 * @return string
+	 */
+	public function encodingPresetInputVal($attribute) {
+		return request($this->encodingPresetInputKey($attribute));
+	}
+
+	/**
 	 * Make the encoding preset input key for an encodable attribute
 	 *
 	 * @param  string $attribute
@@ -154,7 +164,7 @@ trait Encodable {
 			if ($key) $model->setAttribute($this->getKeyName(), $key);
 
 			// Create the new encoding
-			$this->encode($attribute, $this->encodingPresetFromInput($attribute));
+			$this->encode($attribute, $this->encodingPresetInputVal($attribute));
 		});
 	}
 
@@ -163,7 +173,7 @@ trait Encodable {
 	 * source.  The deleting happens automatically onCreating.
 	 *
 	 * @param string $attribute The attribute on the model to use as source
-	 * @param string $preset   The output config key
+	 * @param string $preset    The output config key
 	 * @return Encoding         The new output instance
 	 */
 	public function encode($attribute, $preset) {
