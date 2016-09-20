@@ -3,6 +3,9 @@
 // --------------------------------------------------
 define(function (require) {
 
+	// Load CSS, which will get extacted into own file
+	require('sass/_decoy.scss');
+
 	// Dependencies
 	var $ = require('jquery')
 		, _ = require('lodash')
