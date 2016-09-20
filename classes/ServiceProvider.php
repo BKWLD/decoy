@@ -74,6 +74,11 @@ class ServiceProvider extends BaseServiceProvider {
 			__DIR__.'/../migrations/' => database_path('migrations')
 		], 'migrations');
 
+		// Publish decoy css and js to public directory
+		$this->publishes([
+			__DIR__.'/../dist' => public_path('assets/decoy')
+		], 'assets');
+
 		// Register views
 		$this->loadViewsFrom(__DIR__.'/../views', 'decoy');
 
