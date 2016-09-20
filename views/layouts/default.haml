@@ -17,7 +17,7 @@
 		%meta(name='csrf-token' content=csrf_token())
 
 		-# Stylesheets
-		!= Layout::webpackAssetTag('admin.css')
+		%link(rel="stylesheet" href=config('decoy.core.stylesheet') type="text/css")
 
 	%body(class=Decoy::bodyClass())
 
@@ -33,4 +33,4 @@
 		#main!= $content
 
 		-# JS
-		!= Layout::webpackAssetTag('admin.js')
+		%script(src=config('decoy.core.script') type="text/javascript")

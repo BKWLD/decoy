@@ -26,4 +26,10 @@
 	// want them to get trampled by the Decoy wildcard capture.
 	'register_routes' => true,
 
+	'stylesheet' => '/assets/decoy/index.css',
+	'script' => '/assets/decoy/index.js',
+
+	// Put me in Camo install docs
+	// 'stylesheet' => app('camo.layout')->webpackAssetUrl('admin.css'),
+
 );
