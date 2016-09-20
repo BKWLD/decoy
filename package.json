@@ -7,7 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node_modules/.bin/webpack && node_modules/.bin/webpack -p",
+    "version": "npm run build && git add -A",
+    "postversion": "git push --follow-tags"
   },
   "repository": {
     "type": "git",
@@ -39,5 +42,34 @@
     "raf": "^3",
     "toggleable": "bkwld/toggleable",
     "typeahead.js": "^0"
+  },
+  "devDependencies": {
+    "apply-loader": "^0",
+    "assets-webpack-plugin": "^3.2.0",
+    "autoprefixer": "^6.2.0",
+    "coffee-loader": "^0",
+    "coffee-script": "^1.10.0",
+    "css-loader": "^0",
+    "exports-loader": "^0",
+    "expose-loader": "^0",
+    "extract-text-webpack-plugin": "^0",
+    "file-loader": "^0",
+    "haml-loader": "^0",
+    "html-loader": "^0",
+    "image-webpack-loader": "^1.6.2",
+    "img-loader": "^1.2.0",
+    "import-glob-loader": "^1.1.0",
+    "imports-loader": "^0",
+    "lodash": "^3.10.1",
+    "moment": "^2.10.6",
+    "node-sass": "^3.4.2",
+    "postcss-loader": "^0",
+    "prepend-string-loader": "rsboarder/prepend-string-loader",
+    "sass-loader": "^3.1.2",
+    "style-loader": "^0",
+    "template-html-loader": "0.0.3",
+    "url-loader": "^0",
+    "webpack": "^1.12.3",
+    "webpack-notifier": "^1.2.1"
   }
 }
