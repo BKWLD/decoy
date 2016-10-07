@@ -37,7 +37,7 @@
 		"cviebrock/eloquent-sluggable": "~3.0",
 		"illuminate/support": "^5.1",
 		"illuminate/console": "^5.1",
-		"symfony/yaml": "~2.5",
+		"symfony/yaml": "~2.5 || ^3.0",
 		"zencoder/zencoder-php": "~2.2",
 		"jenssegers/agent": "~2.1"
 	},
