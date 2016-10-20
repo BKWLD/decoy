@@ -103,7 +103,7 @@ define(function (require) {
 
 	// --------------------------------------------------
 	// DOM ready
-	app.on('ready', function () {
+	app.init = function() {
 
 		// Initalize views
 		app.initalizeViews(manifest);
@@ -131,7 +131,10 @@ define(function (require) {
 		// Enable affix globally
 		$('.affixable').views(Affixable);
 
-	});
+	};
+
+	// Deprecated method of init-ing Decoy
+	app.on('ready', app.init);
 
 	// Return public module
 	return app;

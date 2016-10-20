@@ -7,23 +7,27 @@ Crop = require "./crop"
 
 module.exports = Backbone.View.extend
 
-  initialize: (options) ->
-    _.bindAll @
+	initialize: (options) ->
+		_.bindAll @
 
-    @preview = new Preview { el: @el, parent: @ }
-    @crop = new Crop { el: @$('img.source') }
+		@preview = new Preview { el: @el, parent: @ }
+		@crop = new Crop { el: @$('img.source') }
 
-    @preview.on 'previewImage', @onPreviewImage
-    @preview.on 'deleteImage', @onDeleteImage
-    return
+		@preview.on 'previewImage', @onPreviewImage
+		@preview.on 'deleteImage', @onDeleteImage
 
-  onPreviewImage: () ->
-    @crop.destroy()
-    @crop.initialize()
-    return
+		# If on Elements, (or any Boostrap tab UI), try to re-init jcrop when
+		# switching pages. I'm listening to Boostrap's events here.
+		$('a[data-toggle="tab"]').on 'shown.bs.tab', (e) => @crop.init()
+		return
 
-  onDeleteImage: () ->
-    @crop.destroy()
-    @crop.initialize()
-    @crop.clear()
-    return
+	onPreviewImage: () ->
+		@crop.destroy()
+		@crop.initialize()
+		return
+
+	onDeleteImage: () ->
+		@crop.destroy()
+		@crop.initialize()
+		@crop.clear()
+		return

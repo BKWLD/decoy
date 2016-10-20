@@ -79,11 +79,11 @@ class Router {
 	 */
 	public function registerLogin() {
 		Route::get('/', ['as' => 'decoy::account@login',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogin']);
+			'uses' => '\Bkwld\Decoy\Controllers\Login@getLogin']);
 		Route::post('/', ['as' => 'decoy::account@postLogin',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@postLogin']);
+			'uses' => '\Bkwld\Decoy\Controllers\Login@postLogin']);
 		Route::get('logout', ['as' => 'decoy::account@logout',
-			'uses' => 'Bkwld\Decoy\Controllers\Login@getLogout']);
+			'uses' => '\Bkwld\Decoy\Controllers\Login@getLogout']);
 	}
 
 	/**
@@ -93,13 +93,13 @@ class Router {
 	 */
 	public function registerResetPassword() {
 		Route::get('forgot', ['as' => 'decoy::account@forgot',
-			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@getEmail']);
+			'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@getEmail']);
 		Route::post('forgot', ['as' => 'decoy::account@postForgot',
-			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@postEmail']);
+			'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@postEmail']);
 		Route::get('reset/{code}', ['as' => 'decoy::account@reset',
-			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@getReset']);
+			'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@getReset']);
 		Route::post('reset/{code}', ['as' => 'decoy::account@postReset',
-			'uses' => 'Bkwld\Decoy\Controllers\ResetPassword@postReset']);
+			'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@postReset']);
 	}
 
 	/**
@@ -136,9 +136,9 @@ class Router {
 	 */
 	public function registerAdmins() {
 		Route::get('admins/{id}/disable', ['as' => 'decoy::admins@disable',
-			'uses' => 'Bkwld\Decoy\Controllers\Admins@disable']);
+			'uses' => '\Bkwld\Decoy\Controllers\Admins@disable']);
 		Route::get('admins/{id}/enable', ['as' => 'decoy::admins@enable',
-			'uses' => 'Bkwld\Decoy\Controllers\Admins@enable']);
+			'uses' => '\Bkwld\Decoy\Controllers\Admins@enable']);
 	}
 
 	/**
@@ -148,9 +148,9 @@ class Router {
 	 */
 	public function registerCommands() {
 		Route::get('commands', ['as' => 'decoy::commands',
-			'uses' => 'Bkwld\Decoy\Controllers\Commands@index']);
+			'uses' => '\Bkwld\Decoy\Controllers\Commands@index']);
 		Route::post('commands/{command}', ['as' => 'decoy::commands@execute',
-			'uses' => 'Bkwld\Decoy\Controllers\Commands@execute']);
+			'uses' => '\Bkwld\Decoy\Controllers\Commands@execute']);
 	}
 
 	/**
@@ -160,9 +160,9 @@ class Router {
 	 */
 	public function registerWorkers() {
 		Route::get('workers', ['as' => 'decoy::workers',
-			'uses' => 'Bkwld\Decoy\Controllers\Workers@index']);
+			'uses' => '\Bkwld\Decoy\Controllers\Workers@index']);
 		Route::get('workers/tail/{worker}', ['as' => 'decoy::workers@tail',
-			'uses' => 'Bkwld\Decoy\Controllers\Workers@tail']);
+			'uses' => '\Bkwld\Decoy\Controllers\Workers@tail']);
 	}
 
 	/**
@@ -172,7 +172,7 @@ class Router {
 	 */
 	public function registerEncode() {
 		Route::get('encode/{id}/progress', ['as' => 'decoy::encode@progress',
-			'uses' => 'Bkwld\Decoy\Controllers\Encoder@progress']);
+			'uses' => '\Bkwld\Decoy\Controllers\Encoder@progress']);
 	}
 
 	/**
@@ -182,13 +182,13 @@ class Router {
 	 */
 	public function registerElements() {
 		Route::get('elements/field/{key}', ['as' => 'decoy::elements@field',
-			'uses' => 'Bkwld\Decoy\Controllers\Elements@field']);
+			'uses' => '\Bkwld\Decoy\Controllers\Elements@field']);
 		Route::post('elements/field/{key}', ['as' => 'decoy::elements@field-update',
-			'uses' => 'Bkwld\Decoy\Controllers\Elements@fieldUpdate']);
+			'uses' => '\Bkwld\Decoy\Controllers\Elements@fieldUpdate']);
 		Route::get('elements/{locale?}/{tab?}', ['as' => 'decoy::elements',
-			'uses' => 'Bkwld\Decoy\Controllers\Elements@index']);
+			'uses' => '\Bkwld\Decoy\Controllers\Elements@index']);
 		Route::post('elements/{locale?}/{tab?}', ['as' => 'decoy::elements@store',
-			'uses' => 'Bkwld\Decoy\Controllers\Elements@store']);
+			'uses' => '\Bkwld\Decoy\Controllers\Elements@store']);
 	}
 
 	/**
@@ -198,7 +198,7 @@ class Router {
 	 * @return void
 	 */
 	public function registerRedactor() {
-		Route::post('redactor', 'Bkwld\Decoy\Controllers\Redactor@store');
+		Route::post('redactor', '\Bkwld\Decoy\Controllers\Redactor@store');
 	}
 
 	/**
@@ -208,13 +208,13 @@ class Router {
 	 */
 	public function registerExternalEndpoints() {
 		Route::post('encode/notify', ['as' => 'decoy::encode@notify',
-			'uses' => 'Bkwld\Decoy\Controllers\Encoder@notify']);
+			'uses' => '\Bkwld\Decoy\Controllers\Encoder@notify']);
 	}
 
 	/**
 	 * Set and get the action for this request
 	 *
-	 * @return string 'Bkwld\Decoy\Controllers\Account@forgot'
+	 * @return string '\Bkwld\Decoy\Controllers\Account@forgot'
 	 */
 	public function action($name = null) {
 		if ($name) $this->action = $name;

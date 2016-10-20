@@ -113,6 +113,10 @@ class Admin extends Base implements
 		if (($admin = app('decoy.user'))
 			&& !app('decoy.user')->can('grant', 'admins')) {
 			$this->role = $admin->role;
+			
+		// Otherwise, give the admin a default role if none was defined
+		} else if (empty($this->role)) {
+			$this->role = 'admin';
 		}
 	}
 

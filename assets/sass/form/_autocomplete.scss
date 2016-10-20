@@ -1,5 +1,5 @@
 // Make autocompletes go above header-z-ed items, like the `.form-actions`.  This
-// fixes cases where there is an autocomplete at the bototm of a form
+// fixes cases where there is an autocomplete at the bottom of a form
 .tt-dropdown-menu {
 	z-index: $header-z + 1 !important;
 }
@@ -7,4 +7,23 @@
 // Reduce padding on autocomplete
 .tt-dropdown-menu .tt-suggestion {
 	padding: 4px 12px;
+}
+
+// Fix positioning of autocomplets
+.many-to-many-form .tt-menu {
+	left: auto !important;
+	right: 0 !important;
+}
+
+// Prevent the typeahead from creating a 1px line between the header row
+// and the table in the results
+// http://yo.bkwld.com/1X1v1r0P0F41
+.many-to-many-form .twitter-typeahead {
+	margin-bottom: -1px;
+}
+
+// This min-width is eyeballed to be the biggest width the menu can be and still
+// fit within the "related" sidebar before the layout breaks to have no sidebar
+.tt-dropdown-menu, .tt-menu {
+	min-width: 275px;
 }

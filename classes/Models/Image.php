@@ -307,7 +307,7 @@ class Image extends Base {
 	 * @return string
 	 */
 	public function getBackgroundPositionAttribute() {
-		if (!$value = $this->getBackgroundPositionAttribute()) return;
+		if (!$value = $this->getBkgdPosAttribute()) return;
 		return sprintf('background-position: %s;', $value);
 	}
 
