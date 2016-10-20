@@ -6,6 +6,7 @@ use Bkwld\Decoy\Models\Admin;
 use Decoy;
 use Illuminate\Foundation\Auth\ResetsPasswords;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Former;
 
 /**
@@ -96,5 +97,21 @@ class ResetPassword extends Base {
 	 */
 	public function redirectPath() {
 		return route('decoy::account@login');
+	}
+
+	/**
+	 * Subclass the resetPassword method so that it doesn't `bcrypt()` the
+	 * password.  We're trusting to the model's onSaving callback for this.
+	 *
+	 * @param  \Illuminate\Contracts\Auth\CanResetPassword  $user
+	 * @param  string  $password
+	 * @return void
+	 */
+	protected function resetPassword($user, $password) {
+		$user->forceFill([
+			'password' => $password,
+			'remember_token' => Str::random(60),
+		])->save();
+		Auth::guard($this->getGuard())->login($user);
 	}
 }
