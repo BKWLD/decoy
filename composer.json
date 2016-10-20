@@ -49,10 +49,6 @@
     {
 			"type": "vcs",
 			"url":  "git@github.com:BKWLD/camo.git"
-		},
-		{
-			"type": "vcs",
-			"url": "git@github.com:weotch/former.git"
 		}
 	],
 	"conflict": {
