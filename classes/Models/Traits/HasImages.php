@@ -19,6 +19,11 @@ trait HasImages {
 	 */
 	public static function bootHasImages() {
 
+		// Automatically add images relationship to the cleoneable relations
+		static::booted(function($model) {
+			$model->addCloneableRelation('images');
+		});
+
 		// Delete all Images if the parent is deleted.  Need to use "each" to get
 		// the Image deleted events to fire.
 		static::deleted(function($model) {
