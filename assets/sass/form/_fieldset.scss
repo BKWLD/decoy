@@ -64,14 +64,6 @@ fieldset, .fieldset {
 		.legend { margin: 0; }
 		.listing { margin-bottom: 0;}
 
-		// Make sure the table fills the whole container, without this there are
-		// subpixel errors and the header bkgd color doesn't span fully
-		overflow-x: hidden;
-		.listing {
-			width: calc(100% + 1px);
-			max-width: none;
-		}
-
 		// Put padding on the cells so that the normal fieldset padding looks
 		// maintained
 		th:first-child, td:first-child { padding-left: $form-group-margin; }
@@ -89,6 +81,16 @@ fieldset, .fieldset {
 				color:  $color;
 				border-bottom-color: $color;
 			}
+		}
+
+		// In the related sidebar, subpixel rounding issues in browsers result in
+		// 1px of white (from the bkgd) showing up to the right of the table at
+		// some browser widths.  So this makes the table a smidge bigger so the
+		// bckground of the table header is always full bleed.
+		overflow: hidden;
+		.table {
+			width: calc(100% + 1px);
+			max-width: none;
 		}
 
 	}
