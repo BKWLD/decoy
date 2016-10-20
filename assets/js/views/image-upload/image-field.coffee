@@ -7,23 +7,23 @@ Crop = require "./crop"
 
 module.exports = Backbone.View.extend
 
-  initialize: (options) ->
-    _.bindAll @
+	initialize: (options) ->
+		_.bindAll @
 
-    @preview = new Preview { el: @el, parent: @ }
-    @crop = new Crop { el: @$('img.source') }
+		@preview = new Preview { el: @el, parent: @ }
+		@crop = new Crop { el: @$('img.source') }
 
-    @preview.on 'previewImage', @onPreviewImage
-    @preview.on 'deleteImage', @onDeleteImage
-    return
+		@preview.on 'previewImage', @onPreviewImage
+		@preview.on 'deleteImage', @onDeleteImage
+		return
 
-  onPreviewImage: () ->
-    @crop.destroy()
-    @crop.initialize()
-    return
+	onPreviewImage: () ->
+		@crop.destroy()
+		@crop.initialize()
+		return
 
-  onDeleteImage: () ->
-    @crop.destroy()
-    @crop.initialize()
-    @crop.clear()
-    return
+	onDeleteImage: () ->
+		@crop.destroy()
+		@crop.initialize()
+		@crop.clear()
+		return

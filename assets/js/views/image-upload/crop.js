@@ -7,8 +7,8 @@ define(function (require) {
 	var $ = require('jquery'),
 		_ = require('underscore'),
 		Backbone = require('backbone');
-	  require('jcrop');
-	  require('imagesloaded');
+		require('jcrop');
+		require('imagesloaded');
 
 	// Define a backbone view for each image
 	var Crop = Backbone.View.extend({
@@ -42,9 +42,9 @@ define(function (require) {
 			var ratio = this.$upload.data('aspect-ratio');
 			this.ratio = ratio;
 
-			// Listen for window resizing as a way to check whether the img has been resized
-			// since it resizes responsively.  We listen on the leading edge for the start
-			// and the tailing edge for the end
+			// Listen for window resizing as a way to check whether the img has been
+			// resized since it resizes responsively.	We listen on the leading edge
+			// for the start and the tailing edge for the end
 			var $window = $(window), delay = 400;
 			$window.resize(_.debounce(this.destroy, delay, true));
 			$window.resize(_.debounce(this.init, delay, false));
@@ -59,9 +59,9 @@ define(function (require) {
 		// Add jcrop to the element
 		init: function() {
 
-			// Only init once and only add jcrop if the image is visible.  Otherwise, it will
-			// wait until it is first activated by the style tabs.  It needs to be visible
-			// so the size can be measured correctly
+			// Only init once and only add jcrop if the image is visible.	Otherwise,
+			// it will  wait until it is first activated by the style tabs.	It needs
+			// to be visible so the size can be measured correctly
 			if (this.initted || !this.visible()) return;
 			this.initted = true;
 
@@ -177,8 +177,8 @@ define(function (require) {
 		// Perist the user's selection
 		select: function(c) {
 
-			// Convert the coordinates from jcrop into percentages.  It may be undefined if the user
-			// cleared the crop
+			// Convert the coordinates from jcrop into percentages.	It may be
+			// undefined if the user cleared the crop
 			if (c) c = this.convert_to_perc(c);
 
 			// Add the coordinates to the input's value
@@ -202,10 +202,10 @@ define(function (require) {
 			return this.$el.is(":visible");
 		},
 
-		// Convert the coordinates from jcrop into percentages.  So an x value of 10
-		// in a 100px wide image would become .1.  This is done because Croppa will already
-		// be serving an image that is resized from it's source, so a perc offset
-		// is the only thing that will be useful.
+		// Convert the coordinates from jcrop into percentages.	So an x value of 10
+		// in a 100px wide image would become .1.	This is done because Croppa will
+		// already be serving an image that is resized from it's source, so a perc
+		// offset  is the only thing that will be useful.
 		convert_to_perc: function(c) {
 			return {
 				x1 : c.x / this.width,
