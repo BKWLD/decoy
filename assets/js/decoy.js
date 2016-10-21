@@ -28,9 +28,13 @@ define(function (require) {
 	require('./modules/chicken-switch').register(); // Enable chicken switches on delete
 
 	// Private static vars
-	var app = _.extend({}, Backbone.Events),
-		$body = $('body'),
-		$doc = $(document);
+	var app = _.extend({}, Backbone.Events)
+		, $body = $('body')
+		, $doc = $(document)
+	;
+
+	// Modules that get exposed for public configuration
+	app.wysiwyg =require('./wysiwyg/factory');
 
 	// --------------------------------------------------
 	// Pre-ready init
@@ -126,7 +130,7 @@ define(function (require) {
 		});
 
 		// Turn WYSIWYGs on.
-		require('./wysiwyg/factory').init('textarea.wysiwyg');
+		app.wysiwyg.init('textarea.wysiwyg');
 
 		// Enable affix globally
 		$('.affixable').views(Affixable);
