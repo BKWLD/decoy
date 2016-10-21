@@ -1,3 +1,7 @@
+# Inspect how webpack is being run
+minify = '-p' in process.argv # Compiling for production
+
+# Deps
 webpack      = require 'webpack'
 autoprefixer = require 'autoprefixer'
 moment       = require 'moment'
@@ -10,19 +14,28 @@ autoprefixerBrowsers = [
   'ie >= 9'
 ]
 
+# Webpack configuration
 module.exports =
 
   # Set the dir to look for entry files
   context: "#{process.cwd()}/assets"
 
-  entry:
-    index: 'js/decoy.js'
+  # When minifying, use the autorunning entry point.  Otherwise, return the main
+  # Decoy module that has a public API for configuration.
+  entry: index: if minify then 'js/index.js' else 'js/decoy.js'
 
+  # Where to put the files
   output:
     path:          "./dist"
     publicPath:    '/assets/decoy/'
-    filename:      '[name].js'
-    chunkFilename: '[id].js'
+    filename:      if minify then '[name].[hash:8].js' else '[name].js'
+		chunkFilename: if minify then '[id].[hash:8].js' else '[id].js'
+
+    # Make a UMD module
+    library: 'decoy'
+    libraryTarget: 'umd'
+		umdNamedDefine: true
+
 
   # ##############################################################################
   # Resolve - Where to find files
@@ -128,11 +141,13 @@ module.exports =
   # ############################################################################
   # module:
   plugins: [
+
     # Required config for ExtractText to tell it what to name css files. Setting
-    # "allChunks" so that CSS referenced in chunked code splits still show up
-    # in here. Otherwise, we would need webpack to DOM insert the styles on
-    # which doesn't play nice with sourcemaps.
-    new ExtractText ('[name].css'), allChunks: true
+  	# "allChunks" so that CSS referenced in chunked code splits still show up
+  	# in here. Otherwise, we would need webpack to DOM insert the styles on
+  	# which doesn't play nice with sourcemaps.
+  	new ExtractText (if minify then '[name].[hash:8].css' else '[name].css'),
+  		allChunks: true
 
     # Add some branding to all compiled JS files
     new webpack.BannerPlugin "📝 Bukwild 💾 #{moment().format('M.D.YY')} 👍"
