@@ -20,7 +20,7 @@ trait HasImages {
 	public static function bootHasImages() {
 
 		// Automatically add images relationship to the cleoneable relations
-		static::booted(function($model) {
+		static::registerModelEvent('booted', function($model) {
 			$model->addCloneableRelation('images');
 		});
 

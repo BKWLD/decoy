@@ -5,35 +5,35 @@
 	"authors": [
 		{
 			"name": "Robert Reinhard",
-			"email": "info@bkwld.com"
+			"email": "info@bukwild.com"
 		},
 		{
 			"name": "Aaron Nunley",
-			"email": "info@bkwld.com"
+			"email": "info@bukwild.com"
 		},
 		{
 			"name": "Matt Aebersold",
-			"email": "info@bkwld.com"
+			"email": "info@bukwild.com"
 		},
 		{
 			"name": "Eric Howard",
-			"email": "info@bkwld.com"
+			"email": "info@bukwild.com"
 		},
 		{
 			"name": "Michael Starks",
-			"email": "info@bkwld.com"
+			"email": "info@bukwild.com"
 		}
 	],
 	"require": {
 		"php": ">=5.4.0",
-		"anahkiasen/former": "dev-populate-eloquent-collection as 4.0.3",
+		"weotch/former": "^4.0.7",
 		"anahkiasen/html-object": "~1.3",
 		"bkwld/camo": "^3.0",
 		"bkwld/cloner": "^3.1.1",
 		"bkwld/croppa": "~4.0",
 		"bkwld/laravel-haml": "~2.0",
 		"bkwld/library": "dev-master",
-		"bkwld/upchuck": "^2.0@dev",
+		"bkwld/upchuck": "^2.0.1",
 		"cviebrock/eloquent-sluggable": "~3.0",
 		"illuminate/support": "^5.1",
 		"illuminate/console": "^5.1",
@@ -49,10 +49,6 @@
     {
 			"type": "vcs",
 			"url":  "git@github.com:BKWLD/camo.git"
-		},
-		{
-			"type": "vcs",
-			"url": "git@github.com:weotch/former.git"
 		}
 	],
 	"conflict": {
