@@ -4,8 +4,7 @@ docs_dir: 'src-docs'
 site_dir: 'docs'
 
 pages:
-  - Home: index.md
-  - Setup: setup.md
+  - Setup: index.md
   - Getting Started: getting_started.md
   - Models: models.md
   - Views: views.md
@@ -22,6 +21,7 @@ pages:
     - Video Encoding: video_encoding.md
     - Workers: workers.md
     - WYSIWYG: wysiwyg.md
+  - Contribute: contribute.md
 
 theme: 'material'
 extra:

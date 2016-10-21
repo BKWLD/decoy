@@ -158,23 +158,34 @@
           
             
   <li>
-    <a class="current" title="Home" href=".">
-      Home
-    </a>
-    
-      
-        
-      
-      
-    
-  </li>
-
-          
-            
-  <li>
-    <a class="" title="Setup" href="setup/">
+    <a class="current" title="Setup" href=".">
       Setup
     </a>
+    
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="Compatibility" href="#compatibility">
+                Compatibility
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Version history" href="#version-history">
+                Version history
+              </a>
+            </li>
+          
+            <li class="anchor">
+              <a title="Installation" href="#installation">
+                Installation
+              </a>
+            </li>
+          
+        </ul>
+      
     
   </li>
 
@@ -323,6 +334,15 @@
   </li>
 
           
+            
+  <li>
+    <a class="" title="Contribute" href="contribute/">
+      Contribute
+    </a>
+    
+  </li>
+
+          
         </ul>
         
           <hr>
@@ -354,7 +374,31 @@
       <article class="article">
         <div class="wrapper">
           
-          <h1 id="hello">Hello</h1>
+            <h1>Decoy 5</h1>
+          
+          <h2 id="compatibility">Compatibility</h2>
+<p>Decoy is tested to support:</p>
+<ul>
+<li>Latest Chrome (recommended)</li>
+<li>Latest Firefox</li>
+<li>Latest Safari</li>
+<li>IE 10+</li>
+<li>iOS 8 Safari on iPhone and iPad</li>
+<li>Latest Android Chrome</li>
+</ul>
+<h2 id="version-history">Version history</h2>
+<p>See the <a href="https://github.com/BKWLD/decoy/releases">Github &ldquo;Releases&rdquo;</a> history</p>
+<h2 id="installation">Installation</h2>
+<ol>
+<li><code>composer require bkwld/decoy</code></li>
+<li>Add <code>Bkwld\Decoy\ServiceProvider::class</code> to <code>providers</code> in your Laravel&rsquo;s app config file.</li>
+<li>Add these aliases to the <code>aliases</code> in your Laravel&rsquo;s app config file:
+    <code>php
+    'Decoy' =&gt; Bkwld\Decoy\Facades\Decoy::class,
+    'DecoyURL' =&gt; Bkwld\Decoy\Facades\DecoyURL::class,</code></li>
+<li>Publish the migrations, config files, and public assets by running <code>php artisan vendor:publish --provider="Bkwld\Decoy\ServiceProvider"</code></li>
+<li>Run the migrations by running <code>php artisan migrate</code></li>
+</ol>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -374,14 +418,14 @@
     </div>
     <div class="next">
       
-        <a href="setup/" title="Setup">
+        <a href="getting_started/" title="Getting Started">
           <span class="direction">
             Next
           </span>
           <div class="page">
             <div class="stretch">
               <div class="title">
-                Setup
+                Getting Started
               </div>
             </div>
             <div class="button button-next" role="button" aria-label="Next">

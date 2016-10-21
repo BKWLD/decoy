@@ -2,38 +2,23 @@
     "docs": [
         {
             "location": "/",
-            "text": "Hello",
-            "title": "Home"
-        },
-        {
-            "location": "/#hello",
-            "text": "",
-            "title": "Hello"
-        },
-        {
-            "location": "/setup/",
-            "text": "Compatibility\n\n\nDecoy is tested to support:\n\n\n\n\nLatest Chrome (recommended)\n\n\nLatest Firefox\n\n\nLatest Safari\n\n\nIE 9-11\n\n\niOS 8 Safari on iPhone and iPad\n\n\nLatest Android Chrome\n\n\n\n\nVersion history\n\n\nSee the \nGithub \u201cReleases\u201d\n history\n\n\nInstallation\n\n\nDecoy expects to be installed ontop of \nCamo\n.  In particular, Decoy has dependencies that are part of Camo\u2019s dependency list.  For instance, there are some expectating on the version of Compass that is used.\n\n\nIf you \nare\n installing outside of Camo, here are some steps to get you started.\n\n\n\n\nAdd \n\"bkwld/decoy\": \"~5.0\",\n to your composer.json and install.  This reflects the latest stable branch.\n\n\n\n\nEdit the app config file as follows:\n\n\n<?php\n\n\n'providers'\n \n=>\n \n[\n\n    \nBkwld\\Decoy\\ServiceProvider\n::\nclass\n\n\n],\n \n'aliases'\n \n=>\n \n[\n\n    \n'Decoy'\n \n=>\n \nBkwld\\Decoy\\Facades\\Decoy\n::\nclass\n,\n\n    \n'DecoyURL'\n \n=>\n \nBkwld\\Decoy\\Facades\\DecoyURL\n::\nclass\n,\n\n\n],\n\n\n\n\n\n\n\n\n\n\nRun \nphp artisan vendor:publish --provider=\"Bkwld\\Decoy\\ServiceProvider\"\n\n\n\n\nRun \nphp artisan migrate\n\n\n\n\nContributing\n\n\n\n\n\n\nThe \nmaster\n branch represents what will be come the next \nminor\n release.\n\n\n\n\n\n\nA small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.\n\n\n\n\n\n\nA riskier feature should be worked on in a feature branch and then moved into master.  When it\u2019s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace \n{branch}\n with the latest versioned-branch):\n\n\nbash git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master",
+            "text": "Compatibility\n\n\nDecoy is tested to support:\n\n\n\n\nLatest Chrome (recommended)\n\n\nLatest Firefox\n\n\nLatest Safari\n\n\nIE 10+\n\n\niOS 8 Safari on iPhone and iPad\n\n\nLatest Android Chrome\n\n\n\n\nVersion history\n\n\nSee the \nGithub \u201cReleases\u201d\n history\n\n\nInstallation\n\n\n\n\ncomposer require bkwld/decoy\n\n\nAdd \nBkwld\\Decoy\\ServiceProvider::class\n to \nproviders\n in your Laravel\u2019s app config file.\n\n\nAdd these aliases to the \naliases\n in your Laravel\u2019s app config file:\n    \nphp\n    'Decoy' => Bkwld\\Decoy\\Facades\\Decoy::class,\n    'DecoyURL' => Bkwld\\Decoy\\Facades\\DecoyURL::class,\n\n\nPublish the migrations, config files, and public assets by running \nphp artisan vendor:publish --provider=\"Bkwld\\Decoy\\ServiceProvider\"\n\n\nRun the migrations by running \nphp artisan migrate",
             "title": "Setup"
         },
         {
-            "location": "/setup/#compatibility",
-            "text": "Decoy is tested to support:   Latest Chrome (recommended)  Latest Firefox  Latest Safari  IE 9-11  iOS 8 Safari on iPhone and iPad  Latest Android Chrome",
+            "location": "/#compatibility",
+            "text": "Decoy is tested to support:   Latest Chrome (recommended)  Latest Firefox  Latest Safari  IE 10+  iOS 8 Safari on iPhone and iPad  Latest Android Chrome",
             "title": "Compatibility"
         },
         {
-            "location": "/setup/#version-history",
+            "location": "/#version-history",
             "text": "See the  Github \u201cReleases\u201d  history",
             "title": "Version history"
         },
         {
-            "location": "/setup/#installation",
-            "text": "Decoy expects to be installed ontop of  Camo .  In particular, Decoy has dependencies that are part of Camo\u2019s dependency list.  For instance, there are some expectating on the version of Compass that is used.  If you  are  installing outside of Camo, here are some steps to get you started.   Add  \"bkwld/decoy\": \"~5.0\",  to your composer.json and install.  This reflects the latest stable branch.   Edit the app config file as follows:  <?php  'providers'   =>   [ \n     Bkwld\\Decoy\\ServiceProvider :: class  ],   'aliases'   =>   [ \n     'Decoy'   =>   Bkwld\\Decoy\\Facades\\Decoy :: class , \n     'DecoyURL'   =>   Bkwld\\Decoy\\Facades\\DecoyURL :: class ,  ],     Run  php artisan vendor:publish --provider=\"Bkwld\\Decoy\\ServiceProvider\"   Run  php artisan migrate",
+            "location": "/#installation",
+            "text": "composer require bkwld/decoy  Add  Bkwld\\Decoy\\ServiceProvider::class  to  providers  in your Laravel\u2019s app config file.  Add these aliases to the  aliases  in your Laravel\u2019s app config file:\n     php\n    'Decoy' => Bkwld\\Decoy\\Facades\\Decoy::class,\n    'DecoyURL' => Bkwld\\Decoy\\Facades\\DecoyURL::class,  Publish the migrations, config files, and public assets by running  php artisan vendor:publish --provider=\"Bkwld\\Decoy\\ServiceProvider\"  Run the migrations by running  php artisan migrate",
             "title": "Installation"
-        },
-        {
-            "location": "/setup/#contributing",
-            "text": "The  master  branch represents what will be come the next  minor  release.    A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.    A riskier feature should be worked on in a feature branch and then moved into master.  When it\u2019s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace  {branch}  with the latest versioned-branch):  bash git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master",
-            "title": "Contributing"
         },
         {
             "location": "/getting_started/",
@@ -324,6 +309,21 @@
             "location": "/wysiwyg/",
             "text": "Decoy uses \nRedactor\n as its WYSIWYG editors.  To customize the editor, you can get a reference to the wysiwyg adapter from your /js/admin/start.js and customize their config like:\n\n\n// Redactor - Enable uploads and add \"format\" options\n\n\nwysiwyg\n \n=\n \nrequire\n(\n'decoy/assets/js/wysiwyg/factory'\n)\n\n\nwysiwyg\n.\nconfig\n.\nallowUploads\n();\n\n\nwysiwyg\n.\nconfig\n.\nmerge\n({\n\n    \nbuttons\n:\n \n[\n'formatting'\n,\n \n'bold'\n,\n \n'italic'\n,\n \n'link'\n,\n \n'file'\n,\n \n'image'\n,\n \n'horizontalrule'\n,\n \n'orderedlist'\n,\n \n'unorderedlist'\n,\n \n'html'\n],\n\n    \nformatting\n:\n \n[\n'p'\n,\n \n'h2'\n]\n\n\n});",
             "title": "WYSIWYG"
+        },
+        {
+            "location": "/contribute/",
+            "text": "Contribute\n\n\n\n\n\n\nThe \nmaster\n branch represents what will be come the next \nminor\n release.\n\n\n\n\n\n\nA small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.\n\n\n\n\n\n\nA riskier feature should be worked on in a feature branch and then moved into master.  When it\u2019s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace \n{branch}\n with the latest versioned-branch):\n\n\nbash git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master\n\n\n\n\n\n\n\n\n\nDocs\n\n\nTo be able to update docs, you need to install mkdocs:\n\n\n\n\nInstall python (like via Homebrew)\n\n\nInstall mkdocs with \npip install mkdocs\n\n\n\n\nThe source markdown files are in src-docs.  After making changes, run the comile instructions (below).  When adding new files, make sure to update the mkdocs.yml file to add pages to the navigation.\n\n\nHere are some useful comands:\n\n\n\n\nmkdocs build\n - Compile changes into html files\n\n\nmkdocs serve\n - Watches for changes and creates a web endpoint to preview at",
+            "title": "Contribute"
+        },
+        {
+            "location": "/contribute/#contribute",
+            "text": "The  master  branch represents what will be come the next  minor  release.    A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.    A riskier feature should be worked on in a feature branch and then moved into master.  When it\u2019s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace  {branch}  with the latest versioned-branch):  bash git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative {branch}..master",
+            "title": "Contribute"
+        },
+        {
+            "location": "/contribute/#docs",
+            "text": "To be able to update docs, you need to install mkdocs:   Install python (like via Homebrew)  Install mkdocs with  pip install mkdocs   The source markdown files are in src-docs.  After making changes, run the comile instructions (below).  When adding new files, make sure to update the mkdocs.yml file to add pages to the navigation.  Here are some useful comands:   mkdocs build  - Compile changes into html files  mkdocs serve  - Watches for changes and creates a web endpoint to preview at",
+            "title": "Docs"
         }
     ]
 }

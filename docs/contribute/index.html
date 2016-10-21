@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1">
     
       
-        <title>Images - Decoy 5</title>
+        <title>Contribute - Decoy 5</title>
       
       
       
@@ -89,13 +89,9 @@
         
           <span class="path">
             
-              
-                Features <i class="icon icon-link"></i>
-              
-            
           </span>
         
-        Images
+        Contribute
       </div>
     </div>
     
@@ -228,28 +224,9 @@
       
         
   <li>
-    <a class="current" title="Images" href="./">
+    <a class="" title="Images" href="../images/">
       Images
     </a>
-    
-      
-      
-        <ul>
-          
-            <li class="anchor">
-              <a title="Setup" href="#setup">
-                Setup
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Usage" href="#usage">
-                Usage
-              </a>
-            </li>
-          
-        </ul>
-      
     
   </li>
 
@@ -332,9 +309,24 @@
           
             
   <li>
-    <a class="" title="Contribute" href="../contribute/">
+    <a class="current" title="Contribute" href="./">
       Contribute
     </a>
+    
+      
+        
+      
+      
+        <ul>
+          
+            <li class="anchor">
+              <a title="Docs" href="#docs">
+                Docs
+              </a>
+            </li>
+          
+        </ul>
+      
     
   </li>
 
@@ -370,53 +362,34 @@
       <article class="article">
         <div class="wrapper">
           
-            <h1>Images</h1>
-          
-          <p>Decoy has an polymorphic Image model that should be used to store all model images.</p>
-<h2 id="setup">Setup</h2>
-<p>Add the <code>Bkwld\Decoy\Models\Traits\HasImages</code> trait to models that have images:</p>
-<div class="code"><pre><span></span><span class="x">class Article extends Base {</span>
-<span class="x">  use \Bkwld\Decoy\Models\Traits\HasImages;</span>
-<span class="x">}</span>
+          <h1 id="contribute">Contribute</h1>
+<ul>
+<li>
+<p>The <code>master</code> branch represents what will be come the next <strong>minor</strong> release.</p>
+</li>
+<li>
+<p>A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.</p>
+</li>
+<li>
+<p>A riskier feature should be worked on in a feature branch and then moved into master.  When it&rsquo;s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace <code>{branch}</code> with the latest versioned-branch):</p>
+<div class="code"><pre><span></span>bash git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&#39; --abbrev-commit --date=relative {branch}..master
 </pre></div>
 
 
-<h2 id="usage">Usage</h2>
-<p>From the frontend, you can use the <code>img()</code> helper provided by the trait that was added to access a particular <code>Image</code> for your model.  Then, chain on one of the <code>Image</code> accessors.  For example:</p>
-<div class="code"><pre><span></span><span class="x">$article-&gt;img()-&gt;url;</span>
-<span class="x"># /uploads/1/1/image1.jpg</span>
-
-<span class="x">$article-&gt;img(&#39;marquee&#39;)-&gt;crop(400,200)-&gt;url</span>
-<span class="x"># /uploads/1/1/image2-400x200.jpg</span>
-
-<span class="x">$article-&gt;img(&#39;marquee&#39;)-&gt;crop(400,200)-&gt;bkgd</span>
-<span class="x"># /background-image: url(&#39;/uploads/1/1/image2-400x200.jpg&#39;);background-position: 20% 30%;</span>
-
-<span class="x">$article-&gt;img(&#39;marquee&#39;)-&gt;crop(400,200)-&gt;tag</span>
-<span class="x"># &lt;img src=&quot;/background-image: url(&#39;/uploads/1/1/image2-400x200.jpg&#39;);&quot; alt=&quot;I am alt&quot;&gt;</span>
-
-<span class="x">$article-&gt;img(&#39;marquee&#39;)-&gt;crop(400,200)-&gt;div-&gt;class(&#39;marquee&#39;)</span>
-<span class="x"># &lt;div style=&quot;background-image: url(&#39;/uploads/1/1/image2-400x200.jpg&#39;);background-position: 20% 30%;&quot; role=&quot;img&quot; aria-label=&quot;I am alt&quot; class=&quot;marquee&quot;&gt;&lt;/div&gt;</span>
-</pre></div>
-
-
-<p>If no image exists, the response will be an empty string.  For instance:</p>
-<div class="code"><pre><span></span><span class="x">$article-&gt;img(&#39;fake&#39;)-&gt;crop(400,200)-&gt;tag</span>
-<span class="x">#</span>
-</pre></div>
-
-
-<h4 id="validation">Validation</h4>
-<p>Add images to the <code>$rules</code> on a model like:</p>
-<div class="code"><pre><span></span><span class="x">$rules = [</span>
-<span class="x">  &#39;images.default&#39; =&gt; &#39;required&#39;,</span>
-<span class="x">  &#39;images.listing&#39; =&gt; &#39;required|mimes:png&#39;</span>
-<span class="x">]</span>
-</pre></div>
-
-
-<h4 id="json">JSON</h4>
-<p>The <code>Bkwld\Decoy\Collections\Base</code> collection that all models return adds some helpers for adding cropped images to models before they get serialized.  See the <a href="https://github.com/BKWLD/decoy/wiki/3.-Models#serialization">model docs</a>.</p>
+</li>
+</ul>
+<h2 id="docs">Docs</h2>
+<p>To be able to update docs, you need to install mkdocs:</p>
+<ol>
+<li>Install python (like via Homebrew)</li>
+<li>Install mkdocs with <code>pip install mkdocs</code></li>
+</ol>
+<p>The source markdown files are in src-docs.  After making changes, run the comile instructions (below).  When adding new files, make sure to update the mkdocs.yml file to add pages to the navigation.</p>
+<p>Here are some useful comands:</p>
+<ul>
+<li><code>mkdocs build</code> - Compile changes into html files</li>
+<li><code>mkdocs serve</code> - Watches for changes and creates a web endpoint to preview at</li>
+</ul>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -433,7 +406,7 @@
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
       
-        <a href="../elements/" title="Elements">
+        <a href="../wysiwyg/" title="WYSIWYG">
           <span class="direction">
             Previous
           </span>
@@ -443,7 +416,7 @@
             </div>
             <div class="stretch">
               <div class="title">
-                Elements
+                WYSIWYG
               </div>
             </div>
           </div>
@@ -451,22 +424,6 @@
       
     </div>
     <div class="next">
-      
-        <a href="../localization/" title="Localization">
-          <span class="direction">
-            Next
-          </span>
-          <div class="page">
-            <div class="stretch">
-              <div class="title">
-                Localization
-              </div>
-            </div>
-            <div class="button button-next" role="button" aria-label="Next">
-              <i class="icon icon-forward"></i>
-            </div>
-          </div>
-        </a>
       
     </div>
   </nav>

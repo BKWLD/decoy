@@ -156,15 +156,6 @@
           
             
   <li>
-    <a class="" title="Home" href="..">
-      Home
-    </a>
-    
-  </li>
-
-          
-            
-  <li>
     <a class="current" title="Setup" href="./">
       Setup
     </a>
@@ -188,12 +179,6 @@
             <li class="anchor">
               <a title="Installation" href="#installation">
                 Installation
-              </a>
-            </li>
-          
-            <li class="anchor">
-              <a title="Contributing" href="#contributing">
-                Contributing
               </a>
             </li>
           
@@ -347,6 +332,15 @@
   </li>
 
           
+            
+  <li>
+    <a class="" title="Contribute" href="../contribute/">
+      Contribute
+    </a>
+    
+  </li>
+
+          
         </ul>
         
           <hr>
@@ -386,51 +380,23 @@
 <li>Latest Chrome (recommended)</li>
 <li>Latest Firefox</li>
 <li>Latest Safari</li>
-<li>IE 9-11</li>
+<li>IE 10+</li>
 <li>iOS 8 Safari on iPhone and iPad</li>
 <li>Latest Android Chrome</li>
 </ul>
 <h2 id="version-history">Version history</h2>
 <p>See the <a href="https://github.com/BKWLD/decoy/releases">Github &ldquo;Releases&rdquo;</a> history</p>
 <h2 id="installation">Installation</h2>
-<p>Decoy expects to be installed ontop of <a href="https://github.com/BKWLD/camo">Camo</a>.  In particular, Decoy has dependencies that are part of Camo&rsquo;s dependency list.  For instance, there are some expectating on the version of Compass that is used.</p>
-<p>If you <strong>are</strong> installing outside of Camo, here are some steps to get you started.</p>
 <ol>
-<li>Add <code>"bkwld/decoy": "~5.0",</code> to your composer.json and install.  This reflects the latest stable branch.</li>
-<li>
-<p>Edit the app config file as follows:</p>
-<div class="code"><pre><span></span><span class="cp">&lt;?php</span>
-<span class="s1">&#39;providers&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-    <span class="nx">Bkwld\Decoy\ServiceProvider</span><span class="o">::</span><span class="na">class</span>
-<span class="p">],</span> <span class="s1">&#39;aliases&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-    <span class="s1">&#39;Decoy&#39;</span> <span class="o">=&gt;</span> <span class="nx">Bkwld\Decoy\Facades\Decoy</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-    <span class="s1">&#39;DecoyURL&#39;</span> <span class="o">=&gt;</span> <span class="nx">Bkwld\Decoy\Facades\DecoyURL</span><span class="o">::</span><span class="na">class</span><span class="p">,</span>
-<span class="p">],</span>
-</pre></div>
-
-
-</li>
-<li>
-<p>Run <code>php artisan vendor:publish --provider="Bkwld\Decoy\ServiceProvider"</code></p>
-</li>
-<li>Run <code>php artisan migrate</code></li>
+<li><code>composer require bkwld/decoy</code></li>
+<li>Add <code>Bkwld\Decoy\ServiceProvider::class</code> to <code>providers</code> in your Laravel&rsquo;s app config file.</li>
+<li>Add these aliases to the <code>aliases</code> in your Laravel&rsquo;s app config file:
+    <code>php
+    'Decoy' =&gt; Bkwld\Decoy\Facades\Decoy::class,
+    'DecoyURL' =&gt; Bkwld\Decoy\Facades\DecoyURL::class,</code></li>
+<li>Publish the migrations, config files, and public assets by running <code>php artisan vendor:publish --provider="Bkwld\Decoy\ServiceProvider"</code></li>
+<li>Run the migrations by running <code>php artisan migrate</code></li>
 </ol>
-<h2 id="contributing">Contributing</h2>
-<ul>
-<li>
-<p>The <code>master</code> branch represents what will be come the next <strong>minor</strong> release.</p>
-</li>
-<li>
-<p>A small, low-risk feature for an actively developed project should be created in a feature branch (based on the latest version-branch) and then merged into both the version-branch and master.</p>
-</li>
-<li>
-<p>A riskier feature should be worked on in a feature branch and then moved into master.  When it&rsquo;s finished, it can be come part of the next minor version release.  This git command gives you a nice view into commits that are new on master versus the most recent version (replace <code>{branch}</code> with the latest versioned-branch):</p>
-<div class="code"><pre><span></span>bash git log --graph --pretty=format:&#39;%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset&#39; --abbrev-commit --date=relative {branch}..master
-</pre></div>
-
-
-</li>
-</ul>
           <aside class="copyright" role="note">
             
             Documentation built with
@@ -446,22 +412,6 @@
               
   <nav class="pagination" aria-label="Footer">
     <div class="previous">
-      
-        <a href=".." title="Home">
-          <span class="direction">
-            Previous
-          </span>
-          <div class="page">
-            <div class="button button-previous" role="button" aria-label="Previous">
-              <i class="icon icon-back"></i>
-            </div>
-            <div class="stretch">
-              <div class="title">
-                Home
-              </div>
-            </div>
-          </div>
-        </a>
       
     </div>
     <div class="next">
