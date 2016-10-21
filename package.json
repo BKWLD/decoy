@@ -2,13 +2,13 @@
   "name": "decoy",
   "version": "5.0.13",
   "description": "The BKWLD CMS framework",
-  "main": "assets/js/decoy.js",
+  "main": "dist/index.js",
   "directories": {
     "test": "tests"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node_modules/.bin/webpack && node_modules/.bin/webpack -p",
+    "build": "rm -rf ./dist && node_modules/.bin/webpack && node_modules/.bin/webpack -p",
     "version": "npm run build && git add -A",
     "postversion": "git push --follow-tags"
   },

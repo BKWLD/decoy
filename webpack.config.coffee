@@ -2,11 +2,11 @@
 minify = '-p' in process.argv # Compiling for production
 
 # Deps
-webpack = require 'webpack'
+webpack      = require 'webpack'
 autoprefixer = require 'autoprefixer'
-moment = require 'moment'
-ExtractText	= require 'extract-text-webpack-plugin'
-_ = require 'lodash'
+moment       = require 'moment'
+ExtractText	 = require 'extract-text-webpack-plugin'
+_            = require 'lodash'
 
 # Autoprefixer config
 # https://github.com/ai/browserslist#queries
@@ -27,9 +27,9 @@ config =
 
 	# Where to put the files
 	output:
-		path:					"./dist"
-		publicPath:		'/assets/decoy/'
-		filename:			if minify then '[name].[hash:8].js' else '[name].js'
+		path:          "./dist"
+		publicPath:    '/assets/decoy/'
+		filename:      if minify then '[name].min.js' else '[name].js'
 		chunkFilename: if minify then '[id].[hash:8].js' else '[id].js'
 
 		# Make a UMD module
@@ -61,7 +61,6 @@ config.module.noParse = [
 	# https://github.com/pixijs/pixi.js/issues/1854#issuecomment-156074530
 	# https://github.com/pixijs/pixi.js/issues/2078#issuecomment-137297392
 	/bin\/pixi\.js$/
-
 ]
 
 
@@ -172,7 +171,7 @@ config.plugins = [
 	# "allChunks" so that CSS referenced in chunked code splits still show up
 	# in here. Otherwise, we would need webpack to DOM insert the styles on
 	# which doesn't play nice with sourcemaps.
-	new ExtractText (if minify then '[name].[hash:8].css' else '[name].css'),
+	new ExtractText (if minify then '[name].min.css' else '[name].css'),
 		allChunks: true
 
 	# Add some branding to all compiled JS files

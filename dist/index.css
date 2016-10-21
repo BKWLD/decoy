@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 9.20.16 👍 */
+/*! 📝 Bukwild 💾 10.21.16 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -5137,11 +5137,9 @@ button.close {
   -webkit-overflow-scrolling: touch;
   outline: 0; }
   .modal.fade .modal-dialog {
-    -ms-transform: translate(0, -25%);
     transform: translate(0, -25%);
     transition: transform 0.3s ease-out; }
   .modal.in .modal-dialog {
-    -ms-transform: translate(0, 0);
     transform: translate(0, 0); }
 
 .modal-open .modal {
@@ -6569,7 +6567,6 @@ h1 b, h1 strong, h2 b, h2 strong, h3 b, h3 strong, h4 b, h4 strong, h5 b, h5 str
     transition: transform 300ms; }
     .btn.outline:active .glyphicon, #redactor-modal-box #redactor-modal footer button.outline:active .glyphicon {
       transition: transform 100ms;
-      -ms-transform: scale(1.2);
       transform: scale(1.2); }
   .input-group-btn .btn.outline, .input-group-btn #redactor-modal-box #redactor-modal footer button.outline, #redactor-modal-box #redactor-modal footer .input-group-btn button.outline {
     z-index: 2; }
@@ -6591,7 +6588,6 @@ h1 b, h1 strong, h2 b, h2 strong, h3 b, h3 strong, h4 b, h4 strong, h5 b, h5 str
       transition: transform 300ms; }
       .legend .btn.outline:active .glyphicon, .legend #redactor-modal-box #redactor-modal footer button.outline:active .glyphicon, #redactor-modal-box #redactor-modal footer .legend button.outline:active .glyphicon, .search .btn.outline:active .glyphicon, .search #redactor-modal-box #redactor-modal footer button.outline:active .glyphicon, #redactor-modal-box #redactor-modal footer .search button.outline:active .glyphicon, .btn.outline.secondary:active .glyphicon, #redactor-modal-box #redactor-modal footer button.outline.secondary:active .glyphicon {
         transition: transform 100ms;
-        -ms-transform: scale(1.2);
         transform: scale(1.2); }
     .input-group-btn .legend .btn.outline, .input-group-btn .legend #redactor-modal-box #redactor-modal footer button.outline, #redactor-modal-box #redactor-modal footer .input-group-btn .legend button.outline, .input-group-btn .search .btn.outline, .input-group-btn .search #redactor-modal-box #redactor-modal footer button.outline, #redactor-modal-box #redactor-modal footer .input-group-btn .search button.outline, .input-group-btn .btn.outline.secondary, .input-group-btn #redactor-modal-box #redactor-modal footer button.outline.secondary, #redactor-modal-box #redactor-modal footer .input-group-btn button.outline.secondary {
       z-index: 2; }
@@ -7319,6 +7315,16 @@ body.index .standard-list .legend > .pull-right.btn-toolbar {
 .tt-dropdown-menu .tt-suggestion {
   padding: 4px 12px; }
 
+.many-to-many-form .tt-menu {
+  left: auto !important;
+  right: 0 !important; }
+
+.many-to-many-form .twitter-typeahead {
+  margin-bottom: -1px; }
+
+.tt-dropdown-menu, .tt-menu {
+  min-width: 275px; }
+
 /**
  * Adapted from:
  * http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
@@ -7436,14 +7442,11 @@ fieldset, .fieldset {
           margin-right: -3px; } }
   fieldset.standard-list, .fieldset.standard-list {
     padding: 0;
-    overflow-x: hidden; }
+    overflow: hidden; }
     fieldset.standard-list .legend, .fieldset.standard-list .legend {
       margin: 0; }
     fieldset.standard-list .listing, .fieldset.standard-list .listing {
       margin-bottom: 0; }
-    fieldset.standard-list .listing, .fieldset.standard-list .listing {
-      width: calc(100% + 1px);
-      max-width: none; }
     fieldset.standard-list th:first-child, fieldset.standard-list td:first-child, .fieldset.standard-list th:first-child, .fieldset.standard-list td:first-child {
       padding-left: 15px; }
     fieldset.standard-list th[class*='actions'], fieldset.standard-list td[class*='actions'], .fieldset.standard-list th[class*='actions'], .fieldset.standard-list td[class*='actions'] {
@@ -7454,6 +7457,9 @@ fieldset, .fieldset {
     fieldset.standard-list .legend > a:hover, fieldset.standard-list .legend > a:focus, .fieldset.standard-list .legend > a:hover, .fieldset.standard-list .legend > a:focus {
       color: #d08a46;
       border-bottom-color: #d08a46; }
+    fieldset.standard-list .table, .fieldset.standard-list .table {
+      width: calc(100% + 1px);
+      max-width: none; }
   fieldset.disabled, .fieldset.disabled {
     opacity: .7; }
     fieldset.disabled .legend, .fieldset.disabled .legend {
@@ -8185,7 +8191,6 @@ body.elements.index fieldset.locale .legend {
       transition: transform 300ms; }
       body.elements.index fieldset.locale .legend .btn.outline:active .glyphicon, body.elements.index fieldset.locale .legend #redactor-modal-box #redactor-modal footer button.outline:active .glyphicon, #redactor-modal-box #redactor-modal footer body.elements.index fieldset.locale .legend button.outline:active .glyphicon {
         transition: transform 100ms;
-        -ms-transform: scale(1.2);
         transform: scale(1.2); }
     .input-group-btn body.elements.index fieldset.locale .legend .btn.outline, .input-group-btn body.elements.index fieldset.locale .legend #redactor-modal-box #redactor-modal footer button.outline, #redactor-modal-box #redactor-modal footer .input-group-btn body.elements.index fieldset.locale .legend button.outline {
       z-index: 2; }
@@ -8645,8 +8650,7 @@ body.workers.index .worker-entry {
       color: #eee;
       transition: color 100ms; }
   .navigation .top-level-nav .main-nav.open .top-level.parent:after {
-    -ms-transform: rotate(90deg);
-        transform: rotate(90deg);
+    transform: rotate(90deg);
     bottom: 0; }
   .navigation .top-level-nav .main-nav .subnav {
     background-color: #242424;

@@ -27,7 +27,7 @@
 	'register_routes' => true,
 
 	// Set up the default stylesheet and script tags
-	'stylesheet' => '/assets/decoy/index.css',
-	'script' => '/assets/decoy/index.js',
+	'stylesheet' => '/assets/decoy/index.min.css',
+	'script' => '/assets/decoy/index.min.js',
 
 );

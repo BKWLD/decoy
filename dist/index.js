@@ -1,5 +1,15 @@
-/*! 📝 Bukwild 💾 9.20.16 👍 */
-/******/ (function(modules) { // webpackBootstrap
+/*! 📝 Bukwild 💾 10.21.16 👍 */
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define("decoy", [], factory);
+	else if(typeof exports === 'object')
+		exports["decoy"] = factory();
+	else
+		root["decoy"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -75,9 +85,13 @@
 		__webpack_require__(53).register(); // Enable chicken switches on delete
 
 		// Private static vars
-		var app = _.extend({}, Backbone.Events),
-			$body = $('body'),
-			$doc = $(document);
+		var app = _.extend({}, Backbone.Events)
+			, $body = $('body')
+			, $doc = $(document)
+		;
+
+		// Modules that get exposed for public configuration
+		app.wysiwyg =__webpack_require__(54);
 
 		// --------------------------------------------------
 		// Pre-ready init
@@ -90,7 +104,7 @@
 
 		// Pass CSRF token with all ajax requests
 		var csrfToken = $('meta[name="csrf-token"]').attr('content');
-		$.ajaxPrefilter(__webpack_require__(54)(csrfToken));
+		$.ajaxPrefilter(__webpack_require__(58)(csrfToken));
 
 		// --------------------------------------------------
 		// Configure Backbone
@@ -136,21 +150,21 @@
 		};
 
 		// Newer style view declaration
-		$('body.elements.field #main').views(__webpack_require__(55));
-		$('body.elements.index .tab-sidebar').views(__webpack_require__(56));
+		$('body.elements.field #main').views(__webpack_require__(59));
+		$('body.elements.index .tab-sidebar').views(__webpack_require__(60));
 		$('body > .sidebar').views(Sidebar); // The nav sidebar
 		if ($('.form-group.compare').length) $('.related-left-col .form-group').views(LocalizeCompare);
-		$('.admin-permissions').views(__webpack_require__(57));
-		$('.image-upload').views(__webpack_require__(58));
-		$('input[type="file"]').views(__webpack_require__(62));
+		$('.admin-permissions').views(__webpack_require__(61));
+		$('.image-upload').views(__webpack_require__(62));
+		$('input[type="file"]').views(__webpack_require__(66));
 
 		// Launch change modal
-		var changes_modal = __webpack_require__(63);
+		var changes_modal = __webpack_require__(67);
 		$('.changes-modal-link').on('click', changes_modal.open);
 
 		// --------------------------------------------------
 		// DOM ready
-		app.on('ready', function () {
+		app.init = function() {
 
 			// Initalize views
 			app.initalizeViews(manifest);
@@ -173,12 +187,15 @@
 			});
 
 			// Turn WYSIWYGs on.
-			__webpack_require__(65).init('textarea.wysiwyg');
+			app.wysiwyg.init('textarea.wysiwyg');
 
 			// Enable affix globally
 			$('.affixable').views(Affixable);
 
-		});
+		};
+
+		// Deprecated method of init-ing Decoy
+		app.on('ready', app.init);
 
 		// Return public module
 		return app;
@@ -37364,7 +37381,7 @@
 
 /***/ },
 /* 35 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	/**
 	 * @license
@@ -37385,7 +37402,7 @@
 	g=4*m,c=m<a.length-1?a[m+1]:f,e.y=-(c.x-d.x),e.x=c.y-d.y,h=10*(1-m/(l-1)),h>1&&(h=1),i=Math.sqrt(e.x*e.x+e.y*e.y),j=this.texture.height/2,e.x/=i,e.y/=i,e.x*=j,e.y*=j,k[g]=f.x+e.x,k[g+1]=f.y+e.y,k[g+2]=f.x-e.x,k[g+3]=f.y-e.y,d=f;b.DisplayObjectContainer.prototype.updateTransform.call(this)}},b.Rope.prototype.setTexture=function(a){this.texture=a},b.TilingSprite=function(a,c,d){b.Sprite.call(this,a),this._width=c||100,this._height=d||100,this.tileScale=new b.Point(1,1),this.tileScaleOffset=new b.Point(1,1),this.tilePosition=new b.Point(0,0),this.renderable=!0,this.tint=16777215,this.blendMode=b.blendModes.NORMAL},b.TilingSprite.prototype=Object.create(b.Sprite.prototype),b.TilingSprite.prototype.constructor=b.TilingSprite,Object.defineProperty(b.TilingSprite.prototype,"width",{get:function(){return this._width},set:function(a){this._width=a}}),Object.defineProperty(b.TilingSprite.prototype,"height",{get:function(){return this._height},set:function(a){this._height=a}}),b.TilingSprite.prototype.setTexture=function(a){this.texture!==a&&(this.texture=a,this.refreshTexture=!0,this.cachedTint=16777215)},b.TilingSprite.prototype._renderWebGL=function(a){if(this.visible!==!1&&0!==this.alpha){var b,c;for(this._mask&&(a.spriteBatch.stop(),a.maskManager.pushMask(this.mask,a),a.spriteBatch.start()),this._filters&&(a.spriteBatch.flush(),a.filterManager.pushFilter(this._filterBlock)),!this.tilingTexture||this.refreshTexture?(this.generateTilingTexture(!0),this.tilingTexture&&this.tilingTexture.needsUpdate&&(a.renderer.updateTexture(this.tilingTexture.baseTexture),this.tilingTexture.needsUpdate=!1)):a.spriteBatch.renderTilingSprite(this),b=0,c=this.children.length;c>b;b++)this.children[b]._renderWebGL(a);a.spriteBatch.stop(),this._filters&&a.filterManager.popFilter(),this._mask&&a.maskManager.popMask(this._mask,a),a.spriteBatch.start()}},b.TilingSprite.prototype._renderCanvas=function(a){if(this.visible!==!1&&0!==this.alpha){var c=a.context;this._mask&&a.maskManager.pushMask(this._mask,a),c.globalAlpha=this.worldAlpha;var d,e,f=this.worldTransform,g=a.resolution;if(c.setTransform(f.a*g,f.b*g,f.c*g,f.d*g,f.tx*g,f.ty*g),!this.__tilePattern||this.refreshTexture){if(this.generateTilingTexture(!1),!this.tilingTexture)return;this.__tilePattern=c.createPattern(this.tilingTexture.baseTexture.source,"repeat")}this.blendMode!==a.currentBlendMode&&(a.currentBlendMode=this.blendMode,c.globalCompositeOperation=b.blendModesCanvas[a.currentBlendMode]);var h=this.tilePosition,i=this.tileScale;for(h.x%=this.tilingTexture.baseTexture.width,h.y%=this.tilingTexture.baseTexture.height,c.scale(i.x,i.y),c.translate(h.x+this.anchor.x*-this._width,h.y+this.anchor.y*-this._height),c.fillStyle=this.__tilePattern,c.fillRect(-h.x,-h.y,this._width/i.x,this._height/i.y),c.scale(1/i.x,1/i.y),c.translate(-h.x+this.anchor.x*this._width,-h.y+this.anchor.y*this._height),this._mask&&a.maskManager.popMask(a),d=0,e=this.children.length;e>d;d++)this.children[d]._renderCanvas(a)}},b.TilingSprite.prototype.getBounds=function(){var a=this._width,b=this._height,c=a*(1-this.anchor.x),d=a*-this.anchor.x,e=b*(1-this.anchor.y),f=b*-this.anchor.y,g=this.worldTransform,h=g.a,i=g.b,j=g.c,k=g.d,l=g.tx,m=g.ty,n=h*d+j*f+l,o=k*f+i*d+m,p=h*c+j*f+l,q=k*f+i*c+m,r=h*c+j*e+l,s=k*e+i*c+m,t=h*d+j*e+l,u=k*e+i*d+m,v=-(1/0),w=-(1/0),x=1/0,y=1/0;x=x>n?n:x,x=x>p?p:x,x=x>r?r:x,x=x>t?t:x,y=y>o?o:y,y=y>q?q:y,y=y>s?s:y,y=y>u?u:y,v=n>v?n:v,v=p>v?p:v,v=r>v?r:v,v=t>v?t:v,w=o>w?o:w,w=q>w?q:w,w=s>w?s:w,w=u>w?u:w;var z=this._bounds;return z.x=x,z.width=v-x,z.y=y,z.height=w-y,this._currentBounds=z,z},b.TilingSprite.prototype.onTextureUpdate=function(){},b.TilingSprite.prototype.generateTilingTexture=function(a){if(this.texture.baseTexture.hasLoaded){var c,d,e=this.originalTexture||this.texture,f=e.frame,g=f.width!==e.baseTexture.width||f.height!==e.baseTexture.height,h=!1;if(a?(c=b.getNextPowerOfTwo(f.width),d=b.getNextPowerOfTwo(f.height),(f.width!==c||f.height!==d||e.baseTexture.width!==c||e.baseTexture.height||d)&&(h=!0)):g&&(e.trim?(c=e.trim.width,d=e.trim.height):(c=f.width,d=f.height),h=!0),h){var i;this.tilingTexture&&this.tilingTexture.isTiling?(i=this.tilingTexture.canvasBuffer,i.resize(c,d),this.tilingTexture.baseTexture.width=c,this.tilingTexture.baseTexture.height=d,this.tilingTexture.needsUpdate=!0):(i=new b.CanvasBuffer(c,d),this.tilingTexture=b.Texture.fromCanvas(i.canvas),this.tilingTexture.canvasBuffer=i,this.tilingTexture.isTiling=!0),i.context.drawImage(e.baseTexture.source,e.crop.x,e.crop.y,e.crop.width,e.crop.height,0,0,c,d),this.tileScaleOffset.x=f.width/c,this.tileScaleOffset.y=f.height/d}else this.tilingTexture&&this.tilingTexture.isTiling&&this.tilingTexture.destroy(!0),this.tileScaleOffset.x=1,this.tileScaleOffset.y=1,this.tilingTexture=e;this.refreshTexture=!1,this.originalTexture=this.texture,this.texture=this.tilingTexture,this.tilingTexture.baseTexture._powerOf2=!0}},b.TilingSprite.prototype.destroy=function(){b.Sprite.prototype.destroy.call(this),this.tileScale=null,this.tileScaleOffset=null,this.tilePosition=null,this.tilingTexture&&(this.tilingTexture.destroy(!0),this.tilingTexture=null)};var c={radDeg:180/Math.PI,degRad:Math.PI/180,temp:[],Float32Array:"undefined"==typeof Float32Array?Array:Float32Array,Uint16Array:"undefined"==typeof Uint16Array?Array:Uint16Array};c.BoneData=function(a,b){this.name=a,this.parent=b},c.BoneData.prototype={length:0,x:0,y:0,rotation:0,scaleX:1,scaleY:1,inheritScale:!0,inheritRotation:!0,flipX:!1,flipY:!1},c.SlotData=function(a,b){this.name=a,this.boneData=b},c.SlotData.prototype={r:1,g:1,b:1,a:1,attachmentName:null,additiveBlending:!1},c.IkConstraintData=function(a){this.name=a,this.bones=[]},c.IkConstraintData.prototype={target:null,bendDirection:1,mix:1},c.Bone=function(a,b,c){this.data=a,this.skeleton=b,this.parent=c,this.setToSetupPose()},c.Bone.yDown=!1,c.Bone.prototype={x:0,y:0,rotation:0,rotationIK:0,scaleX:1,scaleY:1,flipX:!1,flipY:!1,m00:0,m01:0,worldX:0,m10:0,m11:0,worldY:0,worldRotation:0,worldScaleX:1,worldScaleY:1,worldFlipX:!1,worldFlipY:!1,updateWorldTransform:function(){var a=this.parent;if(a)this.worldX=this.x*a.m00+this.y*a.m01+a.worldX,this.worldY=this.x*a.m10+this.y*a.m11+a.worldY,this.data.inheritScale?(this.worldScaleX=a.worldScaleX*this.scaleX,this.worldScaleY=a.worldScaleY*this.scaleY):(this.worldScaleX=this.scaleX,this.worldScaleY=this.scaleY),this.worldRotation=this.data.inheritRotation?a.worldRotation+this.rotationIK:this.rotationIK,this.worldFlipX=a.worldFlipX!=this.flipX,this.worldFlipY=a.worldFlipY!=this.flipY;else{var b=this.skeleton.flipX,d=this.skeleton.flipY;this.worldX=b?-this.x:this.x,this.worldY=d!=c.Bone.yDown?-this.y:this.y,this.worldScaleX=this.scaleX,this.worldScaleY=this.scaleY,this.worldRotation=this.rotationIK,this.worldFlipX=b!=this.flipX,this.worldFlipY=d!=this.flipY}var e=this.worldRotation*c.degRad,f=Math.cos(e),g=Math.sin(e);this.worldFlipX?(this.m00=-f*this.worldScaleX,this.m01=g*this.worldScaleY):(this.m00=f*this.worldScaleX,this.m01=-g*this.worldScaleY),this.worldFlipY!=c.Bone.yDown?(this.m10=-g*this.worldScaleX,this.m11=-f*this.worldScaleY):(this.m10=g*this.worldScaleX,this.m11=f*this.worldScaleY)},setToSetupPose:function(){var a=this.data;this.x=a.x,this.y=a.y,this.rotation=a.rotation,this.rotationIK=this.rotation,this.scaleX=a.scaleX,this.scaleY=a.scaleY,this.flipX=a.flipX,this.flipY=a.flipY},worldToLocal:function(a){var b=a[0]-this.worldX,d=a[1]-this.worldY,e=this.m00,f=this.m10,g=this.m01,h=this.m11;this.worldFlipX!=(this.worldFlipY!=c.Bone.yDown)&&(e=-e,h=-h);var i=1/(e*h-g*f);a[0]=b*e*i-d*g*i,a[1]=d*h*i-b*f*i},localToWorld:function(a){var b=a[0],c=a[1];a[0]=b*this.m00+c*this.m01+this.worldX,a[1]=b*this.m10+c*this.m11+this.worldY}},c.Slot=function(a,b){this.data=a,this.bone=b,this.setToSetupPose()},c.Slot.prototype={r:1,g:1,b:1,a:1,_attachmentTime:0,attachment:null,attachmentVertices:[],setAttachment:function(a){this.attachment=a,this._attachmentTime=this.bone.skeleton.time,this.attachmentVertices.length=0},setAttachmentTime:function(a){this._attachmentTime=this.bone.skeleton.time-a},getAttachmentTime:function(){return this.bone.skeleton.time-this._attachmentTime},setToSetupPose:function(){var a=this.data;this.r=a.r,this.g=a.g,this.b=a.b,this.a=a.a;for(var b=this.bone.skeleton.data.slots,c=0,d=b.length;d>c;c++)if(b[c]==a){this.setAttachment(a.attachmentName?this.bone.skeleton.getAttachmentBySlotIndex(c,a.attachmentName):null);break}}},c.IkConstraint=function(a,b){this.data=a,this.mix=a.mix,this.bendDirection=a.bendDirection,this.bones=[];for(var c=0,d=a.bones.length;d>c;c++)this.bones.push(b.findBone(a.bones[c].name));this.target=b.findBone(a.target.name)},c.IkConstraint.prototype={apply:function(){var a=this.target,b=this.bones;switch(b.length){case 1:c.IkConstraint.apply1(b[0],a.worldX,a.worldY,this.mix);break;case 2:c.IkConstraint.apply2(b[0],b[1],a.worldX,a.worldY,this.bendDirection,this.mix)}}},c.IkConstraint.apply1=function(a,b,d,e){var f=a.data.inheritRotation&&a.parent?a.parent.worldRotation:0,g=a.rotation,h=Math.atan2(d-a.worldY,b-a.worldX)*c.radDeg-f;a.rotationIK=g+(h-g)*e},c.IkConstraint.apply2=function(a,b,d,e,f,g){var h=b.rotation,i=a.rotation;if(!g)return b.rotationIK=h,void(a.rotationIK=i);var j,k,l=c.temp,m=a.parent;m?(l[0]=d,l[1]=e,m.worldToLocal(l),d=(l[0]-a.x)*m.worldScaleX,e=(l[1]-a.y)*m.worldScaleY):(d-=a.x,e-=a.y),b.parent==a?(j=b.x,k=b.y):(l[0]=b.x,l[1]=b.y,b.parent.localToWorld(l),a.worldToLocal(l),j=l[0],k=l[1]);var n=j*a.worldScaleX,o=k*a.worldScaleY,p=Math.atan2(o,n),q=Math.sqrt(n*n+o*o),r=b.data.length*b.worldScaleX,s=2*q*r;if(1e-4>s)return void(b.rotationIK=h+(Math.atan2(e,d)*c.radDeg-i-h)*g);var t=(d*d+e*e-q*q-r*r)/s;-1>t?t=-1:t>1&&(t=1);var u=Math.acos(t)*f,v=q+r*t,w=r*Math.sin(u),x=Math.atan2(e*v-d*w,d*v+e*w),y=(x-p)*c.radDeg-i;y>180?y-=360:-180>y&&(y+=360),a.rotationIK=i+y*g,y=(u+p)*c.radDeg-h,y>180?y-=360:-180>y&&(y+=360),b.rotationIK=h+(y+a.worldRotation-b.parent.worldRotation)*g},c.Skin=function(a){this.name=a,this.attachments={}},c.Skin.prototype={addAttachment:function(a,b,c){this.attachments[a+":"+b]=c},getAttachment:function(a,b){return this.attachments[a+":"+b]},_attachAll:function(a,b){for(var c in b.attachments){var d=c.indexOf(":"),e=parseInt(c.substring(0,d)),f=c.substring(d+1),g=a.slots[e];if(g.attachment&&g.attachment.name==f){var h=this.getAttachment(e,f);h&&g.setAttachment(h)}}}},c.Animation=function(a,b,c){this.name=a,this.timelines=b,this.duration=c},c.Animation.prototype={apply:function(a,b,c,d,e){d&&0!=this.duration&&(c%=this.duration,b%=this.duration);for(var f=this.timelines,g=0,h=f.length;h>g;g++)f[g].apply(a,b,c,e,1)},mix:function(a,b,c,d,e,f){d&&0!=this.duration&&(c%=this.duration,b%=this.duration);for(var g=this.timelines,h=0,i=g.length;i>h;h++)g[h].apply(a,b,c,e,f)}},c.Animation.binarySearch=function(a,b,c){var d=0,e=Math.floor(a.length/c)-2;if(!e)return c;for(var f=e>>>1;;){if(a[(f+1)*c]<=b?d=f+1:e=f,d==e)return(d+1)*c;f=d+e>>>1}},c.Animation.binarySearch1=function(a,b){var c=0,d=a.length-2;if(!d)return 1;for(var e=d>>>1;;){if(a[e+1]<=b?c=e+1:d=e,c==d)return c+1;e=c+d>>>1}},c.Animation.linearSearch=function(a,b,c){for(var d=0,e=a.length-c;e>=d;d+=c)if(a[d]>b)return d;return-1},c.Curves=function(a){this.curves=[]},c.Curves.prototype={setLinear:function(a){this.curves[19*a]=0},setStepped:function(a){this.curves[19*a]=1},setCurve:function(a,b,c,d,e){var f=.1,g=f*f,h=g*f,i=3*f,j=3*g,k=6*g,l=6*h,m=2*-b+d,n=2*-c+e,o=3*(b-d)+1,p=3*(c-e)+1,q=b*i+m*j+o*h,r=c*i+n*j+p*h,s=m*k+o*l,t=n*k+p*l,u=o*l,v=p*l,w=19*a,x=this.curves;x[w++]=2;for(var y=q,z=r,A=w+19-1;A>w;w+=2)x[w]=y,x[w+1]=z,q+=s,r+=t,s+=u,t+=v,y+=q,z+=r},getCurvePercent:function(a,b){b=0>b?0:b>1?1:b;var c=this.curves,d=19*a,e=c[d];if(0===e)return b;if(1==e)return 0;d++;for(var f=0,g=d,h=d+19-1;h>d;d+=2)if(f=c[d],f>=b){var i,j;return d==g?(i=0,j=0):(i=c[d-2],j=c[d-1]),j+(c[d+1]-j)*(b-i)/(f-i)}var k=c[d-1];return k+(1-k)*(b-f)/(1-f)}},c.RotateTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=2*a},c.RotateTimeline.prototype={boneIndex:0,getFrameCount:function(){return this.frames.length/2},setFrame:function(a,b,c){a*=2,this.frames[a]=b,this.frames[a+1]=c},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h=a.bones[this.boneIndex];if(d>=g[g.length-2]){for(var i=h.data.rotation+g[g.length-1]-h.rotation;i>180;)i-=360;for(;-180>i;)i+=360;return void(h.rotation+=i*f)}var j=c.Animation.binarySearch(g,d,2),k=g[j-1],l=g[j],m=1-(d-l)/(g[j-2]-l);m=this.curves.getCurvePercent(j/2-1,m);for(var i=g[j+1]-k;i>180;)i-=360;for(;-180>i;)i+=360;for(i=h.data.rotation+(k+i*m)-h.rotation;i>180;)i-=360;for(;-180>i;)i+=360;h.rotation+=i*f}}},c.TranslateTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=3*a},c.TranslateTimeline.prototype={boneIndex:0,getFrameCount:function(){return this.frames.length/3},setFrame:function(a,b,c,d){a*=3,this.frames[a]=b,this.frames[a+1]=c,this.frames[a+2]=d},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h=a.bones[this.boneIndex];if(d>=g[g.length-3])return h.x+=(h.data.x+g[g.length-2]-h.x)*f,void(h.y+=(h.data.y+g[g.length-1]-h.y)*f);var i=c.Animation.binarySearch(g,d,3),j=g[i-2],k=g[i-1],l=g[i],m=1-(d-l)/(g[i+-3]-l);m=this.curves.getCurvePercent(i/3-1,m),h.x+=(h.data.x+j+(g[i+1]-j)*m-h.x)*f,h.y+=(h.data.y+k+(g[i+2]-k)*m-h.y)*f}}},c.ScaleTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=3*a},c.ScaleTimeline.prototype={boneIndex:0,getFrameCount:function(){return this.frames.length/3},setFrame:function(a,b,c,d){a*=3,this.frames[a]=b,this.frames[a+1]=c,this.frames[a+2]=d},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h=a.bones[this.boneIndex];if(d>=g[g.length-3])return h.scaleX+=(h.data.scaleX*g[g.length-2]-h.scaleX)*f,void(h.scaleY+=(h.data.scaleY*g[g.length-1]-h.scaleY)*f);var i=c.Animation.binarySearch(g,d,3),j=g[i-2],k=g[i-1],l=g[i],m=1-(d-l)/(g[i+-3]-l);m=this.curves.getCurvePercent(i/3-1,m),h.scaleX+=(h.data.scaleX*(j+(g[i+1]-j)*m)-h.scaleX)*f,h.scaleY+=(h.data.scaleY*(k+(g[i+2]-k)*m)-h.scaleY)*f}}},c.ColorTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=5*a},c.ColorTimeline.prototype={slotIndex:0,getFrameCount:function(){return this.frames.length/5},setFrame:function(a,b,c,d,e,f){a*=5,this.frames[a]=b,this.frames[a+1]=c,this.frames[a+2]=d,this.frames[a+3]=e,this.frames[a+4]=f},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h,i,j,k;if(d>=g[g.length-5]){var l=g.length-1;h=g[l-3],i=g[l-2],j=g[l-1],k=g[l]}else{var m=c.Animation.binarySearch(g,d,5),n=g[m-4],o=g[m-3],p=g[m-2],q=g[m-1],r=g[m],s=1-(d-r)/(g[m-5]-r);s=this.curves.getCurvePercent(m/5-1,s),h=n+(g[m+1]-n)*s,i=o+(g[m+2]-o)*s,j=p+(g[m+3]-p)*s,k=q+(g[m+4]-q)*s}var t=a.slots[this.slotIndex];1>f?(t.r+=(h-t.r)*f,t.g+=(i-t.g)*f,t.b+=(j-t.b)*f,t.a+=(k-t.a)*f):(t.r=h,t.g=i,t.b=j,t.a=k)}}},c.AttachmentTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=a,this.attachmentNames=[],this.attachmentNames.length=a},c.AttachmentTimeline.prototype={slotIndex:0,getFrameCount:function(){return this.frames.length},setFrame:function(a,b,c){this.frames[a]=b,this.attachmentNames[a]=c},apply:function(a,b,d,e,f){var g=this.frames;if(d<g[0])return void(b>d&&this.apply(a,b,Number.MAX_VALUE,null,0));b>d&&(b=-1);var h=d>=g[g.length-1]?g.length-1:c.Animation.binarySearch1(g,d)-1;if(!(g[h]<b)){var i=this.attachmentNames[h];a.slots[this.slotIndex].setAttachment(i?a.getAttachmentBySlotIndex(this.slotIndex,i):null)}}},c.EventTimeline=function(a){this.frames=[],this.frames.length=a,this.events=[],this.events.length=a},c.EventTimeline.prototype={getFrameCount:function(){return this.frames.length},setFrame:function(a,b,c){this.frames[a]=b,this.events[a]=c},apply:function(a,b,d,e,f){if(e){var g=this.frames,h=g.length;if(b>d)this.apply(a,b,Number.MAX_VALUE,e,f),b=-1;else if(b>=g[h-1])return;if(!(d<g[0])){var i;if(b<g[0])i=0;else{i=c.Animation.binarySearch1(g,b);for(var j=g[i];i>0&&g[i-1]==j;)i--}for(var k=this.events;h>i&&d>=g[i];i++)e.push(k[i])}}}},c.DrawOrderTimeline=function(a){this.frames=[],this.frames.length=a,this.drawOrders=[],this.drawOrders.length=a},c.DrawOrderTimeline.prototype={getFrameCount:function(){return this.frames.length},setFrame:function(a,b,c){this.frames[a]=b,this.drawOrders[a]=c},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h;h=d>=g[g.length-1]?g.length-1:c.Animation.binarySearch1(g,d)-1;var i=a.drawOrder,j=(a.slots,this.drawOrders[h]);if(j)for(var k=0,l=j.length;l>k;k++)i[k]=j[k]}}},c.FfdTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=a,this.frameVertices=[],this.frameVertices.length=a},c.FfdTimeline.prototype={slotIndex:0,attachment:0,getFrameCount:function(){return this.frames.length},setFrame:function(a,b,c){this.frames[a]=b,this.frameVertices[a]=c},apply:function(a,b,d,e,f){var g=a.slots[this.slotIndex];if(g.attachment==this.attachment){var h=this.frames;if(!(d<h[0])){var i=this.frameVertices,j=i[0].length,k=g.attachmentVertices;if(k.length!=j&&(f=1),k.length=j,d>=h[h.length-1]){var l=i[h.length-1];if(1>f)for(var m=0;j>m;m++)k[m]+=(l[m]-k[m])*f;else for(var m=0;j>m;m++)k[m]=l[m]}else{var n=c.Animation.binarySearch1(h,d),o=h[n],p=1-(d-o)/(h[n-1]-o);p=this.curves.getCurvePercent(n-1,0>p?0:p>1?1:p);var q=i[n-1],r=i[n];if(1>f)for(var m=0;j>m;m++){var s=q[m];k[m]+=(s+(r[m]-s)*p-k[m])*f}else for(var m=0;j>m;m++){var s=q[m];k[m]=s+(r[m]-s)*p}}}}}},c.IkConstraintTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=3*a},c.IkConstraintTimeline.prototype={ikConstraintIndex:0,getFrameCount:function(){return this.frames.length/3},setFrame:function(a,b,c,d){a*=3,this.frames[a]=b,this.frames[a+1]=c,this.frames[a+2]=d},apply:function(a,b,d,e,f){var g=this.frames;if(!(d<g[0])){var h=a.ikConstraints[this.ikConstraintIndex];if(d>=g[g.length-3])return h.mix+=(g[g.length-2]-h.mix)*f,void(h.bendDirection=g[g.length-1]);var i=c.Animation.binarySearch(g,d,3),j=g[i+-2],k=g[i],l=1-(d-k)/(g[i+-3]-k);l=this.curves.getCurvePercent(i/3-1,l);var m=j+(g[i+1]-j)*l;h.mix+=(m-h.mix)*f,h.bendDirection=g[i+-1]}}},c.FlipXTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=2*a},c.FlipXTimeline.prototype={boneIndex:0,getFrameCount:function(){return this.frames.length/2},setFrame:function(a,b,c){a*=2,this.frames[a]=b,this.frames[a+1]=c?1:0},apply:function(a,b,d,e,f){var g=this.frames;if(d<g[0])return void(b>d&&this.apply(a,b,Number.MAX_VALUE,null,0));b>d&&(b=-1);var h=(d>=g[g.length-2]?g.length:c.Animation.binarySearch(g,d,2))-2;g[h]<b||(a.bones[this.boneIndex].flipX=0!=g[h+1])}},c.FlipYTimeline=function(a){this.curves=new c.Curves(a),this.frames=[],this.frames.length=2*a},c.FlipYTimeline.prototype={boneIndex:0,getFrameCount:function(){return this.frames.length/2},setFrame:function(a,b,c){a*=2,this.frames[a]=b,this.frames[a+1]=c?1:0},apply:function(a,b,d,e,f){var g=this.frames;if(d<g[0])return void(b>d&&this.apply(a,b,Number.MAX_VALUE,null,0));b>d&&(b=-1);var h=(d>=g[g.length-2]?g.length:c.Animation.binarySearch(g,d,2))-2;g[h]<b||(a.bones[this.boneIndex].flipY=0!=g[h+1])}},c.SkeletonData=function(){this.bones=[],this.slots=[],this.skins=[],this.events=[],this.animations=[],this.ikConstraints=[]},c.SkeletonData.prototype={name:null,defaultSkin:null,width:0,height:0,version:null,hash:null,findBone:function(a){for(var b=this.bones,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null},findBoneIndex:function(a){for(var b=this.bones,c=0,d=b.length;d>c;c++)if(b[c].name==a)return c;return-1},findSlot:function(a){for(var b=this.slots,c=0,d=b.length;d>c;c++)if(b[c].name==a)return slot[c];return null},findSlotIndex:function(a){for(var b=this.slots,c=0,d=b.length;d>c;c++)if(b[c].name==a)return c;return-1},findSkin:function(a){for(var b=this.skins,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null},findEvent:function(a){for(var b=this.events,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null},findAnimation:function(a){for(var b=this.animations,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null},findIkConstraint:function(a){for(var b=this.ikConstraints,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null}},c.Skeleton=function(a){this.data=a,this.bones=[];for(var b=0,d=a.bones.length;d>b;b++){var e=a.bones[b],f=e.parent?this.bones[a.bones.indexOf(e.parent)]:null;this.bones.push(new c.Bone(e,this,f))}this.slots=[],this.drawOrder=[];for(var b=0,d=a.slots.length;d>b;b++){var g=a.slots[b],h=this.bones[a.bones.indexOf(g.boneData)],i=new c.Slot(g,h);this.slots.push(i),this.drawOrder.push(b)}this.ikConstraints=[];for(var b=0,d=a.ikConstraints.length;d>b;b++)this.ikConstraints.push(new c.IkConstraint(a.ikConstraints[b],this));this.boneCache=[],this.updateCache()},c.Skeleton.prototype={x:0,y:0,skin:null,r:1,g:1,b:1,a:1,time:0,flipX:!1,flipY:!1,updateCache:function(){var a=this.ikConstraints,b=a.length,c=b+1,d=this.boneCache;d.length>c&&(d.length=c);for(var e=0,f=d.length;f>e;e++)d[e].length=0;for(;d.length<c;)d[d.length]=[];var g=d[0],h=this.bones;a:for(var e=0,f=h.length;f>e;e++){var i=h[e],j=i;do{for(var k=0;b>k;k++)for(var l=a[k],m=l.bones[0],n=l.bones[l.bones.length-1];;){if(j==n){d[k].push(i),d[k+1].push(i);continue a}if(n==m)break;n=n.parent}j=j.parent}while(j);g[g.length]=i}},updateWorldTransform:function(){for(var a=this.bones,b=0,c=a.length;c>b;b++){var d=a[b];d.rotationIK=d.rotation}for(var b=0,e=this.boneCache.length-1;;){for(var f=this.boneCache[b],g=0,h=f.length;h>g;g++)f[g].updateWorldTransform();if(b==e)break;this.ikConstraints[b].apply(),b++}},setToSetupPose:function(){this.setBonesToSetupPose(),this.setSlotsToSetupPose()},setBonesToSetupPose:function(){for(var a=this.bones,b=0,c=a.length;c>b;b++)a[b].setToSetupPose();for(var d=this.ikConstraints,b=0,c=d.length;c>b;b++){var e=d[b];e.bendDirection=e.data.bendDirection,e.mix=e.data.mix}},setSlotsToSetupPose:function(){for(var a=this.slots,b=0,c=a.length;c>b;b++)a[b].setToSetupPose(b);this.resetDrawOrder()},getRootBone:function(){return this.bones.length?this.bones[0]:null},findBone:function(a){for(var b=this.bones,c=0,d=b.length;d>c;c++)if(b[c].data.name==a)return b[c];return null},findBoneIndex:function(a){for(var b=this.bones,c=0,d=b.length;d>c;c++)if(b[c].data.name==a)return c;return-1},findSlot:function(a){for(var b=this.slots,c=0,d=b.length;d>c;c++)if(b[c].data.name==a)return b[c];return null},findSlotIndex:function(a){for(var b=this.slots,c=0,d=b.length;d>c;c++)if(b[c].data.name==a)return c;return-1},setSkinByName:function(a){var b=this.data.findSkin(a);if(!b)throw"Skin not found: "+a;this.setSkin(b)},setSkin:function(a){if(a)if(this.skin)a._attachAll(this,this.skin);else for(var b=this.slots,c=0,d=b.length;d>c;c++){var e=b[c],f=e.data.attachmentName;if(f){var g=a.getAttachment(c,f);g&&e.setAttachment(g)}}this.skin=a},getAttachmentBySlotName:function(a,b){return this.getAttachmentBySlotIndex(this.data.findSlotIndex(a),b)},getAttachmentBySlotIndex:function(a,b){if(this.skin){var c=this.skin.getAttachment(a,b);if(c)return c}return this.data.defaultSkin?this.data.defaultSkin.getAttachment(a,b):null},setAttachment:function(a,b){for(var c=this.slots,d=0,e=c.length;e>d;d++){var f=c[d];if(f.data.name==a){var g=null;if(b&&(g=this.getAttachmentBySlotIndex(d,b),!g))throw"Attachment not found: "+b+", for slot: "+a;return void f.setAttachment(g)}}throw"Slot not found: "+a},findIkConstraint:function(a){for(var b=this.ikConstraints,c=0,d=b.length;d>c;c++)if(b[c].data.name==a)return b[c];return null},update:function(a){this.time+=a},resetDrawOrder:function(){for(var a=0,b=this.drawOrder.length;b>a;a++)this.drawOrder[a]=a}},c.EventData=function(a){this.name=a},c.EventData.prototype={intValue:0,floatValue:0,stringValue:null},c.Event=function(a){this.data=a},c.Event.prototype={intValue:0,floatValue:0,stringValue:null},c.AttachmentType={region:0,boundingbox:1,mesh:2,skinnedmesh:3},c.RegionAttachment=function(a){this.name=a,this.offset=[],this.offset.length=8,this.uvs=[],this.uvs.length=8},c.RegionAttachment.prototype={type:c.AttachmentType.region,x:0,y:0,rotation:0,scaleX:1,scaleY:1,width:0,height:0,r:1,g:1,b:1,a:1,path:null,rendererObject:null,regionOffsetX:0,regionOffsetY:0,regionWidth:0,regionHeight:0,regionOriginalWidth:0,regionOriginalHeight:0,setUVs:function(a,b,c,d,e){var f=this.uvs;e?(f[2]=a,f[3]=d,f[4]=a,f[5]=b,f[6]=c,f[7]=b,f[0]=c,f[1]=d):(f[0]=a,f[1]=d,f[2]=a,f[3]=b,f[4]=c,f[5]=b,f[6]=c,f[7]=d)},updateOffset:function(){var a=this.width/this.regionOriginalWidth*this.scaleX,b=this.height/this.regionOriginalHeight*this.scaleY,d=-this.width/2*this.scaleX+this.regionOffsetX*a,e=-this.height/2*this.scaleY+this.regionOffsetY*b,f=d+this.regionWidth*a,g=e+this.regionHeight*b,h=this.rotation*c.degRad,i=Math.cos(h),j=Math.sin(h),k=d*i+this.x,l=d*j,m=e*i+this.y,n=e*j,o=f*i+this.x,p=f*j,q=g*i+this.y,r=g*j,s=this.offset;s[0]=k-n,s[1]=m+l,s[2]=k-r,s[3]=q+l,s[4]=o-r,s[5]=q+p,s[6]=o-n,s[7]=m+p},computeVertices:function(a,b,c,d){a+=c.worldX,b+=c.worldY;var e=c.m00,f=c.m01,g=c.m10,h=c.m11,i=this.offset;d[0]=i[0]*e+i[1]*f+a,d[1]=i[0]*g+i[1]*h+b,d[2]=i[2]*e+i[3]*f+a,d[3]=i[2]*g+i[3]*h+b,d[4]=i[4]*e+i[5]*f+a,d[5]=i[4]*g+i[5]*h+b,d[6]=i[6]*e+i[7]*f+a,d[7]=i[6]*g+i[7]*h+b}},c.MeshAttachment=function(a){this.name=a},c.MeshAttachment.prototype={type:c.AttachmentType.mesh,vertices:null,uvs:null,regionUVs:null,triangles:null,hullLength:0,r:1,g:1,b:1,a:1,path:null,rendererObject:null,regionU:0,regionV:0,regionU2:0,regionV2:0,regionRotate:!1,regionOffsetX:0,regionOffsetY:0,regionWidth:0,regionHeight:0,regionOriginalWidth:0,regionOriginalHeight:0,edges:null,width:0,height:0,updateUVs:function(){var a=this.regionU2-this.regionU,b=this.regionV2-this.regionV,d=this.regionUVs.length;if(this.uvs&&this.uvs.length==d||(this.uvs=new c.Float32Array(d)),this.regionRotate)for(var e=0;d>e;e+=2)this.uvs[e]=this.regionU+this.regionUVs[e+1]*a,this.uvs[e+1]=this.regionV+b-this.regionUVs[e]*b;else for(var e=0;d>e;e+=2)this.uvs[e]=this.regionU+this.regionUVs[e]*a,this.uvs[e+1]=this.regionV+this.regionUVs[e+1]*b},computeWorldVertices:function(a,b,c,d){var e=c.bone;a+=e.worldX,b+=e.worldY;var f=e.m00,g=e.m01,h=e.m10,i=e.m11,j=this.vertices,k=j.length;c.attachmentVertices.length==k&&(j=c.attachmentVertices);for(var l=0;k>l;l+=2){var m=j[l],n=j[l+1];d[l]=m*f+n*g+a,d[l+1]=m*h+n*i+b}}},c.SkinnedMeshAttachment=function(a){this.name=a},c.SkinnedMeshAttachment.prototype={type:c.AttachmentType.skinnedmesh,bones:null,weights:null,uvs:null,regionUVs:null,triangles:null,hullLength:0,r:1,g:1,b:1,a:1,path:null,rendererObject:null,regionU:0,regionV:0,regionU2:0,regionV2:0,regionRotate:!1,regionOffsetX:0,regionOffsetY:0,regionWidth:0,regionHeight:0,regionOriginalWidth:0,regionOriginalHeight:0,edges:null,width:0,height:0,updateUVs:function(a,b,d,e,f){var g=this.regionU2-this.regionU,h=this.regionV2-this.regionV,i=this.regionUVs.length;if(this.uvs&&this.uvs.length==i||(this.uvs=new c.Float32Array(i)),this.regionRotate)for(var j=0;i>j;j+=2)this.uvs[j]=this.regionU+this.regionUVs[j+1]*g,this.uvs[j+1]=this.regionV+h-this.regionUVs[j]*h;else for(var j=0;i>j;j+=2)this.uvs[j]=this.regionU+this.regionUVs[j]*g,this.uvs[j+1]=this.regionV+this.regionUVs[j+1]*h},computeWorldVertices:function(a,b,c,d){var e,f,g,h,i,j,k,l=c.bone.skeleton.bones,m=this.weights,n=this.bones,o=0,p=0,q=0,r=0,s=n.length;if(c.attachmentVertices.length)for(var t=c.attachmentVertices;s>p;o+=2){for(f=0,g=0,e=n[p++]+p;e>p;p++,q+=3,r+=2)h=l[n[p]],i=m[q]+t[r],j=m[q+1]+t[r+1],k=m[q+2],f+=(i*h.m00+j*h.m01+h.worldX)*k,g+=(i*h.m10+j*h.m11+h.worldY)*k;d[o]=f+a,d[o+1]=g+b}else for(;s>p;o+=2){for(f=0,g=0,e=n[p++]+p;e>p;p++,q+=3)h=l[n[p]],i=m[q],j=m[q+1],k=m[q+2],f+=(i*h.m00+j*h.m01+h.worldX)*k,g+=(i*h.m10+j*h.m11+h.worldY)*k;d[o]=f+a,d[o+1]=g+b}}},c.BoundingBoxAttachment=function(a){this.name=a,this.vertices=[]},c.BoundingBoxAttachment.prototype={type:c.AttachmentType.boundingbox,computeWorldVertices:function(a,b,c,d){a+=c.worldX,b+=c.worldY;for(var e=c.m00,f=c.m01,g=c.m10,h=c.m11,i=this.vertices,j=0,k=i.length;k>j;j+=2){var l=i[j],m=i[j+1];d[j]=l*e+m*f+a,d[j+1]=l*g+m*h+b}}},c.AnimationStateData=function(a){this.skeletonData=a,this.animationToMixTime={}},c.AnimationStateData.prototype={defaultMix:0,setMixByName:function(a,b,c){var d=this.skeletonData.findAnimation(a);if(!d)throw"Animation not found: "+a;var e=this.skeletonData.findAnimation(b);if(!e)throw"Animation not found: "+b;this.setMix(d,e,c)},setMix:function(a,b,c){this.animationToMixTime[a.name+":"+b.name]=c},getMix:function(a,b){var c=a.name+":"+b.name;return this.animationToMixTime.hasOwnProperty(c)?this.animationToMixTime[c]:this.defaultMix}},c.TrackEntry=function(){},c.TrackEntry.prototype={next:null,previous:null,animation:null,loop:!1,delay:0,time:0,lastTime:-1,endTime:0,timeScale:1,mixTime:0,mixDuration:0,mix:1,onStart:null,onEnd:null,onComplete:null,onEvent:null},c.AnimationState=function(a){this.data=a,this.tracks=[],this.events=[]},c.AnimationState.prototype={onStart:null,onEnd:null,onComplete:null,onEvent:null,timeScale:1,update:function(a){a*=this.timeScale;for(var b=0;b<this.tracks.length;b++){var c=this.tracks[b];if(c){if(c.time+=a*c.timeScale,c.previous){var d=a*c.previous.timeScale;c.previous.time+=d,c.mixTime+=d}var e=c.next;e?(e.time=c.lastTime-e.delay,e.time>=0&&this.setCurrent(b,e)):!c.loop&&c.lastTime>=c.endTime&&this.clearTrack(b)}}},apply:function(a){a.resetDrawOrder();for(var b=0;b<this.tracks.length;b++){var c=this.tracks[b];if(c){this.events.length=0;var d=c.time,e=c.lastTime,f=c.endTime,g=c.loop;!g&&d>f&&(d=f);var h=c.previous;if(h){var i=h.time;!h.loop&&i>h.endTime&&(i=h.endTime),h.animation.apply(a,i,i,h.loop,null);var j=c.mixTime/c.mixDuration*c.mix;j>=1&&(j=1,c.previous=null),c.animation.mix(a,c.lastTime,d,g,this.events,j)}else 1==c.mix?c.animation.apply(a,c.lastTime,d,g,this.events):c.animation.mix(a,c.lastTime,d,g,this.events,c.mix);for(var k=0,l=this.events.length;l>k;k++){var m=this.events[k];c.onEvent&&c.onEvent(b,m),this.onEvent&&this.onEvent(b,m)}if(g?e%f>d%f:f>e&&d>=f){var n=Math.floor(d/f);c.onComplete&&c.onComplete(b,n),this.onComplete&&this.onComplete(b,n)}c.lastTime=c.time}}},clearTracks:function(){for(var a=0,b=this.tracks.length;b>a;a++)this.clearTrack(a);this.tracks.length=0},clearTrack:function(a){if(!(a>=this.tracks.length)){var b=this.tracks[a];b&&(b.onEnd&&b.onEnd(a),this.onEnd&&this.onEnd(a),this.tracks[a]=null)}},_expandToIndex:function(a){if(a<this.tracks.length)return this.tracks[a];for(;a>=this.tracks.length;)this.tracks.push(null);return null},setCurrent:function(a,b){var c=this._expandToIndex(a);if(c){var d=c.previous;c.previous=null,c.onEnd&&c.onEnd(a),this.onEnd&&this.onEnd(a),b.mixDuration=this.data.getMix(c.animation,b.animation),b.mixDuration>0&&(b.mixTime=0,b.previous=d&&c.mixTime/c.mixDuration<.5?d:c)}this.tracks[a]=b,b.onStart&&b.onStart(a),this.onStart&&this.onStart(a)},setAnimationByName:function(a,b,c){var d=this.data.skeletonData.findAnimation(b);if(!d)throw"Animation not found: "+b;return this.setAnimation(a,d,c)},setAnimation:function(a,b,d){var e=new c.TrackEntry;return e.animation=b,e.loop=d,e.endTime=b.duration,this.setCurrent(a,e),e},addAnimationByName:function(a,b,c,d){var e=this.data.skeletonData.findAnimation(b);if(!e)throw"Animation not found: "+b;return this.addAnimation(a,e,c,d)},addAnimation:function(a,b,d,e){var f=new c.TrackEntry;f.animation=b,f.loop=d,f.endTime=b.duration;var g=this._expandToIndex(a);if(g){for(;g.next;)g=g.next;g.next=f}else this.tracks[a]=f;return 0>=e&&(g?e+=g.endTime-this.data.getMix(g.animation,b):e=0),f.delay=e,f},getCurrent:function(a){return a>=this.tracks.length?null:this.tracks[a]}},c.SkeletonJson=function(a){this.attachmentLoader=a},c.SkeletonJson.prototype={scale:1,readSkeletonData:function(a,b){var d=new c.SkeletonData;d.name=b;var e=a.skeleton;e&&(d.hash=e.hash,d.version=e.spine,d.width=e.width||0,d.height=e.height||0);for(var f=a.bones,g=0,h=f.length;h>g;g++){var i=f[g],j=null;if(i.parent&&(j=d.findBone(i.parent),!j))throw"Parent bone not found: "+i.parent;var k=new c.BoneData(i.name,j);
 
 	k.length=(i.length||0)*this.scale,k.x=(i.x||0)*this.scale,k.y=(i.y||0)*this.scale,k.rotation=i.rotation||0,k.scaleX=i.hasOwnProperty("scaleX")?i.scaleX:1,k.scaleY=i.hasOwnProperty("scaleY")?i.scaleY:1,k.inheritScale=i.hasOwnProperty("inheritScale")?i.inheritScale:!0,k.inheritRotation=i.hasOwnProperty("inheritRotation")?i.inheritRotation:!0,d.bones.push(k)}var l=a.ik;if(l)for(var g=0,h=l.length;h>g;g++){for(var m=l[g],n=new c.IkConstraintData(m.name),f=m.bones,o=0,p=f.length;p>o;o++){var q=d.findBone(f[o]);if(!q)throw"IK bone not found: "+f[o];n.bones.push(q)}if(n.target=d.findBone(m.target),!n.target)throw"Target bone not found: "+m.target;n.bendDirection=!m.hasOwnProperty("bendPositive")||m.bendPositive?1:-1,n.mix=m.hasOwnProperty("mix")?m.mix:1,d.ikConstraints.push(n)}for(var r=a.slots,g=0,h=r.length;h>g;g++){var s=r[g],k=d.findBone(s.bone);if(!k)throw"Slot bone not found: "+s.bone;var t=new c.SlotData(s.name,k),u=s.color;u&&(t.r=this.toColor(u,0),t.g=this.toColor(u,1),t.b=this.toColor(u,2),t.a=this.toColor(u,3)),t.attachmentName=s.attachment,t.additiveBlending=s.additive&&"true"==s.additive,d.slots.push(t)}var v=a.skins;for(var w in v)if(v.hasOwnProperty(w)){var x=v[w],y=new c.Skin(w);for(var z in x)if(x.hasOwnProperty(z)){var A=d.findSlotIndex(z),B=x[z];for(var C in B)if(B.hasOwnProperty(C)){var D=this.readAttachment(y,C,B[C]);D&&y.addAttachment(A,C,D)}}d.skins.push(y),"default"==y.name&&(d.defaultSkin=y)}var E=a.events;for(var F in E)if(E.hasOwnProperty(F)){var G=E[F],H=new c.EventData(F);H.intValue=G["int"]||0,H.floatValue=G["float"]||0,H.stringValue=G.string||null,d.events.push(H)}var I=a.animations;for(var J in I)I.hasOwnProperty(J)&&this.readAnimation(J,I[J],d);return d},readAttachment:function(a,b,d){b=d.name||b;var e=c.AttachmentType[d.type||"region"],f=d.path||b,g=this.scale;if(e==c.AttachmentType.region){var h=this.attachmentLoader.newRegionAttachment(a,b,f);if(!h)return null;h.path=f,h.x=(d.x||0)*g,h.y=(d.y||0)*g,h.scaleX=d.hasOwnProperty("scaleX")?d.scaleX:1,h.scaleY=d.hasOwnProperty("scaleY")?d.scaleY:1,h.rotation=d.rotation||0,h.width=(d.width||0)*g,h.height=(d.height||0)*g;var i=d.color;return i&&(h.r=this.toColor(i,0),h.g=this.toColor(i,1),h.b=this.toColor(i,2),h.a=this.toColor(i,3)),h.updateOffset(),h}if(e==c.AttachmentType.mesh){var j=this.attachmentLoader.newMeshAttachment(a,b,f);return j?(j.path=f,j.vertices=this.getFloatArray(d,"vertices",g),j.triangles=this.getIntArray(d,"triangles"),j.regionUVs=this.getFloatArray(d,"uvs",1),j.updateUVs(),i=d.color,i&&(j.r=this.toColor(i,0),j.g=this.toColor(i,1),j.b=this.toColor(i,2),j.a=this.toColor(i,3)),j.hullLength=2*(d.hull||0),d.edges&&(j.edges=this.getIntArray(d,"edges")),j.width=(d.width||0)*g,j.height=(d.height||0)*g,j):null}if(e==c.AttachmentType.skinnedmesh){var j=this.attachmentLoader.newSkinnedMeshAttachment(a,b,f);if(!j)return null;j.path=f;for(var k=this.getFloatArray(d,"uvs",1),l=this.getFloatArray(d,"vertices",1),m=[],n=[],o=0,p=l.length;p>o;){var q=0|l[o++];n[n.length]=q;for(var r=o+4*q;r>o;)n[n.length]=l[o],m[m.length]=l[o+1]*g,m[m.length]=l[o+2]*g,m[m.length]=l[o+3],o+=4}return j.bones=n,j.weights=m,j.triangles=this.getIntArray(d,"triangles"),j.regionUVs=k,j.updateUVs(),i=d.color,i&&(j.r=this.toColor(i,0),j.g=this.toColor(i,1),j.b=this.toColor(i,2),j.a=this.toColor(i,3)),j.hullLength=2*(d.hull||0),d.edges&&(j.edges=this.getIntArray(d,"edges")),j.width=(d.width||0)*g,j.height=(d.height||0)*g,j}if(e==c.AttachmentType.boundingbox){for(var s=this.attachmentLoader.newBoundingBoxAttachment(a,b),l=d.vertices,o=0,p=l.length;p>o;o++)s.vertices.push(l[o]*g);return s}throw"Unknown attachment type: "+e},readAnimation:function(a,b,d){var e=[],f=0,g=b.slots;for(var h in g)if(g.hasOwnProperty(h)){var i=g[h],j=d.findSlotIndex(h);for(var k in i)if(i.hasOwnProperty(k)){var l=i[k];if("color"==k){var m=new c.ColorTimeline(l.length);m.slotIndex=j;for(var n=0,o=0,p=l.length;p>o;o++){var q=l[o],r=q.color,s=this.toColor(r,0),t=this.toColor(r,1),u=this.toColor(r,2),v=this.toColor(r,3);m.setFrame(n,q.time,s,t,u,v),this.readCurve(m,n,q),n++}e.push(m),f=Math.max(f,m.frames[5*m.getFrameCount()-5])}else{if("attachment"!=k)throw"Invalid timeline type for a slot: "+k+" ("+h+")";var m=new c.AttachmentTimeline(l.length);m.slotIndex=j;for(var n=0,o=0,p=l.length;p>o;o++){var q=l[o];m.setFrame(n++,q.time,q.name)}e.push(m),f=Math.max(f,m.frames[m.getFrameCount()-1])}}}var w=b.bones;for(var x in w)if(w.hasOwnProperty(x)){var y=d.findBoneIndex(x);if(-1==y)throw"Bone not found: "+x;var z=w[x];for(var k in z)if(z.hasOwnProperty(k)){var l=z[k];if("rotate"==k){var m=new c.RotateTimeline(l.length);m.boneIndex=y;for(var n=0,o=0,p=l.length;p>o;o++){var q=l[o];m.setFrame(n,q.time,q.angle),this.readCurve(m,n,q),n++}e.push(m),f=Math.max(f,m.frames[2*m.getFrameCount()-2])}else if("translate"==k||"scale"==k){var m,A=1;"scale"==k?m=new c.ScaleTimeline(l.length):(m=new c.TranslateTimeline(l.length),A=this.scale),m.boneIndex=y;for(var n=0,o=0,p=l.length;p>o;o++){var q=l[o],B=(q.x||0)*A,C=(q.y||0)*A;m.setFrame(n,q.time,B,C),this.readCurve(m,n,q),n++}e.push(m),f=Math.max(f,m.frames[3*m.getFrameCount()-3])}else{if("flipX"!=k&&"flipY"!=k)throw"Invalid timeline type for a bone: "+k+" ("+x+")";var B="flipX"==k,m=B?new c.FlipXTimeline(l.length):new c.FlipYTimeline(l.length);m.boneIndex=y;for(var D=B?"x":"y",n=0,o=0,p=l.length;p>o;o++){var q=l[o];m.setFrame(n,q.time,q[D]||!1),n++}e.push(m),f=Math.max(f,m.frames[2*m.getFrameCount()-2])}}}var E=b.ik;for(var F in E)if(E.hasOwnProperty(F)){var G=d.findIkConstraint(F),l=E[F],m=new c.IkConstraintTimeline(l.length);m.ikConstraintIndex=d.ikConstraints.indexOf(G);for(var n=0,o=0,p=l.length;p>o;o++){var q=l[o],H=q.hasOwnProperty("mix")?q.mix:1,I=!q.hasOwnProperty("bendPositive")||q.bendPositive?1:-1;m.setFrame(n,q.time,H,I),this.readCurve(m,n,q),n++}e.push(m),f=Math.max(f,m.frames[3*m.getFrameCount()-3])}var J=b.ffd;for(var K in J){var L=d.findSkin(K),i=J[K];for(h in i){var j=d.findSlotIndex(h),M=i[h];for(var N in M){var l=M[N],m=new c.FfdTimeline(l.length),O=L.getAttachment(j,N);if(!O)throw"FFD attachment not found: "+N;m.slotIndex=j,m.attachment=O;var P,Q=O.type==c.AttachmentType.mesh;P=Q?O.vertices.length:O.weights.length/3*2;for(var n=0,o=0,p=l.length;p>o;o++){var R,q=l[o];if(q.vertices){var S=q.vertices,R=[];R.length=P;var T=q.offset||0,U=S.length;if(1==this.scale)for(var V=0;U>V;V++)R[V+T]=S[V];else for(var V=0;U>V;V++)R[V+T]=S[V]*this.scale;if(Q)for(var W=O.vertices,V=0,U=R.length;U>V;V++)R[V]+=W[V]}else Q?R=O.vertices:(R=[],R.length=P);m.setFrame(n,q.time,R),this.readCurve(m,n,q),n++}e[e.length]=m,f=Math.max(f,m.frames[m.getFrameCount()-1])}}}var X=b.drawOrder;if(X||(X=b.draworder),X){for(var m=new c.DrawOrderTimeline(X.length),Y=d.slots.length,n=0,o=0,p=X.length;p>o;o++){var Z=X[o],$=null;if(Z.offsets){$=[],$.length=Y;for(var V=Y-1;V>=0;V--)$[V]=-1;var _=Z.offsets,aa=[];aa.length=Y-_.length;for(var ba=0,ca=0,V=0,U=_.length;U>V;V++){var da=_[V],j=d.findSlotIndex(da.slot);if(-1==j)throw"Slot not found: "+da.slot;for(;ba!=j;)aa[ca++]=ba++;$[ba+da.offset]=ba++}for(;Y>ba;)aa[ca++]=ba++;for(var V=Y-1;V>=0;V--)-1==$[V]&&($[V]=aa[--ca])}m.setFrame(n++,Z.time,$)}e.push(m),f=Math.max(f,m.frames[m.getFrameCount()-1])}var ea=b.events;if(ea){for(var m=new c.EventTimeline(ea.length),n=0,o=0,p=ea.length;p>o;o++){var fa=ea[o],ga=d.findEvent(fa.name);if(!ga)throw"Event not found: "+fa.name;var ha=new c.Event(ga);ha.intValue=fa.hasOwnProperty("int")?fa["int"]:ga.intValue,ha.floatValue=fa.hasOwnProperty("float")?fa["float"]:ga.floatValue,ha.stringValue=fa.hasOwnProperty("string")?fa.string:ga.stringValue,m.setFrame(n++,fa.time,ha)}e.push(m),f=Math.max(f,m.frames[m.getFrameCount()-1])}d.animations.push(new c.Animation(a,e,f))},readCurve:function(a,b,c){var d=c.curve;d?"stepped"==d?a.curves.setStepped(b):d instanceof Array&&a.curves.setCurve(b,d[0],d[1],d[2],d[3]):a.curves.setLinear(b)},toColor:function(a,b){if(8!=a.length)throw"Color hexidecimal length must be 8, recieved: "+a;return parseInt(a.substring(2*b,2*b+2),16)/255},getFloatArray:function(a,b,d){var e=a[b],f=new c.Float32Array(e.length),g=0,h=e.length;if(1==d)for(;h>g;g++)f[g]=e[g];else for(;h>g;g++)f[g]=e[g]*d;return f},getIntArray:function(a,b){for(var d=a[b],e=new c.Uint16Array(d.length),f=0,g=d.length;g>f;f++)e[f]=0|d[f];return e}},c.Atlas=function(a,b){this.textureLoader=b,this.pages=[],this.regions=[];var d=new c.AtlasReader(a),e=[];e.length=4;for(var f=null;;){var g=d.readLine();if(null===g)break;if(g=d.trim(g),g.length)if(f){var h=new c.AtlasRegion;h.name=g,h.page=f,h.rotate="true"==d.readValue(),d.readTuple(e);var i=parseInt(e[0]),j=parseInt(e[1]);d.readTuple(e);var k=parseInt(e[0]),l=parseInt(e[1]);h.u=i/f.width,h.v=j/f.height,h.rotate?(h.u2=(i+l)/f.width,h.v2=(j+k)/f.height):(h.u2=(i+k)/f.width,h.v2=(j+l)/f.height),h.x=i,h.y=j,h.width=Math.abs(k),h.height=Math.abs(l),4==d.readTuple(e)&&(h.splits=[parseInt(e[0]),parseInt(e[1]),parseInt(e[2]),parseInt(e[3])],4==d.readTuple(e)&&(h.pads=[parseInt(e[0]),parseInt(e[1]),parseInt(e[2]),parseInt(e[3])],d.readTuple(e))),h.originalWidth=parseInt(e[0]),h.originalHeight=parseInt(e[1]),d.readTuple(e),h.offsetX=parseInt(e[0]),h.offsetY=parseInt(e[1]),h.index=parseInt(d.readValue()),this.regions.push(h)}else{f=new c.AtlasPage,f.name=g,2==d.readTuple(e)&&(f.width=parseInt(e[0]),f.height=parseInt(e[1]),d.readTuple(e)),f.format=c.Atlas.Format[e[0]],d.readTuple(e),f.minFilter=c.Atlas.TextureFilter[e[0]],f.magFilter=c.Atlas.TextureFilter[e[1]];var m=d.readValue();f.uWrap=c.Atlas.TextureWrap.clampToEdge,f.vWrap=c.Atlas.TextureWrap.clampToEdge,"x"==m?f.uWrap=c.Atlas.TextureWrap.repeat:"y"==m?f.vWrap=c.Atlas.TextureWrap.repeat:"xy"==m&&(f.uWrap=f.vWrap=c.Atlas.TextureWrap.repeat),b.load(f,g,this),this.pages.push(f)}else f=null}},c.Atlas.prototype={findRegion:function(a){for(var b=this.regions,c=0,d=b.length;d>c;c++)if(b[c].name==a)return b[c];return null},dispose:function(){for(var a=this.pages,b=0,c=a.length;c>b;b++)this.textureLoader.unload(a[b].rendererObject)},updateUVs:function(a){for(var b=this.regions,c=0,d=b.length;d>c;c++){var e=b[c];e.page==a&&(e.u=e.x/a.width,e.v=e.y/a.height,e.rotate?(e.u2=(e.x+e.height)/a.width,e.v2=(e.y+e.width)/a.height):(e.u2=(e.x+e.width)/a.width,e.v2=(e.y+e.height)/a.height))}}},c.Atlas.Format={alpha:0,intensity:1,luminanceAlpha:2,rgb565:3,rgba4444:4,rgb888:5,rgba8888:6},c.Atlas.TextureFilter={nearest:0,linear:1,mipMap:2,mipMapNearestNearest:3,mipMapLinearNearest:4,mipMapNearestLinear:5,mipMapLinearLinear:6},c.Atlas.TextureWrap={mirroredRepeat:0,clampToEdge:1,repeat:2},c.AtlasPage=function(){},c.AtlasPage.prototype={name:null,format:null,minFilter:null,magFilter:null,uWrap:null,vWrap:null,rendererObject:null,width:0,height:0},c.AtlasRegion=function(){},c.AtlasRegion.prototype={page:null,name:null,x:0,y:0,width:0,height:0,u:0,v:0,u2:0,v2:0,offsetX:0,offsetY:0,originalWidth:0,originalHeight:0,index:0,rotate:!1,splits:null,pads:null},c.AtlasReader=function(a){this.lines=a.split(/\r\n|\r|\n/)},c.AtlasReader.prototype={index:0,trim:function(a){return a.replace(/^\s+|\s+$/g,"")},readLine:function(){return this.index>=this.lines.length?null:this.lines[this.index++]},readValue:function(){var a=this.readLine(),b=a.indexOf(":");if(-1==b)throw"Invalid line: "+a;return this.trim(a.substring(b+1))},readTuple:function(a){var b=this.readLine(),c=b.indexOf(":");if(-1==c)throw"Invalid line: "+b;for(var d=0,e=c+1;3>d;d++){var f=b.indexOf(",",e);if(-1==f)break;a[d]=this.trim(b.substr(e,f-e)),e=f+1}return a[d]=this.trim(b.substring(e)),d+1}},c.AtlasAttachmentLoader=function(a){this.atlas=a},c.AtlasAttachmentLoader.prototype={newRegionAttachment:function(a,b,d){var e=this.atlas.findRegion(d);if(!e)throw"Region not found in atlas: "+d+" (region attachment: "+b+")";var f=new c.RegionAttachment(b);return f.rendererObject=e,f.setUVs(e.u,e.v,e.u2,e.v2,e.rotate),f.regionOffsetX=e.offsetX,f.regionOffsetY=e.offsetY,f.regionWidth=e.width,f.regionHeight=e.height,f.regionOriginalWidth=e.originalWidth,f.regionOriginalHeight=e.originalHeight,f},newMeshAttachment:function(a,b,d){var e=this.atlas.findRegion(d);if(!e)throw"Region not found in atlas: "+d+" (mesh attachment: "+b+")";var f=new c.MeshAttachment(b);return f.rendererObject=e,f.regionU=e.u,f.regionV=e.v,f.regionU2=e.u2,f.regionV2=e.v2,f.regionRotate=e.rotate,f.regionOffsetX=e.offsetX,f.regionOffsetY=e.offsetY,f.regionWidth=e.width,f.regionHeight=e.height,f.regionOriginalWidth=e.originalWidth,f.regionOriginalHeight=e.originalHeight,f},newSkinnedMeshAttachment:function(a,b,d){var e=this.atlas.findRegion(d);if(!e)throw"Region not found in atlas: "+d+" (skinned mesh attachment: "+b+")";var f=new c.SkinnedMeshAttachment(b);return f.rendererObject=e,f.regionU=e.u,f.regionV=e.v,f.regionU2=e.u2,f.regionV2=e.v2,f.regionRotate=e.rotate,f.regionOffsetX=e.offsetX,f.regionOffsetY=e.offsetY,f.regionWidth=e.width,f.regionHeight=e.height,f.regionOriginalWidth=e.originalWidth,f.regionOriginalHeight=e.originalHeight,f},newBoundingBoxAttachment:function(a,b){return new c.BoundingBoxAttachment(b)}},c.SkeletonBounds=function(){this.polygonPool=[],this.polygons=[],this.boundingBoxes=[]},c.SkeletonBounds.prototype={minX:0,minY:0,maxX:0,maxY:0,update:function(a,b){var d=a.slots,e=d.length,f=a.x,g=a.y,h=this.boundingBoxes,i=this.polygonPool,j=this.polygons;h.length=0;for(var k=0,l=j.length;l>k;k++)i.push(j[k]);j.length=0;for(var k=0;e>k;k++){var m=d[k],n=m.attachment;if(n.type==c.AttachmentType.boundingbox){h.push(n);var o,p=i.length;p>0?(o=i[p-1],i.splice(p-1,1)):o=[],j.push(o),o.length=n.vertices.length,n.computeWorldVertices(f,g,m.bone,o)}}b&&this.aabbCompute()},aabbCompute:function(){for(var a=this.polygons,b=Number.MAX_VALUE,c=Number.MAX_VALUE,d=Number.MIN_VALUE,e=Number.MIN_VALUE,f=0,g=a.length;g>f;f++)for(var h=a[f],i=0,j=h.length;j>i;i+=2){var k=h[i],l=h[i+1];b=Math.min(b,k),c=Math.min(c,l),d=Math.max(d,k),e=Math.max(e,l)}this.minX=b,this.minY=c,this.maxX=d,this.maxY=e},aabbContainsPoint:function(a,b){return a>=this.minX&&a<=this.maxX&&b>=this.minY&&b<=this.maxY},aabbIntersectsSegment:function(a,b,c,d){var e=this.minX,f=this.minY,g=this.maxX,h=this.maxY;if(e>=a&&e>=c||f>=b&&f>=d||a>=g&&c>=g||b>=h&&d>=h)return!1;var i=(d-b)/(c-a),j=i*(e-a)+b;if(j>f&&h>j)return!0;if(j=i*(g-a)+b,j>f&&h>j)return!0;var k=(f-b)/i+a;return k>e&&g>k?!0:(k=(h-b)/i+a,k>e&&g>k?!0:!1)},aabbIntersectsSkeleton:function(a){return this.minX<a.maxX&&this.maxX>a.minX&&this.minY<a.maxY&&this.maxY>a.minY},containsPoint:function(a,b){for(var c=this.polygons,d=0,e=c.length;e>d;d++)if(this.polygonContainsPoint(c[d],a,b))return this.boundingBoxes[d];return null},intersectsSegment:function(a,b,c,d){for(var e=this.polygons,f=0,g=e.length;g>f;f++)if(e[f].intersectsSegment(a,b,c,d))return this.boundingBoxes[f];return null},polygonContainsPoint:function(a,b,c){for(var d=a.length,e=d-2,f=!1,g=0;d>g;g+=2){var h=a[g+1],i=a[e+1];if(c>h&&i>=c||c>i&&h>=c){var j=a[g];j+(c-h)/(i-h)*(a[e]-j)<b&&(f=!f)}e=g}return f},polygonIntersectsSegment:function(a,b,c,d,e){for(var f=a.length,g=b-d,h=c-e,i=b*e-c*d,j=a[f-2],k=a[f-1],l=0;f>l;l+=2){var m=a[l],n=a[l+1],o=j*n-k*m,p=j-m,q=k-n,r=g*q-h*p,s=(i*p-g*o)/r;if((s>=j&&m>=s||s>=m&&j>=s)&&(s>=b&&d>=s||s>=d&&b>=s)){var t=(i*q-h*o)/r;if((t>=k&&n>=t||t>=n&&k>=t)&&(t>=c&&e>=t||t>=e&&c>=t))return!0}j=m,k=n}return!1},getPolygon:function(a){var b=this.boundingBoxes.indexOf(a);return-1==b?null:this.polygons[b]},getWidth:function(){return this.maxX-this.minX},getHeight:function(){return this.maxY-this.minY}},c.Bone.yDown=!0,b.AnimCache={},b.SpineTextureLoader=function(a,c){b.EventTarget.call(this),this.basePath=a,this.crossorigin=c,this.loadingCount=0},b.SpineTextureLoader.prototype=b.SpineTextureLoader,b.SpineTextureLoader.prototype.load=function(a,c){if(a.rendererObject=b.BaseTexture.fromImage(this.basePath+"/"+c,this.crossorigin),!a.rendererObject.hasLoaded){var d=this;++d.loadingCount,a.rendererObject.addEventListener("loaded",function(){--d.loadingCount,d.dispatchEvent({type:"loadedBaseTexture",content:d})})}},b.SpineTextureLoader.prototype.unload=function(a){a.destroy(!0)},b.Spine=function(a){if(b.DisplayObjectContainer.call(this),this.spineData=b.AnimCache[a],!this.spineData)throw new Error("Spine data must be preloaded using PIXI.SpineLoader or PIXI.AssetLoader: "+a);this.skeleton=new c.Skeleton(this.spineData),this.skeleton.updateWorldTransform(),this.stateData=new c.AnimationStateData(this.spineData),this.state=new c.AnimationState(this.stateData),this.slotContainers=[];for(var d=0,e=this.skeleton.slots.length;e>d;d++){var f=this.skeleton.slots[d],g=f.attachment,h=new b.DisplayObjectContainer;if(this.slotContainers.push(h),this.addChild(h),g instanceof c.RegionAttachment){var i=g.rendererObject.name,j=this.createSprite(f,g);f.currentSprite=j,f.currentSpriteName=i,h.addChild(j)}else{if(!(g instanceof c.MeshAttachment))continue;var k=this.createMesh(f,g);f.currentMesh=k,f.currentMeshName=g.name,h.addChild(k)}}this.autoUpdate=!0},b.Spine.prototype=Object.create(b.DisplayObjectContainer.prototype),b.Spine.prototype.constructor=b.Spine,Object.defineProperty(b.Spine.prototype,"autoUpdate",{get:function(){return this.updateTransform===b.Spine.prototype.autoUpdateTransform},set:function(a){this.updateTransform=a?b.Spine.prototype.autoUpdateTransform:b.DisplayObjectContainer.prototype.updateTransform}}),b.Spine.prototype.update=function(a){this.state.update(a),this.state.apply(this.skeleton),this.skeleton.updateWorldTransform();for(var d=this.skeleton.drawOrder,e=this.skeleton.slots,f=0,g=d.length;g>f;f++)this.children[f]=this.slotContainers[d[f]];for(f=0,g=e.length;g>f;f++){var h=e[f],i=h.attachment,j=this.slotContainers[f];if(i){var k=i.type;if(k===c.AttachmentType.region){if(i.rendererObject&&(!h.currentSpriteName||h.currentSpriteName!==i.name)){var l=i.rendererObject.name;if(void 0!==h.currentSprite&&(h.currentSprite.visible=!1),h.sprites=h.sprites||{},void 0!==h.sprites[l])h.sprites[l].visible=!0;else{var m=this.createSprite(h,i);j.addChild(m)}h.currentSprite=h.sprites[l],h.currentSpriteName=l}var n=h.bone;j.position.x=n.worldX+i.x*n.m00+i.y*n.m01,j.position.y=n.worldY+i.x*n.m10+i.y*n.m11,j.scale.x=n.worldScaleX,j.scale.y=n.worldScaleY,j.rotation=-(h.bone.worldRotation*c.degRad),h.currentSprite.tint=b.rgb2hex([h.r,h.g,h.b])}else{if(k!==c.AttachmentType.skinnedmesh){j.visible=!1;continue}if(!h.currentMeshName||h.currentMeshName!==i.name){var o=i.name;if(void 0!==h.currentMesh&&(h.currentMesh.visible=!1),h.meshes=h.meshes||{},void 0!==h.meshes[o])h.meshes[o].visible=!0;else{var p=this.createMesh(h,i);j.addChild(p)}h.currentMesh=h.meshes[o],h.currentMeshName=o}i.computeWorldVertices(h.bone.skeleton.x,h.bone.skeleton.y,h,h.currentMesh.vertices)}j.visible=!0,j.alpha=h.a}else j.visible=!1}},b.Spine.prototype.autoUpdateTransform=function(){this.lastTime=this.lastTime||Date.now();var a=.001*(Date.now()-this.lastTime);this.lastTime=Date.now(),this.update(a),b.DisplayObjectContainer.prototype.updateTransform.call(this)},b.Spine.prototype.createSprite=function(a,d){var e=d.rendererObject,f=e.page.rendererObject,g=new b.Rectangle(e.x,e.y,e.rotate?e.height:e.width,e.rotate?e.width:e.height),h=new b.Texture(f,g),i=new b.Sprite(h),j=e.rotate?.5*Math.PI:0;return i.scale.set(e.width/e.originalWidth*d.scaleX,e.height/e.originalHeight*d.scaleY),i.rotation=j-d.rotation*c.degRad,i.anchor.x=i.anchor.y=.5,i.alpha=d.a,a.sprites=a.sprites||{},a.sprites[e.name]=i,i},b.Spine.prototype.createMesh=function(a,c){var d=c.rendererObject,e=d.page.rendererObject,f=new b.Texture(e),g=new b.Strip(f);return g.drawMode=b.Strip.DrawModes.TRIANGLES,g.canvasPadding=1.5,g.vertices=new b.Float32Array(c.uvs.length),g.uvs=c.uvs,g.indices=c.triangles,g.alpha=c.a,a.meshes=a.meshes||{},a.meshes[c.name]=g,g},b.BaseTextureCache={},b.BaseTextureCacheIdGenerator=0,b.BaseTexture=function(a,c){if(this.resolution=1,this.width=100,this.height=100,this.scaleMode=c||b.scaleModes.DEFAULT,this.hasLoaded=!1,this.source=a,this._UID=b._UID++,this.premultipliedAlpha=!0,this._glTextures=[],this.mipmap=!1,this._dirty=[!0,!0,!0,!0],a){if((this.source.complete||this.source.getContext)&&this.source.width&&this.source.height)this.hasLoaded=!0,this.width=this.source.naturalWidth||this.source.width,this.height=this.source.naturalHeight||this.source.height,this.dirty();else{var d=this;this.source.onload=function(){d.hasLoaded=!0,d.width=d.source.naturalWidth||d.source.width,d.height=d.source.naturalHeight||d.source.height,d.dirty(),d.dispatchEvent({type:"loaded",content:d})},this.source.onerror=function(){d.dispatchEvent({type:"error",content:d})}}this.imageUrl=null,this._powerOf2=!1}},b.BaseTexture.prototype.constructor=b.BaseTexture,b.EventTarget.mixin(b.BaseTexture.prototype),b.BaseTexture.prototype.destroy=function(){this.imageUrl?(delete b.BaseTextureCache[this.imageUrl],delete b.TextureCache[this.imageUrl],this.imageUrl=null,navigator.isCocoonJS||(this.source.src="")):this.source&&this.source._pixiId&&delete b.BaseTextureCache[this.source._pixiId],this.source=null,this.unloadFromGPU()},b.BaseTexture.prototype.updateSourceImage=function(a){this.hasLoaded=!1,this.source.src=null,this.source.src=a},b.BaseTexture.prototype.dirty=function(){for(var a=0;a<this._glTextures.length;a++)this._dirty[a]=!0},b.BaseTexture.prototype.unloadFromGPU=function(){this.dirty();for(var a=this._glTextures.length-1;a>=0;a--){var c=this._glTextures[a],d=b.glContexts[a];d&&c&&d.deleteTexture(c)}this._glTextures.length=0,this.dirty()},b.BaseTexture.fromImage=function(a,c,d){var e=b.BaseTextureCache[a];if(void 0===c&&-1===a.indexOf("data:")&&(c=!0),!e){var f=new Image;c&&(f.crossOrigin=""),f.src=a,e=new b.BaseTexture(f,d),e.imageUrl=a,b.BaseTextureCache[a]=e,-1!==a.indexOf(b.RETINA_PREFIX+".")&&(e.resolution=2)}return e},b.BaseTexture.fromCanvas=function(a,c){a._pixiId||(a._pixiId="canvas_"+b.TextureCacheIdGenerator++);var d=b.BaseTextureCache[a._pixiId];return d||(d=new b.BaseTexture(a,c),b.BaseTextureCache[a._pixiId]=d),d},b.TextureCache={},b.FrameCache={},b.TextureCacheIdGenerator=0,b.Texture=function(a,c,d,e){this.noFrame=!1,c||(this.noFrame=!0,c=new b.Rectangle(0,0,1,1)),a instanceof b.Texture&&(a=a.baseTexture),this.baseTexture=a,this.frame=c,this.trim=e,this.valid=!1,this.requiresUpdate=!1,this._uvs=null,this.width=0,this.height=0,this.crop=d||new b.Rectangle(0,0,1,1),a.hasLoaded?(this.noFrame&&(c=new b.Rectangle(0,0,a.width,a.height)),this.setFrame(c)):a.addEventListener("loaded",this.onBaseTextureLoaded.bind(this))},b.Texture.prototype.constructor=b.Texture,b.EventTarget.mixin(b.Texture.prototype),b.Texture.prototype.onBaseTextureLoaded=function(){var a=this.baseTexture;a.removeEventListener("loaded",this.onLoaded),this.noFrame&&(this.frame=new b.Rectangle(0,0,a.width,a.height)),this.setFrame(this.frame),this.dispatchEvent({type:"update",content:this})},b.Texture.prototype.destroy=function(a){a&&this.baseTexture.destroy(),this.valid=!1},b.Texture.prototype.setFrame=function(a){if(this.noFrame=!1,this.frame=a,this.width=a.width,this.height=a.height,this.crop.x=a.x,this.crop.y=a.y,this.crop.width=a.width,this.crop.height=a.height,!this.trim&&(a.x+a.width>this.baseTexture.width||a.y+a.height>this.baseTexture.height))throw new Error("Texture Error: frame does not fit inside the base Texture dimensions "+this);this.valid=a&&a.width&&a.height&&this.baseTexture.source&&this.baseTexture.hasLoaded,this.trim&&(this.width=this.trim.width,this.height=this.trim.height,this.frame.width=this.trim.width,this.frame.height=this.trim.height),this.valid&&this._updateUvs()},b.Texture.prototype._updateUvs=function(){this._uvs||(this._uvs=new b.TextureUvs);var a=this.crop,c=this.baseTexture.width,d=this.baseTexture.height;this._uvs.x0=a.x/c,this._uvs.y0=a.y/d,this._uvs.x1=(a.x+a.width)/c,this._uvs.y1=a.y/d,this._uvs.x2=(a.x+a.width)/c,this._uvs.y2=(a.y+a.height)/d,this._uvs.x3=a.x/c,this._uvs.y3=(a.y+a.height)/d},b.Texture.fromImage=function(a,c,d){var e=b.TextureCache[a];return e||(e=new b.Texture(b.BaseTexture.fromImage(a,c,d)),b.TextureCache[a]=e),e},b.Texture.fromFrame=function(a){var c=b.TextureCache[a];if(!c)throw new Error('The frameId "'+a+'" does not exist in the texture cache ');return c},b.Texture.fromCanvas=function(a,c){var d=b.BaseTexture.fromCanvas(a,c);return new b.Texture(d)},b.Texture.addTextureToCache=function(a,c){b.TextureCache[c]=a},b.Texture.removeTextureFromCache=function(a){var c=b.TextureCache[a];return delete b.TextureCache[a],delete b.BaseTextureCache[a],c},b.TextureUvs=function(){this.x0=0,this.y0=0,this.x1=0,this.y1=0,this.x2=0,this.y2=0,this.x3=0,this.y3=0},b.Texture.emptyTexture=new b.Texture(new b.BaseTexture),b.RenderTexture=function(a,c,d,e,f){if(this.width=a||100,this.height=c||100,this.resolution=f||1,this.frame=new b.Rectangle(0,0,this.width*this.resolution,this.height*this.resolution),this.crop=new b.Rectangle(0,0,this.width*this.resolution,this.height*this.resolution),this.baseTexture=new b.BaseTexture,this.baseTexture.width=this.width*this.resolution,this.baseTexture.height=this.height*this.resolution,this.baseTexture._glTextures=[],this.baseTexture.resolution=this.resolution,this.baseTexture.scaleMode=e||b.scaleModes.DEFAULT,this.baseTexture.hasLoaded=!0,b.Texture.call(this,this.baseTexture,new b.Rectangle(0,0,this.width*this.resolution,this.height*this.resolution)),this.renderer=d||b.defaultRenderer,this.renderer.type===b.WEBGL_RENDERER){var g=this.renderer.gl;this.baseTexture._dirty[g.id]=!1,this.textureBuffer=new b.FilterTexture(g,this.width,this.height,this.baseTexture.scaleMode),this.baseTexture._glTextures[g.id]=this.textureBuffer.texture,this.render=this.renderWebGL,this.projection=new b.Point(.5*this.width,.5*-this.height)}else this.render=this.renderCanvas,this.textureBuffer=new b.CanvasBuffer(this.width*this.resolution,this.height*this.resolution),this.baseTexture.source=this.textureBuffer.canvas;this.valid=!0,this._updateUvs()},b.RenderTexture.prototype=Object.create(b.Texture.prototype),b.RenderTexture.prototype.constructor=b.RenderTexture,b.RenderTexture.prototype.resize=function(a,c,d){(a!==this.width||c!==this.height)&&(this.valid=a>0&&c>0,this.width=a,this.height=c,this.frame.width=this.crop.width=a*this.resolution,this.frame.height=this.crop.height=c*this.resolution,d&&(this.baseTexture.width=this.width*this.resolution,this.baseTexture.height=this.height*this.resolution),this.renderer.type===b.WEBGL_RENDERER&&(this.projection.x=this.width/2,this.projection.y=-this.height/2),this.valid&&this.textureBuffer.resize(this.width,this.height))},b.RenderTexture.prototype.clear=function(){this.valid&&(this.renderer.type===b.WEBGL_RENDERER&&this.renderer.gl.bindFramebuffer(this.renderer.gl.FRAMEBUFFER,this.textureBuffer.frameBuffer),this.textureBuffer.clear())},b.RenderTexture.prototype.renderWebGL=function(a,b,c){if(this.valid){var d=a.worldTransform;d.identity(),d.translate(0,2*this.projection.y),b&&d.append(b),d.scale(1,-1),a.worldAlpha=1;for(var e=a.children,f=0,g=e.length;g>f;f++)e[f].updateTransform();var h=this.renderer.gl;h.viewport(0,0,this.width*this.resolution,this.height*this.resolution),h.bindFramebuffer(h.FRAMEBUFFER,this.textureBuffer.frameBuffer),c&&this.textureBuffer.clear(),this.renderer.spriteBatch.dirty=!0,this.renderer.renderDisplayObject(a,this.projection,this.textureBuffer.frameBuffer),this.renderer.spriteBatch.dirty=!0}},b.RenderTexture.prototype.renderCanvas=function(a,b,c){if(this.valid){var d=a.worldTransform;d.identity(),b&&d.append(b),a.worldAlpha=1;for(var e=a.children,f=0,g=e.length;g>f;f++)e[f].updateTransform();c&&this.textureBuffer.clear();var h=this.textureBuffer.context,i=this.renderer.resolution;this.renderer.resolution=this.resolution,this.renderer.renderDisplayObject(a,h),this.renderer.resolution=i}},b.RenderTexture.prototype.getImage=function(){var a=new Image;return a.src=this.getBase64(),a},b.RenderTexture.prototype.getBase64=function(){return this.getCanvas().toDataURL()},b.RenderTexture.prototype.getCanvas=function(){if(this.renderer.type===b.WEBGL_RENDERER){var a=this.renderer.gl,c=this.textureBuffer.width,d=this.textureBuffer.height,e=new Uint8Array(4*c*d);a.bindFramebuffer(a.FRAMEBUFFER,this.textureBuffer.frameBuffer),a.readPixels(0,0,c,d,a.RGBA,a.UNSIGNED_BYTE,e),a.bindFramebuffer(a.FRAMEBUFFER,null);var f=new b.CanvasBuffer(c,d),g=f.context.getImageData(0,0,c,d);return g.data.set(e),f.context.putImageData(g,0,0),f.canvas}return this.textureBuffer.canvas},b.RenderTexture.tempMatrix=new b.Matrix,b.VideoTexture=function(a,c){if(!a)throw new Error("No video source element specified.");(a.readyState===a.HAVE_ENOUGH_DATA||a.readyState===a.HAVE_FUTURE_DATA)&&a.width&&a.height&&(a.complete=!0),b.BaseTexture.call(this,a,c),this.autoUpdate=!1,this.updateBound=this._onUpdate.bind(this),a.complete||(this._onCanPlay=this.onCanPlay.bind(this),a.addEventListener("canplay",this._onCanPlay),a.addEventListener("canplaythrough",this._onCanPlay),a.addEventListener("play",this.onPlayStart.bind(this)),a.addEventListener("pause",this.onPlayStop.bind(this)))},b.VideoTexture.prototype=Object.create(b.BaseTexture.prototype),b.VideoTexture.constructor=b.VideoTexture,b.VideoTexture.prototype._onUpdate=function(){this.autoUpdate&&(window.requestAnimationFrame(this.updateBound),this.dirty())},b.VideoTexture.prototype.onPlayStart=function(){this.autoUpdate||(window.requestAnimationFrame(this.updateBound),this.autoUpdate=!0)},b.VideoTexture.prototype.onPlayStop=function(){this.autoUpdate=!1},b.VideoTexture.prototype.onCanPlay=function(){"canplaythrough"===event.type&&(this.hasLoaded=!0,this.source&&(this.source.removeEventListener("canplay",this._onCanPlay),this.source.removeEventListener("canplaythrough",this._onCanPlay),this.width=this.source.videoWidth,this.height=this.source.videoHeight,this.__loaded||(this.__loaded=!0,this.dispatchEvent({type:"loaded",content:this}))))},b.VideoTexture.prototype.destroy=function(){this.source&&this.source._pixiId&&(b.BaseTextureCache[this.source._pixiId]=null,delete b.BaseTextureCache[this.source._pixiId],this.source._pixiId=null,delete this.source._pixiId),b.BaseTexture.prototype.destroy.call(this)},b.VideoTexture.baseTextureFromVideo=function(a,c){a._pixiId||(a._pixiId="video_"+b.TextureCacheIdGenerator++);var d=b.BaseTextureCache[a._pixiId];return d||(d=new b.VideoTexture(a,c),b.BaseTextureCache[a._pixiId]=d),d},b.VideoTexture.textureFromVideo=function(a,c){var d=b.VideoTexture.baseTextureFromVideo(a,c);return new b.Texture(d)},b.VideoTexture.fromUrl=function(a,c){var d=document.createElement("video");return d.src=a,d.autoPlay=!0,d.play(),b.VideoTexture.textureFromVideo(d,c)},b.AssetLoader=function(a,c){this.assetURLs=a,this.crossorigin=c,this.loadersByType={jpg:b.ImageLoader,jpeg:b.ImageLoader,png:b.ImageLoader,gif:b.ImageLoader,webp:b.ImageLoader,json:b.JsonLoader,atlas:b.AtlasLoader,anim:b.SpineLoader,xml:b.BitmapFontLoader,fnt:b.BitmapFontLoader}},b.EventTarget.mixin(b.AssetLoader.prototype),b.AssetLoader.prototype.constructor=b.AssetLoader,b.AssetLoader.prototype._getDataType=function(a){var b="data:",c=a.slice(0,b.length).toLowerCase();if(c===b){var d=a.slice(b.length),e=d.indexOf(",");if(-1===e)return null;var f=d.slice(0,e).split(";")[0];return f&&"text/plain"!==f.toLowerCase()?f.split("/").pop().toLowerCase():"txt"}return null},b.AssetLoader.prototype.load=function(){function a(a){b.onAssetLoaded(a.data.content)}var b=this;this.loadCount=this.assetURLs.length;for(var c=0;c<this.assetURLs.length;c++){var d=this.assetURLs[c],e=this._getDataType(d);e||(e=d.split("?").shift().split(".").pop().toLowerCase());var f=this.loadersByType[e];if(!f)throw new Error(e+" is an unsupported file type");var g=new f(d,this.crossorigin);g.on("loaded",a),g.load()}},b.AssetLoader.prototype.onAssetLoaded=function(a){this.loadCount--,this.emit("onProgress",{content:this,loader:a,loaded:this.assetURLs.length-this.loadCount,total:this.assetURLs.length}),this.onProgress&&this.onProgress(a),this.loadCount||(this.emit("onComplete",{content:this}),this.onComplete&&this.onComplete())},b.JsonLoader=function(a,b){this.url=a,this.crossorigin=b,this.baseUrl=a.replace(/[^\/]*$/,""),
-	this.loaded=!1},b.JsonLoader.prototype.constructor=b.JsonLoader,b.EventTarget.mixin(b.JsonLoader.prototype),b.JsonLoader.prototype.load=function(){window.XDomainRequest&&this.crossorigin?(this.ajaxRequest=new window.XDomainRequest,this.ajaxRequest.timeout=3e3,this.ajaxRequest.onerror=this.onError.bind(this),this.ajaxRequest.ontimeout=this.onError.bind(this),this.ajaxRequest.onprogress=function(){},this.ajaxRequest.onload=this.onJSONLoaded.bind(this)):(this.ajaxRequest=window.XMLHttpRequest?new window.XMLHttpRequest:new window.ActiveXObject("Microsoft.XMLHTTP"),this.ajaxRequest.onreadystatechange=this.onReadyStateChanged.bind(this)),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.send()},b.JsonLoader.prototype.onReadyStateChanged=function(){4!==this.ajaxRequest.readyState||200!==this.ajaxRequest.status&&-1!==window.location.href.indexOf("http")||this.onJSONLoaded()},b.JsonLoader.prototype.onJSONLoaded=function(){if(!this.ajaxRequest.responseText)return void this.onError();if(this.json=JSON.parse(this.ajaxRequest.responseText),this.json.frames&&this.json.meta&&this.json.meta.image){var a=this.json.meta.image;-1===a.indexOf("data:")&&(a=this.baseUrl+a);var d=new b.ImageLoader(a,this.crossorigin),e=this.json.frames;this.texture=d.texture.baseTexture,d.addEventListener("loaded",this.onLoaded.bind(this));for(var f in e){var g=e[f].frame;if(g){var h=new b.Rectangle(g.x,g.y,g.w,g.h),i=h.clone(),j=null;if(e[f].trimmed){var k=e[f].sourceSize,l=e[f].spriteSourceSize;j=new b.Rectangle(l.x,l.y,k.w,k.h)}b.TextureCache[f]=new b.Texture(this.texture,h,i,j)}}d.load()}else if(this.json.bones)if(b.AnimCache[this.url])this.onLoaded();else{var m=this.url.substr(0,this.url.lastIndexOf("."))+".atlas",n=new b.JsonLoader(m,this.crossorigin),o=this;n.onJSONLoaded=function(){if(!this.ajaxRequest.responseText)return void this.onError();var a=new b.SpineTextureLoader(this.url.substring(0,this.url.lastIndexOf("/"))),d=new c.Atlas(this.ajaxRequest.responseText,a),e=new c.AtlasAttachmentLoader(d),f=new c.SkeletonJson(e),g=f.readSkeletonData(o.json);b.AnimCache[o.url]=g,o.spine=g,o.spineAtlas=d,o.spineAtlasLoader=n,a.loadingCount>0?a.addEventListener("loadedBaseTexture",function(a){a.content.content.loadingCount<=0&&o.onLoaded()}):o.onLoaded()},n.load()}else this.onLoaded()},b.JsonLoader.prototype.onLoaded=function(){this.loaded=!0,this.dispatchEvent({type:"loaded",content:this})},b.JsonLoader.prototype.onError=function(){this.dispatchEvent({type:"error",content:this})},b.AtlasLoader=function(a,b){this.url=a,this.baseUrl=a.replace(/[^\/]*$/,""),this.crossorigin=b,this.loaded=!1},b.AtlasLoader.constructor=b.AtlasLoader,b.EventTarget.mixin(b.AtlasLoader.prototype),b.AtlasLoader.prototype.load=function(){this.ajaxRequest=new b.AjaxRequest,this.ajaxRequest.onreadystatechange=this.onAtlasLoaded.bind(this),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.overrideMimeType&&this.ajaxRequest.overrideMimeType("application/json"),this.ajaxRequest.send(null)},b.AtlasLoader.prototype.onAtlasLoaded=function(){if(4===this.ajaxRequest.readyState)if(200===this.ajaxRequest.status||-1===window.location.href.indexOf("http")){this.atlas={meta:{image:[]},frames:[]};var a=this.ajaxRequest.responseText.split(/\r?\n/),c=-3,d=0,e=null,f=!1,g=0,h=0,i=this.onLoaded.bind(this);for(g=0;g<a.length;g++)if(a[g]=a[g].replace(/^\s+|\s+$/g,""),""===a[g]&&(f=g+1),a[g].length>0){if(f===g)this.atlas.meta.image.push(a[g]),d=this.atlas.meta.image.length-1,this.atlas.frames.push({}),c=-3;else if(c>0)if(c%7===1)null!=e&&(this.atlas.frames[d][e.name]=e),e={name:a[g],frame:{}};else{var j=a[g].split(" ");if(c%7===3)e.frame.x=Number(j[1].replace(",","")),e.frame.y=Number(j[2]);else if(c%7===4)e.frame.w=Number(j[1].replace(",","")),e.frame.h=Number(j[2]);else if(c%7===5){var k={x:0,y:0,w:Number(j[1].replace(",","")),h:Number(j[2])};k.w>e.frame.w||k.h>e.frame.h?(e.trimmed=!0,e.realSize=k):e.trimmed=!1}}c++}if(null!=e&&(this.atlas.frames[d][e.name]=e),this.atlas.meta.image.length>0){for(this.images=[],h=0;h<this.atlas.meta.image.length;h++){var l=this.baseUrl+this.atlas.meta.image[h],m=this.atlas.frames[h];this.images.push(new b.ImageLoader(l,this.crossorigin));for(g in m){var n=m[g].frame;n&&(b.TextureCache[g]=new b.Texture(this.images[h].texture.baseTexture,{x:n.x,y:n.y,width:n.w,height:n.h}),m[g].trimmed&&(b.TextureCache[g].realSize=m[g].realSize,b.TextureCache[g].trim.x=0,b.TextureCache[g].trim.y=0))}}for(this.currentImageId=0,h=0;h<this.images.length;h++)this.images[h].on("loaded",i);this.images[this.currentImageId].load()}else this.onLoaded()}else this.onError()},b.AtlasLoader.prototype.onLoaded=function(){this.images.length-1>this.currentImageId?(this.currentImageId++,this.images[this.currentImageId].load()):(this.loaded=!0,this.emit("loaded",{content:this}))},b.AtlasLoader.prototype.onError=function(){this.emit("error",{content:this})},b.SpriteSheetLoader=function(a,b){this.url=a,this.crossorigin=b,this.baseUrl=a.replace(/[^\/]*$/,""),this.texture=null,this.frames={}},b.SpriteSheetLoader.prototype.constructor=b.SpriteSheetLoader,b.EventTarget.mixin(b.SpriteSheetLoader.prototype),b.SpriteSheetLoader.prototype.load=function(){var a=this,c=new b.JsonLoader(this.url,this.crossorigin);c.on("loaded",function(b){a.json=b.data.content.json,a.onLoaded()}),c.load()},b.SpriteSheetLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.ImageLoader=function(a,c){this.texture=b.Texture.fromImage(a,c),this.frames=[]},b.ImageLoader.prototype.constructor=b.ImageLoader,b.EventTarget.mixin(b.ImageLoader.prototype),b.ImageLoader.prototype.load=function(){this.texture.baseTexture.hasLoaded?this.onLoaded():this.texture.baseTexture.on("loaded",this.onLoaded.bind(this))},b.ImageLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.ImageLoader.prototype.loadFramedSpriteSheet=function(a,c,d){this.frames=[];for(var e=Math.floor(this.texture.width/a),f=Math.floor(this.texture.height/c),g=0,h=0;f>h;h++)for(var i=0;e>i;i++,g++){var j=new b.Texture(this.texture.baseTexture,{x:i*a,y:h*c,width:a,height:c});this.frames.push(j),d&&(b.TextureCache[d+"-"+g]=j)}this.load()},b.BitmapFontLoader=function(a,b){this.url=a,this.crossorigin=b,this.baseUrl=a.replace(/[^\/]*$/,""),this.texture=null},b.BitmapFontLoader.prototype.constructor=b.BitmapFontLoader,b.EventTarget.mixin(b.BitmapFontLoader.prototype),b.BitmapFontLoader.prototype.load=function(){this.ajaxRequest=new b.AjaxRequest,this.ajaxRequest.onreadystatechange=this.onXMLLoaded.bind(this),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.overrideMimeType&&this.ajaxRequest.overrideMimeType("application/xml"),this.ajaxRequest.send(null)},b.BitmapFontLoader.prototype.onXMLLoaded=function(){if(4===this.ajaxRequest.readyState&&(200===this.ajaxRequest.status||-1===window.location.protocol.indexOf("http"))){var a=this.ajaxRequest.responseXML;if(!a||/MSIE 9/i.test(navigator.userAgent)||navigator.isCocoonJS)if("function"==typeof window.DOMParser){var c=new DOMParser;a=c.parseFromString(this.ajaxRequest.responseText,"text/xml")}else{var d=document.createElement("div");d.innerHTML=this.ajaxRequest.responseText,a=d}var e=this.baseUrl+a.getElementsByTagName("page")[0].getAttribute("file"),f=new b.ImageLoader(e,this.crossorigin);this.texture=f.texture.baseTexture;var g={},h=a.getElementsByTagName("info")[0],i=a.getElementsByTagName("common")[0];g.font=h.getAttribute("face"),g.size=parseInt(h.getAttribute("size"),10),g.lineHeight=parseInt(i.getAttribute("lineHeight"),10),g.chars={};for(var j=a.getElementsByTagName("char"),k=0;k<j.length;k++){var l=parseInt(j[k].getAttribute("id"),10),m=new b.Rectangle(parseInt(j[k].getAttribute("x"),10),parseInt(j[k].getAttribute("y"),10),parseInt(j[k].getAttribute("width"),10),parseInt(j[k].getAttribute("height"),10));g.chars[l]={xOffset:parseInt(j[k].getAttribute("xoffset"),10),yOffset:parseInt(j[k].getAttribute("yoffset"),10),xAdvance:parseInt(j[k].getAttribute("xadvance"),10),kerning:{},texture:b.TextureCache[l]=new b.Texture(this.texture,m)}}var n=a.getElementsByTagName("kerning");for(k=0;k<n.length;k++){var o=parseInt(n[k].getAttribute("first"),10),p=parseInt(n[k].getAttribute("second"),10),q=parseInt(n[k].getAttribute("amount"),10);g.chars[p].kerning[o]=q}b.BitmapText.fonts[g.font]=g,f.addEventListener("loaded",this.onLoaded.bind(this)),f.load()}},b.BitmapFontLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.SpineLoader=function(a,b){this.url=a,this.crossorigin=b,this.loaded=!1},b.SpineLoader.prototype.constructor=b.SpineLoader,b.EventTarget.mixin(b.SpineLoader.prototype),b.SpineLoader.prototype.load=function(){var a=this,c=new b.JsonLoader(this.url,this.crossorigin);c.on("loaded",function(b){a.json=b.data.content.json,a.onLoaded()}),c.load()},b.SpineLoader.prototype.onLoaded=function(){this.loaded=!0,this.emit("loaded",{content:this})},b.AbstractFilter=function(a,b){this.passes=[this],this.shaders=[],this.dirty=!0,this.padding=0,this.uniforms=b||{},this.fragmentSrc=a||[]},b.AbstractFilter.prototype.constructor=b.AbstractFilter,b.AbstractFilter.prototype.syncUniforms=function(){for(var a=0,b=this.shaders.length;b>a;a++)this.shaders[a].dirty=!0},b.AlphaMaskFilter=function(a){b.AbstractFilter.call(this),this.passes=[this],a.baseTexture._powerOf2=!0,this.uniforms={mask:{type:"sampler2D",value:a},mapDimensions:{type:"2f",value:{x:1,y:5112}},dimensions:{type:"4fv",value:[0,0,0,0]}},a.baseTexture.hasLoaded?(this.uniforms.mask.value.x=a.width,this.uniforms.mask.value.y=a.height):(this.boundLoadedFunction=this.onTextureLoaded.bind(this),a.baseTexture.on("loaded",this.boundLoadedFunction)),this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D mask;","uniform sampler2D uSampler;","uniform vec2 offset;","uniform vec4 dimensions;","uniform vec2 mapDimensions;","void main(void) {","   vec2 mapCords = vTextureCoord.xy;","   mapCords += (dimensions.zw + offset)/ dimensions.xy ;","   mapCords.y *= -1.0;","   mapCords.y += 1.0;","   mapCords *= dimensions.xy / mapDimensions;","   vec4 original =  texture2D(uSampler, vTextureCoord);","   float maskAlpha =  texture2D(mask, mapCords).r;","   original *= maskAlpha;","   gl_FragColor =  original;","}"]},b.AlphaMaskFilter.prototype=Object.create(b.AbstractFilter.prototype),b.AlphaMaskFilter.prototype.constructor=b.AlphaMaskFilter,b.AlphaMaskFilter.prototype.onTextureLoaded=function(){this.uniforms.mapDimensions.value.x=this.uniforms.mask.value.width,this.uniforms.mapDimensions.value.y=this.uniforms.mask.value.height,this.uniforms.mask.value.baseTexture.off("loaded",this.boundLoadedFunction)},Object.defineProperty(b.AlphaMaskFilter.prototype,"map",{get:function(){return this.uniforms.mask.value},set:function(a){this.uniforms.mask.value=a}}),b.ColorMatrixFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={matrix:{type:"mat4",value:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float invert;","uniform mat4 matrix;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord) * matrix;","}"]},b.ColorMatrixFilter.prototype=Object.create(b.AbstractFilter.prototype),b.ColorMatrixFilter.prototype.constructor=b.ColorMatrixFilter,Object.defineProperty(b.ColorMatrixFilter.prototype,"matrix",{get:function(){return this.uniforms.matrix.value},set:function(a){this.uniforms.matrix.value=a}}),b.GrayFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={gray:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D uSampler;","uniform float gray;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), gray);","}"]},b.GrayFilter.prototype=Object.create(b.AbstractFilter.prototype),b.GrayFilter.prototype.constructor=b.GrayFilter,Object.defineProperty(b.GrayFilter.prototype,"gray",{get:function(){return this.uniforms.gray.value},set:function(a){this.uniforms.gray.value=a}}),b.DisplacementFilter=function(a){b.AbstractFilter.call(this),this.passes=[this],a.baseTexture._powerOf2=!0,this.uniforms={displacementMap:{type:"sampler2D",value:a},scale:{type:"2f",value:{x:30,y:30}},offset:{type:"2f",value:{x:0,y:0}},mapDimensions:{type:"2f",value:{x:1,y:5112}},dimensions:{type:"4fv",value:[0,0,0,0]}},a.baseTexture.hasLoaded?(this.uniforms.mapDimensions.value.x=a.width,this.uniforms.mapDimensions.value.y=a.height):(this.boundLoadedFunction=this.onTextureLoaded.bind(this),a.baseTexture.on("loaded",this.boundLoadedFunction)),this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D displacementMap;","uniform sampler2D uSampler;","uniform vec2 scale;","uniform vec2 offset;","uniform vec4 dimensions;","uniform vec2 mapDimensions;","void main(void) {","   vec2 mapCords = vTextureCoord.xy;","   mapCords += (dimensions.zw + offset)/ dimensions.xy ;","   mapCords.y *= -1.0;","   mapCords.y += 1.0;","   vec2 matSample = texture2D(displacementMap, mapCords).xy;","   matSample -= 0.5;","   matSample *= scale;","   matSample /= mapDimensions;","   gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x + matSample.x, vTextureCoord.y + matSample.y));","   gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb, 1.0);","   vec2 cord = vTextureCoord;","}"]},b.DisplacementFilter.prototype=Object.create(b.AbstractFilter.prototype),b.DisplacementFilter.prototype.constructor=b.DisplacementFilter,b.DisplacementFilter.prototype.onTextureLoaded=function(){this.uniforms.mapDimensions.value.x=this.uniforms.displacementMap.value.width,this.uniforms.mapDimensions.value.y=this.uniforms.displacementMap.value.height,this.uniforms.displacementMap.value.baseTexture.off("loaded",this.boundLoadedFunction)},Object.defineProperty(b.DisplacementFilter.prototype,"map",{get:function(){return this.uniforms.displacementMap.value},set:function(a){this.uniforms.displacementMap.value=a}}),Object.defineProperty(b.DisplacementFilter.prototype,"scale",{get:function(){return this.uniforms.scale.value},set:function(a){this.uniforms.scale.value=a}}),Object.defineProperty(b.DisplacementFilter.prototype,"offset",{get:function(){return this.uniforms.offset.value},set:function(a){this.uniforms.offset.value=a}}),b.PixelateFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={invert:{type:"1f",value:0},dimensions:{type:"4fv",value:new b.Float32Array([1e4,100,10,10])},pixelSize:{type:"2f",value:{x:10,y:10}}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec2 testDim;","uniform vec4 dimensions;","uniform vec2 pixelSize;","uniform sampler2D uSampler;","void main(void) {","   vec2 coord = vTextureCoord;","   vec2 size = dimensions.xy/pixelSize;","   vec2 color = floor( ( vTextureCoord * size ) ) / size + pixelSize/dimensions.xy * 0.5;","   gl_FragColor = texture2D(uSampler, color);","}"]},b.PixelateFilter.prototype=Object.create(b.AbstractFilter.prototype),b.PixelateFilter.prototype.constructor=b.PixelateFilter,Object.defineProperty(b.PixelateFilter.prototype,"size",{get:function(){return this.uniforms.pixelSize.value},set:function(a){this.dirty=!0,this.uniforms.pixelSize.value=a}}),b.BlurXFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","   vec4 sum = vec4(0.0);","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 4.0*blur, vTextureCoord.y)) * 0.05;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 3.0*blur, vTextureCoord.y)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 2.0*blur, vTextureCoord.y)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - blur, vTextureCoord.y)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + blur, vTextureCoord.y)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 2.0*blur, vTextureCoord.y)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 3.0*blur, vTextureCoord.y)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 4.0*blur, vTextureCoord.y)) * 0.05;","   gl_FragColor = sum;","}"]},b.BlurXFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurXFilter.prototype.constructor=b.BlurXFilter,Object.defineProperty(b.BlurXFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.dirty=!0,this.uniforms.blur.value=1/7e3*a}}),b.BlurYFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","   vec4 sum = vec4(0.0);","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 4.0*blur)) * 0.05;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 3.0*blur)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 2.0*blur)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - blur)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + blur)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 2.0*blur)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 3.0*blur)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 4.0*blur)) * 0.05;","   gl_FragColor = sum;","}"]},b.BlurYFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurYFilter.prototype.constructor=b.BlurYFilter,Object.defineProperty(b.BlurYFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.uniforms.blur.value=1/7e3*a}}),b.BlurFilter=function(){this.blurXFilter=new b.BlurXFilter,this.blurYFilter=new b.BlurYFilter,this.passes=[this.blurXFilter,this.blurYFilter]},b.BlurFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurFilter.prototype.constructor=b.BlurFilter,Object.defineProperty(b.BlurFilter.prototype,"blur",{get:function(){return this.blurXFilter.blur},set:function(a){this.blurXFilter.blur=this.blurYFilter.blur=a}}),Object.defineProperty(b.BlurFilter.prototype,"blurX",{get:function(){return this.blurXFilter.blur},set:function(a){this.blurXFilter.blur=a}}),Object.defineProperty(b.BlurFilter.prototype,"blurY",{get:function(){return this.blurYFilter.blur},set:function(a){this.blurYFilter.blur=a}}),b.InvertFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={invert:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float invert;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix( (vec3(1)-gl_FragColor.rgb) * gl_FragColor.a, gl_FragColor.rgb, 1.0 - invert);","}"]},b.InvertFilter.prototype=Object.create(b.AbstractFilter.prototype),b.InvertFilter.prototype.constructor=b.InvertFilter,Object.defineProperty(b.InvertFilter.prototype,"invert",{get:function(){return this.uniforms.invert.value},set:function(a){this.uniforms.invert.value=a}}),b.SepiaFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={sepia:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float sepia;","uniform sampler2D uSampler;","const mat3 sepiaMatrix = mat3(0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb * sepiaMatrix, sepia);","}"]},b.SepiaFilter.prototype=Object.create(b.AbstractFilter.prototype),b.SepiaFilter.prototype.constructor=b.SepiaFilter,Object.defineProperty(b.SepiaFilter.prototype,"sepia",{get:function(){return this.uniforms.sepia.value},set:function(a){this.uniforms.sepia.value=a}}),b.TwistFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={radius:{type:"1f",value:.5},angle:{type:"1f",value:5},offset:{type:"2f",value:{x:.5,y:.5}}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec4 dimensions;","uniform sampler2D uSampler;","uniform float radius;","uniform float angle;","uniform vec2 offset;","void main(void) {","   vec2 coord = vTextureCoord - offset;","   float distance = length(coord);","   if (distance < radius) {","       float ratio = (radius - distance) / radius;","       float angleMod = ratio * ratio * angle;","       float s = sin(angleMod);","       float c = cos(angleMod);","       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);","   }","   gl_FragColor = texture2D(uSampler, coord+offset);","}"]},b.TwistFilter.prototype=Object.create(b.AbstractFilter.prototype),b.TwistFilter.prototype.constructor=b.TwistFilter,Object.defineProperty(b.TwistFilter.prototype,"offset",{get:function(){return this.uniforms.offset.value},set:function(a){this.dirty=!0,this.uniforms.offset.value=a}}),Object.defineProperty(b.TwistFilter.prototype,"radius",{get:function(){return this.uniforms.radius.value},set:function(a){this.dirty=!0,this.uniforms.radius.value=a}}),Object.defineProperty(b.TwistFilter.prototype,"angle",{get:function(){return this.uniforms.angle.value},set:function(a){this.dirty=!0,this.uniforms.angle.value=a}}),b.ColorStepFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={step:{type:"1f",value:5}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D uSampler;","uniform float step;","void main(void) {","   vec4 color = texture2D(uSampler, vTextureCoord);","   color = floor(color * step) / step;","   gl_FragColor = color;","}"]},b.ColorStepFilter.prototype=Object.create(b.AbstractFilter.prototype),b.ColorStepFilter.prototype.constructor=b.ColorStepFilter,Object.defineProperty(b.ColorStepFilter.prototype,"step",{get:function(){return this.uniforms.step.value},set:function(a){this.uniforms.step.value=a}}),b.DotScreenFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={scale:{type:"1f",value:1},angle:{type:"1f",value:5},dimensions:{type:"4fv",value:[0,0,0,0]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec4 dimensions;","uniform sampler2D uSampler;","uniform float angle;","uniform float scale;","float pattern() {","   float s = sin(angle), c = cos(angle);","   vec2 tex = vTextureCoord * dimensions.xy;","   vec2 point = vec2(","       c * tex.x - s * tex.y,","       s * tex.x + c * tex.y","   ) * scale;","   return (sin(point.x) * sin(point.y)) * 4.0;","}","void main() {","   vec4 color = texture2D(uSampler, vTextureCoord);","   float average = (color.r + color.g + color.b) / 3.0;","   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);","}"]},b.DotScreenFilter.prototype=Object.create(b.AbstractFilter.prototype),b.DotScreenFilter.prototype.constructor=b.DotScreenFilter,Object.defineProperty(b.DotScreenFilter.prototype,"scale",{get:function(){return this.uniforms.scale.value},set:function(a){this.dirty=!0,this.uniforms.scale.value=a}}),Object.defineProperty(b.DotScreenFilter.prototype,"angle",{get:function(){return this.uniforms.angle.value},set:function(a){this.dirty=!0,this.uniforms.angle.value=a}}),b.CrossHatchFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);","    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);","    if (lum < 1.00) {","        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.75) {","        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.50) {","        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.3) {","        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","}"]},b.CrossHatchFilter.prototype=Object.create(b.AbstractFilter.prototype),b.CrossHatchFilter.prototype.constructor=b.CrossHatchFilter,Object.defineProperty(b.CrossHatchFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.uniforms.blur.value=1/7e3*a}}),b.RGBSplitFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={red:{type:"2f",value:{x:20,y:20}},green:{type:"2f",value:{x:-20,y:20}},blue:{type:"2f",value:{x:20,y:-20}},dimensions:{type:"4fv",value:[0,0,0,0]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec2 red;","uniform vec2 green;","uniform vec2 blue;","uniform vec4 dimensions;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/dimensions.xy).r;","   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/dimensions.xy).g;","   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/dimensions.xy).b;","   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;","}"]},b.RGBSplitFilter.prototype=Object.create(b.AbstractFilter.prototype),b.RGBSplitFilter.prototype.constructor=b.RGBSplitFilter,Object.defineProperty(b.RGBSplitFilter.prototype,"red",{get:function(){return this.uniforms.red.value},set:function(a){this.uniforms.red.value=a}}),Object.defineProperty(b.RGBSplitFilter.prototype,"green",{get:function(){return this.uniforms.green.value},set:function(a){this.uniforms.green.value=a}}),Object.defineProperty(b.RGBSplitFilter.prototype,"blue",{get:function(){return this.uniforms.blue.value},set:function(a){this.uniforms.blue.value=a}}), true?("undefined"!=typeof module&&module.exports&&(exports=module.exports=b),exports.PIXI=b):"undefined"!=typeof define&&define.amd?define(b):a.PIXI=b}).call(this);
+	this.loaded=!1},b.JsonLoader.prototype.constructor=b.JsonLoader,b.EventTarget.mixin(b.JsonLoader.prototype),b.JsonLoader.prototype.load=function(){window.XDomainRequest&&this.crossorigin?(this.ajaxRequest=new window.XDomainRequest,this.ajaxRequest.timeout=3e3,this.ajaxRequest.onerror=this.onError.bind(this),this.ajaxRequest.ontimeout=this.onError.bind(this),this.ajaxRequest.onprogress=function(){},this.ajaxRequest.onload=this.onJSONLoaded.bind(this)):(this.ajaxRequest=window.XMLHttpRequest?new window.XMLHttpRequest:new window.ActiveXObject("Microsoft.XMLHTTP"),this.ajaxRequest.onreadystatechange=this.onReadyStateChanged.bind(this)),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.send()},b.JsonLoader.prototype.onReadyStateChanged=function(){4!==this.ajaxRequest.readyState||200!==this.ajaxRequest.status&&-1!==window.location.href.indexOf("http")||this.onJSONLoaded()},b.JsonLoader.prototype.onJSONLoaded=function(){if(!this.ajaxRequest.responseText)return void this.onError();if(this.json=JSON.parse(this.ajaxRequest.responseText),this.json.frames&&this.json.meta&&this.json.meta.image){var a=this.json.meta.image;-1===a.indexOf("data:")&&(a=this.baseUrl+a);var d=new b.ImageLoader(a,this.crossorigin),e=this.json.frames;this.texture=d.texture.baseTexture,d.addEventListener("loaded",this.onLoaded.bind(this));for(var f in e){var g=e[f].frame;if(g){var h=new b.Rectangle(g.x,g.y,g.w,g.h),i=h.clone(),j=null;if(e[f].trimmed){var k=e[f].sourceSize,l=e[f].spriteSourceSize;j=new b.Rectangle(l.x,l.y,k.w,k.h)}b.TextureCache[f]=new b.Texture(this.texture,h,i,j)}}d.load()}else if(this.json.bones)if(b.AnimCache[this.url])this.onLoaded();else{var m=this.url.substr(0,this.url.lastIndexOf("."))+".atlas",n=new b.JsonLoader(m,this.crossorigin),o=this;n.onJSONLoaded=function(){if(!this.ajaxRequest.responseText)return void this.onError();var a=new b.SpineTextureLoader(this.url.substring(0,this.url.lastIndexOf("/"))),d=new c.Atlas(this.ajaxRequest.responseText,a),e=new c.AtlasAttachmentLoader(d),f=new c.SkeletonJson(e),g=f.readSkeletonData(o.json);b.AnimCache[o.url]=g,o.spine=g,o.spineAtlas=d,o.spineAtlasLoader=n,a.loadingCount>0?a.addEventListener("loadedBaseTexture",function(a){a.content.content.loadingCount<=0&&o.onLoaded()}):o.onLoaded()},n.load()}else this.onLoaded()},b.JsonLoader.prototype.onLoaded=function(){this.loaded=!0,this.dispatchEvent({type:"loaded",content:this})},b.JsonLoader.prototype.onError=function(){this.dispatchEvent({type:"error",content:this})},b.AtlasLoader=function(a,b){this.url=a,this.baseUrl=a.replace(/[^\/]*$/,""),this.crossorigin=b,this.loaded=!1},b.AtlasLoader.constructor=b.AtlasLoader,b.EventTarget.mixin(b.AtlasLoader.prototype),b.AtlasLoader.prototype.load=function(){this.ajaxRequest=new b.AjaxRequest,this.ajaxRequest.onreadystatechange=this.onAtlasLoaded.bind(this),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.overrideMimeType&&this.ajaxRequest.overrideMimeType("application/json"),this.ajaxRequest.send(null)},b.AtlasLoader.prototype.onAtlasLoaded=function(){if(4===this.ajaxRequest.readyState)if(200===this.ajaxRequest.status||-1===window.location.href.indexOf("http")){this.atlas={meta:{image:[]},frames:[]};var a=this.ajaxRequest.responseText.split(/\r?\n/),c=-3,d=0,e=null,f=!1,g=0,h=0,i=this.onLoaded.bind(this);for(g=0;g<a.length;g++)if(a[g]=a[g].replace(/^\s+|\s+$/g,""),""===a[g]&&(f=g+1),a[g].length>0){if(f===g)this.atlas.meta.image.push(a[g]),d=this.atlas.meta.image.length-1,this.atlas.frames.push({}),c=-3;else if(c>0)if(c%7===1)null!=e&&(this.atlas.frames[d][e.name]=e),e={name:a[g],frame:{}};else{var j=a[g].split(" ");if(c%7===3)e.frame.x=Number(j[1].replace(",","")),e.frame.y=Number(j[2]);else if(c%7===4)e.frame.w=Number(j[1].replace(",","")),e.frame.h=Number(j[2]);else if(c%7===5){var k={x:0,y:0,w:Number(j[1].replace(",","")),h:Number(j[2])};k.w>e.frame.w||k.h>e.frame.h?(e.trimmed=!0,e.realSize=k):e.trimmed=!1}}c++}if(null!=e&&(this.atlas.frames[d][e.name]=e),this.atlas.meta.image.length>0){for(this.images=[],h=0;h<this.atlas.meta.image.length;h++){var l=this.baseUrl+this.atlas.meta.image[h],m=this.atlas.frames[h];this.images.push(new b.ImageLoader(l,this.crossorigin));for(g in m){var n=m[g].frame;n&&(b.TextureCache[g]=new b.Texture(this.images[h].texture.baseTexture,{x:n.x,y:n.y,width:n.w,height:n.h}),m[g].trimmed&&(b.TextureCache[g].realSize=m[g].realSize,b.TextureCache[g].trim.x=0,b.TextureCache[g].trim.y=0))}}for(this.currentImageId=0,h=0;h<this.images.length;h++)this.images[h].on("loaded",i);this.images[this.currentImageId].load()}else this.onLoaded()}else this.onError()},b.AtlasLoader.prototype.onLoaded=function(){this.images.length-1>this.currentImageId?(this.currentImageId++,this.images[this.currentImageId].load()):(this.loaded=!0,this.emit("loaded",{content:this}))},b.AtlasLoader.prototype.onError=function(){this.emit("error",{content:this})},b.SpriteSheetLoader=function(a,b){this.url=a,this.crossorigin=b,this.baseUrl=a.replace(/[^\/]*$/,""),this.texture=null,this.frames={}},b.SpriteSheetLoader.prototype.constructor=b.SpriteSheetLoader,b.EventTarget.mixin(b.SpriteSheetLoader.prototype),b.SpriteSheetLoader.prototype.load=function(){var a=this,c=new b.JsonLoader(this.url,this.crossorigin);c.on("loaded",function(b){a.json=b.data.content.json,a.onLoaded()}),c.load()},b.SpriteSheetLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.ImageLoader=function(a,c){this.texture=b.Texture.fromImage(a,c),this.frames=[]},b.ImageLoader.prototype.constructor=b.ImageLoader,b.EventTarget.mixin(b.ImageLoader.prototype),b.ImageLoader.prototype.load=function(){this.texture.baseTexture.hasLoaded?this.onLoaded():this.texture.baseTexture.on("loaded",this.onLoaded.bind(this))},b.ImageLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.ImageLoader.prototype.loadFramedSpriteSheet=function(a,c,d){this.frames=[];for(var e=Math.floor(this.texture.width/a),f=Math.floor(this.texture.height/c),g=0,h=0;f>h;h++)for(var i=0;e>i;i++,g++){var j=new b.Texture(this.texture.baseTexture,{x:i*a,y:h*c,width:a,height:c});this.frames.push(j),d&&(b.TextureCache[d+"-"+g]=j)}this.load()},b.BitmapFontLoader=function(a,b){this.url=a,this.crossorigin=b,this.baseUrl=a.replace(/[^\/]*$/,""),this.texture=null},b.BitmapFontLoader.prototype.constructor=b.BitmapFontLoader,b.EventTarget.mixin(b.BitmapFontLoader.prototype),b.BitmapFontLoader.prototype.load=function(){this.ajaxRequest=new b.AjaxRequest,this.ajaxRequest.onreadystatechange=this.onXMLLoaded.bind(this),this.ajaxRequest.open("GET",this.url,!0),this.ajaxRequest.overrideMimeType&&this.ajaxRequest.overrideMimeType("application/xml"),this.ajaxRequest.send(null)},b.BitmapFontLoader.prototype.onXMLLoaded=function(){if(4===this.ajaxRequest.readyState&&(200===this.ajaxRequest.status||-1===window.location.protocol.indexOf("http"))){var a=this.ajaxRequest.responseXML;if(!a||/MSIE 9/i.test(navigator.userAgent)||navigator.isCocoonJS)if("function"==typeof window.DOMParser){var c=new DOMParser;a=c.parseFromString(this.ajaxRequest.responseText,"text/xml")}else{var d=document.createElement("div");d.innerHTML=this.ajaxRequest.responseText,a=d}var e=this.baseUrl+a.getElementsByTagName("page")[0].getAttribute("file"),f=new b.ImageLoader(e,this.crossorigin);this.texture=f.texture.baseTexture;var g={},h=a.getElementsByTagName("info")[0],i=a.getElementsByTagName("common")[0];g.font=h.getAttribute("face"),g.size=parseInt(h.getAttribute("size"),10),g.lineHeight=parseInt(i.getAttribute("lineHeight"),10),g.chars={};for(var j=a.getElementsByTagName("char"),k=0;k<j.length;k++){var l=parseInt(j[k].getAttribute("id"),10),m=new b.Rectangle(parseInt(j[k].getAttribute("x"),10),parseInt(j[k].getAttribute("y"),10),parseInt(j[k].getAttribute("width"),10),parseInt(j[k].getAttribute("height"),10));g.chars[l]={xOffset:parseInt(j[k].getAttribute("xoffset"),10),yOffset:parseInt(j[k].getAttribute("yoffset"),10),xAdvance:parseInt(j[k].getAttribute("xadvance"),10),kerning:{},texture:b.TextureCache[l]=new b.Texture(this.texture,m)}}var n=a.getElementsByTagName("kerning");for(k=0;k<n.length;k++){var o=parseInt(n[k].getAttribute("first"),10),p=parseInt(n[k].getAttribute("second"),10),q=parseInt(n[k].getAttribute("amount"),10);g.chars[p].kerning[o]=q}b.BitmapText.fonts[g.font]=g,f.addEventListener("loaded",this.onLoaded.bind(this)),f.load()}},b.BitmapFontLoader.prototype.onLoaded=function(){this.emit("loaded",{content:this})},b.SpineLoader=function(a,b){this.url=a,this.crossorigin=b,this.loaded=!1},b.SpineLoader.prototype.constructor=b.SpineLoader,b.EventTarget.mixin(b.SpineLoader.prototype),b.SpineLoader.prototype.load=function(){var a=this,c=new b.JsonLoader(this.url,this.crossorigin);c.on("loaded",function(b){a.json=b.data.content.json,a.onLoaded()}),c.load()},b.SpineLoader.prototype.onLoaded=function(){this.loaded=!0,this.emit("loaded",{content:this})},b.AbstractFilter=function(a,b){this.passes=[this],this.shaders=[],this.dirty=!0,this.padding=0,this.uniforms=b||{},this.fragmentSrc=a||[]},b.AbstractFilter.prototype.constructor=b.AbstractFilter,b.AbstractFilter.prototype.syncUniforms=function(){for(var a=0,b=this.shaders.length;b>a;a++)this.shaders[a].dirty=!0},b.AlphaMaskFilter=function(a){b.AbstractFilter.call(this),this.passes=[this],a.baseTexture._powerOf2=!0,this.uniforms={mask:{type:"sampler2D",value:a},mapDimensions:{type:"2f",value:{x:1,y:5112}},dimensions:{type:"4fv",value:[0,0,0,0]}},a.baseTexture.hasLoaded?(this.uniforms.mask.value.x=a.width,this.uniforms.mask.value.y=a.height):(this.boundLoadedFunction=this.onTextureLoaded.bind(this),a.baseTexture.on("loaded",this.boundLoadedFunction)),this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D mask;","uniform sampler2D uSampler;","uniform vec2 offset;","uniform vec4 dimensions;","uniform vec2 mapDimensions;","void main(void) {","   vec2 mapCords = vTextureCoord.xy;","   mapCords += (dimensions.zw + offset)/ dimensions.xy ;","   mapCords.y *= -1.0;","   mapCords.y += 1.0;","   mapCords *= dimensions.xy / mapDimensions;","   vec4 original =  texture2D(uSampler, vTextureCoord);","   float maskAlpha =  texture2D(mask, mapCords).r;","   original *= maskAlpha;","   gl_FragColor =  original;","}"]},b.AlphaMaskFilter.prototype=Object.create(b.AbstractFilter.prototype),b.AlphaMaskFilter.prototype.constructor=b.AlphaMaskFilter,b.AlphaMaskFilter.prototype.onTextureLoaded=function(){this.uniforms.mapDimensions.value.x=this.uniforms.mask.value.width,this.uniforms.mapDimensions.value.y=this.uniforms.mask.value.height,this.uniforms.mask.value.baseTexture.off("loaded",this.boundLoadedFunction)},Object.defineProperty(b.AlphaMaskFilter.prototype,"map",{get:function(){return this.uniforms.mask.value},set:function(a){this.uniforms.mask.value=a}}),b.ColorMatrixFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={matrix:{type:"mat4",value:[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float invert;","uniform mat4 matrix;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord) * matrix;","}"]},b.ColorMatrixFilter.prototype=Object.create(b.AbstractFilter.prototype),b.ColorMatrixFilter.prototype.constructor=b.ColorMatrixFilter,Object.defineProperty(b.ColorMatrixFilter.prototype,"matrix",{get:function(){return this.uniforms.matrix.value},set:function(a){this.uniforms.matrix.value=a}}),b.GrayFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={gray:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D uSampler;","uniform float gray;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix(gl_FragColor.rgb, vec3(0.2126*gl_FragColor.r + 0.7152*gl_FragColor.g + 0.0722*gl_FragColor.b), gray);","}"]},b.GrayFilter.prototype=Object.create(b.AbstractFilter.prototype),b.GrayFilter.prototype.constructor=b.GrayFilter,Object.defineProperty(b.GrayFilter.prototype,"gray",{get:function(){return this.uniforms.gray.value},set:function(a){this.uniforms.gray.value=a}}),b.DisplacementFilter=function(a){b.AbstractFilter.call(this),this.passes=[this],a.baseTexture._powerOf2=!0,this.uniforms={displacementMap:{type:"sampler2D",value:a},scale:{type:"2f",value:{x:30,y:30}},offset:{type:"2f",value:{x:0,y:0}},mapDimensions:{type:"2f",value:{x:1,y:5112}},dimensions:{type:"4fv",value:[0,0,0,0]}},a.baseTexture.hasLoaded?(this.uniforms.mapDimensions.value.x=a.width,this.uniforms.mapDimensions.value.y=a.height):(this.boundLoadedFunction=this.onTextureLoaded.bind(this),a.baseTexture.on("loaded",this.boundLoadedFunction)),this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D displacementMap;","uniform sampler2D uSampler;","uniform vec2 scale;","uniform vec2 offset;","uniform vec4 dimensions;","uniform vec2 mapDimensions;","void main(void) {","   vec2 mapCords = vTextureCoord.xy;","   mapCords += (dimensions.zw + offset)/ dimensions.xy ;","   mapCords.y *= -1.0;","   mapCords.y += 1.0;","   vec2 matSample = texture2D(displacementMap, mapCords).xy;","   matSample -= 0.5;","   matSample *= scale;","   matSample /= mapDimensions;","   gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.x + matSample.x, vTextureCoord.y + matSample.y));","   gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb, 1.0);","   vec2 cord = vTextureCoord;","}"]},b.DisplacementFilter.prototype=Object.create(b.AbstractFilter.prototype),b.DisplacementFilter.prototype.constructor=b.DisplacementFilter,b.DisplacementFilter.prototype.onTextureLoaded=function(){this.uniforms.mapDimensions.value.x=this.uniforms.displacementMap.value.width,this.uniforms.mapDimensions.value.y=this.uniforms.displacementMap.value.height,this.uniforms.displacementMap.value.baseTexture.off("loaded",this.boundLoadedFunction)},Object.defineProperty(b.DisplacementFilter.prototype,"map",{get:function(){return this.uniforms.displacementMap.value},set:function(a){this.uniforms.displacementMap.value=a}}),Object.defineProperty(b.DisplacementFilter.prototype,"scale",{get:function(){return this.uniforms.scale.value},set:function(a){this.uniforms.scale.value=a}}),Object.defineProperty(b.DisplacementFilter.prototype,"offset",{get:function(){return this.uniforms.offset.value},set:function(a){this.uniforms.offset.value=a}}),b.PixelateFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={invert:{type:"1f",value:0},dimensions:{type:"4fv",value:new b.Float32Array([1e4,100,10,10])},pixelSize:{type:"2f",value:{x:10,y:10}}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec2 testDim;","uniform vec4 dimensions;","uniform vec2 pixelSize;","uniform sampler2D uSampler;","void main(void) {","   vec2 coord = vTextureCoord;","   vec2 size = dimensions.xy/pixelSize;","   vec2 color = floor( ( vTextureCoord * size ) ) / size + pixelSize/dimensions.xy * 0.5;","   gl_FragColor = texture2D(uSampler, color);","}"]},b.PixelateFilter.prototype=Object.create(b.AbstractFilter.prototype),b.PixelateFilter.prototype.constructor=b.PixelateFilter,Object.defineProperty(b.PixelateFilter.prototype,"size",{get:function(){return this.uniforms.pixelSize.value},set:function(a){this.dirty=!0,this.uniforms.pixelSize.value=a}}),b.BlurXFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","   vec4 sum = vec4(0.0);","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 4.0*blur, vTextureCoord.y)) * 0.05;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 3.0*blur, vTextureCoord.y)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - 2.0*blur, vTextureCoord.y)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x - blur, vTextureCoord.y)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + blur, vTextureCoord.y)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 2.0*blur, vTextureCoord.y)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 3.0*blur, vTextureCoord.y)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x + 4.0*blur, vTextureCoord.y)) * 0.05;","   gl_FragColor = sum;","}"]},b.BlurXFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurXFilter.prototype.constructor=b.BlurXFilter,Object.defineProperty(b.BlurXFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.dirty=!0,this.uniforms.blur.value=1/7e3*a}}),b.BlurYFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","   vec4 sum = vec4(0.0);","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 4.0*blur)) * 0.05;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 3.0*blur)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - 2.0*blur)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y - blur)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y)) * 0.16;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + blur)) * 0.15;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 2.0*blur)) * 0.12;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 3.0*blur)) * 0.09;","   sum += texture2D(uSampler, vec2(vTextureCoord.x, vTextureCoord.y + 4.0*blur)) * 0.05;","   gl_FragColor = sum;","}"]},b.BlurYFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurYFilter.prototype.constructor=b.BlurYFilter,Object.defineProperty(b.BlurYFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.uniforms.blur.value=1/7e3*a}}),b.BlurFilter=function(){this.blurXFilter=new b.BlurXFilter,this.blurYFilter=new b.BlurYFilter,this.passes=[this.blurXFilter,this.blurYFilter]},b.BlurFilter.prototype=Object.create(b.AbstractFilter.prototype),b.BlurFilter.prototype.constructor=b.BlurFilter,Object.defineProperty(b.BlurFilter.prototype,"blur",{get:function(){return this.blurXFilter.blur},set:function(a){this.blurXFilter.blur=this.blurYFilter.blur=a}}),Object.defineProperty(b.BlurFilter.prototype,"blurX",{get:function(){return this.blurXFilter.blur},set:function(a){this.blurXFilter.blur=a}}),Object.defineProperty(b.BlurFilter.prototype,"blurY",{get:function(){return this.blurYFilter.blur},set:function(a){this.blurYFilter.blur=a}}),b.InvertFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={invert:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float invert;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix( (vec3(1)-gl_FragColor.rgb) * gl_FragColor.a, gl_FragColor.rgb, 1.0 - invert);","}"]},b.InvertFilter.prototype=Object.create(b.AbstractFilter.prototype),b.InvertFilter.prototype.constructor=b.InvertFilter,Object.defineProperty(b.InvertFilter.prototype,"invert",{get:function(){return this.uniforms.invert.value},set:function(a){this.uniforms.invert.value=a}}),b.SepiaFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={sepia:{type:"1f",value:1}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float sepia;","uniform sampler2D uSampler;","const mat3 sepiaMatrix = mat3(0.3588, 0.7044, 0.1368, 0.2990, 0.5870, 0.1140, 0.2392, 0.4696, 0.0912);","void main(void) {","   gl_FragColor = texture2D(uSampler, vTextureCoord);","   gl_FragColor.rgb = mix( gl_FragColor.rgb, gl_FragColor.rgb * sepiaMatrix, sepia);","}"]},b.SepiaFilter.prototype=Object.create(b.AbstractFilter.prototype),b.SepiaFilter.prototype.constructor=b.SepiaFilter,Object.defineProperty(b.SepiaFilter.prototype,"sepia",{get:function(){return this.uniforms.sepia.value},set:function(a){this.uniforms.sepia.value=a}}),b.TwistFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={radius:{type:"1f",value:.5},angle:{type:"1f",value:5},offset:{type:"2f",value:{x:.5,y:.5}}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec4 dimensions;","uniform sampler2D uSampler;","uniform float radius;","uniform float angle;","uniform vec2 offset;","void main(void) {","   vec2 coord = vTextureCoord - offset;","   float distance = length(coord);","   if (distance < radius) {","       float ratio = (radius - distance) / radius;","       float angleMod = ratio * ratio * angle;","       float s = sin(angleMod);","       float c = cos(angleMod);","       coord = vec2(coord.x * c - coord.y * s, coord.x * s + coord.y * c);","   }","   gl_FragColor = texture2D(uSampler, coord+offset);","}"]},b.TwistFilter.prototype=Object.create(b.AbstractFilter.prototype),b.TwistFilter.prototype.constructor=b.TwistFilter,Object.defineProperty(b.TwistFilter.prototype,"offset",{get:function(){return this.uniforms.offset.value},set:function(a){this.dirty=!0,this.uniforms.offset.value=a}}),Object.defineProperty(b.TwistFilter.prototype,"radius",{get:function(){return this.uniforms.radius.value},set:function(a){this.dirty=!0,this.uniforms.radius.value=a}}),Object.defineProperty(b.TwistFilter.prototype,"angle",{get:function(){return this.uniforms.angle.value},set:function(a){this.dirty=!0,this.uniforms.angle.value=a}}),b.ColorStepFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={step:{type:"1f",value:5}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform sampler2D uSampler;","uniform float step;","void main(void) {","   vec4 color = texture2D(uSampler, vTextureCoord);","   color = floor(color * step) / step;","   gl_FragColor = color;","}"]},b.ColorStepFilter.prototype=Object.create(b.AbstractFilter.prototype),b.ColorStepFilter.prototype.constructor=b.ColorStepFilter,Object.defineProperty(b.ColorStepFilter.prototype,"step",{get:function(){return this.uniforms.step.value},set:function(a){this.uniforms.step.value=a}}),b.DotScreenFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={scale:{type:"1f",value:1},angle:{type:"1f",value:5},dimensions:{type:"4fv",value:[0,0,0,0]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec4 dimensions;","uniform sampler2D uSampler;","uniform float angle;","uniform float scale;","float pattern() {","   float s = sin(angle), c = cos(angle);","   vec2 tex = vTextureCoord * dimensions.xy;","   vec2 point = vec2(","       c * tex.x - s * tex.y,","       s * tex.x + c * tex.y","   ) * scale;","   return (sin(point.x) * sin(point.y)) * 4.0;","}","void main() {","   vec4 color = texture2D(uSampler, vTextureCoord);","   float average = (color.r + color.g + color.b) / 3.0;","   gl_FragColor = vec4(vec3(average * 10.0 - 5.0 + pattern()), color.a);","}"]},b.DotScreenFilter.prototype=Object.create(b.AbstractFilter.prototype),b.DotScreenFilter.prototype.constructor=b.DotScreenFilter,Object.defineProperty(b.DotScreenFilter.prototype,"scale",{get:function(){return this.uniforms.scale.value},set:function(a){this.dirty=!0,this.uniforms.scale.value=a}}),Object.defineProperty(b.DotScreenFilter.prototype,"angle",{get:function(){return this.uniforms.angle.value},set:function(a){this.dirty=!0,this.uniforms.angle.value=a}}),b.CrossHatchFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={blur:{type:"1f",value:1/512}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform float blur;","uniform sampler2D uSampler;","void main(void) {","    float lum = length(texture2D(uSampler, vTextureCoord.xy).rgb);","    gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);","    if (lum < 1.00) {","        if (mod(gl_FragCoord.x + gl_FragCoord.y, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.75) {","        if (mod(gl_FragCoord.x - gl_FragCoord.y, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.50) {","        if (mod(gl_FragCoord.x + gl_FragCoord.y - 5.0, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","    if (lum < 0.3) {","        if (mod(gl_FragCoord.x - gl_FragCoord.y - 5.0, 10.0) == 0.0) {","            gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0);","        }","    }","}"]},b.CrossHatchFilter.prototype=Object.create(b.AbstractFilter.prototype),b.CrossHatchFilter.prototype.constructor=b.CrossHatchFilter,Object.defineProperty(b.CrossHatchFilter.prototype,"blur",{get:function(){return this.uniforms.blur.value/(1/7e3)},set:function(a){this.uniforms.blur.value=1/7e3*a}}),b.RGBSplitFilter=function(){b.AbstractFilter.call(this),this.passes=[this],this.uniforms={red:{type:"2f",value:{x:20,y:20}},green:{type:"2f",value:{x:-20,y:20}},blue:{type:"2f",value:{x:20,y:-20}},dimensions:{type:"4fv",value:[0,0,0,0]}},this.fragmentSrc=["precision mediump float;","varying vec2 vTextureCoord;","varying vec4 vColor;","uniform vec2 red;","uniform vec2 green;","uniform vec2 blue;","uniform vec4 dimensions;","uniform sampler2D uSampler;","void main(void) {","   gl_FragColor.r = texture2D(uSampler, vTextureCoord + red/dimensions.xy).r;","   gl_FragColor.g = texture2D(uSampler, vTextureCoord + green/dimensions.xy).g;","   gl_FragColor.b = texture2D(uSampler, vTextureCoord + blue/dimensions.xy).b;","   gl_FragColor.a = texture2D(uSampler, vTextureCoord).a;","}"]},b.RGBSplitFilter.prototype=Object.create(b.AbstractFilter.prototype),b.RGBSplitFilter.prototype.constructor=b.RGBSplitFilter,Object.defineProperty(b.RGBSplitFilter.prototype,"red",{get:function(){return this.uniforms.red.value},set:function(a){this.uniforms.red.value=a}}),Object.defineProperty(b.RGBSplitFilter.prototype,"green",{get:function(){return this.uniforms.green.value},set:function(a){this.uniforms.green.value=a}}),Object.defineProperty(b.RGBSplitFilter.prototype,"blue",{get:function(){return this.uniforms.blue.value},set:function(a){this.uniforms.blue.value=a}}),"undefined"!=typeof exports?("undefined"!=typeof module&&module.exports&&(exports=module.exports=b),exports.PIXI=b):"undefined"!=typeof define&&define.amd?define(b):a.PIXI=b}).call(this);
 
 /***/ },
 /* 36 */
@@ -44235,2495 +44252,6 @@
 
 /***/ },
 /* 54 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	var SAFE_METHODS = 'GET OPTIONS HEAD TRACE'.split(' '),
-	    DEFAULT_HEADER = 'X-CSRF-Token';
-
-	/**
-	 * Is the given HTTP method (e.g., GET) non-destructive?
-	 *
-	 * @param {string} method HTTP method to test
-	 * @param {string[]} [safeMethods] HTTP methods to consider as "safe"
-	 * @return {boolean}
-	 */
-	function isSafeMethod(method, safeMethods) {
-	    method = method.toUpperCase();
-	    return (safeMethods || SAFE_METHODS).some(function(safeMethod) {
-	        return method.toUpperCase() === safeMethod;
-	    });
-	}
-
-	/**
-	 * Inject CSRF token via header.
-	 *
-	 * @param {string} header Header name to create
-	 * @param {string} tokenValue CSRF token value
-	 * @param {object} jqXHR jQuery jqXHR object
-	 */
-	function injectHeader(header, tokenValue, jqXHR) {
-	    jqXHR.setRequestHeader(header, tokenValue);
-	}
-
-	/**
-	 * Inject CSRF token via POST body
-	 *
-	 * @param {string} tokenValue CSRF token value
-	 * @param {object} options jQuery prefilter options
-	 * @param {string} key POST data key
-	 */
-	function injectData(tokenValue, options, key) {
-	    var data;
-	    if (~options.contentType.indexOf('application/json')) {
-	        data = options.data ? JSON.parse(options.data) : {};
-	        data[key] = tokenValue;
-	        options.data = JSON.stringify(data);
-	    } else {
-	        options.data += options.data ? '&' : '';
-	        options.data += key + '=' + tokenValue;
-	    }
-	}
-
-	/**
-	 * Inject CSRF token via query param.
-	 *
-	 * @param {string} tokenValue CSRF token value
-	 * @param {object} options jQuery prefilter options
-	 * @param {string} param Query param key
-	 */
-	function injectQuery(tokenValue, options, param) {
-	    options.url += ~options.url.indexOf('?') ? '&' : '?';
-	    options.url += param + '=' + tokenValue;
-	}
-
-	/**
-	 * Configure a jQuery CSRF prefilter callback.
-	 *
-	 * @param {string|function} tokenValue CSRF token value
-	 * @param {object} [opts] Configuration options
-	 * @param {string} [options.header] Inject token with given header
-	 * @param {string} [options.data] Inject token with given POST body key
-	 * @param {string} [options.query] Inject token with given query param
-	 */
-	module.exports = function(tokenValue, opts) {
-	    opts = opts || {};
-
-	    return function(options, originalOptions, jqXHR) {
-	        /*jshint maxcomplexity:7*/
-	        if (isSafeMethod(options.type, opts.ignoreMethods)) { return; }
-
-	        tokenValue = typeof tokenValue === 'function' ? tokenValue() : tokenValue;
-
-	        if (opts.header) { injectHeader(opts.header, tokenValue, jqXHR); }
-	        if (opts.data)   { injectData(tokenValue, options, opts.data); }
-	        if (opts.query)  { injectQuery(tokenValue, options, opts.query); }
-
-	        if (!opts.header && !opts.data && !opts.query) {
-	            injectHeader(DEFAULT_HEADER, tokenValue, jqXHR);
-	        }
-	    };
-	};
-
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	  
-		// Dependencies
-		var $ = __webpack_require__(2)
-			, _ = __webpack_require__(5)
-			, Backbone = __webpack_require__(7)
-			, CKEditor = window.CKEDITOR
-			, $body = $('body')
-		;
-
-		// Polyfill window.location.origin in for IE
-		// http://tosbourn.com/a-fix-for-window-location-origin-in-internet-explorer/
-		if (!window.location.origin) {
-			window.location.origin = window.location.protocol + "//" + window.location.hostname 
-				+ (window.location.port ? ':' + window.location.port: '');
-		}
-		
-		// Setup view
-		var View = {};
-		View.initialize = function() {
-			_.bindAll(this);
-			
-			// Cache
-			this.$response = this.$('#response');
-			this.key = this.$response.data('key') || this.$('[name="key"]').val();
-			this.$value = this.$('[name="value"]');
-			this.$submit = this.$('.btn.save');
-
-			// If we're handling the saved condition, immediatly send message and stop
-			if (this.$response.length) return this.saved();
-
-			// Measure the dimensions of the iframe and report back to the parent.  This
-			// is treated like a "ready" event.  If this is field is a WYSIWYG, wait till
-			// CKEditor as initialized because it affects the height measurement.  If it's an image, 
-			// wait for image to load
-			if (this.$value.hasClass('wysiwyg')) CKEditor.on('instanceReady', this.ready);
-			else if (this.$('.image-upload').length) this.$('.img-thumbnail').imagesLoaded(this.ready);
-			else this.ready();
-
-			// Listen for close / cancel events
-			this.$('.btn.back').on('click', this.close);
-
-			// Listen for form submits
-			this.$('form').on('submit', this.saving);
-
-		};
-
-		// Tell the parent that the iframe is ready
-		View.ready = function() {
-			this.message('height', $body.height());
-		};
-
-		// Tell the icon to close
-		View.close = function() {
-			this.message('close')
-		};
-
-		// Tell the icon that we're saving
-		View.saving = function() {
-			this.message('saving');
-			this.$submit.prop('disabled', true);
-		}
-
-		// Tell the icon that saving has finished and pass the new value
-		View.saved = function() {
-			this.message('saved', this.$response.html());
-		}
-
-		// postMessage helper
-		View.message = function(type, value) {
-			window.top.postMessage({
-				key: this.key,
-				type: type,
-				value: value
-			}, window.location.origin);
-		}
-		
-		// Return view class
-		return Backbone.View.extend(View);
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;// --------------------------------------------------
-	// Switch "pages" using push state on tad-sidebar layouts
-	// --------------------------------------------------
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-		
-		// Dependencies
-		var $ = __webpack_require__(2)
-			, Backbone = __webpack_require__(7)
-			, _ = __webpack_require__(5)
-			, $win = $(window)
-		;
-		
-		// Create view
-		var View = {
-			page: null
-		};
-		
-		// Constructor
-		View.initialize = function() {
-			_.bindAll(this);
-
-			// Define router class 
-			this.router = new (Backbone.Router.extend());
-
-			// Begin routing
-			Backbone.history.start({
-				pushState: true,
-				root: window.location.href.match(/\/admin\/[^\/]+/)[0],
-				silent: true
-			});
-
-			// Register click listeners
-			this.$('a').on('click', this.updateRoute);
-
-		};
-
-		View.updateRoute = function(e) {
-			var cur = $(e.currentTarget);
-			this.router.navigate(cur.data('slug'), {trigger: false});
-			this.page = cur.data('slug');
-		};
-
-		// Return it
-		return Backbone.View.extend(View);
-
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ },
-/* 57 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-		
-		// Dependencies
-		var $ = __webpack_require__(2)
-			, _ = __webpack_require__(5)
-			, Backbone = __webpack_require__(7)
-		;
-		
-		/**
-		 * Setup view 
-		 */
-		var View = {};
-		View.initialize = function() {
-			_.bindAll(this);
-
-			// Cache
-			this.$role = $('[name="role"]');
-			this.$customize = this.$('[name="_custom_permissions"]');
-			this.$permissions = this.$('.permissions-list');
-			this.$permissions_inner = this.$('.permissions-list-inner');
-			this.$controllers = this.$permissions.find('.controller');		
-			this.$permission_boxes = this.$controllers.find(':checkbox');
-
-			// Parse the permission checkboxes into a mapping by role
-			this.role_boxes = this.parseBoxesForRoles(this.$permission_boxes);
-
-			// Listen for clicks on the override checkbox
-			this.$customize.on('change', this.togglePermissionsOptions);
-
-			// Check for the role to change and clear the custom permissions
-			this.$role.on('change', this.changeRole);
-
-			// Make clicking a controller name toggler all of it's checkboxes
-			this.$controllers.find('.title').on('click', this.toggleActions);
-
-		};
-
-		/**
-		 * Toggle the permissions options
-		 */
-		View.togglePermissionsOptions = function() {
-
-			// Inspect the clicked box
-			var show = this.$customize.is(':checked');
-
-			// Manually set the height whenever it's moving and then clear it when
-			// animation is done.  The animation is defined in CSS.
-			this.$permissions.height(this.$permissions_inner.outerHeight());
-			_.delay(_.bind(function() { this.$permissions.height(''); }, this), 300);
-
-			// Toggle the open state of the permissions
-			_.defer(_.bind(function() { this.$el.toggleClass('closed', !show); }, this));
-		};
-		
-		/**
-		 * Update the permissions when the role changes
-		 */
-		View.changeRole = function(e) {
-			this.clearCustomPermissions();
-			this.checkRole(this.$role.filter(':checked').val());
-		};
-
-		/**
-		 * Clear permissions customizations
-		 */
-		View.clearCustomPermissions = function() {
-			if (!this.$customize.is(':checked')) return;
-			this.$customize.prop('checked', false).trigger('change');
-		};
-
-		/**
-		 * Parse the checkboxes into buckets by roles
-		 *
-		 * @param jQuery boxes
-		 * @return object
-		 */
-		View.parseBoxesForRoles = function(boxes) {
-			var map = {}, roles, $el;
-			boxes.each(function(i, el) {
-				roles = $(el).data('roles');
-				if (roles) {
-					_.each(roles.split(','), function(role) {
-						map[role] = ( map[role] || $([]) ).add(el);
-					});	
-				}
-			});
-			return map;
-		};
-
-		/**
-		 * Check all the boxes that are defaults for the role
-		 *
-		 * @param string role
-		 */
-		View.checkRole = function(role) {
-			this.$permission_boxes.prop('checked', false);
-			this.role_boxes[role].prop('checked', true);
-		};
-
-		/**
-		 * Toggle all of the actions for a controller when the title is clicked
-		 *
-		 * @param mouseevent e
-		 */
-		View.toggleActions = function(e) {
-			var $actions = $(e.currentTarget).next().find(':checkbox');
-			$actions.prop('checked', $actions.filter(':checked').length != $actions.length);
-		};
-
-		// Return view class
-		return Backbone.View.extend(View);
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $, Backbone, Crop, Preview, _;
-
-	$ = __webpack_require__(2);
-
-	_ = __webpack_require__(5);
-
-	Backbone = __webpack_require__(7);
-
-	Preview = __webpack_require__(59);
-
-	Crop = __webpack_require__(60);
-
-	module.exports = Backbone.View.extend({
-	  initialize: function(options) {
-	    _.bindAll(this);
-	    this.preview = new Preview({
-	      el: this.el,
-	      parent: this
-	    });
-	    this.crop = new Crop({
-	      el: this.$('img.source')
-	    });
-	    this.preview.on('previewImage', this.onPreviewImage);
-	    this.preview.on('deleteImage', this.onDeleteImage);
-	  },
-	  onPreviewImage: function() {
-	    this.crop.destroy();
-	    this.crop.initialize();
-	  },
-	  onDeleteImage: function() {
-	    this.crop.destroy();
-	    this.crop.initialize();
-	    this.crop.clear();
-	  }
-	});
-
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var $, Backbone, _;
-
-	$ = __webpack_require__(2);
-
-	_ = __webpack_require__(5);
-
-	Backbone = __webpack_require__(7);
-
-	module.exports = Backbone.View.extend({
-	  initialize: function() {
-	    _.bindAll(this);
-	    this.$file = this.$el.find('[type="file"]');
-	    this.$holder = this.$el.find('.image-holder');
-	    this.$imagePreview = this.$holder.find('.source');
-	    this.$delete = this.$el.find('.delete');
-	    this.$file.on('change', this.onImageChange);
-	    this.$delete.on('click', this.onDelete);
-	  },
-	  onImageChange: function(input) {
-	    var reader;
-	    if (this.$file[0].files && this.$file[0].files[0]) {
-	      reader = new FileReader;
-	      reader.onload = (function(_this) {
-	        return function(e) {
-	          _this.$file.addClass('hidden');
-	          _this.$el.addClass('has-image');
-	          _this.$imagePreview.attr('src', e.target.result);
-	          _this.trigger('previewImage');
-	        };
-	      })(this);
-	      reader.readAsDataURL(this.$file[0].files[0]);
-	    }
-	  },
-	  onDelete: function() {
-	    this.$imagePreview.attr('src', '');
-	    this.$el.removeClass('has-image');
-	    this.$file.removeClass('hidden');
-	    this.$file.replaceWith(this.$file = this.$file.clone(true));
-	    this.$file.trigger('change');
-	    if (this.$file.hasClass('required')) {
-	      this.$file.prop('required', true);
-	    }
-	    $('<input type="hidden" value="">').attr('name', this.$file.attr('name')).insertBefore(this.$file);
-	    this.trigger('deleteImage');
-	  }
-	});
-
-
-/***/ },
-/* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;// --------------------------------------------------
-	// Add file preview to selected images
-	// --------------------------------------------------
-	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-
-		// Dependencies
-		var $ = __webpack_require__(2),
-			_ = __webpack_require__(5),
-			Backbone = __webpack_require__(7);
-		  __webpack_require__(61);
-		  __webpack_require__(19);
-
-		// Define a backbone view for each image
-		var Crop = Backbone.View.extend({
-
-			// Instance vars
-			jcrop: null, // A jcrop API instance
-			activeCrop: false,
-			width: null,
-			height: null,
-			ratio: undefined,
-			initted: false,
-			$input: null, // The hidden field that stores the output
-
-			// Constructor
-			initialize: function() {
-				_.bindAll(this);
-
-				// Cache selectors
-				this.$upload = this.$el.closest('.image-upload');
-				this.$crop = this.$upload.find('.input-crop_box');
-				this.$focus = this.$upload.find('.input-focal_point');
-				this.$title = this.$upload.find('input.title');
-				this.$cropTool = this.$upload.find('.crop.btn');
-				this.$focusTool = this.$upload.find('.focal.btn');
-				this.$file = this.$upload.find('[type="file"]');
-
-				// Remove clicking on the parent a tag
-				this.$el.parent('a').click(function(e) { e.preventDefault(); });
-
-				// Cache configruation variables
-				var ratio = this.$upload.data('aspect-ratio');
-				this.ratio = ratio;
-
-				// Listen for window resizing as a way to check whether the img has been resized
-				// since it resizes responsively.  We listen on the leading edge for the start
-				// and the tailing edge for the end
-				var $window = $(window), delay = 400;
-				$window.resize(_.debounce(this.destroy, delay, true));
-				$window.resize(_.debounce(this.init, delay, false));
-
-				this.$cropTool.on('click', this.beginCrop);
-				this.$focusTool.on('click', this.beginFocus);
-
-				// Start jcrop up once the images loaded
-				this.$el.imagesLoaded(this.init);
-			},
-
-			// Add jcrop to the element
-			init: function() {
-
-				// Only init once and only add jcrop if the image is visible.  Otherwise, it will
-				// wait until it is first activated by the style tabs.  It needs to be visible
-				// so the size can be measured correctly
-				if (this.initted || !this.visible()) return;
-				this.initted = true;
-
-				// Cache the visible dimensions of the image
-				this.width = this.$el.width();
-				this.height = this.$el.height();
-
-				// Check if there is any crop selection defined
-				var cropVal = this.input_to_json(this.$crop);
-				if (cropVal['x1'] != null) var selection = this.convert_from_perc(cropVal);
-
-				// Init jcrop
-				var self = this;
-				this.$el.Jcrop({
-					onSelect: this.select,
-					onRelease: this.select,
-					aspectRatio: this.ratio,
-					setSelect: selection,
-					keySupport: false // Stop the page scroll from jumping: http://cl.ly/0e1e1615262h
-
-				// Store a reference to jcrop and call the ready function
-				}, function() {
-					self.jcrop = this;
-					self.activeCrop = true;
-				});
-
-				// Check if focal point is set
-				var focalVal = this.input_to_json(this.$focus);
-				if(this.$focusTool.length != 0) {
-					this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
-					this.$focalPoint = this.$el.next('div').find('.focal-point');
-					this.$focalPoint.css({'left' : focalVal.x * this.$el.outerWidth(), 'top' : focalVal.y * this.$el.outerHeight()});
-
-					if(!$.isEmptyObject(focalVal)) {
-						this.$focalPoint.css('opacity', 1);
-					}
-				}
-
-			},
-
-			// Set up cropping when crop tool is clicked
-			beginCrop: function() {
-				if (this.activeCrop == true) return;
-
-				// remove the set focus listener
-				this.$el.next('div').unbind();
-
-				// make the crop tool active
-				this.$cropTool.addClass('active');
-				this.$focusTool.removeClass('active');
-				$('.jcrop-holder').css('pointer-events', 'auto');
-
-				this.jcrop.enable();
-				this.activeCrop = true;
-			},
-
-			// Switch to set focal point
-			beginFocus: function() {
-				if (this.activeCrop != true) return;
-
-				this.$cropTool.removeClass('active');
-				this.$focusTool.addClass('active');
-				// $('.jcrop-holder').css('pointer-events', 'none');
-
-				this.jcrop.disable();
-				this.activeCrop = false;
-
-				this.$el.next('div').on('click', this.setFocus);
-			},
-
-			setFocus: function(e) {
-				var image = $(e.currentTarget);
-				var offset = image.offset();
-
-				var pointX = e.pageX - offset.left - 7;
-				var pointY = e.pageY - offset.top - 7;
-
-				var location = {
-					x : pointX / image.outerWidth(),
-					y : pointY / image.outerHeight()
-				};
-
-				var cropVal = this.input_to_json(this.$crop);
-				var selection = this.convert_from_perc(cropVal);
-				this.$focus.val(JSON.stringify(location));
-
-				if(!$.isEmptyObject(cropVal)) {
-					if(pointX < selection[0] || pointY < selection[1] || pointX > selection[2] || pointY > selection[3]) {
-						console.log('Focal point must be inside crop')
-						return;
-					}
-				}
-
-				this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
-			},
-
-			// Remove jcrop from the element
-			destroy: function() {
-
-				// Only valid if currently initted
-				if (!this.jcrop || !this.initted) return;
-
-				// Unset everything
-				this.jcrop.destroy();
-				this.jcrop = null;
-				this.initted = false;
-
-				// Jcrop will have set width/height on the style
-				this.$el.css({width:'', height:''});
-
-			},
-
-			// Perist the user's selection
-			select: function(c) {
-
-				// Convert the coordinates from jcrop into percentages.  It may be undefined if the user
-				// cleared the crop
-				if (c) c = this.convert_to_perc(c);
-
-				// Add the coordinates to the input's value
-				var val = this.input_to_json(this.$crop);
-				val = c;
-				this.$crop.val(JSON.stringify(val));
-
-			},
-
-			// Clear out the hidden input values for a new image
-			clear: function() {
-				this.$crop.val("");
-				this.$focus.val("");
-				this.$title.val("");
-				this.$focusTool.removeClass('active');
-				this.$cropTool.addClass('active');
-			},
-
-			// Check if the this crop is visible
-			visible: function() {
-				return this.$el.is(":visible");
-			},
-
-			// Convert the coordinates from jcrop into percentages.  So an x value of 10
-			// in a 100px wide image would become .1.  This is done because Croppa will already
-			// be serving an image that is resized from it's source, so a perc offset
-			// is the only thing that will be useful.
-			convert_to_perc: function(c) {
-				return {
-					x1 : c.x / this.width,
-					x2 : c.x2 / this.width,
-					y1 : c.y / this.height,
-					y2 : c.y2 / this.height
-				};
-			},
-
-			// Convert from perc back to pixels of the current image size
-			convert_from_perc: function(c) {
-				return [
-					c.x1 * this.width,
-					c.y1 * this.height,
-					c.x2 * this.width,
-					c.y2 * this.height
-				];
-			},
-
-			// Get JSON from the $input
-			input_to_json: function(input) {
-				var val = $(input).val();
-				if (!val) return {};
-				else return JSON.parse(val);
-			}
-
-		});
-
-		return Crop;
-
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 61 */
-/***/ function(module, exports) {
-
-	/**
-	 * jquery.Jcrop.js v0.9.12
-	 * jQuery Image Cropping Plugin - released under MIT License 
-	 * Author: Kelly Hallman <khallman@gmail.com>
-	 * http://github.com/tapmodo/Jcrop
-	 * Copyright (c) 2008-2013 Tapmodo Interactive LLC {{{
-	 *
-	 * Permission is hereby granted, free of charge, to any person
-	 * obtaining a copy of this software and associated documentation
-	 * files (the "Software"), to deal in the Software without
-	 * restriction, including without limitation the rights to use,
-	 * copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the
-	 * Software is furnished to do so, subject to the following
-	 * conditions:
-	 *
-	 * The above copyright notice and this permission notice shall be
-	 * included in all copies or substantial portions of the Software.
-	 *
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-	 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-	 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-	 * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-	 * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-	 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-	 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-	 * OTHER DEALINGS IN THE SOFTWARE.
-	 *
-	 * }}}
-	 */
-
-	(function ($) {
-
-	  $.Jcrop = function (obj, opt) {
-	    var options = $.extend({}, $.Jcrop.defaults),
-	        docOffset,
-	        _ua = navigator.userAgent.toLowerCase(),
-	        is_msie = /msie/.test(_ua),
-	        ie6mode = /msie [1-6]\./.test(_ua);
-
-	    // Internal Methods {{{
-	    function px(n) {
-	      return Math.round(n) + 'px';
-	    }
-	    function cssClass(cl) {
-	      return options.baseClass + '-' + cl;
-	    }
-	    function supportsColorFade() {
-	      return $.fx.step.hasOwnProperty('backgroundColor');
-	    }
-	    function getPos(obj) //{{{
-	    {
-	      var pos = $(obj).offset();
-	      return [pos.left, pos.top];
-	    }
-	    //}}}
-	    function mouseAbs(e) //{{{
-	    {
-	      return [(e.pageX - docOffset[0]), (e.pageY - docOffset[1])];
-	    }
-	    //}}}
-	    function setOptions(opt) //{{{
-	    {
-	      if (typeof(opt) !== 'object') opt = {};
-	      options = $.extend(options, opt);
-
-	      $.each(['onChange','onSelect','onRelease','onDblClick'],function(i,e) {
-	        if (typeof(options[e]) !== 'function') options[e] = function () {};
-	      });
-	    }
-	    //}}}
-	    function startDragMode(mode, pos, touch) //{{{
-	    {
-	      docOffset = getPos($img);
-	      Tracker.setCursor(mode === 'move' ? mode : mode + '-resize');
-
-	      if (mode === 'move') {
-	        return Tracker.activateHandlers(createMover(pos), doneSelect, touch);
-	      }
-
-	      var fc = Coords.getFixed();
-	      var opp = oppLockCorner(mode);
-	      var opc = Coords.getCorner(oppLockCorner(opp));
-
-	      Coords.setPressed(Coords.getCorner(opp));
-	      Coords.setCurrent(opc);
-
-	      Tracker.activateHandlers(dragmodeHandler(mode, fc), doneSelect, touch);
-	    }
-	    //}}}
-	    function dragmodeHandler(mode, f) //{{{
-	    {
-	      return function (pos) {
-	        if (!options.aspectRatio) {
-	          switch (mode) {
-	          case 'e':
-	            pos[1] = f.y2;
-	            break;
-	          case 'w':
-	            pos[1] = f.y2;
-	            break;
-	          case 'n':
-	            pos[0] = f.x2;
-	            break;
-	          case 's':
-	            pos[0] = f.x2;
-	            break;
-	          }
-	        } else {
-	          switch (mode) {
-	          case 'e':
-	            pos[1] = f.y + 1;
-	            break;
-	          case 'w':
-	            pos[1] = f.y + 1;
-	            break;
-	          case 'n':
-	            pos[0] = f.x + 1;
-	            break;
-	          case 's':
-	            pos[0] = f.x + 1;
-	            break;
-	          }
-	        }
-	        Coords.setCurrent(pos);
-	        Selection.update();
-	      };
-	    }
-	    //}}}
-	    function createMover(pos) //{{{
-	    {
-	      var lloc = pos;
-	      KeyManager.watchKeys();
-
-	      return function (pos) {
-	        Coords.moveOffset([pos[0] - lloc[0], pos[1] - lloc[1]]);
-	        lloc = pos;
-
-	        Selection.update();
-	      };
-	    }
-	    //}}}
-	    function oppLockCorner(ord) //{{{
-	    {
-	      switch (ord) {
-	      case 'n':
-	        return 'sw';
-	      case 's':
-	        return 'nw';
-	      case 'e':
-	        return 'nw';
-	      case 'w':
-	        return 'ne';
-	      case 'ne':
-	        return 'sw';
-	      case 'nw':
-	        return 'se';
-	      case 'se':
-	        return 'nw';
-	      case 'sw':
-	        return 'ne';
-	      }
-	    }
-	    //}}}
-	    function createDragger(ord) //{{{
-	    {
-	      return function (e) {
-	        if (options.disabled) {
-	          return false;
-	        }
-	        if ((ord === 'move') && !options.allowMove) {
-	          return false;
-	        }
-	        
-	        // Fix position of crop area when dragged the very first time.
-	        // Necessary when crop image is in a hidden element when page is loaded.
-	        docOffset = getPos($img);
-
-	        btndown = true;
-	        startDragMode(ord, mouseAbs(e));
-	        e.stopPropagation();
-	        e.preventDefault();
-	        return false;
-	      };
-	    }
-	    //}}}
-	    function presize($obj, w, h) //{{{
-	    {
-	      var nw = $obj.width(),
-	          nh = $obj.height();
-	      if ((nw > w) && w > 0) {
-	        nw = w;
-	        nh = (w / $obj.width()) * $obj.height();
-	      }
-	      if ((nh > h) && h > 0) {
-	        nh = h;
-	        nw = (h / $obj.height()) * $obj.width();
-	      }
-	      xscale = $obj.width() / nw;
-	      yscale = $obj.height() / nh;
-	      $obj.width(nw).height(nh);
-	    }
-	    //}}}
-	    function unscale(c) //{{{
-	    {
-	      return {
-	        x: c.x * xscale,
-	        y: c.y * yscale,
-	        x2: c.x2 * xscale,
-	        y2: c.y2 * yscale,
-	        w: c.w * xscale,
-	        h: c.h * yscale
-	      };
-	    }
-	    //}}}
-	    function doneSelect(pos) //{{{
-	    {
-	      var c = Coords.getFixed();
-	      if ((c.w > options.minSelect[0]) && (c.h > options.minSelect[1])) {
-	        Selection.enableHandles();
-	        Selection.done();
-	      } else {
-	        Selection.release();
-	      }
-	      Tracker.setCursor(options.allowSelect ? 'crosshair' : 'default');
-	    }
-	    //}}}
-	    function newSelection(e) //{{{
-	    {
-	      if (options.disabled) {
-	        return false;
-	      }
-	      if (!options.allowSelect) {
-	        return false;
-	      }
-	      btndown = true;
-	      docOffset = getPos($img);
-	      Selection.disableHandles();
-	      Tracker.setCursor('crosshair');
-	      var pos = mouseAbs(e);
-	      Coords.setPressed(pos);
-	      Selection.update();
-	      Tracker.activateHandlers(selectDrag, doneSelect, e.type.substring(0,5)==='touch');
-	      KeyManager.watchKeys();
-
-	      e.stopPropagation();
-	      e.preventDefault();
-	      return false;
-	    }
-	    //}}}
-	    function selectDrag(pos) //{{{
-	    {
-	      Coords.setCurrent(pos);
-	      Selection.update();
-	    }
-	    //}}}
-	    function newTracker() //{{{
-	    {
-	      var trk = $('<div></div>').addClass(cssClass('tracker'));
-	      if (is_msie) {
-	        trk.css({
-	          opacity: 0,
-	          backgroundColor: 'white'
-	        });
-	      }
-	      return trk;
-	    }
-	    //}}}
-
-	    // }}}
-	    // Initialization {{{
-	    // Sanitize some options {{{
-	    if (typeof(obj) !== 'object') {
-	      obj = $(obj)[0];
-	    }
-	    if (typeof(opt) !== 'object') {
-	      opt = {};
-	    }
-	    // }}}
-	    setOptions(opt);
-	    // Initialize some jQuery objects {{{
-	    // The values are SET on the image(s) for the interface
-	    // If the original image has any of these set, they will be reset
-	    // However, if you destroy() the Jcrop instance the original image's
-	    // character in the DOM will be as you left it.
-	    var img_css = {
-	      border: 'none',
-	      visibility: 'visible',
-	      margin: 0,
-	      padding: 0,
-	      position: 'absolute',
-	      top: 0,
-	      left: 0
-	    };
-
-	    var $origimg = $(obj),
-	      img_mode = true;
-
-	    if (obj.tagName == 'IMG') {
-	      // Fix size of crop image.
-	      // Necessary when crop image is within a hidden element when page is loaded.
-	      if ($origimg[0].width != 0 && $origimg[0].height != 0) {
-	        // Obtain dimensions from contained img element.
-	        $origimg.width($origimg[0].width);
-	        $origimg.height($origimg[0].height);
-	      } else {
-	        // Obtain dimensions from temporary image in case the original is not loaded yet (e.g. IE 7.0). 
-	        var tempImage = new Image();
-	        tempImage.src = $origimg[0].src;
-	        $origimg.width(tempImage.width);
-	        $origimg.height(tempImage.height);
-	      } 
-
-	      var $img = $origimg.clone().removeAttr('id').css(img_css).show();
-
-	      $img.width($origimg.width());
-	      $img.height($origimg.height());
-	      $origimg.after($img).hide();
-
-	    } else {
-	      $img = $origimg.css(img_css).show();
-	      img_mode = false;
-	      if (options.shade === null) { options.shade = true; }
-	    }
-
-	    presize($img, options.boxWidth, options.boxHeight);
-
-	    var boundx = $img.width(),
-	        boundy = $img.height(),
-	        
-	        
-	        $div = $('<div />').width(boundx).height(boundy).addClass(cssClass('holder')).css({
-	        position: 'relative',
-	        backgroundColor: options.bgColor
-	      }).insertAfter($origimg).append($img);
-
-	    if (options.addClass) {
-	      $div.addClass(options.addClass);
-	    }
-
-	    var $img2 = $('<div />'),
-
-	        $img_holder = $('<div />') 
-	        .width('100%').height('100%').css({
-	          zIndex: 310,
-	          position: 'absolute',
-	          overflow: 'hidden'
-	        }),
-
-	        $hdl_holder = $('<div />') 
-	        .width('100%').height('100%').css('zIndex', 320), 
-
-	        $sel = $('<div />') 
-	        .css({
-	          position: 'absolute',
-	          zIndex: 600
-	        }).dblclick(function(){
-	          var c = Coords.getFixed();
-	          options.onDblClick.call(api,c);
-	        }).insertBefore($img).append($img_holder, $hdl_holder); 
-
-	    if (img_mode) {
-
-	      $img2 = $('<img />')
-	          .attr('src', $img.attr('src')).css(img_css).width(boundx).height(boundy),
-
-	      $img_holder.append($img2);
-
-	    }
-
-	    if (ie6mode) {
-	      $sel.css({
-	        overflowY: 'hidden'
-	      });
-	    }
-
-	    var bound = options.boundary;
-	    var $trk = newTracker().width(boundx + (bound * 2)).height(boundy + (bound * 2)).css({
-	      position: 'absolute',
-	      top: px(-bound),
-	      left: px(-bound),
-	      zIndex: 290
-	    }).mousedown(newSelection);
-
-	    /* }}} */
-	    // Set more variables {{{
-	    var bgcolor = options.bgColor,
-	        bgopacity = options.bgOpacity,
-	        xlimit, ylimit, xmin, ymin, xscale, yscale, enabled = true,
-	        btndown, animating, shift_down;
-
-	    docOffset = getPos($img);
-	    // }}}
-	    // }}}
-	    // Internal Modules {{{
-	    // Touch Module {{{ 
-	    var Touch = (function () {
-	      // Touch support detection function adapted (under MIT License)
-	      // from code by Jeffrey Sambells - http://github.com/iamamused/
-	      function hasTouchSupport() {
-	        var support = {}, events = ['touchstart', 'touchmove', 'touchend'],
-	            el = document.createElement('div'), i;
-
-	        try {
-	          for(i=0; i<events.length; i++) {
-	            var eventName = events[i];
-	            eventName = 'on' + eventName;
-	            var isSupported = (eventName in el);
-	            if (!isSupported) {
-	              el.setAttribute(eventName, 'return;');
-	              isSupported = typeof el[eventName] == 'function';
-	            }
-	            support[events[i]] = isSupported;
-	          }
-	          return support.touchstart && support.touchend && support.touchmove;
-	        }
-	        catch(err) {
-	          return false;
-	        }
-	      }
-
-	      function detectSupport() {
-	        if ((options.touchSupport === true) || (options.touchSupport === false)) return options.touchSupport;
-	          else return hasTouchSupport();
-	      }
-	      return {
-	        createDragger: function (ord) {
-	          return function (e) {
-	            if (options.disabled) {
-	              return false;
-	            }
-	            if ((ord === 'move') && !options.allowMove) {
-	              return false;
-	            }
-	            docOffset = getPos($img);
-	            btndown = true;
-	            startDragMode(ord, mouseAbs(Touch.cfilter(e)), true);
-	            e.stopPropagation();
-	            e.preventDefault();
-	            return false;
-	          };
-	        },
-	        newSelection: function (e) {
-	          return newSelection(Touch.cfilter(e));
-	        },
-	        cfilter: function (e){
-	          e.pageX = e.originalEvent.changedTouches[0].pageX;
-	          e.pageY = e.originalEvent.changedTouches[0].pageY;
-	          return e;
-	        },
-	        isSupported: hasTouchSupport,
-	        support: detectSupport()
-	      };
-	    }());
-	    // }}}
-	    // Coords Module {{{
-	    var Coords = (function () {
-	      var x1 = 0,
-	          y1 = 0,
-	          x2 = 0,
-	          y2 = 0,
-	          ox, oy;
-
-	      function setPressed(pos) //{{{
-	      {
-	        pos = rebound(pos);
-	        x2 = x1 = pos[0];
-	        y2 = y1 = pos[1];
-	      }
-	      //}}}
-	      function setCurrent(pos) //{{{
-	      {
-	        pos = rebound(pos);
-	        ox = pos[0] - x2;
-	        oy = pos[1] - y2;
-	        x2 = pos[0];
-	        y2 = pos[1];
-	      }
-	      //}}}
-	      function getOffset() //{{{
-	      {
-	        return [ox, oy];
-	      }
-	      //}}}
-	      function moveOffset(offset) //{{{
-	      {
-	        var ox = offset[0],
-	            oy = offset[1];
-
-	        if (0 > x1 + ox) {
-	          ox -= ox + x1;
-	        }
-	        if (0 > y1 + oy) {
-	          oy -= oy + y1;
-	        }
-
-	        if (boundy < y2 + oy) {
-	          oy += boundy - (y2 + oy);
-	        }
-	        if (boundx < x2 + ox) {
-	          ox += boundx - (x2 + ox);
-	        }
-
-	        x1 += ox;
-	        x2 += ox;
-	        y1 += oy;
-	        y2 += oy;
-	      }
-	      //}}}
-	      function getCorner(ord) //{{{
-	      {
-	        var c = getFixed();
-	        switch (ord) {
-	        case 'ne':
-	          return [c.x2, c.y];
-	        case 'nw':
-	          return [c.x, c.y];
-	        case 'se':
-	          return [c.x2, c.y2];
-	        case 'sw':
-	          return [c.x, c.y2];
-	        }
-	      }
-	      //}}}
-	      function getFixed() //{{{
-	      {
-	        if (!options.aspectRatio) {
-	          return getRect();
-	        }
-	        // This function could use some optimization I think...
-	        var aspect = options.aspectRatio,
-	            min_x = options.minSize[0] / xscale,
-	            
-	            
-	            //min_y = options.minSize[1]/yscale,
-	            max_x = options.maxSize[0] / xscale,
-	            max_y = options.maxSize[1] / yscale,
-	            rw = x2 - x1,
-	            rh = y2 - y1,
-	            rwa = Math.abs(rw),
-	            rha = Math.abs(rh),
-	            real_ratio = rwa / rha,
-	            xx, yy, w, h;
-
-	        if (max_x === 0) {
-	          max_x = boundx * 10;
-	        }
-	        if (max_y === 0) {
-	          max_y = boundy * 10;
-	        }
-	        if (real_ratio < aspect) {
-	          yy = y2;
-	          w = rha * aspect;
-	          xx = rw < 0 ? x1 - w : w + x1;
-
-	          if (xx < 0) {
-	            xx = 0;
-	            h = Math.abs((xx - x1) / aspect);
-	            yy = rh < 0 ? y1 - h : h + y1;
-	          } else if (xx > boundx) {
-	            xx = boundx;
-	            h = Math.abs((xx - x1) / aspect);
-	            yy = rh < 0 ? y1 - h : h + y1;
-	          }
-	        } else {
-	          xx = x2;
-	          h = rwa / aspect;
-	          yy = rh < 0 ? y1 - h : y1 + h;
-	          if (yy < 0) {
-	            yy = 0;
-	            w = Math.abs((yy - y1) * aspect);
-	            xx = rw < 0 ? x1 - w : w + x1;
-	          } else if (yy > boundy) {
-	            yy = boundy;
-	            w = Math.abs(yy - y1) * aspect;
-	            xx = rw < 0 ? x1 - w : w + x1;
-	          }
-	        }
-
-	        // Magic %-)
-	        if (xx > x1) { // right side
-	          if (xx - x1 < min_x) {
-	            xx = x1 + min_x;
-	          } else if (xx - x1 > max_x) {
-	            xx = x1 + max_x;
-	          }
-	          if (yy > y1) {
-	            yy = y1 + (xx - x1) / aspect;
-	          } else {
-	            yy = y1 - (xx - x1) / aspect;
-	          }
-	        } else if (xx < x1) { // left side
-	          if (x1 - xx < min_x) {
-	            xx = x1 - min_x;
-	          } else if (x1 - xx > max_x) {
-	            xx = x1 - max_x;
-	          }
-	          if (yy > y1) {
-	            yy = y1 + (x1 - xx) / aspect;
-	          } else {
-	            yy = y1 - (x1 - xx) / aspect;
-	          }
-	        }
-
-	        if (xx < 0) {
-	          x1 -= xx;
-	          xx = 0;
-	        } else if (xx > boundx) {
-	          x1 -= xx - boundx;
-	          xx = boundx;
-	        }
-
-	        if (yy < 0) {
-	          y1 -= yy;
-	          yy = 0;
-	        } else if (yy > boundy) {
-	          y1 -= yy - boundy;
-	          yy = boundy;
-	        }
-
-	        return makeObj(flipCoords(x1, y1, xx, yy));
-	      }
-	      //}}}
-	      function rebound(p) //{{{
-	      {
-	        if (p[0] < 0) p[0] = 0;
-	        if (p[1] < 0) p[1] = 0;
-
-	        if (p[0] > boundx) p[0] = boundx;
-	        if (p[1] > boundy) p[1] = boundy;
-
-	        return [Math.round(p[0]), Math.round(p[1])];
-	      }
-	      //}}}
-	      function flipCoords(x1, y1, x2, y2) //{{{
-	      {
-	        var xa = x1,
-	            xb = x2,
-	            ya = y1,
-	            yb = y2;
-	        if (x2 < x1) {
-	          xa = x2;
-	          xb = x1;
-	        }
-	        if (y2 < y1) {
-	          ya = y2;
-	          yb = y1;
-	        }
-	        return [xa, ya, xb, yb];
-	      }
-	      //}}}
-	      function getRect() //{{{
-	      {
-	        var xsize = x2 - x1,
-	            ysize = y2 - y1,
-	            delta;
-
-	        if (xlimit && (Math.abs(xsize) > xlimit)) {
-	          x2 = (xsize > 0) ? (x1 + xlimit) : (x1 - xlimit);
-	        }
-	        if (ylimit && (Math.abs(ysize) > ylimit)) {
-	          y2 = (ysize > 0) ? (y1 + ylimit) : (y1 - ylimit);
-	        }
-
-	        if (ymin / yscale && (Math.abs(ysize) < ymin / yscale)) {
-	          y2 = (ysize > 0) ? (y1 + ymin / yscale) : (y1 - ymin / yscale);
-	        }
-	        if (xmin / xscale && (Math.abs(xsize) < xmin / xscale)) {
-	          x2 = (xsize > 0) ? (x1 + xmin / xscale) : (x1 - xmin / xscale);
-	        }
-
-	        if (x1 < 0) {
-	          x2 -= x1;
-	          x1 -= x1;
-	        }
-	        if (y1 < 0) {
-	          y2 -= y1;
-	          y1 -= y1;
-	        }
-	        if (x2 < 0) {
-	          x1 -= x2;
-	          x2 -= x2;
-	        }
-	        if (y2 < 0) {
-	          y1 -= y2;
-	          y2 -= y2;
-	        }
-	        if (x2 > boundx) {
-	          delta = x2 - boundx;
-	          x1 -= delta;
-	          x2 -= delta;
-	        }
-	        if (y2 > boundy) {
-	          delta = y2 - boundy;
-	          y1 -= delta;
-	          y2 -= delta;
-	        }
-	        if (x1 > boundx) {
-	          delta = x1 - boundy;
-	          y2 -= delta;
-	          y1 -= delta;
-	        }
-	        if (y1 > boundy) {
-	          delta = y1 - boundy;
-	          y2 -= delta;
-	          y1 -= delta;
-	        }
-
-	        return makeObj(flipCoords(x1, y1, x2, y2));
-	      }
-	      //}}}
-	      function makeObj(a) //{{{
-	      {
-	        return {
-	          x: a[0],
-	          y: a[1],
-	          x2: a[2],
-	          y2: a[3],
-	          w: a[2] - a[0],
-	          h: a[3] - a[1]
-	        };
-	      }
-	      //}}}
-
-	      return {
-	        flipCoords: flipCoords,
-	        setPressed: setPressed,
-	        setCurrent: setCurrent,
-	        getOffset: getOffset,
-	        moveOffset: moveOffset,
-	        getCorner: getCorner,
-	        getFixed: getFixed
-	      };
-	    }());
-
-	    //}}}
-	    // Shade Module {{{
-	    var Shade = (function() {
-	      var enabled = false,
-	          holder = $('<div />').css({
-	            position: 'absolute',
-	            zIndex: 240,
-	            opacity: 0
-	          }),
-	          shades = {
-	            top: createShade(),
-	            left: createShade().height(boundy),
-	            right: createShade().height(boundy),
-	            bottom: createShade()
-	          };
-
-	      function resizeShades(w,h) {
-	        shades.left.css({ height: px(h) });
-	        shades.right.css({ height: px(h) });
-	      }
-	      function updateAuto()
-	      {
-	        return updateShade(Coords.getFixed());
-	      }
-	      function updateShade(c)
-	      {
-	        shades.top.css({
-	          left: px(c.x),
-	          width: px(c.w),
-	          height: px(c.y)
-	        });
-	        shades.bottom.css({
-	          top: px(c.y2),
-	          left: px(c.x),
-	          width: px(c.w),
-	          height: px(boundy-c.y2)
-	        });
-	        shades.right.css({
-	          left: px(c.x2),
-	          width: px(boundx-c.x2)
-	        });
-	        shades.left.css({
-	          width: px(c.x)
-	        });
-	      }
-	      function createShade() {
-	        return $('<div />').css({
-	          position: 'absolute',
-	          backgroundColor: options.shadeColor||options.bgColor
-	        }).appendTo(holder);
-	      }
-	      function enableShade() {
-	        if (!enabled) {
-	          enabled = true;
-	          holder.insertBefore($img);
-	          updateAuto();
-	          Selection.setBgOpacity(1,0,1);
-	          $img2.hide();
-
-	          setBgColor(options.shadeColor||options.bgColor,1);
-	          if (Selection.isAwake())
-	          {
-	            setOpacity(options.bgOpacity,1);
-	          }
-	            else setOpacity(1,1);
-	        }
-	      }
-	      function setBgColor(color,now) {
-	        colorChangeMacro(getShades(),color,now);
-	      }
-	      function disableShade() {
-	        if (enabled) {
-	          holder.remove();
-	          $img2.show();
-	          enabled = false;
-	          if (Selection.isAwake()) {
-	            Selection.setBgOpacity(options.bgOpacity,1,1);
-	          } else {
-	            Selection.setBgOpacity(1,1,1);
-	            Selection.disableHandles();
-	          }
-	          colorChangeMacro($div,0,1);
-	        }
-	      }
-	      function setOpacity(opacity,now) {
-	        if (enabled) {
-	          if (options.bgFade && !now) {
-	            holder.animate({
-	              opacity: 1-opacity
-	            },{
-	              queue: false,
-	              duration: options.fadeTime
-	            });
-	          }
-	          else holder.css({opacity:1-opacity});
-	        }
-	      }
-	      function refreshAll() {
-	        options.shade ? enableShade() : disableShade();
-	        if (Selection.isAwake()) setOpacity(options.bgOpacity);
-	      }
-	      function getShades() {
-	        return holder.children();
-	      }
-
-	      return {
-	        update: updateAuto,
-	        updateRaw: updateShade,
-	        getShades: getShades,
-	        setBgColor: setBgColor,
-	        enable: enableShade,
-	        disable: disableShade,
-	        resize: resizeShades,
-	        refresh: refreshAll,
-	        opacity: setOpacity
-	      };
-	    }());
-	    // }}}
-	    // Selection Module {{{
-	    var Selection = (function () {
-	      var awake,
-	          hdep = 370,
-	          borders = {},
-	          handle = {},
-	          dragbar = {},
-	          seehandles = false;
-
-	      // Private Methods
-	      function insertBorder(type) //{{{
-	      {
-	        var jq = $('<div />').css({
-	          position: 'absolute',
-	          opacity: options.borderOpacity
-	        }).addClass(cssClass(type));
-	        $img_holder.append(jq);
-	        return jq;
-	      }
-	      //}}}
-	      function dragDiv(ord, zi) //{{{
-	      {
-	        var jq = $('<div />').mousedown(createDragger(ord)).css({
-	          cursor: ord + '-resize',
-	          position: 'absolute',
-	          zIndex: zi
-	        }).addClass('ord-'+ord);
-
-	        if (Touch.support) {
-	          jq.bind('touchstart.jcrop', Touch.createDragger(ord));
-	        }
-
-	        $hdl_holder.append(jq);
-	        return jq;
-	      }
-	      //}}}
-	      function insertHandle(ord) //{{{
-	      {
-	        var hs = options.handleSize,
-
-	          div = dragDiv(ord, hdep++).css({
-	            opacity: options.handleOpacity
-	          }).addClass(cssClass('handle'));
-
-	        if (hs) { div.width(hs).height(hs); }
-
-	        return div;
-	      }
-	      //}}}
-	      function insertDragbar(ord) //{{{
-	      {
-	        return dragDiv(ord, hdep++).addClass('jcrop-dragbar');
-	      }
-	      //}}}
-	      function createDragbars(li) //{{{
-	      {
-	        var i;
-	        for (i = 0; i < li.length; i++) {
-	          dragbar[li[i]] = insertDragbar(li[i]);
-	        }
-	      }
-	      //}}}
-	      function createBorders(li) //{{{
-	      {
-	        var cl,i;
-	        for (i = 0; i < li.length; i++) {
-	          switch(li[i]){
-	            case'n': cl='hline'; break;
-	            case's': cl='hline bottom'; break;
-	            case'e': cl='vline right'; break;
-	            case'w': cl='vline'; break;
-	          }
-	          borders[li[i]] = insertBorder(cl);
-	        }
-	      }
-	      //}}}
-	      function createHandles(li) //{{{
-	      {
-	        var i;
-	        for (i = 0; i < li.length; i++) {
-	          handle[li[i]] = insertHandle(li[i]);
-	        }
-	      }
-	      //}}}
-	      function moveto(x, y) //{{{
-	      {
-	        if (!options.shade) {
-	          $img2.css({
-	            top: px(-y),
-	            left: px(-x)
-	          });
-	        }
-	        $sel.css({
-	          top: px(y),
-	          left: px(x)
-	        });
-	      }
-	      //}}}
-	      function resize(w, h) //{{{
-	      {
-	        $sel.width(Math.round(w)).height(Math.round(h));
-	      }
-	      //}}}
-	      function refresh() //{{{
-	      {
-	        var c = Coords.getFixed();
-
-	        Coords.setPressed([c.x, c.y]);
-	        Coords.setCurrent([c.x2, c.y2]);
-
-	        updateVisible();
-	      }
-	      //}}}
-
-	      // Internal Methods
-	      function updateVisible(select) //{{{
-	      {
-	        if (awake) {
-	          return update(select);
-	        }
-	      }
-	      //}}}
-	      function update(select) //{{{
-	      {
-	        var c = Coords.getFixed();
-
-	        resize(c.w, c.h);
-	        moveto(c.x, c.y);
-	        if (options.shade) Shade.updateRaw(c);
-
-	        awake || show();
-
-	        if (select) {
-	          options.onSelect.call(api, unscale(c));
-	        } else {
-	          options.onChange.call(api, unscale(c));
-	        }
-	      }
-	      //}}}
-	      function setBgOpacity(opacity,force,now) //{{{
-	      {
-	        if (!awake && !force) return;
-	        if (options.bgFade && !now) {
-	          $img.animate({
-	            opacity: opacity
-	          },{
-	            queue: false,
-	            duration: options.fadeTime
-	          });
-	        } else {
-	          $img.css('opacity', opacity);
-	        }
-	      }
-	      //}}}
-	      function show() //{{{
-	      {
-	        $sel.show();
-
-	        if (options.shade) Shade.opacity(bgopacity);
-	          else setBgOpacity(bgopacity,true);
-
-	        awake = true;
-	      }
-	      //}}}
-	      function release() //{{{
-	      {
-	        disableHandles();
-	        $sel.hide();
-
-	        if (options.shade) Shade.opacity(1);
-	          else setBgOpacity(1);
-
-	        awake = false;
-	        options.onRelease.call(api);
-	      }
-	      //}}}
-	      function showHandles() //{{{
-	      {
-	        if (seehandles) {
-	          $hdl_holder.show();
-	        }
-	      }
-	      //}}}
-	      function enableHandles() //{{{
-	      {
-	        seehandles = true;
-	        if (options.allowResize) {
-	          $hdl_holder.show();
-	          return true;
-	        }
-	      }
-	      //}}}
-	      function disableHandles() //{{{
-	      {
-	        seehandles = false;
-	        $hdl_holder.hide();
-	      } 
-	      //}}}
-	      function animMode(v) //{{{
-	      {
-	        if (v) {
-	          animating = true;
-	          disableHandles();
-	        } else {
-	          animating = false;
-	          enableHandles();
-	        }
-	      } 
-	      //}}}
-	      function done() //{{{
-	      {
-	        animMode(false);
-	        refresh();
-	      } 
-	      //}}}
-	      // Insert draggable elements {{{
-	      // Insert border divs for outline
-
-	      if (options.dragEdges && $.isArray(options.createDragbars))
-	        createDragbars(options.createDragbars);
-
-	      if ($.isArray(options.createHandles))
-	        createHandles(options.createHandles);
-
-	      if (options.drawBorders && $.isArray(options.createBorders))
-	        createBorders(options.createBorders);
-
-	      //}}}
-
-	      // This is a hack for iOS5 to support drag/move touch functionality
-	      $(document).bind('touchstart.jcrop-ios',function(e) {
-	        if ($(e.currentTarget).hasClass('jcrop-tracker')) e.stopPropagation();
-	      });
-
-	      var $track = newTracker().mousedown(createDragger('move')).css({
-	        cursor: 'move',
-	        position: 'absolute',
-	        zIndex: 360
-	      });
-
-	      if (Touch.support) {
-	        $track.bind('touchstart.jcrop', Touch.createDragger('move'));
-	      }
-
-	      $img_holder.append($track);
-	      disableHandles();
-
-	      return {
-	        updateVisible: updateVisible,
-	        update: update,
-	        release: release,
-	        refresh: refresh,
-	        isAwake: function () {
-	          return awake;
-	        },
-	        setCursor: function (cursor) {
-	          $track.css('cursor', cursor);
-	        },
-	        enableHandles: enableHandles,
-	        enableOnly: function () {
-	          seehandles = true;
-	        },
-	        showHandles: showHandles,
-	        disableHandles: disableHandles,
-	        animMode: animMode,
-	        setBgOpacity: setBgOpacity,
-	        done: done
-	      };
-	    }());
-	    
-	    //}}}
-	    // Tracker Module {{{
-	    var Tracker = (function () {
-	      var onMove = function () {},
-	          onDone = function () {},
-	          trackDoc = options.trackDocument;
-
-	      function toFront(touch) //{{{
-	      {
-	        $trk.css({
-	          zIndex: 450
-	        });
-
-	        if (touch)
-	          $(document)
-	            .bind('touchmove.jcrop', trackTouchMove)
-	            .bind('touchend.jcrop', trackTouchEnd);
-
-	        else if (trackDoc)
-	          $(document)
-	            .bind('mousemove.jcrop',trackMove)
-	            .bind('mouseup.jcrop',trackUp);
-	      } 
-	      //}}}
-	      function toBack() //{{{
-	      {
-	        $trk.css({
-	          zIndex: 290
-	        });
-	        $(document).unbind('.jcrop');
-	      } 
-	      //}}}
-	      function trackMove(e) //{{{
-	      {
-	        onMove(mouseAbs(e));
-	        return false;
-	      } 
-	      //}}}
-	      function trackUp(e) //{{{
-	      {
-	        e.preventDefault();
-	        e.stopPropagation();
-
-	        if (btndown) {
-	          btndown = false;
-
-	          onDone(mouseAbs(e));
-
-	          if (Selection.isAwake()) {
-	            options.onSelect.call(api, unscale(Coords.getFixed()));
-	          }
-
-	          toBack();
-	          onMove = function () {};
-	          onDone = function () {};
-	        }
-
-	        return false;
-	      }
-	      //}}}
-	      function activateHandlers(move, done, touch) //{{{
-	      {
-	        btndown = true;
-	        onMove = move;
-	        onDone = done;
-	        toFront(touch);
-	        return false;
-	      }
-	      //}}}
-	      function trackTouchMove(e) //{{{
-	      {
-	        onMove(mouseAbs(Touch.cfilter(e)));
-	        return false;
-	      }
-	      //}}}
-	      function trackTouchEnd(e) //{{{
-	      {
-	        return trackUp(Touch.cfilter(e));
-	      }
-	      //}}}
-	      function setCursor(t) //{{{
-	      {
-	        $trk.css('cursor', t);
-	      }
-	      //}}}
-
-	      if (!trackDoc) {
-	        $trk.mousemove(trackMove).mouseup(trackUp).mouseout(trackUp);
-	      }
-
-	      $img.before($trk);
-	      return {
-	        activateHandlers: activateHandlers,
-	        setCursor: setCursor
-	      };
-	    }());
-	    //}}}
-	    // KeyManager Module {{{
-	    var KeyManager = (function () {
-	      var $keymgr = $('<input type="radio" />').css({
-	        position: 'fixed',
-	        left: '-120px',
-	        width: '12px'
-	      }).addClass('jcrop-keymgr'),
-
-	        $keywrap = $('<div />').css({
-	          position: 'absolute',
-	          overflow: 'hidden'
-	        }).append($keymgr);
-
-	      function watchKeys() //{{{
-	      {
-	        if (options.keySupport) {
-	          $keymgr.show();
-	          $keymgr.focus();
-	        }
-	      }
-	      //}}}
-	      function onBlur(e) //{{{
-	      {
-	        $keymgr.hide();
-	      }
-	      //}}}
-	      function doNudge(e, x, y) //{{{
-	      {
-	        if (options.allowMove) {
-	          Coords.moveOffset([x, y]);
-	          Selection.updateVisible(true);
-	        }
-	        e.preventDefault();
-	        e.stopPropagation();
-	      }
-	      //}}}
-	      function parseKey(e) //{{{
-	      {
-	        if (e.ctrlKey || e.metaKey) {
-	          return true;
-	        }
-	        shift_down = e.shiftKey ? true : false;
-	        var nudge = shift_down ? 10 : 1;
-
-	        switch (e.keyCode) {
-	        case 37:
-	          doNudge(e, -nudge, 0);
-	          break;
-	        case 39:
-	          doNudge(e, nudge, 0);
-	          break;
-	        case 38:
-	          doNudge(e, 0, -nudge);
-	          break;
-	        case 40:
-	          doNudge(e, 0, nudge);
-	          break;
-	        case 27:
-	          if (options.allowSelect) Selection.release();
-	          break;
-	        case 9:
-	          return true;
-	        }
-
-	        return false;
-	      }
-	      //}}}
-
-	      if (options.keySupport) {
-	        $keymgr.keydown(parseKey).blur(onBlur);
-	        if (ie6mode || !options.fixedSupport) {
-	          $keymgr.css({
-	            position: 'absolute',
-	            left: '-20px'
-	          });
-	          $keywrap.append($keymgr).insertBefore($img);
-	        } else {
-	          $keymgr.insertBefore($img);
-	        }
-	      }
-
-
-	      return {
-	        watchKeys: watchKeys
-	      };
-	    }());
-	    //}}}
-	    // }}}
-	    // API methods {{{
-	    function setClass(cname) //{{{
-	    {
-	      $div.removeClass().addClass(cssClass('holder')).addClass(cname);
-	    }
-	    //}}}
-	    function animateTo(a, callback) //{{{
-	    {
-	      var x1 = a[0] / xscale,
-	          y1 = a[1] / yscale,
-	          x2 = a[2] / xscale,
-	          y2 = a[3] / yscale;
-
-	      if (animating) {
-	        return;
-	      }
-
-	      var animto = Coords.flipCoords(x1, y1, x2, y2),
-	          c = Coords.getFixed(),
-	          initcr = [c.x, c.y, c.x2, c.y2],
-	          animat = initcr,
-	          interv = options.animationDelay,
-	          ix1 = animto[0] - initcr[0],
-	          iy1 = animto[1] - initcr[1],
-	          ix2 = animto[2] - initcr[2],
-	          iy2 = animto[3] - initcr[3],
-	          pcent = 0,
-	          velocity = options.swingSpeed;
-
-	      x1 = animat[0];
-	      y1 = animat[1];
-	      x2 = animat[2];
-	      y2 = animat[3];
-
-	      Selection.animMode(true);
-	      var anim_timer;
-
-	      function queueAnimator() {
-	        window.setTimeout(animator, interv);
-	      }
-	      var animator = (function () {
-	        return function () {
-	          pcent += (100 - pcent) / velocity;
-
-	          animat[0] = Math.round(x1 + ((pcent / 100) * ix1));
-	          animat[1] = Math.round(y1 + ((pcent / 100) * iy1));
-	          animat[2] = Math.round(x2 + ((pcent / 100) * ix2));
-	          animat[3] = Math.round(y2 + ((pcent / 100) * iy2));
-
-	          if (pcent >= 99.8) {
-	            pcent = 100;
-	          }
-	          if (pcent < 100) {
-	            setSelectRaw(animat);
-	            queueAnimator();
-	          } else {
-	            Selection.done();
-	            Selection.animMode(false);
-	            if (typeof(callback) === 'function') {
-	              callback.call(api);
-	            }
-	          }
-	        };
-	      }());
-	      queueAnimator();
-	    }
-	    //}}}
-	    function setSelect(rect) //{{{
-	    {
-	      setSelectRaw([rect[0] / xscale, rect[1] / yscale, rect[2] / xscale, rect[3] / yscale]);
-	      options.onSelect.call(api, unscale(Coords.getFixed()));
-	      Selection.enableHandles();
-	    }
-	    //}}}
-	    function setSelectRaw(l) //{{{
-	    {
-	      Coords.setPressed([l[0], l[1]]);
-	      Coords.setCurrent([l[2], l[3]]);
-	      Selection.update();
-	    }
-	    //}}}
-	    function tellSelect() //{{{
-	    {
-	      return unscale(Coords.getFixed());
-	    }
-	    //}}}
-	    function tellScaled() //{{{
-	    {
-	      return Coords.getFixed();
-	    }
-	    //}}}
-	    function setOptionsNew(opt) //{{{
-	    {
-	      setOptions(opt);
-	      interfaceUpdate();
-	    }
-	    //}}}
-	    function disableCrop() //{{{
-	    {
-	      options.disabled = true;
-	      Selection.disableHandles();
-	      Selection.setCursor('default');
-	      Tracker.setCursor('default');
-	    }
-	    //}}}
-	    function enableCrop() //{{{
-	    {
-	      options.disabled = false;
-	      interfaceUpdate();
-	    }
-	    //}}}
-	    function cancelCrop() //{{{
-	    {
-	      Selection.done();
-	      Tracker.activateHandlers(null, null);
-	    }
-	    //}}}
-	    function destroy() //{{{
-	    {
-	      $div.remove();
-	      $origimg.show();
-	      $origimg.css('visibility','visible');
-	      $(obj).removeData('Jcrop');
-	    }
-	    //}}}
-	    function setImage(src, callback) //{{{
-	    {
-	      Selection.release();
-	      disableCrop();
-	      var img = new Image();
-	      img.onload = function () {
-	        var iw = img.width;
-	        var ih = img.height;
-	        var bw = options.boxWidth;
-	        var bh = options.boxHeight;
-	        $img.width(iw).height(ih);
-	        $img.attr('src', src);
-	        $img2.attr('src', src);
-	        presize($img, bw, bh);
-	        boundx = $img.width();
-	        boundy = $img.height();
-	        $img2.width(boundx).height(boundy);
-	        $trk.width(boundx + (bound * 2)).height(boundy + (bound * 2));
-	        $div.width(boundx).height(boundy);
-	        Shade.resize(boundx,boundy);
-	        enableCrop();
-
-	        if (typeof(callback) === 'function') {
-	          callback.call(api);
-	        }
-	      };
-	      img.src = src;
-	    }
-	    //}}}
-	    function colorChangeMacro($obj,color,now) {
-	      var mycolor = color || options.bgColor;
-	      if (options.bgFade && supportsColorFade() && options.fadeTime && !now) {
-	        $obj.animate({
-	          backgroundColor: mycolor
-	        }, {
-	          queue: false,
-	          duration: options.fadeTime
-	        });
-	      } else {
-	        $obj.css('backgroundColor', mycolor);
-	      }
-	    }
-	    function interfaceUpdate(alt) //{{{
-	    // This method tweaks the interface based on options object.
-	    // Called when options are changed and at end of initialization.
-	    {
-	      if (options.allowResize) {
-	        if (alt) {
-	          Selection.enableOnly();
-	        } else {
-	          Selection.enableHandles();
-	        }
-	      } else {
-	        Selection.disableHandles();
-	      }
-
-	      Tracker.setCursor(options.allowSelect ? 'crosshair' : 'default');
-	      Selection.setCursor(options.allowMove ? 'move' : 'default');
-
-	      if (options.hasOwnProperty('trueSize')) {
-	        xscale = options.trueSize[0] / boundx;
-	        yscale = options.trueSize[1] / boundy;
-	      }
-
-	      if (options.hasOwnProperty('setSelect')) {
-	        setSelect(options.setSelect);
-	        Selection.done();
-	        delete(options.setSelect);
-	      }
-
-	      Shade.refresh();
-
-	      if (options.bgColor != bgcolor) {
-	        colorChangeMacro(
-	          options.shade? Shade.getShades(): $div,
-	          options.shade?
-	            (options.shadeColor || options.bgColor):
-	            options.bgColor
-	        );
-	        bgcolor = options.bgColor;
-	      }
-
-	      if (bgopacity != options.bgOpacity) {
-	        bgopacity = options.bgOpacity;
-	        if (options.shade) Shade.refresh();
-	          else Selection.setBgOpacity(bgopacity);
-	      }
-
-	      xlimit = options.maxSize[0] || 0;
-	      ylimit = options.maxSize[1] || 0;
-	      xmin = options.minSize[0] || 0;
-	      ymin = options.minSize[1] || 0;
-
-	      if (options.hasOwnProperty('outerImage')) {
-	        $img.attr('src', options.outerImage);
-	        delete(options.outerImage);
-	      }
-
-	      Selection.refresh();
-	    }
-	    //}}}
-	    //}}}
-
-	    if (Touch.support) $trk.bind('touchstart.jcrop', Touch.newSelection);
-
-	    $hdl_holder.hide();
-	    interfaceUpdate(true);
-
-	    var api = {
-	      setImage: setImage,
-	      animateTo: animateTo,
-	      setSelect: setSelect,
-	      setOptions: setOptionsNew,
-	      tellSelect: tellSelect,
-	      tellScaled: tellScaled,
-	      setClass: setClass,
-
-	      disable: disableCrop,
-	      enable: enableCrop,
-	      cancel: cancelCrop,
-	      release: Selection.release,
-	      destroy: destroy,
-
-	      focus: KeyManager.watchKeys,
-
-	      getBounds: function () {
-	        return [boundx * xscale, boundy * yscale];
-	      },
-	      getWidgetSize: function () {
-	        return [boundx, boundy];
-	      },
-	      getScaleFactor: function () {
-	        return [xscale, yscale];
-	      },
-	      getOptions: function() {
-	        // careful: internal values are returned
-	        return options;
-	      },
-
-	      ui: {
-	        holder: $div,
-	        selection: $sel
-	      }
-	    };
-
-	    if (is_msie) $div.bind('selectstart', function () { return false; });
-
-	    $origimg.data('Jcrop', api);
-	    return api;
-	  };
-	  $.fn.Jcrop = function (options, callback) //{{{
-	  {
-	    var api;
-	    // Iterate over each object, attach Jcrop
-	    this.each(function () {
-	      // If we've already attached to this object
-	      if ($(this).data('Jcrop')) {
-	        // The API can be requested this way (undocumented)
-	        if (options === 'api') return $(this).data('Jcrop');
-	        // Otherwise, we just reset the options...
-	        else $(this).data('Jcrop').setOptions(options);
-	      }
-	      // If we haven't been attached, preload and attach
-	      else {
-	        if (this.tagName == 'IMG')
-	          $.Jcrop.Loader(this,function(){
-	            $(this).css({display:'block',visibility:'hidden'});
-	            api = $.Jcrop(this, options);
-	            if ($.isFunction(callback)) callback.call(api);
-	          });
-	        else {
-	          $(this).css({display:'block',visibility:'hidden'});
-	          api = $.Jcrop(this, options);
-	          if ($.isFunction(callback)) callback.call(api);
-	        }
-	      }
-	    });
-
-	    // Return "this" so the object is chainable (jQuery-style)
-	    return this;
-	  };
-	  //}}}
-	  // $.Jcrop.Loader - basic image loader {{{
-
-	  $.Jcrop.Loader = function(imgobj,success,error){
-	    var $img = $(imgobj), img = $img[0];
-
-	    function completeCheck(){
-	      if (img.complete) {
-	        $img.unbind('.jcloader');
-	        if ($.isFunction(success)) success.call(img);
-	      }
-	      else window.setTimeout(completeCheck,50);
-	    }
-
-	    $img
-	      .bind('load.jcloader',completeCheck)
-	      .bind('error.jcloader',function(e){
-	        $img.unbind('.jcloader');
-	        if ($.isFunction(error)) error.call(img);
-	      });
-
-	    if (img.complete && $.isFunction(success)){
-	      $img.unbind('.jcloader');
-	      success.call(img);
-	    }
-	  };
-
-	  //}}}
-	  // Global Defaults {{{
-	  $.Jcrop.defaults = {
-
-	    // Basic Settings
-	    allowSelect: true,
-	    allowMove: true,
-	    allowResize: true,
-
-	    trackDocument: true,
-
-	    // Styling Options
-	    baseClass: 'jcrop',
-	    addClass: null,
-	    bgColor: 'black',
-	    bgOpacity: 0.6,
-	    bgFade: false,
-	    borderOpacity: 0.4,
-	    handleOpacity: 0.5,
-	    handleSize: null,
-
-	    aspectRatio: 0,
-	    keySupport: true,
-	    createHandles: ['n','s','e','w','nw','ne','se','sw'],
-	    createDragbars: ['n','s','e','w'],
-	    createBorders: ['n','s','e','w'],
-	    drawBorders: true,
-	    dragEdges: true,
-	    fixedSupport: true,
-	    touchSupport: null,
-
-	    shade: null,
-
-	    boxWidth: 0,
-	    boxHeight: 0,
-	    boundary: 2,
-	    fadeTime: 400,
-	    animationDelay: 20,
-	    swingSpeed: 3,
-
-	    minSelect: [0, 0],
-	    maxSize: [0, 0],
-	    minSize: [0, 0],
-
-	    // Callbacks / Event Handlers
-	    onChange: function () {},
-	    onSelect: function () {},
-	    onDblClick: function () {},
-	    onRelease: function () {}
-	  };
-
-	  // }}}
-	}(jQuery));
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	
-	/*
-	Populate the filename fields for the custom file inputs.  This was done so they
-	look consistent across browsers and more like the rest of the inputs. This is
-	based on:
-
-	http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
-	 */
-	var $, Backbone, _;
-
-	$ = __webpack_require__(2);
-
-	_ = __webpack_require__(5);
-
-	Backbone = __webpack_require__(7);
-
-	module.exports = Backbone.View.extend({
-	  initialize: function() {
-	    _.bindAll(this);
-	    this.render();
-	    this.$el.on('change', this.onChange);
-	    return this.onChange();
-	  },
-	  render: function() {
-	    var $btns, $inputGroup;
-	    $btns = this.$el.nextAll('.input-group-btn');
-	    this.$el.wrap('<div class="input-group bootstrap-file"></div>').wrap('<span class="input-group-btn"></span>').wrap('<span class="btn btn-default btn-file">Browse&hellip; </span>');
-	    $inputGroup = this.$el.closest('.input-group');
-	    this.$filename = $('<input type="text" class="form-control" readonly>').appendTo($inputGroup);
-	    return $inputGroup.append($btns);
-	  },
-	  onChange: function(e) {
-	    var name;
-	    if ((e != null ? e.currentTarget : void 0) && this.el !== e.currentTarget) {
-	      this.setElement(e.currentTarget);
-	    }
-	    name = this.$el.val().replace(/\\/g, '/').replace(/.*\//, '');
-	    return this.$filename.val(name);
-	  }
-	});
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-
-		// Dependencies
-		var $ = __webpack_require__(2)
-			, _ = __webpack_require__(5)
-			, bootstrap = __webpack_require__(10)
-			, tpl = _.template(__webpack_require__(64));
-		;
-
-		/**
-		 * Request the attribtues from the server
-		 *
-		 * @param {MouseEvent} $e
-		 * @return {void}
-		 */
-		function open(e) {
-			e.preventDefault();
-			var url = $(e.currentTarget).attr('href');
-			$.get(url).done(render);
-		}
-
-		/**
-		 * Render the content and finish opening the modal
-		 *
-		 * @param {object} data The changes edit response
-		 * @return {void}
-		 */
-		function render(data) {
-
-			// Capitalize the action
-			data.action = data.action.charAt(0).toUpperCase() + data.action.slice(1);
-
-			// Create the body from the list of attributes
-			data.body = '<dl class="dl-horizontal">' +
-				_.reduce(data.attributes, function(html, val, key) {
-					return html+'<dt>'+key+'</dt><dd>'+(val||'<em>Empty</em>')+'</dd>';
-				}, '') + '</dl>';
-
-			// Render markup and render
-			$(tpl(data)).modal();
-		}
-
-		// Return API
-		return { open: open };
-
-	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"modal fade changes-modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n        <h4 class=\"modal-title\">Changes to \"<%=title%>\"</h4>\n      </div>\n      <div class=\"modal-body\">\n        <%=body%>\n      </div>\n      <div class=\"modal-footer\">\n        <%=action%> on <%=date%> by <a href=\"<%=admin_edit%>\"><%=admin%></a>\n      </div>\n    </div>\n  </div>\n</div>";
-
-/***/ },
-/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -46732,13 +44260,13 @@
 	 !(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
 
 		// Redactor is default (and, currently, only provider)
-		return __webpack_require__(66);
+		return __webpack_require__(55);
 
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
 
 /***/ },
-/* 66 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -46749,8 +44277,8 @@
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function(require) {
 
 		// Dependencies
-		__webpack_require__(67);
-		__webpack_require__(68);
+		__webpack_require__(56);
+		__webpack_require__(57);
 		var $ = __webpack_require__(2)
 			, _ = __webpack_require__(5)
 		;
@@ -46853,7 +44381,7 @@
 
 
 /***/ },
-/* 67 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*** IMPORTS FROM imports-loader ***/
@@ -55898,10 +53426,2506 @@
 
 
 /***/ },
-/* 68 */
+/* 57 */
 /***/ function(module, exports) {
 
 	// removed by extract-text-webpack-plugin
 
+/***/ },
+/* 58 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var SAFE_METHODS = 'GET OPTIONS HEAD TRACE'.split(' '),
+	    DEFAULT_HEADER = 'X-CSRF-Token';
+
+	/**
+	 * Is the given HTTP method (e.g., GET) non-destructive?
+	 *
+	 * @param {string} method HTTP method to test
+	 * @param {string[]} [safeMethods] HTTP methods to consider as "safe"
+	 * @return {boolean}
+	 */
+	function isSafeMethod(method, safeMethods) {
+	    method = method.toUpperCase();
+	    return (safeMethods || SAFE_METHODS).some(function(safeMethod) {
+	        return method.toUpperCase() === safeMethod;
+	    });
+	}
+
+	/**
+	 * Inject CSRF token via header.
+	 *
+	 * @param {string} header Header name to create
+	 * @param {string} tokenValue CSRF token value
+	 * @param {object} jqXHR jQuery jqXHR object
+	 */
+	function injectHeader(header, tokenValue, jqXHR) {
+	    jqXHR.setRequestHeader(header, tokenValue);
+	}
+
+	/**
+	 * Inject CSRF token via POST body
+	 *
+	 * @param {string} tokenValue CSRF token value
+	 * @param {object} options jQuery prefilter options
+	 * @param {string} key POST data key
+	 */
+	function injectData(tokenValue, options, key) {
+	    var data;
+	    if (~options.contentType.indexOf('application/json')) {
+	        data = options.data ? JSON.parse(options.data) : {};
+	        data[key] = tokenValue;
+	        options.data = JSON.stringify(data);
+	    } else {
+	        options.data += options.data ? '&' : '';
+	        options.data += key + '=' + tokenValue;
+	    }
+	}
+
+	/**
+	 * Inject CSRF token via query param.
+	 *
+	 * @param {string} tokenValue CSRF token value
+	 * @param {object} options jQuery prefilter options
+	 * @param {string} param Query param key
+	 */
+	function injectQuery(tokenValue, options, param) {
+	    options.url += ~options.url.indexOf('?') ? '&' : '?';
+	    options.url += param + '=' + tokenValue;
+	}
+
+	/**
+	 * Configure a jQuery CSRF prefilter callback.
+	 *
+	 * @param {string|function} tokenValue CSRF token value
+	 * @param {object} [opts] Configuration options
+	 * @param {string} [options.header] Inject token with given header
+	 * @param {string} [options.data] Inject token with given POST body key
+	 * @param {string} [options.query] Inject token with given query param
+	 */
+	module.exports = function(tokenValue, opts) {
+	    opts = opts || {};
+
+	    return function(options, originalOptions, jqXHR) {
+	        /*jshint maxcomplexity:7*/
+	        if (isSafeMethod(options.type, opts.ignoreMethods)) { return; }
+
+	        tokenValue = typeof tokenValue === 'function' ? tokenValue() : tokenValue;
+
+	        if (opts.header) { injectHeader(opts.header, tokenValue, jqXHR); }
+	        if (opts.data)   { injectData(tokenValue, options, opts.data); }
+	        if (opts.query)  { injectQuery(tokenValue, options, opts.query); }
+
+	        if (!opts.header && !opts.data && !opts.query) {
+	            injectHeader(DEFAULT_HEADER, tokenValue, jqXHR);
+	        }
+	    };
+	};
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+	  
+		// Dependencies
+		var $ = __webpack_require__(2)
+			, _ = __webpack_require__(5)
+			, Backbone = __webpack_require__(7)
+			, CKEditor = window.CKEDITOR
+			, $body = $('body')
+		;
+
+		// Polyfill window.location.origin in for IE
+		// http://tosbourn.com/a-fix-for-window-location-origin-in-internet-explorer/
+		if (!window.location.origin) {
+			window.location.origin = window.location.protocol + "//" + window.location.hostname 
+				+ (window.location.port ? ':' + window.location.port: '');
+		}
+		
+		// Setup view
+		var View = {};
+		View.initialize = function() {
+			_.bindAll(this);
+			
+			// Cache
+			this.$response = this.$('#response');
+			this.key = this.$response.data('key') || this.$('[name="key"]').val();
+			this.$value = this.$('[name="value"]');
+			this.$submit = this.$('.btn.save');
+
+			// If we're handling the saved condition, immediatly send message and stop
+			if (this.$response.length) return this.saved();
+
+			// Measure the dimensions of the iframe and report back to the parent.  This
+			// is treated like a "ready" event.  If this is field is a WYSIWYG, wait till
+			// CKEditor as initialized because it affects the height measurement.  If it's an image, 
+			// wait for image to load
+			if (this.$value.hasClass('wysiwyg')) CKEditor.on('instanceReady', this.ready);
+			else if (this.$('.image-upload').length) this.$('.img-thumbnail').imagesLoaded(this.ready);
+			else this.ready();
+
+			// Listen for close / cancel events
+			this.$('.btn.back').on('click', this.close);
+
+			// Listen for form submits
+			this.$('form').on('submit', this.saving);
+
+		};
+
+		// Tell the parent that the iframe is ready
+		View.ready = function() {
+			this.message('height', $body.height());
+		};
+
+		// Tell the icon to close
+		View.close = function() {
+			this.message('close')
+		};
+
+		// Tell the icon that we're saving
+		View.saving = function() {
+			this.message('saving');
+			this.$submit.prop('disabled', true);
+		}
+
+		// Tell the icon that saving has finished and pass the new value
+		View.saved = function() {
+			this.message('saved', this.$response.html());
+		}
+
+		// postMessage helper
+		View.message = function(type, value) {
+			window.top.postMessage({
+				key: this.key,
+				type: type,
+				value: value
+			}, window.location.origin);
+		}
+		
+		// Return view class
+		return Backbone.View.extend(View);
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;// --------------------------------------------------
+	// Switch "pages" using push state on tad-sidebar layouts
+	// --------------------------------------------------
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+		
+		// Dependencies
+		var $ = __webpack_require__(2)
+			, Backbone = __webpack_require__(7)
+			, _ = __webpack_require__(5)
+			, $win = $(window)
+		;
+		
+		// Create view
+		var View = {
+			page: null
+		};
+		
+		// Constructor
+		View.initialize = function() {
+			_.bindAll(this);
+
+			// Define router class 
+			this.router = new (Backbone.Router.extend());
+
+			// Begin routing
+			Backbone.history.start({
+				pushState: true,
+				root: window.location.href.match(/\/admin\/[^\/]+/)[0],
+				silent: true
+			});
+
+			// Register click listeners
+			this.$('a').on('click', this.updateRoute);
+
+		};
+
+		View.updateRoute = function(e) {
+			var cur = $(e.currentTarget);
+			this.router.navigate(cur.data('slug'), {trigger: false});
+			this.page = cur.data('slug');
+		};
+
+		// Return it
+		return Backbone.View.extend(View);
+
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+		
+		// Dependencies
+		var $ = __webpack_require__(2)
+			, _ = __webpack_require__(5)
+			, Backbone = __webpack_require__(7)
+		;
+		
+		/**
+		 * Setup view 
+		 */
+		var View = {};
+		View.initialize = function() {
+			_.bindAll(this);
+
+			// Cache
+			this.$role = $('[name="role"]');
+			this.$customize = this.$('[name="_custom_permissions"]');
+			this.$permissions = this.$('.permissions-list');
+			this.$permissions_inner = this.$('.permissions-list-inner');
+			this.$controllers = this.$permissions.find('.controller');		
+			this.$permission_boxes = this.$controllers.find(':checkbox');
+
+			// Parse the permission checkboxes into a mapping by role
+			this.role_boxes = this.parseBoxesForRoles(this.$permission_boxes);
+
+			// Listen for clicks on the override checkbox
+			this.$customize.on('change', this.togglePermissionsOptions);
+
+			// Check for the role to change and clear the custom permissions
+			this.$role.on('change', this.changeRole);
+
+			// Make clicking a controller name toggler all of it's checkboxes
+			this.$controllers.find('.title').on('click', this.toggleActions);
+
+		};
+
+		/**
+		 * Toggle the permissions options
+		 */
+		View.togglePermissionsOptions = function() {
+
+			// Inspect the clicked box
+			var show = this.$customize.is(':checked');
+
+			// Manually set the height whenever it's moving and then clear it when
+			// animation is done.  The animation is defined in CSS.
+			this.$permissions.height(this.$permissions_inner.outerHeight());
+			_.delay(_.bind(function() { this.$permissions.height(''); }, this), 300);
+
+			// Toggle the open state of the permissions
+			_.defer(_.bind(function() { this.$el.toggleClass('closed', !show); }, this));
+		};
+		
+		/**
+		 * Update the permissions when the role changes
+		 */
+		View.changeRole = function(e) {
+			this.clearCustomPermissions();
+			this.checkRole(this.$role.filter(':checked').val());
+		};
+
+		/**
+		 * Clear permissions customizations
+		 */
+		View.clearCustomPermissions = function() {
+			if (!this.$customize.is(':checked')) return;
+			this.$customize.prop('checked', false).trigger('change');
+		};
+
+		/**
+		 * Parse the checkboxes into buckets by roles
+		 *
+		 * @param jQuery boxes
+		 * @return object
+		 */
+		View.parseBoxesForRoles = function(boxes) {
+			var map = {}, roles, $el;
+			boxes.each(function(i, el) {
+				roles = $(el).data('roles');
+				if (roles) {
+					_.each(roles.split(','), function(role) {
+						map[role] = ( map[role] || $([]) ).add(el);
+					});	
+				}
+			});
+			return map;
+		};
+
+		/**
+		 * Check all the boxes that are defaults for the role
+		 *
+		 * @param string role
+		 */
+		View.checkRole = function(role) {
+			this.$permission_boxes.prop('checked', false);
+			this.role_boxes[role].prop('checked', true);
+		};
+
+		/**
+		 * Toggle all of the actions for a controller when the title is clicked
+		 *
+		 * @param mouseevent e
+		 */
+		View.toggleActions = function(e) {
+			var $actions = $(e.currentTarget).next().find(':checkbox');
+			$actions.prop('checked', $actions.filter(':checked').length != $actions.length);
+		};
+
+		// Return view class
+		return Backbone.View.extend(View);
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $, Backbone, Crop, Preview, _;
+
+	$ = __webpack_require__(2);
+
+	_ = __webpack_require__(5);
+
+	Backbone = __webpack_require__(7);
+
+	Preview = __webpack_require__(63);
+
+	Crop = __webpack_require__(64);
+
+	module.exports = Backbone.View.extend({
+	  initialize: function(options) {
+	    _.bindAll(this);
+	    this.preview = new Preview({
+	      el: this.el,
+	      parent: this
+	    });
+	    this.crop = new Crop({
+	      el: this.$('img.source')
+	    });
+	    this.preview.on('previewImage', this.onPreviewImage);
+	    this.preview.on('deleteImage', this.onDeleteImage);
+	    $('a[data-toggle="tab"]').on('shown.bs.tab', (function(_this) {
+	      return function(e) {
+	        return _this.crop.init();
+	      };
+	    })(this));
+	  },
+	  onPreviewImage: function() {
+	    this.crop.destroy();
+	    this.crop.initialize();
+	  },
+	  onDeleteImage: function() {
+	    this.crop.destroy();
+	    this.crop.initialize();
+	    this.crop.clear();
+	  }
+	});
+
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var $, Backbone, _;
+
+	$ = __webpack_require__(2);
+
+	_ = __webpack_require__(5);
+
+	Backbone = __webpack_require__(7);
+
+	module.exports = Backbone.View.extend({
+	  initialize: function() {
+	    _.bindAll(this);
+	    this.$file = this.$el.find('[type="file"]');
+	    this.$holder = this.$el.find('.image-holder');
+	    this.$imagePreview = this.$holder.find('.source');
+	    this.$delete = this.$el.find('.delete');
+	    this.$file.on('change', this.onImageChange);
+	    this.$delete.on('click', this.onDelete);
+	  },
+	  onImageChange: function(input) {
+	    var reader;
+	    if (this.$file[0].files && this.$file[0].files[0]) {
+	      reader = new FileReader;
+	      reader.onload = (function(_this) {
+	        return function(e) {
+	          _this.$file.addClass('hidden');
+	          _this.$el.addClass('has-image');
+	          _this.$imagePreview.attr('src', e.target.result);
+	          _this.trigger('previewImage');
+	        };
+	      })(this);
+	      reader.readAsDataURL(this.$file[0].files[0]);
+	    }
+	  },
+	  onDelete: function() {
+	    this.$imagePreview.attr('src', '');
+	    this.$el.removeClass('has-image');
+	    this.$file.removeClass('hidden');
+	    this.$file.replaceWith(this.$file = this.$file.clone(true));
+	    this.$file.trigger('change');
+	    if (this.$file.hasClass('required')) {
+	      this.$file.prop('required', true);
+	    }
+	    $('<input type="hidden" value="">').attr('name', this.$file.attr('name')).insertBefore(this.$file);
+	    this.trigger('deleteImage');
+	  }
+	});
+
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;// --------------------------------------------------
+	// Add file preview to selected images
+	// --------------------------------------------------
+	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+
+		// Dependencies
+		var $ = __webpack_require__(2),
+			_ = __webpack_require__(5),
+			Backbone = __webpack_require__(7);
+			__webpack_require__(65);
+			__webpack_require__(19);
+
+		// Define a backbone view for each image
+		var Crop = Backbone.View.extend({
+
+			// Instance vars
+			jcrop: null, // A jcrop API instance
+			activeCrop: false,
+			width: null,
+			height: null,
+			ratio: undefined,
+			initted: false,
+			$input: null, // The hidden field that stores the output
+
+			// Constructor
+			initialize: function() {
+				_.bindAll(this);
+
+				// Cache selectors
+				this.$upload = this.$el.closest('.image-upload');
+				this.$crop = this.$upload.find('.input-crop_box');
+				this.$focus = this.$upload.find('.input-focal_point');
+				this.$title = this.$upload.find('input.title');
+				this.$cropTool = this.$upload.find('.crop.btn');
+				this.$focusTool = this.$upload.find('.focal.btn');
+				this.$file = this.$upload.find('[type="file"]');
+
+				// Remove clicking on the parent a tag
+				this.$el.parent('a').click(function(e) { e.preventDefault(); });
+
+				// Cache configruation variables
+				var ratio = this.$upload.data('aspect-ratio');
+				this.ratio = ratio;
+
+				// Listen for window resizing as a way to check whether the img has been
+				// resized since it resizes responsively.	We listen on the leading edge
+				// for the start and the tailing edge for the end
+				var $window = $(window), delay = 400;
+				$window.resize(_.debounce(this.destroy, delay, true));
+				$window.resize(_.debounce(this.init, delay, false));
+
+				this.$cropTool.on('click', this.beginCrop);
+				this.$focusTool.on('click', this.beginFocus);
+
+				// Start jcrop up once the images loaded
+				this.$el.imagesLoaded(this.init);
+			},
+
+			// Add jcrop to the element
+			init: function() {
+
+				// Only init once and only add jcrop if the image is visible.	Otherwise,
+				// it will  wait until it is first activated by the style tabs.	It needs
+				// to be visible so the size can be measured correctly
+				if (this.initted || !this.visible()) return;
+				this.initted = true;
+
+				// Cache the visible dimensions of the image
+				this.width = this.$el.width();
+				this.height = this.$el.height();
+
+				// Check if there is any crop selection defined
+				var cropVal = this.input_to_json(this.$crop);
+				if (cropVal['x1'] != null) var selection = this.convert_from_perc(cropVal);
+
+				// Init jcrop
+				var self = this;
+				this.$el.Jcrop({
+					onSelect: this.select,
+					onRelease: this.select,
+					aspectRatio: this.ratio,
+					setSelect: selection,
+					keySupport: false // Stop the page scroll from jumping: http://cl.ly/0e1e1615262h
+
+				// Store a reference to jcrop and call the ready function
+				}, function() {
+					self.jcrop = this;
+					self.activeCrop = true;
+				});
+
+				// Check if focal point is set
+				var focalVal = this.input_to_json(this.$focus);
+				if(this.$focusTool.length != 0) {
+					this.$el.next('div').append('<div class="focal-point glyphicon glyphicon-screenshot"></div>');
+					this.$focalPoint = this.$el.next('div').find('.focal-point');
+					this.$focalPoint.css({'left' : focalVal.x * this.$el.outerWidth(), 'top' : focalVal.y * this.$el.outerHeight()});
+
+					if(!$.isEmptyObject(focalVal)) {
+						this.$focalPoint.css('opacity', 1);
+					}
+				}
+
+			},
+
+			// Set up cropping when crop tool is clicked
+			beginCrop: function() {
+				if (this.activeCrop == true) return;
+
+				// remove the set focus listener
+				this.$el.next('div').unbind();
+
+				// make the crop tool active
+				this.$cropTool.addClass('active');
+				this.$focusTool.removeClass('active');
+				$('.jcrop-holder').css('pointer-events', 'auto');
+
+				this.jcrop.enable();
+				this.activeCrop = true;
+			},
+
+			// Switch to set focal point
+			beginFocus: function() {
+				if (this.activeCrop != true) return;
+
+				this.$cropTool.removeClass('active');
+				this.$focusTool.addClass('active');
+				// $('.jcrop-holder').css('pointer-events', 'none');
+
+				this.jcrop.disable();
+				this.activeCrop = false;
+
+				this.$el.next('div').on('click', this.setFocus);
+			},
+
+			setFocus: function(e) {
+				var image = $(e.currentTarget);
+				var offset = image.offset();
+
+				var pointX = e.pageX - offset.left - 7;
+				var pointY = e.pageY - offset.top - 7;
+
+				var location = {
+					x : pointX / image.outerWidth(),
+					y : pointY / image.outerHeight()
+				};
+
+				var cropVal = this.input_to_json(this.$crop);
+				var selection = this.convert_from_perc(cropVal);
+				this.$focus.val(JSON.stringify(location));
+
+				if(!$.isEmptyObject(cropVal)) {
+					if(pointX < selection[0] || pointY < selection[1] || pointX > selection[2] || pointY > selection[3]) {
+						console.log('Focal point must be inside crop')
+						return;
+					}
+				}
+
+				this.$focalPoint.css({'left' : location.x * this.$el.outerWidth(), 'top' : location.y * this.$el.outerHeight(), 'opacity' : 1 });
+			},
+
+			// Remove jcrop from the element
+			destroy: function() {
+
+				// Only valid if currently initted
+				if (!this.jcrop || !this.initted) return;
+
+				// Unset everything
+				this.jcrop.destroy();
+				this.jcrop = null;
+				this.initted = false;
+
+				// Jcrop will have set width/height on the style
+				this.$el.css({width:'', height:''});
+
+			},
+
+			// Perist the user's selection
+			select: function(c) {
+
+				// Convert the coordinates from jcrop into percentages.	It may be
+				// undefined if the user cleared the crop
+				if (c) c = this.convert_to_perc(c);
+
+				// Add the coordinates to the input's value
+				var val = this.input_to_json(this.$crop);
+				val = c;
+				this.$crop.val(JSON.stringify(val));
+
+			},
+
+			// Clear out the hidden input values for a new image
+			clear: function() {
+				this.$crop.val("");
+				this.$focus.val("");
+				this.$title.val("");
+				this.$focusTool.removeClass('active');
+				this.$cropTool.addClass('active');
+			},
+
+			// Check if the this crop is visible
+			visible: function() {
+				return this.$el.is(":visible");
+			},
+
+			// Convert the coordinates from jcrop into percentages.	So an x value of 10
+			// in a 100px wide image would become .1.	This is done because Croppa will
+			// already be serving an image that is resized from it's source, so a perc
+			// offset  is the only thing that will be useful.
+			convert_to_perc: function(c) {
+				return {
+					x1 : c.x / this.width,
+					x2 : c.x2 / this.width,
+					y1 : c.y / this.height,
+					y2 : c.y2 / this.height
+				};
+			},
+
+			// Convert from perc back to pixels of the current image size
+			convert_from_perc: function(c) {
+				return [
+					c.x1 * this.width,
+					c.y1 * this.height,
+					c.x2 * this.width,
+					c.y2 * this.height
+				];
+			},
+
+			// Get JSON from the $input
+			input_to_json: function(input) {
+				var val = $(input).val();
+				if (!val) return {};
+				else return JSON.parse(val);
+			}
+
+		});
+
+		return Crop;
+
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 65 */
+/***/ function(module, exports) {
+
+	/**
+	 * jquery.Jcrop.js v0.9.12
+	 * jQuery Image Cropping Plugin - released under MIT License 
+	 * Author: Kelly Hallman <khallman@gmail.com>
+	 * http://github.com/tapmodo/Jcrop
+	 * Copyright (c) 2008-2013 Tapmodo Interactive LLC {{{
+	 *
+	 * Permission is hereby granted, free of charge, to any person
+	 * obtaining a copy of this software and associated documentation
+	 * files (the "Software"), to deal in the Software without
+	 * restriction, including without limitation the rights to use,
+	 * copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the
+	 * Software is furnished to do so, subject to the following
+	 * conditions:
+	 *
+	 * The above copyright notice and this permission notice shall be
+	 * included in all copies or substantial portions of the Software.
+	 *
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+	 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+	 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+	 * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+	 * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+	 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+	 * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+	 * OTHER DEALINGS IN THE SOFTWARE.
+	 *
+	 * }}}
+	 */
+
+	(function ($) {
+
+	  $.Jcrop = function (obj, opt) {
+	    var options = $.extend({}, $.Jcrop.defaults),
+	        docOffset,
+	        _ua = navigator.userAgent.toLowerCase(),
+	        is_msie = /msie/.test(_ua),
+	        ie6mode = /msie [1-6]\./.test(_ua);
+
+	    // Internal Methods {{{
+	    function px(n) {
+	      return Math.round(n) + 'px';
+	    }
+	    function cssClass(cl) {
+	      return options.baseClass + '-' + cl;
+	    }
+	    function supportsColorFade() {
+	      return $.fx.step.hasOwnProperty('backgroundColor');
+	    }
+	    function getPos(obj) //{{{
+	    {
+	      var pos = $(obj).offset();
+	      return [pos.left, pos.top];
+	    }
+	    //}}}
+	    function mouseAbs(e) //{{{
+	    {
+	      return [(e.pageX - docOffset[0]), (e.pageY - docOffset[1])];
+	    }
+	    //}}}
+	    function setOptions(opt) //{{{
+	    {
+	      if (typeof(opt) !== 'object') opt = {};
+	      options = $.extend(options, opt);
+
+	      $.each(['onChange','onSelect','onRelease','onDblClick'],function(i,e) {
+	        if (typeof(options[e]) !== 'function') options[e] = function () {};
+	      });
+	    }
+	    //}}}
+	    function startDragMode(mode, pos, touch) //{{{
+	    {
+	      docOffset = getPos($img);
+	      Tracker.setCursor(mode === 'move' ? mode : mode + '-resize');
+
+	      if (mode === 'move') {
+	        return Tracker.activateHandlers(createMover(pos), doneSelect, touch);
+	      }
+
+	      var fc = Coords.getFixed();
+	      var opp = oppLockCorner(mode);
+	      var opc = Coords.getCorner(oppLockCorner(opp));
+
+	      Coords.setPressed(Coords.getCorner(opp));
+	      Coords.setCurrent(opc);
+
+	      Tracker.activateHandlers(dragmodeHandler(mode, fc), doneSelect, touch);
+	    }
+	    //}}}
+	    function dragmodeHandler(mode, f) //{{{
+	    {
+	      return function (pos) {
+	        if (!options.aspectRatio) {
+	          switch (mode) {
+	          case 'e':
+	            pos[1] = f.y2;
+	            break;
+	          case 'w':
+	            pos[1] = f.y2;
+	            break;
+	          case 'n':
+	            pos[0] = f.x2;
+	            break;
+	          case 's':
+	            pos[0] = f.x2;
+	            break;
+	          }
+	        } else {
+	          switch (mode) {
+	          case 'e':
+	            pos[1] = f.y + 1;
+	            break;
+	          case 'w':
+	            pos[1] = f.y + 1;
+	            break;
+	          case 'n':
+	            pos[0] = f.x + 1;
+	            break;
+	          case 's':
+	            pos[0] = f.x + 1;
+	            break;
+	          }
+	        }
+	        Coords.setCurrent(pos);
+	        Selection.update();
+	      };
+	    }
+	    //}}}
+	    function createMover(pos) //{{{
+	    {
+	      var lloc = pos;
+	      KeyManager.watchKeys();
+
+	      return function (pos) {
+	        Coords.moveOffset([pos[0] - lloc[0], pos[1] - lloc[1]]);
+	        lloc = pos;
+
+	        Selection.update();
+	      };
+	    }
+	    //}}}
+	    function oppLockCorner(ord) //{{{
+	    {
+	      switch (ord) {
+	      case 'n':
+	        return 'sw';
+	      case 's':
+	        return 'nw';
+	      case 'e':
+	        return 'nw';
+	      case 'w':
+	        return 'ne';
+	      case 'ne':
+	        return 'sw';
+	      case 'nw':
+	        return 'se';
+	      case 'se':
+	        return 'nw';
+	      case 'sw':
+	        return 'ne';
+	      }
+	    }
+	    //}}}
+	    function createDragger(ord) //{{{
+	    {
+	      return function (e) {
+	        if (options.disabled) {
+	          return false;
+	        }
+	        if ((ord === 'move') && !options.allowMove) {
+	          return false;
+	        }
+	        
+	        // Fix position of crop area when dragged the very first time.
+	        // Necessary when crop image is in a hidden element when page is loaded.
+	        docOffset = getPos($img);
+
+	        btndown = true;
+	        startDragMode(ord, mouseAbs(e));
+	        e.stopPropagation();
+	        e.preventDefault();
+	        return false;
+	      };
+	    }
+	    //}}}
+	    function presize($obj, w, h) //{{{
+	    {
+	      var nw = $obj.width(),
+	          nh = $obj.height();
+	      if ((nw > w) && w > 0) {
+	        nw = w;
+	        nh = (w / $obj.width()) * $obj.height();
+	      }
+	      if ((nh > h) && h > 0) {
+	        nh = h;
+	        nw = (h / $obj.height()) * $obj.width();
+	      }
+	      xscale = $obj.width() / nw;
+	      yscale = $obj.height() / nh;
+	      $obj.width(nw).height(nh);
+	    }
+	    //}}}
+	    function unscale(c) //{{{
+	    {
+	      return {
+	        x: c.x * xscale,
+	        y: c.y * yscale,
+	        x2: c.x2 * xscale,
+	        y2: c.y2 * yscale,
+	        w: c.w * xscale,
+	        h: c.h * yscale
+	      };
+	    }
+	    //}}}
+	    function doneSelect(pos) //{{{
+	    {
+	      var c = Coords.getFixed();
+	      if ((c.w > options.minSelect[0]) && (c.h > options.minSelect[1])) {
+	        Selection.enableHandles();
+	        Selection.done();
+	      } else {
+	        Selection.release();
+	      }
+	      Tracker.setCursor(options.allowSelect ? 'crosshair' : 'default');
+	    }
+	    //}}}
+	    function newSelection(e) //{{{
+	    {
+	      if (options.disabled) {
+	        return false;
+	      }
+	      if (!options.allowSelect) {
+	        return false;
+	      }
+	      btndown = true;
+	      docOffset = getPos($img);
+	      Selection.disableHandles();
+	      Tracker.setCursor('crosshair');
+	      var pos = mouseAbs(e);
+	      Coords.setPressed(pos);
+	      Selection.update();
+	      Tracker.activateHandlers(selectDrag, doneSelect, e.type.substring(0,5)==='touch');
+	      KeyManager.watchKeys();
+
+	      e.stopPropagation();
+	      e.preventDefault();
+	      return false;
+	    }
+	    //}}}
+	    function selectDrag(pos) //{{{
+	    {
+	      Coords.setCurrent(pos);
+	      Selection.update();
+	    }
+	    //}}}
+	    function newTracker() //{{{
+	    {
+	      var trk = $('<div></div>').addClass(cssClass('tracker'));
+	      if (is_msie) {
+	        trk.css({
+	          opacity: 0,
+	          backgroundColor: 'white'
+	        });
+	      }
+	      return trk;
+	    }
+	    //}}}
+
+	    // }}}
+	    // Initialization {{{
+	    // Sanitize some options {{{
+	    if (typeof(obj) !== 'object') {
+	      obj = $(obj)[0];
+	    }
+	    if (typeof(opt) !== 'object') {
+	      opt = {};
+	    }
+	    // }}}
+	    setOptions(opt);
+	    // Initialize some jQuery objects {{{
+	    // The values are SET on the image(s) for the interface
+	    // If the original image has any of these set, they will be reset
+	    // However, if you destroy() the Jcrop instance the original image's
+	    // character in the DOM will be as you left it.
+	    var img_css = {
+	      border: 'none',
+	      visibility: 'visible',
+	      margin: 0,
+	      padding: 0,
+	      position: 'absolute',
+	      top: 0,
+	      left: 0
+	    };
+
+	    var $origimg = $(obj),
+	      img_mode = true;
+
+	    if (obj.tagName == 'IMG') {
+	      // Fix size of crop image.
+	      // Necessary when crop image is within a hidden element when page is loaded.
+	      if ($origimg[0].width != 0 && $origimg[0].height != 0) {
+	        // Obtain dimensions from contained img element.
+	        $origimg.width($origimg[0].width);
+	        $origimg.height($origimg[0].height);
+	      } else {
+	        // Obtain dimensions from temporary image in case the original is not loaded yet (e.g. IE 7.0). 
+	        var tempImage = new Image();
+	        tempImage.src = $origimg[0].src;
+	        $origimg.width(tempImage.width);
+	        $origimg.height(tempImage.height);
+	      } 
+
+	      var $img = $origimg.clone().removeAttr('id').css(img_css).show();
+
+	      $img.width($origimg.width());
+	      $img.height($origimg.height());
+	      $origimg.after($img).hide();
+
+	    } else {
+	      $img = $origimg.css(img_css).show();
+	      img_mode = false;
+	      if (options.shade === null) { options.shade = true; }
+	    }
+
+	    presize($img, options.boxWidth, options.boxHeight);
+
+	    var boundx = $img.width(),
+	        boundy = $img.height(),
+	        
+	        
+	        $div = $('<div />').width(boundx).height(boundy).addClass(cssClass('holder')).css({
+	        position: 'relative',
+	        backgroundColor: options.bgColor
+	      }).insertAfter($origimg).append($img);
+
+	    if (options.addClass) {
+	      $div.addClass(options.addClass);
+	    }
+
+	    var $img2 = $('<div />'),
+
+	        $img_holder = $('<div />') 
+	        .width('100%').height('100%').css({
+	          zIndex: 310,
+	          position: 'absolute',
+	          overflow: 'hidden'
+	        }),
+
+	        $hdl_holder = $('<div />') 
+	        .width('100%').height('100%').css('zIndex', 320), 
+
+	        $sel = $('<div />') 
+	        .css({
+	          position: 'absolute',
+	          zIndex: 600
+	        }).dblclick(function(){
+	          var c = Coords.getFixed();
+	          options.onDblClick.call(api,c);
+	        }).insertBefore($img).append($img_holder, $hdl_holder); 
+
+	    if (img_mode) {
+
+	      $img2 = $('<img />')
+	          .attr('src', $img.attr('src')).css(img_css).width(boundx).height(boundy),
+
+	      $img_holder.append($img2);
+
+	    }
+
+	    if (ie6mode) {
+	      $sel.css({
+	        overflowY: 'hidden'
+	      });
+	    }
+
+	    var bound = options.boundary;
+	    var $trk = newTracker().width(boundx + (bound * 2)).height(boundy + (bound * 2)).css({
+	      position: 'absolute',
+	      top: px(-bound),
+	      left: px(-bound),
+	      zIndex: 290
+	    }).mousedown(newSelection);
+
+	    /* }}} */
+	    // Set more variables {{{
+	    var bgcolor = options.bgColor,
+	        bgopacity = options.bgOpacity,
+	        xlimit, ylimit, xmin, ymin, xscale, yscale, enabled = true,
+	        btndown, animating, shift_down;
+
+	    docOffset = getPos($img);
+	    // }}}
+	    // }}}
+	    // Internal Modules {{{
+	    // Touch Module {{{ 
+	    var Touch = (function () {
+	      // Touch support detection function adapted (under MIT License)
+	      // from code by Jeffrey Sambells - http://github.com/iamamused/
+	      function hasTouchSupport() {
+	        var support = {}, events = ['touchstart', 'touchmove', 'touchend'],
+	            el = document.createElement('div'), i;
+
+	        try {
+	          for(i=0; i<events.length; i++) {
+	            var eventName = events[i];
+	            eventName = 'on' + eventName;
+	            var isSupported = (eventName in el);
+	            if (!isSupported) {
+	              el.setAttribute(eventName, 'return;');
+	              isSupported = typeof el[eventName] == 'function';
+	            }
+	            support[events[i]] = isSupported;
+	          }
+	          return support.touchstart && support.touchend && support.touchmove;
+	        }
+	        catch(err) {
+	          return false;
+	        }
+	      }
+
+	      function detectSupport() {
+	        if ((options.touchSupport === true) || (options.touchSupport === false)) return options.touchSupport;
+	          else return hasTouchSupport();
+	      }
+	      return {
+	        createDragger: function (ord) {
+	          return function (e) {
+	            if (options.disabled) {
+	              return false;
+	            }
+	            if ((ord === 'move') && !options.allowMove) {
+	              return false;
+	            }
+	            docOffset = getPos($img);
+	            btndown = true;
+	            startDragMode(ord, mouseAbs(Touch.cfilter(e)), true);
+	            e.stopPropagation();
+	            e.preventDefault();
+	            return false;
+	          };
+	        },
+	        newSelection: function (e) {
+	          return newSelection(Touch.cfilter(e));
+	        },
+	        cfilter: function (e){
+	          e.pageX = e.originalEvent.changedTouches[0].pageX;
+	          e.pageY = e.originalEvent.changedTouches[0].pageY;
+	          return e;
+	        },
+	        isSupported: hasTouchSupport,
+	        support: detectSupport()
+	      };
+	    }());
+	    // }}}
+	    // Coords Module {{{
+	    var Coords = (function () {
+	      var x1 = 0,
+	          y1 = 0,
+	          x2 = 0,
+	          y2 = 0,
+	          ox, oy;
+
+	      function setPressed(pos) //{{{
+	      {
+	        pos = rebound(pos);
+	        x2 = x1 = pos[0];
+	        y2 = y1 = pos[1];
+	      }
+	      //}}}
+	      function setCurrent(pos) //{{{
+	      {
+	        pos = rebound(pos);
+	        ox = pos[0] - x2;
+	        oy = pos[1] - y2;
+	        x2 = pos[0];
+	        y2 = pos[1];
+	      }
+	      //}}}
+	      function getOffset() //{{{
+	      {
+	        return [ox, oy];
+	      }
+	      //}}}
+	      function moveOffset(offset) //{{{
+	      {
+	        var ox = offset[0],
+	            oy = offset[1];
+
+	        if (0 > x1 + ox) {
+	          ox -= ox + x1;
+	        }
+	        if (0 > y1 + oy) {
+	          oy -= oy + y1;
+	        }
+
+	        if (boundy < y2 + oy) {
+	          oy += boundy - (y2 + oy);
+	        }
+	        if (boundx < x2 + ox) {
+	          ox += boundx - (x2 + ox);
+	        }
+
+	        x1 += ox;
+	        x2 += ox;
+	        y1 += oy;
+	        y2 += oy;
+	      }
+	      //}}}
+	      function getCorner(ord) //{{{
+	      {
+	        var c = getFixed();
+	        switch (ord) {
+	        case 'ne':
+	          return [c.x2, c.y];
+	        case 'nw':
+	          return [c.x, c.y];
+	        case 'se':
+	          return [c.x2, c.y2];
+	        case 'sw':
+	          return [c.x, c.y2];
+	        }
+	      }
+	      //}}}
+	      function getFixed() //{{{
+	      {
+	        if (!options.aspectRatio) {
+	          return getRect();
+	        }
+	        // This function could use some optimization I think...
+	        var aspect = options.aspectRatio,
+	            min_x = options.minSize[0] / xscale,
+	            
+	            
+	            //min_y = options.minSize[1]/yscale,
+	            max_x = options.maxSize[0] / xscale,
+	            max_y = options.maxSize[1] / yscale,
+	            rw = x2 - x1,
+	            rh = y2 - y1,
+	            rwa = Math.abs(rw),
+	            rha = Math.abs(rh),
+	            real_ratio = rwa / rha,
+	            xx, yy, w, h;
+
+	        if (max_x === 0) {
+	          max_x = boundx * 10;
+	        }
+	        if (max_y === 0) {
+	          max_y = boundy * 10;
+	        }
+	        if (real_ratio < aspect) {
+	          yy = y2;
+	          w = rha * aspect;
+	          xx = rw < 0 ? x1 - w : w + x1;
+
+	          if (xx < 0) {
+	            xx = 0;
+	            h = Math.abs((xx - x1) / aspect);
+	            yy = rh < 0 ? y1 - h : h + y1;
+	          } else if (xx > boundx) {
+	            xx = boundx;
+	            h = Math.abs((xx - x1) / aspect);
+	            yy = rh < 0 ? y1 - h : h + y1;
+	          }
+	        } else {
+	          xx = x2;
+	          h = rwa / aspect;
+	          yy = rh < 0 ? y1 - h : y1 + h;
+	          if (yy < 0) {
+	            yy = 0;
+	            w = Math.abs((yy - y1) * aspect);
+	            xx = rw < 0 ? x1 - w : w + x1;
+	          } else if (yy > boundy) {
+	            yy = boundy;
+	            w = Math.abs(yy - y1) * aspect;
+	            xx = rw < 0 ? x1 - w : w + x1;
+	          }
+	        }
+
+	        // Magic %-)
+	        if (xx > x1) { // right side
+	          if (xx - x1 < min_x) {
+	            xx = x1 + min_x;
+	          } else if (xx - x1 > max_x) {
+	            xx = x1 + max_x;
+	          }
+	          if (yy > y1) {
+	            yy = y1 + (xx - x1) / aspect;
+	          } else {
+	            yy = y1 - (xx - x1) / aspect;
+	          }
+	        } else if (xx < x1) { // left side
+	          if (x1 - xx < min_x) {
+	            xx = x1 - min_x;
+	          } else if (x1 - xx > max_x) {
+	            xx = x1 - max_x;
+	          }
+	          if (yy > y1) {
+	            yy = y1 + (x1 - xx) / aspect;
+	          } else {
+	            yy = y1 - (x1 - xx) / aspect;
+	          }
+	        }
+
+	        if (xx < 0) {
+	          x1 -= xx;
+	          xx = 0;
+	        } else if (xx > boundx) {
+	          x1 -= xx - boundx;
+	          xx = boundx;
+	        }
+
+	        if (yy < 0) {
+	          y1 -= yy;
+	          yy = 0;
+	        } else if (yy > boundy) {
+	          y1 -= yy - boundy;
+	          yy = boundy;
+	        }
+
+	        return makeObj(flipCoords(x1, y1, xx, yy));
+	      }
+	      //}}}
+	      function rebound(p) //{{{
+	      {
+	        if (p[0] < 0) p[0] = 0;
+	        if (p[1] < 0) p[1] = 0;
+
+	        if (p[0] > boundx) p[0] = boundx;
+	        if (p[1] > boundy) p[1] = boundy;
+
+	        return [Math.round(p[0]), Math.round(p[1])];
+	      }
+	      //}}}
+	      function flipCoords(x1, y1, x2, y2) //{{{
+	      {
+	        var xa = x1,
+	            xb = x2,
+	            ya = y1,
+	            yb = y2;
+	        if (x2 < x1) {
+	          xa = x2;
+	          xb = x1;
+	        }
+	        if (y2 < y1) {
+	          ya = y2;
+	          yb = y1;
+	        }
+	        return [xa, ya, xb, yb];
+	      }
+	      //}}}
+	      function getRect() //{{{
+	      {
+	        var xsize = x2 - x1,
+	            ysize = y2 - y1,
+	            delta;
+
+	        if (xlimit && (Math.abs(xsize) > xlimit)) {
+	          x2 = (xsize > 0) ? (x1 + xlimit) : (x1 - xlimit);
+	        }
+	        if (ylimit && (Math.abs(ysize) > ylimit)) {
+	          y2 = (ysize > 0) ? (y1 + ylimit) : (y1 - ylimit);
+	        }
+
+	        if (ymin / yscale && (Math.abs(ysize) < ymin / yscale)) {
+	          y2 = (ysize > 0) ? (y1 + ymin / yscale) : (y1 - ymin / yscale);
+	        }
+	        if (xmin / xscale && (Math.abs(xsize) < xmin / xscale)) {
+	          x2 = (xsize > 0) ? (x1 + xmin / xscale) : (x1 - xmin / xscale);
+	        }
+
+	        if (x1 < 0) {
+	          x2 -= x1;
+	          x1 -= x1;
+	        }
+	        if (y1 < 0) {
+	          y2 -= y1;
+	          y1 -= y1;
+	        }
+	        if (x2 < 0) {
+	          x1 -= x2;
+	          x2 -= x2;
+	        }
+	        if (y2 < 0) {
+	          y1 -= y2;
+	          y2 -= y2;
+	        }
+	        if (x2 > boundx) {
+	          delta = x2 - boundx;
+	          x1 -= delta;
+	          x2 -= delta;
+	        }
+	        if (y2 > boundy) {
+	          delta = y2 - boundy;
+	          y1 -= delta;
+	          y2 -= delta;
+	        }
+	        if (x1 > boundx) {
+	          delta = x1 - boundy;
+	          y2 -= delta;
+	          y1 -= delta;
+	        }
+	        if (y1 > boundy) {
+	          delta = y1 - boundy;
+	          y2 -= delta;
+	          y1 -= delta;
+	        }
+
+	        return makeObj(flipCoords(x1, y1, x2, y2));
+	      }
+	      //}}}
+	      function makeObj(a) //{{{
+	      {
+	        return {
+	          x: a[0],
+	          y: a[1],
+	          x2: a[2],
+	          y2: a[3],
+	          w: a[2] - a[0],
+	          h: a[3] - a[1]
+	        };
+	      }
+	      //}}}
+
+	      return {
+	        flipCoords: flipCoords,
+	        setPressed: setPressed,
+	        setCurrent: setCurrent,
+	        getOffset: getOffset,
+	        moveOffset: moveOffset,
+	        getCorner: getCorner,
+	        getFixed: getFixed
+	      };
+	    }());
+
+	    //}}}
+	    // Shade Module {{{
+	    var Shade = (function() {
+	      var enabled = false,
+	          holder = $('<div />').css({
+	            position: 'absolute',
+	            zIndex: 240,
+	            opacity: 0
+	          }),
+	          shades = {
+	            top: createShade(),
+	            left: createShade().height(boundy),
+	            right: createShade().height(boundy),
+	            bottom: createShade()
+	          };
+
+	      function resizeShades(w,h) {
+	        shades.left.css({ height: px(h) });
+	        shades.right.css({ height: px(h) });
+	      }
+	      function updateAuto()
+	      {
+	        return updateShade(Coords.getFixed());
+	      }
+	      function updateShade(c)
+	      {
+	        shades.top.css({
+	          left: px(c.x),
+	          width: px(c.w),
+	          height: px(c.y)
+	        });
+	        shades.bottom.css({
+	          top: px(c.y2),
+	          left: px(c.x),
+	          width: px(c.w),
+	          height: px(boundy-c.y2)
+	        });
+	        shades.right.css({
+	          left: px(c.x2),
+	          width: px(boundx-c.x2)
+	        });
+	        shades.left.css({
+	          width: px(c.x)
+	        });
+	      }
+	      function createShade() {
+	        return $('<div />').css({
+	          position: 'absolute',
+	          backgroundColor: options.shadeColor||options.bgColor
+	        }).appendTo(holder);
+	      }
+	      function enableShade() {
+	        if (!enabled) {
+	          enabled = true;
+	          holder.insertBefore($img);
+	          updateAuto();
+	          Selection.setBgOpacity(1,0,1);
+	          $img2.hide();
+
+	          setBgColor(options.shadeColor||options.bgColor,1);
+	          if (Selection.isAwake())
+	          {
+	            setOpacity(options.bgOpacity,1);
+	          }
+	            else setOpacity(1,1);
+	        }
+	      }
+	      function setBgColor(color,now) {
+	        colorChangeMacro(getShades(),color,now);
+	      }
+	      function disableShade() {
+	        if (enabled) {
+	          holder.remove();
+	          $img2.show();
+	          enabled = false;
+	          if (Selection.isAwake()) {
+	            Selection.setBgOpacity(options.bgOpacity,1,1);
+	          } else {
+	            Selection.setBgOpacity(1,1,1);
+	            Selection.disableHandles();
+	          }
+	          colorChangeMacro($div,0,1);
+	        }
+	      }
+	      function setOpacity(opacity,now) {
+	        if (enabled) {
+	          if (options.bgFade && !now) {
+	            holder.animate({
+	              opacity: 1-opacity
+	            },{
+	              queue: false,
+	              duration: options.fadeTime
+	            });
+	          }
+	          else holder.css({opacity:1-opacity});
+	        }
+	      }
+	      function refreshAll() {
+	        options.shade ? enableShade() : disableShade();
+	        if (Selection.isAwake()) setOpacity(options.bgOpacity);
+	      }
+	      function getShades() {
+	        return holder.children();
+	      }
+
+	      return {
+	        update: updateAuto,
+	        updateRaw: updateShade,
+	        getShades: getShades,
+	        setBgColor: setBgColor,
+	        enable: enableShade,
+	        disable: disableShade,
+	        resize: resizeShades,
+	        refresh: refreshAll,
+	        opacity: setOpacity
+	      };
+	    }());
+	    // }}}
+	    // Selection Module {{{
+	    var Selection = (function () {
+	      var awake,
+	          hdep = 370,
+	          borders = {},
+	          handle = {},
+	          dragbar = {},
+	          seehandles = false;
+
+	      // Private Methods
+	      function insertBorder(type) //{{{
+	      {
+	        var jq = $('<div />').css({
+	          position: 'absolute',
+	          opacity: options.borderOpacity
+	        }).addClass(cssClass(type));
+	        $img_holder.append(jq);
+	        return jq;
+	      }
+	      //}}}
+	      function dragDiv(ord, zi) //{{{
+	      {
+	        var jq = $('<div />').mousedown(createDragger(ord)).css({
+	          cursor: ord + '-resize',
+	          position: 'absolute',
+	          zIndex: zi
+	        }).addClass('ord-'+ord);
+
+	        if (Touch.support) {
+	          jq.bind('touchstart.jcrop', Touch.createDragger(ord));
+	        }
+
+	        $hdl_holder.append(jq);
+	        return jq;
+	      }
+	      //}}}
+	      function insertHandle(ord) //{{{
+	      {
+	        var hs = options.handleSize,
+
+	          div = dragDiv(ord, hdep++).css({
+	            opacity: options.handleOpacity
+	          }).addClass(cssClass('handle'));
+
+	        if (hs) { div.width(hs).height(hs); }
+
+	        return div;
+	      }
+	      //}}}
+	      function insertDragbar(ord) //{{{
+	      {
+	        return dragDiv(ord, hdep++).addClass('jcrop-dragbar');
+	      }
+	      //}}}
+	      function createDragbars(li) //{{{
+	      {
+	        var i;
+	        for (i = 0; i < li.length; i++) {
+	          dragbar[li[i]] = insertDragbar(li[i]);
+	        }
+	      }
+	      //}}}
+	      function createBorders(li) //{{{
+	      {
+	        var cl,i;
+	        for (i = 0; i < li.length; i++) {
+	          switch(li[i]){
+	            case'n': cl='hline'; break;
+	            case's': cl='hline bottom'; break;
+	            case'e': cl='vline right'; break;
+	            case'w': cl='vline'; break;
+	          }
+	          borders[li[i]] = insertBorder(cl);
+	        }
+	      }
+	      //}}}
+	      function createHandles(li) //{{{
+	      {
+	        var i;
+	        for (i = 0; i < li.length; i++) {
+	          handle[li[i]] = insertHandle(li[i]);
+	        }
+	      }
+	      //}}}
+	      function moveto(x, y) //{{{
+	      {
+	        if (!options.shade) {
+	          $img2.css({
+	            top: px(-y),
+	            left: px(-x)
+	          });
+	        }
+	        $sel.css({
+	          top: px(y),
+	          left: px(x)
+	        });
+	      }
+	      //}}}
+	      function resize(w, h) //{{{
+	      {
+	        $sel.width(Math.round(w)).height(Math.round(h));
+	      }
+	      //}}}
+	      function refresh() //{{{
+	      {
+	        var c = Coords.getFixed();
+
+	        Coords.setPressed([c.x, c.y]);
+	        Coords.setCurrent([c.x2, c.y2]);
+
+	        updateVisible();
+	      }
+	      //}}}
+
+	      // Internal Methods
+	      function updateVisible(select) //{{{
+	      {
+	        if (awake) {
+	          return update(select);
+	        }
+	      }
+	      //}}}
+	      function update(select) //{{{
+	      {
+	        var c = Coords.getFixed();
+
+	        resize(c.w, c.h);
+	        moveto(c.x, c.y);
+	        if (options.shade) Shade.updateRaw(c);
+
+	        awake || show();
+
+	        if (select) {
+	          options.onSelect.call(api, unscale(c));
+	        } else {
+	          options.onChange.call(api, unscale(c));
+	        }
+	      }
+	      //}}}
+	      function setBgOpacity(opacity,force,now) //{{{
+	      {
+	        if (!awake && !force) return;
+	        if (options.bgFade && !now) {
+	          $img.animate({
+	            opacity: opacity
+	          },{
+	            queue: false,
+	            duration: options.fadeTime
+	          });
+	        } else {
+	          $img.css('opacity', opacity);
+	        }
+	      }
+	      //}}}
+	      function show() //{{{
+	      {
+	        $sel.show();
+
+	        if (options.shade) Shade.opacity(bgopacity);
+	          else setBgOpacity(bgopacity,true);
+
+	        awake = true;
+	      }
+	      //}}}
+	      function release() //{{{
+	      {
+	        disableHandles();
+	        $sel.hide();
+
+	        if (options.shade) Shade.opacity(1);
+	          else setBgOpacity(1);
+
+	        awake = false;
+	        options.onRelease.call(api);
+	      }
+	      //}}}
+	      function showHandles() //{{{
+	      {
+	        if (seehandles) {
+	          $hdl_holder.show();
+	        }
+	      }
+	      //}}}
+	      function enableHandles() //{{{
+	      {
+	        seehandles = true;
+	        if (options.allowResize) {
+	          $hdl_holder.show();
+	          return true;
+	        }
+	      }
+	      //}}}
+	      function disableHandles() //{{{
+	      {
+	        seehandles = false;
+	        $hdl_holder.hide();
+	      } 
+	      //}}}
+	      function animMode(v) //{{{
+	      {
+	        if (v) {
+	          animating = true;
+	          disableHandles();
+	        } else {
+	          animating = false;
+	          enableHandles();
+	        }
+	      } 
+	      //}}}
+	      function done() //{{{
+	      {
+	        animMode(false);
+	        refresh();
+	      } 
+	      //}}}
+	      // Insert draggable elements {{{
+	      // Insert border divs for outline
+
+	      if (options.dragEdges && $.isArray(options.createDragbars))
+	        createDragbars(options.createDragbars);
+
+	      if ($.isArray(options.createHandles))
+	        createHandles(options.createHandles);
+
+	      if (options.drawBorders && $.isArray(options.createBorders))
+	        createBorders(options.createBorders);
+
+	      //}}}
+
+	      // This is a hack for iOS5 to support drag/move touch functionality
+	      $(document).bind('touchstart.jcrop-ios',function(e) {
+	        if ($(e.currentTarget).hasClass('jcrop-tracker')) e.stopPropagation();
+	      });
+
+	      var $track = newTracker().mousedown(createDragger('move')).css({
+	        cursor: 'move',
+	        position: 'absolute',
+	        zIndex: 360
+	      });
+
+	      if (Touch.support) {
+	        $track.bind('touchstart.jcrop', Touch.createDragger('move'));
+	      }
+
+	      $img_holder.append($track);
+	      disableHandles();
+
+	      return {
+	        updateVisible: updateVisible,
+	        update: update,
+	        release: release,
+	        refresh: refresh,
+	        isAwake: function () {
+	          return awake;
+	        },
+	        setCursor: function (cursor) {
+	          $track.css('cursor', cursor);
+	        },
+	        enableHandles: enableHandles,
+	        enableOnly: function () {
+	          seehandles = true;
+	        },
+	        showHandles: showHandles,
+	        disableHandles: disableHandles,
+	        animMode: animMode,
+	        setBgOpacity: setBgOpacity,
+	        done: done
+	      };
+	    }());
+	    
+	    //}}}
+	    // Tracker Module {{{
+	    var Tracker = (function () {
+	      var onMove = function () {},
+	          onDone = function () {},
+	          trackDoc = options.trackDocument;
+
+	      function toFront(touch) //{{{
+	      {
+	        $trk.css({
+	          zIndex: 450
+	        });
+
+	        if (touch)
+	          $(document)
+	            .bind('touchmove.jcrop', trackTouchMove)
+	            .bind('touchend.jcrop', trackTouchEnd);
+
+	        else if (trackDoc)
+	          $(document)
+	            .bind('mousemove.jcrop',trackMove)
+	            .bind('mouseup.jcrop',trackUp);
+	      } 
+	      //}}}
+	      function toBack() //{{{
+	      {
+	        $trk.css({
+	          zIndex: 290
+	        });
+	        $(document).unbind('.jcrop');
+	      } 
+	      //}}}
+	      function trackMove(e) //{{{
+	      {
+	        onMove(mouseAbs(e));
+	        return false;
+	      } 
+	      //}}}
+	      function trackUp(e) //{{{
+	      {
+	        e.preventDefault();
+	        e.stopPropagation();
+
+	        if (btndown) {
+	          btndown = false;
+
+	          onDone(mouseAbs(e));
+
+	          if (Selection.isAwake()) {
+	            options.onSelect.call(api, unscale(Coords.getFixed()));
+	          }
+
+	          toBack();
+	          onMove = function () {};
+	          onDone = function () {};
+	        }
+
+	        return false;
+	      }
+	      //}}}
+	      function activateHandlers(move, done, touch) //{{{
+	      {
+	        btndown = true;
+	        onMove = move;
+	        onDone = done;
+	        toFront(touch);
+	        return false;
+	      }
+	      //}}}
+	      function trackTouchMove(e) //{{{
+	      {
+	        onMove(mouseAbs(Touch.cfilter(e)));
+	        return false;
+	      }
+	      //}}}
+	      function trackTouchEnd(e) //{{{
+	      {
+	        return trackUp(Touch.cfilter(e));
+	      }
+	      //}}}
+	      function setCursor(t) //{{{
+	      {
+	        $trk.css('cursor', t);
+	      }
+	      //}}}
+
+	      if (!trackDoc) {
+	        $trk.mousemove(trackMove).mouseup(trackUp).mouseout(trackUp);
+	      }
+
+	      $img.before($trk);
+	      return {
+	        activateHandlers: activateHandlers,
+	        setCursor: setCursor
+	      };
+	    }());
+	    //}}}
+	    // KeyManager Module {{{
+	    var KeyManager = (function () {
+	      var $keymgr = $('<input type="radio" />').css({
+	        position: 'fixed',
+	        left: '-120px',
+	        width: '12px'
+	      }).addClass('jcrop-keymgr'),
+
+	        $keywrap = $('<div />').css({
+	          position: 'absolute',
+	          overflow: 'hidden'
+	        }).append($keymgr);
+
+	      function watchKeys() //{{{
+	      {
+	        if (options.keySupport) {
+	          $keymgr.show();
+	          $keymgr.focus();
+	        }
+	      }
+	      //}}}
+	      function onBlur(e) //{{{
+	      {
+	        $keymgr.hide();
+	      }
+	      //}}}
+	      function doNudge(e, x, y) //{{{
+	      {
+	        if (options.allowMove) {
+	          Coords.moveOffset([x, y]);
+	          Selection.updateVisible(true);
+	        }
+	        e.preventDefault();
+	        e.stopPropagation();
+	      }
+	      //}}}
+	      function parseKey(e) //{{{
+	      {
+	        if (e.ctrlKey || e.metaKey) {
+	          return true;
+	        }
+	        shift_down = e.shiftKey ? true : false;
+	        var nudge = shift_down ? 10 : 1;
+
+	        switch (e.keyCode) {
+	        case 37:
+	          doNudge(e, -nudge, 0);
+	          break;
+	        case 39:
+	          doNudge(e, nudge, 0);
+	          break;
+	        case 38:
+	          doNudge(e, 0, -nudge);
+	          break;
+	        case 40:
+	          doNudge(e, 0, nudge);
+	          break;
+	        case 27:
+	          if (options.allowSelect) Selection.release();
+	          break;
+	        case 9:
+	          return true;
+	        }
+
+	        return false;
+	      }
+	      //}}}
+
+	      if (options.keySupport) {
+	        $keymgr.keydown(parseKey).blur(onBlur);
+	        if (ie6mode || !options.fixedSupport) {
+	          $keymgr.css({
+	            position: 'absolute',
+	            left: '-20px'
+	          });
+	          $keywrap.append($keymgr).insertBefore($img);
+	        } else {
+	          $keymgr.insertBefore($img);
+	        }
+	      }
+
+
+	      return {
+	        watchKeys: watchKeys
+	      };
+	    }());
+	    //}}}
+	    // }}}
+	    // API methods {{{
+	    function setClass(cname) //{{{
+	    {
+	      $div.removeClass().addClass(cssClass('holder')).addClass(cname);
+	    }
+	    //}}}
+	    function animateTo(a, callback) //{{{
+	    {
+	      var x1 = a[0] / xscale,
+	          y1 = a[1] / yscale,
+	          x2 = a[2] / xscale,
+	          y2 = a[3] / yscale;
+
+	      if (animating) {
+	        return;
+	      }
+
+	      var animto = Coords.flipCoords(x1, y1, x2, y2),
+	          c = Coords.getFixed(),
+	          initcr = [c.x, c.y, c.x2, c.y2],
+	          animat = initcr,
+	          interv = options.animationDelay,
+	          ix1 = animto[0] - initcr[0],
+	          iy1 = animto[1] - initcr[1],
+	          ix2 = animto[2] - initcr[2],
+	          iy2 = animto[3] - initcr[3],
+	          pcent = 0,
+	          velocity = options.swingSpeed;
+
+	      x1 = animat[0];
+	      y1 = animat[1];
+	      x2 = animat[2];
+	      y2 = animat[3];
+
+	      Selection.animMode(true);
+	      var anim_timer;
+
+	      function queueAnimator() {
+	        window.setTimeout(animator, interv);
+	      }
+	      var animator = (function () {
+	        return function () {
+	          pcent += (100 - pcent) / velocity;
+
+	          animat[0] = Math.round(x1 + ((pcent / 100) * ix1));
+	          animat[1] = Math.round(y1 + ((pcent / 100) * iy1));
+	          animat[2] = Math.round(x2 + ((pcent / 100) * ix2));
+	          animat[3] = Math.round(y2 + ((pcent / 100) * iy2));
+
+	          if (pcent >= 99.8) {
+	            pcent = 100;
+	          }
+	          if (pcent < 100) {
+	            setSelectRaw(animat);
+	            queueAnimator();
+	          } else {
+	            Selection.done();
+	            Selection.animMode(false);
+	            if (typeof(callback) === 'function') {
+	              callback.call(api);
+	            }
+	          }
+	        };
+	      }());
+	      queueAnimator();
+	    }
+	    //}}}
+	    function setSelect(rect) //{{{
+	    {
+	      setSelectRaw([rect[0] / xscale, rect[1] / yscale, rect[2] / xscale, rect[3] / yscale]);
+	      options.onSelect.call(api, unscale(Coords.getFixed()));
+	      Selection.enableHandles();
+	    }
+	    //}}}
+	    function setSelectRaw(l) //{{{
+	    {
+	      Coords.setPressed([l[0], l[1]]);
+	      Coords.setCurrent([l[2], l[3]]);
+	      Selection.update();
+	    }
+	    //}}}
+	    function tellSelect() //{{{
+	    {
+	      return unscale(Coords.getFixed());
+	    }
+	    //}}}
+	    function tellScaled() //{{{
+	    {
+	      return Coords.getFixed();
+	    }
+	    //}}}
+	    function setOptionsNew(opt) //{{{
+	    {
+	      setOptions(opt);
+	      interfaceUpdate();
+	    }
+	    //}}}
+	    function disableCrop() //{{{
+	    {
+	      options.disabled = true;
+	      Selection.disableHandles();
+	      Selection.setCursor('default');
+	      Tracker.setCursor('default');
+	    }
+	    //}}}
+	    function enableCrop() //{{{
+	    {
+	      options.disabled = false;
+	      interfaceUpdate();
+	    }
+	    //}}}
+	    function cancelCrop() //{{{
+	    {
+	      Selection.done();
+	      Tracker.activateHandlers(null, null);
+	    }
+	    //}}}
+	    function destroy() //{{{
+	    {
+	      $div.remove();
+	      $origimg.show();
+	      $origimg.css('visibility','visible');
+	      $(obj).removeData('Jcrop');
+	    }
+	    //}}}
+	    function setImage(src, callback) //{{{
+	    {
+	      Selection.release();
+	      disableCrop();
+	      var img = new Image();
+	      img.onload = function () {
+	        var iw = img.width;
+	        var ih = img.height;
+	        var bw = options.boxWidth;
+	        var bh = options.boxHeight;
+	        $img.width(iw).height(ih);
+	        $img.attr('src', src);
+	        $img2.attr('src', src);
+	        presize($img, bw, bh);
+	        boundx = $img.width();
+	        boundy = $img.height();
+	        $img2.width(boundx).height(boundy);
+	        $trk.width(boundx + (bound * 2)).height(boundy + (bound * 2));
+	        $div.width(boundx).height(boundy);
+	        Shade.resize(boundx,boundy);
+	        enableCrop();
+
+	        if (typeof(callback) === 'function') {
+	          callback.call(api);
+	        }
+	      };
+	      img.src = src;
+	    }
+	    //}}}
+	    function colorChangeMacro($obj,color,now) {
+	      var mycolor = color || options.bgColor;
+	      if (options.bgFade && supportsColorFade() && options.fadeTime && !now) {
+	        $obj.animate({
+	          backgroundColor: mycolor
+	        }, {
+	          queue: false,
+	          duration: options.fadeTime
+	        });
+	      } else {
+	        $obj.css('backgroundColor', mycolor);
+	      }
+	    }
+	    function interfaceUpdate(alt) //{{{
+	    // This method tweaks the interface based on options object.
+	    // Called when options are changed and at end of initialization.
+	    {
+	      if (options.allowResize) {
+	        if (alt) {
+	          Selection.enableOnly();
+	        } else {
+	          Selection.enableHandles();
+	        }
+	      } else {
+	        Selection.disableHandles();
+	      }
+
+	      Tracker.setCursor(options.allowSelect ? 'crosshair' : 'default');
+	      Selection.setCursor(options.allowMove ? 'move' : 'default');
+
+	      if (options.hasOwnProperty('trueSize')) {
+	        xscale = options.trueSize[0] / boundx;
+	        yscale = options.trueSize[1] / boundy;
+	      }
+
+	      if (options.hasOwnProperty('setSelect')) {
+	        setSelect(options.setSelect);
+	        Selection.done();
+	        delete(options.setSelect);
+	      }
+
+	      Shade.refresh();
+
+	      if (options.bgColor != bgcolor) {
+	        colorChangeMacro(
+	          options.shade? Shade.getShades(): $div,
+	          options.shade?
+	            (options.shadeColor || options.bgColor):
+	            options.bgColor
+	        );
+	        bgcolor = options.bgColor;
+	      }
+
+	      if (bgopacity != options.bgOpacity) {
+	        bgopacity = options.bgOpacity;
+	        if (options.shade) Shade.refresh();
+	          else Selection.setBgOpacity(bgopacity);
+	      }
+
+	      xlimit = options.maxSize[0] || 0;
+	      ylimit = options.maxSize[1] || 0;
+	      xmin = options.minSize[0] || 0;
+	      ymin = options.minSize[1] || 0;
+
+	      if (options.hasOwnProperty('outerImage')) {
+	        $img.attr('src', options.outerImage);
+	        delete(options.outerImage);
+	      }
+
+	      Selection.refresh();
+	    }
+	    //}}}
+	    //}}}
+
+	    if (Touch.support) $trk.bind('touchstart.jcrop', Touch.newSelection);
+
+	    $hdl_holder.hide();
+	    interfaceUpdate(true);
+
+	    var api = {
+	      setImage: setImage,
+	      animateTo: animateTo,
+	      setSelect: setSelect,
+	      setOptions: setOptionsNew,
+	      tellSelect: tellSelect,
+	      tellScaled: tellScaled,
+	      setClass: setClass,
+
+	      disable: disableCrop,
+	      enable: enableCrop,
+	      cancel: cancelCrop,
+	      release: Selection.release,
+	      destroy: destroy,
+
+	      focus: KeyManager.watchKeys,
+
+	      getBounds: function () {
+	        return [boundx * xscale, boundy * yscale];
+	      },
+	      getWidgetSize: function () {
+	        return [boundx, boundy];
+	      },
+	      getScaleFactor: function () {
+	        return [xscale, yscale];
+	      },
+	      getOptions: function() {
+	        // careful: internal values are returned
+	        return options;
+	      },
+
+	      ui: {
+	        holder: $div,
+	        selection: $sel
+	      }
+	    };
+
+	    if (is_msie) $div.bind('selectstart', function () { return false; });
+
+	    $origimg.data('Jcrop', api);
+	    return api;
+	  };
+	  $.fn.Jcrop = function (options, callback) //{{{
+	  {
+	    var api;
+	    // Iterate over each object, attach Jcrop
+	    this.each(function () {
+	      // If we've already attached to this object
+	      if ($(this).data('Jcrop')) {
+	        // The API can be requested this way (undocumented)
+	        if (options === 'api') return $(this).data('Jcrop');
+	        // Otherwise, we just reset the options...
+	        else $(this).data('Jcrop').setOptions(options);
+	      }
+	      // If we haven't been attached, preload and attach
+	      else {
+	        if (this.tagName == 'IMG')
+	          $.Jcrop.Loader(this,function(){
+	            $(this).css({display:'block',visibility:'hidden'});
+	            api = $.Jcrop(this, options);
+	            if ($.isFunction(callback)) callback.call(api);
+	          });
+	        else {
+	          $(this).css({display:'block',visibility:'hidden'});
+	          api = $.Jcrop(this, options);
+	          if ($.isFunction(callback)) callback.call(api);
+	        }
+	      }
+	    });
+
+	    // Return "this" so the object is chainable (jQuery-style)
+	    return this;
+	  };
+	  //}}}
+	  // $.Jcrop.Loader - basic image loader {{{
+
+	  $.Jcrop.Loader = function(imgobj,success,error){
+	    var $img = $(imgobj), img = $img[0];
+
+	    function completeCheck(){
+	      if (img.complete) {
+	        $img.unbind('.jcloader');
+	        if ($.isFunction(success)) success.call(img);
+	      }
+	      else window.setTimeout(completeCheck,50);
+	    }
+
+	    $img
+	      .bind('load.jcloader',completeCheck)
+	      .bind('error.jcloader',function(e){
+	        $img.unbind('.jcloader');
+	        if ($.isFunction(error)) error.call(img);
+	      });
+
+	    if (img.complete && $.isFunction(success)){
+	      $img.unbind('.jcloader');
+	      success.call(img);
+	    }
+	  };
+
+	  //}}}
+	  // Global Defaults {{{
+	  $.Jcrop.defaults = {
+
+	    // Basic Settings
+	    allowSelect: true,
+	    allowMove: true,
+	    allowResize: true,
+
+	    trackDocument: true,
+
+	    // Styling Options
+	    baseClass: 'jcrop',
+	    addClass: null,
+	    bgColor: 'black',
+	    bgOpacity: 0.6,
+	    bgFade: false,
+	    borderOpacity: 0.4,
+	    handleOpacity: 0.5,
+	    handleSize: null,
+
+	    aspectRatio: 0,
+	    keySupport: true,
+	    createHandles: ['n','s','e','w','nw','ne','se','sw'],
+	    createDragbars: ['n','s','e','w'],
+	    createBorders: ['n','s','e','w'],
+	    drawBorders: true,
+	    dragEdges: true,
+	    fixedSupport: true,
+	    touchSupport: null,
+
+	    shade: null,
+
+	    boxWidth: 0,
+	    boxHeight: 0,
+	    boundary: 2,
+	    fadeTime: 400,
+	    animationDelay: 20,
+	    swingSpeed: 3,
+
+	    minSelect: [0, 0],
+	    maxSize: [0, 0],
+	    minSize: [0, 0],
+
+	    // Callbacks / Event Handlers
+	    onChange: function () {},
+	    onSelect: function () {},
+	    onDblClick: function () {},
+	    onRelease: function () {}
+	  };
+
+	  // }}}
+	}(jQuery));
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	
+	/*
+	Populate the filename fields for the custom file inputs.  This was done so they
+	look consistent across browsers and more like the rest of the inputs. This is
+	based on:
+
+	http://www.abeautifulsite.net/whipping-file-inputs-into-shape-with-bootstrap-3/
+	 */
+	var $, Backbone, _;
+
+	$ = __webpack_require__(2);
+
+	_ = __webpack_require__(5);
+
+	Backbone = __webpack_require__(7);
+
+	module.exports = Backbone.View.extend({
+	  initialize: function() {
+	    _.bindAll(this);
+	    this.render();
+	    this.$el.on('change', this.onChange);
+	    return this.onChange();
+	  },
+	  render: function() {
+	    var $btns, $inputGroup;
+	    $btns = this.$el.nextAll('.input-group-btn');
+	    this.$el.wrap('<div class="input-group bootstrap-file"></div>').wrap('<span class="input-group-btn"></span>').wrap('<span class="btn btn-default btn-file">Browse&hellip; </span>');
+	    $inputGroup = this.$el.closest('.input-group');
+	    this.$filename = $('<input type="text" class="form-control" readonly>').appendTo($inputGroup);
+	    return $inputGroup.append($btns);
+	  },
+	  onChange: function(e) {
+	    var name;
+	    if ((e != null ? e.currentTarget : void 0) && this.el !== e.currentTarget) {
+	      this.setElement(e.currentTarget);
+	    }
+	    name = this.$el.val().replace(/\\/g, '/').replace(/.*\//, '');
+	    return this.$filename.val(name);
+	  }
+	});
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
+
+		// Dependencies
+		var $ = __webpack_require__(2)
+			, _ = __webpack_require__(5)
+			, bootstrap = __webpack_require__(10)
+			, tpl = _.template(__webpack_require__(68));
+		;
+
+		/**
+		 * Request the attribtues from the server
+		 *
+		 * @param {MouseEvent} $e
+		 * @return {void}
+		 */
+		function open(e) {
+			e.preventDefault();
+			var url = $(e.currentTarget).attr('href');
+			$.get(url).done(render);
+		}
+
+		/**
+		 * Render the content and finish opening the modal
+		 *
+		 * @param {object} data The changes edit response
+		 * @return {void}
+		 */
+		function render(data) {
+
+			// Capitalize the action
+			data.action = data.action.charAt(0).toUpperCase() + data.action.slice(1);
+
+			// Create the body from the list of attributes
+			data.body = '<dl class="dl-horizontal">' +
+				_.reduce(data.attributes, function(html, val, key) {
+					return html+'<dt>'+key+'</dt><dd>'+(val||'<em>Empty</em>')+'</dd>';
+				}, '') + '</dl>';
+
+			// Render markup and render
+			$(tpl(data)).modal();
+		}
+
+		// Return API
+		return { open: open };
+
+	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports) {
+
+	module.exports = "<div class=\"modal fade changes-modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n        <h4 class=\"modal-title\">Changes to \"<%=title%>\"</h4>\n      </div>\n      <div class=\"modal-body\">\n        <%=body%>\n      </div>\n      <div class=\"modal-footer\">\n        <%=action%> on <%=date%> by <a href=\"<%=admin_edit%>\"><%=admin%></a>\n      </div>\n    </div>\n  </div>\n</div>";
+
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
