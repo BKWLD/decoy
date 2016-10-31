@@ -11,7 +11,7 @@ class {{model}} extends Base {
 	// public static $rules = [
 	// 	'title' => 'required',
 	// 	'slug' => 'alpha_dash|unique:articles',
-	// 	'image' => 'image',
+	// 	'images.image' => 'image|required',
 	// 	'date' => 'required',
 	// 	'url' => 'url',
 	// ];
