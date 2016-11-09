@@ -166,10 +166,9 @@ class Element extends Base {
 	 * integeration with the Elements admin UI to store the input name in the
 	 * "name" attribute
 	 *
-	 * @param  string $name
 	 * @return Image
 	 */
-	public function img($name = null) {
+	public function img() {
 
 		// Check for an existing Image relation
 		if (($image = $this->parentImg($this->inputName()))
