@@ -203,7 +203,6 @@ class ServiceProvider extends BaseServiceProvider {
 		// This group is used by public decoy routes
 		$this->app['router']->middlewareGroup('decoy.public', [
 			'web',
-			'camo.ua-compatibility',
 		]);
 
 		// The is the starndard auth protected group
@@ -212,7 +211,6 @@ class ServiceProvider extends BaseServiceProvider {
 			'decoy.auth',
 			'decoy.save-redirect',
 			'decoy.edit-redirect',
-			'camo.ua-compatibility',
 		]);
 
 		// Require a logged in admin session but no CSRF token
@@ -333,10 +331,6 @@ class ServiceProvider extends BaseServiceProvider {
 
 		// Support for cloning models
 		$this->app->register('Bkwld\Cloner\ServiceProvider');
-
-		// Probably already registered by the App, but just in case
-		AliasLoader::getInstance()->alias('Camo', \Bkwld\Camo\Facade::class);
-		$this->app->register('Bkwld\Camo\ServiceProvider');
 	}
 
 	/**
