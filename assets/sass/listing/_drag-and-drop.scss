@@ -2,9 +2,9 @@
 .listing {
 
 	.ui-sortable {
-		
+
 		// This is the drop box
-		.placeholder { 
+		.placeholder {
 			background: darken($body-color, 5%);
 
 			// Prevent the new dotted border from having a double border
@@ -27,7 +27,7 @@
 			cursor: auto;
 		}
 	}
-		
+
 	// This is the unit that gets dragged around
 	.ui-sortable-helper {
 		background: darken($table-row-hover, 1%) !important;
@@ -39,8 +39,8 @@
 		// Remove borders on the sides so there is no shift
 		border-left: none;
 		border-right: none;
-		
-		// Fix for long cells not looking right 
+
+		// Fix for long cells not looking right
 		// https://github.com/BKWLD/decoy/issues/53
 		display: block !important;
 		white-space: nowrap;
@@ -55,7 +55,7 @@
 			// Hide columns on break as defined in listing._table.scss
 			@media (max-width: $screen-sm) {
 				display: none;
-				&:first-child + td, &:last-child { display: inline-block; }	
+				&:first-child + td, &:last-child { display: inline-block; }
 			}
 
 			// IE9 doesn't support the inline block on td.  Using float looks
@@ -78,7 +78,7 @@
 		}
 
 		// For the IE9 fix
-		@include clearfix; 
+		@include clearfix;
 	}
 
 }
