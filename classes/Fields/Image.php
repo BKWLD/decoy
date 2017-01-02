@@ -80,8 +80,7 @@ class Image extends File {
 
 		// Check if there are rules for this field
 		$rules_key = 'images.' . ($this->name ?: 'default');
-		if (!array_key_exists($rules_key, $this->getRules() ?: [])) return;
-		$rules = $this->getRules()[$rules_key];
+		if (!$rules = Former::getRules($rules_key)) return;
 
 		// If there already is an image, drop the forced requirement
 		if ($this->hasImage() && array_key_exists('required', $rules)) {
