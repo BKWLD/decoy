@@ -34,7 +34,7 @@ define(function (require) {
 	;
 
 	// Modules that get exposed for public configuration
-	app.wysiwyg =require('./wysiwyg/factory');
+	app.wysiwyg = require('./wysiwyg/factory');
 
 	// --------------------------------------------------
 	// Pre-ready init
