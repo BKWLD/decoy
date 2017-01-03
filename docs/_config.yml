@@ -1,26 +1,31 @@
-# Dependencies
-markdown:         redcarpet
-highlighter:      pygments
+name: Herring Cove
+author: Herring Cove
+baseurl: /
+description: theme for jekyll
+github: http://www.github.com/arnp
+twitter: http://www.twitter.com/
+facebook: http://www.facebook.com
+linkedin: http://www.linkedin.com
+email: rnpatel[at]me.com
+# location: 42°2'16"N   70°12'47"W
+# disqus: diqus-username
 
-# Permalinks
-permalink:        pretty
-# relative_permalinks: true
+##Make sure to edit the above fields, especially for disqus.
 
-# Setup
-title:            Decoy
-tagline:          'A Jekyll theme'
-description:      'A brazen two-column <a href="http://jekyllrb.com" target="_blank">Jekyll</a> theme that pairs a prominent sidebar with uncomplicated content. Made by <a href="https://twitter.com/mdo" target="_blank">@mdo</a>.'
-url:              http://www.bukwild.com
-baseurl:          /
 
-author:
-  name:           'Bukwild'
-  url:            http://www.bukwild.com
+# highlighter: pygments
+# markdown: redcarpet
+# redcarpet:
+  # extensions: ["tables"]
 
-paginate:         5
-
-# Custom vars
-version:          5.2
-
-github:
-  repo:           https://github.com/BKWLD/decoy
+# defaults:
+#   - scope:
+#       path: ""
+#       type: "pages"
+#     values:
+#       layout: "default"
+#   - scope:
+#       path: ""
+#       type: "posts"
+#     values:
+#       layout: "post"
