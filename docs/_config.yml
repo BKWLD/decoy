@@ -29,3 +29,5 @@ email: rnpatel[at]me.com
 #       type: "posts"
 #     values:
 #       layout: "post"
+
+theme: jekyll-theme-minimal
