@@ -1,6 +1,8 @@
 ## Compatibility
 
-Decoy is tested to support:
+Decoy *currently* only works with **Laravel 5.0 - 5.2**.
+
+Decoy is tested to support the following browsers:
 
 - Latest Chrome (recommended)
 - Latest Firefox
@@ -11,17 +13,21 @@ Decoy is tested to support:
 
 ## Version history
 
-See the [Github "Releases"](https://github.com/BKWLD/decoy/releases) history
+See the [Github "Releases"](https://github.com/BKWLD/decoy/releases) history.
 
 ## Installation
 
 
 1. `composer require bkwld/decoy`
+
 2. Add `Bkwld\Decoy\ServiceProvider::class` to `providers` in your Laravel's app config file.
+
 3. Add these aliases to the `aliases` in your Laravel's app config file:
-	```php
-	'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
-	'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
-	```
+
+		<?php
+		'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
+		'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
+
 4. Publish the migrations, config files, and public assets by running `php artisan vendor:publish --provider="Bkwld\Decoy\ServiceProvider"`
+
 5. Run the migrations by running `php artisan migrate`

@@ -13,7 +13,7 @@
 To be able to update docs, you need to install mkdocs:
 
 1. Install python (like via Homebrew)
-2. Install mkdocs with `pip install mkdocs`
+2. Install mkdocs with `pip install mkdocs mkdocs-material pygments`
 
 The source markdown files are in src-docs.  After making changes, run the comile instructions (below).  When adding new files, make sure to update the mkdocs.yml file to add pages to the navigation.
 

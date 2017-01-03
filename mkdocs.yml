@@ -23,6 +23,7 @@ pages:
     - WYSIWYG: wysiwyg.md
   - Contribute: contribute.md
 
+# Theme
 theme: 'material'
 extra:
   font:
@@ -31,9 +32,10 @@ extra:
   author:
     github: 'bkwld'
     twitter: 'bkwld'
-
 extra_css: ['css/style.css']
 
 markdown_extensions:
   - codehilite(css_class=code)
-  - smarty
+  - admonition
+  - toc:
+      permalink: '#'
