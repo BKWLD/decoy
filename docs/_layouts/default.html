@@ -7,9 +7,7 @@
 
     <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
     <meta name="viewport" content="width=device-width">
-    <!--[if lt IE 9]>
-    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
+
   </head>
   <body>
     <div class="wrapper">
@@ -20,33 +18,41 @@
         <p class="view">
           <a href="{{ site.github.repository_url }}">View the Project on GitHub</a>
         </p>
+
+				<hr/>
+
+        <nav>
+
+          <h3>Setup</h3>
+					<div><a href='index'>About</a></div>
+					<div><a href='instalation'>Installation</a></div>
+					<div><a href='getting-started'>Getting Started</a></div>
+
+          <h3>Core</h3>
+					<div><a href='models'>Models</a></div>
+					<div><a href='controllers'>Controllers</a></div>
+					<div><a href='views'>Views</a></div>
+
+          <h3>Features</h3>
+					<div><a href='custom-form-fields'>Custom form fields</a></div>
+					<div><a href='elements'>Elements</a></div>
+					<div><a href='images'>Images</a></div>
+					<div><a href='localization'>Localization</a></div>
+					<div><a href='model-duplication'>Model duplication</a></div>
+					<div><a href='permissions'>Permissions</a></div>
+					<div><a href='slugs'>Slugs</a></div>
+					<div><a href='validation'>Validation</a></div>
+					<div><a href='video-encoding'>Video Encoding</a></div>
+					<div><a href='workers'>Workers</a></div>
+        </nav>
+
       </header>
+
       <section>
-
-      {{ content }}
-
+        {{ content }}
       </section>
-      <footer>
-        {% if site.github.is_project_page %}
-        <p>This project is maintained by <a href="{{ site.github.owner_url }}">{{ site.github.owner_name }}</a></p>
-        {% endif %}
-        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
-      </footer>
+
     </div>
-    <script src="{{ '/assets/js/scale.fix.js' | relative_url }}"></script>
 
-
-  {% if site.google_analytics %}
-    <script type="text/javascript">
-      var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-      document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-    </script>
-    <script type="text/javascript">
-      try {
-        var pageTracker = _gat._getTracker("{{ site.google_analytics }}");
-      pageTracker._trackPageview();
-      } catch(err) {}
-    </script>
-  {% endif %}
   </body>
 </html>
