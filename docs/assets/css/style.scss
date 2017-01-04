@@ -3,6 +3,12 @@
 
 @import "{{ site.theme }}";
 
+// Add margins above and below hrs
+hr {
+	margin: 20px 0;
+}
+
+// Fix spacing of headers in the sidebar
 nav {
 	h3:not(:first-child) {
 		margin-top: 30px;

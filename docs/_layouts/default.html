@@ -13,37 +13,23 @@
     <div class="wrapper">
       <header>
         <h1>{{ site.title | default: site.github.repository_name }}</h1>
-        <p>{{ site.description | default: site.github.project_tagline }}</p>
+        <p>
+          {{ site.description | default: site.github.project_tagline }}. <br>
+          By <a href='http://www.bukwild.com'>Bukwild</a>.</p>
 
-        <p class="view">
-          <a href="{{ site.github.repository_url }}">View the Project on GitHub</a>
-        </p>
+
+        <div><a href="{{ site.github.repository_url }}">View on GitHub</a></div>
+				<div><a href="http://www.bukwild.com/project/decoy">Case study</a></div>
 
 				<hr/>
 
         <nav>
-
-          <h3>Setup</h3>
-					<div><a href='index'>About</a></div>
-					<div><a href='installation'>Installation</a></div>
-					<div><a href='getting-started'>Getting Started</a></div>
-
-          <h3>Core</h3>
-					<div><a href='models'>Models</a></div>
-					<div><a href='controllers'>Controllers</a></div>
-					<div><a href='views'>Views</a></div>
-
-          <h3>Features</h3>
-					<div><a href='custom-form-fields'>Custom form fields</a></div>
-					<div><a href='elements'>Elements</a></div>
-					<div><a href='images'>Images</a></div>
-					<div><a href='localization'>Localization</a></div>
-					<div><a href='model-duplication'>Model duplication</a></div>
-					<div><a href='permissions'>Permissions</a></div>
-					<div><a href='slugs'>Slugs</a></div>
-					<div><a href='validation'>Validation</a></div>
-					<div><a href='video-encoding'>Video Encoding</a></div>
-					<div><a href='workers'>Workers</a></div>
+					{% for category in site.nav %}
+						<h3>{{ category[0] }}</h3>
+            {% for link in category[1] %}
+              <div><a href='{{ link[1] }}'>{{ link[0] }}</a></div>
+            {% endfor %}
+					{% endfor %}
         </nav>
 
       </header>

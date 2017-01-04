@@ -1,3 +1,24 @@
 title: Decoy
 
 theme: jekyll-theme-minimal
+
+nav:
+  Setup:
+    About: index
+    Installation: installation
+    Getting started: getting-started
+  Core:
+    Models: models
+    Views: views
+    Controllers: controllers
+  Features:
+    Custom form fields: custom-form-fields
+    Elements: elements
+    Images: images
+    Localization: localization
+    Model duplication: model-duplication
+    Permissions: permissions
+    Slugs: slugs
+    Validation: validation
+    Video encoding: video-encoding
+    Workers: workers
