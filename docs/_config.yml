@@ -4,9 +4,9 @@ theme: jekyll-theme-minimal
 
 nav:
   Setup:
-    About: index
-    Installation: installation
-    Getting started: getting-started
+    About: //github.com/BKWLD/decoy
+    Installation: index
+    Quick start: quick-start
   Core:
     Models: models
     Views: views

@@ -15,3 +15,8 @@ nav {
 		margin-bottom: 15px;
 	}
 }
+
+// Increase the spacing between h2s in docs
+section.page h2:not(:first-child) {
+	margin-top: 40px;
+}

@@ -31,22 +31,22 @@ Decoy's wildcard router will interfere with creating custom /admin routes becaus
 
 - `config/decoy/core.php`:
 
-  ```php
-  'register_routes' => false,```
-
+  ```php?start_inline=1
+  'register_routes' => false,
+  ```
 
 - `app/Http/routes.php`:
 
-```php
-// Register custom "example" action
-Route::group([
-  'middleware' => 'decoy.protected',
-  'prefix' => 'admin',
-  'namespace' => 'Admin',
-], function() {
-  Route::get('project-categories/example', 'ProjectCategories@example');
-});
+  ```php?start_inline=1
+  // Register custom "example" action
+  Route::group([
+    'middleware' => 'decoy.protected',
+    'prefix' => 'admin',
+    'namespace' => 'Admin',
+  ], function() {
+    Route::get('project-categories/example', 'ProjectCategories@example');
+  });
 
-// Register rest of Decoy routes manually
-app('decoy.router')->registerAll();
-```
+  // Register rest of Decoy routes manually
+  app('decoy.router')->registerAll();
+  ```
