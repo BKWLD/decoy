@@ -113,7 +113,7 @@ class Admin extends Base implements
 		if (($admin = app('decoy.user'))
 			&& !app('decoy.user')->can('grant', 'admins')) {
 			$this->role = $admin->role;
-			
+
 		// Otherwise, give the admin a default role if none was defined
 		} else if (empty($this->role)) {
 			$this->role = 'admin';
@@ -143,7 +143,7 @@ class Admin extends Base implements
 
 		// Save or clear permission choices if the form had a "custom permissions"
 		// pushed checkbox
-		if (Input::exists('_custom_permissions')) {
+		if (Request::exists('_custom_permissions')) {
 			$this->permissions = Request::get('_custom_permissions') ?
 				json_encode(Request::get('_permission')) : null;
 		}
