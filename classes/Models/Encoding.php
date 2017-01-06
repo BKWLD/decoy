@@ -104,7 +104,7 @@ class Encoding extends Base {
 	/**
 	 * Make an instance of the encoding provider
 	 *
-	 * @param array $input Request::get()
+	 * @param array $input Request::input()
 	 * @return mixed Reponse to the API
 	 */
 	static public function notify($input) {

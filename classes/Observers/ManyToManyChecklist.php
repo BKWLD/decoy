@@ -24,7 +24,7 @@ class ManyToManyChecklist {
 	public function handle($model) {
 
 		// Check for matching input elements
-		foreach(Request::get() as $key => $val) {
+		foreach(Request::input() as $key => $val) {
 			if (preg_match('#^'.self::PREFIX.'(.+)#', $key, $matches)) {
 				$this->updateRelationship($model, $matches[1]);
 			}

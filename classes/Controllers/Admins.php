@@ -105,7 +105,7 @@ class Admins extends Base {
 
 		// If the password is empty, remove the key from the input so it isn't cleared
 		if (!Request::has('password')) {
-			Request::replace(array_except(Request::get(), ['password']));
+			Request::replace(array_except(Request::input(), ['password']));
 		}
 
 		// Continue processing
