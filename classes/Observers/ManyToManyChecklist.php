@@ -24,7 +24,7 @@ class ManyToManyChecklist {
 	public function handle($model) {
 
 		// Check for matching input elements
-		foreach(Input::get() as $key => $val) {
+		foreach(Request::get() as $key => $val) {
 			if (preg_match('#^'.self::PREFIX.'(.+)#', $key, $matches)) {
 				$this->updateRelationship($model, $matches[1]);
 			}
@@ -46,7 +46,7 @@ class ManyToManyChecklist {
 
 		// Strip all the "0"s from the input.  These exist because push checkboxes 
 		// is globally set for all of Decoy;
-		$ids = Input::get(self::PREFIX.$relationship);
+		$ids = Request::get(self::PREFIX.$relationship);
 		$ids = array_filter($ids, function($id) { return $id > 0; });
 
 		// Allow a single listener to transform the list of ids to, for instance, 

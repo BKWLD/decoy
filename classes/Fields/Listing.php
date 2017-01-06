@@ -306,7 +306,7 @@ class Listing extends Field {
 			'listing'           => $items,
 			'count'             => is_a($items, LengthAwarePaginator::class) ?
 				$items->total() : $items->count(),
-			'paginator_from'    => (Input::get('page', 1)-1) * $this->perPage(),
+			'paginator_from'    => (Request::get('page', 1)-1) * $this->perPage(),
 		);
 
 		// If the listing has a parent, add relationship vars

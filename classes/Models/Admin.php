@@ -102,7 +102,7 @@ class Admin extends Base implements
 	public function onCreating() {
 
 		// Send out email
-		if (Input::has('_send_email')) $this->sendCreateEmail();
+		if (Request::has('_send_email')) $this->sendCreateEmail();
 
 		// Make them active
 		$this->active = 1;
@@ -126,7 +126,7 @@ class Admin extends Base implements
 	 * @return void
 	 */
 	public function onUpdating() {
-		if (Input::has('_send_email')) $this->sendUpdateEmail();
+		if (Request::has('_send_email')) $this->sendUpdateEmail();
 	}
 
 	/**
@@ -144,8 +144,8 @@ class Admin extends Base implements
 		// Save or clear permission choices if the form had a "custom permissions"
 		// pushed checkbox
 		if (Input::exists('_custom_permissions')) {
-			$this->permissions = Input::get('_custom_permissions') ?
-				json_encode(Input::get('_permission')) : null;
+			$this->permissions = Request::get('_custom_permissions') ?
+				json_encode(Request::get('_permission')) : null;
 		}
 	}
 
@@ -161,10 +161,10 @@ class Admin extends Base implements
 		$email = array(
 			'first_name' => $admin->first_name,
 			'last_name' => $admin->last_name,
-			'email' => Input::get('email'),
+			'email' => Request::get('email'),
 			'url' => Request::root().'/'.Config::get('decoy.core.dir'),
 			'root' => Request::root(),
-			'password' => Input::get('password'),
+			'password' => Request::get('password'),
 		);
 
 		// Send the email
@@ -186,10 +186,10 @@ class Admin extends Base implements
 		$email = array(
 			'editor_first_name' => $admin->first_name,
 			'editor_last_name' => $admin->last_name,
-			'first_name' =>Input::get('first_name'),
-			'last_name' =>Input::get('last_name'),
-			'email' => Input::get('email'),
-			'password' =>Input::get('password'),
+			'first_name' =>Request::get('first_name'),
+			'last_name' =>Request::get('last_name'),
+			'email' => Request::get('email'),
+			'password' =>Request::get('password'),
 			'url' => Request::root().'/'.Config::get('decoy.core.dir'),
 			'root' => Request::root(),
 		);

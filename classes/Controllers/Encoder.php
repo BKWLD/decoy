@@ -27,7 +27,7 @@ class Encoder extends Controller {
 	 * @return mixed
 	 */
 	public function notify() {
-		return Encoding::notify(Input::get());
+		return Encoding::notify(Request::get());
 	}
 
 }

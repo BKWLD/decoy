@@ -323,8 +323,8 @@ class Helpers {
 	 * @return array
 	 */
 	public function filteredInput() {
-		$files = $this->arrayFilterRecursive(Input::file());
-		$input = array_replace_recursive(Input::get(), $files);
+		$files = $this->arrayFilterRecursive(Request::file());
+		$input = array_replace_recursive(Request::get(), $files);
 		return Library\Utils\Collection::nullEmpties($input);
 	}
 

@@ -168,7 +168,7 @@ class Zencoder extends EncodingProvider {
 	/**
 	 * Handle notification requests from the SDK
 	 *
-	 * @param array $input Input::get()
+	 * @param array $input Request::get()
 	 * @return mixed Reponse to the API
 	 */
 	public function handleNotification($input) {

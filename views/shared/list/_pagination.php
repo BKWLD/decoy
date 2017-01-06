@@ -5,9 +5,9 @@
 if ((empty($layout) || $layout == 'full') && method_exists($listing, 'links')) {
 	echo view('decoy::shared.list._paginator', [
 		'paginator' => $listing->appends([
-			'query' => Input::get('query'),
-			'sort' => Input::get('sort'),
-			'count' => Input::get('count'),
+			'query' => Request::get('query'),
+			'sort' => Request::get('sort'),
+			'count' => Request::get('count'),
 		]),
 	])->render();
 }

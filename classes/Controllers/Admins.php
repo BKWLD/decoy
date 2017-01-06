@@ -99,13 +99,13 @@ class Admins extends Base {
 	public function update($id) {
 
 		// Encorce permissions on updating ones own role
-		if (!app('decoy.user')->can('update', 'admins') && Input::has('role')) {
+		if (!app('decoy.user')->can('update', 'admins') && Request::has('role')) {
 			throw new AccessDeniedHttpException;
 		}
 
 		// If the password is empty, remove the key from the input so it isn't cleared
-		if (!Input::has('password')) {
-			Input::replace(array_except(Input::get(), ['password']));
+		if (!Request::has('password')) {
+			Request::replace(array_except(Request::get(), ['password']));
 		}
 
 		// Continue processing

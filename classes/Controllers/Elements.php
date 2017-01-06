@@ -215,8 +215,8 @@ class Elements extends Base {
 			if (!$value && $el->type == 'video-encoder') return $el->delete();
 
 			// Save it
-			$el->value = Input::hasFile($key) ?
-				app('upchuck.storage')->moveUpload(Input::file($key)) :
+			$el->value = Request::hasFile($key) ?
+				app('upchuck.storage')->moveUpload(Request::file($key)) :
 				$value;
 			$el->save();
 		});
@@ -296,8 +296,8 @@ class Elements extends Base {
 
 		// If the value has changed, update or an insert a record in the database.
 		$el = Decoy::el($key);
-		$value = Input::get('value');
-		if ($value != $el->value || Input::hasFile('value')) {
+		$value = Request::get('value');
+		if ($value != $el->value || Request::hasFile('value')) {
 
 			// Making use of the model's exists property to trigger Laravel's
 			// internal logic.
