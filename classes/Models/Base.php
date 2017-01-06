@@ -17,7 +17,7 @@ use DecoyURL;
 use Event;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Eloquent\Model as Eloquent;
-use Input;
+use Request;
 use Log;
 use Request;
 use Session;

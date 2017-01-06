@@ -12,7 +12,7 @@ use Cache;
 use Config;
 use Decoy;
 use Former;
-use Input;
+use Request;
 use Redirect;
 use Illuminate\Support\Str;
 use URL;

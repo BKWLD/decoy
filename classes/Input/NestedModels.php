@@ -5,7 +5,7 @@ use Bkwld\Decoy\Exceptions\ValidationFail;
 use Bkwld\Decoy\Input\ModelValidator;
 use Bkwld\Decoy\Models\Image;
 use Decoy;
-use Input;
+use Request;
 use Illuminate\Database\Eloquent\Relations\Relation;
 
 /**

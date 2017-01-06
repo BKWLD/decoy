@@ -8,7 +8,7 @@ use DecoyURL;
 use Former;
 use Former\Traits\Field;
 use HtmlObject\Input as HtmlInput;
-use Input;
+use Request;
 use Illuminate\Container\Container;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;

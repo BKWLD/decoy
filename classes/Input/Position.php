@@ -1,7 +1,7 @@
 <?php namespace Bkwld\Decoy\Input;
 
 // Dependencies
-use Input;
+use Request;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**

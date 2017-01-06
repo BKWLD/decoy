@@ -3,7 +3,7 @@
 // Deps
 use Bkwld\Decoy\Models\Encoding;
 use Illuminate\Routing\Controller;
-use Input;
+use Request;
 
 /**
  * Hande encoder progress events

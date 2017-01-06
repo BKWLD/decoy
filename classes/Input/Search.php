@@ -4,7 +4,7 @@
 use Bkwld\Decoy\Exceptions\Exception;
 use Config;
 use DB;
-use Input;
+use Request;
 use Log;
 use Bkwld\Library\Utils\Text;
 

@@ -3,7 +3,7 @@
 // Deps
 use App;
 use Bkwld\Decoy\Models\Admin;
-use Input;
+use Request;
 use Redirect;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 

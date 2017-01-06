@@ -2,7 +2,7 @@
 
 // Dependencies
 use Event;
-use Input;
+use Request;
 
 /**
  * Take input from a Many to Many Checklist and commit it to the db,
@@ -18,8 +18,8 @@ class ManyToManyChecklist {
 	/**
 	 * Take input from a Many to Many Checklist and commit it to the db. Called
 	 * on model saved.
-	 * 
-	 * @param Bkwld\Decoy\Models\Base $model 
+	 *
+	 * @param Bkwld\Decoy\Models\Base $model
 	 */
 	public function handle($model) {
 
@@ -33,7 +33,7 @@ class ManyToManyChecklist {
 
 	/**
 	 * Process a particular input instance
-	 * 
+	 *
 	 * @param Bkwld\Decoy\Models\Base $model A model instance
 	 * @param string $relationship The relationship name
 	 */
@@ -44,19 +44,19 @@ class ManyToManyChecklist {
 		// this data saved on it
 		if (!method_exists($model, $relationship)) return;
 
-		// Strip all the "0"s from the input.  These exist because push checkboxes 
+		// Strip all the "0"s from the input.  These exist because push checkboxes
 		// is globally set for all of Decoy;
 		$ids = Request::get(self::PREFIX.$relationship);
 		$ids = array_filter($ids, function($id) { return $id > 0; });
 
-		// Allow a single listener to transform the list of ids to, for instance, 
+		// Allow a single listener to transform the list of ids to, for instance,
 		// add pivot data.
 		$prefix = 'decoy::many-to-many-checklist.';
 		if ($mutated = Event::until($prefix."syncing: $relationship", [$ids])) {
 			$ids = $mutated;
 		}
 
-		// Attach just the ones mentioned in the input.  This blows away the 
+		// Attach just the ones mentioned in the input.  This blows away the
 		// previous joins
 		$model->$relationship()->sync($ids);
 

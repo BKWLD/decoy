@@ -3,7 +3,7 @@
 // Deps
 use Closure;
 use DecoyURL;
-use Input;
+use Request;
 use Redirect;
 use Session;
 
