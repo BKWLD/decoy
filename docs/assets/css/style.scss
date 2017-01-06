@@ -3,6 +3,11 @@
 
 @import "{{ site.theme }}";
 
+// Seperate the sidebar from the body after break
+header {
+	margin-bottom: 20px;
+}
+
 // Add margins above and below hrs
 hr {
 	margin: 20px 0;

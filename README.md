@@ -6,7 +6,8 @@
 
 Since 2012 and Laravel 3, [Bukwild](http://www.bukwild.com) has been maintaining our own content management system that we call [Decoy](http://www.bukwild.com/project/decoy). Decoy is meant to reduce the development effort for implementing content management while being highly flexible.  And it helps you generate a great looking, easy to use admin interface; no manual required.
 
-The driving philosophy behind Decoy is that a CMS should share models with your public facing app; your app interacts with data stored with Decoy only through standard Laravel models.  This approach makes reading controller/view code simple (`Article::ordered()->take(6)->get()`) and it provides a really clean place to hang business logic.  There is no additional templating or querying language to learn.  After the CMS is setup, the developer interacts with the data using purely Laravel APIs.
+The driving philosophy behind Decoy is that a CMS should share models with your public facing app; your app interacts with data stored with Decoy only through standard Laravel models.  This approach makes reading controller code simple (`Article::ordered()->take(6)->get()`), gives you access to Laravel mutators so you views are human readable (`$article->full_date`), and allows you to share business logic between admin and public sites.  There is no additional templating or querying language to learn.  After the CMS is setup, the developer interacts with the data using purely Laravel APIs.
+
 
 #### Turn-key Decoy features
 
@@ -27,6 +28,7 @@ Besides it’s model-centric paradigm, Decoy includes the following features:
 - Organized key-value pair type data as [Elements](elements)
 - All configuration stored in the filesystem to keep your team in sync via Git (or whatever VCS)
 
+
 #### A familiar implementation paradigm: MVC
 
 Decoy installs into your app as a composer package and integrates with your project rather than being a standalone install.  Decoy shares the Eloquent models of your public site and stores data in regular Laravel migrated tables.  Your controllers and views do not need to touch Decoy at all and while your models need to use Decoy’s subclass of `Eloquent\Model`, there is very little behavior added at model instantiation.  In other words, Decoy adds almost no overhead to your public site.
@@ -38,4 +40,7 @@ Implementing Decoy to manage model is done through a common MVC pattern that all
 - You specify validation rules, ordering scopes, and features like which relationships to follow when cloning from the model, adding specifically named properties and methods.
 - Finally, you create a regular Laravel view containing the form that should be shown to the admin during creation and editing of content.  This is easier than it sounds through support of Former and many Decoy-unqiue Former fields like our image uploader and wysiwyg types.
 
-For more information, see our [quick start guide](quick-start).
+
+#### Next steps
+
+Interested in giving Decoy a spin?  Check out the [quick start guide](http://docs.decoy.bukwild.com/quick-start).

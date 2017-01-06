@@ -1,3 +1,5 @@
+# Controllers
+
 A lot of Decoy's "magic" comes by having your admin controllers extend the `Bkwld\Decoy\Controllers\Base`.  I typically have the admin controllers extend an application specific base controller (i.e. `Admin\BaseController`) which then extends the `Bkwld\Decoy\Controllers\Base`.
 
 ### Protected properties

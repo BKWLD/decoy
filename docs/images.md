@@ -1,3 +1,5 @@
+# Image
+
 Decoy has an polymorphic Image model that should be used to store all model images.
 
 ## Setup

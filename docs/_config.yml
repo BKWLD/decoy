@@ -12,13 +12,14 @@ nav:
     Views: views
     Controllers: controllers
   Features:
-    Custom form fields: custom-form-fields
+    Custom fields: custom-form-fields
     Elements: elements
     Images: images
     Localization: localization
-    Model duplication: model-duplication
+    Model duplication: duplication
     Permissions: permissions
     Slugs: slugs
     Validation: validation
     Video encoding: video-encoding
     Workers: workers
+    WYSIWYG: wysiwyg

@@ -1,3 +1,5 @@
+# Localization
+
 Decoy's localization features come in two flavors: (1) localization of Elements and (2) localization of model instances.  In both cases, you begin by editing the Decoy "site.php" config file.
 
 ##### Elements localization

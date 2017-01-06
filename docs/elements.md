@@ -1,3 +1,5 @@
+# Elements
+
 Copy, images, and files that aren't managed as part of an item in a list.  If content needs to be managed and a model doesn't make sense, use Elements.
 
 ## Setup

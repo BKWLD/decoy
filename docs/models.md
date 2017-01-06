@@ -1,3 +1,5 @@
+# Models
+
 Decoy uses the same models as your app uses.  Thus, put them as per normal in /app and give them the namespace `App\`.  However, instead of extending `Eloquent`, they should extend `Bkwld\Decoy\Models\Base`.
 
 ## Querying

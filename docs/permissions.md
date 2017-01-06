@@ -1,3 +1,5 @@
+# Permissions
+
 Here is an example of a groups and permissions that would be in the `site` config:
 
 	'roles' => array(

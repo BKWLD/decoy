@@ -1,3 +1,5 @@
+# Workers
+
 If you make a Laravel command extend from `Bkwld\Decoy\Models\Worker`, the command is embued with some extra functionality.  The following options get added:
 
 - `--worker` - Run command as a worker.  As in not letting the process die.

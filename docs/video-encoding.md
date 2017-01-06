@@ -1,3 +1,5 @@
+# Video encoding
+
 The `Former::videoEncoder` form field creates the upload field for a video in the admin.  However, there is additional setup that the developer must do to make video encoding work.  Currently, only one provider is supported for video encoding, [Zencoder](https://zencoder.com/), but it's implementation is relatively abstracted; other providers could be added in the future.
 
 You'll need to edit the Decoy "encoding.php" config file.  It should be within your app/configs/packages directory.  The comments for each config parameter should be sufficient to explain how to use them.  Depending on where you are pushing the encoded videos to, you may need to spin up an S3 instance.  If you push to SFTP you can generate a key-pair locally (`ssh-keygen`), post the private key to [Zencoder](https://app.zencoder.com/account/credentials) and then add the public key to the server's authorized_keys.
