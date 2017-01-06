@@ -7,7 +7,6 @@ use Bkwld\Library;
 use Config;
 use Croppa;
 use Former;
-use Request;
 use ReflectionClass;
 use Request;
 use Session;

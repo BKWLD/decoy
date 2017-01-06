@@ -24,7 +24,6 @@ use Event;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Str;
 use Former;
-use Request;
 use Log;
 use Redirect;
 use Request;

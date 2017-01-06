@@ -5,7 +5,6 @@ use App;
 use Config;
 use Closure;
 use Request;
-use Request;
 use Route;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
