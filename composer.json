@@ -31,7 +31,7 @@
 		"bkwld/cloner": "^3.1.1",
 		"bkwld/croppa": "~4.0",
 		"bkwld/laravel-haml": "~2.0",
-		"bkwld/library": "dev-master",
+		"bkwld/library": "~4.0",
 		"bkwld/upchuck": "^2.0.1",
 		"cviebrock/eloquent-sluggable": "~3.0",
 		"illuminate/support": "^5.0",
