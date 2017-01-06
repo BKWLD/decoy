@@ -26,6 +26,7 @@ Besides it’s model-centric paradigm, Decoy includes the following features:
 - Cloning of content, even across servers
 - Localization
 - Organized key-value pair type data as [Elements](elements)
+- Drag and drop ordering of data in list views
 - All configuration stored in the filesystem to keep your team in sync via Git (or whatever VCS)
 
 

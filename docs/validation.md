@@ -1,3 +1,11 @@
+# Validation
+
+Validation rules are stored in the model in the static `$rules` property.  The syntax is just  normal [Laravel validation](https://laravel.com/docs/5.3/validation#available-validation-rules), keyed to your column name.
+
+## Validating images
+
+To support validating images (which are stored in another table), Decoy adds support for "dot" notation in the rules array for specifying the image to be validated.
+
 ## Custom validation
 
 An easy way to add custom validation to models is by specifying an `onValidating` method, taking the `$validation` object, adding errors to it, and returning it.  Special logic in the Base Controller's validate method will see the returned `Validator` and its errors and respond appropriately.

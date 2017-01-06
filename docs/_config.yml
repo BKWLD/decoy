@@ -4,22 +4,22 @@ theme: jekyll-theme-minimal
 
 nav:
   Setup:
-    About: //github.com/BKWLD/decoy
+    About: //github.com/BKWLD/decoy#readme
     Installation: index
     Quick start: quick-start
   Core:
     Models: models
     Views: views
     Controllers: controllers
+    Routing: routing
   Features:
-    Custom fields: custom-form-fields
+    Console: console
+    Custom form fields: custom-form-fields
     Elements: elements
     Images: images
     Localization: localization
     Model duplication: duplication
     Permissions: permissions
-    Slugs: slugs
     Validation: validation
     Video encoding: video-encoding
-    Workers: workers
     WYSIWYG: wysiwyg

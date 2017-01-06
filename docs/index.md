@@ -1,10 +1,10 @@
 # Installation
 
-1. Run `composer require bkwld/decoy`
+1. Add to your app with `composer require bkwld/decoy`
 
-2. Add `Bkwld\Decoy\ServiceProvider::class` to `providers` in your Laravel's app config file.
+2. Add `Bkwld\Decoy\ServiceProvider::class` to the `providers` in your Laravel's app config file.
 
-3. Add these aliases to the `aliases` in your Laravel's app config file:
+3. Add the following config to the `aliases` in your Laravel's app config file:
 
 		'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
 		'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
@@ -12,6 +12,8 @@
 4. Publish the migrations, config files, and public assets by running `php artisan vendor:publish --provider="Bkwld\Decoy\ServiceProvider"`
 
 5. Run the migrations by running `php artisan migrate`
+
+Next, see the [quick start](quick-start) for tips on your first install.
 
 
 ## Compatibility

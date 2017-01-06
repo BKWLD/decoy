@@ -1,52 +1,203 @@
-## Config
+# Quick start
 
-On the average project, the only config file that would need changing is the `site.php` file.  All sites will need to customize at least the `nav` and `post_login_redirect` properties.
+This guide walks you through using Decoy to create a simple news article listing for your site.
 
-## Generators
+## Step 1 - Database migration
 
-The Decoy workflow begins with generating a migration for a database table using the [standard Laravel approach](http://laravel.com/docs/migrations).  Then, Decoy provides a generator that creates the controller, model, and view for that table.  Run `php artisan decoy:generate Model` where "Model" is the name of the Model class you intend to create.  This should be the singular form of the table you created.
+Create a normal database migration to store your articles:
 
-You will now be able to access the index view for the new model by going to "/admin/{plural model name}".  For instance, "/admin/articles".  The generated files will contain commented out, boilerplate code that you can customize for your particular needs.
+```
+php artisan make:migration --create=articles create_articles
+```
 
-## Routing
+Create columns for title, slug, body, date, and public (whether it should be published publicly):
 
-#### Standard CRUD routes
+```php?start_inline=1
+Schema::create('encodings', function(Blueprint $table) {
+  $table->increments('id');
+  $table->string('title');
+  $table->string('slug')->unique();
+  $table->text('body');
+  $table->date('date');
+  $table->boolean('public');
+  $table->timestamps();
+  $table->index(['public', 'date']);
+});
+```
 
-Decoy registers a wildcard `admin/*` route. It parses the requested path to determine what controller and action should be used.  The route is parsed by taking dash-delimited slugs of the controller and converting them to StudlyCased controller names and snakeCased actions on the controller.  You can read the Bkwld\Decoy\Controllers\Base docs for all of the default actions, but here's an example of the more significant ones:
+## Step 2 - Generate model, controller, and view
 
-Assuming your model is `App\ProjectCategory` with a controller of `App\Http\Controllers\Admin\ProjectCategories`:
+Decoy provides [a generator](generator) that creates the controller, model, and view for the data you are managing.  Run `php artisan decoy:generate Article`. This creates the following files:
 
-- `GET /admin/project-categories` - List all project categories
-- `GET /admin/project-categories/create` - Form to create a new category
-- `POST /admin/project-categories/create` - Create a new category and redirect to edit action
-- `GET /admin/project-categories/2/edit` - Form to edit category with primary key of `2`
-- `POST /admin/project-categories/2/edit` - Update the category and redirect to same edit action
-  - Also supports `PUT /admin/project-categories/2` and `POST /admin/project-categories/2`
-- `GET /admin/project-categories/2/destroy` - Delete the category
-  - Also supports `DELETE /admin/project-categories/2`
+- `app/Article` - The model (shared by admin and public sites)
+- `app/Http/Controllers/Admin/Articles.php` - The controller
+- `resources/views/admin/articles/edit.haml.php` - The view
 
-#### Creating custom routes
+## Step 3 - Configure the model
 
-Decoy's wildcard router will interfere with creating custom /admin routes because it runs before app routes gets registered (and I [haven't found a way](https://github.com/BKWLD/decoy/issues/490) to delay it).  You can stop Decoy from registering it's routes via the `decoy.core.register_routes` boolean config value and then manually register them after you finish registering your own routes. Thus:
+You'll notice that the generated model has a bunch of commented out code by default.  That code represents common functionality and is there to help you get started.  Edit it until it looks like this:
 
-- `config/decoy/core.php`:
+```php
+<?php namespace App;
+use Bkwld\Decoy\Models\Base;
+use Bkwld\Decoy\Models\Traits\HasImages;
 
-  ```php?start_inline=1
-  'register_routes' => false,
-  ```
+class Article extends Base {
+	use HasImages;
 
-- `app/Http/routes.php`:
+	/**
+	 * Add date fields
+	 *
+	 * @var array
+	 */
+	protected $dates = ['date'];
 
-  ```php?start_inline=1
-  // Register custom "example" action
-  Route::group([
-    'middleware' => 'decoy.protected',
-    'prefix' => 'admin',
-    'namespace' => 'Admin',
-  ], function() {
-    Route::get('project-categories/example', 'ProjectCategories@example');
-  });
+	/**
+	 * Validation rules
+	 *
+	 * @var array
+	 */
+	public static $rules = [
+		'title' => 'required',
+		'slug' => 'alpha_dash|unique:articles',
+    'body' => 'required',
+		'date' => 'required',
+		'images.default' => 'required|mimes:jpeg',
+		'images.marquee' => 'required',
+	];
 
-  // Register rest of Decoy routes manually
-  app('decoy.router')->registerAll();
-  ```
+	/**
+	 * Orders instances of this model in the admin as well as default ordering
+	 * to be used by public site implementation.
+	 *
+	 * @param  Illuminate\Database\Query\Builder $query
+	 * @return void
+	 */
+	public function scopeOrdered($query) {
+		$query->orderBy('date', 'desc');
+	}
+
+	/**
+	 * Return the URI to instances of this model
+	 *
+	 * @return string A URI that the browser can resolve
+	 */
+	public function getUriAttribute() {
+		return url('article', $this->slug);
+	}
+
+}
+```
+
+Let me expand on the key components of this file:
+
+- The model subclasses the Decoy base model (which in turn subclasses the Eloquent model).
+
+- The `HasImages` trait adds support for this model having [images](images).
+
+- We're using [standard Laravel model conventions](https://laravel.com/docs/eloquent-mutators#date-mutators) to make our `date` column get automatically mutated into a [Carbon](https://github.com/briannesbitt/Carbon) instance.
+
+- [Laravel-style](https://laravel.com/docs/5.3/validation#available-validation-rules) [Validation rules](validation) get stored in the model in the static `$rules` property.
+
+- The `ordered` scope is [a convention](models#ordering) used by Decoy to specify the order that items should appear in the index, listing view for the model.
+
+- Finally the `uri` mutator is another [Decoy convention](models#deep-link) for specifying the deep link for this model on the public site.
+
+For more information, see [Models](models).
+
+## Step 4 - Configure the edit view
+
+The create and edit form are both created by a simple Laravel view.  The view file created by the generator is written in [HAML](https://github.com/arnaud-lb/MtHaml) but can be changed to php, blade, or anything else by just changing the file suffix.  Change the edit view to this to create the fields required for our Article model.
+
+```haml
+!= View::make('decoy::shared.form._header', $__data)->render()
+
+%fieldset
+	.legend= empty($item) ? 'New' : 'Edit'
+	!= Former::text('title')
+	!= Former::image()
+	!= Former::image('marquee')
+	!= Former::wysiwyg('body')
+
+%fieldset
+	!= View::make('decoy::shared.form._display_module', $__data)->render()
+	!= Former::date('date')->value('now')
+
+!= View::make('decoy::shared.form._footer', $__data)->render()
+```
+
+For more information, see [Views](views) and [Custom form fields](custom-fields).
+
+## Step 5 - Configure the controller
+
+Like the model, the generated controller contains a number of commented out line and also subclasses a Decoy base class.  The generated file is rather empty, it contains some protected properties that are used to configure aspects of the user interface for this specific resource.  If you need to do something deeply custom, a developer can also override inherited methods for each CRUD.
+
+Change your Article controller to:
+
+```php
+<?php namespace App\Http\Controllers\Admin;
+use Bkwld\Decoy\Controllers\Base;
+
+class Articles extends Base {
+	protected $title = 'News';
+	protected $description = 'Articles that appear in the News section.';
+	protected $columns = [
+		'Title' => 'getAdminTitleHtmlAttribute',
+		'Date' => 'date',
+	];
+	protected $search = [
+		'title',
+		'date' => 'date',
+	];
+}
+```
+
+This configuration renames how the resource is titles from its default "Articles" to "News", defines a description that shows up in the header, configures what columns show up in the listing table, and configures how the fields available in the search.
+
+For more information, see [Controllers](controllers).
+
+## Step 6 - Add the public route
+
+In order for the `getUriAttribute()` accessor to work, you must create the `article` route in your Laravel routes file:
+
+```php?start_inline=1
+Route::get('news/{slug}', ['as' => 'article', function($slug) {
+	return view('news.show', ['article' => Article::findBySlugOrFail($slug) ]);
+}]);
+```
+
+While doing that, you could stub out the listing view as well:
+
+```php?start_inline=1
+Route::get('news', ['as' => 'news', function() {
+	return view('news.index', ['articles' => Article::listing()->paginate(12) ]);
+}]);
+```
+
+## Step 7 - Edit the Decoy navigation
+
+Now, update the admin navigation to include "News", the label for managing Article models.  The contents of the navigation are stored in the `config/decoy/site.php` file.  There is no need to setup any special routing definitions, this happens [automatically](routing).
+
+```php
+<?php return array(
+
+	'name' => 'Your site',
+
+	'nav' => [
+		'Articles,align-left' => '/admin/articles',
+	],
+
+);
+```
+
+The `align-left` defines an icon to use in the navigation sidebar.  These are any of the [Bootstrap Glyphicon names](http://getbootstrap.com/components/#glyphicons-glyphs).
+
+## Step 8 - Create an admin account
+
+Create yourself an admin account by running `php artisan decoy:admin` in the [console](console) and answering its prompts.
+
+![](assets/img/create-admin.gif)
+
+## Step 9 - Login and start creating content
+
+Finally, you can go to /admin in your browser (for whatever your development domain is) and login using the credentials you just used to create an initial account.  You should be seeing the following:
