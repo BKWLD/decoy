@@ -3,6 +3,7 @@
 // Dependencies
 use Bkwld\Decoy\Models\Image;
 use Illuminate\Database\Eloquent\Builder;
+use Event;
 
 /**
  * All models that should support images should inherit this trait.  This gets
@@ -20,8 +21,8 @@ trait HasImages {
 	public static function bootHasImages() {
 
 		// Automatically add images relationship to the cleoneable relations
-		static::registerModelEvent('booted', function($model) {
-			$model->addCloneableRelation('images');
+		Event::listen('cloner::cloning: '.get_called_class(), function($clone, $src) {
+			$src->addCloneableRelation('images');
 		});
 
 		// Delete all Images if the parent is deleted.  Need to use "each" to get
