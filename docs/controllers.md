@@ -33,6 +33,8 @@ The following properties are only relevant if a controller is a parent or child 
 
 ### Search property
 
+![](assets/img/search.gif)
+
 The search property takes an array like the following example:
 
 ```php?start_inline=1

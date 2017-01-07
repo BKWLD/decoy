@@ -111,6 +111,13 @@ public function onRemoving($parent) {}
 public function onRemoved($parent) {}
 ```
 
+## Duplication
+
+![](assets/img/duplicate.png)
+
+Decoy implements [Cloner](https://github.com/BKWLD/cloner) to allow admins to duplicate models.  A single model and it's files should work right out of the box.  To support cloning relationships, specify a `$cloneable_relations` array on the model.  Read the [Cloner docs](https://github.com/BKWLD/cloner#usage) for more info and some other options.
+
+
 ## Relationships
 
 ### Many to Many relationships

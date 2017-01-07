@@ -3,72 +3,83 @@
 Admin views are stored in /app/views/admin/CONTROLLER where "CONTROLLER" is the lowercased controller name (i.e. "articles", "photos").  For each admin controller, you need to have at least an "edit.php" file in that directory (i.e. /app/views/admin/articles/edit.php).  This file contains a form used for both the /create and /edit routes.
 
 
-#### Grouping form fields
+## Grouping form fields
 
 Use a `fieldset` and a div of class `.legend` to contain groups of fields in box.  For instance:
 
-	!= View::make('decoy::shared.form._header', $__data)->render()
-	%fieldset
-		.legend=empty($item)?'New':'Edit'
-		!= Former::text('title')
-		!= Former::textarea('body')
+```haml
+!= View::make('decoy::shared.form._header', $__data)->render()
+%fieldset
+  .legend=empty($item)?'New':'Edit'
+  != Former::text('title')
+  != Former::textarea('body')
+```
 
-
-#### Overriding a Decoy partial
+## Overriding a Decoy partial
 
 You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at app/views/admin/articles/shared/_pagination.php you can customize the pagination partial JUST for the articles controller.
 
 In addition, you can override a partial for ALL controllers through built in [Laravel functionality](http://laravel.com/docs/packages#package-views).
 
-
-#### Sidebar
+## Sidebar
 
 The sidebar is primarily designed to house related model listings but you can actually store anything in it.  Add items to the Sidebar by calling `$sidebar->add('Content')` from the view.  For instance:
 
-	- $sidebar->add(Former::listing('Contributor')->take(30))
-	- $sidebar->add('<p>A paragraph</p>')
+```haml
+$sidebar->add(Former::listing('Contributor')->take(30))
+$sidebar->add('<p>A paragraph</p>')
+```
 
 Note: This must be run **before** the include of the `decoy::shared.form._header` partial.
 
 
-### Embeded / inline relationship list
+## Embeded / inline relationship list
 
 A standard list (like seen on index views) can be embedded in form like:
 
-	!= Former::listing('Faqs')->layout('form')->take(100)
+```haml
+!= Former::listing('Faqs')->layout('form')->take(100)
+```
 
 See the documentation under Form Fields for the full API of `listing()`.
 
 
-#### Data for Former select, radio, and checkbox
+## Data for Former select, radio, and checkbox
 
 A convention to follow is to create a static array on the model that populates Former's select, radio, and checkbox types.  The name of the property holding this array should be the plural form of the column that will store the value(s).  The keys of this array are slugs that are stored in a database column and the values are the readable vesions.  For instance:
 
-	static public $categories = array(
-		'inspiring' => 'Inspiring',
-		'quirky' => 'Quirky',
-		'cool' => 'Cool',
-		'adventurous' => 'Adventurous',
-	);
+```php?start_inline=1
+static public $categories = array(
+  'inspiring' => 'Inspiring',
+  'quirky' => 'Quirky',
+  'cool' => 'Cool',
+  'adventurous' => 'Adventurous',
+);
+```
 
 Then, in the edit view, you could do this:
 
-	!= Former::checkbox('category')->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))->push(false)
+```php?start_inline=1
+echo Former::checkbox('category')
+  ->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))
+  ->push(false)
+```
 
 Furthermore, you can use this array for searching the list view by referencing it in the `search` property on your controller:
 
-	protected $search = array(
-		'title',
-		'category' => array(
-			'type' => 'select',
-			'options' => 'Post::$categories'
-		),
-	);
+```php?start_inline=1
+protected $search = array(
+  'title',
+  'category' => array(
+    'type' => 'select',
+    'options' => 'Post::$categories'
+  ),
+);
+```
 
 Finally, there is some automatic logic on the list table that will take the values from that column (if specified in the controller `columns` property) and translate it using the static array, assuming you named it to be the plural of the column.
 
-
-#### Toggleable fields
+## Toggleable fields
 
 The `auto-toggleable` JS module applies some JS to forms that will allow you to define fields that hide and show based on clicks on "trigger" elements.  For example:
 
@@ -80,7 +91,7 @@ The `auto-toggleable` JS module applies some JS to forms that will allow you to 
 != Former::text('url', "URL")->dataShowWhenType('external')
 ```
 
-#### Nested, related models
+## Nested, related models
 
 You can edit a child model in the context of it's parent Through special naming conventions.  Take the following form for example:
 

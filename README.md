@@ -27,6 +27,7 @@ Besides it’s model-centric paradigm, Decoy includes the following features:
 - Localization
 - Organized key-value pair type data as [Elements](elements)
 - Drag and drop ordering of data in list views
+- Built in interface for creating 301 and 302 redirects
 - All configuration stored in the filesystem to keep your team in sync via Git (or whatever VCS)
 
 

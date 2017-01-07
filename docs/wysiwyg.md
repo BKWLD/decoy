@@ -1,5 +1,7 @@
 # WYSIWYG
 
+![](assets/img/wysiwyg.gif)
+
 Decoy uses [Redactor](http://imperavi.com/redactor/) as its WYSIWYG editors.  To customize the editor, you can get a reference to the wysiwyg adapter from your /js/admin/start.js and customize their config like:
 
 ```js

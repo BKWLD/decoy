@@ -1,6 +1,6 @@
 # Image
 
-Decoy has an polymorphic Image model that should be used to store all model images.
+Decoy has an polymorphic `Image` model that should be used to store all model images.
 
 ## Setup
 
@@ -53,4 +53,4 @@ $rules = [
 
 #### JSON
 
-The `Bkwld\Decoy\Collections\Base` collection that all models return adds some helpers for adding cropped images to models before they get serialized.  See the [model docs](https://github.com/BKWLD/decoy/wiki/3.-Models#serialization).
+The `Bkwld\Decoy\Collections\Base` collection that all models return adds some helpers for adding cropped images to models before they get serialized.  See the [model docs](model).

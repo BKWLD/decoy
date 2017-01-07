@@ -1,6 +1,6 @@
 # Quick start
 
-This guide walks you through using Decoy to create a simple news article listing for your site.
+This guide walks you through using Decoy to create a simple news article listing for your site.  It is assumed that you've already [installed Decoy](index).
 
 ## Step 1 - Database migration
 
@@ -13,7 +13,7 @@ php artisan make:migration --create=articles create_articles
 Create columns for title, slug, body, date, and public (whether it should be published publicly):
 
 ```php?start_inline=1
-Schema::create('encodings', function(Blueprint $table) {
+Schema::create('articles', function(Blueprint $table) {
   $table->increments('id');
   $table->string('title');
   $table->string('slug')->unique();
@@ -25,7 +25,11 @@ Schema::create('encodings', function(Blueprint $table) {
 });
 ```
 
+Run the migration: `php artisan migrate`.
+
 ## Step 2 - Generate model, controller, and view
+
+![](assets/img/generate.gif)
 
 Decoy provides [a generator](generator) that creates the controller, model, and view for the data you are managing.  Run `php artisan decoy:generate Article`. This creates the following files:
 
@@ -43,48 +47,48 @@ use Bkwld\Decoy\Models\Base;
 use Bkwld\Decoy\Models\Traits\HasImages;
 
 class Article extends Base {
-	use HasImages;
+  use HasImages;
 
-	/**
-	 * Add date fields
-	 *
-	 * @var array
-	 */
-	protected $dates = ['date'];
+  /**
+   * Add date fields
+   *
+   * @var array
+   */
+  protected $dates = ['date'];
 
-	/**
-	 * Validation rules
-	 *
-	 * @var array
-	 */
-	public static $rules = [
-		'title' => 'required',
-		'slug' => 'alpha_dash|unique:articles',
+  /**
+   * Validation rules
+   *
+   * @var array
+   */
+  public static $rules = [
+    'title' => 'required',
+    'slug' => 'alpha_dash|unique:articles',
     'body' => 'required',
-		'date' => 'required',
-		'images.default' => 'required|mimes:jpeg',
-		'images.marquee' => 'required',
-	];
+    'date' => 'required',
+    'images.default' => 'required|mimes:jpeg',
+    'images.marquee' => 'required',
+  ];
 
-	/**
-	 * Orders instances of this model in the admin as well as default ordering
-	 * to be used by public site implementation.
-	 *
-	 * @param  Illuminate\Database\Query\Builder $query
-	 * @return void
-	 */
-	public function scopeOrdered($query) {
-		$query->orderBy('date', 'desc');
-	}
+  /**
+   * Orders instances of this model in the admin as well as default ordering
+   * to be used by public site implementation.
+   *
+   * @param  Illuminate\Database\Query\Builder $query
+   * @return void
+   */
+  public function scopeOrdered($query) {
+    $query->orderBy('date', 'desc');
+  }
 
-	/**
-	 * Return the URI to instances of this model
-	 *
-	 * @return string A URI that the browser can resolve
-	 */
-	public function getUriAttribute() {
-		return url('article', $this->slug);
-	}
+  /**
+   * Return the URI to instances of this model
+   *
+   * @return string A URI that the browser can resolve
+   */
+  public function getUriAttribute() {
+    return url('article', $this->slug);
+  }
 
 }
 ```
@@ -113,15 +117,15 @@ The create and edit form are both created by a simple Laravel view.  The view fi
 != View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
-	.legend= empty($item) ? 'New' : 'Edit'
-	!= Former::text('title')
-	!= Former::image()
-	!= Former::image('marquee')
-	!= Former::wysiwyg('body')
+  .legend= empty($item) ? 'New' : 'Edit'
+  != Former::text('title')
+  != Former::image()
+  != Former::image('marquee')
+  != Former::wysiwyg('body')
 
 %fieldset
-	!= View::make('decoy::shared.form._display_module', $__data)->render()
-	!= Former::date('date')->value('now')
+  != View::make('decoy::shared.form._display_module', $__data)->render()
+  != Former::date('date')->value('now')
 
 != View::make('decoy::shared.form._footer', $__data)->render()
 ```
@@ -139,16 +143,16 @@ Change your Article controller to:
 use Bkwld\Decoy\Controllers\Base;
 
 class Articles extends Base {
-	protected $title = 'News';
-	protected $description = 'Articles that appear in the News section.';
-	protected $columns = [
-		'Title' => 'getAdminTitleHtmlAttribute',
-		'Date' => 'date',
-	];
-	protected $search = [
-		'title',
-		'date' => 'date',
-	];
+  protected $title = 'News';
+  protected $description = 'Articles that appear in the News section.';
+  protected $columns = [
+    'Title' => 'getAdminTitleHtmlAttribute',
+    'Date' => 'date',
+  ];
+  protected $search = [
+    'title',
+    'date' => 'date',
+  ];
 }
 ```
 
@@ -162,7 +166,7 @@ In order for the `getUriAttribute()` accessor to work, you must create the `arti
 
 ```php?start_inline=1
 Route::get('news/{slug}', ['as' => 'article', function($slug) {
-	return view('news.show', ['article' => Article::findBySlugOrFail($slug) ]);
+  return view('news.show', ['article' => Article::findBySlugOrFail($slug) ]);
 }]);
 ```
 
@@ -170,7 +174,7 @@ While doing that, you could stub out the listing view as well:
 
 ```php?start_inline=1
 Route::get('news', ['as' => 'news', function() {
-	return view('news.index', ['articles' => Article::listing()->paginate(12) ]);
+  return view('news.index', ['articles' => Article::listing()->paginate(12) ]);
 }]);
 ```
 
@@ -179,18 +183,19 @@ Route::get('news', ['as' => 'news', function() {
 Now, update the admin navigation to include "News", the label for managing Article models.  The contents of the navigation are stored in the `config/decoy/site.php` file.  There is no need to setup any special routing definitions, this happens [automatically](routing).
 
 ```php
-<?php return array(
+<?php return [
+  'name' => 'Your site',
+  'nav' => [
+    'News,align-left' => '/admin/articles',
 
-	'name' => 'Your site',
-
-	'nav' => [
-		'Articles,align-left' => '/admin/articles',
-	],
-
-);
+    // Decoy defaults
+    'Elements,leaf' => '/admin/elements',
+    'Redirects,new-window' => '/admin/redirect-rules',
+  ],
+];
 ```
 
-The `align-left` defines an icon to use in the navigation sidebar.  These are any of the [Bootstrap Glyphicon names](http://getbootstrap.com/components/#glyphicons-glyphs).
+The `align-left` defines an icon to use in the navigation sidebar.  These can be  any of the [Bootstrap Glyphicon names](http://getbootstrap.com/components/#glyphicons-glyphs).
 
 ## Step 8 - Create an admin account
 
@@ -201,3 +206,5 @@ Create yourself an admin account by running `php artisan decoy:admin` in the [co
 ## Step 9 - Login and start creating content
 
 Finally, you can go to /admin in your browser (for whatever your development domain is) and login using the credentials you just used to create an initial account.  You should be seeing the following:
+
+![](assets/img/quick-start.gif)

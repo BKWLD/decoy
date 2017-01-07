@@ -13,13 +13,12 @@ nav:
     Controllers: controllers
     Routing: routing
   Features:
+    Admin management: admins
     Console: console
-    Custom form fields: custom-form-fields
+    Custom form fields: custom-fields
     Elements: elements
     Images: images
     Localization: localization
-    Model duplication: duplication
-    Permissions: permissions
     Validation: validation
     Video encoding: video-encoding
     WYSIWYG: wysiwyg
