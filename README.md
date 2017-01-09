@@ -1,5 +1,6 @@
 # Decoy
 
+- Quick Start: http://docs.decoy.bukwild.com/quick-start
 - Documentation: http://docs.decoy.bukwild.com
 - Case study: Coming soon
 
