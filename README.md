@@ -1,5 +1,7 @@
 # Decoy
 
+Decoy is a PHP content management written for the [Laravel framework](https://laravel.com) that allows you to access your data using standard Laravel [Eloquent](https://laravel.com/docs/eloquent) models.
+
 - Quick Start: http://docs.decoy.bukwild.com/quick-start
 - Documentation: http://docs.decoy.bukwild.com
 - Case study: Coming soon
