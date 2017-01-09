@@ -1,7 +1,7 @@
 {
   "name": "decoy",
   "version": "5.0.13",
-  "description": "The BKWLD CMS framework",
+  "description": "A Laravel model-based CMS by Bukwild",
   "main": "dist/index.js",
   "directories": {
     "test": "tests"
@@ -16,9 +16,8 @@
     "type": "git",
     "url": "git+https://github.com/BKWLD/decoy.git"
   },
-  "author": "info@bkwld.com",
-  "license": "UNLICENSED",
-  "private": true,
+  "author": "info@bukwild.com",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/BKWLD/decoy/issues"
   },

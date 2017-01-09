@@ -1,7 +1,7 @@
 {
 	"name": "bkwld/decoy",
-	"description": "The BKWLD CMS framework",
-	"license": "proprietary",
+	"description": "A Laravel model-based CMS by Bukwild",
+	"license": "MIT",
 	"authors": [
 		{
 			"name": "Robert Reinhard",
