@@ -2,6 +2,11 @@
 
 - Documentation: http://docs.decoy.bukwild.com
 
+![Screenshot of example projects listing](//docs.decoy.bukwild.com/img/assets/readme/projects.jpg)
+![Screenshot of example project edit view](//docs.decoy.bukwild.com/img/assets/readme/project.jpg)
+![Screenshot of example category edit view](//docs.decoy.bukwild.com/img/assets/readme/category.jpg)
+![Screenshot of elements editor](//docs.decoy.bukwild.com/img/assets/readme/elements.jpg)
+
 ## About
 
 Since 2012 and Laravel 3, [Bukwild](http://www.bukwild.com) has been maintaining our own content management system that we call [Decoy](http://www.bukwild.com/project/decoy). Decoy is meant to reduce the development effort for implementing content management while being highly flexible.  And it helps you generate a great looking, easy to use admin interface; no manual required.
