@@ -2,10 +2,10 @@
 
 - Documentation: http://docs.decoy.bukwild.com
 
-![Screenshot of example projects listing](//docs.decoy.bukwild.com/img/assets/readme/projects.jpg)
-![Screenshot of example project edit view](//docs.decoy.bukwild.com/img/assets/readme/project.jpg)
-![Screenshot of example category edit view](//docs.decoy.bukwild.com/img/assets/readme/category.jpg)
-![Screenshot of elements editor](//docs.decoy.bukwild.com/img/assets/readme/elements.jpg)
+![Screenshot of example projects listing](//docs.decoy.bukwild.com/assets/img/readme/projects.jpg)
+![Screenshot of example project edit view](//docs.decoy.bukwild.com/assets/img/readme/project.jpg)
+![Screenshot of example category edit view](//docs.decoy.bukwild.com/assets/img/readme/category.jpg)
+![Screenshot of elements editor](//docs.decoy.bukwild.com/assets/img/readme/elements.jpg)
 
 ## About
 
