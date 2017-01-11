@@ -230,9 +230,7 @@ class Element extends Base {
 		// Return an empty Image object if no default value
 		if (empty($this->value)) return new Image;
 
-		// All src images must live in the /img (relative) directory.  I'm not
-		// throwing an exception here because Laravel's view exception handler
-		// doesn't display the message.
+		// All src images must live in the /img (relative) directory
 		if (!Str::is('/img/*', $this->value)) {
 			throw new Exception('All Element images must be stored in public/img');
 		}
