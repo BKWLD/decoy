@@ -1,5 +1,13 @@
-# npm should just install frontend assets
-src
+# NPM should just install frontend assets
+
+classes
+config
+docs
+lang
+migrations
+stubs
+views
+
 tests
 .travis.yml
 composer.json
