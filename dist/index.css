@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 10.21.16 👍 */
+/*! 📝 Bukwild 💾 1.31.17 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -6900,15 +6900,6 @@ button.close {
         display: none; }
         .listing .ui-sortable-helper td:first-child + td, .listing .ui-sortable-helper td:last-child {
           display: inline-block; } }
-    .lt-ie10 .listing .ui-sortable-helper td {
-      float: left;
-      height: 100%;
-      vertical-align: middle; }
-      .lt-ie10 .listing .ui-sortable-helper td:before {
-        content: '';
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle; }
   .listing .ui-sortable-helper:after {
     content: "";
     display: table;
