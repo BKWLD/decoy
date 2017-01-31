@@ -1,11 +1,12 @@
 <?php namespace Bkwld\Decoy\Models;
 
 // Dependencies
-use Config;
 use Bkwld\Decoy\Models\Image;
 use Bkwld\Decoy\Models\Traits\Encodable;
 use Bkwld\Decoy\Models\Traits\HasImages;
 use Bkwld\Library\Utils\File;
+use Config;
+use DB;
 use Decoy;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -247,6 +248,10 @@ class Element extends Base {
 			fclose($stream);
 		}
 
+		// Wrap the touching of the element and images table in a transaction
+		// so that the element isn't updated if the images write fails
+		DB::beginTransaction();
+
 		// Update or create this Element instance
 		$this->value = app('upchuck')->url($path);
 		$this->save();
@@ -263,6 +268,7 @@ class Element extends Base {
 			'height'    => $size[1],
 		]);
 		$this->images()->save($image);
+		DB::commit();
 
 		// Clear cached image relations
 		unset($this->relations['images']);
