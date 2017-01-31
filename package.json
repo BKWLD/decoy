@@ -1,6 +1,6 @@
 {
   "name": "decoy",
-  "version": "5.0.13",
+  "version": "5.2.0",
   "description": "A Laravel model-based CMS by Bukwild",
   "main": "dist/index.js",
   "directories": {
