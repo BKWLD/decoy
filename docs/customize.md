@@ -7,7 +7,8 @@ To customize the JS or CSS for Decoy, you can build your own js and css file and
 Decoy uses [Redactor](http://imperavi.com/redactor/) as its WYSIWYG editors.  Here is an example (in coffeescript and expecting to be built using Webpack) of how to change the Redactor config.  This script would be built into a standalone js file that would be referenced via editing the `script` value in the `core.php` config file.
 
 ```coffee
-# Load Decoy js from the public/assets directory where it was installed by `php artisan vendor:publish`
+# Load Decoy js from the public/assets directory where it was installed by 
+# `php artisan vendor:publish`
 decoy = require '../../../public/assets/decoy/index'
 
 # Make a single stylesheet with Decoy and extended styles
