@@ -4,7 +4,7 @@ Decoy is a PHP content management written for the [Laravel framework](https://la
 
 - Quick Start: http://docs.decoy.bukwild.com/quick-start
 - Documentation: http://docs.decoy.bukwild.com
-- Case study: Coming soon
+- Case study: http://www.bukwild.com/project/decoy
 
 
 ## Screenshots
