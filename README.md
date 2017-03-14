@@ -38,7 +38,7 @@ Besides it’s model-centric paradigm, Decoy includes the following features:
 - Commands panel for executing artisan commands via web UI
 - Cloning of content, even across servers
 - Localization
-- Organized key-value pair type data as [Elements](elements)
+- Organized key-value pair type data as [Elements](http://docs.decoy.bukwild.com/elements)
 - Drag and drop ordering of data in list views
 - Built in interface for creating 301 and 302 redirects
 - All configuration stored in the filesystem to keep your team in sync via Git (or whatever VCS)
