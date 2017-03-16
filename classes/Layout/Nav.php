@@ -1,98 +1,103 @@
-<?php namespace Bkwld\Decoy\Layout;
+<?php
 
-// Deps
-use Config;
+namespace Bkwld\Decoy\Layout;
+
 use URL;
+use Config;
 
 /**
  * Generate an array for the nav that is more easily parsed in a frontend view
  */
-class Nav {
+class Nav
+{
+    /**
+     * Generate the nav config
+     *
+     * @return array
+     */
+    public function generate()
+    {
+        // Get the navigation pages from the config
+        $pages = Config::get('decoy.site.nav');
+        if (is_callable($pages)) {
+            $pages = call_user_func($pages);
+        }
 
-	/**
-	 * Generate the nav config
-	 *
-	 * @return array
-	 */
-	public function generate() {
+        // Loop through the list of pages and massage
+        $massaged = [];
+        foreach ($pages as $key => $val) {
 
-		// Get the navigation pages from the config
-		$pages = Config::get('decoy.site.nav');
-		if (is_callable($pages)) $pages = call_user_func($pages);
+            // If val is an array, make a drop down menu
+            if (is_array($val)) {
 
-		// Loop through the list of pages and massage
-		$massaged = array();
-		foreach($pages as $key => $val) {
+                // Create a new page instance that represents the dropdown menu
+                $page = ['active' => false];
+                $page = array_merge($page, $this->makeIcon($key));
+                $page['children'] = [];
 
-			// If val is an array, make a drop down menu
-			if (is_array($val)) {
+                // Loop through children (we only support one level deep) and
+                // add each as a child
+                foreach ($val as $child_key => $child_val) {
+                    $page['children'][] = $this->makePage($child_key, $child_val);
+                }
 
-				// Create a new page instance that represents the dropdown menu
-				$page = ['active' => false];
-				$page = array_merge($page, $this->makeIcon($key));
-				$page['children'] = [];
+                // See if any of the children are active and set the pulldown to active
+                foreach ($page['children'] as $child) {
+                    if (!empty($child->active)) {
+                        $page['active'] = true;
+                        break;
+                    }
+                }
 
+                // Add the pulldown to the list of pages
+                $massaged[] = (object) $page;
 
-				// Loop through children (we only support one level deep) and
-				// add each as a child
-				foreach($val as $child_key => $child_val) {
-					$page['children'][] = $this->makePage($child_key, $child_val);
-				}
+            // The page is a simple (non pulldown) link
+            } else {
+                $massaged[] = $this->makePage($key, $val);
+            }
+        }
 
-				// See if any of the children are active and set the pulldown to active
-				foreach($page['children'] as $child) {
-					if (!empty($child->active)) {
-						$page['active'] = true;
-						break;
-					}
-				}
+        // Pass along the navigation data
+        return $massaged;
+    }
 
-				// Add the pulldown to the list of pages
-				$massaged[] = (object) $page;
+    /**
+     * Break the icon out of the label, returning an arary of label and icon
+     */
+    protected function makeIcon($label_and_icon)
+    {
+        $parts = explode(',', $label_and_icon);
+        if (count($parts) == 2) {
+            return ['label' => $parts[0], 'icon' => $parts[1]];
+        }
 
-			// The page is a simple (non pulldown) link
-			} else {
-				$massaged[] = $this->makePage($key, $val);
-			}
-		}
+        return ['label' => $parts[0], 'icon' => 'default'];
+    }
 
-		// Pass along the navigation data
-		return $massaged;
-	}
+    /**
+     * Make a page object
+     *
+     * @return object
+     */
+    protected function makePage($key, $val)
+    {
+        // Check if it's a divider
+        if ($val === '-') {
+            return (object) ['divider' => true];
+        }
 
-	/**
-	 * Break the icon out of the label, returning an arary of label and icon
-	 */
-	protected function makeIcon($label_and_icon) {
-		$parts = explode(',', $label_and_icon);
-		if (count($parts) == 2) return ['label' => $parts[0], 'icon' => $parts[1]];
-		else return ['label' => $parts[0], 'icon' => 'default'];
-	}
+        // Create a new page
+        $page = ['url' => $val, 'divider' => false];
+        $page = array_merge($page, $this->makeIcon($key));
 
-	/**
-	 * Make a page object
-	 *
-	 * @return object
-	 */
-	protected function makePage($key, $val) {
+        // Check if this item is the currently selected one
+        $page['active'] = false;
+        if (strpos(URL::current(), parse_url($page['url'], PHP_URL_PATH))) {
+            $page['active'] = true;
+        }
 
-		// Check if it's a divider
-		if ($val === '-') {
-			return (object) array('divider' => true);
-		}
-
-		// Create a new page
-		$page = ['url' => $val, 'divider' => false];
-		$page = array_merge($page, $this->makeIcon($key));
-
-		// Check if this item is the currently selected one
-		$page['active'] = false;
-		if (strpos(URL::current(), parse_url($page['url'], PHP_URL_PATH))) {
-			$page['active'] = true;
-		}
-
-		// Return the new page
-		return (object) $page;
-	}
-
+        // Return the new page
+        return (object) $page;
+    }
 }
