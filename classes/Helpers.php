@@ -195,6 +195,7 @@ class Helpers {
 	private $is_handling;
 	public function handling() {
 		if (!is_null($this->is_handling)) return $this->is_handling;
+		if (env('DECOY_TESTING')) return true;
 		$this->is_handling = preg_match('#^'.Config::get('decoy.core.dir').'($|/)'.'#i', Request::path());
 		return $this->is_handling;
 	}

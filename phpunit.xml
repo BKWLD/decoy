@@ -23,7 +23,7 @@
             </exclude>
         </whitelist>
     </filter>
-    
+
     <php>
 
         <ini name="display_errors" value="On" />
@@ -33,5 +33,7 @@
         <env name="CACHE_DRIVER" value="array"/>
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_DRIVER" value="sync"/>
+
+        <env name="DECOY_TESTING" value="true"/>
     </php>
 </phpunit>

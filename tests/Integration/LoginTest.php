@@ -8,7 +8,7 @@ class Login extends TestCase
 
     public function testHome()
     {
-        $response = $this->get('/');
+        $response = $this->get('admin');
         $response->assertResponseStatus(200);
     }
 }
