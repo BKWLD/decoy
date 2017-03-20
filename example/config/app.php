@@ -156,6 +156,8 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        Bkwld\Decoy\ServiceProvider::class
+
     ],
 
     /*
@@ -201,6 +203,9 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
+
+        'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
+        'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
 
     ],
 

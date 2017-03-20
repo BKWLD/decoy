@@ -1,0 +1,109 @@
+# YAML docs:   http://symfony.com/doc/current/components/yaml/yaml_format.html
+# YAML editor: http://nodeca.github.io/js-yaml/
+
+# Most terse way of using, like Frags now
+homepage:
+  marquee:
+    title: Welcome to my cool site
+    image,image: /img/temp/home-marquee.jpg
+  body:
+    title: Read the following
+    body,wysiwyg: Blah, blah, blah
+
+# This is a more explicit way to define stuff and adds
+# support for extra fields like help text
+other:
+  label: Another Homepage
+  help: This is the other site homepage # Help can be applied at any level
+  sections:
+
+    # You can switch back to the terse format at any level
+    marquee:
+      title: Welcome to my cool site
+      image,image: /img/temp/home-marquee.jpg
+
+    # ... but here is the longhand way of specify a section
+    body:
+      label: Page body
+      help: The main article of the page
+
+      # Here are each of the different field types supported
+      fields:
+
+        # The default is a textfield
+        title:
+          label: The title of the page
+          help: This is like the h1 dude
+          value: Read the following
+
+        # A textfield used for a URL
+        link: http://google.com
+
+        # A textarea
+        subtitle,textarea: |-
+          This subtitle will finally explain to you my stuff.
+          And this will be another "paragraph".
+
+        # WYSIWYG, CKEditor field
+        body:
+          type: wysiwyg # Type is declared explicitly
+          value: Blah, blah, blah
+
+        # An image field
+        image:
+          type: image
+          label: Body image
+          value: /img/temp/home-marquee.jpg
+
+        # A file field
+        pdf:
+          type: file
+          label: A PDF
+          rules: mimes:pdf # You can add validation rules
+
+        # A boolean / checkbox field
+        show_contact:
+          type: boolean
+          label: Show the contact page
+          value: 1 # Default the checkbox to "checked"
+
+        # A video encoder instance.  Video encoders can't have a default value,
+        # they must be supplied through upload a video in the admin
+        video,video-encoder:
+          preset: example
+
+        # A autocomplete that points to a specfici model
+        project,model:
+          class: App\Project
+
+        # ----------------------------------------------------------------------
+        # The following all require additional attributes and, thus, can't be
+        # invoked using the shorthand method
+
+        # A select menu
+        select_menu:
+          type: select
+          options:
+            one: One
+            two: Two
+          value: two
+          help: Example of help
+
+        # A list of radio buttons
+        radio_list:
+          type: radios
+          options:
+            one: One
+            two: Two
+          value: two
+
+        # A series of checkboxes. The `Decoy:el()` value when rendered as a
+        # string will be a commad delimited list.  But `Decoy:el()->value()`
+        # will return an array of the keys.
+        checkboxes:
+          type: checkboxes
+          options:
+            one: One
+            two: Two
+            three: Three
+          value: two,three
