@@ -22,7 +22,7 @@
 	'nav' => [
 		// 'Content,book' => [
 		// 	'Articles' => '/admin/articles'
-		// ]
+		// ],
 		'Elements,leaf' => '/admin/elements',
 		'Redirects,new-window' => '/admin/redirect-rules',
 	],
