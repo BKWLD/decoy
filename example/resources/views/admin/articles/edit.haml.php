@@ -1,0 +1,27 @@
+-#
+
+	- $sidebar->add(Former::listing('Video'))
+	- $sidebar->add(Former::listing('Photo')->take(30))
+
+	!= View::make('decoy::shared.form._header', $__data)->render()
+
+	%fieldset
+		.legend= empty($item) ? 'New' : 'Edit'
+		!= Former::text('title')
+		!= Former::wysiwyg('body')
+		!= Former::image()
+		!= Former::image('listing')
+
+	%fieldset
+		.legend Other
+		!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline()
+		!= Former::select('category_id', 'Categories')->addOption(null)->fromQuery(Category::ordered()->get(), 'name')
+		!= Former::date('date')->value('now')
+		!= Former::date('date_end')
+		!= Former::text('url', "URL")->blockHelp('An external link to the article.')
+
+	%fieldset
+		!= View::make('decoy::shared.form._display_module', $__data)->render()
+		!= Former::checkbox('featured')->checkboxes(['Yes' => ['name' => 'featured', 'value' => 1]])->push()->blockHelp('Featured articles will show up in the ticker on the home page.')
+
+	!= View::make('decoy::shared.form._footer', $__data)->render()
