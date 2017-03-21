@@ -8,7 +8,7 @@ homepage:
     image,image: /img/temp/home-marquee.jpg
   body:
     title: Read the following
-    body,wysiwyg: Blah, blah, blah
+    # body,wysiwyg: Blah, blah, blah
 
 # This is a more explicit way to define stuff and adds
 # support for extra fields like help text
@@ -20,7 +20,7 @@ other:
     # You can switch back to the terse format at any level
     marquee:
       title: Welcome to my cool site
-      image,image: /img/temp/home-marquee.jpg
+      # image,image: /img/temp/home-marquee.jpg
 
     # ... but here is the longhand way of specify a section
     body:
@@ -53,7 +53,7 @@ other:
         image:
           type: image
           label: Body image
-          value: /img/temp/home-marquee.jpg
+          # value: /img/temp/home-marquee.jpg
 
         # A file field
         pdf:
