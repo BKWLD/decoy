@@ -13,8 +13,10 @@ class ReEncodableVideo extends Migration
     public function up()
     {
         Schema::table('encodings', function (Blueprint $table) {
-            $table->string('preset')->after('encodable_attribute');
             $table->text('response')->after('message')->nullable();
+        });
+        Schema::table('encodings', function (Blueprint $table) {
+            $table->string('preset')->after('encodable_attribute')->default('');
         });
     }
 
@@ -27,6 +29,8 @@ class ReEncodableVideo extends Migration
     {
         Schema::table('encodings', function (Blueprint $table) {
             $table->dropColumn('preset');
+        });
+        Schema::table('encodings', function (Blueprint $table) {
             $table->dropColumn('response');
         });
     }
