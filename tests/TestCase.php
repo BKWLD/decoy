@@ -38,7 +38,7 @@ abstract class TestCase extends LaravelTestCase
      *
      * @return void
      */
-    public function auth()
+    protected function auth()
     {
         $this->actingAs(Admin::create([
             'first_name' => 'First',
