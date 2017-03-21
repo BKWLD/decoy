@@ -5,7 +5,7 @@ use Auth;
 use Bkwld\Decoy\Models\Admin;
 use Tests\TestCase;
 
-class Login extends TestCase
+class LoginTest extends TestCase
 {
 
     public function testLoginScreen()
@@ -16,10 +16,11 @@ class Login extends TestCase
 
     public function testInvalidLogin()
     {
-        $this->get('admin'); // So the refferer gets set
         $response = $this->post('admin', [
             'email' => 'test@domain.com',
             'password' => 'pass',
+        ], [
+            'HTTP_REFERER' => url('admin'), // So it redirects back to self
         ]);
 
         // Check that user is redirected back to login but there are errors
