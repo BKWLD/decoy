@@ -2,12 +2,14 @@
 namespace Tests;
 
 use Illuminate\Contracts\Console\Kernel;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 abstract class TestCase extends LaravelTestCase
 {
-    use MockeryPHPUnitIntegration; // Increments assertion count
+    use DatabaseTransactions,
+        MockeryPHPUnitIntegration; // Increments assertion count
 
     /**
      * The base URL to use while testing the application.
