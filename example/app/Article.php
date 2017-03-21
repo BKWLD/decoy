@@ -10,14 +10,18 @@ class Article extends Base {
 	 *
 	 * @var array
 	 */
-	// public static $rules = [
-	// 	'title' => 'required',
-	// 	'slug' => 'alpha_dash|unique:articles',
-	// 	'images.default' => 'image|required',
-	//	'images.listing' => 'image',
-	// 	'date' => 'required',
-	// 	'url' => 'url',
-	// ];
+	public static $rules = [
+		'title' => 'required',
+		'slug' => 'alpha_dash|unique:articles',
+		'images.default' => 'image',
+		'date' => 'required',
+	];
+
+	public static $categories = [
+		'first' => 'first',
+		'second' => 'second',
+		'third' => 'third',
+	];
 
 	/**
 	 * Uploadable attributes
@@ -45,10 +49,10 @@ class Article extends Base {
 	 *
 	 * @return void
 	 */
-	// public function onCreating() {
-	// 	if (isset($this->position)) return;
-	// 	$this->position = $this->article->blocks()->max('position') + 1;
-	// }
+	public function onCreating() {
+		if (isset($this->position)) return;
+		$this->position = self::max('position') + 1;
+	}
 
 	/**
 	 * Orders instances of this model in the admin as well as default ordering
@@ -57,26 +61,26 @@ class Article extends Base {
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @return void
 	 */
-	// public function scopeOrdered($query) {
-	// 	$query->positioned();
-	// }
+	public function scopeOrdered($query) {
+		$query->positioned();
+	}
 
 	/**
 	 * Return the URI to instances of this model
 	 *
 	 * @return string A URI that the browser can resolve
 	 */
-	// public function getUriAttribute() {
-	// 	return route('article', $this->slug);
-	// }
+	public function getUriAttribute() {
+		return route('article', $this->slug);
+	}
 
 	/**
 	 * Render markup for the "featured" column in the admin listing
 	 *
 	 * @return string HTML
 	 */
-	// public function getAdminFeaturedAttribute() {
-	// 	return $this->featured ? '<span class="badge">Featured</span>' : '';
-	// }
+	public function getAdminFeaturedAttribute() {
+		return $this->featured ? '<span class="badge">Featured</span>' : '';
+	}
 
 }

@@ -22,6 +22,8 @@ class CreateArticles extends Migration
 
             $table->date('date')->index();
             $table->boolean('featured')->index();
+            $table->integer('position');
+            $table->boolean('public');
             $table->timestamps();
         });
     }
