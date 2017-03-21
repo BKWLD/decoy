@@ -32,4 +32,19 @@ abstract class TestCase extends LaravelTestCase
 
         return $app;
     }
+
+    /**
+     * Authenticate an admin
+     *
+     * @return void
+     */
+    public function auth()
+    {
+        $this->actingAs(Admin::create([
+            'first_name' => 'First',
+            'last_name' => 'Last',
+            'email' => 'test@domain.com',
+            'password' => 'pass',
+        ]), 'decoy');
+    }
 }
