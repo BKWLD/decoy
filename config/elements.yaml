@@ -53,7 +53,7 @@ other:
         image:
           type: image
           label: Body image
-        #   value: /img/temp/home-marquee.jpg
+          # value: /img/temp/home-marquee.jpg
 
         # A file field
         pdf:
