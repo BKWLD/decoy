@@ -46,7 +46,8 @@
         "mockery/mockery": "0.9.*",
         "phpunit/phpunit": "~5.7",
         "symfony/css-selector": "2.8.*|3.0.*",
-        "symfony/dom-crawler": "2.8.*|3.0.*"
+        "symfony/dom-crawler": "2.8.*|3.0.*",
+		"doctrine/dbal": "^2.5"
 	},
 	"conflict": {
 		"anahkiasen/html-object": "1.4.1"

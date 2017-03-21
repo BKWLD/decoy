@@ -1,14 +1,15 @@
 <?php
 namespace Tests;
 
+use Bkwld\Decoy\Models\Admin;
 use Illuminate\Contracts\Console\Kernel;
-use Illuminate\Foundation\Testing\DatabaseTransactions;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
 abstract class TestCase extends LaravelTestCase
 {
-    use DatabaseTransactions,
+    use DatabaseMigrations,
         MockeryPHPUnitIntegration; // Increments assertion count
 
     /**
