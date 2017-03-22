@@ -13,6 +13,8 @@
 	.legend Other
 	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(App\Article::$categories))->inline()
 	!= Former::date('date')->value('now')
+	!= Former::manyToManyChecklist('tags')->addGroupClass('two-col')
+
 
 %fieldset
 	!= View::make('decoy::shared.form._display_module', $__data)->render()

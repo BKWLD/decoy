@@ -21,7 +21,8 @@
 	 */
 	'nav' => [
 		'Content,book' => [
-			'Articles' => '/admin/articles'
+			'Articles' => '/admin/articles',
+			'Tags' => '/admin/tags',
 		],
 		'Elements,leaf' => '/admin/elements',
 		'Redirects,new-window' => '/admin/redirect-rules',
