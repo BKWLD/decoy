@@ -96,15 +96,34 @@ class ArticleTest extends TestCase
         $this->assertNotEmpty($article->img()->url);
     }
 
-    public function testStoreWithNewSubmit()
+    public function testDestroy()
     {
         $this->auth();
-        list($params, $files) = $this->createData();
-        $response = $this->call('POST', 'admin/articles/create', array_merge($params, [
-            '_save' => 'new',
-        ]));
+        $article = factory(Article::class)->create();
 
-        $this->assertRedirectedTo('/admin/articles/create');
+        $new_article = Article::findBySlug($article->slug);
+        $this->assertNotEmpty($new_article);
+
+        $this->get('admin/articles/1/destroy');
+
+        $old_article = Article::findBySlug($article->slug);
+        $this->assertEmpty($old_article);
+    }
+
+    public function testDuplicate()
+    {
+        $this->auth();
+        $article = factory(Article::class)->create();
+
+        $new_article = Article::findBySlug($article->slug);
+        $this->assertNotEmpty($new_article);
+
+        $this->get('admin/articles/' . $new_article->id . '/duplicate');
+
+        $duplicate_article = Article::findBySlug($new_article->slug . '-1');
+
+        $this->assertNotEmpty($duplicate_article);
+        $this->assertEquals($duplicate_article->slug, $new_article->slug . '-1');
     }
 
 }
