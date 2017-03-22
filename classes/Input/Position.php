@@ -50,10 +50,12 @@ class Position {
 		} else if (isset($this->item->position)) {
 
 			// Visiblity may be set at the same time and would be ignored otherwise
-			if (Request::has('public')) $this->item->public = Request::get('public');
+			if (Request::has('public')) {
+				$this->item->public = request('public', 0);
+			}
 
 			// Do position
-			$this->item->position = Request::get('position');
+			$this->item->position = request('position');
 
 		}
 
