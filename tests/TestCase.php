@@ -47,4 +47,13 @@ abstract class TestCase extends LaravelTestCase
             'password' => 'pass',
         ]), 'decoy');
     }
+
+    /**
+     * Helper for creating the header that Request::ajax() looks for
+     *
+     * @return array
+     */
+    protected function ajaxHeader() {
+        return [ 'X-Requested-With' => 'XMLHttpRequest' ];
+    }
 }

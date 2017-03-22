@@ -34,9 +34,7 @@ class ListingTest extends TestCase
             'id' => $first_article->id,
             'position' => 2,
             'public' => true
-        ], [
-            'X-Requested-With' => 'XMLHttpRequest',
-        ]);
+        ], $this->ajaxHeader());
 
         $this->assertEquals(2, $first_article->fresh()->position);
     }
@@ -70,9 +68,7 @@ class ListingTest extends TestCase
             'id' => 1,
             'position' => 1,
             'public' => true
-        ], [
-            'X-Requested-With' => 'XMLHttpRequest',
-        ]);
+        ], $this->ajaxHeader());
 
         $this->assertEquals(1, $article->fresh()->public);
     }
@@ -90,9 +86,7 @@ class ListingTest extends TestCase
             'id' => 1,
             'position' => 1,
             'public' => false
-        ], [
-            'X-Requested-With' => 'XMLHttpRequest',
-        ]);
+        ], $this->ajaxHeader());
 
         $this->assertEquals(0, $article->fresh()->public);
     }
