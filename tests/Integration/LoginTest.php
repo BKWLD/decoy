@@ -61,7 +61,19 @@ class LoginTest extends TestCase
 
         // Should redirect to the first route in the config
         $response = $this->get('admin');
-        $response->assertRedirectedTo('admin/elements');
+        $response->assertRedirectedTo('admin/articles');
+
+    }
+
+    public function testRedirectAfterLoginToExplicitlyDefinedUrl()
+    {
+        $this->auth();
+
+        config()->set('decoy.site.post_login_redirect', '/admin/something');
+
+        // Should redirect to the first route in the config
+        $response = $this->get('admin');
+        $response->assertRedirectedTo('admin/something');
 
     }
 }
