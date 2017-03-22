@@ -1,4 +1,4 @@
-<?
+<?php 
 
 // Require a slug
 if (empty($item->slug)) return;

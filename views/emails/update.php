@@ -3,7 +3,7 @@
 	<br/>
 	<b>Name:</b> <?=$first_name?> <?=$last_name?><br/>
 	<b>Email:</b> <?=$email?><br/>
-	<? if ($password): ?><b>Password:</b> <?=$password?> (you should change this ASAP)
-	<? else: ?><b>Password:</b> Unchanged (and cannot be displayed because it is one-way encrypted)
-	<? endif ?>
+	<?php if ($password): ?><b>Password:</b> <?=$password?> (you should change this ASAP)
+	<?php else: ?><b>Password:</b> Unchanged (and cannot be displayed because it is one-way encrypted)
+	<?php endif ?>
 </p>

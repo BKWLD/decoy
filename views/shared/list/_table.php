@@ -1,4 +1,4 @@
-<?
+<?php 
 /**
  * Render a table of model rows.  Required variables:
  * - listing
@@ -41,31 +41,31 @@ if ($listing->count()) {
 	<thead>
 			<tr>
 
-				<? if ($can_delete): ?>
+				<?php if ($can_delete): ?>
 					<th class="select-all"><span class="glyphicon glyphicon-check"></span></th>
-				<? else: ?>
+				<?php else: ?>
 					<th class="hide"></th>
-				<? endif ?>
+				<?php endif ?>
 
-				<?// Loop through the columns array and create columns?>
-				<? foreach(array_keys($columns) as $column): ?>
+				<?php // Loop through the columns array and create columns?>
+				<?php foreach(array_keys($columns) as $column): ?>
 					<th class="<?=strtolower($column)?>"><?=$column?></th>
-				<? endforeach ?>
+				<?php endforeach ?>
 
-				<? if (isset($test_actions)): ?>
-					<? if (count($test_actions)): ?>
+				<?php if (isset($test_actions)): ?>
+					<?php if (count($test_actions)): ?>
 						<th class="actions-<?=count($test_actions)?>">Actions</th>
-					<? endif ?>
-				<? else: ?>
+					<?php endif ?>
+				<?php else: ?>
 					<th class="actions-3">Actions</th>
-				<? endif ?>
+				<?php endif ?>
 
 			</tr>
 		</thead>
 	<tbody>
 
-		<?// Many to many listings have a remove option, so the bulk actions change?>
-		<? if ($can_delete && $many_to_many): ?>
+		<?php // Many to many listings have a remove option, so the bulk actions change?>
+		<?php if ($can_delete && $many_to_many): ?>
 			<tr class="hide warning bulk-actions">
 				<td colspan="999">
 					<a class="btn btn-warning remove-confirm" href="#">
@@ -74,17 +74,17 @@ if ($listing->count()) {
 				</td>
 			</tr>
 
-		<?// Standard bulk actions ?>
-		<? else: ?>
+		<?php // Standard bulk actions ?>
+		<?php else: ?>
 			<?=View::make('decoy::shared.list._bulk_actions')->render()?>
-		<? endif ?>
+		<?php endif ?>
 
-		<?
+		<?php 
 		// Loop through the listing data
 		foreach ($listing as $item): ?>
 
 			<tr data-model-id="<?=$item->getKey()?>" class="<?=$item->getAdminRowClassAttribute()?>"
-				<?
+				<?php 
 				// Render parent id
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
 
@@ -96,19 +96,19 @@ if ($listing->count()) {
 				?>
 			>
 
-				<?// Checkboxes or bullets ?>
-				<? if ($can_delete): ?>
+				<?php // Checkboxes or bullets ?>
+				<?php if ($can_delete): ?>
 					<td><input type="checkbox" name="select-row"></td>
-				<? else: ?>
+				<?php else: ?>
 					<td class="hide"></td>
-				<? endif ?>
+				<?php endif ?>
 
-				<?// Loop through columns and add columns ?>
-				<? $column_names = array_keys($columns) ?>
-				<? foreach(array_values($columns) as $i => $column): ?>
+				<?php // Loop through columns and add columns ?>
+				<?php $column_names = array_keys($columns) ?>
+				<?php foreach(array_values($columns) as $i => $column): ?>
 					<td class="<?=strtolower($column_names[$i])?>">
 
-						<?
+						<?php 
 						// Wrap the column value in an edit link only if it's the first
 						// column and it doesn't contain an a tag with an href attribute
 						$value = Decoy::renderListColumn($item, $column, $convert_dates);
@@ -120,19 +120,19 @@ if ($listing->count()) {
 						echo $value; ?>
 
 					</td>
-				<? endforeach ?>
+				<?php endforeach ?>
 
-				<?// Standard action links?>
-				<? if (count($test_actions)): ?>
+				<?php // Standard action links?>
+				<?php if (count($test_actions)): ?>
 					<td class="actions">
 						<?=implode(' | ', $item->makeAdminActions($__data))?>
 					</td>
-				<? endif ?>
+				<?php endif ?>
 
 			</tr>
-		<? endforeach ?>
+		<?php endforeach ?>
 
-		<?// Maybe there were no results found ?>
+		<?php // Maybe there were no results found ?>
 		<?=View::make('decoy::shared.list._no_results', $__data)->render()?>
 
 	</tbody>
