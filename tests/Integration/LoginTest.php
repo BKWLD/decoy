@@ -8,12 +8,22 @@ use Tests\TestCase;
 class LoginTest extends TestCase
 {
 
+    /**
+     * Test viewing the login screen
+     *
+     * @return void
+     */
     public function testLoginScreen()
     {
         $response = $this->get('admin');
         $response->assertResponseStatus(200);
     }
 
+    /**
+     * Test posting invalid creds
+     *
+     * @return void
+     */
     public function testInvalidLogin()
     {
         $response = $this->post('admin', [
@@ -28,6 +38,11 @@ class LoginTest extends TestCase
         $response->assertSessionHasErrors();
     }
 
+    /**
+     * Test a valid login
+     *
+     * @return void
+     */
     public function testValidLogin()
     {
         Admin::create([
@@ -55,6 +70,11 @@ class LoginTest extends TestCase
         $this->assertEquals('test@domain.com', Auth::user()->email);
     }
 
+    /**
+     * Test redirect after login
+     *
+     * @return void
+     */
     public function testRedirectAfterLogin()
     {
         $this->auth();
@@ -65,6 +85,12 @@ class LoginTest extends TestCase
 
     }
 
+    /**
+     * Test redirect after login when there is a config value set for where
+     * the user should be redirected to.
+     *
+     * @return void
+     */
     public function testRedirectAfterLoginToExplicitlyDefinedUrl()
     {
         $this->auth();
