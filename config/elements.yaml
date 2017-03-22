@@ -5,7 +5,7 @@
 homepage:
   marquee:
     title: Welcome to my cool site
-    image,image: /img/temp/home-marquee.jpg
+    # image,image: /img/temp/home-marquee.jpg
   body:
     title: Read the following
     # body,wysiwyg: Blah, blah, blah
