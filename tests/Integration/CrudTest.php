@@ -115,13 +115,9 @@ class CrudTest extends TestCase
         $this->auth();
         $article = factory(Article::class)->create();
 
-        $new_article = Article::findBySlug($article->slug);
-        $this->assertNotEmpty($new_article);
+        $this->get('admin/articles/' . $article->id . '/destroy');
 
-        $this->get('admin/articles/1/destroy');
-
-        $old_article = Article::findBySlug($article->slug);
-        $this->assertEmpty($old_article);
+        $this->assertEmpty($article->fresh());
     }
 
     /**
