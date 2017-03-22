@@ -417,7 +417,17 @@ abstract class Base extends Eloquent implements SluggableInterface {
 		if (empty($attributes)) throw new Exception('No searchable attributes');
 
 		// Concatenate all the attributes with spaces and look for the term.
-		$source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
+		switch(DB::getDriverName()) {
+			case 'mysql':
+				$source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
+				break;
+			case 'sqlite':
+				$source = DB::raw(implode(' || ',$attributes));
+				break;
+		}
+
+
+		// Apply query
 		return $exact ?
 			$query->where($source, '=', $term) :
 			$query->where($source, 'LIKE', "%$term%");
