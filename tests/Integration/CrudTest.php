@@ -5,9 +5,14 @@ use App\Article;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 
-class ArticleTest extends TestCase
+class CrudTest extends TestCase
 {
 
+    /**
+     * Create data used for crud tests
+     *
+     * @return array
+     */
     private function createData()
     {
 
@@ -56,13 +61,10 @@ class ArticleTest extends TestCase
         ];
     }
 
-    public function testIndex()
-    {
-        $this->auth();
-        $response = $this->get('admin/articles');
-        $response->assertResponseStatus(200);
-    }
-
+    /**
+     * Test the model create route is working
+     * @return void
+     */
     public function testCreate()
     {
         $this->auth();
@@ -70,6 +72,10 @@ class ArticleTest extends TestCase
         $response->assertResponseStatus(200);
     }
 
+    /**
+     * Test if the validator catches missing data
+     * @return void
+     */
     public function testStoreFailsValidation()
     {
         $this->auth();
@@ -80,6 +86,10 @@ class ArticleTest extends TestCase
         $response->assertSessionHasErrors('title');
     }
 
+    /**
+     * Test the model store
+     * @return void
+     */
     public function testStore()
     {
         $this->auth();
@@ -96,6 +106,10 @@ class ArticleTest extends TestCase
         $this->assertNotEmpty($article->img()->url);
     }
 
+    /**
+     * Test the model destroy
+     * @return void
+     */
     public function testDestroy()
     {
         $this->auth();
@@ -110,6 +124,10 @@ class ArticleTest extends TestCase
         $this->assertEmpty($old_article);
     }
 
+    /**
+     * Test the model duplicate
+     * @return void
+     */
     public function testDuplicate()
     {
         $this->auth();
