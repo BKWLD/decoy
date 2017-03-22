@@ -296,7 +296,7 @@ class Elements extends Base {
 
 		// If the value has changed, update or an insert a record in the database.
 		$el = Decoy::el($key);
-		$value = Request::get('value');
+		$value = request('value');
 		if ($value != $el->value || Request::hasFile('value')) {
 
 			// Making use of the model's exists property to trigger Laravel's

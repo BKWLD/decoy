@@ -21,7 +21,7 @@ class Position {
 		if ($relationship && Request::has('parent_id')) {
 			$relation = $this->item->{$relationship}();
 			if ($relation instanceof BelongsToMany) {
-				$this->pivot = $relation->where($relation->getOtherKey(), '=', Request::get('parent_id'))->first()->pivot;
+				$this->pivot = $relation->where($relation->getOtherKey(), '=', request('parent_id'))->first()->pivot;
 			}
 		}
 	}
@@ -43,7 +43,7 @@ class Position {
 
 		// Write the position value to the pivot table
 		if (isset($this->pivot->position)) {
-			$this->pivot->position = Request::get('position');
+			$this->pivot->position = request('position');
 			$this->pivot->save();
 
 		// Write position value to the item

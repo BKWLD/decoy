@@ -30,7 +30,7 @@ class Search {
 	}
 
 	/**
-	 * Apply the effect of a search (which is communicated view Request::get('query'))
+	 * Apply the effect of a search (which is communicated view request('query'))
 	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  array $config Search config from the controller class definition
@@ -45,7 +45,7 @@ class Search {
 		$config = $this->longhand($config);
 
 		// Deserialize the query and loop through
-		$conditions = json_decode(Request::get('query'));
+		$conditions = json_decode(request('query'));
 		if (!is_array($conditions)) throw new Exception('Bad query');
 		foreach($conditions as $condition) {
 
