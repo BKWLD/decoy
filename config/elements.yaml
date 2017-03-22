@@ -8,7 +8,7 @@ homepage:
     # image,image: /img/temp/home-marquee.jpg
   body:
     title: Read the following
-    # body,wysiwyg: Blah, blah, blah
+    body,wysiwyg: Blah, blah, blah
 
 # This is a more explicit way to define stuff and adds
 # support for extra fields like help text
