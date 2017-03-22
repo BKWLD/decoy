@@ -1,10 +1,10 @@
 <div id="commands">
-	<? foreach($commands as $namespace => $subcommands): ?>
+	<?php foreach($commands as $namespace => $subcommands): ?>
 		<div class='col-sm-6 col-lg-4'>
 			<div class="standard-list fieldset">
 				<div class="legend sidebar-header"><?=$namespace?></div>
 				<table>
-					<? foreach($subcommands as $name => $command): ?>
+					<?php foreach($subcommands as $name => $command): ?>
 						<tr data-js-view="task-method">
 							<td>
 								<a data-action="<?=route('decoy::commands@execute', $command->getName())?>" class="btn btn-default">Execute</a>
@@ -17,9 +17,9 @@
 								<p><small><?=$command->getDescription()?></small></p>
 							</td>
 						</tr>
-					 <? endforeach ?>
+					 <?php endforeach ?>
 				</table>
 			</div>
 		</div>
-	<? endforeach ?>
+	<?php endforeach ?>
 </div>

@@ -1,4 +1,4 @@
-<?
+<?php 
 // Sidebar pagination can be found in standard.php
 
 // Standard full list pagination

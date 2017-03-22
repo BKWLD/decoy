@@ -1,4 +1,4 @@
-<?
+<?php 
 /**
  * This is implemented by the _pagination partial and is based on
  * /laravel/framework/src/Illuminate/Pagination/views/slider.php
@@ -15,19 +15,19 @@ $per_page = $controller::$per_page;
 if ($paginator->total() > $per_page): ?>
 	<div class="pagination-wrapper">
 
-		<?// The list of pages ?>
-		<? if ($paginator->lastPage() > 1): ?>
+		<?php // The list of pages ?>
+		<?php if ($paginator->lastPage() > 1): ?>
 			<span class="pagination-desktop">
 				<?= with(new PaginationPresenter($paginator))->render(); ?>
 			</span>
 
-			<?// On mobile, just show first, prev, current, next, last pagination buttons ?>
+			<?php // On mobile, just show first, prev, current, next, last pagination buttons ?>
 			<span class="pagination-mobile">
 				<?= with(new PaginationPresenter($paginator))->renderMobile(); ?>
 			</span>
-		<? endif ?>
+		<?php endif ?>
 
-		<?// Per page selector ?>
+		<?php // Per page selector ?>
 		<span class="per-page">
 			<?= with(new PaginationPresenter($paginator))->renderPerPageOptions([
 				$per_page,
@@ -36,4 +36,4 @@ if ($paginator->total() > $per_page): ?>
 			]); ?>
 		</span>
 	</div>
-<? endif ?>
+<?php endif ?>
