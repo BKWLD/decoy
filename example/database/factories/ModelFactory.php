@@ -35,3 +35,9 @@ $factory->define(App\Tag::class, function (Faker\Generator $faker) {
         'name' => $faker->word,
     ];
 });
+
+$factory->define(App\Slide::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
+    ];
+});
