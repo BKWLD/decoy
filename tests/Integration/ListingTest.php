@@ -3,6 +3,7 @@ namespace Tests\Integration;
 
 use App\Article;
 use Tests\TestCase;
+use Bkwld\Decoy\Input\Search;
 use Illuminate\Http\UploadedFile;
 
 class ListingTest extends TestCase
@@ -89,6 +90,30 @@ class ListingTest extends TestCase
         ], $this->ajaxHeader());
 
         $this->assertEquals(0, $article->fresh()->public);
+    }
+
+    /**
+     * Test that a title field is exactly a match in search
+     *
+     * @return void
+     */
+    public function testListingSearch()
+    {
+        $this->auth();
+        $articles = factory(Article::class, 3)->create();
+        $first = Article::first();
+
+        $search = Search::query(["title" => $first->title]);
+
+        $response = $this->get('admin/articles?' . $search);
+
+        // Sanity check that the view has content property
+        $this->assertViewHas('content');
+
+        // Check that the one result matches the article that was searched for
+        $articles = $this->response->original->content->getItems();
+        $this->assertEquals(1, $articles->count());
+        $this->assertEquals($first->title, $articles[0]->title);
     }
 
 }

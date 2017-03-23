@@ -3,9 +3,6 @@ use Bkwld\Decoy\Controllers\Base;
 
 class Articles extends Base {
 
-	/*
-	 * Example settings
-
 	protected $title = 'News & Events';
 	protected $description = 'News and events yo!';
 	protected $columns = [
@@ -25,12 +22,9 @@ class Articles extends Base {
 		],
 		'category' => [
 			'type' => 'select',
-			'options' => 'Article::$categories',
+			'options' => 'App\Article::$categories',
 		],
 		'date' => 'date',
 	];
-
-	 *
-	 */
 
 }
