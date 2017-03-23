@@ -4,7 +4,6 @@ namespace Tests\Integration;
 use Decoy;
 use Tests\TestCase;
 use Bkwld\Decoy\Models\Element;
-use Illuminate\Http\UploadedFile;
 
 class ElementsTest extends TestCase
 {
@@ -95,7 +94,7 @@ class ElementsTest extends TestCase
         // Make a post request without changing the title
         $response = $this->post('admin/elements', []);
         $this->assertResponseStatus(302);
-        $this->assertEmpty($first_check);
+        $this->assertEmpty(Element::first());
         $this->assertEquals($default_text, $default_element);
     }
 
