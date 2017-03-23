@@ -43,9 +43,8 @@
 	 * @var array
 	 */
 	'roles' => [
-		// 'super' => '<b>Super admin</b> - Can manage all content.',
-		// 'general' => '<b>General</b> - Can manage sub pages of services and buildings (except for forms).',
-		// 'forms' => '<b>Forms</b> - Can do everything a general admin can but can also manage forms.',
+		'admin' => '<b>Super admin</b> - Can manage all content.',
+		'viewer' => '<b>Viewer</b> - Can only read.',
 	],
 
 	/**
@@ -54,15 +53,16 @@
 	 * @var array
 	 */
 	'permissions' => [
-		// 'general' => [
-		// 	'cant' => [
-		// 		'create.categories',
-		// 		'destroy.categories',
-		// 		'manage.slides',
-		// 		'manage.sub-categories',
-		// 		'manage.forms',
-		// 	],
-		// ],
+		'viewer' => [
+			'can' => [
+				'read.articles',
+				'read.admins',
+				'manage.tags',
+			],
+			'cant' => [
+				'destroy.tags',
+			]
+		],
 	],
 
 	/**
