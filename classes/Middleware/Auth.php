@@ -84,7 +84,7 @@ class Auth {
 		// touched,
 		$action = $wildcard->detectAction();
 		if (in_array($action, ['attach', 'remove'])) {
-			$controller = Request::get('parent_controller');
+			$controller = request('parent_controller');
 			$action = 'update';
 
 		// Otherwise, use the controller from the route

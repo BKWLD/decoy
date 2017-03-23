@@ -42,8 +42,8 @@ class ManyToManyTest extends TestCase
     {
         $params = http_build_query([
             'query' => 'amp',
-            'parent_id' => $this->tag->id,
             'parent_controller' => 'App\Http\Controllers\Admin\Tags',
+            'parent_id' => $this->tag->id,
         ]);
         $this->json('GET', 'admin/articles/autocomplete?'.$params);
 
@@ -63,8 +63,12 @@ class ManyToManyTest extends TestCase
      */
     public function testSidebarAttach()
     {
-
-
+        $this->post('admin/articles/1/attach', [
+            'parent_controller' => 'App\Http\Controllers\Admin\Tags',
+            'parent_id' => $this->tag->id,
+        ], $this->ajaxHeader());
+        $this->assertEquals(1, $this->tag->articles()->count());
+        $this->assertEquals($this->article->id, $this->tag->articles()->first()->id);
     }
 
     /**
@@ -72,7 +76,25 @@ class ManyToManyTest extends TestCase
      */
     public function testSidebarDetach()
     {
+        $this->delete('admin/admin/articles/1/remove', [
+            'parent_controller' => 'App\Http\Controllers\Admin\Tags',
+            'parent_id' => $this->tag->id,
+        ], $this->ajaxHeader());
+        $this->assertEquals(0, $this->tag->articles()->count());
+    }
 
+    /**
+     * Test bulk detaching of a many to many relationship from the sidebar
+     */
+    public function testSidebarBulkDetach()
+    {
+        $article = factory(Article::class)->create();
+        $this->delete('admin/admin/articles/1/remove', [
+            'parent_controller' => 'App\Http\Controllers\Admin\Tags',
+            'parent_id' => $this->tag->id,
+            'ids' => $this->article->id.','.$article->id,
+        ], $this->ajaxHeader());
+        $this->assertEquals(0, $this->tag->articles()->count());
     }
 
 }

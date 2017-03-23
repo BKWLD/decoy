@@ -46,7 +46,7 @@ class ManyToManyChecklist {
 
 		// Strip all the "0"s from the input.  These exist because push checkboxes
 		// is globally set for all of Decoy;
-		$ids = Request::get(self::PREFIX.$relationship);
+		$ids = request(self::PREFIX.$relationship);
 		$ids = array_filter($ids, function($id) { return $id > 0; });
 
 		// Allow a single listener to transform the list of ids to, for instance,

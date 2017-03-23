@@ -29,12 +29,12 @@ class SaveRedirect {
 		}
 
 		// Go back to the listing
-		if (Request::get('_save') == 'back') {
+		if (request('_save') == 'back') {
 			Session::flash('save_redirect', app('decoy.breadcrumbs')->smartBack());
 		}
 
 		// Go to new form by stripping the last segment from the URL
-		if (Request::get('_save') == 'new') {
+		if (request('_save') == 'new') {
 			Session::flash('save_redirect', DecoyURL::relative('create'));
 		}
 

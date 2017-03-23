@@ -200,8 +200,8 @@ class Base extends Controller {
 		// If the input contains info on the parent, immediately instantiate
 		// the parent instance.  These are populated by some AJAX calls like
 		// autocomplete on a many to many and the attach method.
-		if (($parent_id = Request::get('parent_id'))
-			&& ($parent_controller = Request::get('parent_controller'))) {
+		if (($parent_id = request('parent_id'))
+			&& ($parent_controller = request('parent_controller'))) {
 			$parent_model_class = $this->model($parent_controller);
 			$this->parent($parent_model_class::findOrFail($parent_id));
 		}
@@ -605,7 +605,7 @@ class Base extends Controller {
 		}
 
 		// Set localization options on new instance
-		if ($locale = Request::get('locale')) {
+		if ($locale = request('locale')) {
 			$new->locale = $locale;
 			if (isset($src->locale_group)) $new->locale_group = $src->locale_group;
 			$new->save();
@@ -628,7 +628,7 @@ class Base extends Controller {
 	public function autocomplete() {
 
 		// Do nothing if the query is too short
-		if (strlen(Request::get('query')) < 1) return Response::json();
+		if (strlen(request('query')) < 1) return Response::json();
 
 		// Get an instance so the title attributes can be found.  If none are found,
 		// then there are no results, so bounce
@@ -637,7 +637,7 @@ class Base extends Controller {
 		}
 
 		// Get data matching the query
-		$query = call_user_func([$this->model, 'titleContains'], Request::get('query'))
+		$query = call_user_func([$this->model, 'titleContains'], request('query'))
 			->ordered()
 			->take(15); // Note, this is also enforced in the autocomplete.js
 
@@ -651,7 +651,7 @@ class Base extends Controller {
 			// attached is because it already exists.  Otherwise, it would allow the
 			// user to create the tag
 			if ($this->parentRelation()
-				->titleContains(Request::get('query'), true)
+				->titleContains(request('query'), true)
 				->count()) {
 				return Response::json(['exists' => true]);
 			}
@@ -724,7 +724,7 @@ class Base extends Controller {
 	public function remove($id) {
 
 		// Support removing many ids at once
-		$ids = Request::has('ids') ? explode(',', Request::get('ids')) : array($id);
+		$ids = Request::has('ids') ? explode(',', request('ids')) : array($id);
 
 		// Get the model instances for each id, for the purpose of event firing
 		$items = array_map(function($id) { return $this->findOrFail($id); }, $ids);
@@ -842,7 +842,7 @@ class Base extends Controller {
 
 	// Return the per_page based on the input
 	public function perPage() {
-		$per_page = Request::get('count', static::$per_page);
+		$per_page = request('count', static::$per_page);
 		if ($per_page == 'all') return 1000;
 		return $per_page;
 	}

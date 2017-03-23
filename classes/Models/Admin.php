@@ -143,8 +143,8 @@ class Admin extends Base implements
 		// Save or clear permission choices if the form had a "custom permissions"
 		// pushed checkbox
 		if (Request::exists('_custom_permissions')) {
-			$this->permissions = Request::get('_custom_permissions') ?
-				json_encode(Request::get('_permission')) : null;
+			$this->permissions = request('_custom_permissions') ?
+				json_encode(request('_permission')) : null;
 		}
 	}
 
@@ -160,10 +160,10 @@ class Admin extends Base implements
 		$email = array(
 			'first_name' => $admin->first_name,
 			'last_name' => $admin->last_name,
-			'email' => Request::get('email'),
+			'email' => request('email'),
 			'url' => Request::root().'/'.Config::get('decoy.core.dir'),
 			'root' => Request::root(),
-			'password' => Request::get('password'),
+			'password' => request('password'),
 		);
 
 		// Send the email
@@ -185,10 +185,10 @@ class Admin extends Base implements
 		$email = array(
 			'editor_first_name' => $admin->first_name,
 			'editor_last_name' => $admin->last_name,
-			'first_name' =>Request::get('first_name'),
-			'last_name' =>Request::get('last_name'),
-			'email' => Request::get('email'),
-			'password' =>Request::get('password'),
+			'first_name' =>request('first_name'),
+			'last_name' =>request('last_name'),
+			'email' => request('email'),
+			'password' =>request('password'),
 			'url' => Request::root().'/'.Config::get('decoy.core.dir'),
 			'root' => Request::root(),
 		);
