@@ -41,3 +41,12 @@ $factory->define(App\Slide::class, function (Faker\Generator $faker) {
         'title' => $faker->word,
     ];
 });
+
+$factory->define(Bkwld\Decoy\Models\Element::class, function (Faker\Generator $faker) {
+    return [
+        'key' => 'homepage.marquee.title',
+        'type' => 'text',
+        'value' => 'test',
+        'locale' => 'en',
+    ];
+});
