@@ -4,11 +4,11 @@
 # Most terse way of using, like Frags now
 homepage:
   marquee:
-    title: Welcome to my cool site
+    title: Welcome to Decoy
     # image,image: /img/temp/home-marquee.jpg
   body:
     title: Read the following
-    body,wysiwyg: Blah, blah, blah
+    body,wysiwyg: Some body text
 
 # This is a more explicit way to define stuff and adds
 # support for extra fields like help text
@@ -19,7 +19,7 @@ other:
 
     # You can switch back to the terse format at any level
     marquee:
-      title: Welcome to my cool site
+      title: Marquee Title
       # image,image: /img/temp/home-marquee.jpg
 
     # ... but here is the longhand way of specify a section
@@ -33,7 +33,7 @@ other:
         # The default is a textfield
         title:
           label: The title of the page
-          help: This is like the h1 dude
+          help: Will show up as an h1
           value: Read the following
 
         # A textfield used for a URL
@@ -41,13 +41,13 @@ other:
 
         # A textarea
         subtitle,textarea: |-
-          This subtitle will finally explain to you my stuff.
+          This subtitle will populate here.
           And this will be another "paragraph".
 
         # WYSIWYG, CKEditor field
         body:
           type: wysiwyg # Type is declared explicitly
-          value: Blah, blah, blah
+          value: wysiwyg content
 
         # An image field
         image:
