@@ -50,3 +50,12 @@ $factory->define(Bkwld\Decoy\Models\Element::class, function (Faker\Generator $f
         'locale' => 'en',
     ];
 });
+
+$factory->define(Bkwld\Decoy\Models\RedirectRule::class, function (Faker\Generator $faker) {
+    return [
+        'from' => 'test',
+        'to' => '/redirected',
+        'code' => 301,
+        'label' => $faker->word,
+    ];
+});
