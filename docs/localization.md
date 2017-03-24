@@ -21,7 +21,7 @@ Here is an example migration schema:
 Schema::create('articles', function(Blueprint $table) {
 	$table->string('locale');
 	$table->string('locale_group')->index();
-	$table->boolean('public')->nullable(); // Not required, just an example
+	$table->boolean('public'); // Not required, just an example
 	$table->index(['locale', 'public']); // You'll want to use locale in indexes
 	$table->index(['public', 'locale']);
 });
