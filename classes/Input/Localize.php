@@ -86,11 +86,22 @@ class Localize
     public function hidden()
     {
         $class = $this->model; // Must be a local var to test
-        return count(Config::get('decoy.site.locales')) <= 1 // There aren't multiple locales specified
-            || ($this->item && !$this->item->locale) // We're editing a model with no locale attribute
-            || $class::$localizable === false // The model has been set to NOT be localizable
-            || !Config::get('decoy.site.auto_localize_root_models') // We're not auto localizing at all
-            || app('decoy.wildcard')->detectParent(); // The're viewing a child model
+
+        // There aren't multiple locales specified
+        if (count(config('decoy.site.locales')) <= 1 ) return true;
+
+        // We're editing a model with no locale attribute
+        if ($this->item && !$this->item->locale) return true;
+
+        // The model was explicitly disabled
+        if ($class::$localizable === false ) return true;
+
+        // Auto localize is turned on and we're on a child model
+        if (config('decoy.site.auto_localize_root_models')
+            && app('decoy.wildcard')->detectParent()) return true;
+
+        // Otherwise, allow localization
+        return false;
     }
 
     /**
