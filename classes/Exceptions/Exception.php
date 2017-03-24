@@ -1,6 +1,11 @@
-<?php namespace Bkwld\Decoy\Exceptions;
+<?php
+
+namespace Bkwld\Decoy\Exceptions;
 
 /**
  * Generic exception
  */
-class Exception extends \Exception {}
+class Exception extends \Exception
+{
+    //
+}
