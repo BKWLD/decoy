@@ -1,4 +1,4 @@
-# Decoy
+# Decoy [![Build Status](https://travis-ci.org/BKWLD/decoy.svg?branch=master)](https://travis-ci.org/BKWLD/decoy)
 
 Decoy is a PHP content management written for the [Laravel framework](https://laravel.com) that allows you to access your data using standard Laravel [Eloquent](https://laravel.com/docs/eloquent) models.
 
