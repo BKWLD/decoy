@@ -24,6 +24,7 @@
             'Articles' => '/admin/articles',
             'Tags' => '/admin/tags',
         ],
+        'Recipes,grain' => '/admin/recipes',
         'Elements,leaf' => '/admin/elements',
         'Redirects,new-window' => '/admin/redirect-rules',
     ],
@@ -73,8 +74,8 @@
      */
     'locales' => [
         'en' => 'English',
-        // 'es' => 'Spanish',
-        // 'fr' => 'French',
+        'es' => 'Spanish',
+        'fr' => 'French',
     ],
 
     /**
@@ -85,7 +86,7 @@
      *
      * @var boolean
      */
-    'auto_localize_root_models' => true,
+    // 'auto_localize_root_models' => true,
 
     /**
      * Store an entry in the database of all model changes.
