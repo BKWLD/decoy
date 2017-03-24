@@ -1,5 +1,4 @@
--# - $sidebar->add(Former::listing('Video'))
--# - $sidebar->add(Former::listing('Photo')->take(30))
+- $sidebar->add(Former::listing('App\Slide'))
 
 != View::make('decoy::shared.form._header', $__data)->render()
 

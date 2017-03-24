@@ -89,17 +89,14 @@ class Search {
 			$input = date('Y-m-d', strtotime($input));
 		}
 
+
 		// Apply the where
 		switch ($comparison) {
 
 			// NULL safe equals and not equals
-			// http://stackoverflow.com/a/19778341/59160
-			case '=': return $query->whereRaw(sprintf('%s <=> %s',
-				is_string($field) ? "`{$field}`" : $field,
-				$input == '' ? 'NULL' : DB::connection()->getPdo()->quote($input)));
-			case '!=': return $query->whereRaw(sprintf('NOT(%s <=> %s)',
-				is_string($field) ? "`{$field}`" : $field,
-				$input == '' ? 'NULL' : DB::connection()->getPdo()->quote($input)));
+			case '=':
+			case '!=':
+				return $this->applyEquality($comparison, $query, $field, $input);
 
 			// Not Like
 			case '!%*%':
@@ -166,6 +163,77 @@ class Search {
 
 		}
 		return $search;
+	}
+
+    /**
+     * Make the NULL-safe equals query
+     *
+     * @param  string $comparison
+     * @param  Builder $query
+     * @param  string $field
+     * @param  string $input
+     * @return Builder
+     */
+    protected function applyEquality($comparison, $query, $field, $input)
+	{
+		// Make SQL safe values
+		$safe_field = is_string($field) ? "`{$field}`" : $field;
+		$safe_input = $input  == '' ?
+			'NULL' : DB::connection()->getPdo()->quote($input);
+
+		// Different engines have different APIs
+		switch(DB::getDriverName())
+		{
+			case 'mysql': return $this->applyMysqlEquality(
+					$comparison, $query, $safe_field, $safe_input);
+			case 'sqlite': return $this->applySqliteEquality(
+					$comparison, $query, $safe_field, $safe_input);
+
+        }
+	}
+
+    /**
+     * Make NULL-safe MySQL query
+     * http://stackoverflow.com/a/19778341/59160
+     *
+     * @param  string $comparison
+     * @param  Builder $query
+     * @param  string $field
+     * @param  string $input
+     * @return Builder
+     */
+    protected function applyMysqlEquality($comparison, $query, $field, $input) {
+		switch($comparison)
+		{
+			case '=':
+				$sql = sprintf('%s <=> %s', $field, $input);
+				return $query->whereRaw($sql);
+			case '!=':
+				$sql = sprintf('NOT(%s <=> %s)', $field, $input);
+				return $query->whereRaw($sql);
+		}
+	}
+
+	/**
+     * Make NULL-safe SQLITE query
+     * http://www.sqlite.org/lang_expr.html#isisnot
+     *
+     * @param  string $comparison
+     * @param  Builder $query
+     * @param  string $field
+     * @param  string $input
+     * @return Builder
+     */
+    protected function applySqliteEquality($comparison, $query, $field, $input) {
+		switch($comparison)
+		{
+			case '=':
+				$sql = sprintf('%s IS %s', $field, $input);
+				return $query->whereRaw($sql);
+			case '!=':
+				$sql = sprintf('%s IS NOT %s', $field, $input);
+				return $query->whereRaw($sql);
+		}
 	}
 
 	/**

@@ -63,6 +63,7 @@ class CrudTest extends TestCase
 
     /**
      * Test the model create route is working
+     *
      * @return void
      */
     public function testCreate()
@@ -74,6 +75,7 @@ class CrudTest extends TestCase
 
     /**
      * Test if the validator catches missing data
+     *
      * @return void
      */
     public function testStoreFailsValidation()
@@ -88,12 +90,14 @@ class CrudTest extends TestCase
 
     /**
      * Test the model store
+     *
      * @return void
      */
     public function testStore()
     {
         $this->auth();
         list($params, $files) = $this->createData();
+
         $response = $this->call('POST', 'admin/articles/create', array_merge($params, [
             '_save' => 'save',
         ]), [], $files);
@@ -107,7 +111,25 @@ class CrudTest extends TestCase
     }
 
     /**
+     * Test that the edit view updates properly
+     *
+     * @return void
+     */
+    public function testUpdate()
+    {
+        $this->auth();
+        $article = factory(Article::class)->create();
+
+        $response = $this->call('POST', 'admin/articles/' . $article->id . '/edit', [
+            'title' => 'new article title',
+        ]);
+
+        $this->assertEquals('new article title', $article->fresh()->title);
+    }
+
+    /**
      * Test the model destroy
+     *
      * @return void
      */
     public function testDestroy()
@@ -122,6 +144,7 @@ class CrudTest extends TestCase
 
     /**
      * Test the model duplicate
+     *
      * @return void
      */
     public function testDuplicate()

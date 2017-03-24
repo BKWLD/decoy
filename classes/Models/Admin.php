@@ -331,11 +331,8 @@ class Admin extends Base implements
 
 		// Get all the app controllers
 		$controllers = array_map(function($path) {
-			return 'Admin\\'.basename($path, '.php');
-		}, glob(app_path().'/controllers/Admin/*Controller.php'));
-
-		// Remove some classes
-		$controllers = array_diff($controllers, ['Admin\BaseController']);
+			return 'App\Http\Controllers\Admin\\'.basename($path, '.php');
+		}, glob(app_path('/Http/Controllers/Admin/*.php')));
 
 		// Add some Decoy controllers
 		$controllers[] = 'Bkwld\Decoy\Controllers\Admins';

@@ -1,7 +1,10 @@
 <?php namespace App\Http\Controllers\Admin;
 use Bkwld\Decoy\Controllers\Base;
 
-class Articles extends Base {
+class Slides extends Base {
+
+	/*
+	 * Example settings
 
 	protected $title = 'News & Events';
 	protected $description = 'News and events yo!';
@@ -22,9 +25,12 @@ class Articles extends Base {
 		],
 		'category' => [
 			'type' => 'select',
-			'options' => 'App\Article::$categories',
+			'options' => 'Article::$categories',
 		],
 		'date' => 'date',
 	];
+
+	 *
+	 */
 
 }

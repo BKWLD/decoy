@@ -23,6 +23,7 @@ class Article extends Base {
         'third' => 'third',
     ];
 
+    protected $visible = [ 'slides' ];
 
     /**
      * List of all relationships
@@ -32,6 +33,11 @@ class Article extends Base {
     public function tags()
     {
         return $this->morphToMany('App\Tag', 'taggable');
+    }
+
+    public function slides()
+    {
+        return $this->hasMany('App\Slide');
     }
 
     /**

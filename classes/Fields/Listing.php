@@ -382,7 +382,7 @@ class Listing extends Field {
 	 *
 	 * @return LengthAwarePaginator | Collection
 	 */
-	protected function getItems() {
+	public function getItems() {
 
 		// The user specified items so use them
 		if ($this->items) return $this->items;

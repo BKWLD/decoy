@@ -35,3 +35,27 @@ $factory->define(App\Tag::class, function (Faker\Generator $faker) {
         'name' => $faker->word,
     ];
 });
+
+$factory->define(App\Slide::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->word,
+    ];
+});
+
+$factory->define(Bkwld\Decoy\Models\Element::class, function (Faker\Generator $faker) {
+    return [
+        'key' => 'homepage.marquee.title',
+        'type' => 'text',
+        'value' => 'test',
+        'locale' => 'en',
+    ];
+});
+
+$factory->define(Bkwld\Decoy\Models\RedirectRule::class, function (Faker\Generator $faker) {
+    return [
+        'from' => 'test',
+        'to' => '/redirected',
+        'code' => 301,
+        'label' => $faker->word,
+    ];
+});
