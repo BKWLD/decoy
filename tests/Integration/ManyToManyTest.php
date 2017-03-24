@@ -48,10 +48,14 @@ class ManyToManyTest extends TestCase
         $this->json('GET', 'admin/articles/autocomplete?'.$params);
 
         $this->seeJson([
-            'id' => 1,
-            'title' => 'Example',
-            'columns' => [
-                'getAdminTitleHtmlAttribute' => 'Example',
+            [
+                'id' => 1,
+                'title' => 'Example',
+                'columns' => [
+                    'getAdminTitleHtmlAttribute' => 'Example',
+                    'getAdminFeaturedAttribute' => '',
+                    'created_at' => date('m/d/y'),
+                ]
             ]
         ]);
     }
