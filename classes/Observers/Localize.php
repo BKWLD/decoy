@@ -2,6 +2,7 @@
 
 namespace Bkwld\Decoy\Observers;
 
+use Bkwld\Decoy\Models\Element;
 use Config;
 use Illuminate\Support\Str;
 
@@ -20,6 +21,7 @@ class Localize
     {
         if (!empty($model->locale)
             && empty($model->locale_group)
+            && !is_a($model, Element::class) // Elements don't have groups
             && ($locales = Config::get('decoy.site.locales'))
             && count($locales) > 1) {
             $model->setAttribute('locale_group', Str::random());
