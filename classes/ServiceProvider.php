@@ -181,17 +181,16 @@ class ServiceProvider extends BaseServiceProvider
      */
     protected function delegateAdminObservers()
     {
-        $methodMap = [
-            'eloquent.saving:*'         => 'Bkwld\Decoy\Observers\Localize',
-            'eloquent.saved:*'          => 'Bkwld\Decoy\Observers\ManyToManyChecklist',
-            'eloquent.saving:*'         => 'Bkwld\Decoy\Observers\Encoding@onSaving',
-            'eloquent.deleted:*'        => 'Bkwld\Decoy\Observers\Encoding@onDeleted',
-            'decoy::model.validating:*' => 'Bkwld\Decoy\Observers\ValidateExistingFiles@onValidating',
-        ];
-
-        foreach ($methodMap as $key => $method) {
-            $this->app['events']->listen($key, $method);
-        }
+        $this->app['events']->listen('eloquent.saving:*',
+            'Bkwld\Decoy\Observers\Localize');
+        $this->app['events']->listen('eloquent.saving:*',
+            'Bkwld\Decoy\Observers\Encoding@onSaving');
+        $this->app['events']->listen('eloquent.saved:*',
+            'Bkwld\Decoy\Observers\ManyToManyChecklist');
+        $this->app['events']->listen('eloquent.deleted:*',
+            'Bkwld\Decoy\Observers\Encoding@onDeleted');
+        $this->app['events']->listen('decoy::model.validating:*',
+            'Bkwld\Decoy\Observers\ValidateExistingFiles@onValidating');
     }
 
     /**
