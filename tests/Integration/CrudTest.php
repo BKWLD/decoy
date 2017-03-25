@@ -26,6 +26,16 @@ class CrudTest extends TestCase
             imagedestroy($img);
         }
 
+        // Make the file record
+        $file = new UploadedFile(
+            $img_path,
+            $img_name,
+            'image/png',
+            null,
+            null,
+            true
+        );
+
         return [
 
             // Params
@@ -47,14 +57,7 @@ class CrudTest extends TestCase
             [
                 'images' => [
                     '_xxxx' => [
-                        'file' => new UploadedFile(
-                            $img_path,
-                            $img_name,
-                            'image/png',
-                            null,
-                            null,
-                            true
-                        )
+                        'file' => $file,
                     ],
                 ],
             ],
