@@ -111,10 +111,15 @@ class Localize
      */
     public function localizableLocales()
     {
-        return array_diff_key(// Keep only locales that don't exist in
+        // Keep only locales that don't exist in ...
+        return array_diff_key(
             Config::get('decoy.site.locales'),
-            array_flip($this->other()->lists('locale')), // ... the locales of other localizations
-            [$this->item->locale => null] // ... and this locale
+
+            // ... the locales of other localizations ...
+            $this->other()->lists('locale')->flip()->toArray(),
+
+            // ... and the model's locale
+            [$this->item->locale => null]
         );
     }
 
