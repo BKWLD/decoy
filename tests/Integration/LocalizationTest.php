@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Integration;
 
+use App\Article;
 use App\Recipe;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
@@ -26,6 +27,18 @@ class LocalizationTest extends TestCase
     {
         $response = $this->get('admin/recipes/create');
         $response->assertResponseStatus(200);
+    }
+
+    /**
+     * Test hidden on a non-localized model
+     *
+     * @return void
+     */
+    public function testHiddenOnCreate()
+    {
+        $response = $this->get('admin/articles/create');
+        $response->assertResponseStatus(200);
+        $response->assertTrue($this->response->original->content->localize->hidden());
     }
 
     /**
@@ -61,6 +74,21 @@ class LocalizationTest extends TestCase
 
         $response = $this->get('admin/recipes/'.$recipe->id.'/edit');
         $response->assertResponseStatus(200);
+        $response->assertFalse($this->response->original->content->localize->hidden());
+    }
+
+    /**
+     * Test hidden on a non-localized model
+     *
+     * @return void
+     */
+    public function testHiddenOnEdit()
+    {
+        $article = factory(Article::class)->create();
+
+        $response = $this->get('admin/articles/'.$article->id.'/edit');
+        $response->assertResponseStatus(200);
+        $response->assertTrue($this->response->original->content->localize->hidden());
     }
 
     /**

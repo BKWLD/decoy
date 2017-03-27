@@ -84,7 +84,7 @@
      *
      * @var boolean
      */
-    // 'auto_localize_root_models' => true,
+    'auto_localize_root_models' => false,
 
     /**
      * Store an entry in the database of all model changes.
