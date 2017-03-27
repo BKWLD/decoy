@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Bkwld\Decoy\Controllers\Base;
 
-class {{controller}} extends Base
+class Recipes extends Base
 {
     /*
      * Example settings

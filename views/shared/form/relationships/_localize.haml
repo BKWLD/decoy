@@ -18,7 +18,7 @@
 							%input(type="radio" name="compare" value=$model->locale data-model=$model)
 							%strong.locale=Config::get('decoy.site.locales')[$model->locale]
 							=' - '
-							%a(href=DecoyURL::relative('edit', $model->getKey()))!=$model->title()
+							%a(href=DecoyURL::relative('edit', $model->getKey()))!=$model->admin_title
 				%p.help-block Choose an existing localization for this <b>#{$title}</b> to compare against.  Rollover form element to view the content in the selected localization.
 
 		-# Create a new localization menu if there are un-assigned locales
@@ -39,26 +39,26 @@
 					-$locale = key($locales)
 					%input(type='hidden' name='locale' value=$locale)
 					.form-control A #{$label} localization
-				
+
 				-# Additional options
-				%input(type="hidden" name='options')
-				.checkbox
-					%label
-						%input(type="checkbox" name='options[]' value='text' checked)
-						Include text and settings
-				-if(count($item->file_attributes))
+					%input(type="hidden" name='options')
 					.checkbox
 						%label
-							%input(type="checkbox" name='options[]' value='files' checked)
-							Include images and files
-					
+							%input(type="checkbox" name='options[]' value='text' checked)
+							Include text and settings
+					-if(count($item->file_attributes))
+						.checkbox
+							%label
+								%input(type="checkbox" name='options[]' value='files' checked)
+								Include images and files
+
 				-# Help
 				%p.help-block Creating a new localization of the current <b>#{$title}</b> will create a copy of <i>this</i> <b>#{$title}</b> using the selected locale.  The new <b>#{$title}</b> will be set to "Hidden".
 
 				-# Submit
 				%button.btn.btn-default
 					%span.glyphicon.glyphicon-plus.glyphicon
-					Create				
+					Create
 			!=Former::close()
 
 		-else

@@ -1,5 +1,16 @@
-<?php namespace Bkwld\Decoy\Facades;
+<?php
+
+namespace Bkwld\Decoy\Facades;
+
 use Illuminate\Support\Facades\Facade;
-class DecoyURL extends Facade {
-	protected static function getFacadeAccessor() { return 'decoy.url'; }
+
+class DecoyURL extends Facade
+{
+    /**
+     * @return string
+     */
+    protected static function getFacadeAccessor()
+    {
+        return 'decoy.url';
+    }
 }
