@@ -117,6 +117,22 @@ class LocalizationTest extends TestCase
         $response->assertResponseStatus(200);
     }
 
+    /**
+     * Test that the edit view doesnt error
+     *
+     * @return void
+     */
+    public function testEditOfDuplicate()
+    {
+        $recipe = factory(Recipe::class)->create();
+        $dupe = $recipe->duplicate();
+        $dupe->locale = 'es';
+        $dupe->save();
+
+        $response = $this->get('admin/recipes/'.$dupe->id.'/edit');
+        $response->assertResponseStatus(200);
+    }
+
     // /**
     //  * Test that the edit view updates properly
     //  *

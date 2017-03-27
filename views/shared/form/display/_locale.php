@@ -19,7 +19,7 @@ if ($item && ($localizations = $localize->other())) {
 		if ($sibling = $localizations->get($options['value'])) {
 			$sibling = $sibling[0]; // The groupBy makes an array for its value
 			$options['disabled'] = true;
-			$label = "<span class='locale-label'>{$label} - Localized as <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->title().'</a></span>';
+			$label = "<span class='locale-label'>{$label} - Localized as <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->admin_title.'</a></span>';
 			$config[$label] = $options;
 
 		// Else, don't touch
