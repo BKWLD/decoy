@@ -9,6 +9,16 @@ class CrudTest extends TestCase
 {
 
     /**
+     * Common init
+     *
+     * @return void
+     */
+    public function setUp() {
+        parent::setUp();
+        $this->auth();
+    }
+
+    /**
      * Create data used for crud tests
      *
      * @return array
@@ -71,7 +81,6 @@ class CrudTest extends TestCase
      */
     public function testCreate()
     {
-        $this->auth();
         $response = $this->get('admin/articles/create');
         $response->assertResponseStatus(200);
     }
@@ -83,7 +92,6 @@ class CrudTest extends TestCase
      */
     public function testStoreFailsValidation()
     {
-        $this->auth();
         $response = $this->post('admin/articles/create', ['title' => ''], [
             'HTTP_REFERER' => url('admin/articles/create'),
         ]);
@@ -98,7 +106,6 @@ class CrudTest extends TestCase
      */
     public function testStore()
     {
-        $this->auth();
         list($params, $files) = $this->createData();
 
         $response = $this->call('POST', 'admin/articles/create', array_merge($params, [
@@ -114,13 +121,25 @@ class CrudTest extends TestCase
     }
 
     /**
+     * Test that the edit view doesn't error
+     *
+     * @return void
+     */
+    public function testEdit()
+    {
+        $article = factory(Article::class)->create();
+
+        $response = $this->get('admin/articles/'.$article->id.'/edit');
+        $response->assertResponseStatus(200);
+    }
+
+    /**
      * Test that the edit view updates properly
      *
      * @return void
      */
     public function testUpdate()
     {
-        $this->auth();
         $article = factory(Article::class)->create();
 
         $response = $this->call('POST', 'admin/articles/' . $article->id . '/edit', [
@@ -137,7 +156,6 @@ class CrudTest extends TestCase
      */
     public function testDestroy()
     {
-        $this->auth();
         $article = factory(Article::class)->create();
 
         $this->get('admin/articles/' . $article->id . '/destroy');
@@ -152,7 +170,6 @@ class CrudTest extends TestCase
      */
     public function testDuplicate()
     {
-        $this->auth();
         $article = factory(Article::class)->create();
 
         $new_article = Article::findBySlug($article->slug);
