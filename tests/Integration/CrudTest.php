@@ -67,8 +67,6 @@ class CrudTest extends TestCase
      */
     public function testStore()
     {
-        $this->auth();
-
         $response = $this->call('POST', 'admin/articles/create', array_merge($this->createData(), [
             '_save' => 'save',
         ]));
