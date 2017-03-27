@@ -1,5 +1,7 @@
 <?php
 
+use Bkwld\Decoy\Models\Admin as BkwldAdmin;
+
 /*
 |--------------------------------------------------------------------------
 | Model Factories
@@ -57,5 +59,15 @@ $factory->define(Bkwld\Decoy\Models\RedirectRule::class, function (Faker\Generat
         'to' => '/redirected',
         'code' => 301,
         'label' => $faker->word,
+    ];
+});
+
+$factory->define(BkwldAdmin::class, function (Faker\Generator $faker) {
+    return [
+        'first_name' => $faker->firstName,
+        'last_name' => $faker->lastName,
+        'email' => $faker->safeEmail,
+        'password' => bcrypt(str_random(10)),
+        'role' => 'viewer',
     ];
 });

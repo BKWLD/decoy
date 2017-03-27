@@ -55,12 +55,10 @@
 	'permissions' => [
 		'viewer' => [
 			'can' => [
-				'read.articles',
-				'read.admins',
-				'manage.tags',
+				'manage.articles',
 			],
 			'cant' => [
-				'destroy.tags',
+				'destroy.articles',
 			]
 		],
 	],
