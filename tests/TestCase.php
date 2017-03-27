@@ -53,7 +53,8 @@ abstract class TestCase extends LaravelTestCase
      *
      * @return array
      */
-    protected function ajaxHeader() {
+    protected function ajaxHeader()
+    {
         return [ 'X-Requested-With' => 'XMLHttpRequest' ];
     }
 }
