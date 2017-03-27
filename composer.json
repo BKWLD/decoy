@@ -28,7 +28,7 @@
 		"php": ">=5.4.0",
 		"weotch/former": "^4.0.7",
 		"anahkiasen/html-object": "~1.3",
-		"bkwld/cloner": "^3.1.1",
+		"bkwld/cloner": "^3.2.2",
 		"bkwld/croppa": "~4.0",
 		"bkwld/laravel-haml": "~2.0",
 		"bkwld/library": "~4.0",
