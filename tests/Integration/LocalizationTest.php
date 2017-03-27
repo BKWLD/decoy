@@ -9,6 +9,16 @@ class LocalizationTest extends TestCase
 {
 
     /**
+     * Common init
+     *
+     * @return void
+     */
+    public function setUp() {
+        parent::setUp();
+        $this->auth();
+    }
+
+    /**
      * Create data used for crud tests
      *
      * @return array
@@ -70,7 +80,6 @@ class LocalizationTest extends TestCase
      */
     public function testCreate()
     {
-        $this->auth();
         $response = $this->get('admin/recipes/create');
         $response->assertResponseStatus(200);
     }
@@ -82,7 +91,6 @@ class LocalizationTest extends TestCase
      */
     public function testStore()
     {
-        $this->auth();
         list($params, $files) = $this->createData();
 
         $response = $this->call('POST', 'admin/recipes/create', array_merge($params, [
@@ -94,6 +102,19 @@ class LocalizationTest extends TestCase
         $this->assertEquals('en', Recipe::first()->locale);
         $this->assertNotEmpty(Recipe::first()->locale_group);
 
+    }
+
+    /**
+     * Test that the edit view doesnt error
+     *
+     * @return void
+     */
+    public function testEdit()
+    {
+        $recipe = factory(Recipe::class)->create();
+
+        $response = $this->get('admin/recipes/'.$recipe->id.'/edit');
+        $response->assertResponseStatus(200);
     }
 
     // /**

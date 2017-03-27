@@ -42,6 +42,15 @@ $factory->define(App\Slide::class, function (Faker\Generator $faker) {
     ];
 });
 
+$factory->define(App\Recipe::class, function (Faker\Generator $faker) {
+    return [
+        'title' => trim($faker->sentence, '.'),
+        'directions' => '<p>'.$faker->paragraph.'</p>',
+        'locale' => 'en',
+        'public' => 1,
+    ];
+});
+
 $factory->define(Bkwld\Decoy\Models\Element::class, function (Faker\Generator $faker) {
     return [
         'key' => 'homepage.marquee.title',
