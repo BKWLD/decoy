@@ -100,6 +100,11 @@ class Localize
         if (config('decoy.site.auto_localize_root_models')
             && app('decoy.wildcard')->detectParent()) return true;
 
+        // If auto-localizeable is turned off and this model doesn't have it
+        // turned on
+        if (!config('decoy.site.auto_localize_root_models')
+            && !$class::$localizable) return true;
+
         // Otherwise, allow localization
         return false;
     }
