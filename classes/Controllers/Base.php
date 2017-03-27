@@ -635,14 +635,17 @@ class Base extends Controller
         // Duplicate using Bkwld\Cloner
         $new = $src->duplicate();
 
+        // Don't make duplicates public
+        if (array_key_exists('public', $new->getAttributes())) {
+            $this->public = 0;
+        }
+
         // If there is a name or title field, append " copy" to it.  Use "original"
         // to avoid mutators.
         if ($name = $new->getOriginal('name')) {
             $new->setAttribute('name', $name.' copy');
-            $new->save();
         } elseif ($title = $new->getOriginal('title')) {
             $new->setAttribute('title', $title.' copy');
-            $new->save();
         }
 
         // Set localization options on new instance
@@ -651,8 +654,10 @@ class Base extends Controller
             if (isset($src->locale_group)) {
                 $new->locale_group = $src->locale_group;
             }
-            $new->save();
         }
+
+        // Save any changes that were made
+        $new->save();
 
         // Save the new record and redirect to its edit view
         return Redirect::to(DecoyURL::relative('edit', $new->getKey()))
