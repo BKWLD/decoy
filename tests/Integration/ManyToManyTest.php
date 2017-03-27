@@ -23,7 +23,7 @@ class ManyToManyTest extends TestCase
      *
      * @return void
      */
-    public function setUp() {
+    protected function setUp() {
         parent::setUp();
         $this->auth();
 
