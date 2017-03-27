@@ -76,11 +76,10 @@ abstract class Base extends Eloquent implements SluggableInterface
     /**
      * Specify columns that shouldn't be duplicated by Bkwld\Cloner.  Include
      * slug by default so that Sluggable will automatically generate a new one.
-     * Also include "public" so clones aren't immediately published.
      *
      * @var array
      */
-    protected $clone_exempt_attributes = [ 'slug', 'public' ];
+    protected $clone_exempt_attributes = ['slug'];
 
     /**
      * Relations to follow when models are duplicated
