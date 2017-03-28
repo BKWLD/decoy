@@ -9,14 +9,25 @@ class ElementsTest extends TestCase
 {
 
     /**
+     * Common init
+     *
+     * @return void
+     */
+    protected function setUp() {
+        parent::setUp();
+        $this->auth();
+
+        // Disable localization for these tests
+        config()->set('decoy.site.locales', []);
+    }
+
+    /**
      * Test that the elements page loads
      *
      * @return void
      */
     public function testElementsListing()
     {
-        $this->auth();
-
         $response = $this->get('admin/elements');
 
         $this->assertResponseOk();
@@ -29,8 +40,6 @@ class ElementsTest extends TestCase
      */
     public function testElementsShowDefault()
     {
-        $this->auth();
-
         $default = 'Welcome to Decoy';
         $element = Decoy::el('homepage.marquee.title');
 
@@ -44,8 +53,6 @@ class ElementsTest extends TestCase
      */
     public function testTextElementSave()
     {
-        $this->auth();
-
         $response = $this->post('admin/elements', [
             'homepage|marquee|title' => 'Test'
         ]);
@@ -62,8 +69,6 @@ class ElementsTest extends TestCase
      */
     public function testTextElementReadsValueFromDatabase()
     {
-        $this->auth();
-
         $create_element = factory(Element::class)->create();
         $database_value = Element::first()->value();
 
@@ -80,8 +85,6 @@ class ElementsTest extends TestCase
      */
     public function testTextElementDoesntSaveUnchanged()
     {
-        $this->auth();
-
         // Make sure first there are no elements in the database
         $first_check = Element::first();
         $this->assertEmpty($first_check);
