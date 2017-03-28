@@ -330,8 +330,20 @@ abstract class Base extends Eloquent implements SluggableInterface
      *
      * @return string
      */
-    public function getAdminRowClassAttribute()
+    public function getAdminRowClassAttribute() {}
+
+    /**
+     * Expose model attributes for comparison by the localization sidebar
+     *
+     * @return array
+     */
+    public function getAttributesForLocalizationComparisonAttribute()
     {
+        $attributes = $this->getAttributes();
+        if (method_exists($this, 'croppedImages')) {
+            $attributes['images'] = $this->croppedImages(600, 600);
+        }
+        return $attributes;
     }
 
     //---------------------------------------------------------------------------

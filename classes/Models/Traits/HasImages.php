@@ -67,6 +67,26 @@ trait HasImages
     }
 
     /**
+     * Return an array of all images associated with the model, keyed by their
+     * name, while optionally applying a crop to them
+     */
+    public function croppedImages($width = null, $height = null, $options = null)
+    {
+        return array_combine(
+
+            // Keys
+            $this->images->map(function ($image) {
+                return $image->name ?: 'default';
+            })->toArray(),
+
+            // Values
+            $this->images->map(function ($image) use ($width, $height, $options) {
+                return $image->crop($width, $height, $options)->url;
+            })->toArray()
+        );
+    }
+
+    /**
      * Add an Image to the `imgs` attribute of the model for the purpose of
      * exposing it when serialized.
      *
