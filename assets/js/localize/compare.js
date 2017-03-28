@@ -2,111 +2,111 @@
  * Wraps edit view form-groups, showing the compare UI on hover
  */
 define(function (require) {
-  
-	// Dependencies
-	var $ = require('jquery')
-		, _ = require('lodash')
-		, Backbone = require('backbone')
-	;
 
-	// Get a shared reference to the localizations
-	var $localizations = $('.form-group.compare :radio');
-	if (!$localizations.length) return;
+  // Dependencies
+  var $ = require('jquery')
+    , _ = require('lodash')
+    , Backbone = require('backbone')
+  ;
 
-	// Store the model data when localizations change
-	var model, locale;
-	$localizations.on('change', function() {
-		var $checked = $localizations.filter(':checked');
-		model = $checked.data('model');
-		locale = $checked.siblings('.locale').text();
-	});
-	
-	// Popover defaults
-	var defaults = {
-		container: 'body',
-		html: true,
-		placement: 'right',
-		template: '<div class="popover localize-compare" role="tooltip"><div class="arrow"></div><div class="popover-title"></div><div class="popover-content"></div></div>',
-		viewport: { selector: 'body', padding: 5 },
-		trigger: 'manual'
-	};
+  // Get a shared reference to the localizations
+  var $localizations = $('.form-group.compare :radio');
+  if (!$localizations.length) return;
 
-	// Setup view
-	var View = {};
-	View.initialize = function() {
-		_.bindAll(this);
+  // Store the model data when localizations change
+  var model, locale;
+  $localizations.on('change', function() {
+    var $checked = $localizations.filter(':checked');
+    model = $checked.data('model');
+    locale = $checked.siblings('.locale').text();
+  });
 
-		// Cache
-		this.$input = this.$('input,textarea');
-		this.name = this.$input.attr('name');
-		this.type = this.getType();
+  // Popover defaults
+  var defaults = {
+    container: 'body',
+    html: true,
+    placement: 'right',
+    template: '<div class="popover localize-compare" role="tooltip"><div class="arrow"></div><div class="popover-title"></div><div class="popover-content"></div></div>',
+    viewport: { selector: 'body', padding: 5 },
+    trigger: 'manual'
+  };
 
-		// Register events
-		this.$el.on('mouseenter', this.show);
-		this.$el.on('mouseleave', this.hide);
+  // Setup view
+  var View = {};
+  View.initialize = function() {
+    _.bindAll(this);
 
-	};
+    // Cache
+    this.$input = this.$('input,textarea');
+    this.name = this.$input.attr('name');
+    this.type = this.getType();
 
-	// Show the popover
-	View.show = function() {
-		if (!model) return;
+    // Register events
+    this.$el.on('mouseenter', this.show);
+    this.$el.on('mouseleave', this.hide);
 
-		// Get the massaged content
-		var content = this.massage(model[this.name]);
-		if (!content) return;
+  };
 
-		// Merge this title and value into with defaults and show
-		this.$el.popover(_.defaults({
-			title: locale + ' localization',
-			content: content
-		}, defaults)).popover('show');
-	};
+  // Show the popover
+  View.show = function() {
+    if (!model) return;
 
-	// Figure out what type of form element is being shown
-	View.getType = function() {
-		if (this.$input.attr('name') == 'slug') return 'slug';
-		else if (this.$input.attr('name') == 'locale') return 'locale';
-		else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
-		else if (this.$input.hasClass('date')) return 'date';
-		else if (this.$input.closest('.form-group.image-upload').length) return 'image';
-		else if (this.$input.is(':radio')) return 'radio';
-		else return 'text';
-	};
+    // Get the massaged content
+    var content = this.massage(model[this.name]);
+    if (!content) return;
 
-	// Massage the content of the popover
-	View.massage = function(content) {
-		switch(this.type) {
+    // Merge this title and value into with defaults and show
+    this.$el.popover(_.defaults({
+      title: locale + ' localization',
+      content: content
+    }, defaults)).popover('show');
+  };
 
-			// Get the value from the other checkables.  Null values are converted
-			// to empty strings to fix issues like with "visible".
-			case 'radio': return this.$input.filter('[value="'+(content||'')+'"]').parent().text();
+  // Figure out what type of form element is being shown
+  View.getType = function() {
+    if (this.$input.attr('name') == 'slug') return 'slug';
+    else if (this.$input.attr('name') == 'locale') return 'locale';
+    else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
+    else if (this.$input.hasClass('date')) return 'date';
+    else if (this.$input.closest('.form-group.image-upload').length) return 'image';
+    else if (this.$input.is(':radio')) return 'radio';
+    else return 'text';
+  };
 
-			// Wrap in container with special class
-			case 'wysiwyg': return '<div class="wysiwyg">'+content+'</div>';
+  // Massage the content of the popover
+  View.massage = function(content) {
+    switch(this.type) {
 
-			// Format date
-			case 'date': return content.replace(/(\d+)\-(\d+)\-(\d+)/, "$2/$3/$1");
+      // Get the value from the other checkables.  Null values are converted
+      // to empty strings to fix issues like with "visible".
+      case 'radio': return this.$input.filter('[value="'+(content||'')+'"]').parent().text();
 
-			// Make an image tag
-			case 'image':  return '<img src="'+content+'" class="image"/>';
+      // Wrap in container with special class
+      case 'wysiwyg': return '<div class="wysiwyg">'+content+'</div>';
 
-			// Make a PATH from the slug
-			case 'slug': return this.$input.siblings('.input-group-addon').text()+content;
+      // Format date
+      case 'date': return content.replace(/(\d+)\-(\d+)\-(\d+)/, "$2/$3/$1");
 
-			// Locales shouldn't be shown
-			case 'locale': return null;
+      // Make an image tag
+      case 'image':  return '<img src="'+content+'" class="image"/>';
 
-			// Don't massage
-			case 'text':
-			default: return content;
-		}
-	};
+      // Make a PATH from the slug
+      case 'slug': return this.$input.siblings('.input-group-addon').text()+content;
 
-	// Hide the popover
-	View.hide = function() {
-		this.$el.popover('destroy');
-	};
-	
-	// Return view class
-	return Backbone.View.extend(View);
+      // Locales shouldn't be shown
+      case 'locale': return null;
+
+      // Don't massage
+      case 'text':
+      default: return content;
+    }
+  };
+
+  // Hide the popover
+  View.hide = function() {
+    this.$el.popover('destroy');
+  };
+
+  // Return view class
+  return Backbone.View.extend(View);
 });
