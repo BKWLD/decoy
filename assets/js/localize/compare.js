@@ -37,9 +37,10 @@ define(function (require) {
     _.bindAll(this);
 
     // Cache
-    this.$input = this.$('input,textarea');
-    this.name = this.$input.attr('name');
+    try { this.$input = this.getInput(); }
+    catch (e) { return; }
     this.type = this.getType();
+    this.name = this.getName();
 
     // Register events
     this.$el.on('mouseenter', this.show);
@@ -47,12 +48,45 @@ define(function (require) {
 
   };
 
+  // Get the input
+  View.getInput = function() {
+
+    // If an image input, find the
+    if (this.$el.hasClass('image-upload')) {
+      return this.$('.input-name');
+    }
+
+    // If simple constraints only match 1 field, use it
+    $input = this.$('input,textarea');
+    if ($input.length == 1) return $input;
+
+    // Otherwise, throw an error
+    throw new Error('Input could not be detected');
+  };
+
+  // Figure out what type of form element is being shown
+  View.getType = function() {
+    if (this.$input.attr('name') == 'slug') return 'slug';
+    else if (this.$input.attr('name') == 'locale') return 'locale';
+    else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
+    else if (this.$input.hasClass('date')) return 'date';
+    else if (this.$input.hasClass('input-name')) return 'image';
+    else if (this.$input.is(':radio')) return 'radio';
+    else return 'text';
+  };
+
+  // Get the attribute name
+  View.getName = function() {
+    if (this.type == 'image') return this.$input.val() || 'default';
+    else return this.$input.attr('name');
+  }
+
   // Show the popover
   View.show = function() {
     if (!model) return;
 
     // Get the massaged content
-    var content = this.massage(model[this.name]);
+    var content = this.getContent();
     if (!content) return;
 
     // Merge this title and value into with defaults and show
@@ -62,19 +96,15 @@ define(function (require) {
     }, defaults)).popover('show');
   };
 
-  // Figure out what type of form element is being shown
-  View.getType = function() {
-    if (this.$input.attr('name') == 'slug') return 'slug';
-    else if (this.$input.attr('name') == 'locale') return 'locale';
-    else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
-    else if (this.$input.hasClass('date')) return 'date';
-    else if (this.$input.closest('.form-group.image-upload').length) return 'image';
-    else if (this.$input.is(':radio')) return 'radio';
-    else return 'text';
-  };
-
   // Massage the content of the popover
-  View.massage = function(content) {
+  View.getContent = function() {
+
+    // Get the content value
+    var content = this.type == 'image' ?
+        model.images[this.name] :
+        model[this.name];
+    console.log(this.name, this.type, model);
+    // Massage the content
     switch(this.type) {
 
       // Get the value from the other checkables.  Null values are converted
