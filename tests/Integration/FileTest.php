@@ -26,17 +26,6 @@ class FileTest extends TestCase
      */
     private function createData()
     {
-
-        // Create an image in the tmp directory where Upchuck is expecting it
-        $tmp_dir = ini_get('upload_tmp_dir') ?: sys_get_temp_dir();
-        $img_name = 'decoy-article-image.png';
-        $img_path = $tmp_dir.'/'.$img_name;
-        if (!file_exists($img_path)) {
-            $img = imagecreatetruecolor(20, 20);
-            imagepng($img, $img_path);
-            imagedestroy($img);
-        }
-
         return [
 
             // Params
@@ -58,14 +47,7 @@ class FileTest extends TestCase
             [
                 'images' => [
                     '_xxxx' => [
-                        'file' => new UploadedFile(
-                            $img_path,
-                            $img_name,
-                            'image/png',
-                            null,
-                            null,
-                            true
-                        )
+                        'file' => $this->createUploadedFile()
                     ],
                 ],
             ],
@@ -79,12 +61,6 @@ class FileTest extends TestCase
      */
     public function createRecipeData()
     {
-        $tmp_dir = ini_get('upload_tmp_dir') ?: sys_get_temp_dir();
-        $file_name = 'file.txt';
-        $file_path = $tmp_dir.'/'.$file_name;
-        if (!file_exists($file_path)) {
-            file_put_contents($file_path, 'test');
-        }
 
         return [
 
@@ -97,14 +73,7 @@ class FileTest extends TestCase
 
             // Files
             [
-                'file' => new UploadedFile(
-                    $file_path,
-                    $file_name,
-                    null,
-                    null,
-                    null,
-                    true
-                )
+                'file' => $this->createUploadedFile('file.jpg')
             ],
         ];
     }
@@ -150,12 +119,7 @@ class FileTest extends TestCase
      */
     public function testImageRemovedOnDelete()
     {
-        // Make image
-        $img = imagecreatetruecolor(20, 20);
-        ob_start();
-        imagejpeg($img);
-        $this->disk->put('test.jpg', ob_get_clean());
-        imagedestroy($img);
+        $this->createVirtualFile('test.jpg');
 
         // Create recipe with file attachments
         $article = factory(Article::class)->create();
@@ -186,10 +150,10 @@ class FileTest extends TestCase
      */
     public function testFileRemovedOnDelete()
     {
-        $this->disk->put('test.txt', 'test');
+        $this->createVirtualFile('test.jpg');
 
         $recipe = factory(Recipe::class)->create([
-            'file' => '/uploads/test.txt'
+            'file' => '/uploads/test.jpg'
         ]);
 
         $response = $this->get('admin/recipes/'.$recipe->id.'/destroy');
@@ -206,10 +170,10 @@ class FileTest extends TestCase
      */
     public function testFileRemovedOnSave()
     {
-        $this->disk->put('test.txt', 'test');
+        $this->createVirtualFile('test.jpg');
 
         $recipe = factory(Recipe::class)->create([
-            'file' => '/uploads/test.txt'
+            'file' => '/uploads/test.jpg'
         ]);
 
         $this->assertNotEmpty($recipe->file);
