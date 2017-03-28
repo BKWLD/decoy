@@ -7,6 +7,15 @@ use Bkwld\Decoy\Models\Element;
 
 class ElementsTest extends TestCase
 {
+    /**
+     * Common init
+     *
+     * @return void
+     */
+    protected function setUp() {
+        parent::setUp();
+        $this->auth();
+    }
 
     /**
      * Test that the elements page loads
@@ -15,8 +24,6 @@ class ElementsTest extends TestCase
      */
     public function testElementsListing()
     {
-        $this->auth();
-
         $response = $this->get('admin/elements');
 
         $this->assertResponseOk();
@@ -29,8 +36,6 @@ class ElementsTest extends TestCase
      */
     public function testElementsShowDefault()
     {
-        $this->auth();
-
         $default = 'Welcome to Decoy';
         $element = Decoy::el('homepage.marquee.title');
 
@@ -42,12 +47,15 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementSave()
+    public function testTextFieldSave()
     {
-        $this->auth();
-
         $response = $this->post('admin/elements', [
-            'homepage|marquee|title' => 'Test'
+            'homepage|marquee|title' => 'Test',
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
         ]);
 
         $element = Decoy::el('homepage.marquee.title');
@@ -60,10 +68,8 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementReadsValueFromDatabase()
+    public function testTextFieldReadsValueFromDatabase()
     {
-        $this->auth();
-
         $create_element = factory(Element::class)->create();
         $database_value = Element::first()->value();
 
@@ -78,10 +84,8 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementDoesntSaveUnchanged()
+    public function testTextFieldDoesntSaveUnchanged()
     {
-        $this->auth();
-
         // Make sure first there are no elements in the database
         $first_check = Element::first();
         $this->assertEmpty($first_check);
@@ -92,10 +96,84 @@ class ElementsTest extends TestCase
         $this->assertEquals($default_text, $default_element);
 
         // Make a post request without changing the title
-        $response = $this->post('admin/elements', []);
+        $response = $this->post('admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ]);
         $this->assertResponseStatus(302);
         $this->assertEmpty(Element::first());
         $this->assertEquals($default_text, $default_element);
+    }
+
+    /**
+     * Test that the image uploads to element fields
+     *
+     * @return void
+     */
+    public function testImageFieldUpload()
+    {
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ], [], [
+            'images' => [
+                '_xxxx' => [
+                    'file' => $this->createUploadedFile()
+                ],
+            ],
+        ]);
+
+        $element = Decoy::el('homepage.marquee.image');
+        $this->assertResponseStatus(302);
+        $this->assertNotEmpty($element->crop(10, 10)->url);
+    }
+
+    /**
+     * Test that the file uploads to element fields
+     *
+     * @return void
+     */
+    public function testFileFieldUpload()
+    {
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ], [], [
+            'homepage|marquee|file' => $this->createUploadedFile('file.jpg')
+        ]);
+
+        $element = Decoy::el('homepage.marquee.file');
+        $this->assertResponseStatus(302);
+        $this->assertNotEmpty($element->value());
+    }
+
+    /**
+     * Test that the image is deleted from elements and db
+     *
+     * @return void
+     */
+    public function testImageFieldDelete()
+    {
+        
+    }
+
+    /**
+     * Test that the file is deleted from elements and db
+     *
+     * @return void
+     */
+    public function testFileFieldDelete()
+    {
+
     }
 
 }
