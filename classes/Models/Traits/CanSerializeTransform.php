@@ -90,8 +90,13 @@ trait CanSerializeTransform
     protected function runSerializeTransformsOnCollection(Collection $collection)
     {
         // Loop through the collection and transform each model
-        return $collection->map(function (Model $model) {
-            return $this->runSerializeTransformsOnModel($model);
+        return $collection->map(function ($item) {
+
+            // If collection item isn't a model, don't do anything
+            if (!is_a($item, Model::class)) return $item;
+
+            // Serialize the model
+            return $this->runSerializeTransformsOnModel($item);
 
         // Remove all the models whose transforms did not return a value. Then
         // convert back to an array.
