@@ -18,7 +18,9 @@ class ElementsTest extends TestCase
         $this->auth();
 
         // Disable localization for these tests
-        config()->set('decoy.site.locales', []);
+        config()->set('decoy.site.locales', [
+            'en' => 'English',
+        ]);
     }
 
     /**
