@@ -341,7 +341,7 @@ abstract class Base extends Eloquent implements SluggableInterface
     {
         $attributes = $this->getAttributes();
         if (method_exists($this, 'croppedImages')) {
-            $attributes['images'] = $this->croppedImages(600, 600);
+            $attributes['images'] = $this->croppedImages(300);
         }
         return $attributes;
     }
