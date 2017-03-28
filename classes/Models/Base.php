@@ -285,9 +285,7 @@ abstract class Base extends Eloquent implements SluggableInterface
      *
      * @return string
      */
-    public function getUriAttribute()
-    {
-    }
+    public function getUriAttribute() {}
 
     /**
      * Get all file fields by looking at Upchuck config and validation rules
