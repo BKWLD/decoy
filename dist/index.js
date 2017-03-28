@@ -29068,7 +29068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var content = this.type == 'image' ?
 	        model.images[this.name] :
 	        model[this.name];
-	    console.log(this.name, this.type, model);
+
 	    // Massage the content
 	    switch(this.type) {
 
