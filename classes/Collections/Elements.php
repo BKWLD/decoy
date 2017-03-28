@@ -205,6 +205,20 @@ class Elements extends Collection
     }
 
     /**
+     * Clea the internal store as well as the cache, in effect totally resetting
+     * hydration
+     *
+     * @return $this;
+     */
+    public function empty()
+    {
+        $this->items = [];
+        $this->clearCache();
+
+        return $this;
+    }
+
+    /**
      * Merge database records and config file into a single, flat associative array.
      *
      * @return void
