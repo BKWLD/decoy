@@ -15,7 +15,7 @@
 				-foreach($localizations as $model)
 					.radio
 						%label
-							%input(type="radio" name="compare" value=$model->locale data-model=$model)
+							%input(type="radio" name="compare" value=$model->locale data-model=json_encode($model->attributes_for_localization_comparison))
 							%strong.locale=Config::get('decoy.site.locales')[$model->locale]
 							=' - '
 							%a(href=DecoyURL::relative('edit', $model->getKey()))!=$model->admin_title

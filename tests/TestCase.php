@@ -2,6 +2,7 @@
 namespace Tests;
 
 use Bkwld\Decoy\Models\Admin;
+use Cache;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
@@ -136,4 +137,11 @@ abstract class TestCase extends LaravelTestCase
         imagedestroy($img);
     }
 
+    /**
+	 * Clear the cache after every test
+	 */
+	public function tearDown() {
+		Cache::flush();
+        parent::tearDown();
+	}
 }

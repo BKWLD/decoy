@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class ElementsTest extends TestCase
 {
+
     /**
      * Common init
      *
@@ -16,6 +17,11 @@ class ElementsTest extends TestCase
     protected function setUp() {
         parent::setUp();
         $this->auth();
+
+        // Disable localization for these tests
+        config()->set('decoy.site.locales', [
+            'en' => 'English',
+        ]);
     }
 
     /**

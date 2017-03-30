@@ -42,6 +42,19 @@ class LocalizationTest extends TestCase
     }
 
     /**
+     * Test auto localize root models
+     *
+     * @return void
+     */
+    public function testAutoLocalizeRootModelsConfig()
+    {
+        config()->set('decoy.site.auto_localize_root_models', true);
+        $response = $this->get('admin/articles/create');
+        $response->assertResponseStatus(200);
+        $response->assertFalse($this->response->original->content->localize->hidden());
+    }
+
+    /**
      * Test that localization columns get set
      *
      * @return void

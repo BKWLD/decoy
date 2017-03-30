@@ -12,3 +12,9 @@ end_of_line = lf
 [*.haml,*.haml.php]
 indent_style = tab
 indent_size = 2
+
+[*.js,.coffee]
+indent_style = space
+indent_size = 2
+charset = utf-8
+end_of_line = lf

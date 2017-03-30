@@ -125,16 +125,16 @@ class Elements extends Collection
     }
 
     /**
-     * Populate the Collection from the Cache or build the cache if it isn't set yet.
-     * But only if not on a local environment (as new Elements are added, you would have
-     * to keep re-clearing the cache)
+     * Populate the Collection from the Cache or build the cache if it isn't set
+     * yet. But only if not on a local environment (as new Elements are added,
+     * you would have to keep re-clearing the cache)
      *
      * @return $this
      */
     public function hydrate($include_extra = false)
     {
-        // If including extra YAML config vars, neither use the cache NOR allow the cache
-        // to be saved with it
+        // If including extra YAML config vars, neither use the cache NOR allow
+        // the cache to be saved with it
         if ($include_extra && !$this->has_extra) {
             $this->has_extra = true;
             $this->items = $this->mergeSources();
@@ -200,6 +200,20 @@ class Elements extends Collection
     public function clearCache()
     {
         Cache::forget($this->cacheKey());
+
+        return $this;
+    }
+
+    /**
+     * Clea the internal store as well as the cache, in effect totally resetting
+     * hydration
+     *
+     * @return $this;
+     */
+    public function empty()
+    {
+        $this->items = [];
+        $this->clearCache();
 
         return $this;
     }

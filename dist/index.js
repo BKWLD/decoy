@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 1.31.17 👍 */
+/*! 📝 Bukwild 💾 3.28.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -28967,114 +28967,145 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Wraps edit view form-groups, showing the compare UI on hover
 	 */
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-	  
-		// Dependencies
-		var $ = __webpack_require__(2)
-			, _ = __webpack_require__(5)
-			, Backbone = __webpack_require__(7)
-		;
 
-		// Get a shared reference to the localizations
-		var $localizations = $('.form-group.compare :radio');
-		if (!$localizations.length) return;
+	  // Dependencies
+	  var $ = __webpack_require__(2)
+	    , _ = __webpack_require__(5)
+	    , Backbone = __webpack_require__(7)
+	  ;
 
-		// Store the model data when localizations change
-		var model, locale;
-		$localizations.on('change', function() {
-			var $checked = $localizations.filter(':checked');
-			model = $checked.data('model');
-			locale = $checked.siblings('.locale').text();
-		});
-		
-		// Popover defaults
-		var defaults = {
-			container: 'body',
-			html: true,
-			placement: 'right',
-			template: '<div class="popover localize-compare" role="tooltip"><div class="arrow"></div><div class="popover-title"></div><div class="popover-content"></div></div>',
-			viewport: { selector: 'body', padding: 5 },
-			trigger: 'manual'
-		};
+	  // Get a shared reference to the localizations
+	  var $localizations = $('.form-group.compare :radio');
+	  if (!$localizations.length) return;
 
-		// Setup view
-		var View = {};
-		View.initialize = function() {
-			_.bindAll(this);
+	  // Store the model data when localizations change
+	  var model, locale;
+	  $localizations.on('change', function() {
+	    var $checked = $localizations.filter(':checked');
+	    model = $checked.data('model');
+	    locale = $checked.siblings('.locale').text();
+	  });
 
-			// Cache
-			this.$input = this.$('input,textarea');
-			this.name = this.$input.attr('name');
-			this.type = this.getType();
+	  // Popover defaults
+	  var defaults = {
+	    container: 'body',
+	    html: true,
+	    placement: 'right',
+	    template: '<div class="popover localize-compare" role="tooltip"><div class="arrow"></div><div class="popover-title"></div><div class="popover-content"></div></div>',
+	    viewport: { selector: 'body', padding: 5 },
+	    trigger: 'manual'
+	  };
 
-			// Register events
-			this.$el.on('mouseenter', this.show);
-			this.$el.on('mouseleave', this.hide);
+	  // Setup view
+	  var View = {};
+	  View.initialize = function() {
+	    _.bindAll(this);
 
-		};
+	    // Cache
+	    try { this.$input = this.getInput(); }
+	    catch (e) { return; }
+	    this.type = this.getType();
+	    this.name = this.getName();
 
-		// Show the popover
-		View.show = function() {
-			if (!model) return;
+	    // Register events
+	    this.$el.on('mouseenter', this.show);
+	    this.$el.on('mouseleave', this.hide);
 
-			// Get the massaged content
-			var content = this.massage(model[this.name]);
-			if (!content) return;
+	  };
 
-			// Merge this title and value into with defaults and show
-			this.$el.popover(_.defaults({
-				title: locale + ' localization',
-				content: content
-			}, defaults)).popover('show');
-		};
+	  // Get the input
+	  View.getInput = function() {
 
-		// Figure out what type of form element is being shown
-		View.getType = function() {
-			if (this.$input.attr('name') == 'slug') return 'slug';
-			else if (this.$input.attr('name') == 'locale') return 'locale';
-			else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
-			else if (this.$input.hasClass('date')) return 'date';
-			else if (this.$input.closest('.form-group.image-upload').length) return 'image';
-			else if (this.$input.is(':radio')) return 'radio';
-			else return 'text';
-		};
+	    // If an image input, find the
+	    if (this.$el.hasClass('image-upload')) {
+	      return this.$('.input-name');
+	    }
 
-		// Massage the content of the popover
-		View.massage = function(content) {
-			switch(this.type) {
+	    // If simple constraints only match 1 field, use it
+	    $input = this.$('input,textarea');
+	    if ($input.length == 1) return $input;
 
-				// Get the value from the other checkables.  Null values are converted
-				// to empty strings to fix issues like with "visible".
-				case 'radio': return this.$input.filter('[value="'+(content||'')+'"]').parent().text();
+	    // Otherwise, throw an error
+	    throw new Error('Input could not be detected');
+	  };
 
-				// Wrap in container with special class
-				case 'wysiwyg': return '<div class="wysiwyg">'+content+'</div>';
+	  // Figure out what type of form element is being shown
+	  View.getType = function() {
+	    if (this.$input.attr('name') == 'slug') return 'slug';
+	    else if (this.$input.attr('name') == 'locale') return 'locale';
+	    else if (this.$input.hasClass('wysiwyg')) return 'wysiwyg';
+	    else if (this.$input.hasClass('date')) return 'date';
+	    else if (this.$input.hasClass('input-name')) return 'image';
+	    else if (this.$input.is(':radio')) return 'radio';
+	    else return 'text';
+	  };
 
-				// Format date
-				case 'date': return content.replace(/(\d+)\-(\d+)\-(\d+)/, "$2/$3/$1");
+	  // Get the attribute name
+	  View.getName = function() {
+	    if (this.type == 'image') return this.$input.val() || 'default';
+	    else return this.$input.attr('name');
+	  }
 
-				// Make an image tag
-				case 'image':  return '<img src="'+content+'" class="image"/>';
+	  // Show the popover
+	  View.show = function() {
+	    if (!model) return;
 
-				// Make a PATH from the slug
-				case 'slug': return this.$input.siblings('.input-group-addon').text()+content;
+	    // Get the massaged content
+	    var content = this.getContent();
+	    if (!content) return;
 
-				// Locales shouldn't be shown
-				case 'locale': return null;
+	    // Merge this title and value into with defaults and show
+	    this.$el.popover(_.defaults({
+	      title: locale + ' localization',
+	      content: content
+	    }, defaults)).popover('show');
+	  };
 
-				// Don't massage
-				case 'text':
-				default: return content;
-			}
-		};
+	  // Massage the content of the popover
+	  View.getContent = function() {
 
-		// Hide the popover
-		View.hide = function() {
-			this.$el.popover('destroy');
-		};
-		
-		// Return view class
-		return Backbone.View.extend(View);
+	    // Get the content value
+	    var content = this.type == 'image' ?
+	        model.images[this.name] :
+	        model[this.name];
+
+	    // Massage the content
+	    switch(this.type) {
+
+	      // Get the value from the other checkables.  Null values are converted
+	      // to empty strings to fix issues like with "visible".
+	      case 'radio': return this.$input.filter('[value="'+(content||'')+'"]').parent().text();
+
+	      // Wrap in container with special class
+	      case 'wysiwyg': return '<div class="wysiwyg">'+content+'</div>';
+
+	      // Format date
+	      case 'date': return content.replace(/(\d+)\-(\d+)\-(\d+)/, "$2/$3/$1");
+
+	      // Make an image tag
+	      case 'image':  return '<img src="'+content+'" class="image"/>';
+
+	      // Make a PATH from the slug
+	      case 'slug': return this.$input.siblings('.input-group-addon').text()+content;
+
+	      // Locales shouldn't be shown
+	      case 'locale': return null;
+
+	      // Don't massage
+	      case 'text':
+	      default: return content;
+	    }
+	  };
+
+	  // Hide the popover
+	  View.hide = function() {
+	    this.$el.popover('destroy');
+	  };
+
+	  // Return view class
+	  return Backbone.View.extend(View);
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ },
 /* 13 */
@@ -37719,7 +37750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    root.chroma = chroma;
 	  }
 
-	  chroma.version = '1.1.1';
+	  chroma.version = '1.2.1';
 
 
 	  /**
@@ -39658,6 +39689,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var dd, dm, i, numColors, o, out, ref, results, samples, w;
 	      numColors = 0;
 	      out = 'hex';
+	      if (arguments.length === 0) {
+	        return _colors.map(function(c) {
+	          return c[out]();
+	        });
+	      }
 	      if (arguments.length === 1) {
 	        if (type(arguments[0]) === 'string') {
 	          out = arguments[0];
