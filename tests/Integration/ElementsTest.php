@@ -1,9 +1,10 @@
 <?php
 namespace Tests\Integration;
 
-use Decoy;
-use Tests\TestCase;
 use Bkwld\Decoy\Models\Element;
+use Decoy;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class ElementsTest extends TestCase
 {
@@ -163,7 +164,41 @@ class ElementsTest extends TestCase
      */
     public function testImageFieldDelete()
     {
-        
+
+        $this->createUploadedFile('test.jpg');
+
+        $element = factory(Element::class)->create([
+            'key' => 'homepage.marquee.image',
+            'type' => 'image',
+            'value' => '/uploads/test.jpg',
+            'locale' => 'en',
+        ]);
+        $image = $element->images()->create([
+            'file' => '/uploads/test.jpg',
+            'file_type' => 'image/jpeg',
+            'file_size' => 10,
+            'width' => 20,
+            'height' => 20,
+        ]);
+
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                $image->id => [
+                    'name' => 'homepage|marquee|image',
+                    'file' => '',
+                ],
+            ],
+        ], [], [
+            'images' => [
+                $image->id => [
+                    'file' => '',
+                ],
+            ],
+        ]);
+
+        $this->assertResponseStatus(302);
+        $this->assertEmpty($element->fresh()->value);
+        $this->assertEmpty($image->fresh());
     }
 
     /**
@@ -173,7 +208,29 @@ class ElementsTest extends TestCase
      */
     public function testFileFieldDelete()
     {
+        $this->createVirtualFile('test.jpg');
 
+        $element = factory(Element::class)->create([
+            'key' => 'homepage.marquee.file',
+            'type' => 'file',
+            'value' => '/uploads/file.jpg',
+            'locale' => 'en',
+        ]);
+
+        $response = $this->call('POST', 'admin/elements', [
+            'homepage|marquee|file' => '',
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ]);
+
+        $this->assertResponseStatus(302);
+
+        $path = app('upchuck')->path($element->value);
+        $this->assertEmpty($element->fresh()->value);
+        $this->assertFalse($this->disk->has($path));
     }
 
 }
