@@ -52,7 +52,7 @@ class ElementsLocalizationTest extends TestCase
         ]);
 
         // Clear the cache
-        app('decoy.elements')->empty();
+        app('decoy.elements')->reset();
 
         // Test that in english, we don't see the sapnish title
         $element = (string) Decoy::el('homepage.marquee.title');
@@ -71,7 +71,7 @@ class ElementsLocalizationTest extends TestCase
         ]);
 
         // Clear the cache
-        app('decoy.elements')->empty();
+        app('decoy.elements')->reset();
 
         // Set to spanish adn confirm the locale scene
         Decoy::locale('es');
