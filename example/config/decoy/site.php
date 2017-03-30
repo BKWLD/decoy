@@ -48,23 +48,21 @@
         'viewer' => '<b>Viewer</b> - Can only read.',
     ],
 
-    /**
-     * Permissions rules.  These are described in more detail in the README.
-     *
-     * @var array
-     */
-    'permissions' => [
-        'viewer' => [
-            'can' => [
-                'read.articles',
-                'read.admins',
-                'manage.tags',
-            ],
-            'cant' => [
-                'destroy.tags',
-            ]
-        ],
-    ],
+	/**
+	 * Permissions rules.  These are described in more detail in the README.
+	 *
+	 * @var array
+	 */
+	'permissions' => [
+		'viewer' => [
+			'can' => [
+				'manage.articles',
+			],
+			'cant' => [
+				'destroy.articles',
+			]
+		],
+	],
 
     /**
      * A hash of localization slugs and readable labels for all the locales for this

@@ -25,52 +25,13 @@ class CrudTest extends TestCase
      */
     private function createData()
     {
-
-        // Create an image in the tmp directory where Upchuck is expecting it
-        $tmp_dir = ini_get('upload_tmp_dir') ?: sys_get_temp_dir();
-        $img_name = 'decoy-article-image.png';
-        $img_path = $tmp_dir.'/'.$img_name;
-        if (!file_exists($img_path)) {
-            $img = imagecreatetruecolor(20, 20);
-            imagepng($img, $img_path);
-            imagedestroy($img);
-        }
-
-        // Make the file record
-        $file = new UploadedFile(
-            $img_path,
-            $img_name,
-            'image/png',
-            null,
-            null,
-            true
-        );
-
         return [
-
-            // Params
-            [
-                'title' => 'Example Title',
-                'body' => 'Body',
-                'category' => 'first',
-                'date' => '2020-01-01',
-                'featured' => 1,
-                'public' => 1,
-                'images' => [
-                    '_xxxx' => [
-                        'name' => '',
-                    ],
-                ],
-            ],
-
-            // Files
-            [
-                'images' => [
-                    '_xxxx' => [
-                        'file' => $file,
-                    ],
-                ],
-            ],
+            'title' => 'Example Title',
+            'body' => 'Body',
+            'category' => 'first',
+            'date' => '2020-01-01',
+            'featured' => 1,
+            'public' => 1,
         ];
     }
 
@@ -106,18 +67,15 @@ class CrudTest extends TestCase
      */
     public function testStore()
     {
-        list($params, $files) = $this->createData();
-
-        $response = $this->call('POST', 'admin/articles/create', array_merge($params, [
+        $response = $this->call('POST', 'admin/articles/create', array_merge($this->createData(), [
             '_save' => 'save',
-        ]), [], $files);
+        ]));
 
         $this->assertRedirectedTo('admin/articles/1/edit');
 
         $article = Article::findBySlug('example-title');
         $this->assertNotEmpty($article);
         $this->assertEquals(1, $article->position);
-        $this->assertNotEmpty($article->img()->url);
     }
 
     /**

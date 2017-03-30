@@ -205,12 +205,12 @@ class Elements extends Collection
     }
 
     /**
-     * Clea the internal store as well as the cache, in effect totally resetting
-     * hydration
+     * Clear the internal store as well as the cache, in effect
+     * totally resetting hydration
      *
-     * @return $this;
+     * @return $this
      */
-    public function empty()
+    public function reset()
     {
         $this->items = [];
         $this->clearCache();

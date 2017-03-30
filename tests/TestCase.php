@@ -6,6 +6,7 @@ use Cache;
 use Illuminate\Contracts\Console\Kernel;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
+use Illuminate\Http\UploadedFile;
 use League\Flysystem\Filesystem;
 use League\Flysystem\Vfs\VfsAdapter;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -91,6 +92,49 @@ abstract class TestCase extends LaravelTestCase
         $this->app->singleton('upchuck.disk', function($app) {
             return $this->disk = new Filesystem(new VfsAdapter(new Vfs));
         });
+    }
+
+    /**
+     * Create a UploadedFile instance to work with
+     *
+     * @param  string $file_name
+     * @return UploadedFile
+     */
+    protected function createUploadedFile($file_name = 'test.jpg')
+    {
+        // Create an image in the tmp directory where Upchuck is expecting it
+        $tmp_dir = ini_get('upload_tmp_dir') ?: sys_get_temp_dir();
+        $file_path = $tmp_dir.'/'.$file_name;
+        if (!file_exists($file_path)) {
+            $file = imagecreatetruecolor(20, 20);
+            imagepng($file, $file_path);
+            imagedestroy($file);
+        }
+
+        return new UploadedFile(
+            $file_path,
+            basename($file_path),
+            'image/jpeg',
+            null,
+            null,
+            true
+        );
+    }
+
+    /**
+     * Create a virtual file to work with
+     *
+     * @param  string $file_name
+     * @return string
+     */
+    protected function createVirtualFile($file_name = 'test.jpg')
+    {
+        // Make image
+        $img = imagecreatetruecolor(20, 20);
+        ob_start();
+        imagejpeg($img);
+        $this->disk->put($file_name, ob_get_clean());
+        imagedestroy($img);
     }
 
     /**

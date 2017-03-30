@@ -1,9 +1,10 @@
 <?php
 namespace Tests\Integration;
 
-use Decoy;
-use Tests\TestCase;
 use Bkwld\Decoy\Models\Element;
+use Decoy;
+use Illuminate\Http\UploadedFile;
+use Tests\TestCase;
 
 class ElementsTest extends TestCase
 {
@@ -53,10 +54,15 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementSave()
+    public function testTextFieldSave()
     {
         $response = $this->post('admin/elements', [
-            'homepage|marquee|title' => 'Test'
+            'homepage|marquee|title' => 'Test',
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
         ]);
 
         $element = Decoy::el('homepage.marquee.title');
@@ -69,7 +75,7 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementReadsValueFromDatabase()
+    public function testTextFieldReadsValueFromDatabase()
     {
         $create_element = factory(Element::class)->create();
         $database_value = Element::first()->value();
@@ -85,7 +91,7 @@ class ElementsTest extends TestCase
      *
      * @return void
      */
-    public function testTextElementDoesntSaveUnchanged()
+    public function testTextFieldDoesntSaveUnchanged()
     {
         // Make sure first there are no elements in the database
         $first_check = Element::first();
@@ -97,10 +103,140 @@ class ElementsTest extends TestCase
         $this->assertEquals($default_text, $default_element);
 
         // Make a post request without changing the title
-        $response = $this->post('admin/elements', []);
+        $response = $this->post('admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ]);
         $this->assertResponseStatus(302);
         $this->assertEmpty(Element::first());
         $this->assertEquals($default_text, $default_element);
+    }
+
+    /**
+     * Test that the image uploads to element fields
+     *
+     * @return void
+     */
+    public function testImageFieldUpload()
+    {
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ], [], [
+            'images' => [
+                '_xxxx' => [
+                    'file' => $this->createUploadedFile()
+                ],
+            ],
+        ]);
+
+        $element = Decoy::el('homepage.marquee.image');
+        $this->assertResponseStatus(302);
+        $this->assertNotEmpty($element->crop(10, 10)->url);
+    }
+
+    /**
+     * Test that the file uploads to element fields
+     *
+     * @return void
+     */
+    public function testFileFieldUpload()
+    {
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ], [], [
+            'homepage|marquee|file' => $this->createUploadedFile('file.jpg')
+        ]);
+
+        $element = Decoy::el('homepage.marquee.file');
+        $this->assertResponseStatus(302);
+        $this->assertNotEmpty($element->value());
+    }
+
+    /**
+     * Test that the image is deleted from elements and db
+     *
+     * @return void
+     */
+    public function testImageFieldDelete()
+    {
+
+        $this->createUploadedFile('test.jpg');
+
+        $element = factory(Element::class)->create([
+            'key' => 'homepage.marquee.image',
+            'type' => 'image',
+            'value' => '/uploads/test.jpg',
+            'locale' => 'en',
+        ]);
+        $image = $element->images()->create([
+            'file' => '/uploads/test.jpg',
+            'file_type' => 'image/jpeg',
+            'file_size' => 10,
+            'width' => 20,
+            'height' => 20,
+        ]);
+
+        $response = $this->call('POST', 'admin/elements', [
+            'images' => [
+                $image->id => [
+                    'name' => 'homepage|marquee|image',
+                    'file' => '',
+                ],
+            ],
+        ], [], [
+            'images' => [
+                $image->id => [
+                    'file' => '',
+                ],
+            ],
+        ]);
+
+        $this->assertResponseStatus(302);
+        $this->assertEmpty($element->fresh()->value);
+        $this->assertEmpty($image->fresh());
+    }
+
+    /**
+     * Test that the file is deleted from elements and db
+     *
+     * @return void
+     */
+    public function testFileFieldDelete()
+    {
+        $this->createVirtualFile('test.jpg');
+
+        $element = factory(Element::class)->create([
+            'key' => 'homepage.marquee.file',
+            'type' => 'file',
+            'value' => '/uploads/file.jpg',
+            'locale' => 'en',
+        ]);
+
+        $response = $this->call('POST', 'admin/elements', [
+            'homepage|marquee|file' => '',
+            'images' => [
+                '_xxxx' => [
+                    'name' => 'homepage|marquee|image',
+                ],
+            ],
+        ]);
+
+        $this->assertResponseStatus(302);
+
+        $path = app('upchuck')->path($element->value);
+        $this->assertEmpty($element->fresh()->value);
+        $this->assertFalse($this->disk->has($path));
     }
 
 }
