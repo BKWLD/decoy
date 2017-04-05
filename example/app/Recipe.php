@@ -15,8 +15,8 @@ class Recipe extends Base
      * @var array
      */
     public static $rules = [
-    	'title' => 'required',
-    	'images.default' => 'image',
+        'title' => 'required',
+        'images.default' => 'image',
         'file' => 'file',
     ];
 
@@ -33,5 +33,4 @@ class Recipe extends Base
      * @var boolean
      */
     static public $localizable = true;
-
 }

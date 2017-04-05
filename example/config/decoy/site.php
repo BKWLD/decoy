@@ -48,21 +48,21 @@
         'viewer' => '<b>Viewer</b> - Can only read.',
     ],
 
-	/**
-	 * Permissions rules.  These are described in more detail in the README.
-	 *
-	 * @var array
-	 */
-	'permissions' => [
-		'viewer' => [
-			'can' => [
-				'manage.articles',
-			],
-			'cant' => [
-				'destroy.articles',
-			]
-		],
-	],
+    /**
+     * Permissions rules.  These are described in more detail in the README.
+     *
+     * @var array
+     */
+    'permissions' => [
+        'viewer' => [
+            'can' => [
+                'manage.articles',
+            ],
+            'cant' => [
+                'destroy.articles',
+            ]
+        ],
+    ],
 
     /**
      * A hash of localization slugs and readable labels for all the locales for this
@@ -99,7 +99,7 @@
      * @return boolean
      */
     // 'log_changes' => true,
-    'log_changes' => function($model, $action, $admin_id) {
+    'log_changes' => function ($model, $action, $admin_id) {
         return true;
     },
 

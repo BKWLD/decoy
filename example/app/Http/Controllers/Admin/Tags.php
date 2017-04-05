@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
+
 use Bkwld\Decoy\Controllers\Base;
 
-class Tags extends Base {
+class Tags extends Base
+{
 
-	/*
+    /*
 	 * Example settings
 
 	protected $title = 'News & Events';
@@ -32,5 +34,4 @@ class Tags extends Base {
 
 	 *
 	 */
-
 }
