@@ -1,4 +1,4 @@
-<?php return array(
+<?php return [
 
     /**
      * The name of the site is shown in the header of all pages
@@ -103,4 +103,4 @@
         return true;
     },
 
-);
+];

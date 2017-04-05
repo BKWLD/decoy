@@ -1,4 +1,4 @@
-<?php return array(
+<?php return [
 
     // The directory for the admin
     'dir' => 'admin',
@@ -30,4 +30,4 @@
     'stylesheet' => '/assets/decoy/index.min.css',
     'script' => '/assets/decoy/index.min.js',
 
-);
+];

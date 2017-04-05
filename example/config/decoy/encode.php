@@ -1,4 +1,4 @@
-<?php return array(
+<?php return [
 
     /**
      * The API key used to access the specified provider
@@ -59,4 +59,4 @@
      */
     'provider' => '\Bkwld\Decoy\Input\EncodingProviders\Zencoder',
 
-);
+];
