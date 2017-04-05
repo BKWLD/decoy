@@ -121,7 +121,7 @@ class Localize
             Config::get('decoy.site.locales'),
 
             // ... the locales of other localizations ...
-            $this->other()->lists('locale')->flip()->toArray(),
+            $this->other()->pluck('locale')->flip()->toArray(),
 
             // ... and the model's locale
             [$this->item->locale => null]
