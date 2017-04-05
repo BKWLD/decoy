@@ -5,7 +5,6 @@ namespace Bkwld\Decoy\Controllers;
 use Auth;
 use Former;
 use Illuminate\Routing\Controller;
-use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 
@@ -15,7 +14,7 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
  */
 class Login extends Controller
 {
-    use AuthenticatesUsers, ThrottlesLogins, ValidatesRequests;
+    use AuthenticatesUsers, ValidatesRequests;
 
     /**
      * Use the guest middleware to redirect logged in admins away from the login
@@ -25,7 +24,7 @@ class Login extends Controller
      */
     public function __construct()
     {
-        $this->middleware('decoy.guest', ['except' => 'getLogout']);
+        $this->middleware('decoy.guest', ['except' => 'logout']);
     }
 
     /**
@@ -55,7 +54,7 @@ class Login extends Controller
     public function logout()
     {
         // Logout the session
-        Auth::guard($this->getGuard())->logout();
+        Auth::logout();
 
         // Redirect back to previous page so that switching users takes you back to
         // your previous page.
