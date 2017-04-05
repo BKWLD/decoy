@@ -38,13 +38,13 @@ class ValidateExistingFiles
 
         // For each of the file rules, if the input has a value, make a file
         // instance for it if it's a local path.
-        $files = $validation->getFiles();
         $data = $validation->getData();
+
         foreach ($rules as $attribute => $rules) {
 
             // Skip if a file was uploaded for this attribtue or if the existing data
             // is undefined
-            if (isset($files[$attribute]) || empty($data[$attribute])) {
+            if (empty($data[$attribute]) || is_a($data[$attribute], File::class)) {
                 continue;
             }
 
@@ -55,6 +55,6 @@ class ValidateExistingFiles
         // Replace the files and data with the updated set. `setData()` expects the
         // data to contain files in it.  But `getData()` strips out the files.  Thus,
         // they need to be merged back in before being set.
-        $validation->setData(array_merge($files, $data));
+        $validation->setData(array_merge($data));
     }
 }
