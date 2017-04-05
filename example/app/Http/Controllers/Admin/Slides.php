@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers\Admin;
+
 use Bkwld\Decoy\Controllers\Base;
 
-class Slides extends Base {
+class Slides extends Base
+{
 
-	/*
+    /*
 	 * Example settings
 
 	protected $title = 'News & Events';
@@ -32,5 +34,4 @@ class Slides extends Base {
 
 	 *
 	 */
-
 }

@@ -25,7 +25,6 @@ class CreateTags extends Migration
                 ->onUpdate('cascade')
                 ->onDelete('cascade');
         });
-
     }
 
     /**

@@ -1,8 +1,10 @@
 <?php namespace App;
+
 use Bkwld\Decoy\Models\Base;
 use Bkwld\Decoy\Models\Traits\HasImages;
 
-class Tag extends Base {
+class Tag extends Base
+{
     use HasImages;
 
     /**
@@ -42,5 +44,4 @@ class Tag extends Base {
     {
         $query->orderBy('name');
     }
-
 }
