@@ -288,7 +288,7 @@ class Elements extends Base
         // Check for the image in the input.  If isn't found, make no changes.
         $name = $el->inputName();
         if (!$data = array_first($input['images'],
-            function ($id, $data) use ($name) {
+            function ($data, $id) use ($name) {
                 return $data['name'] == $name;
             })) {
             return;
