@@ -34,12 +34,12 @@ class Article extends Base
      */
     public function tags()
     {
-        return $this->morphToMany('App\Tag', 'taggable');
+        return $this->morphToMany(\App\Tag::class, 'taggable');
     }
 
     public function slides()
     {
-        return $this->hasMany('App\Slide');
+        return $this->hasMany(\App\Slide::class);
     }
 
     /**

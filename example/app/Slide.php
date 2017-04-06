@@ -21,6 +21,6 @@ class Slide extends Base
      */
     public function article()
     {
-        return $this->belongsTo('App\Article');
+        return $this->belongsTo(\App\Article::class);
     }
 }
