@@ -12,11 +12,13 @@ use Request;
 use DecoyURL;
 use Bkwld\Library\Utils\Text;
 use Bkwld\Decoy\Auth\AuthInterface;
+use Bkwld\Decoy\Notifications\ResetPassword;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Notifications\Notifiable;
 
 class Admin extends Base implements
     AuthInterface,
@@ -25,7 +27,7 @@ class Admin extends Base implements
 {
     // Note, not using the Authorizable trait because I've defined my own versions
     // for backwards compatability with Decoy 4 and also to have a tigher syntax.
-    use Authenticatable, CanResetPassword, Traits\HasImages;
+    use Authenticatable, CanResetPassword, Traits\HasImages, Notifiable;
 
     /**
      * The table associated with the model.  Explicitly declaring so that sub
@@ -246,6 +248,18 @@ class Admin extends Base implements
     public function cannot($action, $controller)
     {
         return $this->cant($action, $controller);
+    }
+
+    /**
+     * Send the password reset notification. This overrides a method inheritted
+     * from the CanResetPassword trait
+     *
+     * @param  string  $token
+     * @return void
+     */
+    public function sendPasswordResetNotification($token)
+    {
+        $this->notify(new ResetPassword($token));
     }
 
     /**

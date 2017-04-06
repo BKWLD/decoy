@@ -19,41 +19,6 @@ class ResetPassword extends Base
     use ResetsPasswords;
 
     /**
-     * Display the form to request a password reset link.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function showLinkRequestForm()
-    {
-        // Pass validation rules
-        Former::withRules([
-            'email' => 'required|email',
-        ]);
-
-        // Set the breadcrumbs
-        app('decoy.breadcrumbs')->set([
-            route('decoy::account@login') => 'Login',
-            url()->current() => 'Forgot Password',
-        ]);
-
-        // Show the page
-        $this->title = 'Forgot Password';
-        $this->description = 'You know the drill.';
-
-        return $this->populateView('decoy::account.forgot');
-    }
-
-    /**
-     * Get the e-mail subject line to be used for the reset link email.
-     *
-     * @return string
-     */
-    protected function getEmailSubject()
-    {
-        return 'Recover access to '.Decoy::site();
-    }
-
-    /**
      * Display the password reset view for the given token.
      *
      * If no token is present, display the link request form.
@@ -120,6 +85,6 @@ class ResetPassword extends Base
             'remember_token' => Str::random(60),
         ])->save();
 
-        Auth::guard($this->getGuard())->login($user);
+        Auth::login($user);
     }
 }
