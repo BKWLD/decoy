@@ -39,22 +39,47 @@ class ValidateExistingFiles
         // For each of the file rules, if the input has a value, make a file
         // instance for it if it's a local path.
         $data = $validation->getData();
-
         foreach ($rules as $attribute => $rules) {
 
-            // Skip if a file was uploaded for this attribtue or if the existing data
-            // is undefined
-            if (empty($data[$attribute]) || is_a($data[$attribute], File::class)) {
+            // Test that the attribute is in the data.  It may not be for images
+            // attributes or other nested models
+            if (!array_key_exists($attribute, $data)) {
                 continue;
-            }
+
+            // Skip if a file was uploaded for this attribtue
+            } else if (is_a($data[$attribute], File::class)) {
+                continue;
+
+            // If the value is empty, because the user is deleting the file
+            // instance, make an empty File instance that will pass the file
+            // check but fail required checks
+            } else if (empty($data[$attribute])) {
+                $data[$attribute] = new File('', false);
 
             // Create the file instance and clear the data instance
-            $data[$attribute] = new File(Config::get('upchuck.disk.path').'/'.app('upchuck')->path($data[$attribute]));
+            } else {
+                $data[$attribute] = $this->makeFileFromPath($data[$attribute]);
+            }
+
         }
 
         // Replace the files and data with the updated set. `setData()` expects the
         // data to contain files in it.  But `getData()` strips out the files.  Thus,
         // they need to be merged back in before being set.
         $validation->setData(array_merge($data));
+    }
+
+    /**
+     * Make a file instance using uphuck from the string input value
+     *
+     * @param string $path
+     * @return File
+     */
+    public function makeFileFromPath($path)
+    {
+        $upchuck_path = app('upchuck')->path($path);
+        $absolute_path = Config::get('upchuck.disk.path').'/'.$upchuck_path;
+        return new File($absolute_path);
+
     }
 }
