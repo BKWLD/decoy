@@ -58,7 +58,7 @@ trait HasImages
      */
     public function img($name = null)
     {
-        return $this->images->first(function ($key, Image $image) use ($name) {
+        return $this->images->first(function (Image $image, $key) use ($name) {
             return $image->getAttribute('name') == $name;
 
         // When the $name isn't found, return an empty Image object so all the

@@ -83,17 +83,17 @@ class Router
     {
         Route::get('/', [
             'as' => 'decoy::account@login',
-            'uses' => '\Bkwld\Decoy\Controllers\Login@getLogin',
+            'uses' => '\Bkwld\Decoy\Controllers\Login@showLoginForm',
         ]);
 
         Route::post('/', [
             'as' => 'decoy::account@postLogin',
-            'uses' => '\Bkwld\Decoy\Controllers\Login@postLogin',
+            'uses' => '\Bkwld\Decoy\Controllers\Login@login',
         ]);
 
         Route::get('logout', [
             'as' => 'decoy::account@logout',
-            'uses' => '\Bkwld\Decoy\Controllers\Login@getLogout',
+            'uses' => '\Bkwld\Decoy\Controllers\Login@logout',
         ]);
     }
 
@@ -105,19 +105,19 @@ class Router
     public function registerResetPassword()
     {
         Route::get('forgot', ['as' => 'decoy::account@forgot',
-            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@getEmail',
+            'uses' => '\Bkwld\Decoy\Controllers\ForgotPassword@showLinkRequestForm',
         ]);
 
         Route::post('forgot', ['as' => 'decoy::account@postForgot',
-            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@postEmail',
+            'uses' => '\Bkwld\Decoy\Controllers\ForgotPassword@sendResetLinkEmail',
         ]);
 
-        Route::get('reset/{code}', ['as' => 'decoy::account@reset',
-            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@getReset',
+        Route::get('password/reset/{code}', ['as' => 'decoy::account@reset',
+            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@showResetForm',
         ]);
 
-        Route::post('reset/{code}', ['as' => 'decoy::account@postReset',
-            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@postReset',
+        Route::post('password/reset/{code}', ['as' => 'decoy::account@postReset',
+            'uses' => '\Bkwld\Decoy\Controllers\ResetPassword@reset',
         ]);
     }
 

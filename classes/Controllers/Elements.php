@@ -58,7 +58,7 @@ class Elements extends Base
 
         // If handling a deep link to a tab, verify that the passed tab
         // slug is a real key in the data.  Else 404.
-        if ($tab && !in_array($tab, $elements->lists('page_label')
+        if ($tab && !in_array($tab, $elements->pluck('page_label')
             ->map(function ($title) {
                 return Str::slug($title);
             })
@@ -288,7 +288,7 @@ class Elements extends Base
         // Check for the image in the input.  If isn't found, make no changes.
         $name = $el->inputName();
         if (!$data = array_first($input['images'],
-            function ($id, $data) use ($name) {
+            function ($data, $id) use ($name) {
                 return $data['name'] == $name;
             })) {
             return;

@@ -1,8 +1,10 @@
 <?php namespace App;
+
 use Bkwld\Decoy\Models\Base;
 use Bkwld\Decoy\Models\Traits\HasImages;
 
-class Article extends Base {
+class Article extends Base
+{
     use HasImages;
 
     /**
@@ -47,7 +49,9 @@ class Article extends Base {
      */
     public function onCreating()
     {
-        if (isset($this->position)) return;
+        if (isset($this->position)) {
+            return;
+        }
         $this->position = self::max('position') + 1;
     }
 
@@ -82,5 +86,4 @@ class Article extends Base {
     {
         return $this->featured ? '<span class="badge">Featured</span>' : '';
     }
-
 }

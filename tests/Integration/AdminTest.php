@@ -109,7 +109,7 @@ class AdminTest extends TestCase
             'created_at' => Carbon::now(),
         ]);
 
-        $response = $this->get('admin/reset/'.$token);
+        $response = $this->get('admin/password/reset/'.$token);
         $this->assertResponseOk();
     }
 
@@ -129,7 +129,7 @@ class AdminTest extends TestCase
             'created_at' => Carbon::now(),
         ]);
 
-        $response = $this->post('admin/reset/'.$token, [
+        $response = $this->post('admin/password/reset/'.$token, [
             'email' => 'test@domain.com',
             'password' => 'farting',
             'password_confirmation' => 'farting',

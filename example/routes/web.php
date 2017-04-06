@@ -15,6 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('article/{slug}', ['as' => 'article', function($slug) {
+Route::get('article/{slug}', ['as' => 'article', function ($slug) {
     return 'hello';
 }]);

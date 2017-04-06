@@ -14,14 +14,14 @@ use Bkwld\Cloner\Cloneable;
 use Bkwld\Upchuck\SupportsUploads;
 use Bkwld\Library\Utils\Collection;
 use Bkwld\Decoy\Exceptions\Exception;
-use Cviebrock\EloquentSluggable\SluggableTrait;
+use Cviebrock\EloquentSluggable\Sluggable;
+use Cviebrock\EloquentSluggable\SluggableScopeHelpers;
 use Bkwld\Decoy\Collections\Base as BaseCollection;
-use Cviebrock\EloquentSluggable\SluggableInterface;
 use Illuminate\Database\Eloquent\Model as Eloquent;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-abstract class Base extends Eloquent implements SluggableInterface
+abstract class Base extends Eloquent
 {
 
     /**
@@ -29,11 +29,11 @@ abstract class Base extends Eloquent implements SluggableInterface
      * negligible.
      */
     use Cloneable,
-        SluggableTrait,
+        Sluggable,
+        SluggableScopeHelpers,
         SupportsUploads,
-        Traits\CanSerializeTransform {
-        needsSlugging as traitNeedsSlugging;
-    }
+        Traits\CanSerializeTransform
+    ;
 
     /**
      * Use the Decoy Base Collection
@@ -195,12 +195,18 @@ abstract class Base extends Eloquent implements SluggableInterface
      * Tell sluggable where to get the source for the slug and apply other
      * customizations.
      *
-     * @var array
+     * @return array
      */
-    protected $sluggable = [
-        'build_from' => 'admin_title',
-        'max_length' => 100,
-    ];
+    public function sluggable()
+    {
+        if (!$this->needsSlugging()) return [];
+        return [
+            'slug' => [
+                'source' => 'admin_title',
+                'maxLength' => 100,
+            ]
+        ];
+    }
 
     /**
      * Check for a validation rule for a slug column
@@ -209,11 +215,7 @@ abstract class Base extends Eloquent implements SluggableInterface
      */
     protected function needsSlugging()
     {
-        if (!array_key_exists('slug', static::$rules)) {
-            return false;
-        }
-
-        return $this->traitNeedsSlugging();
+        return array_key_exists('slug', static::$rules);
     }
 
     //---------------------------------------------------------------------------
@@ -636,12 +638,13 @@ abstract class Base extends Eloquent implements SluggableInterface
      * Find by the slug and fail if missing.  Invokes methods from the
      * Sluggable trait.
      *
-     * @param  string                             $string
+     * @param  string $string
+     * @param  array $columns
      * @return Illuminate\Database\Eloquent\Model
      *
      * @throws Illuminate\Database\Eloquent\ModelNotFoundException
      */
-    public static function findBySlugOrFail($slug)
+    public static function findBySlugOrFail($slug, array $columns = ['*'])
     {
         // Model not found, throw exception
         if (!$item = static::findBySlug($slug)) {

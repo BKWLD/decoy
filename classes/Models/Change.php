@@ -130,7 +130,7 @@ class Change extends Base
      */
     public static function getActions()
     {
-        return static::groupBy('action')->lists('action', 'action');
+        return static::groupBy('action')->pluck('action', 'action');
     }
 
     /**
@@ -144,7 +144,7 @@ class Change extends Base
         return static::groupBy('admin_id')
             ->join('admins', 'admins.id', '=', 'admin_id')
             ->select(DB::raw('changes.id, CONCAT(first_name, " ", last_name) name'))
-            ->lists('name', 'id');
+            ->pluck('name', 'id');
     }
 
     /**

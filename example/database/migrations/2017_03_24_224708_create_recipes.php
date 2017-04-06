@@ -20,7 +20,7 @@ class CreateRecipes extends Migration
             $table->string('file')->nullable();
 
             $table->string('locale');
-        	$table->string('locale_group')->index();
+            $table->string('locale_group')->index();
             $table->boolean('public')->index();
             $table->timestamps();
         });
