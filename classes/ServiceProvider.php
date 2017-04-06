@@ -341,7 +341,7 @@ class ServiceProvider extends BaseServiceProvider
         $this->app->register('Bkwld\Upchuck\ServiceProvider');
 
         // Creation of slugs
-        $this->app->register('Cviebrock\EloquentSluggable\SluggableServiceProvider');
+        $this->app->register('Cviebrock\EloquentSluggable\ServiceProvider');
 
         // Support for cloning models
         $this->app->register('Bkwld\Cloner\ServiceProvider');
