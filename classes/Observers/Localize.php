@@ -16,11 +16,14 @@ class Localize
      * Called on model saving
      *
      * @param  string $event
-     * @param Bkwld\Decoy\Models\Base $model
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function handle($event, $model)
+    public function handle($event, $payload)
     {
+        list($model) = $payload;
+        
         if (!empty($model->locale)
             && empty($model->locale_group)
             && !is_a($model, Element::class) // Elements don't have groups

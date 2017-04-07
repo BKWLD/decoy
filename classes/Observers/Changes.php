@@ -24,10 +24,13 @@ class Changes
      * Handle all Eloquent model events
      *
      * @param  string $event
-     * @param  Bkwld\Decoy\Models\Base $model
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
      */
-    public function handle($event, $model)
+    public function handle($event, $payload)
     {
+        list($model) = $payload;
+
         // Don't log the Change model events
         if (is_a($model, Models\Change::class)) {
             return;

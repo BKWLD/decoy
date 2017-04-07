@@ -21,11 +21,14 @@ class ManyToManyChecklist
      * on model saved.
      *
      * @param  string $event
-     * @param  Bkwld\Decoy\Models\Base $model
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function handle($event, $model)
+    public function handle($event, $payload)
     {
+        list($model) = $payload;
+        
         // Check for matching input elements
         foreach (Request::input() as $key => $val) {
             if (preg_match('#^'.self::PREFIX.'(.+)#', $key, $matches)) {

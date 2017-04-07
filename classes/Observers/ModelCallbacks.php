@@ -15,11 +15,13 @@ class ModelCallbacks
      * Handle all model events, both Eloquent and Decoy
      *
      * @param  string $event
-     * @param  Bkwld\Decoy\Models\Base $model
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function handle($event, $model)
+    public function handle($event, $payload)
     {
+        list($model) = $payload;
 
         // Get the action from the event name
         preg_match('#\.(\w+)#', $event, $matches);

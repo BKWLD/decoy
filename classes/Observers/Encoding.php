@@ -11,11 +11,14 @@ class Encoding
      * Start a new encode if a new encodable file was uploaded
      *
      * @param  string $event
-     * @param  Bkwld\Decoy\Models\Base $model
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function onSaving($event, $model)
+    public function onSaving($event, $payload)
     {
+        list($model) = $payload;
+
         if (!$this->isEncodable($model)) {
             return;
         }
