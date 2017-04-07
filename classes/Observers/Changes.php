@@ -23,9 +23,10 @@ class Changes
     /**
      * Handle all Eloquent model events
      *
-     * @param Bkwld\Decoy\Models\Base $model
+     * @param  string $event
+     * @param  Bkwld\Decoy\Models\Base $model
      */
-    public function handle($model)
+    public function handle($event, $model)
     {
         // Don't log the Change model events
         if (is_a($model, Models\Change::class)) {
@@ -57,7 +58,7 @@ class Changes
         }
 
         // Get the action of the event
-        preg_match('#eloquent\.(\w+)#', Event::firing(), $matches);
+        preg_match('#eloquent\.(\w+)#', $event, $matches);
         $action = $matches[1];
         if (!in_array($action, $this->supported)) {
             return;

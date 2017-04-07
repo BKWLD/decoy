@@ -15,11 +15,12 @@ class ValidateExistingFiles
     /**
      * Massage validation handling
      *
+     * @param  string $event
      * @param  Bkwld\Decoy\Models\Base         $model
      * @param  Illuminate\Validation\Validator $validation
      * @return void
      */
-    public function onValidating($model, $validation)
+    public function onValidating($event, $model, $validation)
     {
         // Only act on locally hosted files
         if (Config::get('upchuck.disk.driver') != 'local') {

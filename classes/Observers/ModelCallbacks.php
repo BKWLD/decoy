@@ -14,14 +14,12 @@ class ModelCallbacks
     /**
      * Handle all model events, both Eloquent and Decoy
      *
-     * @param Bkwld\Decoy\Models\Base $model
+     * @param  string $event
+     * @param  Bkwld\Decoy\Models\Base $model
+     * @return void
      */
-    public function handle($model)
+    public function handle($event, $model)
     {
-        // Get the name of the event.  Examples:
-        // - eloquent.saving: Person
-        // - decoy::model.validating: Person
-        $event = Event::firing();
 
         // Get the action from the event name
         preg_match('#\.(\w+)#', $event, $matches);

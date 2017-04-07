@@ -15,9 +15,11 @@ class Localize
     /**
      * Called on model saving
      *
+     * @param  string $event
      * @param Bkwld\Decoy\Models\Base $model
+     * @return void
      */
-    public function handle($model)
+    public function handle($event, $model)
     {
         if (!empty($model->locale)
             && empty($model->locale_group)

@@ -10,10 +10,11 @@ class Encoding
     /**
      * Start a new encode if a new encodable file was uploaded
      *
+     * @param  string $event
      * @param  Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function onSaving($model)
+    public function onSaving($event, $model)
     {
         if (!$this->isEncodable($model)) {
             return;
@@ -36,10 +37,11 @@ class Encoding
     /**
      * Delete all encodes on the model
      *
+     * @param  string $event
      * @param  Bkwld\Decoy\Models\Base $model
      * @return void
      */
-    public function onDeleted($model)
+    public function onDeleted($event, $model)
     {
         if (!$this->isEncodable($model)) {
             return;
