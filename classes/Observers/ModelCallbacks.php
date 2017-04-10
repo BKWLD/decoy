@@ -31,7 +31,7 @@ class ModelCallbacks
         // any additional event arguments to it
         $method = 'on'.Str::studly($action);
         if (method_exists($model, $method)) {
-            return call_user_func_array([$model, $method], array_slice(func_get_args(), 1));
+            return call_user_func_array([$model, $method], array_slice($payload, 1));
         }
     }
 }
