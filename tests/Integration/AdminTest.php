@@ -4,7 +4,9 @@ namespace Tests\Integration;
 use App\Article;
 use Bkwld\Decoy\Models\Admin;
 use Carbon\Carbon;
+use DB;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 use Tests\TestCase;
 
 class AdminTest extends TestCase
@@ -103,7 +105,7 @@ class AdminTest extends TestCase
     public function testResetPasswordFormIndex()
     {
         $token = Str::random(60);
-        \DB::table('password_resets')->insert([
+        DB::table('password_resets')->insert([
             'email' => 'test@domain.com',
             'token' => $token,
             'created_at' => Carbon::now(),
@@ -120,29 +122,29 @@ class AdminTest extends TestCase
      */
     public function testResetPasswordFormSave()
     {
-        $current_password = Admin::findOrFail(1)->password;
+        // Get current admin
+        $admin = Admin::findOrFail(1);
 
-        $token = Str::random(60);
-        \DB::table('password_resets')->insert([
-            'email' => 'test@domain.com',
-            'token' => $token,
-            'created_at' => Carbon::now(),
-        ]);
+        // Write reset token to database and get the emailed token back.
+        // Ordinarily, this gets called eventually by the forgot controller.
+        $tokens = Password::broker()->getRepository();
+        $token = $tokens->create($admin);
 
+        // Post the reset form
         $response = $this->post('admin/password/reset/'.$token, [
             'email' => 'test@domain.com',
             'password' => 'new_password',
             'password_confirmation' => 'new_password',
             'token' => $token,
         ]);
+
+        // Should redirect to to self
         $response->assertStatus(302);
 
+        // Check that the admin has a new password now
         $new_password = Admin::findOrFail(1)->password;
-
-        dd($current_password, $new_password);
-
-        $this->assertNotEquals($current_password, $new_password);
-        $this->assertEmpty(\DB::table('password_resets')
+        $this->assertNotEquals($admin->password, $new_password);
+        $this->assertEmpty(DB::table('password_resets')
             ->where('email', 'test@domain.com')->get());
     }
 

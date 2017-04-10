@@ -36,11 +36,6 @@ class ResetPassword extends Base
             'password_confirmation' => 'required|same:password',
         ]);
 
-        // Lookup the admin
-        $user = Admin::where('token', $token)
-            ->join('password_resets', 'password_resets.email', '=', 'admins.email')
-            ->firstOrFail();
-
         // Set the breadcrumbs
         app('decoy.breadcrumbs')->set([
             route('decoy::account@login') => 'Login',
@@ -53,7 +48,6 @@ class ResetPassword extends Base
         $this->description = 'Almost done.';
 
         return $this->populateView('decoy::account.reset', [
-            'user' => $user,
             'token' => $token,
         ]);
     }
