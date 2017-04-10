@@ -231,7 +231,7 @@ class Helpers
 
     /**
      * Force Decoy to believe that it's handling or not handling the request
-     * 
+     *
      * @param  boolean $bool
      * @return void
      */
@@ -254,7 +254,7 @@ class Helpers
             && ($locales = Config::get('decoy.site.locales'))
             && is_array($locales)
             && isset($locales[$locale])) {
-            return Session::set('locale', $locale);
+            return Session::put('locale', $locale);
         }
 
         // Return the current locale or default to first one.  Store it in a local var
