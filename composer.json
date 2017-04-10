@@ -55,7 +55,8 @@
         "laravel/tinker": "^1.0"
     },
     "conflict": {
-        "anahkiasen/html-object": "1.4.1"
+        "anahkiasen/html-object": "1.4.1",
+        "laravel/framework": "<5.4.0"
     },
     "autoload": {
         "psr-4": {
