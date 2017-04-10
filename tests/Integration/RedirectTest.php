@@ -18,7 +18,7 @@ class RedirectTest extends TestCase
 
         $response = $this->get('admin/redirect-rules');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -57,8 +57,8 @@ class RedirectTest extends TestCase
 
         $response = $this->get('/test');
 
-        $this->assertResponseStatus(301);
-        $this->assertRedirectedTo('/redirected');
+        $response->assertStatus(301);
+        $response->assertRedirect('/redirected');
     }
 
 }

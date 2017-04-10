@@ -42,7 +42,7 @@ class OneToManyTest extends TestCase
         $article->slides()->save(factory(Slide::class)->make());
 
         $response = $this->get('admin/articles/1/slides/1/edit');
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**

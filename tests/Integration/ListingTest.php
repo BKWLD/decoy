@@ -17,7 +17,7 @@ class ListingTest extends TestCase
     {
         $this->auth();
         $response = $this->get('admin/articles');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -108,10 +108,10 @@ class ListingTest extends TestCase
         $response = $this->get('admin/articles?' . $search);
 
         // Sanity check that the view has content property
-        $this->assertViewHas('content');
+        $response->assertViewHas('content');
 
         // Check that the one result matches the article that was searched for
-        $articles = $this->response->original->content->getItems();
+        $articles = $response->original->content->getItems();
         $this->assertEquals(1, $articles->count());
         $this->assertEquals($first->title, $articles[0]->title);
     }

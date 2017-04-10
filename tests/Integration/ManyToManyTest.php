@@ -45,9 +45,9 @@ class ManyToManyTest extends TestCase
             'parent_controller' => 'App\Http\Controllers\Admin\Tags',
             'parent_id' => $this->tag->id,
         ]);
-        $this->json('GET', 'admin/articles/autocomplete?'.$params);
+        $response = $this->json('GET', 'admin/articles/autocomplete?'.$params);
 
-        $this->seeJson([
+        $response->assertJson([
             [
                 'id' => 1,
                 'title' => 'Example',
