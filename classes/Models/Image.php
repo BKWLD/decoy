@@ -117,7 +117,7 @@ class Image extends Base
                 return false;
             }
             $image->populateFileMeta();
-        }, config('upchuck.priority', 0) + 1);
+        });
 
         // If the image is deleted, delete Croppa crops
         static::updating(function (Image $image) {

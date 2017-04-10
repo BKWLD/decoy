@@ -200,6 +200,7 @@ class ServiceProvider extends BaseServiceProvider
      */
     protected function registerMiddlewares()
     {
+
         // Register middleware individually
         foreach ([
             'decoy.auth'          => Middleware\Auth::class,
@@ -207,7 +208,7 @@ class ServiceProvider extends BaseServiceProvider
             'decoy.guest'         => Middleware\Guest::class,
             'decoy.save-redirect' => Middleware\SaveRedirect::class,
         ] as $key => $class) {
-            $this->app['router']->middleware($key, $class);
+            $this->app['router']->aliasMiddleware($key, $class);
         }
 
         // This group is used by public decoy routes

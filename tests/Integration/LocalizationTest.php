@@ -26,7 +26,7 @@ class LocalizationTest extends TestCase
     public function testCreate()
     {
         $response = $this->get('admin/recipes/create');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -37,8 +37,8 @@ class LocalizationTest extends TestCase
     public function testHiddenOnCreate()
     {
         $response = $this->get('admin/articles/create');
-        $response->assertResponseStatus(200);
-        $response->assertTrue($this->response->original->content->localize->hidden());
+        $response->assertStatus(200);
+        $this->assertTrue($response->original->content->localize->hidden());
     }
 
     /**
@@ -50,8 +50,8 @@ class LocalizationTest extends TestCase
     {
         config()->set('decoy.site.auto_localize_root_models', true);
         $response = $this->get('admin/articles/create');
-        $response->assertResponseStatus(200);
-        $response->assertFalse($this->response->original->content->localize->hidden());
+        $response->assertStatus(200);
+        $this->assertFalse($response->original->content->localize->hidden());
     }
 
     /**
@@ -69,7 +69,7 @@ class LocalizationTest extends TestCase
             '_save' => 'save',
         ]);
 
-        $this->assertRedirectedTo('admin/recipes/1/edit');
+        $response->assertRedirect('admin/recipes/1/edit');
 
         $this->assertEquals('en', Recipe::first()->locale);
         $this->assertNotEmpty(Recipe::first()->locale_group);
@@ -86,8 +86,8 @@ class LocalizationTest extends TestCase
         $recipe = factory(Recipe::class)->create();
 
         $response = $this->get('admin/recipes/'.$recipe->id.'/edit');
-        $response->assertResponseStatus(200);
-        $response->assertFalse($this->response->original->content->localize->hidden());
+        $response->assertStatus(200);
+        $this->assertFalse($response->original->content->localize->hidden());
     }
 
     /**
@@ -100,8 +100,8 @@ class LocalizationTest extends TestCase
         $article = factory(Article::class)->create();
 
         $response = $this->get('admin/articles/'.$article->id.'/edit');
-        $response->assertResponseStatus(200);
-        $response->assertTrue($this->response->original->content->localize->hidden());
+        $response->assertStatus(200);
+        $this->assertTrue($response->original->content->localize->hidden());
     }
 
     /**
@@ -142,7 +142,7 @@ class LocalizationTest extends TestCase
         ]);
 
         // Test that simple fields were copied
-        $this->seeInDatabase('recipes', [
+        $this->assertDatabaseHas('recipes', [
             'title' => 'Title copy',
             'directions' => 'Directions',
             'locale' => 'es',
@@ -178,7 +178,7 @@ class LocalizationTest extends TestCase
         $dupe->save();
 
         $response = $this->get('admin/recipes/'.$dupe->id.'/edit');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
 }

@@ -14,14 +14,14 @@ class ModelCallbacks
     /**
      * Handle all model events, both Eloquent and Decoy
      *
-     * @param Bkwld\Decoy\Models\Base $model
+     * @param  string $event
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
+     * @return void
      */
-    public function handle($model)
+    public function handle($event, $payload)
     {
-        // Get the name of the event.  Examples:
-        // - eloquent.saving: Person
-        // - decoy::model.validating: Person
-        $event = Event::firing();
+        list($model) = $payload;
 
         // Get the action from the event name
         preg_match('#\.(\w+)#', $event, $matches);
@@ -31,7 +31,7 @@ class ModelCallbacks
         // any additional event arguments to it
         $method = 'on'.Str::studly($action);
         if (method_exists($model, $method)) {
-            return call_user_func_array([$model, $method], array_slice(func_get_args(), 1));
+            return call_user_func_array([$model, $method], array_slice($payload, 1));
         }
     }
 }

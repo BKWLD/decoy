@@ -43,7 +43,7 @@ class CrudTest extends TestCase
     public function testCreate()
     {
         $response = $this->get('admin/articles/create');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -56,7 +56,7 @@ class CrudTest extends TestCase
         $response = $this->post('admin/articles/create', ['title' => ''], [
             'HTTP_REFERER' => url('admin/articles/create'),
         ]);
-        $response->assertRedirectedTo('admin/articles/create');
+        $response->assertRedirect('admin/articles/create');
         $response->assertSessionHasErrors('title');
     }
 
@@ -71,7 +71,7 @@ class CrudTest extends TestCase
             '_save' => 'save',
         ]));
 
-        $this->assertRedirectedTo('admin/articles/1/edit');
+        $response->assertRedirect('admin/articles/1/edit');
 
         $article = Article::findBySlug('example-title');
         $this->assertNotEmpty($article);
@@ -88,7 +88,7 @@ class CrudTest extends TestCase
         $article = factory(Article::class)->create();
 
         $response = $this->get('admin/articles/'.$article->id.'/edit');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Bkwld\Decoy\Observers;
 
-use Config;
+// Deps
 use Symfony\Component\HttpFoundation\File\File;
 
 /**
@@ -15,14 +15,19 @@ class ValidateExistingFiles
     /**
      * Massage validation handling
      *
-     * @param  Bkwld\Decoy\Models\Base         $model
-     * @param  Illuminate\Validation\Validator $validation
+     * @param  string $event
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base
+     *    - Illuminate\Validation\Validator
      * @return void
      */
-    public function onValidating($model, $validation)
+    public function onValidating($event, $payload)
     {
+        // Destructure payload
+        list($model, $validation) = $payload;
+
         // Only act on locally hosted files
-        if (Config::get('upchuck.disk.driver') != 'local') {
+        if (config('upchuck.disk.driver') != 'local') {
             return;
         }
 
@@ -78,7 +83,7 @@ class ValidateExistingFiles
     public function makeFileFromPath($path)
     {
         $upchuck_path = app('upchuck')->path($path);
-        $absolute_path = Config::get('upchuck.disk.path').'/'.$upchuck_path;
+        $absolute_path = config('upchuck.disk.path').'/'.$upchuck_path;
         return new File($absolute_path);
 
     }

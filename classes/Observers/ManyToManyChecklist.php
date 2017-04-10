@@ -20,10 +20,15 @@ class ManyToManyChecklist
      * Take input from a Many to Many Checklist and commit it to the db. Called
      * on model saved.
      *
-     * @param Bkwld\Decoy\Models\Base $model
+     * @param  string $event
+     * @param  array $payload Contains:
+     *    - Bkwld\Decoy\Models\Base $model
+     * @return void
      */
-    public function handle($model)
+    public function handle($event, $payload)
     {
+        list($model) = $payload;
+        
         // Check for matching input elements
         foreach (Request::input() as $key => $val) {
             if (preg_match('#^'.self::PREFIX.'(.+)#', $key, $matches)) {

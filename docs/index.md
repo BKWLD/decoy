@@ -18,8 +18,6 @@ Next, see the [quick start](quick-start) for tips on your first install.
 
 ## Compatibility
 
-Decoy *currently* only works with **Laravel 5.0 - 5.2**.
-
 Decoy is tested to support the following browsers:
 
 - Latest Chrome (recommended)

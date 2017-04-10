@@ -16,7 +16,7 @@ class LoginTest extends TestCase
     public function testLoginScreen()
     {
         $response = $this->get('admin');
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
     }
 
     /**
@@ -34,7 +34,7 @@ class LoginTest extends TestCase
         ]);
 
         // Check that user is redirected back to login but there are errors
-        $response->assertRedirectedToRoute('decoy::account@login');
+        $response->assertRedirect('admin');
         $response->assertSessionHasErrors();
     }
 
@@ -63,7 +63,7 @@ class LoginTest extends TestCase
 
         // The response redirects back to the login page. A middleware will
         // then redirect to the first page of the admin
-        $response->assertRedirectedToRoute('decoy::account@login');
+        $response->assertRedirect('admin');
 
         // Check that we're logged in now
         $this->assertTrue(Auth::check());
@@ -81,7 +81,7 @@ class LoginTest extends TestCase
 
         // Should redirect to the first route in the config
         $response = $this->get('admin');
-        $response->assertRedirectedTo('admin/articles');
+        $response->assertRedirect('admin/articles');
 
     }
 
@@ -99,7 +99,7 @@ class LoginTest extends TestCase
 
         // Should redirect to the first route in the config
         $response = $this->get('admin');
-        $response->assertRedirectedTo('admin/something');
+        $response->assertRedirect('admin/something');
 
     }
 }

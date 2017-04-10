@@ -26,7 +26,7 @@ class ElementsLocalizationTest extends TestCase
     public function testDefaultLocaleListing()
     {
         $response = $this->get('admin/elements');
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -37,7 +37,7 @@ class ElementsLocalizationTest extends TestCase
     public function testExplicitLocaleListing()
     {
         $response = $this->get('admin/elements/en');
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**

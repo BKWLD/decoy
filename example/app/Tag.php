@@ -30,7 +30,7 @@ class Tag extends Base
      */
     public function articles()
     {
-        return $this->morphedByMany('App\Article', 'taggable');
+        return $this->morphedByMany(\App\Article::class, 'taggable');
     }
 
     /**

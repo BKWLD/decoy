@@ -28,29 +28,19 @@ class FileTest extends TestCase
     {
         return [
 
-            // Params
-            [
-                'title' => 'Example Title',
-                'body' => 'Body',
-                'category' => 'first',
-                'date' => '2020-01-01',
-                'featured' => 1,
-                'public' => 1,
-                'images' => [
-                    '_xxxx' => [
-                        'name' => '',
-                    ],
+            'title' => 'Example Title',
+            'body' => 'Body',
+            'category' => 'first',
+            'date' => '2020-01-01',
+            'featured' => 1,
+            'public' => 1,
+            'images' => [
+                '_xxxx' => [
+                    'name' => '',
+                    'file' => $this->createUploadedFile(),
                 ],
             ],
-
-            // Files
-            [
-                'images' => [
-                    '_xxxx' => [
-                        'file' => $this->createUploadedFile()
-                    ],
-                ],
-            ],
+            '_save' => 'save',
         ];
     }
 
@@ -63,18 +53,11 @@ class FileTest extends TestCase
     {
 
         return [
-
-            // Params
-            [
-                'title' => 'Test Recipe',
-                'locale' => 'en',
-                'public' => 1,
-            ],
-
-            // Files
-            [
-                'file' => $this->createUploadedFile('file.jpg')
-            ],
+            'title' => 'Test Recipe',
+            'locale' => 'en',
+            'public' => 1,
+            'file' => $this->createUploadedFile('file.jpg'),
+            '_save' => 'save',
         ];
     }
 
@@ -85,13 +68,11 @@ class FileTest extends TestCase
      */
     public function testImageUploadStore()
     {
-        list($params, $files) = $this->createData();
+        $data = $this->createData();
 
-        $response = $this->call('POST', 'admin/articles/create', array_merge($params, [
-            '_save' => 'save',
-        ]), [], $files);
+        $response = $this->call('POST', 'admin/articles/create', $data);
 
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $article = Article::findBySlug('example-title');
         $this->assertNotEmpty($article->img()->url);
     }
@@ -101,11 +82,9 @@ class FileTest extends TestCase
      */
     public function testFileUploadStore()
     {
-        list($params, $files) = $this->createRecipeData();
+        $data = $this->createRecipeData();
 
-        $response = $this->call('POST', 'admin/recipes/create', array_merge($params, [
-            '_save' => 'save',
-        ]), [], $files);
+        $response = $this->call('POST', 'admin/recipes/create', $data);
 
         $recipe = Recipe::first();
         $this->assertEquals('Test Recipe', $recipe->title);
