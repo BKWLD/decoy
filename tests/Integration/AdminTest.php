@@ -41,7 +41,7 @@ class AdminTest extends TestCase
     public function testAdminCanPermissions()
     {
         $response = $this->get('admin/articles/1/edit');
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -52,7 +52,7 @@ class AdminTest extends TestCase
         $article = Article::first();
         $this->assertEquals(1, $article->id);
         $response = $this->get('admin/articles/1/delete');
-        $this->assertResponseStatus(403);
+        $response->assertStatus(403);
     }
 
     /**
@@ -66,7 +66,7 @@ class AdminTest extends TestCase
         $this->assertEquals(2, $new_admin->id);
 
         $response = $this->get('admin/admins/2/disable');
-        $this->assertResponseStatus(403);
+        $response->assertStatus(403);
     }
 
     /**
@@ -78,7 +78,7 @@ class AdminTest extends TestCase
     {
         $response = $this->get('admin/forgot');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -92,7 +92,7 @@ class AdminTest extends TestCase
             'email' => 'test@domain.com',
         ]);
 
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
     }
 
     /**
@@ -110,7 +110,7 @@ class AdminTest extends TestCase
         ]);
 
         $response = $this->get('admin/password/reset/'.$token);
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -131,14 +131,16 @@ class AdminTest extends TestCase
 
         $response = $this->post('admin/password/reset/'.$token, [
             'email' => 'test@domain.com',
-            'password' => 'farting',
-            'password_confirmation' => 'farting',
+            'password' => 'new_password',
+            'password_confirmation' => 'new_password',
             'token' => $token,
         ]);
+        $response->assertStatus(302);
 
         $new_password = Admin::findOrFail(1)->password;
 
-        $this->assertResponseStatus(302);
+        dd($current_password, $new_password);
+
         $this->assertNotEquals($current_password, $new_password);
         $this->assertEmpty(\DB::table('password_resets')
             ->where('email', 'test@domain.com')->get());

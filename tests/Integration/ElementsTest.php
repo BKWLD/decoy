@@ -33,7 +33,7 @@ class ElementsTest extends TestCase
     {
         $response = $this->get('admin/elements');
 
-        $this->assertResponseOk();
+        $response->assertStatus(200);
     }
 
     /**
@@ -66,7 +66,7 @@ class ElementsTest extends TestCase
         ]);
 
         $element = Decoy::el('homepage.marquee.title');
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $this->assertEquals('Test', $element);
     }
 
@@ -110,7 +110,7 @@ class ElementsTest extends TestCase
                 ],
             ],
         ]);
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $this->assertEmpty(Element::first());
         $this->assertEquals($default_text, $default_element);
     }
@@ -137,7 +137,7 @@ class ElementsTest extends TestCase
         ]);
 
         $element = Decoy::el('homepage.marquee.image');
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $this->assertNotEmpty($element->crop(10, 10)->url);
     }
 
@@ -159,7 +159,7 @@ class ElementsTest extends TestCase
         ]);
 
         $element = Decoy::el('homepage.marquee.file');
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $this->assertNotEmpty($element->value());
     }
 
@@ -202,7 +202,7 @@ class ElementsTest extends TestCase
             ],
         ]);
 
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $this->assertEmpty($element->fresh()->value);
         $this->assertEmpty($image->fresh());
     }
@@ -232,7 +232,7 @@ class ElementsTest extends TestCase
             ],
         ]);
 
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
 
         $path = app('upchuck')->path($element->value);
         $this->assertEmpty($element->fresh()->value);

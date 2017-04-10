@@ -91,7 +91,7 @@ class FileTest extends TestCase
             '_save' => 'save',
         ]), [], $files);
 
-        $this->assertResponseStatus(302);
+        $response->assertStatus(302);
         $article = Article::findBySlug('example-title');
         $this->assertNotEmpty($article->img()->url);
     }
