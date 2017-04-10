@@ -126,12 +126,7 @@ class ElementsTest extends TestCase
             'images' => [
                 '_xxxx' => [
                     'name' => 'homepage|marquee|image',
-                ],
-            ],
-        ], [], [
-            'images' => [
-                '_xxxx' => [
-                    'file' => $this->createUploadedFile()
+                    'file' => $this->createUploadedFile(),
                 ],
             ],
         ]);
