@@ -983,7 +983,7 @@ class Base extends Controller
         }
 
         // Set vars
-        $this->layout->title = $this->title;
+        $this->layout->title = $this->title();
         $this->layout->description = $this->description();
         View::share('controller', $this->controller);
 

@@ -24,9 +24,21 @@ use Bkwld\Library\Laravel\Former as FormerUtils;
 class Elements extends Base
 {
     /**
-     * @var string
+     * Override the title for localization
+     * @param  string $controller_name
+     * @return string
      */
-    protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
+    public function title($controller_name = null) {
+        return __('decoy::elements.title');
+    }
+
+    /**
+     * Override the description for localization
+     * @return string
+     */
+    public function description() {
+        return __('decoy::elements.description');
+    }
 
     /**
      * All elements view
