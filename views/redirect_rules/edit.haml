@@ -4,7 +4,7 @@
 	.legend=empty($item) ? 'New' : 'Edit'
 
 	:php
-		$help = __('decoy::redirect_rules.form.from_help');
+		$help = __('decoy::redirect_rules.form.from_help', ['root' => Request::root()]);
 		if (Config::get('decoy::core.allow_regex_in_redirects')) {
 			$help .= __('decoy::redirect_rules.form.from_regex_help');
 		}
