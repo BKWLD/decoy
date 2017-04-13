@@ -6,5 +6,10 @@ return [
 
     'actions.save_new' => 'Go to create form after saving',
     'actions.save_back' => 'Return to listing after saving',
+    'actions.save' => 'Save',
+    'actions.new' => '&amp; New',
+    'actions.back' => '&amp; Back',
+    'actions.delete' => 'Delete',
+    'actions.cancel' => 'Cancel',
 
 ];
