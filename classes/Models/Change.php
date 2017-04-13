@@ -143,7 +143,7 @@ class Change extends Base
     {
         return static::groupBy('admin_id')
             ->join('admins', 'admins.id', '=', 'admin_id')
-            ->select(DB::raw('changes.id, CONCAT(first_name, " ", last_name) name'))
+            ->select(DB::raw('admins.id, CONCAT(first_name, " ", last_name) name'))
             ->pluck('name', 'id');
     }
 

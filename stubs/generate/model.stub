@@ -55,7 +55,7 @@ class {{model}} extends Base
     // public function onCreating()
     // {
     //     if (isset($this->position)) return;
-    //     $this->position = $this->article->blocks()->max('position') + 1;
+    //     $this->position = static::max('position') + 1;
     // }
 
     /**
