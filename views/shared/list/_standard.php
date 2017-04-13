@@ -5,7 +5,7 @@
 	<?php if ($parent_controller):?> data-parent-controller="<?=$parent_controller?><?php endif?>"
 	>
 
-	<?php 
+	<?php
 	// Create the page title for the sidebar layout
 	if ($layout == 'sidebar') echo View::make('decoy::shared.list._sidebar_header', $__data)->render();
 
@@ -18,12 +18,12 @@
 
 	// Add sidebar pagination
 	if (!empty($layout) && $layout != 'full' && $count > count($listing)): ?>
-		<a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>" class="btn btn-default btn-sm btn-block full-list">See full list of related <b><?=title_case($title)?></b></a>
+		<a href="<?=DecoyURL::relative('index', $parent_id, $controller)?>" class="btn btn-default btn-sm btn-block full-list"><?= __('decoy::list.standard.related', ['title' => title_case($title)]) ?></b></a>
 	<?php endif ?>
 
 </div>
 
-<?php 
+<?php
 // Render pagination
 echo View::make('decoy::shared.list._pagination', $__data)->render();
 

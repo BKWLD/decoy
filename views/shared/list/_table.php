@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Render a table of model rows.  Required variables:
  * - listing
@@ -69,7 +69,8 @@ if ($listing->count()) {
 			<tr class="hide warning bulk-actions">
 				<td colspan="999">
 					<a class="btn btn-warning remove-confirm" href="#">
-						<span class="glyphicon glyphicon-remove"></span> Remove Selected
+						<span class="glyphicon glyphicon-remove"></span>
+						<?= __('decoy::list.table.remove_selected') ?>
 					</a>
 				</td>
 			</tr>
@@ -79,12 +80,12 @@ if ($listing->count()) {
 			<?=View::make('decoy::shared.list._bulk_actions')->render()?>
 		<?php endif ?>
 
-		<?php 
+		<?php
 		// Loop through the listing data
 		foreach ($listing as $item): ?>
 
 			<tr data-model-id="<?=$item->getKey()?>" class="<?=$item->getAdminRowClassAttribute()?>"
-				<?php 
+				<?php
 				// Render parent id
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
 
@@ -108,7 +109,7 @@ if ($listing->count()) {
 				<?php foreach(array_values($columns) as $i => $column): ?>
 					<td class="<?=strtolower($column_names[$i])?>">
 
-						<?php 
+						<?php
 						// Wrap the column value in an edit link only if it's the first
 						// column and it doesn't contain an a tag with an href attribute
 						$value = Decoy::renderListColumn($item, $column, $convert_dates);

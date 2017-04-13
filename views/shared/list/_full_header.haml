@@ -3,9 +3,9 @@
 
 	-# Stats
 	%span.stat
-		Total
+		!= __('decoy::list.full_header.total')
 		%span.badge=$count
-	
+
 	-# Potentially contain other buttons
 	.pull-right.btn-toolbar
 
@@ -18,10 +18,8 @@
 					.glyphicon.glyphicon-search
 
 				-# Rest button
-				%a.btn.btn-sm.outline.search-clear.js-tooltip(title="Reset")
+				%a.btn.btn-sm.outline.search-clear.js-tooltip(title="#{__('decoy::list.full_header.reset')}")
 					.glyphicon.glyphicon-ban-circle
 
 -# Search UI
 !=View::make('decoy::shared.list._search', $__data)->render()
-
-
