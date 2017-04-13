@@ -1,8 +1,8 @@
-<?php 
+<?php
 
 // Require a slug
 if (empty($item->slug)) return;
-	
+
 // If no route is defined, hide the slug interface
 $url = $item->getUriAttribute();
 if (!$url) return;
@@ -18,4 +18,6 @@ $url_link = '<a href="'.$url.'" target="_blank">URI</a>';
 $prepend = preg_replace('#/[\w-\.]+$#', '/', parse_url(rtrim($url,'/'), PHP_URL_PATH));
 
 // Render the field
-echo Former::text('slug')->blockHelp('Used to form the '.$url_link.' for this content.')->prepend($prepend);
+echo Former::text('slug')
+    ->blockHelp(__('decoy::display.slug.help', ['url_link' => $url_link]))
+    ->prepend($prepend);

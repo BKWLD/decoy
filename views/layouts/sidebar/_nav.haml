@@ -38,20 +38,20 @@
 		.main-nav(class=$open?'active open':null)
 			%a.top-level.parent
 				%span.glyphicon.glyphicon-cog
-				Settings
+				!= __('decoy::sidebar.nav.settings')
 
 			.subnav
 
 				-if($admin->can('read', 'admins'))
-					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null)) Admins
+					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Admins@index') class=(Request::segment(2)=='admins'?'active':null))!= __('decoy::sidebar.nav.admins')
 				-else
-					%a(href=$admin->getUserUrl() class=(Request::segment(2)=='admins'?'active':null)) Account
+					%a(href=$admin->getUserUrl() class=(Request::segment(2)=='admins'?'active':null))!= __('decoy::sidebar.nav.account')
 
 				-if($admin->can('read', 'changes'))
-					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null)) Changes
+					%a(href=DecoyURL::action('Bkwld\\Decoy\\Controllers\\Changes@index') class=(Request::segment(2)=='changes'?'active':null))!= __('decoy::sidebar.nav.changes')
 
 				-if($admin->can('read', 'commands'))
-					%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null)) Commands
+					%a(href=route('decoy::commands') class=(Request::segment(2)=='commands'?'active':null))!= __('decoy::sidebar.nav.commands')
 
 				-if($admin->can('read', 'workers') && count(Bkwld\Decoy\Models\Worker::all()))
-					%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null)) Workers
+					%a(href=route('decoy::workers')  class=(Request::segment(2)=='workers'?'active':null))!= __('decoy::sidebar.nav.workers')

@@ -7,12 +7,12 @@
 		.left
 			%a.logout(href=route('decoy::account@logout'))
 				%span.glyphicon.glyphicon-log-out
-				Logout
+				!= __('decoy::sidebar.bottom.logout')
 			.subtitle
 				%span.glyphicon.glyphicon-heart
-				%a(href="http://decoy.bukwild.com" target="_blank") Decoy 5.2 
+				%a(href="http://decoy.bukwild.com" target="_blank") Decoy 5.4
 				by
 				%a(href="http://www.bukwild.com" target="_blank") Bukwild
 		%a.right(href="/")
 			.glyphicon.glyphicon-globe
-			.subtitle Open site
+			.subtitle!= __('decoy::sidebar.bottom.open_site')

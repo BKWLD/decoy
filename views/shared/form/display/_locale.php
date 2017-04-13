@@ -31,4 +31,4 @@ if ($item && ($localizations = $localize->other())) {
 echo Former::radios('locale')
 	->radios($config)
 	->addGroupClass('locale')
-	->blockHelp('This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.');
+	->blockHelp(__('decoy::display.locale.help'));

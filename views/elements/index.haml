@@ -18,7 +18,7 @@
 	-if(($locales = Config::get('decoy.site.locales')) && count($locales) > 1)
 		%fieldset.locale
 			.legend
-				Locale
+				!= __('decoy::elements.legend.locale')
 				.btn-group.pull-right
 					%button.btn.btn-sm.outline.dropdown-toggle(type="button" data-toggle="dropdown" aria-expanded="false")
 						=Config::get('decoy.site.locales')[$locale]
@@ -68,6 +68,6 @@
 .controls.form-actions
 	%button.btn.btn-success.save(type="submit")
 		%span.glyphicon.glyphicon-file
-		Save all tabs
+		!= __('decoy::elements.footer.save')
 
 !=Former::close()

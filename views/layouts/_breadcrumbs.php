@@ -13,7 +13,7 @@ $breadcrumb_count = count($breadcrumbs);
 		<?php if ($back && !Route::is('decoy::account@forgot', 'decoy::account@reset')): ?>
 			<a href="<?=$back?>" class="back">
 				<span class="glyphicon glyphicon-arrow-left"></span>
-				Back to listing
+				<?php echo __('decoy::breadcrumbs.back_to_listing'); ?>
 			</a>
 		<?php endif?>
 

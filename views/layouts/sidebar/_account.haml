@@ -4,8 +4,8 @@
 		%img.gravatar(src=$auth->getUserPhoto())
 		%span.name
 			-if(($name = $auth->getShortName()) == "Default")
-				Hi there!
+				!= __('decoy::sidebar.account.welcome')
 			-else
-				!='Hi, '.$name
+				!= __('decoy::sidebar.account.welcome_admin', ['name' => $name])
 	%a.btn.outline.close-nav
 		%span.glyphicon.close.glyphicon-remove
