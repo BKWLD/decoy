@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 4.13.17 👍 */
+/*! 📝 Bukwild 💾 4.21.17 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -6622,6 +6622,15 @@ h1 b, h1 strong, h2 b, h2 strong, h3 b, h3 strong, h4 b, h4 strong, h5 b, h5 str
 button.close {
   margin-top: -3px; }
 
+.spinner-46 {
+  display: inline-block;
+  vertical-align: middle;
+  width: 18px;
+  height: 18px;
+  background-image: url(/assets/decoy/img/8c9e8416.gif);
+  background-size: cover;
+  opacity: 0; }
+
 .breadcrumbs {
   background: rgba(255, 255, 255, 0.93);
   position: relative;
@@ -8024,6 +8033,8 @@ body .redactor-dropdown.redactor-dropdown-box-fontcolor a:hover {
     font-weight: bold; }
     #commands td:last-child p {
       margin: 0; }
+      #commands td:last-child p:not(:last-of-type) {
+        display: inline-block; }
     #commands td:last-child small {
       font-weight: normal; }
   #commands td {

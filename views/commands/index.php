@@ -12,7 +12,7 @@
 							<td>
 								<p>
 									<?=$name?>
-									<img src="/packages/bkwld/decoy/img/spinners/46x46.gif"/>
+									<div class='spinner-46'></div>
 								</p>
 								<p><small><?=$command->getDescription()?></small></p>
 							</td>
