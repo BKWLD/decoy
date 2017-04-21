@@ -12,4 +12,8 @@ return [
     'actions.delete' => 'Delete',
     'actions.cancel' => 'Cancel',
 
+    'secondary_actions.duplicate' => 'Duplicate',
+    'secondary_actions.changes' => '<b>Changes</b> history',
+    'secondary_actions.public_view' => 'Public view',
+
 ];

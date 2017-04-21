@@ -20,6 +20,7 @@ return [
 
     'standard.related' => 'See full list of related <b>:title</b>',
 
+    'table.actions' => 'Actions',
     'table.remove_selected' => 'Remove Selected',
 
 ];

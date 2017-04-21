@@ -28,7 +28,7 @@ if ($item && ($localizations = $localize->other())) {
 }
 
 // Render the locale menu
-echo Former::radios('locale')
+echo Former::radios('locale', __('decoy::display.locale.label'))
 	->radios($config)
 	->addGroupClass('locale')
 	->blockHelp(__('decoy::display.locale.help'));

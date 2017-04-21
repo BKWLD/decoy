@@ -422,7 +422,7 @@ abstract class Base extends Eloquent
         extract($data);
 
         return sprintf('<a href="%s" class="action-edit js-tooltip"
-            data-placement="left" title="Edit in admin">
+            data-placement="left" title="' . __('decoy::base.standard_list.private') . '">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>', $this->getAdminEditUri($controller, $many_to_many));
     }

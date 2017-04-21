@@ -2,8 +2,8 @@
 
 return [
 
-    'legend.new' => 'New',
-    'legend.edit' => 'Edit',
+    'legend.new' => 'Nova',
+    'legend.edit' => 'Editar',
 
     'form.from_help' => 'Um caminho de URL, começando depois ":root/". Isso pode conter curingas na forma de um <code>%</code>. Por exemplo, para coincidir com todos os URLs que começam com "blog /", use <code>blog/%</code>.',
 
