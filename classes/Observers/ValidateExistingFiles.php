@@ -44,10 +44,11 @@ class ValidateExistingFiles
         // For each of the file rules, if the input has a value, make a file
         // instance for it if it's a local path.
         $data = $validation->getData();
-        foreach ($rules as $attribute => $rules) {
+        foreach (array_keys($rules) as $attribute) {
 
-            // Test that the attribute is in the data.  It may not be for images
-            // attributes or other nested models
+            // Skip if the attribute isn't in the input.  It may not be for
+            // images or other nested models.  Their validation should get
+            // triggered later through NestedModels behavior.
             if (!array_key_exists($attribute, $data)) {
                 continue;
 
