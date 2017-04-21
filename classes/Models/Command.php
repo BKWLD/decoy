@@ -19,7 +19,11 @@ class Command
     // Queries
     //---------------------------------------------------------------------------
 
-    // Get all the commands
+    /**
+     * Scan commands directory for custom commands
+     *
+     * @return array
+     */
     public static function all()
     {
         // Add custom ones
@@ -37,7 +41,11 @@ class Command
         return $commands;
     }
 
-    // Scan commands directory for custom commands
+    /**
+     * Scan commands directory for custom commands
+     *
+     * @return array
+     */
     public static function allCustom()
     {
         // Response array
@@ -45,6 +53,7 @@ class Command
 
         // Loop through PHP files
         $dir = app_path('Console/Commands');
+        if (!is_dir($dir)) return [];
         $files = scandir($dir);
         foreach ($files as $file) {
             if (!preg_match('#\w+\.php#', $file)) {

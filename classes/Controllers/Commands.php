@@ -2,6 +2,8 @@
 
 namespace Bkwld\Decoy\Controllers;
 
+// Deps
+use Artisan;
 use App;
 use Response;
 use Bkwld\Decoy\Models\Command;
@@ -24,6 +26,8 @@ class Commands extends Base
 
     /**
      * List all the tasks in the admin
+     *
+     * @return Response
      */
     public function index()
     {
@@ -34,6 +38,8 @@ class Commands extends Base
 
     /**
      * Run one of the commands, designed to be called via AJAX
+     *
+     * @return Response
      */
     public function execute($command_name)
     {
@@ -42,22 +48,10 @@ class Commands extends Base
             App::abort(404);
         }
 
-        // Bootstrap the console app and load the command through it.  Code taken from
-        // https://github.com/JN-Jones/web-artisan/blob/master/src/Jones/WebArtisan/Controllers/Cmd.php
-        $app = app();
-        $app->loadDeferredProviders();
-        $artisan = ConsoleApplication::start($app);
-        $command = $artisan->find($command_name);
-
-        // Do the minimum required for arguments; we only support non-argumented commands
-        $arguments = [];
-        $arguments['command'] = $command_name;
-        $arguments = new ArrayInput($arguments);
-
         // Run it, ignoring all output
         set_time_limit(self::MAX_EXECUTION_TIME);
         ob_start();
-        $command->run($arguments, new NullOutput);
+        Artisan::call($command->getName());
         ob_end_clean();
 
         // Return response
