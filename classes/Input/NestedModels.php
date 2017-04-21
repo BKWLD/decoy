@@ -55,11 +55,6 @@ class NestedModels
     }
 
     /**
-     * Get both regular and files input with empty files stripped out so they
-     * don't
-     */
-
-    /**
      * Check if the input is a relation and, if it is, return the relationship
      * object
      *
@@ -109,7 +104,7 @@ class NestedModels
         // detected because the id begins with an underscore (aka, doesn't reflect)
         // a true record in the database.
         foreach ($data as $id => $input) {
-            $prefix = $name.'.'.$id.'.';
+            $prefix = $name.'|'.$id.'|';
             if (starts_with($id, '_')) {
                 $this->storeChild($relation, $input, $prefix);
             } else {
