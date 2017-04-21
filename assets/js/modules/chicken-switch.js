@@ -3,22 +3,23 @@
 // admin to confirm the delete.  This must be manually
 // opted into by requiring this module from an app's
 // admin/start.js before the decoy is started.
-// 
+//
 // require('decoy/modules/chicken-switch').register();
 // decoy.trigger('ready');
-// 
+//
 // --------------------------------------------------
 define(function(require) {
 
 	// Dependencies
 	var $ = require('jquery');
+    var __ = require('../localize/translated');
 
 	// Add listeners to all listing delete links and all delete
 	// links on edit pages
 	function register() {
 		$('.listing').find('.delete-now, .remove-now').add('.form-actions .delete').on('click', prompt);
 	}
-	
+
 	// Prompt user to confirm deletes
 	function prompt(e, bypass) {
 		var $el = $(this);
@@ -33,7 +34,7 @@ define(function(require) {
 		// Prevent default behavior
 		e.preventDefault();
 		e.stopImmediatePropagation();
-		
+
 		// Hide tooltips
 		var title;
 		if ($el.hasClass('js-tooltip')) {
@@ -48,7 +49,7 @@ define(function(require) {
 		// Show the dialog
 		$el.popover({
 			trigger: 'manual',
-			content: '<p class="text-center">Are you sure?</p><div><a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> Yes</a> <a href="#" class="btn btn-default">Cancel</a></div>',
+			content: '<p class="text-center">'+__('chicken_switch.text')+'</p><div><a href="#" class="btn btn-danger"><span class="glyphicon glyphicon-trash"></span> '+__('chicken_switch.confirm')+'</a> <a href="#" class="btn btn-default">'+__('chicken_switch.cancel')+'</a></div>',
 			html: true,
 
 			// If a butto, it's an edit button, so put the popup on top
@@ -76,7 +77,7 @@ define(function(require) {
 	function close(e) {
 		e.data.$target.popover('hide');
 		if (e.data.$target.hasClass('js-tooltip')) {
-			e.data.$target.tooltip({ 
+			e.data.$target.tooltip({
 				animation: false,
 				title: e.data.title
 			});

@@ -6,6 +6,7 @@ define(function (require) {
 	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
+		__ = require('../localize/translated'),
 		Backbone = require('backbone');
 
 	// Bring in just enough jQuery UI for drag and drop
@@ -564,13 +565,13 @@ define(function (require) {
 				if (model.get('public')) {
 					$icon.addClass(publicIconClass);
 					$icon.removeClass(privateIconClass);
-					$icon.attr('title', 'Make private');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Make private');
+					$icon.attr('title', __('standard_list.private'));
+					$row.find('.visibility.js-tooltip').attr('data-original-title', __('standard_list.private'));
 				} else {
 					$icon.removeClass(publicIconClass);
 					$icon.addClass(privateIconClass);
-					$icon.attr('title', 'Publish');
-					$row.find('.visibility.js-tooltip').attr('data-original-title', 'Publish');
+					$icon.attr('title', __('standard_list.publish'));
+					$row.find('.visibility.js-tooltip').attr('data-original-title', __('standard_list.publish'));
 				}
 			}
 
