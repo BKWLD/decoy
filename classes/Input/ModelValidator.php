@@ -95,15 +95,15 @@ class ModelValidator
     public function handleImageRules($model, $rules)
     {
 
-        // If the model is an image, the rules were passed in by NestedModles and
-        // are good to go
+        // If the model is an image, the rules were passed in by NestedModels
+        // and are good to go
         if (is_a($model, Image::class)) {
             return $rules;
         }
 
-        // Otherwise, remove any image rules because this is a non-Image and these
-        // rules will get applied by NestedModels
-        return array_where($rules, function ($key, $val) {
+        // Otherwise, remove any image rules because this is a non-Image and
+        // these rules will get applied by NestedModels
+        return array_where($rules, function ($val, $key) {
             return !starts_with($key, 'images.');
         });
     }
