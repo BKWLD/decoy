@@ -406,7 +406,7 @@ abstract class Base extends Eloquent
         return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-eye-%s"></span>
             </a>',
-            $public ? 'Make private' : 'Publish',
+            $public ? __('decoy::base.standard_list.private') : __('decoy::base.standard_list.private'),
             $public ? 'open' : 'close'
         );
     }
