@@ -46,4 +46,37 @@ class RedirectRules extends Base
     {
         return array_except(parent::getPermissionOptions(), ['publish']);
     }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct()
+    {
+        $this->title = __('decoy::redirect_rules.controller.title');
+        $this->description = __('decoy::redirect_rules.controller.description');
+        $this->columns = [
+            __('decoy::redirect_rules.controller.column.rule') => 'getAdminTitleAttribute',
+        ];
+        $this->search = [
+            'from' => [
+                'label' => __('decoy::redirect_rules.controller.search.from'),
+                'type' => 'text',
+            ],
+            'to' => [
+                'label' => __('decoy::redirect_rules.controller.search.to'),
+                'type' => 'text',
+            ],
+            'code' => [
+                'label' => __('decoy::redirect_rules.controller.search.code'),
+                'type' => 'select',
+                'options' => 'Bkwld\Decoy\Models\RedirectRule::$codes',
+            ],
+            'label' => [
+                'label' => __('decoy::redirect_rules.controller.search.label'),
+                'type' => 'text',
+            ],
+        ];
+
+        parent::__construct();
+    }
 }

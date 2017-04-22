@@ -2,6 +2,17 @@
 
 return [
 
+    'controller.title' => 'Redirects',
+    'controller.description' => 'Rules that redirect an internal URL path to another.',
+    'controller.column.rule' => 'Rule',
+    'controller.search.from' => 'from',
+    'controller.search.to' => 'to',
+    'controller.search.code' => 'code',
+    'controller.search.label' => 'label',
+
+    'model.301' => '301 - Permanent',
+    'model.302' => '302 - Temporary',
+
     'legend.new' => 'New',
     'legend.edit' => 'Edit',
 
@@ -12,6 +23,5 @@ return [
     'form.to_help' => 'An absolute path ( <code>/insight/example</code> ) or url ( <code>http://domain.com/path?id=num</code> ).',
     'form.radio_help' => 'How should browsers treat this redirect.',
     'form.label_help' => 'An optional internal label used to identify this <b>Rule</b> in the Admin.',
-
 
 ];

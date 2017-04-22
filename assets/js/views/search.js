@@ -6,6 +6,7 @@ define(function (require) {
 	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
+     	__ = require('../localize/translated'),
 		Backbone = require('backbone');
 
 	// Make the key used to save the state
@@ -116,20 +117,20 @@ define(function (require) {
 				// Text input
 				case 'text':
 					return '<select class="comparisons form-control">'+
-							'<option value="%*%">contains</option>'+
-							'<option value="=">is exactly</option>'+
-							'<option value="*%">begins with</option>'+
-							'<option value="%*">ends with</option>'+
-							'<option value="!%*%">doesn\'t contain</option>'+
+							'<option value="%*%">'+__('search.text_field.contains')+'</option>'+
+							'<option value="=">'+__('search.text_field.is_exactly')+'</option>'+
+							'<option value="*%">'+__('search.text_field.begins_with')+'</option>'+
+							'<option value="%*">'+__('search.text_field.ends_with')+'</option>'+
+							'<option value="!%*%">'+__('search.text_field.does_not_contain')+'</option>'+
 						'</select>'+
 						'<input type="text" class="input input-field form-control"/>';
 				
 				// Date selector
 				case 'date':
 					return $('<select class="comparisons form-control">'+
-							'<option value=">">is after</option>'+
-							'<option value="<">is before</option>'+
-							'<option value="=">is on</option>'+
+							'<option value=">">'+__('search.date_field.is_after')+'</option>'+
+							'<option value="<">'+__('search.date_field.is_before')+'</option>'+
+							'<option value="=">'+__('search.date_field.is_on')+'</option>'+
 						'</select>').add($(''+
 						'<div class="input-group date-field date">'+
 							'<input class="date input-field form-control" maxlength="10" placeholder="mm/dd/yyyy" type="text">'+
@@ -141,18 +142,18 @@ define(function (require) {
 				// Number selector
 				case 'number':
 					return '<select class="comparisons form-control">'+
-							'<option value="=">is</option>'+
-							'<option value="!=">is not</option>'+
-							'<option value="<">is less than</option>'+
-							'<option value=">">is greater than</option>'+
+							'<option value="=">'+__('search.number_field.is')+'</option>'+
+							'<option value="!=">'+__('search.number_field.is_not')+'</option>'+
+							'<option value="<">'+__('search.number_field.is_less_than')+'</option>'+
+							'<option value=">">'+__('search.number_field.is_greater_than')+'</option>'+
 						'</select>'+
 						'<input type="number" class="input input-field form-control">';
 				
 				// Select menu
 				case 'select':
 					var comparisons = '<select class="comparisons form-control">'+
-							'<option value="=">is</option>'+
-							'<option value="!=">is not</option>'+
+							'<option value="=">'+__('search.select_field.is')+'is</option>'+
+							'<option value="!=">'+__('search.select_field.is_not')+'is not</option>'+
 						'</select>';
 					var $select = $('<select class="input input-field form-control">');
 					_.each(meta.options, function(label, value) {
@@ -178,8 +179,8 @@ define(function (require) {
 			var $condition = $('<div>').addClass('condition');
 			
 			// Add initial title
-			if (is_first) $condition.append('<span class="intro">Filter where the</span>');
-			else $condition.append('<span class="intro">and where the</span>');
+			if (is_first) $condition.append('<span class="intro">'+__('search.filter_where')+'</span>');
+			else $condition.append('<span class="intro">'+__('search.and_where')+'</span>');
 						
 			// Add the fields list
 			if (_.size(this.schema) > 1) {

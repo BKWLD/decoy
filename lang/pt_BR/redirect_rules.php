@@ -2,6 +2,17 @@
 
 return [
 
+    'controller.title' => 'Redirecionamentos',
+    'controller.description' => 'Regras que redirecionam um URL interno para outro URL.',
+    'controller.column.rule' => 'Regra',
+    'controller.search.from' => 'de',
+    'controller.search.to' => 'para',
+    'controller.search.code' => 'código',
+    'controller.search.label' => 'etiqueta',
+
+    'model.301' => '301 - Permanente',
+    'model.302' => '302 - Temporário',
+
     'legend.new' => 'Nova',
     'legend.edit' => 'Editar',
 

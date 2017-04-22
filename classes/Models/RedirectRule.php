@@ -117,4 +117,18 @@ class RedirectRule extends Base
         $path = ltrim(Request::path(), '/'); // ltrim fixes homepage
         return $query ? $path.'?'.$query : $path;
     }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct(array $attributes = [])
+    {
+        self::$codes = [
+            '301' => __('decoy::redirect_rules.model.301'),
+            '302' => __('decoy::redirect_rules.model.302'),
+        ];
+
+        // Continue Laravel construction
+        parent::__construct($attributes);
+    }
 }

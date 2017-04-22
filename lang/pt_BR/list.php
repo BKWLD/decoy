@@ -10,8 +10,10 @@ return [
     'full_header.total' => 'Total',
     'full_header.reset' => 'Limpar filtros',
 
-    'no_results.many_to_many.none' => 'Nenhum <b><a href=":url" title=":description" class="js-tooltip progress-link">:title</a></b> foi anexado a esta <b>:parent</b>.',
-    'no_results.many_to_many.none_create' => '<span class="nowrap">Use o <b><span class="glyphicon glyphicon-search"></span> Adicionar</b></span> preenchimento automático no cabeçalho deste painel para localizar e anexar um.',
+    'many_to_many.add' => 'Adicionar',
+
+    'no_results.many_to_many.none' => '<b><a href=":url" title=":description" class="js-tooltip progress-link">:title</a></b> ainda não foram relacionados com este "<b>:parent</b>".',
+    'no_results.many_to_many.none_create' => 'Use o campo de preenchimento aitomático <b><span class="glyphicon glyphicon-search"></span> Adicionar</b> no cabeçalho deste painel para localizar e criar o relacionamento.',
 
     'no_results.none' => 'Nenhum <b><a href=":url" title=":description" class="js-tooltip progress-link">:title</a></b> foi anexado a esta <b>:parent</b>.',
     'no_results.create' => '<span class="nowrap">Clique em <b><a href=":url"><span class="glyphicon glyphicon-plus"></span> Novo</a></b></span> para criar um.',
