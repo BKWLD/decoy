@@ -6,7 +6,7 @@ return [
     'legend.view' => 'Visualizar',
 
     'locale.label' => 'Idioma',
-    'locale.help' => 'Esse conteúdo só será exibido para os espectadores com o idioma selecionado. Você não pode atribuí-lo a um idioma que já tenha sido usado para traduzir esse conteúdo.',
+    'locale.help' => 'Este conteúdo só será exibido para os espectadores com o idioma selecionado. Você não pode atribuí-lo a um idioma que já tenha sido usado para traduzir esse conteúdo.',
 
     'slug.label' => 'Slug',
     'slug.help' => 'Usado para formar o :url_link para este conteúdo.',
