@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 4.13.17 👍 */
+/*! 📝 Bukwild 💾 4.21.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -29154,8 +29154,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		// Bring in just enough jQuery UI for drag and drop
 		__webpack_require__(16);
 
-		console.log(__('standard_list.private'));
-
 		// Bring in the template for new rows.  Currently, the only need to do this
 		// is for many-to-many row insertion
 		var row_template = _.template(__webpack_require__(17));
@@ -36736,64 +36734,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	// A single Seed Task
 	// --------------------------------------------------
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-		
+
 		// Dependencies
 		var $ = __webpack_require__(2),
 			_ = __webpack_require__(5),
 			Backbone = __webpack_require__(7);
-		
+
 		// Private static vars
 		var app;
-			
+
 		// Public view module
 		var SeedTask = Backbone.View.extend({
-			
+
 			initialize: function (options) {
 				_.bindAll(this);
 				app = options.app;
-				
+
 			},
-			
+
 			// Register interaction events
 			events: {
 				'click a': 'execute'
 			},
-			
+
 			// Execute a task.  We allow multiple tasks to be triggered
 			// at a time
 			execute: function(e) {
 				e.preventDefault();
-				
+
 				// Vars
 				var url = this.$('a').data('action'),
-					spinner_template = this.$('img').first(),
-					spinner = spinner_template.clone().show();
-				
+					spinner_template = this.$('.spinner-46').first(),
+					spinner = spinner_template.clone().css('opacity', 1);
+
 				// Add a new spinner
 				spinner_template.after(spinner);
-				
+
 				// Execute link via AJAX POST
 				$.ajax(url, {
 					type:'POST',
 					dataType: 'JSON'
 				})
-				
+
 				// Success
 				.done(function(data) {
 					spinner.fadeOut(function() {spinner.remove();});
 				})
-				
+
 				// Error
 				.fail(function() {
 					spinner.fadeOut(function() {spinner.remove();});
 				});
 
 			}
-			
+
 		});
-		
+
 		return SeedTask;
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ }),
 /* 32 */
