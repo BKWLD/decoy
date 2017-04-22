@@ -32,7 +32,7 @@ class RedirectRules extends Base
         'to',
         'code' => [
             'type' => 'select',
-            'options' => 'Bkwld\Decoy\Models\RedirectRule::$codes',
+            'options' => 'Bkwld\Decoy\Models\RedirectRule::getCodes()',
         ],
         'label',
     ];
@@ -69,7 +69,7 @@ class RedirectRules extends Base
             'code' => [
                 'label' => __('decoy::redirect_rules.controller.search.code'),
                 'type' => 'select',
-                'options' => 'Bkwld\Decoy\Models\RedirectRule::$codes',
+                'options' => 'Bkwld\Decoy\Models\RedirectRule::getCodes()',
             ],
             'label' => [
                 'label' => __('decoy::redirect_rules.controller.search.label'),

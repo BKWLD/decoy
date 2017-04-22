@@ -1,17 +1,17 @@
 != View::make('decoy::shared.form._header', $__data)->render()
 
 %fieldset
-	.legend=empty($item) ? 'New' : 'Edit'
+	.legend=empty($item) ? __('decoy::redirect_rules.legend.new') : __('decoy::redirect_rules.legend.edit')
 
 	:php
 		$help = __('decoy::redirect_rules.form.from_help', ['root' => Request::root()]);
 		if (Config::get('decoy::core.allow_regex_in_redirects')) {
 			$help .= __('decoy::redirect_rules.form.from_regex_help');
 		}
-		echo Former::text('from')->blockHelp($help);
+		echo Former::text('from')->label(__('decoy::redirect_rules.form.from'))->blockHelp($help);
 
-	!= Former::text('to')->blockHelp(__('decoy::redirect_rules.form.to_help'))
-	!= Former::radios('code')->radios(Bkwld\Library\Laravel\Former::radioArray(Bkwld\Decoy\Models\RedirectRule::$codes))->blockHelp(__('decoy::redirect_rules.form.radio_help'));
-	!= Former::text('label')->help(__('decoy::redirect_rules.form.label_help'))
+	!= Former::text('to')->label(__('decoy::redirect_rules.form.to'))->blockHelp(__('decoy::redirect_rules.form.to_help'))
+	!= Former::radios('code')->label(__('decoy::redirect_rules.form.code'))->radios(Bkwld\Library\Laravel\Former::radioArray(Bkwld\Decoy\Models\RedirectRule::getCodes()))->blockHelp(__('decoy::redirect_rules.form.radio_help'));
+	!= Former::text('label')->label(__('decoy::redirect_rules.form.label'))->help(__('decoy::redirect_rules.form.label_help'))
 
 != View::make('decoy::shared.form._footer', $__data)->render()
