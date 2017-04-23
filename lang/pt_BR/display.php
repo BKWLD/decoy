@@ -7,6 +7,7 @@ return [
 
     'locale.label' => 'Idioma',
     'locale.help' => 'Este conteúdo só será exibido para os espectadores com o idioma selecionado. Você não pode atribuí-lo a um idioma que já tenha sido usado para traduzir este conteúdo.',
+    'locale.localized_as' => 'Traduzido como',
 
     'slug.label' => 'Slug',
     'slug.help' => 'Usado para formar o :url_link para este conteúdo.',

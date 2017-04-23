@@ -1020,17 +1020,17 @@ class Base extends Controller
         }
 
         // Render the message
-        $message = "The <b>".Str::singular($this->title)."</b> {$title} was successfully {$verb}.";
+        $message = __('decoy::base.success_message', ['model' => Str::singular($this->title), 'title' => $title, 'verb' => __("decoy::base.verb.$verb")]);
 
         // Add extra messaging for copies
         if ($verb == 'duplicated') {
             $url = preg_replace('#/duplicate#', '/edit', Request::url());
-            $message .= ' You are viewing a <b>copy</b> of the <a href="'.$url.'">original</a>.';
+            $message .= __('decoy::base.success_duplicated', ['url' => $url]);
         }
 
         // Add extra messaging if the creation was begun from the localize UI
         if ($verb == 'duplicated' && is_a($input, '\Bkwld\Decoy\Models\Base') && !empty($input->locale)) {
-            $message .= " You may begin localizing it for <b>".config('decoy.site.locales')[$input->locale].'</b>.';
+            $message .= __('decoy::base.success_localized', ['locale' => config('decoy.site.locales')[$input->locale]]);
         }
 
         // Return message

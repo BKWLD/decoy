@@ -3,7 +3,7 @@
 return [
 
     'title' => 'Elementos',
-    'description' => 'Cópia, imagens e arquivos que não são gerenciados como parte de um item em uma lista.',
+    'description' => 'Copia, imagens e arquivos que não são gerenciados como parte de um item numa lista.',
 
     'legend.locale' => 'Idioma',
     'footer.save' => 'Salvar todas as guias',

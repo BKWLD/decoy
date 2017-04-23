@@ -7,6 +7,7 @@ return [
 
     'locale.label' => 'Locale',
     'locale.help' => 'This content will only be shown to viewers of the selected locale.  You cannot assign it to a locale that has already been used to localize this content.',
+    'locale.localized_as' => 'Localized as',
 
     'slug.label' => 'Slug',
     'slug.help' => 'Used to form the :url_link for this content.',
