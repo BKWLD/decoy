@@ -61,12 +61,19 @@ class Policy
             return true;
         }
 
+        // Don't allow creation on Decoy controlers that don't allow it
+        if ($action == 'create' && in_array($controller, [
+            'commands', 'changes', 'elements', 'workers',
+            ])) {
+            return false;
+        }
+
         // Always let developers access workers and commands
         if (in_array($controller, ['workers', 'commands']) && $admin->isDeveloper()) {
             return true;
         }
 
-        // If the admin has permissiosn, test if they have access to the action using
+        // If the admin has permissions, test if they have access to the action using
         // the array of permitted actions.
         if ($permissions = $admin->getPermissionsAttribute()) {
 

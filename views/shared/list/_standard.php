@@ -25,6 +25,6 @@
 
 <?php
 // Render pagination
-echo View::make('decoy::shared.list._pagination', $__data)->render();
+echo View::make('decoy::shared.pagination.index', $__data)->render();
 
 ?>

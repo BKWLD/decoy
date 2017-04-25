@@ -1,0 +1,23 @@
+:php
+    // Default options
+    $controller = app('decoy.wildcard')->detectController();
+    $options = [
+        $controller::$per_page,
+        $controller::$per_page * 2,
+        'all',
+    ];
+
+    // Get selected choice
+    $selected = request('count', $options[0]);
+
+%ul.pagination
+    %li.disabled
+        %span Show
+    - foreach($options as $option)
+        - if ($selected == $option)
+            %li.active
+                %span= ucfirst($option)
+        -else
+            - $url = $paginator->appends('count', $option)->url(1)
+            %li
+                %a(href=$url)= ucfirst($option)

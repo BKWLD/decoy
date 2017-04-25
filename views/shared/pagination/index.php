@@ -3,7 +3,7 @@
 
 // Standard full list pagination
 if ((empty($layout) || $layout == 'full') && method_exists($listing, 'links')) {
-	echo view('decoy::shared.list._paginator', [
+	echo view('decoy::shared.pagination.paginator', [
 		'paginator' => $listing->appends([
 			'query' => request('query'),
 			'sort' => request('sort'),
