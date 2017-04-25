@@ -18,6 +18,6 @@
             %li.active
                 %span= ucfirst($option)
         -else
-            - $url = $paginator->addQuery('count', $option)->url(1)
+            - $url = $paginator->appends('count', $option)->url(1)
             %li
                 %a(href=$url)= ucfirst($option)

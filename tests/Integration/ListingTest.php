@@ -124,16 +124,16 @@ class ListingTest extends TestCase
     public function testPagination()
     {
         $this->auth();
-        
+
         // Pagination is currently set at 5
         $articles = factory(Article::class, 6)->create();
         $response = $this->get('admin/articles');
 
         // Check for errors
-        $response->assertResponseStatus(200);
+        $response->assertStatus(200);
 
         // Check that there are 2 pages of results
-        $paginator = $this->response->original->content->getItems();
+        $paginator = $response->original->content->getItems();
         $this->assertEquals(2, $paginator->lastPage());
     }
 
