@@ -141,17 +141,7 @@ class Change extends Base
      */
     public static function getAdmins()
     {
-        return static::groupBy('admin_id')
-            ->join('admins', 'admins.id', '=', 'admin_id')
-            ->select('admins.*')
-            ->get()
-            ->map(function($admin) {
-                return [
-                    'id' => $admin->id,
-                    'name' => $admin->first_name.' '.$admin->last_name,
-                ];
-            })
-            ->pluck('name', 'id');
+        return Admin::all(['id', 'email'])->pluck('email', 'id');
     }
 
     /**
