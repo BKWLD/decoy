@@ -116,4 +116,25 @@ class ListingTest extends TestCase
         $this->assertEquals($first->title, $articles[0]->title);
     }
 
+    /**
+     * Test that pagination is rendering fine
+     *
+     * @return void
+     */
+    public function testPagination()
+    {
+        $this->auth();
+
+        // Pagination is currently set at 5
+        $articles = factory(Article::class, 6)->create();
+        $response = $this->get('admin/articles');
+
+        // Check for errors
+        $response->assertStatus(200);
+
+        // Check that there are 2 pages of results
+        $paginator = $response->original->content->getItems();
+        $this->assertEquals(2, $paginator->lastPage());
+    }
+
 }

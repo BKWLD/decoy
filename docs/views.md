@@ -17,7 +17,7 @@ Use a `fieldset` and a div of class `.legend` to contain groups of fields in box
 
 ## Overriding a Decoy partial
 
-You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at `app/views/admin/articles/shared/_pagination.php` you can customize the pagination partial JUST for the articles controller.
+You can override any of the Decoy partials on a per-controller basis.  This is done by creating a file structure within a controller's views directory that matches the decoy views structure.  Any mirrored path will be used in place of the Decoy partial.  For instance, if you create a file at `app/views/admin/articles/shared/pagination/index.php` you can customize the pagination partial JUST for the articles controller.
 
 In addition, you can override a partial for ALL controllers through built in [Laravel functionality](http://laravel.com/docs/packages#package-views).
 
