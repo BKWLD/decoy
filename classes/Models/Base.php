@@ -422,7 +422,7 @@ abstract class Base extends Eloquent
         extract($data);
 
         return sprintf('<a href="%s" class="action-edit js-tooltip"
-            data-placement="left" title="Edit in admin">
+            data-placement="left" title="' . __('decoy::base.action.edit') . '">
                 <span class="glyphicon glyphicon-pencil"></span>
             </a>', $this->getAdminEditUri($controller, $many_to_many));
     }
@@ -457,7 +457,7 @@ abstract class Base extends Eloquent
         }
 
         return sprintf('<a href="%s" target="_blank" class="action-view js-tooltip"
-            data-placement="left" title="View on site">
+            data-placement="left" title="' . __('decoy::base.action.view') . '">
                 <span class="glyphicon glyphicon-bookmark"></span>
             </a>', $uri);
     }
@@ -484,7 +484,7 @@ abstract class Base extends Eloquent
                 <span class="glyphicon glyphicon-%s"></span>
             </a>',
             $many_to_many ? 'remove-now' : 'delete-now',
-            $many_to_many ? 'Remove relationship' : 'Permanently delete',
+            $many_to_many ? __('decoy::base.action.remove') : __('decoy::base.action.delete'),
             $many_to_many ? 'remove' : 'trash'
         );
     }

@@ -54,10 +54,10 @@ if ($listing->count()) {
 
 				<?php if (isset($test_actions)): ?>
 					<?php if (count($test_actions)): ?>
-						<th class="actions-<?=count($test_actions)?>">Actions</th>
+						<th class="actions-<?=count($test_actions)?>"><?= __('decoy::list.table.actions') ?></th>
 					<?php endif ?>
 				<?php else: ?>
-					<th class="actions-3">Actions</th>
+					<th class="actions-3"><?= __('decoy::list.table.actions') ?></th>
 				<?php endif ?>
 
 			</tr>

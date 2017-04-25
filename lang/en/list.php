@@ -10,6 +10,8 @@ return [
     'full_header.total' => 'Total',
     'full_header.reset' => 'Reset',
 
+    'many_to_many.add' => 'Add',
+
     'no_results.many_to_many.none' => 'No <b><a href=":url" title=":description" class="js-tooltip progress-link">:title</a></b> have been attached to this <b>:parent</b>.',
     'no_results.many_to_many.none_create' => '<span class="nowrap">Use the <b><span class="glyphicon glyphicon-search"></span> Add</b></span> autocomplete field in this panel\'s header to find and attach one.',
 
@@ -20,6 +22,7 @@ return [
 
     'standard.related' => 'See full list of related <b>:title</b>',
 
+    'table.actions' => 'Actions',
     'table.remove_selected' => 'Remove Selected',
 
 ];

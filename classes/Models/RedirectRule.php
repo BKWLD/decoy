@@ -29,12 +29,15 @@ class RedirectRule extends Base
     /**
      * Redirection codes
      *
-     * @var array
+     * @return array
      */
-    public static $codes = [
-        '301' => '301 - Permanent',
-        '302' => '302 - Temporary',
-    ];
+    public static function getCodes()
+    {
+        return [
+            '301' => __('decoy::redirect_rules.model.301'),
+            '302' => __('decoy::redirect_rules.model.302'),
+        ];
+    }
 
     /**
      * Generate the admin title

@@ -19,7 +19,7 @@ if ($item && ($localizations = $localize->other())) {
 		if ($sibling = $localizations->get($options['value'])) {
 			$sibling = $sibling[0]; // The groupBy makes an array for its value
 			$options['disabled'] = true;
-			$label = "<span class='locale-label'>{$label} - Localized as <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->admin_title.'</a></span>';
+			$label = "<span class='locale-label'>{$label} - " . __('decoy::display.locale.localized_as') . " <a href='".DecoyURL::relative('edit', $sibling->getKey())."'>".$sibling->admin_title.'</a></span>';
 			$config[$label] = $options;
 
 		// Else, don't touch
@@ -28,7 +28,7 @@ if ($item && ($localizations = $localize->other())) {
 }
 
 // Render the locale menu
-echo Former::radios('locale')
+echo Former::radios('locale', __('decoy::display.locale.label'))
 	->radios($config)
 	->addGroupClass('locale')
 	->blockHelp(__('decoy::display.locale.help'));
