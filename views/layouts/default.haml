@@ -20,8 +20,8 @@
 		%link(rel="stylesheet" href=config('decoy.core.stylesheet') type="text/css")
 
 		-# Passthrough javascript translations
-		- $localization = json_encode(__('decoy::javascript'))
-		!= "<script>LOCALIZATIONS = JSON.parse('$localization');</script>";
+		- $localization = json_encode(__('decoy::javascript'), JSON_HEX_APOS)
+		!= "<script>var LOCALIZATIONS = JSON.parse('$localization');</script>";
 
 	%body(class=Decoy::bodyClass())
 

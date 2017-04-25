@@ -16,7 +16,7 @@ return [
     'search.text_field.is_exactly' => 'is exactly',
     'search.text_field.begins_with' => 'begins with',
     'search.text_field.ends_with' => 'ends with',
-    'search.text_field.does_not_contain' => 'doesn\\\'t contain',
+    'search.text_field.does_not_contain' => 'doesn\'t contain',
 
     'search.date_field.is_after' => 'is after',
     'search.date_field.is_before' => 'is before',
