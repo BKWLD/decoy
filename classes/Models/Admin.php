@@ -59,7 +59,7 @@ class Admin extends Base implements
     public static $rules = [
         'first_name' => 'required',
         'last_name' => 'required',
-        'image' => 'image',
+        'images.default' => 'image',
         'email' => 'required|email|unique:admins,email',
         'password' => 'required',
         'confirm_password' => 'sometimes|required_with:password|same:password',
