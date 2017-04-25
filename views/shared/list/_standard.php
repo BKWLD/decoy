@@ -5,7 +5,7 @@
 	<?php if ($parent_controller):?> data-parent-controller="<?=$parent_controller?><?php endif?>"
 	>
 
-	<?php 
+	<?php
 	// Create the page title for the sidebar layout
 	if ($layout == 'sidebar') echo View::make('decoy::shared.list._sidebar_header', $__data)->render();
 
@@ -23,8 +23,8 @@
 
 </div>
 
-<?php 
+<?php
 // Render pagination
-echo View::make('decoy::shared.list._pagination', $__data)->render();
+echo View::make('decoy::shared.pagination.index', $__data)->render();
 
 ?>
