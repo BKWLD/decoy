@@ -17,6 +17,13 @@ class RedirectRule extends Base
     public $cloneable = false;
 
     /**
+     * Admins should not be localized
+     *
+     * @var boolean
+     */
+    public static $localizable = false;
+
+    /**
      * Validation rules
      *
      * @var array
