@@ -152,8 +152,8 @@ define(function (require) {
 				// Select menu
 				case 'select':
 					var comparisons = '<select class="comparisons form-control">'+
-							'<option value="=">'+__('search.select_field.is')+'is</option>'+
-							'<option value="!=">'+__('search.select_field.is_not')+'is not</option>'+
+							'<option value="=">'+__('search.select_field.is')+'</option>'+
+							'<option value="!=">'+__('search.select_field.is_not')+'</option>'+
 						'</select>';
 					var $select = $('<select class="input input-field form-control">');
 					_.each(meta.options, function(label, value) {
