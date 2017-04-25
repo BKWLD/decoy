@@ -28,4 +28,5 @@ class Articles extends Base
         ],
         'date' => 'date',
     ];
+    public static $per_page = 5;
 }
