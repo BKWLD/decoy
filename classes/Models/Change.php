@@ -134,8 +134,7 @@ class Change extends Base
     }
 
     /**
-     * Return a list of all the admins that have been logged as a hash for use
-     * in a select menu
+     * Return a list of all the admins as a hash for use in a select menu
      *
      * @return array
      */
