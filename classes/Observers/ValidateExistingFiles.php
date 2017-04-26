@@ -86,6 +86,21 @@ class ValidateExistingFiles
         $upchuck_path = app('upchuck')->path($path);
         $absolute_path = config('upchuck.disk.path').'/'.$upchuck_path;
         return new File($absolute_path);
+    }
 
+    /**
+     * Remove file-ish validation rules for an attribute
+     *
+     * @param  Validator $validator
+     * @param  string $attribute
+     * @return void
+     */
+    protected function removeFileRules($validator, $attribute) {
+        $rules = $validator->getRules();
+        if (empty($rules[$attribute])) return;
+        $rules[$attribute] = array_except($rules, [
+            'image', 'file', 'mimes', 'mimetypes', 'video',
+        ]);
+        $validator->setRules($rules);
     }
 }
