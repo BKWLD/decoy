@@ -110,6 +110,28 @@ class FileTest extends TestCase
     }
 
     /**
+     * Tese that an image is not destroyed when a model is updated
+     *
+     * @return void
+     */
+    public function testImageKeptOnUpdate()
+    {
+        // Create recipe with file attachments
+        $article = factory(Article::class)->create();
+        $image = $this->createImageOn($article);
+
+        // Submit a save
+        $response = $this->post('admin/articles/'.$article->id.'/edit', [
+            'title' => 'Ok?'
+        ]);
+
+        $response->assertSessionMissing('errors');
+        $path = app('upchuck')->path($image->file);
+        $this->assertEquals(1, $article->images()->count());
+        $this->assertTrue($this->disk->has($path));
+    }
+
+    /**
      * Test that an image gets removed when the article is deleted
      *
      * @return void
