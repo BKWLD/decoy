@@ -20,9 +20,9 @@ class Article extends Base
     ];
 
     public static $categories = [
-        'first' => 'first',
-        'second' => 'second',
-        'third' => 'third',
+        'first' => 'First',
+        'second' => 'Second',
+        'third' => 'Third',
     ];
 
     protected $visible = [ 'slides' ];

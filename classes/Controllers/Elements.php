@@ -158,8 +158,8 @@ class Elements extends Base
                     ->id($id);
 
             case 'radios':
-                return Former::radios($key, $el->label)
-                    ->radios(FormerUtils::radioArray($el->options))
+                return Former::radiolist($key, $el->label)
+                    ->from($el->options)
                     ->blockHelp($el->help)
                     ->id($id);
 

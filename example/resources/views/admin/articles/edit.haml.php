@@ -10,7 +10,7 @@
 
 %fieldset
 	.legend Other
-	!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(App\Article::$categories))->inline()
+	!= Former::radiolist('category')->from(App\Article::$categories)->inline()
 	!= Former::date('date')->value('now')
 	!= Former::manyToManyChecklist('tags')->addGroupClass('two-col')
 

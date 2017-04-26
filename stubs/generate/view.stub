@@ -1,7 +1,7 @@
 -#
 
-	- $sidebar->add(Former::listing('Video'))
-	- $sidebar->add(Former::listing('Photo')->take(30))
+	- $sidebar->add(Former::listing('App\Video'))
+	- $sidebar->add(Former::listing('App\Photo')->take(30))
 
 	!= View::make('decoy::shared.form._header', $__data)->render()
 
@@ -14,8 +14,8 @@
 
 	%fieldset
 		.legend Other
-		!= Former::radios('category')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$categories))->inline()
-		!= Former::select('category_id', 'Categories')->addOption(null)->fromQuery(Category::ordered()->get(), 'name')
+		!= Former::radiolist('category')->from(App\Article::$categories)->inline()
+		!= Former::select('category_id', 'Categories')->addOption(null)->fromQuery(App\Category::ordered()->get(), 'name')
 		!= Former::date('date')->value('now')
 		!= Former::date('date_end')
 		!= Former::text('url', "URL")->blockHelp('An external link to the article.')

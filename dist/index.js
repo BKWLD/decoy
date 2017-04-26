@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 4.25.17 👍 */
+/*! 📝 Bukwild 💾 4.26.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -44196,11 +44196,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * Example usage:
 	 *
-	 * 	!= Former::radios('type')
-	 * 		->radios(Bkwld\Library\Laravel\Former::radioArray([
+	 * 	!= Former::radiolist('type')
+	 * 		->from([
 	 * 			'internal' => 'Internal',
 	 *			'external' => 'External',
-	 *		]))->dataToggleable('type')
+	 *		])->dataToggleable('type')
 	 * 	!= Former::textarea('body')->class('wysiwyg')->dataShowWhenType('internal')
 	 * 	!= Former::text('url', "URL")->dataShowWhenType('external')
 	 *

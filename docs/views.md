@@ -84,7 +84,7 @@ Finally, there is some automatic logic on the list table that will take the valu
 The `auto-toggleable` JS module applies some JS to forms that will allow you to define fields that hide and show based on clicks on "trigger" elements.  For example:
 
 ```haml
-!= Former::radios('type')->radios(Bkwld\Library\Laravel\Former::radioArray(Article::$types))->dataToggleable('type')
+!= Former::radiolist('type')->from(App\Article::$types)->dataToggleable('type')
 != Former::text('title')
 != Former::wysiwyg('body')->dataShowWhenType('internal')
 != Former::image('image')->dataShowWhenType('internal')

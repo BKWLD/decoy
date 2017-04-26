@@ -11,7 +11,7 @@
 		echo Former::text('from')->label(__('decoy::redirect_rules.form.from'))->blockHelp($help);
 
 	!= Former::text('to')->label(__('decoy::redirect_rules.form.to'))->blockHelp(__('decoy::redirect_rules.form.to_help'))
-	!= Former::radios('code')->label(__('decoy::redirect_rules.form.code'))->radios(Bkwld\Library\Laravel\Former::radioArray(Bkwld\Decoy\Models\RedirectRule::getCodes()))->blockHelp(__('decoy::redirect_rules.form.radio_help'));
+	!= Former::radiolist('code')->label(__('decoy::redirect_rules.form.code'))->from(Bkwld\Decoy\Models\RedirectRule::getCodes())->blockHelp(__('decoy::redirect_rules.form.radio_help'));
 	!= Former::text('label')->label(__('decoy::redirect_rules.form.label'))->help(__('decoy::redirect_rules.form.label_help'))
 
 != View::make('decoy::shared.form._footer', $__data)->render()

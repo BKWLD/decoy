@@ -4,11 +4,11 @@
  *
  * Example usage:
  *
- * 	!= Former::radios('type')
- * 		->radios(Bkwld\Library\Laravel\Former::radioArray([
+ * 	!= Former::radiolist('type')
+ * 		->from([
  * 			'internal' => 'Internal',
  *			'external' => 'External',
- *		]))->dataToggleable('type')
+ *		])->dataToggleable('type')
  * 	!= Former::textarea('body')->class('wysiwyg')->dataShowWhenType('internal')
  * 	!= Former::text('url', "URL")->dataShowWhenType('external')
  *

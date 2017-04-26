@@ -94,6 +94,17 @@ echo Former::manyToManyChecklist('hubs')
 echo Former::note('Creator', $author->name);
 ```
 
+### Radiolist
+
+- Wraps Former's `radio` field so that it's easier to instantiate using a simple associative aray
+
+```php?start_inline=1
+echo Former::radiolist('category')->from([
+	'car' => 'Red Car',
+	'bus' => 'Big bus'
+]);
+```
+
 ### Time
 
 - Create a time [selector widget](http://cl.ly/image/22062i19133Y).
