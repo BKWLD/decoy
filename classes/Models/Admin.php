@@ -59,7 +59,7 @@ class Admin extends Base implements
     public static $rules = [
         'first_name' => 'required',
         'last_name' => 'required',
-        'image' => 'image',
+        'images.default' => 'image',
         'email' => 'required|email|unique:admins,email',
         'password' => 'required',
         'confirm_password' => 'sometimes|required_with:password|same:password',
@@ -349,19 +349,19 @@ class Admin extends Base implements
 
     /**
      * Make a list of the role titles by getting just the text between bold tags
-     * in the roles config array, which is a common convention in Decoy 4.x
+     * in the roles config array, which is a common convention in Decoy
      *
      * @return array
      */
     public static function getRoleTitles()
     {
         return array_map(function ($title) {
-            if (preg_match('#^<b>(\w+)</b>#i', $title, $matches)) {
+            if (preg_match('#^<b>([^<]+)</b>#i', $title, $matches)) {
                 return $matches[1];
             }
 
             return $title;
-        }, Config::get('decoy.site.roles'));
+        }, config('decoy.site.roles'));
     }
 
     /**

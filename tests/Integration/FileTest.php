@@ -62,6 +62,23 @@ class FileTest extends TestCase
     }
 
     /**
+     * Create data used for image upload test
+     *
+     * @return Image
+     */
+    public function createImageOn($article)
+    {
+        $this->createVirtualFile('test.jpg');
+        return $article->images()->create([
+            'file' => '/uploads/test.jpg',
+            'file_type' => 'image/jpeg',
+            'file_size' => 10,
+            'width' => 20,
+            'height' => 20,
+        ]);
+    }
+
+    /**
      * Test the image file field uploads and is stored when saved
      *
      * @return void
@@ -93,23 +110,37 @@ class FileTest extends TestCase
     }
 
     /**
+     * Tese that an image is not destroyed when a model is updated
+     *
+     * @return void
+     */
+    public function testImageKeptOnUpdate()
+    {
+        // Create recipe with file attachments
+        $article = factory(Article::class)->create();
+        $image = $this->createImageOn($article);
+
+        // Submit a save
+        $response = $this->post('admin/articles/'.$article->id.'/edit', [
+            'title' => 'Ok?'
+        ]);
+
+        $response->assertSessionMissing('errors');
+        $path = app('upchuck')->path($image->file);
+        $this->assertEquals(1, $article->images()->count());
+        $this->assertTrue($this->disk->has($path));
+    }
+
+    /**
      * Test that an image gets removed when the article is deleted
      *
      * @return void
      */
     public function testImageRemovedOnDelete()
     {
-        $this->createVirtualFile('test.jpg');
-
         // Create recipe with file attachments
         $article = factory(Article::class)->create();
-        $article->images()->create([
-            'file' => '/uploads/test.jpg',
-            'file_type' => 'image/jpeg',
-            'file_size' => 10,
-            'width' => 20,
-            'height' => 20,
-        ]);
+        $this->createImageOn($article);
 
         // Test first that the image is actually there
         $path = app('upchuck')->path($article->img()->file);
@@ -144,11 +175,41 @@ class FileTest extends TestCase
     }
 
     /**
+     * Test that an image gets removed when the article is deleted
+     *
+     * @return void
+     */
+    public function testImageCanBeDeletedOnSave()
+    {
+        // Create recipe with file attachments
+        $article = factory(Article::class)->create();
+        $image = $this->createImageOn($article);
+
+        // Submit a save
+        $response = $this->post('admin/articles/'.$article->id.'/edit', [
+            'images' => [
+                $image->id => [
+                    'name' => '',
+                    'file' => '',
+                ]
+            ],
+            '_save' => 'save',
+        ]);
+
+        $response->assertSessionMissing('errors');
+
+        // Test that the image has been removed
+        $path = app('upchuck')->path($image->file);
+        $this->assertEquals(0, $article->images()->count());
+        $this->assertFalse($this->disk->has($path));
+    }
+
+    /**
      * Test that a file is deleted if checkbox is checked on save
      *
      * @return void
      */
-    public function testFileRemovedOnSave()
+    public function testFileCanBeDeletedOnSave()
     {
         $this->createVirtualFile('test.jpg');
 

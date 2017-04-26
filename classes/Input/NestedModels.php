@@ -174,7 +174,7 @@ class NestedModels
         }
 
         // Return the parent rules concatenated on the default rules for an Image
-        // (those are essentially hardocded here but I don't expect them to change)
+        // (those are essentially hardcoded here but I don't expect them to change)
         return [
             'file' => 'image|' . $parent::$rules[$rules_key],
         ];

@@ -134,17 +134,13 @@ class Change extends Base
     }
 
     /**
-     * Return a list of all the admins that have been logged as a hash for use
-     * in a select menu
+     * Return a list of all the admins as a hash for use in a select menu
      *
      * @return array
      */
     public static function getAdmins()
     {
-        return static::groupBy('admin_id')
-            ->join('admins', 'admins.id', '=', 'admin_id')
-            ->select(DB::raw('admins.id, CONCAT(first_name, " ", last_name) name'))
-            ->pluck('name', 'id');
+        return Admin::all(['id', 'email'])->pluck('email', 'id');
     }
 
     /**

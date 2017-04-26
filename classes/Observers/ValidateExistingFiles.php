@@ -57,21 +57,21 @@ class ValidateExistingFiles
                 continue;
 
             // If the value is empty, because the user is deleting the file
-            // instance, make an empty File instance that will pass the file
-            // check but fail required checks
+            // instance, set it to an empty string instead of the default
+            // (null).  Null requires `nullable` validation rules to be set
+            // and I don't want to require that.
             } else if (empty($data[$attribute])) {
-                $data[$attribute] = new File('', false);
+                $data[$attribute] = '';
 
             // Create the file instance and clear the data instance
             } else {
                 $data[$attribute] = $this->makeFileFromPath($data[$attribute]);
             }
-
         }
 
-        // Replace the files and data with the updated set. `setData()` expects the
-        // data to contain files in it.  But `getData()` strips out the files.  Thus,
-        // they need to be merged back in before being set.
+        // Replace the files and data with the updated set. `setData()` expects
+        // the data to contain files in it.  But `getData()` strips out the
+        // files.  Thus, they need to be merged back in before being set.
         $validation->setData(array_merge($data));
     }
 
@@ -86,6 +86,6 @@ class ValidateExistingFiles
         $upchuck_path = app('upchuck')->path($path);
         $absolute_path = config('upchuck.disk.path').'/'.$upchuck_path;
         return new File($absolute_path);
-
     }
+
 }
