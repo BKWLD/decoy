@@ -11,6 +11,7 @@
 %fieldset
 	.legend Other
 	!= Former::radiolist('category')->from(App\Article::$categories)->inline()
+	!= Former::checklist('topic')->from(App\Article::$topics)
 	!= Former::date('date')->value('now')
 	!= Former::manyToManyChecklist('tags')->addGroupClass('two-col')
 
