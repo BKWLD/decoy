@@ -229,6 +229,9 @@ class Element extends Base
         $replacement = array_get($yaml, $this->key)
             ?: array_get($yaml, $this->key.',image');
 
+        // Support longhand syntax
+        if (is_array($replacement)) $replacement = $replacement['value'];
+
         // Check if the filenames are the same
         if (pathinfo($image->file, PATHINFO_BASENAME)
             == pathinfo($replacement, PATHINFO_BASENAME)) {
