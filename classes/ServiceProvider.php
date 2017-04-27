@@ -75,6 +75,11 @@ class ServiceProvider extends BaseServiceProvider
             __DIR__.'/../dist' => public_path('assets/decoy')
         ], 'assets');
 
+        // Publish lanaguage files
+        $this->publishes([
+            __DIR__.'/../lang' => resource_path('lang/vendor/decoy')
+        ], 'lang');
+
         // Register views
         $this->loadViewsFrom(__DIR__.'/../views', 'decoy');
 
