@@ -521,6 +521,7 @@ abstract class Base extends Eloquent
                 $source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
                 break;
             case 'sqlite':
+            case 'pgsql':
                 $source = DB::raw(implode(' || ',$attributes));
                 break;
         }
