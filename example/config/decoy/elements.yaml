@@ -1,9 +1,15 @@
 # YAML docs:   http://symfony.com/doc/current/components/yaml/yaml_format.html
 # YAML editor: http://nodeca.github.io/js-yaml/
 
-# Most terse way of using, like Frags now
 homepage:
+
   marquee:
     title: Welcome to Decoy
     image,image:
     file,file:
+
+  bukwild:
+    logo:
+      type: image
+      label: Bukwild logo
+      value: /img/logo.jpg

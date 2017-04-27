@@ -19,16 +19,38 @@ class Article extends Base
         'date' => 'required',
     ];
 
+    /**
+     * Example options for radiolist
+     *
+     * @var array
+     */
     public static $categories = [
-        'first' => 'first',
-        'second' => 'second',
-        'third' => 'third',
+        'news' => 'News Story',
+        'blog' => 'Blog Post',
     ];
 
-    protected $visible = [ 'slides' ];
+    /**
+     * Example options for checklist
+     *
+     * @var array
+     */
+    public static $topics = [
+        'cars' => 'Cars',
+        'trucks' => 'Large trucks',
+        'minitrucks' => 'Small trucks',
+    ];
 
     /**
-     * List of all relationships
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'topic' => 'array',
+    ];
+
+    /**
+     * Tags relation
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
      */
@@ -37,6 +59,11 @@ class Article extends Base
         return $this->morphToMany(\App\Tag::class, 'taggable');
     }
 
+    /**
+     * Slides relation
+     *
+     * @return Illuminate\Database\Eloquent\Relations\Relation
+     */
     public function slides()
     {
         return $this->hasMany(\App\Slide::class);
@@ -49,10 +76,9 @@ class Article extends Base
      */
     public function onCreating()
     {
-        if (isset($this->position)) {
-            return;
+        if (empty($this->position)) {
+            $this->position = self::max('position') + 1;
         }
-        $this->position = self::max('position') + 1;
     }
 
     /**

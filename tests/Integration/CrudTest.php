@@ -32,6 +32,7 @@ class CrudTest extends TestCase
             'date' => '2020-01-01',
             'featured' => 1,
             'public' => 1,
+            'topic' => [ 'cars', 'trucks' ],
         ];
     }
 

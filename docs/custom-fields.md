@@ -16,6 +16,26 @@ echo Former::belongsTo('related_product_id', 'Related product')->parent(App\Proj
 echo Former::belongsTo('author_id', 'Author')->route('/admin/admins')->value(app('decoy.user')->id)->title(app('decoy.user')->getAdminTitleAttribute());
 ```
 
+### Checklist
+
+- Wraps Former's `checkbox` field so that it's easier to instantiate using a simple associative array
+
+```php?start_inline=1
+echo Former::checklist('category')->from([
+	'car' => 'Red Car',
+	'bus' => 'Big bus'
+]);
+```
+
+- Note, the checklist field will POST an array to the server.  You can convert this to a string for storing in the database by [casting](https://laravel.com/docs/5.4/eloquent-mutators#array-and-json-casting) to an array:
+
+```php?start_inline=1
+// In your model
+protected $casts = [
+    'category' => 'array',
+];
+```
+
 ### Date
 
 ![](assets/img/date.gif)
@@ -92,6 +112,17 @@ echo Former::manyToManyChecklist('hubs')
 
 ```php?start_inline=1
 echo Former::note('Creator', $author->name);
+```
+
+### Radiolist
+
+- Wraps Former's `radio` field so that it's easier to instantiate using a simple associative array
+
+```php?start_inline=1
+echo Former::radiolist('category')->from([
+	'car' => 'Red Car',
+	'bus' => 'Big bus'
+]);
 ```
 
 ### Time

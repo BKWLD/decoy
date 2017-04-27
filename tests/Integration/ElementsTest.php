@@ -234,4 +234,32 @@ class ElementsTest extends TestCase
         $this->assertFalse($this->disk->has($path));
     }
 
+    /**
+     * Test that element images are moved to writeable storage for cropping
+     *
+     * @return void
+     */
+    public function testDefaultImageMovedToDisk()
+    {
+        $this->get('admin/elements');
+
+        // Check that image was created in elements table
+        $this->assertDatabaseHas('elements', [
+            'key' => 'homepage.bukwild.logo',
+            'type' => 'image',
+            'value' => '/uploads/elements/logo.jpg',
+        ]);
+
+        // Check that image was also created in images table
+        $this->assertDatabaseHas('images', [
+            'imageable_type' => 'Bkwld\Decoy\Models\Element',
+            'imageable_id' => 'homepage.bukwild.logo',
+            'file' => '/uploads/elements/logo.jpg',
+        ]);
+
+        // Check that image exists on disk
+        $path = app('upchuck')->path('/uploads/elements/logo.jpg');
+        $this->assertTrue($this->disk->has($path));
+    }
+
 }

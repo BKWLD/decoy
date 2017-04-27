@@ -28,8 +28,7 @@
 		if (app('decoy.user')->can('grant', $controller)
 			&& ($roles = Config::get('decoy.site.roles'))
 			&& !empty($roles)) {
-			echo Former::radios('role')
-				->radios(Bkwld\Library\Laravel\Former::radioArray($roles));
+			echo Former::radiolist('role')->from($roles);
 			echo View::make('decoy::admins._permissions', $__data)->render();
 		}
 
