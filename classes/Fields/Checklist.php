@@ -5,6 +5,7 @@ namespace Bkwld\Decoy\Fields;
 // Deps
 use Bkwld\Library\Laravel\Former as FormerUtils;
 use Former\Form\Fields\Checkbox;
+use HtmlObject\Input as HtmlInput;
 use Illuminate\Container\Container;
 
 /**
@@ -38,15 +39,27 @@ class Checklist extends Checkbox
      */
     public function from(array $options)
     {
+        // Makes the options passed in override anything from the populator.
+        $this->grouped = true;
+
         // Produce Former-style checkbox options
         $options = FormerUtils::checkboxArray($this->name, $options);
         $this->checkboxes($options);
 
-        // Prevent hidden fields from confusing repopulation on errors
-        // http://cl.ly/image/3l1D32021q2I
-        $this->push(false);
-
         // Make chainable
         return $this;
+    }
+
+    /**
+     * Prepend a hidden field of the same name to the checkboxes so that if none
+     * are checked, they get cleared.  This is an alternative to the Former
+     * push() which resulted in an array of multiple NULL values when the field
+     * is stored using Laravel casting to array.
+     *
+     * @return string An input tag
+     */
+    public function render()
+    {
+        return HtmlInput::hidden($this->name).parent::render();
     }
 }

@@ -41,6 +41,15 @@ class Article extends Base
     ];
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'topic' => 'array',
+    ];
+
+    /**
      * Tags relation
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
@@ -69,18 +78,6 @@ class Article extends Base
     {
         if (empty($this->position)) {
             $this->position = self::max('position') + 1;
-        }
-    }
-
-    /**
-     * Save topics arrau
-     *
-     * @return void
-     */
-    public function onSaving()
-    {
-        if (is_array($this->topic)) {
-            $this->topic = implode(',', $this->topic);
         }
     }
 

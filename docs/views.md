@@ -57,15 +57,33 @@ static public $categories = array(
 );
 ```
 
-Then, in the edit view, you could do this:
+Then, in the edit view, you could do something like this:
 
 ```php?start_inline=1
-echo Former::checkbox('category')
-  ->checkboxes(Bkwld\Library\Laravel\Former::checkboxArray('category', Post::$categories))
-  ->push(false)
+echo Former::checklist('category')->from(Post::$categories)
+echo Former::radiolist('category')->from(Post::$categories)
 ```
 
-Furthermore, you can use this array for searching the list view by referencing it in the `search` property on your controller:
+Note, the checklist field will POST an array to the server.  You can convert this to a string for storing in the database by [casting](https://laravel.com/docs/5.4/eloquent-mutators#array-and-json-casting) to an array:
+
+```php?start_inline=1
+// In your model
+protected $casts = [
+    'category' => 'array',
+];
+```
+
+... or you can convert to a string by hooking into the saving event, which is easy in Decoy using the `onSaving` no-op method that you inherit by subclassing the Decoy base model.
+
+```php?start_inline=1
+// In your model
+public function onSaving()
+{
+    $this->category = implode(',', $this->category);
+}
+```
+
+Additionally, you can use this array for searching the list view by referencing it in the `search` property on your controller:
 
 ```php?start_inline=1
 protected $search = array(

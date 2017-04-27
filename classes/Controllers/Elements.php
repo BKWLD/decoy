@@ -16,7 +16,6 @@ use Bkwld\Decoy\Models\Image;
 use Bkwld\Library\Utils\File;
 use Bkwld\Decoy\Models\Element;
 use Bkwld\Decoy\Exceptions\ValidationFail;
-use Bkwld\Library\Laravel\Former as FormerUtils;
 
 /**
  * Render a form that allows admins to override language files
@@ -164,8 +163,8 @@ class Elements extends Base
                     ->id($id);
 
             case 'checkboxes':
-                return Former::checkboxes($key, $el->label)
-                    ->checkboxes(FormerUtils::checkboxArray($key, $el->options))
+                return Former::checklist($key, $el->label)
+                    ->from($el->options)
                     ->blockHelp($el->help)
                     ->id($id);
 
