@@ -30,4 +30,10 @@ return [
     'search.select_field.is' => 'é',
     'search.select_field.is_not' => 'não é',
 
+    'changes.empty' => 'Vazio',
+    'changes.changes_to' => 'Alterações em',
+    'changes.on' => 'em',
+    'changes.by' => 'por',
+    'changes.close' => 'Fechar',
+
 ];

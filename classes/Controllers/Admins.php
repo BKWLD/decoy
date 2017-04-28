@@ -59,8 +59,8 @@ class Admins extends Base
                 'label' => __('decoy::admins.controller.search.status'),
                 'type' => 'select',
                 'options' => [
-                    1 => 'enabled',
-                    0 => 'disabled',
+                    1 => __('decoy::admins.controller.search.enabled'),
+                    0 => __('decoy::admins.controller.search.disabled'),
                 ],
             ],
         ];

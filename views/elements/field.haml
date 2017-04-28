@@ -15,8 +15,8 @@
 	.form-actions
 		%button.btn.btn-success.save(name="_save" value="save" type="submit")
 			%span.glyphicon.glyphicon-file.glyphicon
-			Save
-		%span.btn.btn-default.back Cancel
+			!= __('decoy::elements.buttons.save')
+		%span.btn.btn-default.back != __('decoy::elements.buttons.cancel')
 
 	!= Former::close()
 

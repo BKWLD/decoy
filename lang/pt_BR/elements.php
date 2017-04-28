@@ -10,4 +10,7 @@ return [
     'legend.locale' => 'Idioma',
     'footer.save' => 'Salvar todas as guias',
 
+    'buttons.save' => 'Salvar',
+    'buttons.cancel' => 'Cancelar',
+
 ];

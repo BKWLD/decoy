@@ -10,4 +10,7 @@ return [
     'legend.locale' => 'Locale',
     'footer.save' => 'Save all tabs',
 
+    'buttons.save' => 'Save',
+    'buttons.cancel' => 'Cancel',
+
 ];

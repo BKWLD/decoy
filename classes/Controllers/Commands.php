@@ -22,6 +22,11 @@ class Commands extends Base
     /**
      * @var string
      */
+    protected $title = 'Commands';
+
+    /**
+     * @var string
+     */
     public $description = "Trigger any command for this site.  Note: these may take awhile to execute.";
 
     /**
@@ -56,5 +61,16 @@ class Commands extends Base
 
         // Return response
         return Response::json('ok');
+    }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct()
+    {
+        $this->title = __('decoy::commands.controller.title');
+        $this->description = __('decoy::commands.controller.description');
+
+        parent::__construct();
     }
 }
