@@ -39,4 +39,8 @@ return [
     'permissions' => 'Permissions',
     'permissions_override' => 'Override default permissions for the selected Role',
 
+    'standard_list.you' => 'You',
+    'standard_list.disabled' => 'Disabled',
+    'standard_list.click' => 'Click to enable login',
+
 ];
