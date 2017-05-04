@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 4.26.17 👍 */
+/*! 📝 Bukwild 💾 5.4.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -56100,11 +56100,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	var __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
 
 		// Dependencies
-		var $ = __webpack_require__(2)
-			, _ = __webpack_require__(5)
-			, bootstrap = __webpack_require__(10)
-			, tpl = _.template(__webpack_require__(70));
-		;
+		var $ = __webpack_require__(2),
+	        __ = __webpack_require__(15),
+			_ = __webpack_require__(5),
+			bootstrap = __webpack_require__(10),
+			tpl = _.template('\
+	            <div class="modal fade changes-modal">\
+	                <div class="modal-dialog">\
+	                    <div class="modal-content">\
+	                        <div class="modal-header">\
+	                            <button type="button" class="close" data-dismiss="modal" \
+	                            aria-label="' + __('changes.close') + '"><span aria-hidden="true">&times;</span></button>\
+	                            <h4 class="modal-title">' + __('changes.changes_to') + ' "<%=title%>"</h4>\
+	                        </div>\
+	                        <div class="modal-body">\
+	                            <%=body%>\
+	                        </div>\
+	                        <div class="modal-footer">\
+	                            <%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
+	                            <a href="<%=admin_edit%>"><%=admin%></a>\
+	                        </div>\
+	                    </div>\
+	                </div>\
+	            </div>');
 
 		/**
 		 * Request the attribtues from the server
@@ -56132,7 +56150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Create the body from the list of attributes
 			data.body = '<dl class="dl-horizontal">' +
 				_.reduce(data.attributes, function(html, val, key) {
-					return html+'<dt>'+key+'</dt><dd>'+(val||'<em>Empty</em>')+'</dd>';
+					return html+'<dt>'+key+'</dt><dd>'+(val||'<em>' + __('changes.empty') + '</em>')+'</dd>';
 				}, '') + '</dl>';
 
 			// Render markup and render
@@ -56144,12 +56162,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 
-
-/***/ },
-/* 70 */
-/***/ function(module, exports) {
-
-	module.exports = "<div class=\"modal fade changes-modal\">\n  <div class=\"modal-dialog\">\n    <div class=\"modal-content\">\n      <div class=\"modal-header\">\n        <button type=\"button\" class=\"close\" data-dismiss=\"modal\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>\n        <h4 class=\"modal-title\">Changes to \"<%=title%>\"</h4>\n      </div>\n      <div class=\"modal-body\">\n        <%=body%>\n      </div>\n      <div class=\"modal-footer\">\n        <%=action%> on <%=date%> by <a href=\"<%=admin_edit%>\"><%=admin%></a>\n      </div>\n    </div>\n  </div>\n</div>";
 
 /***/ }
 /******/ ])
