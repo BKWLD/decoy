@@ -14,6 +14,11 @@ class Changes extends Base
     /**
      * @var string
      */
+    protected $title = 'Changes';
+
+    /**
+     * @var string
+     */
     protected $description = 'A log of actions that can be used to audit <b>Admin</b> activity or recover content.';
 
     /**
@@ -24,29 +29,43 @@ class Changes extends Base
     ];
 
     /**
-     * @var array
+     * Make search options dependent on whether the site is using roles
+     *
+     * @return array
      */
-    protected $search = [
-        'model' => [
-            'type' => 'text',
-            'label' => 'Type',
-        ],
-        'key',
-        'action' => [
-            'type' => 'select',
-            'options' => 'Bkwld\Decoy\Models\Change::getActions()',
-        ],
-        'title',
-        'admin_id' => [
-            'type' => 'select',
-            'label' => 'Admin',
-            'options' => 'Bkwld\Decoy\Models\Change::getAdmins()',
-        ],
-        'created_at' => [
-            'type' => 'date',
-            'label' => 'Date',
-        ],
-    ];
+    public function search()
+    {
+        $options = [
+            'model' => [
+                'label' => __('decoy::changes.controller.search.type'),
+                'type' => 'text',
+            ],
+            'key' => [
+                'label' => __('decoy::changes.controller.search.key'),
+                'type' => 'text',
+            ],
+            'action' => [
+                'label' => __('decoy::changes.controller.search.action'),
+                'type' => 'select',
+                'options' => 'Bkwld\Decoy\Models\Change::getActions()',
+            ],
+            'title' => [
+                'label' => __('decoy::changes.controller.search.title'),
+                'type' => 'text',
+            ],
+            'admin_id' => [
+                'label' => __('decoy::changes.controller.search.admin'),
+                'type' => 'select',
+                'options' => 'Bkwld\Decoy\Models\Change::getAdmins()',
+            ],
+            'created_at' => [
+                'label' => __('decoy::changes.controller.search.date'),
+                'type' => 'date',
+            ],
+        ];
+
+        return $options;
+     }
 
     /**
      * Only reading is possible
@@ -79,5 +98,19 @@ class Changes extends Base
             'date' => $change->getHumanDateAttribute(),
             'attributes' => $change->attributesForModal(),
         ]);
+    }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct()
+    {
+        $this->title = __('decoy::changes.controller.title');
+        $this->description = __('decoy::changes.controller.description');
+        $this->columns = [
+            __('decoy::changes.controller.column.activity') => 'getAdminTitleHtmlAttribute',
+        ];
+
+        parent::__construct();
     }
 }

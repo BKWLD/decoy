@@ -7,7 +7,8 @@
 					<?php foreach($subcommands as $name => $command): ?>
 						<tr data-js-view="task-method">
 							<td>
-								<a data-action="<?=route('decoy::commands@execute', $command->getName())?>" class="btn btn-default">Execute</a>
+								<a data-action="<?=route('decoy::commands@execute', $command->getName())?>"
+                                   class="btn btn-default"><?=__('decoy::commands.execute')?></a>
 							</td>
 							<td>
 								<p>

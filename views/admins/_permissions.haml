@@ -2,14 +2,14 @@
 
 -# Implement this as a collectoin instead, like fetch the collection of permission options
 .form-group.admin-permissions(class=$item&&$item->permissions?null:'closed')
-	%label.control-label Permissions
+	%label.control-label != __('decoy::admins.permissions')
 	%div
 
 		.checkbox
 			%label
 				%input(type='hidden' name='_custom_permissions')
 				%input(type='checkbox' name='_custom_permissions' value=1 checked=$item&&$item->permissions)
-				Override default permissions for the selected Role
+				!= __('decoy::admins.permissions_override')
 
 		.permissions-list
 			.permissions-list-inner

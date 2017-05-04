@@ -130,7 +130,9 @@ class Change extends Base
      */
     public static function getActions()
     {
-        return static::groupBy('action')->pluck('action', 'action');
+        return static::groupBy('action')->pluck('action', 'action')->mapWithKeys(function ($item) {
+            return [$item => __("decoy::changes.actions.$item")];
+        });
     }
 
     /**
@@ -150,12 +152,13 @@ class Change extends Base
      */
     public function getAdminTitleHtmlAttribute()
     {
-        return $this->getAdminLinkAttribute()
-            .' '.$this->getActionLabelAttribute()
-            .' the '.$this->getModelAttribute()
-            .' "'.$this->getLinkedlTitleAttribute().'"'
-            .' about '.$this->getDateAttribute()
-        ;
+        return __('decoy::changes.admin_title', [
+            'admin' => $this->getAdminLinkAttribute(),
+            'action' => $this->getActionLabelAttribute(),
+            'model' => $this->getModelAttribute(),
+            'model_title' => $this->getLinkedTitleAttribute(),
+            'date' => $this->getDateAttribute()
+        ]);
     }
 
     /**
@@ -186,7 +189,7 @@ class Change extends Base
         return sprintf('<a href="%s" class="label label-%s">%s</a>',
             $this->filterUrl(['action' => $this->action]),
             isset($map[$this->action]) ? $map[$this->action] : 'info',
-            $this->action);
+            __("decoy::changes.actions.$this->action"));
     }
 
     /**
@@ -221,7 +224,7 @@ class Change extends Base
      *
      * @return string HTML
      */
-    public function getLinkedlTitleAttribute()
+    public function getLinkedTitleAttribute()
     {
         return sprintf('<a href="%s">%s</a>',
             $this->filterUrl(['model' => $this->model, 'key' => $this->key]),
@@ -235,6 +238,7 @@ class Change extends Base
      */
     public function getDateAttribute()
     {
+        \Carbon\Carbon::setLocale(Decoy::locale());
         return sprintf('<a href="%s" class="js-tooltip" title="%s">%s</a>',
             $this->filterUrl(['created_at' => $this->created_at->format('m/d/Y')]),
             $this->getHumanDateAttribute(),
@@ -248,7 +252,7 @@ class Change extends Base
      */
     public function getHumanDateAttribute()
     {
-        return $this->created_at->format('M j, Y \a\t g:i A');
+        return $this->created_at->format(__('decoy::changes.human_date'));
     }
 
     /**
@@ -264,24 +268,24 @@ class Change extends Base
         // Always add a filter icon
         $actions[] = sprintf('<a href="%s"
             class="glyphicon glyphicon-filter js-tooltip"
-            title="Filter to just changes of this <b>%s</b>"
+            title="' . __('decoy::changes.standard_list.filter') . '"
             data-placement="left"></a>',
             $this->filterUrl(['model' => $this->model, 'key' => $this->key]),
-            $this->model);
+            strip_tags($this->getModelAttribute()));
 
         // If there are changes, add the modal button
         if ($this->changed) {
             $actions[] = sprintf('<a href="%s"
             class="glyphicon glyphicon-export js-tooltip changes-modal-link"
-            title="View changed attributes"
+            title="' . __('decoy::changes.standard_list.view') . '"
             data-placement="left"></a>',
             DecoyURL::action('changes@edit', $this->id));
         }
 
-        // Else, show a disabled bitton
+        // Else, show a disabled button
         else {
             $actions[] = '<span class="glyphicon glyphicon-export js-tooltip"
-            title="No changed attributes"
+            title="' . __('decoy::changes.standard_list.no_changed') . '"
             data-placement="left"></span>';
         }
 

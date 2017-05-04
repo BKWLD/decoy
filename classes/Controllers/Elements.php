@@ -23,21 +23,14 @@ use Bkwld\Decoy\Exceptions\ValidationFail;
 class Elements extends Base
 {
     /**
-     * Override the title for localization
-     * @param  string $controller_name
-     * @return string
+     * @var string
      */
-    public function title($controller_name = null) {
-        return __('decoy::elements.title');
-    }
+    protected $title = 'Elements';
 
     /**
-     * Override the description for localization
-     * @return string
+     * @var string
      */
-    public function description() {
-        return __('decoy::elements.description');
-    }
+    protected $description = 'Copy, images, and files that aren\'t managed as part of an item in a list.';
 
     /**
      * All elements view
@@ -86,7 +79,7 @@ class Elements extends Base
 
         // Set the breadcrumbs NOT include the locale/tab
         app('decoy.breadcrumbs')->set([
-            route('decoy::elements') => 'Elements',
+            route('decoy::elements') => $this->title,
         ]);
 
         // Render the view
@@ -279,7 +272,7 @@ class Elements extends Base
 
         // Redirect back to index
         return Redirect::to(URL::current())->with('success',
-            '<b>Elements</b> were successfully saved.');
+            __('decoy::elements.successfully_saved'));
     }
 
     /**
@@ -402,5 +395,16 @@ class Elements extends Base
         }
 
         return $out;
+    }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct()
+    {
+        $this->title = __('decoy::elements.controller.title');
+        $this->description = __('decoy::elements.controller.description');
+
+        parent::__construct();
     }
 }

@@ -43,20 +43,31 @@ class Admins extends Base
     public function search()
     {
         $options = [
-            'first_name',
-            'last_name',
-            'email',
+            'first_name' => [
+                'label' => __('decoy::admins.controller.search.first_name'),
+                'type' => 'text',
+            ],
+            'last_name' => [
+                'label' => __('decoy::admins.controller.search.last_name'),
+                'type' => 'text',
+            ],
+            'email' => [
+                'label' => __('decoy::admins.controller.search.email'),
+                'type' => 'text',
+            ],
             'status' => [
+                'label' => __('decoy::admins.controller.search.status'),
                 'type' => 'select',
                 'options' => [
-                    1 => 'enabled',
-                    0 => 'disabled',
+                    1 => __('decoy::admins.controller.search.enabled'),
+                    0 => __('decoy::admins.controller.search.disabled'),
                 ],
             ],
         ];
 
         if (($roles = Admin::getRoleTitles()) && count($roles)) {
             $options['role'] = [
+                'label' => __('decoy::admins.controller.search.role'),
                 'type' => 'select',
                 'options' => $roles,
             ];
@@ -171,5 +182,21 @@ class Admins extends Base
         $admin->save();
 
         return Redirect::back();
+    }
+
+    /**
+     * Populate protected properties on init
+     */
+    public function __construct()
+    {
+        $this->title = __('decoy::admins.controller.title');
+        $this->description = __('decoy::admins.controller.description');
+        $this->columns = [
+            __('decoy::admins.controller.column.name') => 'getAdminTitleHtmlAttribute',
+            __('decoy::admins.controller.column.status') => 'getAdminStatusAttribute',
+            __('decoy::admins.controller.column.email') => 'email',
+        ];
+
+        parent::__construct();
     }
 }
