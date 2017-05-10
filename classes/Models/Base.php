@@ -539,7 +539,10 @@ abstract class Base extends Eloquent
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy($this->getTable().'.created_at', 'desc');
+        if ($this->usesTimestamps()) {
+            $query->orderBy($this->getTable().'.created_at', 'desc');
+        }
+        return $query;
     }
 
     /**
@@ -586,8 +589,11 @@ abstract class Base extends Eloquent
      */
     public function scopePositioned($query)
     {
-        return $query->orderBy($this->getTable().'.position', 'asc')
-            ->orderBy($this->getTable().'.created_at', 'desc');
+        $query->orderBy($this->getTable().'.position', 'asc');
+        if ($this->usesTimestamps()) {
+            $query->orderBy($this->getTable().'.created_at', 'desc');
+        }
+        return $query;
     }
 
     /**
