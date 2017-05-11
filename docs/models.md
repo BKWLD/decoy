@@ -122,9 +122,16 @@ Decoy implements [Cloner](https://github.com/BKWLD/cloner) to allow admins to du
 
 ### Many to Many relationships
 
+Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.  Then, add the following code to your edit view to add a listing interface to the sidebar of the page.
+
+```php?start_inline=1
+echo $sidebar->add(Former::listing('App\Image'));
+```
+
+The listing interface will allow you to attach Images to your Post and will look similar to this:
+
 ![](assets/img/many-to-many.gif)
 
-Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.
 
 Since we typically add timestamps to pivot tables, you'll want to call `withTimestamps` on relationships.  And, if the pivot rows should be sortable, you'l need to use `withPivot('position')` so that the position value gets rendered to the listing table.  Additionally, the easiest way to have Decoy sort by position in the admin is to add that `orderBy` clause to the relationships as well.  So your full relationship function may look like (don't forget that both models in the relationship need to be defined):
 
