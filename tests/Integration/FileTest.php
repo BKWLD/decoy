@@ -24,7 +24,7 @@ class FileTest extends TestCase
      *
      * @return array
      */
-    private function createData()
+    private function createData($filename = null)
     {
         return [
 
@@ -37,7 +37,7 @@ class FileTest extends TestCase
             'images' => [
                 '_xxxx' => [
                     'name' => '',
-                    'file' => $this->createUploadedFile(),
+                    'file' => $this->createUploadedFile($filename),
                 ],
             ],
             '_save' => 'save',
@@ -86,6 +86,22 @@ class FileTest extends TestCase
     public function testImageUploadStore()
     {
         $data = $this->createData();
+
+        $response = $this->call('POST', 'admin/articles/create', $data);
+
+        $response->assertStatus(302);
+        $article = Article::findBySlug('example-title');
+        $this->assertNotEmpty($article->img()->url);
+    }
+
+    /**
+     * Tese file upload with all caps filename
+     *
+     * @return void
+     */
+    public function testAllCapsImageUploadStore()
+    {
+        $data = $this->createData('UPPERCASE.JPEG');
 
         $response = $this->call('POST', 'admin/articles/create', $data);
 
