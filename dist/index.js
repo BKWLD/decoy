@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 5.4.17 👍 */
+/*! 📝 Bukwild 💾 5.26.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -92,6 +92,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		// Modules that get exposed for public configuration
 		app.wysiwyg = __webpack_require__(56);
+
+		// Expose packages that Decoy consumes so they can be used when extending
+		// Decoy per-project
+		app.$ = $
+		app._ = _
+		app.Backbone = Backbone
+		app.bootstrap = bootstrap
 
 		// --------------------------------------------------
 		// Pre-ready init

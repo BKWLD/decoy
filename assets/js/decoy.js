@@ -36,6 +36,13 @@ define(function (require) {
 	// Modules that get exposed for public configuration
 	app.wysiwyg = require('./wysiwyg/factory');
 
+	// Expose packages that Decoy consumes so they can be used when extending
+	// Decoy per-project
+	app.$ = $
+	app._ = _
+	app.Backbone = Backbone
+	app.bootstrap = bootstrap
+
 	// --------------------------------------------------
 	// Pre-ready init
 
