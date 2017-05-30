@@ -58,7 +58,7 @@ class Base extends Controller
      *
      * @var boolean
      */
-    public static $with_trashed = false;
+    protected $with_trashed = false;
 
     /**
      * The model class name that the contorller manages. Ex: Post
@@ -287,6 +287,16 @@ class Base extends Controller
     }
 
     /**
+     * Get the with_trashed settings for a controller
+     *
+     * @return array
+     */
+    public function withTrashed()
+    {
+        return $this->with_trashed;
+    }
+
+    /**
      * Get the directory for the detail views.  It's based off the controller name.
      * This is basically a conversion to snake case from studyly case
      *
@@ -434,7 +444,7 @@ class Base extends Controller
             call_user_func([$this->model, 'ordered']);
 
         // Allow trashed records
-        if (static::$with_trashed) {
+        if ($this->withTrashed()) {
             $query->withTrashed();
         }
 
@@ -830,7 +840,7 @@ class Base extends Controller
     protected function findOrFail($id)
     {
         $model = $this->model;
-        if (static::$with_trashed) {
+        if ($this->withTrashed()) {
             return $model::withTrashed()->findOrFail($id);
         } else {
             return $model::findOrFail($id);

@@ -110,7 +110,7 @@ class Breadcrumbs
     public function find($controller, $id)
     {
         $model = $controller->model();
-        if ($controller::$with_trashed) {
+        if ($controller->withTrashed()) {
             return $model::withTrashed()->find($id);
         } else {
             return $model::find($id);

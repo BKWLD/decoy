@@ -4,5 +4,5 @@ use Bkwld\Decoy\Controllers\Base;
 
 class Tags extends Base
 {
-    static $with_trashed = true;
+    protected $with_trashed = true;
 }
