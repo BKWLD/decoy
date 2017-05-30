@@ -979,7 +979,7 @@ class Base extends Controller
     {
         $dir = Str::snake($this->controllerName());
         $path = base_path('resources/views/admin/').$dir;
-        app('view.finder')->prependNamespace('decoy', $path);
+        app('view')->prependNamespace('decoy', $path);
     }
 
     /**
