@@ -17,6 +17,7 @@ return [
     'standard_list.private' => 'Tornar privado',
 
     'action.edit' => 'Editar no admin',
+    'action.read' => 'Ver no admin',
     'action.view' => 'Ver no site',
     'action.remove' => 'Remover relacionamento',
     'action.delete' => 'Deletar permanentimente',

@@ -417,7 +417,6 @@ abstract class Base extends Eloquent
 
         // Create the markup
         $public = $this->getAttribute('public');
-
         return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-eye-%s"></span>
             </a>',
@@ -427,7 +426,7 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * Make the edit action.
+     * Make the edit or view action.
      *
      * @param  array  $data The data passed to a listing view
      * @return string
@@ -436,10 +435,18 @@ abstract class Base extends Eloquent
     {
         extract($data);
 
+        // Make markup
+        $editable = app('decoy.user')->can('update', $controller);
         return sprintf('<a href="%s" class="action-edit js-tooltip"
-            data-placement="left" title="' . __('decoy::base.action.edit') . '">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </a>', $this->getAdminEditUri($controller, $many_to_many));
+            data-placement="left" title="%s">
+                <span class="glyphicon glyphicon-%s"></span>
+            </a>',
+            $this->getAdminEditUri($controller, $many_to_many), // URL
+            $editable ? // Label
+                __('decoy::base.action.edit') :
+                __('decoy::base.action.read') ,
+            $editable ? 'pencil' : 'zoom-in' // Icon
+        );
     }
 
     /**
