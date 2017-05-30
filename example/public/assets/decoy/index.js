@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 5.26.17 👍 */
+/*! 📝 Bukwild 💾 5.30.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();

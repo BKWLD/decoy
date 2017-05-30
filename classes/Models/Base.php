@@ -328,11 +328,26 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * A no-op that can add classes to rows in listing tables in the admin
+     * Automatically add classes to rows in listing tables in the admin
      *
      * @return string
      */
-    public function getAdminRowClassAttribute() {}
+    public function getAdminRowClassAttribute() {
+        $classes = [];
+
+        // Add a visbility classs
+        if ($this->public) {
+            $classes[] = 'is-public';
+        }
+
+        // Add a soft-deleted class
+        if (method_exists($this, 'trashed') && $this->trashed()) {
+            $classes[] = 'is-trashed';
+        }
+
+        // Return all classes
+        return implode(' ', $classes);
+    }
 
     /**
      * Expose model attributes for comparison by the localization sidebar
