@@ -148,7 +148,8 @@ class ListingTest extends TestCase
     public function testSoftDeletes()
     {
         // Make a tag and soft delete it
-        ($tag = factory(Tag::class)->create())->delete();
+        $tag = factory(Tag::class)->create();
+        $tag->delete();
 
         // Check for errors
         $response = $this->get('admin/tags')->assertStatus(200);
