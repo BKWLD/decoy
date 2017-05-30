@@ -89,14 +89,32 @@ class Breadcrumbs
             // On an edit page
             } elseif (is_numeric($id)) {
                 $url .= '/' . $id;
-                $model = $controller->model();
-                $item = call_user_func($model.'::find', $id);
-                $breadcrumbs[URL::to($url.'/edit')] = strip_tags($item->getAdminTitleHtmlAttribute(), '<img>');
+                $item = $this->find($controller, $id);
+                $title = $item->getAdminTitleAttribute();
+                $breadcrumbs[URL::to($url.'/edit')] = $title;
             }
         }
 
         // Return the full list
         return $breadcrumbs;
+    }
+
+    /**
+     * Lookup a model instance given the controller and id, including any
+     * trashed models in case the controller should show trashed models
+     *
+     * @param  Controller\Base $controller
+     * @param  integer $id
+     * @return Model
+     */
+    public function find($controller, $id)
+    {
+        $model = $controller->model();
+        if ($controller::$with_trashed) {
+            return $model::withTrashed()->find($id);
+        } else {
+            return $model::find($id);
+        }
     }
 
     /**

@@ -2,6 +2,7 @@
 namespace Tests\Integration;
 
 use App\Article;
+use App\Tag;
 use Tests\TestCase;
 use Bkwld\Decoy\Input\Search;
 use Illuminate\Http\UploadedFile;
@@ -10,12 +11,21 @@ class ListingTest extends TestCase
 {
 
     /**
+     * Shared setup
+     *
+     * @return void
+     */
+    protected function setup() {
+        parent::setUp();
+        $this->auth();
+    }
+
+    /**
      * Test that the model listing view works
      * @return void
      */
     public function testIndex()
     {
-        $this->auth();
         $response = $this->get('admin/articles');
         $response->assertStatus(200);
     }
@@ -26,7 +36,6 @@ class ListingTest extends TestCase
      */
     public function testOrder()
     {
-        $this->auth();
         $articles = factory(Article::class, 2)->create();
 
         list($first_article, $second_article) = $articles;
@@ -46,7 +55,6 @@ class ListingTest extends TestCase
      */
     public function testListingDestroy()
     {
-        $this->auth();
         $article = factory(Article::class)->create();
 
         $response = $this->call('DELETE', 'admin/articles/' . $article->id);
@@ -60,7 +68,6 @@ class ListingTest extends TestCase
      */
     public function testListingPublic()
     {
-        $this->auth();
         $article = factory(Article::class)->create([
             'public' => 0
         ]);
@@ -80,7 +87,6 @@ class ListingTest extends TestCase
      */
     public function testListingPrivate()
     {
-        $this->auth();
         $article = factory(Article::class)->create();
 
         $response = $this->json('PUT', 'admin/articles/' . $article->id, [
@@ -99,7 +105,6 @@ class ListingTest extends TestCase
      */
     public function testListingSearch()
     {
-        $this->auth();
         $articles = factory(Article::class, 3)->create();
         $first = Article::first();
 
@@ -123,8 +128,6 @@ class ListingTest extends TestCase
      */
     public function testPagination()
     {
-        $this->auth();
-
         // Pagination is currently set at 5
         $articles = factory(Article::class, 6)->create();
         $response = $this->get('admin/articles');
@@ -135,6 +138,27 @@ class ListingTest extends TestCase
         // Check that there are 2 pages of results
         $paginator = $response->original->content->getItems();
         $this->assertEquals(2, $paginator->lastPage());
+    }
+
+    /**
+     * Test that soft deleted rows can be shown
+     *
+     * @return void
+     */
+    public function testSoftDeletes()
+    {
+        // Make a tag and soft delete it
+        ($tag = factory(Tag::class)->create())->delete();
+
+        // Check for errors
+        $response = $this->get('admin/tags')->assertStatus(200);
+
+        // Check that the tag is present in the results
+        $paginator = $response->original->content->getItems();
+        $this->assertEquals(1, $paginator->count());
+
+        // Checkt that the edit view is allowed
+        $this->get('admin/tags/'.$tag->id.'/edit')->assertStatus(200);
     }
 
 }

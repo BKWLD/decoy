@@ -54,6 +54,13 @@ class Base extends Controller
     public static $per_sidebar = 6;
 
     /**
+     * Include soft deleted models in the listing
+     *
+     * @var boolean
+     */
+    public static $with_trashed = false;
+
+    /**
      * The model class name that the contorller manages. Ex: Post
      *
      * @var string
@@ -421,16 +428,21 @@ class Base extends Controller
         $this->overrideViews();
 
         // Open up the query. We can assume that Model has an ordered() function
-        // because it's defined on Decoy's Base_Model.
+        // because it's defined on Decoy's Base_Model
         $query = $this->parent ?
             $this->parentRelation()->ordered() :
             call_user_func([$this->model, 'ordered']);
 
-        // Run the query.
+        // Allow trashed records
+        if (static::$with_trashed) {
+            $query->withTrashed();
+        }
+
+        // Run the query
         $search = new Search();
         $results = $search->apply($query, $this->search())->paginate($this->perPage());
 
-        // Render the view using the `listing` builder.
+        // Render the view using the `listing` builder
         $listing = Listing::createFromController($this, $results);
         if ($this->parent) {
             $listing->parent($this->parent);
@@ -817,7 +829,12 @@ class Base extends Controller
      */
     protected function findOrFail($id)
     {
-        return call_user_func([$this->model, 'findOrFail'], $id);
+        $model = $this->model;
+        if (static::$with_trashed) {
+            return $model::withTrashed()->findOrFail($id);
+        } else {
+            return $model::findOrFail($id);
+        }
     }
 
     /**
