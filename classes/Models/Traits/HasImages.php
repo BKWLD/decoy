@@ -56,7 +56,7 @@ trait HasImages
      * @param  string $name The "name" field from the db
      * @return Image
      */
-    public function img($name = null)
+    public function img($name = 'image')
     {
         return $this->images->first(function (Image $image, $key) use ($name) {
             return $image->getAttribute('name') == $name;
