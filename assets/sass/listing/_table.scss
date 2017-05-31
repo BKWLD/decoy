@@ -185,5 +185,10 @@ tr.is-trashed {
 	background-size: 40px 40px;
 
 	// Lighten the text colors
-	color: lighten(#333, 40%);
+	color: lighten(#333, 30%);
+
+    // Make trash icons look very disabled
+    .glyphicon-trash {
+        opacity: 0.3;
+    }
 }

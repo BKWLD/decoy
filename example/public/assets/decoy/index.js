@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 5.30.17 👍 */
+/*! 📝 Bukwild 💾 5.31.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -36810,30 +36810,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	// and DELETE.
 	// --------------------------------------------------
 	!(__WEBPACK_AMD_DEFINE_RESULT__ = function (require) {
-		
+
 		// Dependencies
 		var $ = __webpack_require__(2)
 			, _ = __webpack_require__(5)
 			, Backbone = __webpack_require__(7)
 			$doc = $(document)
 		;
-			
+
 		// Private static vars
 		var app,
 			progress = 0, // How many requests have finished
 			total = 0; // How many total requests have been made
-		
+
 		// Public view module
 		var AjaxProgress = Backbone.View.extend({
-			
+
 			// Constructor
 			initialize: function (options) {
 				_.bindAll(this);
 				app = options.app;
-				
+
 				// Shared vars
 				this.$bar = this.$('.progress-bar');
-				this.$links = $('.main-nav a[href], .breadcrumbs a, .standard-list a[href*="http://"]:not([target="_blank"]), .progress-link, .form-actions .btn:not([target="_blank"])');
+				this.$links = $('.main-nav a[href], .breadcrumbs a, .standard-list a[href*="http://"]:not([target="_blank"]), .progress-link, .form-actions .btn:not([target="_blank"]):not([disabled])');
 				this.persist = false;
 
 				// Listen for start and complete
@@ -36841,14 +36841,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				$doc.ajaxComplete(this.complete);
 				this.$links.on('click', this.showSpinner);
 			},
-			
+
 			// Add progress of a new ajax request, thus making the
 			// progress smaller
 			send: function() {
 				total++;
 				this.render();
 			},
-			
+
 			// Remove progress of an ajax request cause it finished,
 			// thus lengthening the bar
 			complete: function() {
@@ -36865,27 +36865,28 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.persist = true // Show forever
 				this.render();
 			},
-			
+
 			// Update the position of the bar
 			render: function() {
-				
+
 				// Show and hide the bar
 				if (total > 0 || this.persist) this.$bar.stop(true).css('opacity', 1);
 				else if (total === 0) this.$bar.stop(true).delay(800).animate({opacity:0}, function() {
 					$(this).css('width', 0);
 				});
-				
+
 				// Animate the bar
 				var perc = (progress + 1) / (total + 1);
 				this.$bar.css('width', (perc*100)+"%");
 			}
-			
+
 		});
-		
+
 		// Return view
 		return AjaxProgress;
-		
+
 	}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+
 
 /***/ },
 /* 33 */
@@ -44408,7 +44409,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		// Add listeners to all listing delete links and all delete
 		// links on edit pages
 		function register() {
-			$('.listing').find('.delete-now, .remove-now').add('.form-actions .delete').on('click', prompt);
+			$('.listing')
+			.find('.delete-now:not([disabled]), .remove-now:not([disabled])')
+			.add('.form-actions .delete:not([disabled])')
+			.on('click', prompt);
 		}
 
 		// Prompt user to confirm deletes

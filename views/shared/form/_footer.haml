@@ -21,9 +21,14 @@
 
 	-# Delete
 	-if (!empty($item) && app('decoy.user')->can('destroy', $controller))
-		%a.btn.btn-danger.delete(href=DecoyURL::relative('destroy', $item->id))
-			%span.glyphicon.glyphicon-trash.glyphicon
-			!= __('decoy::form.actions.delete')
+		-if ($item->trashed())
+			%span.btn.btn-danger.delete(disabled)
+				%span.glyphicon.glyphicon-trash.glyphicon
+				!= __('decoy::form.actions.delete')
+		-else
+			%a.btn.btn-danger.delete(href=DecoyURL::relative('destroy', $item->id))
+				%span.glyphicon.glyphicon-trash.glyphicon
+				!= __('decoy::form.actions.delete')
 
 	-# Cancel
 	%a.btn.btn-default.back(href=app('decoy.breadcrumbs')->smartBack())!= __('decoy::form.actions.cancel')

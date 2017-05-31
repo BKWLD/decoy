@@ -501,6 +501,11 @@ abstract class Base extends Eloquent
             return;
         }
 
+        // If soft deleted, show a disabled icon
+        if (method_exists($this, 'trashed') && $this->trashed()) {
+            return '<span class="glyphicon glyphicon-trash"></span>';
+        }
+
         // Return markup
         return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-%s"></span>
