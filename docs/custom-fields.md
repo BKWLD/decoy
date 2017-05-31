@@ -16,6 +16,14 @@ echo Former::belongsTo('related_product_id', 'Related product')->parent(App\Proj
 echo Former::belongsTo('author_id', 'Author')->route('/admin/admins')->value(app('decoy.user')->id)->title(app('decoy.user')->getAdminTitleAttribute());
 ```
 
+### Boolean
+
+- Creates a single checkbox for use with boolean attributes
+
+```php?start_inline=1
+echo Former::boolean('featured')->message('Yes, featured')
+```
+
 ### Checklist
 
 - Wraps Former's `checkbox` field so that it's easier to instantiate using a simple associative array
