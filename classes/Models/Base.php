@@ -506,12 +506,19 @@ abstract class Base extends Eloquent
             return '<span class="glyphicon glyphicon-trash"></span>';
         }
 
+        // Make the label
+        $label = $many_to_many ?
+            __('decoy::base.action.remove') :
+            $with_trashed ?
+                __('decoy::base.action.soft_delete') :
+                __('decoy::base.action.delete') ;
+
         // Return markup
         return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-%s"></span>
             </a>',
             $many_to_many ? 'remove-now' : 'delete-now',
-            $many_to_many ? __('decoy::base.action.remove') : __('decoy::base.action.delete'),
+            $label,
             $many_to_many ? 'remove' : 'trash'
         );
     }

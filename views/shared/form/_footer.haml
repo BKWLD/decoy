@@ -21,7 +21,7 @@
 
 	-# Delete
 	-if (!empty($item) && app('decoy.user')->can('destroy', $controller))
-		-if ($item->trashed())
+		-if (method_exists($item, 'trashed') && $item->trashed())
 			%span.btn.btn-danger.delete(disabled)
 				%span.glyphicon.glyphicon-trash.glyphicon
 				!= __('decoy::form.actions.delete')

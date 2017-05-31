@@ -21,5 +21,5 @@ return [
     'action.view' => 'Ver no site',
     'action.remove' => 'Remover relacionamento',
     'action.delete' => 'Deletar permanentimente',
-
+    'action.soft_delete' => 'Deletar',
 ];
