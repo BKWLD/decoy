@@ -19,8 +19,8 @@ class Search
      * Utility method to generate a query string that applies the condition
      * provided in the args
      *
-     * @param  array  $terms An associative array where the keys are "fields" and the
-     *                       values are "inputs"
+     * @param  array $terms An associative array where the keys are "fields"
+     *         and the values are "inputs"
      * @return string
      */
     public static function query($terms)
@@ -34,7 +34,7 @@ class Search
      * Apply the effect of a search (which is communicated view request('query'))
      *
      * @param  Illuminate\Database\Query\Builder $query
-     * @param  array                             $config Search config from the controller class definition
+     * @param  array $config Search config from the controller class definition
      * @return Illuminate\Database\Query\Builder
      */
     public function apply($query, $config)
@@ -47,15 +47,17 @@ class Search
         // Expand the config
         $config = $this->longhand($config);
 
-        // Deserialize the query and loop through
+        // Deserialize the query
         $conditions = json_decode(request('query'));
         if (!is_array($conditions)) {
             throw new Exception('Bad query');
         }
 
+        // ... and loop though it
         foreach ($conditions as $condition) {
 
-            // Get the field name by taking the index and looking up which key it corresponds to
+            // Get the field name by taking the index and looking up which key
+            // it corresponds to
             $field = $condition[0];
             $field_config = $config[$field];
 
@@ -170,7 +172,7 @@ class Search
 				return $query->whereRaw($sql);
 		}
 	}
-    
+
 	/**
      * Make NULL-safe SQLITE query
      * http://www.sqlite.org/lang_expr.html#isisnot
@@ -268,5 +270,40 @@ class Search
 
         // Unknown format
         throw new Exception('Could not parse option: '.$options);
+    }
+
+    /**
+     * Make soft deletes condition if the controller supports trashed records.
+     * Returns an array so it can be easily merged into exisitng configs.
+     *
+     * @param  Controller\Base $controller
+     * @return array
+     */
+    public function makeSoftDeletesCondition($controller)
+    {
+        if (!$controller->withTrashed()) return [];
+        return [
+            'deleted_at' => [
+                'type' => 'select',
+                'label' => 'status',
+                'options' => [
+                    'exists' => 'exists',
+                    'deleted' => 'deleted'
+                ],
+                'query' => function($query, $condition, $input) {
+
+                    // If not deleted...
+                    if (($input == 'exists' && $condition == '=') ||
+                        ($input == 'deleted' && $condition == '!=')) {
+                        $query->whereNull('deleted_at');
+
+                    // If deleted...
+                    } else if (($input == 'deleted' && $condition == '=') ||
+                        ($input == 'exists' && $condition == '!=')) {
+                        $query->whereNotNull('deleted_at');
+                    }
+                },
+            ]
+        ];
     }
 }

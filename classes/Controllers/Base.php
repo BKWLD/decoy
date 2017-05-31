@@ -277,13 +277,17 @@ class Base extends Controller
     }
 
     /**
-     * Get the search settings for a controller
+     * Get the search settings for a controller, merging in default selectors
      *
      * @return array
      */
     public function search()
     {
-        return $this->search;
+        $search = new Search;
+        return array_merge(
+            $search->makeSoftDeletesCondition($this),
+            $this->search ?: []
+        );
     }
 
     /**
