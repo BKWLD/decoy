@@ -29,6 +29,8 @@ $factory->define(App\Article::class, function (Faker\Generator $faker) {
         'category' => 'first',
         'public' => 1,
         'date' => $faker->date(),
+        'time' => $faker->time(),
+        'datetime' => $faker->dateTime(),
     ];
 });
 
