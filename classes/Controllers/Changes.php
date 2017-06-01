@@ -91,7 +91,7 @@ class Changes extends Base
         $change = Change::findOrFail($id);
 
         return Response::json([
-            'action' => $change->action,
+            'action' => __("decoy::changes.actions.$change->action"),
             'title' => $change->title,
             'admin' => $change->admin->getAdminTitleHtmlAttribute(),
             'admin_edit' => $change->admin->getAdminEditAttribute(),
