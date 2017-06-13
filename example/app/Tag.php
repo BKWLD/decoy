@@ -2,10 +2,11 @@
 
 use Bkwld\Decoy\Models\Base;
 use Bkwld\Decoy\Models\Traits\HasImages;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Tag extends Base
 {
-    use HasImages;
+    use HasImages, SoftDeletes;
 
     /**
      * Indicates if the model should be timestamped.

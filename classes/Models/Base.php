@@ -328,11 +328,26 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * A no-op that can add classes to rows in listing tables in the admin
+     * Automatically add classes to rows in listing tables in the admin
      *
      * @return string
      */
-    public function getAdminRowClassAttribute() {}
+    public function getAdminRowClassAttribute() {
+        $classes = [];
+
+        // Add a visbility classs
+        if ($this->public) {
+            $classes[] = 'is-public';
+        }
+
+        // Add a soft-deleted class
+        if (method_exists($this, 'trashed') && $this->trashed()) {
+            $classes[] = 'is-trashed';
+        }
+
+        // Return all classes
+        return implode(' ', $classes);
+    }
 
     /**
      * Expose model attributes for comparison by the localization sidebar
@@ -402,7 +417,6 @@ abstract class Base extends Eloquent
 
         // Create the markup
         $public = $this->getAttribute('public');
-
         return sprintf('<a class="visibility js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-eye-%s"></span>
             </a>',
@@ -412,7 +426,7 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * Make the edit action.
+     * Make the edit or view action.
      *
      * @param  array  $data The data passed to a listing view
      * @return string
@@ -421,10 +435,18 @@ abstract class Base extends Eloquent
     {
         extract($data);
 
+        // Make markup
+        $editable = app('decoy.user')->can('update', $controller);
         return sprintf('<a href="%s" class="action-edit js-tooltip"
-            data-placement="left" title="' . __('decoy::base.action.edit') . '">
-                <span class="glyphicon glyphicon-pencil"></span>
-            </a>', $this->getAdminEditUri($controller, $many_to_many));
+            data-placement="left" title="%s">
+                <span class="glyphicon glyphicon-%s"></span>
+            </a>',
+            $this->getAdminEditUri($controller, $many_to_many), // URL
+            $editable ? // Label
+                __('decoy::base.action.edit') :
+                __('decoy::base.action.read') ,
+            $editable ? 'pencil' : 'zoom-in' // Icon
+        );
     }
 
     /**
@@ -479,12 +501,24 @@ abstract class Base extends Eloquent
             return;
         }
 
+        // If soft deleted, show a disabled icon
+        if (method_exists($this, 'trashed') && $this->trashed()) {
+            return '<span class="glyphicon glyphicon-trash"></span>';
+        }
+
+        // Make the label
+        $label = $many_to_many ?
+            __('decoy::base.action.remove') :
+            $with_trashed ?
+                __('decoy::base.action.soft_delete') :
+                __('decoy::base.action.delete') ;
+
         // Return markup
         return sprintf('<a class="%s js-tooltip" data-placement="left" title="%s">
                 <span class="glyphicon glyphicon-%s"></span>
             </a>',
             $many_to_many ? 'remove-now' : 'delete-now',
-            $many_to_many ? __('decoy::base.action.remove') : __('decoy::base.action.delete'),
+            $label,
             $many_to_many ? 'remove' : 'trash'
         );
     }
@@ -539,7 +573,10 @@ abstract class Base extends Eloquent
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy($this->getTable().'.created_at', 'desc');
+        if ($this->usesTimestamps()) {
+            $query->orderBy($this->getTable().'.created_at', 'desc');
+        }
+        return $query;
     }
 
     /**
@@ -586,8 +623,11 @@ abstract class Base extends Eloquent
      */
     public function scopePositioned($query)
     {
-        return $query->orderBy($this->getTable().'.position', 'asc')
-            ->orderBy($this->getTable().'.created_at', 'desc');
+        $query->orderBy($this->getTable().'.position', 'asc');
+        if ($this->usesTimestamps()) {
+            $query->orderBy($this->getTable().'.created_at', 'desc');
+        }
+        return $query;
     }
 
     /**

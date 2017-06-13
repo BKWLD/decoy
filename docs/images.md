@@ -17,7 +17,7 @@ class Article extends Base {
 From the frontend, you can use the `img()` helper provided by the trait that was added to access a particular `Image` for your model.  Then, chain on one of the `Image` accessors.  For example:
 
 ```php
-$article->img()->url;
+$article->img()->url; # Shorthand for $article->img('image')->url;
 # /uploads/1/1/image1.jpg
 
 $article->img('marquee')->crop(400,200)->url

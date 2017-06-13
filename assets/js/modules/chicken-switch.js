@@ -17,7 +17,10 @@ define(function(require) {
 	// Add listeners to all listing delete links and all delete
 	// links on edit pages
 	function register() {
-		$('.listing').find('.delete-now, .remove-now').add('.form-actions .delete').on('click', prompt);
+		$('.listing')
+		.find('.delete-now:not([disabled]), .remove-now:not([disabled])')
+		.add('.form-actions .delete:not([disabled])')
+		.on('click', prompt);
 	}
 
 	// Prompt user to confirm deletes

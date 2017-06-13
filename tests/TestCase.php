@@ -97,14 +97,16 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Create a UploadedFile instance to work with
      *
-     * @param  string $file_name
+     * @param  string $filename
      * @return UploadedFile
      */
-    protected function createUploadedFile($file_name = 'test.jpg')
+    protected function createUploadedFile($filename = null)
     {
+        if (!$filename) $filename = 'test.jpg';
+
         // Create an image in the tmp directory where Upchuck is expecting it
         $tmp_dir = ini_get('upload_tmp_dir') ?: sys_get_temp_dir();
-        $file_path = $tmp_dir.'/'.$file_name;
+        $file_path = $tmp_dir.'/'.$filename;
         if (!file_exists($file_path)) {
             $file = imagecreatetruecolor(20, 20);
             imagepng($file, $file_path);
@@ -124,16 +126,18 @@ abstract class TestCase extends LaravelTestCase
     /**
      * Create a virtual file to work with
      *
-     * @param  string $file_name
+     * @param  string $filename
      * @return string
      */
-    protected function createVirtualFile($file_name = 'test.jpg')
+    protected function createVirtualFile($filename = null)
     {
+        if (!$filename) $filename = 'test.jpg';
+
         // Make image
         $img = imagecreatetruecolor(20, 20);
         ob_start();
         imagejpeg($img);
-        $this->disk->put($file_name, ob_get_clean());
+        $this->disk->put($filename, ob_get_clean());
         imagedestroy($img);
     }
 

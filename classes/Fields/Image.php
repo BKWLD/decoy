@@ -54,8 +54,8 @@ class Image extends File
     {
         parent::__construct($app, 'file', $name, $label, $value, $attributes);
 
-        // Set a default label if there is a NULL name (which is encouraged for
-        // models with only one image)
+        // Set a default label if there is a NULL name
+        // DEPRECATED
         if (!$name) {
             $this->group->setLabel('Image');
         }

@@ -60,7 +60,6 @@
     "img-loader": "^1.2.0",
     "import-glob-loader": "^1.1.0",
     "imports-loader": "^0",
-    "lodash": "^3.10.1",
     "moment": "^2.10.6",
     "node-sass": "^3.4.2",
     "postcss-loader": "^0",

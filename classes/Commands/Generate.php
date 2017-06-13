@@ -80,7 +80,7 @@ class Generate extends Command
         // Figure out the naming
         $path = 'resources/views/admin/'
             . Str::plural(Str::snake($this->argument('model')))
-            . '/edit.haml.php';
+            . '/edit.haml';
         $file = base_path().'/'.$path;
 
         // Copy the stub over

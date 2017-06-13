@@ -345,6 +345,7 @@ class Listing extends Field
             'count'             => is_a($items, LengthAwarePaginator::class) ?
                 $items->total() : $items->count(),
             'paginator_from'    => (request('page', 1)-1) * $this->perPage(),
+            'with_trashed'      => $this->controller->withTrashed()
         ];
 
         // If the listing has a parent, add relationship vars

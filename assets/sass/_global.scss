@@ -37,6 +37,11 @@ body {
 	}
 }
 
+// Clear default hover colors without trampling styles
+a {
+	color: inherit;
+}
+
 // Remove the blue tab focus outline.  Bootstrap's active/hover states suffice
 a, .btn { outline: none !important; }
 

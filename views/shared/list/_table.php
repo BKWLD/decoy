@@ -99,7 +99,12 @@ if ($listing->count()) {
 
 				<?php // Checkboxes or bullets ?>
 				<?php if ($can_delete): ?>
-					<td><input type="checkbox" name="select-row"></td>
+					<td><input
+						type="checkbox"
+						name="select-row"
+						<?php if (method_exists($item, 'trashed')
+							&& $item->trashed()) echo 'disabled'; ?>
+						></td>
 				<?php else: ?>
 					<td class="hide"></td>
 				<?php endif ?>

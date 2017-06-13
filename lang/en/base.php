@@ -17,8 +17,9 @@ return [
     'standard_list.private' => 'Make Private',
 
     'action.edit' => 'Edit in admin',
+    'action.read' => 'View in admin',
     'action.view' => 'View on site',
     'action.remove' => 'Remove relationship',
     'action.delete' => 'Permanently delete',
-
+    'action.soft_delete' => 'Delete',
 ];

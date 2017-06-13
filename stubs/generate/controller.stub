@@ -30,7 +30,7 @@ class {{controller}} extends Base
         ],
         'category' => [
             'type' => 'select',
-            'options' => 'Article::$categories',
+            'options' => 'App\Article::$categories',
         ],
         'date' => 'date',
     ];

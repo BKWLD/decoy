@@ -2,8 +2,9 @@
 	data-js-view="standard-list"
 	data-controller-route="<?=URL::to(DecoyURL::action($controller))?>"
 	data-position-offset="<?=$paginator_from?>"
+	data-with-trashed="<?=$with_trashed?>"
 	<?php if ($parent_controller):?> data-parent-controller="<?=$parent_controller?><?php endif?>"
-	>
+  >
 
 	<?php
 	// Create the page title for the sidebar layout
