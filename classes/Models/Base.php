@@ -243,7 +243,7 @@ abstract class Base extends Eloquent
     {
         return implode(' ', array_map(function ($attribute) {
             return $this->$attribute;
-        }, $this->titleAttributes())) ?: 'Untitled';
+        }, $this->titleAttributes())) ?: __('decoy::base.untitled');
     }
 
     /**

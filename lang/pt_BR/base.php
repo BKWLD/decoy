@@ -7,6 +7,7 @@ return [
     'success_message' => 'O <b>:model</b> :title foi :verb com sucesso.',
     'success_duplicated' => ' Você está vendo uma <b>cópia</b> do <a href=":url">original</a>.',
     'success_localized' => ' Você pode iniciar a tradução a partir do <b>:locale</b>.',
+    'untitled' => 'Sem título',
 
     'verb.created' => 'criado',
     'verb.deleted' => 'deletado',
