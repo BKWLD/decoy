@@ -3,6 +3,7 @@
 return [
 
     'listing.pending_save' => '<span class="glyphicon glyphicon-info-sign"></span>Você deve salvar antes de poder adicionar <b title=":description" class="js-tooltip">:model</b>.',
+    'listing.new' => 'Novo',
 
     'actions.save_new' => 'Ir para o formulário de criação após salvar',
     'actions.save_back' => 'Retornar à listagem após salvar',

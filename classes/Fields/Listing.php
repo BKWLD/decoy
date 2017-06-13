@@ -366,7 +366,7 @@ class Listing extends Field
     {
         return '<div class="btn-group">
             <a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
-            <span class="glyphicon glyphicon-plus"></span> New</a>
+            <span class="glyphicon glyphicon-plus"></span> ' . __('decoy::form.listing.new') . '</a>
             </div>';
     }
 
