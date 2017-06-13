@@ -287,7 +287,7 @@ class Listing extends Field
         if (empty($this->parent_item)) {
             $this->addGroupClass('note');
 
-            return $this->group->wrapField(Former::note($this->label_text, trans('decoy::form.listing.pending_save', ['model' => $this->label_text])));
+            return $this->group->wrapField(Former::note($this->label_text, trans('decoy::form.listing.pending_save', ['model' => $this->label_text, 'description' => $this->controller->description()])));
         }
 
         // Add create button if we have permission and if there is a parent item
