@@ -3,7 +3,7 @@
 // Deps
 use Bkwld\Decoy\Input\Search;
 use Bkwld\Decoy\Models\Admin;
-use Bkwld\Library\Utils\String;
+use Bkwld\Library\Utils\Text;
 use Config;
 use DB;
 use DecoyURL;
@@ -274,7 +274,7 @@ class Change extends Base {
 		// Make more readable titles
 		$out = [];
 		foreach($attributes as $key => $val) {
-			$out[String::titleFromKey($key)] = $val;
+			$out[Text::titleFromKey($key)] = $val;
 		}
 		return $out;
 	}

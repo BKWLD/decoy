@@ -142,7 +142,7 @@ class Image extends Upload {
 			foreach($this->crops as $key => $val) {
 				$label = is_numeric($key) ? $val : $key;
 				$html .= '<span class="'.$active.'">'
-					.Library\Utils\String::titleFromKey($label)
+					.Library\Utils\Text::titleFromKey($label)
 					.'</span>';
 				$active = null;
 			}

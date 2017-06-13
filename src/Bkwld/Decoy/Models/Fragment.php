@@ -36,7 +36,7 @@ class Fragment extends Base {
 			
 			// Format title and add as a node
 			$title_key = $title; // Preserve for use with the full_key
-			$title = ucwords(Library\Utils\String::titleFromKey($title));
+			$title = ucwords(Library\Utils\Text::titleFromKey($title));
 			$output[$title] = array();
 			
 			// Break the keys for all the pairs up by section
@@ -53,11 +53,11 @@ class Fragment extends Base {
 				// Allow the section to be undefined or have a bunch of periods
 				if (substr_count($key, '.') === 1) {
 					list($section, $key) = explode('.', $key);
-					$section = Library\Utils\String::titleFromKey(trim($section));
+					$section = Library\Utils\Text::titleFromKey(trim($section));
 				} else $section = 'General';
 				
 				// Format the key
-				$key = Library\Utils\String::titleFromKey($key);
+				$key = Library\Utils\Text::titleFromKey($key);
 				
 				// Add the pair to the list
 				if (!isset($output[$title][$section])) $output[$title][$section] = array();

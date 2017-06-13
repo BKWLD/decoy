@@ -266,8 +266,8 @@ class Worker extends \Illuminate\Console\Command {
 		if (!is_numeric($interval)) return $interval;
 		switch($format) {
 			case 'raw': return $interval;
-			case 'abbreviated': return Library\Utils\String::timeElapsed(time() - $interval, $abbreviated);
-			default: return Library\Utils\String::timeElapsed(time() - $interval);
+			case 'abbreviated': return Library\Utils\Text::timeElapsed(time() - $interval, $abbreviated);
+			default: return Library\Utils\Text::timeElapsed(time() - $interval);
 		}
 	}
 }
