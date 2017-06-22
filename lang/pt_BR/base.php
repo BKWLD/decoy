@@ -2,6 +2,10 @@
 
 return [
 
+    'constants.format_date' => 'd/m/y',
+    'constants.format_datetime' => 'd/m/y H:i T',
+    'constants.format_time' => 'H:i T',
+
     'header.new_locale' => 'Novo :title em :label',
 
     'success_message' => 'O <b>:model</b> :title foi :verb com sucesso.',

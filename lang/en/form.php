@@ -17,4 +17,9 @@ return [
     'secondary_actions.changes' => '<b>Changes</b> history',
     'secondary_actions.public_view' => 'Public view',
 
+    'belongs_to.search' => 'Search',
+
+    'date.placeholder' => 'MM/DD/YYYY',
+    'date.format' => 'm/d/Y',
+
 ];

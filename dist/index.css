@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 5.31.17 👍 */
+/*! 📝 Bukwild 💾 6.22.17 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -8785,12 +8785,11 @@ body.workers.index .worker-entry {
       .sidebar .dashboard .gravatar {
         display: none; } }
 /*!
- * Datepicker for Bootstrap v1.6.4 (https://github.com/eternicode/bootstrap-datepicker)
+ * Datepicker for Bootstrap v1.7.0 (https://github.com/uxsolutions/bootstrap-datepicker)
  *
- * Copyright 2012 Stefan Petre
- * Improvements by Andrew Rowls
  * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
  */
+
 .datepicker {
   border-radius: 4px;
   direction: ltr;
@@ -8798,10 +8797,13 @@ body.workers.index .worker-entry {
 .datepicker-inline {
   width: 220px;
 }
-.datepicker.datepicker-rtl {
+.datepicker-rtl {
   direction: rtl;
 }
-.datepicker.datepicker-rtl table tr td span {
+.datepicker-rtl.dropdown-menu {
+  left: auto;
+}
+.datepicker-rtl table tr td span {
   float: right;
 }
 .datepicker-dropdown {
@@ -9430,6 +9432,10 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
 .datepicker tfoot tr th:hover {
   background: #eeeeee;
 }
+.datepicker .prev.disabled,
+.datepicker .next.disabled {
+  visibility: hidden;
+}
 .datepicker .cw {
   font-size: 10px;
   width: 12px;
@@ -9460,8 +9466,7 @@ fieldset[disabled] .datepicker table tr td span.active.disabled:hover.focus {
   border-width: 1px 0;
   margin-left: -5px;
   margin-right: -5px;
-}
-/*# sourceMappingURL=bootstrap-datepicker3.css.map *//*
+}/*
 	Icon font
 */
 @font-face {

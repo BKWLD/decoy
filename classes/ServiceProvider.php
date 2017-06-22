@@ -95,13 +95,13 @@ class ServiceProvider extends BaseServiceProvider
 
         // Define constants that Decoy uses
         if (!defined('FORMAT_DATE')) {
-            define('FORMAT_DATE', 'm/d/y');
+            define('FORMAT_DATE', __('decoy::base.constants.format_date'));
         }
         if (!defined('FORMAT_DATETIME')) {
-            define('FORMAT_DATETIME', 'm/d/y g:i a T');
+            define('FORMAT_DATETIME', __('decoy::base.constants.format_datetime'));
         }
         if (!defined('FORMAT_TIME')) {
-            define('FORMAT_TIME', 'g:i a T');
+            define('FORMAT_TIME', __('decoy::base.constants.format_time'));
         }
 
         // Register global and named middlewares

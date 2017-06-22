@@ -3,6 +3,7 @@
 namespace Bkwld\Decoy\Input;
 
 use DB;
+use Carbon\Carbon;
 use Config;
 use Request;
 use Bkwld\Library\Utils\Text;
@@ -94,7 +95,7 @@ class Search
         // Convert date formats
         if ($type == 'date') {
             $field = DB::raw("DATE($field)");
-            $input = date('Y-m-d', strtotime($input));
+            $input = Carbon::createFromFormat(__('decoy::form.date.format'), $input)->format('Y-m-d');
         }
 
         // Apply the where
