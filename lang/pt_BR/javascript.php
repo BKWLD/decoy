@@ -36,4 +36,8 @@ return [
     'changes.by' => 'por',
     'changes.close' => 'Fechar',
 
+    'date.format' => 'dd/mm/yyyy',
+    'date.separator' => '/',
+    'date.placeholder' => 'dd/mm/aaaa',
+
 ];

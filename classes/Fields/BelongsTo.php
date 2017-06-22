@@ -60,7 +60,7 @@ class BelongsTo extends Field
         // Set default attributes
         $attributes = array_merge([
             'class' => 'span5',
-            'placeholder' => 'Search',
+            'placeholder' => __('decoy::form.belongs_to.search'),
             'autocomplete' => 'off',
         ], (array) $attributes);
 

@@ -287,7 +287,7 @@ class Listing extends Field
         if (empty($this->parent_item)) {
             $this->addGroupClass('note');
 
-            return $this->group->wrapField(Former::note($this->label_text, trans('decoy::form.listing.pending_save', ['model' => $this->label_text])));
+            return $this->group->wrapField(Former::note($this->label_text, trans('decoy::form.listing.pending_save', ['model' => $this->label_text, 'description' => $this->controller->description()])));
         }
 
         // Add create button if we have permission and if there is a parent item
@@ -366,7 +366,7 @@ class Listing extends Field
     {
         return '<div class="btn-group">
             <a href="'.URL::to($this->getCreateURL()).'" class="btn btn-info btn-small new">
-            <span class="glyphicon glyphicon-plus"></span> New</a>
+            <span class="glyphicon glyphicon-plus"></span> ' . __('decoy::form.listing.new') . '</a>
             </div>';
     }
 

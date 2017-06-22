@@ -35,7 +35,7 @@ class Date extends Field
         // Set default attributes
         $attributes = array_merge([
             'maxlength' => 10,
-            'placeholder' => 'MM/DD/YY',
+            'placeholder' => __('decoy::form.date.placeholder'),
             'id' => null, // We don't want to conflict on the id
         ], (array) $attributes);
 
@@ -47,7 +47,7 @@ class Date extends Field
         // or populated data.  If there is a value now (or if there was before), make
         // it human readable.  This assumes it WAS a MYSQL timestamp.
         if ($this->value) {
-            $this->value = date('m/d/Y', strtotime($this->value));
+            $this->value = date(__('decoy::form.date.format'), strtotime($this->value));
         }
 
         // Apend the button that the calendar selector hooks into
@@ -61,7 +61,7 @@ class Date extends Field
      */
     public function value($value)
     {
-        return parent::value(date('m/d/Y', strtotime($value)));
+        return parent::value(date(__('decoy::form.date.format'), strtotime($value)));
     }
 
     /**
