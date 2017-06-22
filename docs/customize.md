@@ -13,7 +13,7 @@ decoy = require '../../../public/assets/decoy/index'
 
 # Make a single stylesheet with Decoy and extended styles
 require '../../../public/assets/decoy/index.css'
-require './start.scss'
+require './start.styl'
 
 # Customize wysiwyg options
 decoy.wysiwyg.config.allowUploads()
