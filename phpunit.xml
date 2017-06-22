@@ -25,7 +25,6 @@
 
         <ini name="display_errors" value="On" />
         <ini name="display_startup_errors" value="On" />
-        <ini name="max_execution_time" value="1200" />
 
         <env name="APP_KEY" value="base64:HqeMk52gfm5xfSyiqY7gwATGTp96R2tD4GLxXUB0IcQ="/>
         <env name="APP_ENV" value="testing"/>
