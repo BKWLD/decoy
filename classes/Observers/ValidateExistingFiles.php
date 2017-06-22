@@ -45,27 +45,28 @@ class ValidateExistingFiles
         // instance for it if it's a local path.
         $data = $validation->getData();
         foreach (array_keys($rules) as $attribute) {
+            $value = array_get($data, $attribute);
 
             // Skip if the attribute isn't in the input.  It may not be for
             // images or other nested models.  Their validation should get
             // triggered later through NestedModels behavior.
-            if (!array_key_exists($attribute, $data)) {
+            if (!array_has($data, $attribute)) {
                 continue;
 
             // Skip if a file was uploaded for this attribtue
-            } else if (is_a($data[$attribute], File::class)) {
+            } else if (is_a($value, File::class)) {
                 continue;
 
             // If the value is empty, because the user is deleting the file
             // instance, set it to an empty string instead of the default
             // (null).  Null requires `nullable` validation rules to be set
             // and I don't want to require that.
-            } else if (empty($data[$attribute])) {
+            } else if (!$value) {
                 $data[$attribute] = '';
 
             // Create the file instance and clear the data instance
             } else {
-                $data[$attribute] = $this->makeFileFromPath($data[$attribute]);
+                array_set($data, $attribute, $this->makeFileFromPath($value));
             }
         }
 
