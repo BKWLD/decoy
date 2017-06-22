@@ -62,7 +62,7 @@ class ValidateExistingFiles
             // (null).  Null requires `nullable` validation rules to be set
             // and I don't want to require that.
             } else if (!$value) {
-                $data[$attribute] = '';
+                array_set($data, $attribute, '');
 
             // Create the file instance and clear the data instance
             } else {
