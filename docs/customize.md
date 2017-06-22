@@ -16,7 +16,6 @@ require '../../../public/assets/decoy/index.css'
 require './start.scss'
 
 # Customize wysiwyg options
-require './fontcolor.js'
 decoy.wysiwyg.config.allowUploads()
 decoy.wysiwyg.config.merge({
   plugins: ['fontcolor'],
