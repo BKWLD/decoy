@@ -140,7 +140,7 @@ class ModelValidator
     }
 
     /**
-     * Add replacers to the validator that strip back out the previx
+     * Add replacers to the validator that strip back out the prefix
      *
      * @param  string                          $prefix
      * @param  Illuminate\Validation\Validator $validator
@@ -149,7 +149,13 @@ class ModelValidator
     protected function removePrefixFromMessages($prefix, $validator)
     {
         // Get all the rules in a single flat array
-        $rules = Arr::flatten($validator->getRules());
+        $rules = array_flatten($validator->getRules());
+
+        // Get just the rules, not rule modifiers
+        $rules = array_map(function($rule) {
+            preg_match('#^([^:]+)#', $rule, $matches);
+            return $matches[1];
+        }, $rules);
 
         // Callback that removes isntances of the prefix from a message. Laravel
         // will have already replaced underscores with spaces, so we need to
