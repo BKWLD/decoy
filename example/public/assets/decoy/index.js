@@ -40957,8 +40957,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				// hide and changeDate because the plugin keeps touching our hidden field,
 				// probably because it has the same selector.
 				}).on('changeDate hide', this.update);
-
-				console.log('teste',__('date.format'))
 			},
 
 			// Listen for changes to the datepicker and update the related hidden field
