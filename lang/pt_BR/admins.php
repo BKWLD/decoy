@@ -39,4 +39,8 @@ return [
     'permissions' => 'Permissões',
     'permissions_override' => 'Sobrescrever as permissões padrão para o Papel selecionado',
 
+    'standard_list.you' => 'Você',
+    'standard_list.disabled' => 'Desabilitado',
+    'standard_list.click' => 'Clique para habilitar o login',
+
 ];

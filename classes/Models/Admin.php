@@ -311,12 +311,14 @@ class Admin extends Base implements
 
         // If row is you
         if ($this->id == app('decoy.user')->id) {
-            $html .= '<span class="label label-info">You</span>';
+            $html .= '<span class="label label-info">' . __('decoy::admins.standard_list.you') . '</span>';
         }
 
         // If row is disabled
         if ($this->disabled()) {
-            $html .= '<a href="'.URL::to(DecoyURL::relative('enable', $this->id)).'" class="label label-warning js-tooltip" title="Click to enable login">Disabled</a>';
+            $html .= '<a href="' . URL::to(DecoyURL::relative('enable', $this->id)) . '" class="label label-warning
+                js-tooltip" title="' . __('decoy::admins.standard_list.click') . '">' .
+                __('decoy::admins.standard_list.disabled') . '</a>';
         }
 
         // Return HTML

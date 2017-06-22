@@ -7,6 +7,7 @@ define(function (require) {
 	// Dependencies
 	var $ = require('jquery'),
 		_ = require('underscore'),
+        __ = require('../localize/translated'),
 		Backbone = require('backbone');
 	require('bootstrap-datepicker');
 	require('bootstrap-datepicker/dist/css/bootstrap-datepicker3.css')
@@ -26,36 +27,44 @@ define(function (require) {
 			this.$el.addClass('date').datepicker({
 				keyboardNavigation: false, // Makes it possible to manually type in
 				todayHighlight: true,
-				orientation: 'top left'
+				orientation: 'top left',
+                format: __('date.format')
 
 			// Update the hidden field whenver the datepicker updates.  Need both
 			// hide and changeDate because the plugin keeps touching our hidden field,
 			// probably because it has the same selector.
 			}).on('changeDate hide', this.update);
+
+			console.log('teste',__('date.format'))
 		},
 
 		// Listen for changes to the datepicker and update the related hidden field
 		// with the date in the mysql format
 		update: function() {
-
 			// Allow the field to be empty
 			if (!this.$input.val()) return this.$hidden.val(null);
 
 			// Make sure the date is valid
-			var parts = this.$input.val().match(/^(\d{1,2})\/(\d{1,2})\/(\d{1,2}|\d{4})$/);
+			var parts = this.$input.val().split(__('date.separator'));
 			if (!parts) return;
 
+			// Identify date parts based on date format
+			var formatParts = __('date.format').toLowerCase().split(__('date.separator'));
+			var day = formatParts.indexOf('d') >= 0 ? parts[formatParts.indexOf('d')] : parts[formatParts.indexOf('dd')];
+			var month = formatParts.indexOf('m') >= 0 ? parts[formatParts.indexOf('m')] : parts[formatParts.indexOf('mm')];
+			var year = formatParts.indexOf('yy') >= 0 ? parts[formatParts.indexOf('yy')] : parts[formatParts.indexOf('yyyy')];
+
 			// Pad the numbers
-			if (parts[1].length == 1) parts[1] = '0'+parts[1];
-			if (parts[2].length == 1) parts[2] = '0'+parts[2];
-			if (parts[3].length == 1) parts[3] = '200'+parts[3];
-			if (parts[3].length == 2) {
-				if (parts[3] - 10 > String(new Date().getFullYear()).substr(2)) parts[3] = '19'+parts[3];
-				else parts[3] = '20'+parts[3];
+			if (month.length == 1) month = '0'+month;
+			if (day.length == 1) day = '0'+day;
+			if (year.length == 1) year = '200'+year;
+			if (year.length == 2) {
+				if (year - 10 > String(new Date().getFullYear()).substr(2)) year = '19'+year;
+				else year = '20'+year;
 			}
 
 			// Update hidden field
-			this.$hidden.val(parts[3]+'-'+parts[1]+'-'+parts[2]);
+			this.$hidden.val(year+'-'+month+'-'+day);
 			this.$hidden.trigger('change');
 		},
 
