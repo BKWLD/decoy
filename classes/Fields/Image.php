@@ -252,10 +252,10 @@ class Image extends File
             return $image->id;
         }
 
-        // Otherwise, use a unique id for this image instance.  It must be unique
-        // compared to other Former:image() instances on this page.
+        // Otherwise, use the name of the field, which should be unique compared
+        // to other image fields on the page.
         if (!$this->input_id) {
-            $this->input_id = '_'.str_random(4);
+            $this->input_id = '_'.preg_replace('#[^\w]#', '', $this->name);
         }
 
         return $this->input_id;
