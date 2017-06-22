@@ -6,7 +6,7 @@
 	.legend= empty($item) ? 'New' : 'Edit'
 	!= Former::text('title')
 	!= Former::wysiwyg('body')
-	!= Former::image()
+	!= Former::image('image')
 
 %fieldset
 	.legend Other
