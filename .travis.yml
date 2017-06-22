@@ -9,7 +9,7 @@ install:
   - composer install
 
 script:
-  - php -d max_execution_time=1200 vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text
+  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml --coverage-text
 
 after_success:
   - travis_retry php vendor/bin/coveralls
