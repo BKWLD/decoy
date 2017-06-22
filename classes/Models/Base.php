@@ -299,7 +299,7 @@ abstract class Base extends Eloquent
 
         // Get all the file validation rule keys
         $attributes = array_keys(array_filter(static::$rules, function ($rules) {
-            return preg_match('#file|image|mimes|video#i', $rules);
+            return preg_match('#file|image|mimes|video|dimensions#i', $rules);
         }));
 
         // Get all the model attributes from upchuck
