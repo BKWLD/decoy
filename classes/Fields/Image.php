@@ -101,6 +101,20 @@ class Image extends File
     }
 
     /**
+     * Show errors that will have been stored on the `file` proeperty
+     *
+     * @return void
+     */
+    public function showErrors()
+    {
+        $key = sprintf('images.%s.file', $this->inputId());
+        if (session('errors') && ($error = session('errors')->first($key))) {
+            $this->help($error);
+            $this->group->addClass('has-error');
+        }
+    }
+
+    /**
      * Give the file input the prefixed name.
      *
      * @return string An input tag
@@ -125,6 +139,9 @@ class Image extends File
 
         // Add the aspect ratio choice
         $this->group->dataAspectRatio($this->ratio ?: false);
+
+        // Set errors
+        $this->showErrors();
 
         // Inform whether there is an existing image to preview
         if ($this->hasImage()) {
