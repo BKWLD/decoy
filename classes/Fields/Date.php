@@ -79,8 +79,8 @@ class Date extends Field
 
         // Convert the value to a mysql friendly format or leave null.
         $mysql_date = $this->value ?
-            date(Library\Utils\Constants::MYSQL_DATE, strtotime($this->value)) :
-            null;
+            \DateTime::createFromFormat(__('decoy::form.date.format'), $this->value)
+                ->format(Library\Utils\Constants::MYSQL_DATE) : null;
 
         // Add a hidden field that will contain the mysql value, for storing in db
         $html .= HtmlInput::hidden($this->name, $mysql_date)->id($this->name);
