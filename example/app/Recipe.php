@@ -16,7 +16,7 @@ class Recipe extends Base
      */
     public static $rules = [
         'title' => 'required',
-        'images.default' => 'image',
+        'images.image' => 'image',
         'file' => 'file',
     ];
 

@@ -39,6 +39,7 @@ abstract class TestCase extends LaravelTestCase
     protected function setUp()
     {
         parent::setUp();
+        set_time_limit(1200);
         $this->mockDisk();
     }
 

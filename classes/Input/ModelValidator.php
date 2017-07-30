@@ -59,7 +59,7 @@ class ModelValidator
 
         // Apply prefixes
         if ($prefix) {
-            $data = $this->prefixArrayKeys($prefix, $data);
+            $data = $this->nestArray($prefix, $data);
             $rules = $this->prefixArrayKeys($prefix, $rules);
         }
 
@@ -81,6 +81,7 @@ class ModelValidator
         // Fire completion event
         $model->fireDecoyEvent('validated', [$model, $validator]);
 
+        // Return the validator
         return $validator;
     }
 
@@ -109,6 +110,22 @@ class ModelValidator
     }
 
     /**
+     * Nest an array at another depth using the prefix
+     *
+     * @param  string $prefix
+     * @param  array  $array
+     * @return array
+     */
+    public function nestArray($prefix, $array)
+    {
+        $data = [];
+        foreach($array as $key => $value) {
+            array_set($data, $prefix.$key, $value);
+        }
+        return $data;
+    }
+
+    /**
      * Apply a prefix to the keys of an array
      *
      * @param  string $prefix
@@ -123,7 +140,7 @@ class ModelValidator
     }
 
     /**
-     * Add replacers to the validator that strip back out the previx
+     * Add replacers to the validator that strip back out the prefix
      *
      * @param  string                          $prefix
      * @param  Illuminate\Validation\Validator $validator
@@ -131,9 +148,14 @@ class ModelValidator
      */
     protected function removePrefixFromMessages($prefix, $validator)
     {
-
         // Get all the rules in a single flat array
-        $rules = Arr::flatten($validator->getRules());
+        $rules = array_flatten($validator->getRules());
+
+        // Get just the rules, not rule modifiers
+        $rules = array_map(function($rule) {
+            preg_match('#^([^:]+)#', $rule, $matches);
+            return $matches[1];
+        }, $rules);
 
         // Callback that removes isntances of the prefix from a message. Laravel
         // will have already replaced underscores with spaces, so we need to

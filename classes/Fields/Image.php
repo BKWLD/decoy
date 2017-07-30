@@ -101,6 +101,20 @@ class Image extends File
     }
 
     /**
+     * Show errors that will have been stored on the `file` proeperty
+     *
+     * @return void
+     */
+    public function showErrors()
+    {
+        $key = sprintf('images.%s.file', $this->inputId());
+        if (session('errors') && ($error = session('errors')->first($key))) {
+            $this->help($error);
+            $this->group->addClass('has-error');
+        }
+    }
+
+    /**
      * Give the file input the prefixed name.
      *
      * @return string An input tag
@@ -125,6 +139,9 @@ class Image extends File
 
         // Add the aspect ratio choice
         $this->group->dataAspectRatio($this->ratio ?: false);
+
+        // Set errors
+        $this->showErrors();
 
         // Inform whether there is an existing image to preview
         if ($this->hasImage()) {
@@ -252,10 +269,10 @@ class Image extends File
             return $image->id;
         }
 
-        // Otherwise, use a unique id for this image instance.  It must be unique
-        // compared to other Former:image() instances on this page.
+        // Otherwise, use the name of the field, which should be unique compared
+        // to other image fields on the page.
         if (!$this->input_id) {
-            $this->input_id = '_'.str_random(4);
+            $this->input_id = '_'.preg_replace('#[^\w]#', '', $this->name);
         }
 
         return $this->input_id;

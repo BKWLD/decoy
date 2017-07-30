@@ -104,7 +104,7 @@ class NestedModels
         // detected because the id begins with an underscore (aka, doesn't reflect)
         // a true record in the database.
         foreach ($data as $id => $input) {
-            $prefix = $name.'|'.$id.'|';
+            $prefix = $name.'.'.$id.'.';
             if (starts_with($id, '_')) {
                 $this->storeChild($relation, $input, $prefix);
             } else {

@@ -15,7 +15,7 @@ class Article extends Base
     public static $rules = [
         'title' => 'required',
         'slug' => 'alpha_dash|unique:articles',
-        'images.default' => 'image',
+        'images.image' => 'image|dimensions:min_width=10',
         'date' => 'required',
     ];
 
