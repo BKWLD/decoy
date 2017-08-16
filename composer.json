@@ -56,7 +56,8 @@
     },
     "conflict": {
         "anahkiasen/html-object": "1.4.1",
-        "laravel/framework": "<5.4.0"
+        "laravel/framework": "<5.4.0",
+        "php": "7.0.7"
     },
     "autoload": {
         "psr-4": {
