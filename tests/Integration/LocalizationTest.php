@@ -38,6 +38,10 @@ class LocalizationTest extends TestCase
     {
         $response = $this->get('admin/articles/create');
         $response->assertStatus(200);
+        var_dump($response);
+        var_dump($response->original);
+        var_dump($response->original->content);
+        var_dump($response->original->content->localize);
         $this->assertTrue($response->original->content->localize->hidden());
     }
 
