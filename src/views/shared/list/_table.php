@@ -20,6 +20,7 @@ $can_delete = $many_to_many;
 
 // Test the data for presence of special properties
 if ($listing->count()) {
+	$test_row = $listing[0]->toArray();
 
 	// Get the list of actions
 	$test_actions = $listing[0]->makeAdminActions($__data);
