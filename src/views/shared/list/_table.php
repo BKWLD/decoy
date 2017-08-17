@@ -90,10 +90,8 @@ if ($listing->count()) {
 				if (!empty($parent_id)) echo "data-parent-id='$parent_id' ";
 
 				// Add position value from the row or from the pivot table.
-				$position = isset($item->pivot)
-					? $item->pivot->getAttribute('position')
-					: $item->getAttribute('position');
-				if (is_numeric($position)) echo "data-position='{$position}' ";
+				if (isset($test_row['pivot']) && array_key_exists('position', $test_row['pivot'])) echo "data-position='{$item->pivot->position}' ";
+				else if (array_key_exists('position', $test_row)) echo "data-position='{$item->attributes['position']}' ";
 				?>
 			>
 
