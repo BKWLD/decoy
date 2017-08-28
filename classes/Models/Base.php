@@ -97,6 +97,14 @@ abstract class Base extends Eloquent
     protected $cloneable_file_attributes;
 
     /**
+     * If populated, these will ignore the override mutators in admin that are
+     * in hasGetMutator() and hasSetMutator()
+     *
+     * @var array
+     */
+    protected $preserve_mutators = [];
+
+    /**
      * Constructor registers events and configures mass assignment
      */
     public function __construct(array $attributes = [])
@@ -126,6 +134,8 @@ abstract class Base extends Eloquent
      */
     public function hasGetMutator($key)
     {
+        if (in_array($key, $this->preserve_mutators))
+            return parent::hasGetMutator($key);
         return Decoy::handling() && array_key_exists($key, $this->attributes)
             ? false : parent::hasGetMutator($key);
     }
@@ -138,6 +148,8 @@ abstract class Base extends Eloquent
      */
     public function hasSetMutator($key)
     {
+        if (in_array($key, $this->preserve_mutators))
+            return parent::hasSetMutator($key);
         return Decoy::handling() && array_key_exists($key, $this->attributes)
             ? false : parent::hasSetMutator($key);
     }
