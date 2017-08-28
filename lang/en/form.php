@@ -22,4 +22,9 @@ return [
     'date.placeholder' => 'MM/DD/YYYY',
     'date.format' => 'm/d/Y',
 
+    'image.crop_tooltip' => 'Click and drag on the image to set cropping bounds',
+    'image.focal_tooltip' => 'Click a point that should stay in view despite browser resizing',
+    'image.title_placeholder' => 'Enter image title',
+    'image.title_help' => 'Used for the img tag &quot;alt&quot; attribute',
+
 ];

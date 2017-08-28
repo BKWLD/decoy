@@ -173,14 +173,12 @@ class Image extends File
 			<div class="image-holder">
 			<div class="toolbar input-group">
 			<div class="btn-group btn-group-sm">
-			<div class="crop btn js-tooltip active" title="Click and drag on the
-				image to set cropping bounds">
+			<div class="crop btn js-tooltip active" title="' . __('decoy::form.image.crop_tooltip') . '">
 			<div class="glyphicon glyphicon-scissors"></div></div>';
 
         // Will add the focal point ui
         if ($this->add_focal_point) {
-            $html .= '<div class="focal btn js-tooltip" title="Click a point that
-				should stay in view despite browser resizing">
+            $html .= '<div class="focal btn js-tooltip" title="' . __('decoy::form.image.focal_tooltip') . '">
 				<div class="glyphicon glyphicon-screenshot"></div></div>';
 
             // Will store the focal point
@@ -194,8 +192,8 @@ class Image extends File
         // Add the title input
         $html .= Former::text($this->inputName('title'))
             ->class('title js-tooltip')
-            ->placeholder('Enter image title')
-            ->title('Used for the img tag &quot;alt&quot; attribute')
+            ->placeholder(__('decoy::form.image.title_placeholder'))
+            ->title(__('decoy::form.image.title_help'))
             ->render();
 
         // Add delete button
