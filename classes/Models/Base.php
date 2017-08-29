@@ -102,7 +102,7 @@ abstract class Base extends Eloquent
      *
      * @var array
      */
-    protected $preserve_mutators = [];
+    protected $admin_mutators = [];
 
     /**
      * Constructor registers events and configures mass assignment
@@ -129,29 +129,31 @@ abstract class Base extends Eloquent
     /**
      * Disable all mutatators while in Admin by returning that no mutators exist
      *
-     * @param  [type]  $key [description]
-     * @return boolean      [description]
+     * @param  string  $key
+     * @return boolean
      */
     public function hasGetMutator($key)
     {
-        if (in_array($key, $this->preserve_mutators))
+        if (!Decoy::handling()
+            || !array_key_exists($key, $this->attributes)
+            || in_array()$key, $this->admin_mutators)) {
             return parent::hasGetMutator($key);
-        return Decoy::handling() && array_key_exists($key, $this->attributes)
-            ? false : parent::hasGetMutator($key);
+        }
     }
 
     /**
     * Disable all mutatators while in Admin by returning that no mutators exist
     *
-    * @param  [type]  $key [description]
-    * @return boolean      [description]
+    * @param  string  $key
+    * @return boolean
      */
     public function hasSetMutator($key)
     {
-        if (in_array($key, $this->preserve_mutators))
+        if (!Decoy::handling()
+            || !array_key_exists($key, $this->attributes)
+            || in_array()$key, $this->admin_mutators)) {
             return parent::hasSetMutator($key);
-        return Decoy::handling() && array_key_exists($key, $this->attributes)
-            ? false : parent::hasSetMutator($key);
+        }
     }
 
     /**
