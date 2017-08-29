@@ -138,7 +138,6 @@ class Elements extends Collection
         if ($include_extra && !$this->has_extra) {
             $this->has_extra = true;
             $this->items = $this->mergeSources();
-
             return $this;
         }
 
@@ -150,7 +149,6 @@ class Elements extends Collection
         // If running locally, don't use or store the cache
         if (App::isLocal()) {
             $this->items = $this->mergeSources();
-
             return $this;
         }
 
@@ -162,6 +160,7 @@ class Elements extends Collection
             Cache::forever($this->cacheKey(), $this->items);
         }
 
+        // Allow chain
         return $this;
     }
 
