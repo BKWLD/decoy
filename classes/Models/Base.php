@@ -97,6 +97,14 @@ abstract class Base extends Eloquent
     protected $cloneable_file_attributes;
 
     /**
+     * If populated, these will ignore the override mutators in admin that are
+     * in hasGetMutator() and hasSetMutator()
+     *
+     * @var array
+     */
+    protected $admin_mutators = [];
+
+    /**
      * Constructor registers events and configures mass assignment
      */
     public function __construct(array $attributes = [])
@@ -119,27 +127,37 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * Disable all mutatators while in Admin by returning that no mutators exist
+     * Disable mutators unless the active request isn't for the admin, the key
+     * doesn't reference a true database-backed attribute, or the key was
+     * expressly whitelisted in the admin_mutators property.
      *
-     * @param  [type]  $key [description]
-     * @return boolean      [description]
+     * @param  string  $key
+     * @return mixed
      */
     public function hasGetMutator($key)
     {
-        return Decoy::handling() && array_key_exists($key, $this->attributes)
-            ? false : parent::hasGetMutator($key);
+        if (!Decoy::handling()
+            || !array_key_exists($key, $this->attributes)
+            || in_array($key, $this->admin_mutators)) {
+            return parent::hasGetMutator($key);
+        }
     }
 
     /**
-    * Disable all mutatators while in Admin by returning that no mutators exist
+    * Disable mutators unless the active request isn't for the admin, the key
+    * doesn't reference a true database-backed attribute, or the key was
+    * expressly whitelisted in the admin_mutators property.
     *
-    * @param  [type]  $key [description]
-    * @return boolean      [description]
+    * @param  string  $key
+    * @return mixed
      */
     public function hasSetMutator($key)
     {
-        return Decoy::handling() && array_key_exists($key, $this->attributes)
-            ? false : parent::hasSetMutator($key);
+        if (!Decoy::handling()
+            || !array_key_exists($key, $this->attributes)
+            || in_array($key, $this->admin_mutators)) {
+            return parent::hasSetMutator($key);
+        }
     }
 
     /**
