@@ -211,6 +211,20 @@ class Helpers
     }
 
     /**
+     * Check if the Element key exists
+     *
+     * @param  string $key
+     * @return boolean
+     */
+    public function hasEl($key)
+    {
+        return app('decoy.elements')
+            ->localize($this->locale())
+            ->hydrate()
+            ->has($key);
+    }
+
+    /**
      * Is Decoy handling the request?  Check if the current path is exactly "admin" or if
      * it contains admin/*
      *
