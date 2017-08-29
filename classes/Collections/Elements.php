@@ -2,15 +2,17 @@
 
 namespace Bkwld\Decoy\Collections;
 
+// Deps
 use App;
-use Cache;
 use Bkwld\Library\Utils;
-use Illuminate\Support\Str;
-use Bkwld\Decoy\Models\Element;
-use Symfony\Component\Yaml\Yaml;
-use Illuminate\Support\Collection;
 use Bkwld\Decoy\Exceptions\Exception;
+use Bkwld\Decoy\Models\Element;
+use Cache;
 use Illuminate\Database\Eloquent\Collection as ModelCollection;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Str;
+use Log;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Produces a store of all the site Elements
