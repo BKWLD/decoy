@@ -89,28 +89,25 @@ class Elements extends Collection
     {
         $this->hydrate();
 
-        // Build an element from the item in the collection or throw an
-        // exception if the key isn't valid
-        if (!$this->has($key)) {
-            if ($default) {
-                return $default;
-            } else {
-                if (App::isLocal()) {
-                    throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
-
-                // If running on a server, return an empty Element, whose ->toString()
-                // will return an empty string.
-                } else {
-                    \Log::error("Element key '{$key}' is not declared in elements.yaml.");
-
-                    return new $this->model();
-                }
-            }
-
-            // Add the key as an attribute
-        } else {
+        // Create an Element instance using the data for the key
+        if ($this->has($key)) {
             return new $this->model(array_merge($this->items[$key], ['key' => $key]));
         }
+
+        // If the key doesn't exist but a default was passed in, return it
+        if ($default) {
+            return $default;
+        }
+
+        // if the key doesn't exist, but running locally, throw an exception
+        if (App::isLocal()) {
+            throw new Exception("Element key '{$key}' is not declared in elements.yaml.");
+        }
+
+        // Otherwise, like if key doesn't exist and running on production,
+        // return an empty Element, whose ->toString() will return an empty string.
+        Log::error("Element key '{$key}' is not declared in elements.yaml.");
+        return new $this->model();
     }
 
     /**
