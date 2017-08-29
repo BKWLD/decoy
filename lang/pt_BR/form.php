@@ -22,4 +22,9 @@ return [
     'date.placeholder' => 'DD/MM/AAAA',
     'date.format' => 'd/m/Y',
 
+    'image.crop_tooltip' => 'Clique e arraste sobre a imagem para definir os limites do corte',
+    'image.focal_tooltip' => 'Clique em um ponto que deve permanecer visível independete das dimensões do navegador',
+    'image.title_placeholder' => 'Digite o título da imagem',
+    'image.title_help' => 'Usado para o atributo &quot;alt&quot; da tag img',
+
 ];
