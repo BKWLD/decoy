@@ -18,6 +18,7 @@ class Image extends Base
      * @var array
      */
     protected $visible = [
+        'icon',
         'xs', 'xs2x',
         's', 's2x',
         'm', 'm2x',
@@ -31,6 +32,7 @@ class Image extends Base
      * @var array
      */
     protected $appends = [
+        'icon',
         'xs', 'xs2x',
         's', 's2x',
         'm', 'm2x',
@@ -74,6 +76,7 @@ class Image extends Base
      * @var array
      */
     protected $sizes = [
+        'icon' => [64, 64],    // Icon size
         'xs' => [480, 768],    // Phone portrait
         's'  => [768, 1024],   // Tablet portrait
         'm'  => [1024, 768],   // Tablet landscape
@@ -381,6 +384,14 @@ class Image extends Base
      * 1366, which we take to be the 1x "desktop" resolution.  1366 is currently
      * the most popular desktop resolution.
      *
+     * @return string
+     */
+    public function getIconAttribute()
+    {
+        return $this->urlify('icon');
+    }
+
+    /**
      * @return string
      */
     public function getXsAttribute()
