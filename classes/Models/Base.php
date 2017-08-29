@@ -127,31 +127,35 @@ abstract class Base extends Eloquent
     }
 
     /**
-     * Disable all mutatators while in Admin by returning that no mutators exist
+     * Disable mutators unless the active request isn't for the admin, the key
+     * doesn't reference a true database-backed attribute, or the key was
+     * expressly whitelisted in the admin_mutators property.
      *
      * @param  string  $key
-     * @return boolean
+     * @return mixed
      */
     public function hasGetMutator($key)
     {
         if (!Decoy::handling()
             || !array_key_exists($key, $this->attributes)
-            || in_array()$key, $this->admin_mutators)) {
+            || in_array($key, $this->admin_mutators)) {
             return parent::hasGetMutator($key);
         }
     }
 
     /**
-    * Disable all mutatators while in Admin by returning that no mutators exist
+    * Disable mutators unless the active request isn't for the admin, the key
+    * doesn't reference a true database-backed attribute, or the key was
+    * expressly whitelisted in the admin_mutators property.
     *
     * @param  string  $key
-    * @return boolean
+    * @return mixed
      */
     public function hasSetMutator($key)
     {
         if (!Decoy::handling()
             || !array_key_exists($key, $this->attributes)
-            || in_array()$key, $this->admin_mutators)) {
+            || in_array($key, $this->admin_mutators)) {
             return parent::hasSetMutator($key);
         }
     }
