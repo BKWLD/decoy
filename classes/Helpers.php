@@ -211,6 +211,21 @@ class Helpers
     }
 
     /**
+     * Return a number of Element values at once in an associative array
+     *
+     * @param  string $prefix Any leading part of a key
+     * @param  array  $crops  Assoc array with Element partial keys for ITS keys
+     *                        and values as an arary of crop()-style arguments
+     * @return array
+     */
+    public function els($prefix, $crops = [])
+    {
+        return app('decoy.elements')
+            ->localize($this->locale())
+            ->getMany($prefix, $crops);
+    }
+
+    /**
      * Check if the Element key exists
      *
      * @param  string $key

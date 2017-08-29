@@ -82,7 +82,7 @@ class Elements extends Collection
     /**
      * Get an element given it's key
      *
-     * @param  string                     $key
+     * @param  string  $key
      * @return Bkwld\Decoy\Models\Element
      */
     public function get($key, $default = null)
@@ -108,6 +108,62 @@ class Elements extends Collection
         // return an empty Element, whose ->toString() will return an empty string.
         Log::error("Element key '{$key}' is not declared in elements.yaml.");
         return new $this->model();
+    }
+
+    /**
+     * Get a number of elements at once by passing in a first or second level
+     * depth key.  Like just `'homepage.marquee'`
+     *
+     * @param  string $prefix Any leading part of a key
+     * @param  array  $crops  Assoc array with Element partial keys for ITS keys
+     *                        and values as an arary of crop()-style arguments
+     * @return array
+     */
+    public function getMany($prefix, $crops = [])
+    {
+        // Get all of the elements matching the prefix with dot-notated keys
+        $dotted = $this
+            ->hydrate()
+            ->filter(function($val, $key) use ($prefix) {
+                return starts_with($key, $prefix);
+
+            // Loop through all matching elements
+            })->map(function($val, $key) use ($prefix, $crops) {
+
+                // Resolve the key using the Element helper so that we get an
+                // actual Element model instance.
+                $el = $this->get($key);
+                $value = $el->value();
+
+                // Check if the element key is in the $crops config.  If so,
+                // return the croopped image instructions.
+                $crop_key = substr($key, strlen($prefix) + 1);
+                if (isset($crops[$crop_key])) {
+
+                    // Handle models returned from BelongsTo fields
+                    if (is_a($value, Base::class)) {
+                        $func = [$value, 'withDefaultImage'];
+                        return call_user_func_array($func, $crops[$crop_key]);
+                    }
+
+                    // Otherwise, use the crop helper on the Element model
+                    return call_user_func_array([$el, 'crop'], $crops[$crop_key]);
+                }
+
+                // If no crops were defined, return the value
+                return (string) $value;
+
+            // Convert the collection to an array
+            })->all();
+
+        // Make a multidimensionsl array from the dots, stripping the prefix
+        // from the  keys.  Then return it.
+        $multi = [];
+        $len = strlen($prefix);
+        foreach($dotted as $key => $val) {
+            array_set($multi, trim(substr($key, $len), '.'), $val);
+        }
+        return $multi;
     }
 
     /**
