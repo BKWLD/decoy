@@ -7,7 +7,7 @@ return [
      *
      * @var string
      */
-    'name' => config('site.name') ? config('site.name') : 'Admin',
+    'name' => config('app.name', 'Admin'),
 
     /**
      * This generates the nav sidebar.  It is key-value pairs.  The key is always the
