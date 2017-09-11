@@ -60,13 +60,12 @@ class Command
                 continue;
             }
 
-            // Get properties of the command
+            // Build an instance of a command using the service container
             $path = $dir.'/'.$file;
             $class = 'App\Console\Commands\\'.basename($path, '.php');
+            $command = app($class);
 
             // Validate command
-            require_once($path);
-            $command = new $class;
             if (!is_a($command, 'Illuminate\Console\Command')) {
                 continue;
             }
