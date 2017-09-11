@@ -167,6 +167,7 @@ return [
         /*
          * Package Service Providers...
          */
+        Bkwld\Decoy\ServiceProvider::class,
 
         /*
          * Application Service Providers...
@@ -226,6 +227,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        'Decoy' => Bkwld\Decoy\Facades\Decoy::class,
+        'DecoyURL' => Bkwld\Decoy\Facades\DecoyURL::class,
     ],
 
 ];

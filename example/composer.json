@@ -49,10 +49,12 @@
             "@php artisan package:discover"
         ],
         "post-install-cmd": [
-            "rm -rf vendor/bkwld/decoy && ln -s ../../../ vendor/bkwld/decoy"
+            "rm -rf vendor/bkwld/decoy && ln -s ../../../ vendor/bkwld/decoy",
+            "composer dump-autoload"
         ],
         "post-update-cmd": [
-            "rm -rf vendor/bkwld/decoy && ln -s ../../../ vendor/bkwld/decoy"
+            "rm -rf vendor/bkwld/decoy && ln -s ../../../ vendor/bkwld/decoy",
+            "composer dump-autoload"
         ]
     },
     "config": {
