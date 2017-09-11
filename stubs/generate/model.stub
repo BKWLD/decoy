@@ -15,12 +15,12 @@ class {{model}} extends Base
      * @var array
      */
     // public static $rules = [
-    // 	'title' => 'required',
-    // 	'slug' => 'alpha_dash|unique:articles',
-    // 	'images.default' => 'image|required',
-    //	'images.listing' => 'image',
-    // 	'date' => 'required',
-    // 	'url' => 'url',
+    //    'title' => 'required',
+    //    'slug' => 'alpha_dash|unique:articles',
+    //    'images.default' => 'image|required',
+    //    'images.listing' => 'image',
+    //    'date' => 'required',
+    //    'url' => 'url',
     // ];
 
     /**
