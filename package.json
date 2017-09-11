@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node_modules/.bin/webpack && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
-    "build": "npm run dev && node_modules/.bin/webpack -p && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
-    "version": "npm run build && git add -A",
+    "dev": "webpack && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
+    "build": "yarn dev && webpack -p && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
+    "version": "yarn build && git add -A",
     "postversion": "git push --follow-tags"
   },
   "repository": {
@@ -49,6 +49,7 @@
     "autoprefixer": "^6.2.0",
     "coffee-loader": "^0",
     "coffee-script": "^1.10.0",
+    "coffeescript": "^1.12.7",
     "css-loader": "^0",
     "exports-loader": "^0",
     "expose-loader": "^0",
