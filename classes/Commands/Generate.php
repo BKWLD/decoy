@@ -14,7 +14,8 @@ class Generate extends Command
      *
      * @var string
      */
-    protected $name = 'decoy:generate';
+    protected $signature = 'decoy:generate
+        {model : The class name of a model}';
 
     /**
      * The console command description.
@@ -24,23 +25,11 @@ class Generate extends Command
     protected $description = 'Generate controller/model/view given a model class name';
 
     /**
-     * The options
-     *
-     * @return array
-     */
-    protected function getArguments()
-    {
-        return [
-            ['model', InputArgument::REQUIRED, 'The class name of the model you are generating CRUD around'],
-        ];
-    }
-
-    /**
      * Execute the console command.
      *
      * @return void
      */
-    public function fire()
+    public function handle()
     {
         // Figure out the stub directory
         $this->stubs = __DIR__.'/../../stubs/generate';
