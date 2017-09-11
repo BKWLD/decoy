@@ -8,9 +8,9 @@
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node_modules/.bin/webpack && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
-    "build": "npm run dev && node_modules/.bin/webpack -p && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
-    "version": "npm run build && git add -A",
+    "dev": "webpack && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
+    "build": "yarn dev && webpack -p && /bin/cp -rf ./dist/* ./example/public/assets/decoy",
+    "version": "yarn build && git add -A",
     "postversion": "git push --follow-tags"
   },
   "repository": {
