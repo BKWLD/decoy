@@ -40,16 +40,16 @@
 		@include box-shadow(inset 0 1px 1px rgba(0,0,0,.075));
 
 		// Styling
-		font-family: inherit;
+		font-family: inherit !important;
 		line-height: inherit;
 		background: none;
 
 		// Clear the decoy link styling
 		a { border: none; }
-		
+
 		// Clear the Lato bold height hack
 		b, strong { font-size: inherit; }
-		
+
 		// Use the body font for headers
 		h1, h2, h3, h4, h5, h6 {
 			font-family: inherit;
@@ -66,7 +66,7 @@
 		background: $code-editor-bkgd;
 		color: $code-editor-text;
 	}
-}	
+}
 
 // Theme the hovers in the toolbar.  Need to increase specificity to counter
 // an important in their styles
@@ -114,13 +114,13 @@ body .redactor-dropdown.redactor-dropdown-box-fontcolor a:hover {
 		}
 
 		// Fix the button colors
-		.redactor-modal-action-btn { 
+		.redactor-modal-action-btn {
 			@extend .btn-success;
 		}
-		.redactor-modal-delete-btn { 
+		.redactor-modal-delete-btn {
 			@extend .btn-danger;
 		}
-		.redactor-modal-close-btn { 
+		.redactor-modal-close-btn {
 			@extend .btn-default;
 		}
 	}

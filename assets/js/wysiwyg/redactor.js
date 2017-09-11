@@ -68,7 +68,7 @@ define(function(require) {
 	/**
 	 * Initialize wysiwyg editors
 	 *
-	 * @string {selector} A jquery style selector string
+	 * @param {string} selector jquery style selector string
 	 * @return {jQuery}
 	 */
 	function init(selector) {
