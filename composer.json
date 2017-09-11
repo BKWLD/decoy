@@ -63,10 +63,10 @@
             "Bkwld\\Decoy\\": "classes/"
         }
     },
-        "autoload-dev": {
-                "psr-4": {
-                        "App\\": "example/app/",
-                        "Tests\\": "tests/"
-                }
-        }
+    "autoload-dev": {
+            "psr-4": {
+                    "App\\": "example/app/",
+                    "Tests\\": "tests/"
+            }
+    }
 }
