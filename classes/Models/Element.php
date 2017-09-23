@@ -188,7 +188,6 @@ class Element extends Base
      */
     public function img()
     {
-
         // Check for an existing Image relation
         if (($image = $this->parentImg($this->inputName()))
             && $image->exists) {
@@ -216,7 +215,6 @@ class Element extends Base
      */
     protected function getReplacementImage(Image $image)
     {
-
         // Check that the image is in the elements dir, which means it's
         // a default image
         if (!strpos($image->file, '/elements/')) {
@@ -225,12 +223,8 @@ class Element extends Base
 
         // Get the current file value form the YAML.  Need to check for the
         // shorthand with the type suffix as well.
-        $yaml = app('decoy.elements')->getConfig();
-        $replacement = array_get($yaml, $this->key)
-            ?: array_get($yaml, $this->key.',image');
-
-        // Support longhand syntax
-        if (is_array($replacement)) $replacement = $replacement['value'];
+        $yaml = app('decoy.elements')->assocConfig();
+        $replacement = $yaml[$this->key]['value'];
 
         // Check if the filenames are the same
         if (pathinfo($image->file, PATHINFO_BASENAME)
