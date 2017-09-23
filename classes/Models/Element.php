@@ -249,7 +249,6 @@ class Element extends Base
      */
     public function defaultImage()
     {
-
         // Return an empty Image object if no default value
         if (empty($this->value)) {
             return new Image;
@@ -257,7 +256,8 @@ class Element extends Base
 
         // All src images must live in the /img (relative) directory
         if (!Str::is('/img/*', $this->value)) {
-            throw new Exception('All Element images must be stored in public/img');
+            $msg = 'Element images must be stored in public/img: '.$this->value;
+            throw new Exception($msg);
         }
 
         // Check if the image already exists in the uploads directory
