@@ -188,7 +188,6 @@ class Element extends Base
      */
     public function img()
     {
-
         // Check for an existing Image relation
         if (($image = $this->parentImg($this->inputName()))
             && $image->exists) {
@@ -216,7 +215,6 @@ class Element extends Base
      */
     protected function getReplacementImage(Image $image)
     {
-
         // Check that the image is in the elements dir, which means it's
         // a default image
         if (!strpos($image->file, '/elements/')) {
@@ -225,12 +223,8 @@ class Element extends Base
 
         // Get the current file value form the YAML.  Need to check for the
         // shorthand with the type suffix as well.
-        $yaml = app('decoy.elements')->getConfig();
-        $replacement = array_get($yaml, $this->key)
-            ?: array_get($yaml, $this->key.',image');
-
-        // Support longhand syntax
-        if (is_array($replacement)) $replacement = $replacement['value'];
+        $yaml = app('decoy.elements')->assocConfig();
+        $replacement = $yaml[$this->key]['value'];
 
         // Check if the filenames are the same
         if (pathinfo($image->file, PATHINFO_BASENAME)
@@ -255,7 +249,6 @@ class Element extends Base
      */
     public function defaultImage()
     {
-
         // Return an empty Image object if no default value
         if (empty($this->value)) {
             return new Image;
@@ -263,7 +256,8 @@ class Element extends Base
 
         // All src images must live in the /img (relative) directory
         if (!Str::is('/img/*', $this->value)) {
-            throw new Exception('All Element images must be stored in public/img');
+            $msg = 'Element images must be stored in public/img: '.$this->value;
+            throw new Exception($msg);
         }
 
         // Check if the image already exists in the uploads directory
