@@ -480,7 +480,7 @@ define(function (require) {
 				model = this.collection.get(modelId);
 
 			// Set the visibility status
-			model.set('public', model.get('public') ? false : true);
+			model.set('public', model.get('public') ? 0 : 1);
 			model.save();
 
 			// Update the UI

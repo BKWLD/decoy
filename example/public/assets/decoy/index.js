@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 9.11.17 👍 */
+/*! 📝 Bukwild 💾 9.28.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -29629,7 +29629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					model = this.collection.get(modelId);
 
 				// Set the visibility status
-				model.set('public', model.get('public') ? false : true);
+				model.set('public', model.get('public') ? 0 : 1);
 				model.save();
 
 				// Update the UI
