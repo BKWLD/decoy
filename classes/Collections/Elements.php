@@ -295,7 +295,7 @@ class Elements extends Collection
      * @param  boolean $include_extra Include attibutes that are only needed by Admin UIs
      * @return array
      */
-    protected function assocConfig($include_extra = false)
+    public function assocConfig($include_extra = false)
     {
         // Load the config data if it isn't already
         if (!$this->config) {
