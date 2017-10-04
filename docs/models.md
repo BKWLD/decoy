@@ -168,10 +168,10 @@ I am using this term to describe a model that relates back to it self; like a pr
 
 ```php?start_inline=1
 public function projects() {
-	return $this->belongsToMany('Project', 'project_projects', 'project_id', 'related_project_id');
+	return $this->belongsToMany('App\Project', 'project_projects', 'project_id', 'related_project_id');
 }
 public function projectsAsChild() {
-	return $this->belongsToMany('Project', 'project_projects', 'related_project_id', 'project_id');
+	return $this->belongsToMany('App\Project', 'project_projects', 'related_project_id', 'project_id');
 }
 ```
 
@@ -187,11 +187,11 @@ Example:
 
 ```php?start_inline=1
 public function services() {
-	return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')
+	return $this->morphedByMany('App\Service', 'serviceable', null, 'serviceable_id', 'service_id')
     ->withTimestamps();
 }
 public function servicesAsChild() {
-  return $this->morphedByMany('Service', 'serviceable')-
+  return $this->morphedByMany('App\Service', 'serviceable')-
     >withTimestamps();
 }
 ```
