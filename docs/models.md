@@ -125,7 +125,7 @@ Decoy implements [Cloner](https://github.com/BKWLD/cloner) to allow admins to du
 Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.  Then, add the following code to your edit view to add a listing interface to the sidebar of the page.
 
 ```php?start_inline=1
-echo $sidebar->add(Former::listing('App\Image'));
+$sidebar->add(Former::listing('App\Image'));
 ```
 
 The listing interface will allow you to attach Images to your Post and will look similar to this:
