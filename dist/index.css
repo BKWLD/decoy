@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 9.11.17 👍 */
+/*! 📝 Bukwild 💾 10.10.17 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -7451,8 +7451,7 @@ fieldset, .fieldset {
         fieldset .legend > .pull-right, .fieldset .legend > .pull-right {
           margin-right: -3px; } }
   fieldset.standard-list, .fieldset.standard-list {
-    padding: 0;
-    overflow: hidden; }
+    padding: 0; }
     fieldset.standard-list .legend, .fieldset.standard-list .legend {
       margin: 0; }
     fieldset.standard-list .listing, .fieldset.standard-list .listing {
@@ -7467,9 +7466,11 @@ fieldset, .fieldset {
     fieldset.standard-list .legend > a:hover, fieldset.standard-list .legend > a:focus, .fieldset.standard-list .legend > a:hover, .fieldset.standard-list .legend > a:focus {
       color: #d08a46;
       border-bottom-color: #d08a46; }
-    fieldset.standard-list .table, .fieldset.standard-list .table {
-      width: calc(100% + 1px);
-      max-width: none; }
+    fieldset.standard-list .listing-wrapper, .fieldset.standard-list .listing-wrapper {
+      overflow: hidden; }
+      fieldset.standard-list .listing-wrapper .table, .fieldset.standard-list .listing-wrapper .table {
+        width: calc(100% + 1px);
+        max-width: none; }
   fieldset.disabled, .fieldset.disabled {
     opacity: .7; }
     fieldset.disabled .legend, .fieldset.disabled .legend {
