@@ -125,7 +125,7 @@ Decoy implements [Cloner](https://github.com/BKWLD/cloner) to allow admins to du
 Decoy expects you to name your relationships after the model/table. So a post with many images should have an "images" relationship defined.  Then, add the following code to your edit view to add a listing interface to the sidebar of the page.
 
 ```php?start_inline=1
-echo $sidebar->add(Former::listing('App\Image'));
+$sidebar->add(Former::listing('App\Image'));
 ```
 
 The listing interface will allow you to attach Images to your Post and will look similar to this:
@@ -168,10 +168,10 @@ I am using this term to describe a model that relates back to it self; like a pr
 
 ```php?start_inline=1
 public function projects() {
-	return $this->belongsToMany('Project', 'project_projects', 'project_id', 'related_project_id');
+	return $this->belongsToMany('App\Project', 'project_projects', 'project_id', 'related_project_id');
 }
 public function projectsAsChild() {
-	return $this->belongsToMany('Project', 'project_projects', 'related_project_id', 'project_id');
+	return $this->belongsToMany('App\Project', 'project_projects', 'related_project_id', 'project_id');
 }
 ```
 
@@ -187,11 +187,11 @@ Example:
 
 ```php?start_inline=1
 public function services() {
-	return $this->morphedByMany('Service', 'serviceable', null, 'serviceable_id', 'service_id')
+	return $this->morphedByMany('App\Service', 'serviceable', null, 'serviceable_id', 'service_id')
     ->withTimestamps();
 }
 public function servicesAsChild() {
-  return $this->morphedByMany('Service', 'serviceable')-
+  return $this->morphedByMany('App\Service', 'serviceable')-
     >withTimestamps();
 }
 ```
