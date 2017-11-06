@@ -38,7 +38,8 @@
         "illuminate/console": "^5.0",
         "symfony/yaml": "~2.5 || ^3.0",
         "zencoder/zencoder-php": "~2.2",
-        "jenssegers/agent": "~2.1"
+        "jenssegers/agent": "~2.1",
+        "league/csv": "^9.1"
     },
     "require-dev": {
         "laravel/framework": "5.4.*|5.5.*",
