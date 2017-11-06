@@ -8,6 +8,7 @@ return [
     'bulk_actions.cancel_delete' => 'Cancelar',
 
     'full_header.total' => 'Total',
+    'full_header.download' => 'Baixar CSV',
     'full_header.reset' => 'Limpar filtros',
 
     'many_to_many.add' => 'Adicionar',
