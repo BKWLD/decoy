@@ -9,14 +9,15 @@
 	-# Potentially contain other buttons
 	.pull-right.btn-toolbar
 
-		-# Download
-		- $url = DecoyURL::relative('csv', null, $controller)
-		%a.btn.btn-sm.outline.download.js-tooltip(href=$url
-			title="#{__('decoy::list.full_header.download')}")
-			.glyphicon.glyphicon-save
+		-# Download CSV
+		- if ($is_exportable)
+			- $url = DecoyURL::relative('csv', null, $controller)
+			%a.btn.btn-sm.outline.download.js-tooltip(href=$url
+				title="#{__('decoy::list.full_header.download')}")
+				.glyphicon.glyphicon-save
 
 		-# Search togglers
-		-if (!empty($search))
+		- if (!empty($search))
 			.btn-group.search-controls.closed
 
 				-# Search toggle
@@ -28,4 +29,4 @@
 					.glyphicon.glyphicon-ban-circle
 
 -# Search UI
-!=View::make('decoy::shared.list._search', $__data)->render()
+!= View::make('decoy::shared.list._search', $__data)->render()

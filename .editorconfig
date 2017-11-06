@@ -9,7 +9,7 @@ indent_size = 4
 charset = utf-8
 end_of_line = lf
 
-[*.haml,*.haml.php]
+[*.haml]
 indent_style = tab
 indent_size = 2
 

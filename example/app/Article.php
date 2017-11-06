@@ -50,6 +50,13 @@ class Article extends Base
     ];
 
     /**
+     * Should the model be exportable
+     *
+     * @var boolean
+     */
+    public $exportable = true;
+
+    /**
      * Tags relation
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation

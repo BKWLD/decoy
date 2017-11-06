@@ -329,6 +329,10 @@ class Listing extends Field
         // Get the listing of items
         $items = $this->getItems();
 
+        // Get an instance of a model to call non-static methods on
+        $model_class = $this->controller->model();
+        $model_instance = new $model_class;
+
         // Create all the vars the standard list expects
         $vars = [
             'controller'        => $this->controller_name,
@@ -345,7 +349,8 @@ class Listing extends Field
             'count'             => is_a($items, LengthAwarePaginator::class) ?
                 $items->total() : $items->count(),
             'paginator_from'    => (request('page', 1)-1) * $this->perPage(),
-            'with_trashed'      => $this->controller->withTrashed()
+            'with_trashed'      => $this->controller->withTrashed(),
+            'is_exportable'     => $model_instance->isExportable(),
         ];
 
         // If the listing has a parent, add relationship vars

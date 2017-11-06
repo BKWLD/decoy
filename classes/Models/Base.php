@@ -32,7 +32,8 @@ abstract class Base extends Eloquent
         Sluggable,
         SluggableScopeHelpers,
         SupportsUploads,
-        Traits\CanSerializeTransform
+        Traits\CanSerializeTransform,
+        Traits\Exportable
     ;
 
     /**
@@ -95,6 +96,13 @@ abstract class Base extends Eloquent
      * @var array
      */
     protected $cloneable_file_attributes;
+
+    /**
+     * Should the model be exportable as CSV?
+     *
+     * @var boolean
+     */
+    public $exportable = false;
 
     /**
      * If populated, these will ignore the override mutators in admin that are
