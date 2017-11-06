@@ -59,6 +59,11 @@
 		padding-left: $form-group-margin;
 	}
 
+	// Vertical align the actions contents relative to each other
+	.actions > * {
+		vertical-align: middle;
+	}
+
 	// Style the header
 	thead {
 		background: lighten($theme-secondary-color, 10%);

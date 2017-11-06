@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 10.10.17 👍 */
+/*! 📝 Bukwild 💾 11.6.17 👍 */
 @import url(//fonts.googleapis.com/css?family=Cabin:400,700|Roboto+Slab:100,300,400);@charset "UTF-8";
 /**
  * Bootstrap variables
@@ -7233,6 +7233,8 @@ body.index .standard-list .legend > .pull-right.btn-toolbar {
     overflow: visible; }
   .table th.hide + th, .table td.hide + td {
     padding-left: 15px; }
+  .table .actions > * {
+    vertical-align: middle; }
   .table thead {
     background: #fff1e3; }
     .table thead th {
