@@ -25,7 +25,8 @@ class Wildcard
      *
      * @var array
      */
-    private $actions = ['create', 'edit', 'destroy', 'attach', 'remove', 'autocomplete', 'duplicate'];
+    private $actions = ['create', 'edit', 'destroy', 'attach', 'remove',
+        'autocomplete', 'duplicate', 'csv'];
 
     /**
      * Constructor
@@ -75,7 +76,6 @@ class Wildcard
 
         // Execute the request
         $params = $id ? [$id] : [];
-
         return $controller->callAction($action, $params);
     }
 

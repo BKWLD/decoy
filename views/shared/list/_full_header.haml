@@ -12,8 +12,10 @@
 		-# Download CSV
 		- if ($is_exportable)
 			- $url = DecoyURL::relative('csv', null, $controller)
-			%a.btn.btn-sm.outline.download.js-tooltip(href=$url
-				title="#{__('decoy::list.full_header.download')}")
+			- $disabled = !$listing->count()
+			%a.btn.btn-sm.outline.download.js-tooltip(href=$disabled?null:$url
+				title="#{__('decoy::list.full_header.download')}"
+				disabled=$disabled)
 				.glyphicon.glyphicon-save
 
 		-# Search togglers

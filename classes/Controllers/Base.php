@@ -34,6 +34,7 @@ use Bkwld\Library\Laravel\Validator as BkwldLibraryValidator;
  */
 class Base extends Controller
 {
+    use Traits\Exportable;
 
     //---------------------------------------------------------------------------
     // Default settings
@@ -441,20 +442,8 @@ class Base extends Controller
         // Look for overriden views
         $this->overrideViews();
 
-        // Open up the query. We can assume that Model has an ordered() function
-        // because it's defined on Decoy's Base_Model
-        $query = $this->parent ?
-            $this->parentRelation()->ordered() :
-            call_user_func([$this->model, 'ordered']);
-
-        // Allow trashed records
-        if ($this->withTrashed()) {
-            $query->withTrashed();
-        }
-
-        // Run the query
-        $search = new Search();
-        $results = $search->apply($query, $this->search())->paginate($this->perPage());
+        // Get models to show
+        $results = $this->makeIndexQuery()->paginate($this->perPage());
 
         // Render the view using the `listing` builder
         $listing = Listing::createFromController($this, $results);
@@ -643,6 +632,10 @@ class Base extends Controller
             ->with('success', $this->successMessage($item, 'deleted'));
         }
     }
+
+    //---------------------------------------------------------------------------
+    // Special actions
+    //---------------------------------------------------------------------------
 
     /**
      * Duplicate a record
@@ -834,6 +827,30 @@ class Base extends Controller
     //---------------------------------------------------------------------------
     // Utility methods
     //---------------------------------------------------------------------------
+
+    /**
+     * Make the index query, including applying a search
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function makeIndexQuery()
+    {
+        // Open up the query. We can assume that Model has an ordered() function
+        // because it's defined on Decoy's Base_Model
+        $query = $this->parent ?
+            $this->parentRelation()->ordered() :
+            call_user_func([$this->model, 'ordered']);
+
+        // Allow trashed records
+        if ($this->withTrashed()) {
+            $query->withTrashed();
+        }
+
+        // Apply search
+        $search = new Search();
+        $query = $search->apply($query, $this->search());
+        return $query;
+    }
 
     /**
      * Helper for getting a model instance by ID

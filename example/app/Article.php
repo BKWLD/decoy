@@ -101,6 +101,16 @@ class Article extends Base
     }
 
     /**
+     * No-op, used to configure the query used to fetch exportable records
+     *
+     * @param \Illuminate\Database\Eloquent\Builder $query
+     * @return void
+     */
+    public function scopeExporting($query) {
+        $query->with('slides');
+    }
+
+    /**
      * Return the URI to instances of this model
      *
      * @return string A URI that the browser can resolve
