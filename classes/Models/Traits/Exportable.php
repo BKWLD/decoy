@@ -36,17 +36,31 @@ trait Exportable
      */
     public function forExport()
     {
-        // Make a clone because converting to array directly was failing
-        $clone = tap(new static, function ($instance) {
+        return $this->mapExportAttributes($this->cloneForExport());
+    }
+
+    /**
+     * Clone this model for export because converting self to an array directly
+     * was causing errors.  This code is based on the Laravel replicate()
+     *
+     * @return $this
+     */
+    protected function cloneForExport()
+    {
+        return tap(new static, function ($instance) {
             $instance->setRawAttributes($this->getAttributes());
             $instance->setRelations($this->relations);
         });
+    }
 
-        // Convert clone to array
-        $attributes = $clone->toArray();
-
-        // Massage the values
-        return collect($attributes)->map(function($value, $key) {
+    /**
+     * Massage attribute values. The CSV needs a flat array.
+     *
+     * @return array
+     */
+    protected function mapExportAttributes($attributes)
+    {
+        return collect($attributes->toArray())->map(function($value, $key) {
             return $this->mapExportAttribute($value, $key);
         })->toArray();
     }
