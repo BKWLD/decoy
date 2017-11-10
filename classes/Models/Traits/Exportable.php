@@ -111,7 +111,7 @@ trait Exportable
 
                 // id must be lowercase for opening in excel
                 // https://annalear.ca/2010/06/10/why-excel-thinks-your-csv-is-a-sylk/
-                case 'id': return strtolower($key);
+                case 'id': return $key;
 
                 // Make common acronyms upper case
                 case 'cta':
