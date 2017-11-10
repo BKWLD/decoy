@@ -108,7 +108,13 @@ trait Exportable
         $headers = array_keys($this->forExport());
         return array_map(function($key) {
             switch($key) {
-                case 'id':
+
+                // id must be lowercase for opening in excel
+                // https://annalear.ca/2010/06/10/why-excel-thinks-your-csv-is-a-sylk/
+                case 'id': return strtolower($key);
+
+                // Make common acronyms upper case
+                case 'cta':
                 case 'url': return strtoupper($key);
                 default: return TextUtils::titleFromKey($key);
             }

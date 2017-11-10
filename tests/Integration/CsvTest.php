@@ -47,11 +47,12 @@ class CsvTest extends TestCase
         $row = $csv->fetchOne(0);
 
         // Check that the header contains expected fields
-        $this->assertEquals('ID', $headers[0]);
+        $this->assertEquals('id', $headers[0]);
+        $this->assertEquals('Category', $headers[1]);
         $this->assertContains('Slides', $headers);
 
         // Check that scalar values were set
-        $this->assertEquals($article->id, $row['ID']);
+        $this->assertEquals($article->id, $row['id']);
 
         // Check that random relation becomes id
         $this->assertEquals($article->slides->first()->id, $row['Slides']);
