@@ -13,8 +13,10 @@ end_of_line = lf
 indent_style = tab
 indent_size = 2
 
-[*.js,.coffee]
+[*.js]
 indent_style = tab
 indent_size = 2
-charset = utf-8
-end_of_line = lf
+
+[*.coffee]
+indent_style = tab
+indent_size = 2
