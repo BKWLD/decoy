@@ -4,7 +4,7 @@
 	-# Stats
 	%span.stat
 		!= __('decoy::list.full_header.total')
-		%span.badge=$count
+		%span.badge= number_format($count)
 
 	-# Potentially contain other buttons
 	.pull-right.btn-toolbar
