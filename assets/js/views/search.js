@@ -132,12 +132,12 @@ define(function (require) {
 							'<option value="<">'+__('search.date_field.is_before')+'</option>'+
 							'<option value="=">'+__('search.date_field.is_on')+'</option>'+
 						'</select>').add($(''+
-						'<div class="input-group date-field date">'+
+						'<div class="input input-group date-field date">'+
 							'<input class="date input-field form-control" maxlength="10" placeholder="' + __('date.placeholder') + '" type="text">'+
 							'<span class="input-group-btn"><button class="btn btn-default" type="button"><span class="glyphicon glyphicon-calendar"></button></span></span>'+
 						'</div>').datepicker({
 							todayHighlight: true,
-                        	format: __('date.format')
+              format: __('date.format')
 						}));
 
 				// Number selector
