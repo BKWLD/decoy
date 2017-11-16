@@ -81,6 +81,13 @@ The search property takes an array like the following example:
 
   // Date input field
   'created_at' => 'date',
+  
+  // Visibility select menu
+  'public' => [
+    'label' => 'visibility',
+    'type' => 'select',
+    'options' => [ 'private', 'public' ],
+  ],
 ];
 ```
 
