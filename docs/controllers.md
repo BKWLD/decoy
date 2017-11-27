@@ -42,45 +42,45 @@ The search property takes an array like the following example:
 ```php?start_inline=1
 [
 
-  // 'title' column assumed to be a text type
-  'title',
+    // 'title' column assumed to be a text type
+    'title',
 
-  // Label auto generated from field name
-  'description' => 'text',
+    // Label auto generated from field name
+    'description' => 'text',
 
-  // Most explicit way to define a text field
-  'body' => [
-    'type' => 'text',
-    'label' => 'Body',
-  ]
+    // Most explicit way to define a text field
+    'body' => [
+        'type' => 'text',
+        'label' => 'Body',
+    ]
 
-  // Creates a pulldown menu
-  'type' => [
-    'type' => 'select',
-    'options' => [
-      'photo' => 'Photo',
-      'video' => 'Video',
+    // Creates a pulldown menu
+    'type' => [
+        'type' => 'select',
+        'options' => [
+            'photo' => 'Photo',
+            'video' => 'Video',
+        ],
     ],
-  ],
 
-  // Creates a pulldown using static array on Post model
-  'category' => [
-    'type' => 'select',
-    'options' => 'Post::$categories'
-  ],
+    // Creates a pulldown using static array on Post model
+    'category' => [
+        'type' => 'select',
+        'options' => 'Post::$categories'
+    ],
 
-  // Numeric input field
-  'like_count' => [
-    'type' => 'number',
-    'label' => 'Like total',
+    // Numeric input field
+    'like_count' => [
+        'type' => 'number',
+        'label' => 'Like total',
 
-    // Call the static method `likeCountSearch`() on the `Admin\SomeController`
-    // class to override the query for the like_count field
-    'query' => 'Admin\SomeController::likeCountSearch'
-  ],
+        // Call the static method `likeCountSearch`() on the `Admin\SomeController`
+        // class to override the query for the like_count field
+        'query' => 'Admin\SomeController::likeCountSearch'
+    ],
 
-  // Date input field
-  'created_at' => 'date',
+    // Date input field
+    'created_at' => 'date',
 ];
 ```
 
@@ -91,49 +91,49 @@ Several of these properties have accessor functions that can be overrode in your
 use Bkwld\Decoy\Controllers\Base;
 class Articles extends Base {
 
-  public function search() {
-    return [
+    public function search() {
+        return [
 
-      // Load configuration data from Laravel config()
-      'affiliation' => [
-        'type' => 'select',
-        'options' => config('settings.affiliation'),
-      ],
+            // Load configuration data from Laravel config()
+            'affiliation' => [
+                'type' => 'select',
+                'options' => config('settings.affiliation'),
+            ],
 
-      // Support a database "SET" type column in searches
-      'type' => [
-        'type' => 'select',
-        'options' => 'Article::$types',
+            // Support a database "SET" type column in searches
+            'type' => [
+                'type' => 'select',
+                'options' => 'Article::$types',
 
-        // Any search type supports the `query` parameter for change how the
-        // field input is applied to the search query
-        'query' => function($query, $condition, $input) {
-          $type = DB::connection()->getPdo()->quote($type);
-          $query->whereRaw('FIND_IN_SET('.$type.', articles.type)');
-        },
-      ],
+                // Any search type supports the `query` parameter for change how the
+                // field input is applied to the search query
+                'query' => function($query, $condition, $input) {
+                    $type = DB::connection()->getPdo()->quote($type);
+                    $query->whereRaw('FIND_IN_SET('.$type.', articles.type)');
+                },
+            ],
 
-      // Make a toggle for soft deleted columns
-      'status' => [
-        'type' => 'select',
-        'options' => [
-          'active' => 'active',
-          'inactive' => 'inactive',
-        ],
-        'query' => function($query, $condition, $input) {
-          if ($input == 'active') {
-            $query->whereNull('deleted_at');
-          } else if ($input == 'inactive') {
-            $query->whereNotNull('deleted_at');
-          }
-        },
-      ],
-    ];
-  }
+            // Make a toggle for soft deleted columns
+            'status' => [
+                'type' => 'select',
+                'options' => [
+                    'active' => 'active',
+                    'inactive' => 'inactive',
+                ],
+                'query' => function($query, $condition, $input) {
+                    if ($input == 'active') {
+                        $query->whereNull('deleted_at');
+                    } else if ($input == 'inactive') {
+                        $query->whereNotNull('deleted_at');
+                    }
+                },
+            ],
+        ];
+    }
 
-  // Other accessor functions
-  public function description() { return ''; }
-  public function columns() { return []; }
+    // Other accessor functions
+    public function description() { return ''; }
+    public function columns() { return []; }
 }
 ```
 
