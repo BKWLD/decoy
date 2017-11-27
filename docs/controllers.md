@@ -117,14 +117,15 @@ class Articles extends Base {
             'status' => [
                 'type' => 'select',
                 'options' => [
-                    'active' => 'active',
-                    'inactive' => 'inactive',
+                    'deleted' => 'deleted',
                 ],
                 'query' => function($query, $condition, $input) {
-                    if ($input == 'active') {
-                        $query->whereNull('deleted_at');
-                    } else if ($input == 'inactive') {
-                        $query->whereNotNull('deleted_at');
+                    if ($input == 'deleted') {
+                        if ($condition == '=') {
+                            $query->whereNotNull('deleted_at');
+                        } else {
+                            $query->whereNull('deleted_at');
+                        }
                     }
                 },
             ],
