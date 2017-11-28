@@ -18,6 +18,13 @@ use Illuminate\Database\Eloquent\Model;
 class Change extends Base
 {
     /**
+     * The query param key used when previewing
+     *
+     * @var string
+     */
+    const QUERY_KEY = 'view-change';
+
+    /**
      * Always eager load the admins
      *
      * @var array
@@ -99,7 +106,6 @@ class Change extends Base
         if (!$admin) {
             $admin = app('decoy.user');
         }
-
         if (!$admin) {
             return;
         }
@@ -168,7 +174,7 @@ class Change extends Base
         return __('decoy::changes.admin_title', [
             'admin' => $this->getAdminLinkAttribute(),
             'action' => $this->getActionLabelAttribute(),
-            'model' => $this->getModelAttribute(),
+            'model' => $this->getModelNameHtmlAttribute(),
             'model_title' => $this->getLinkedTitleAttribute(),
             'date' => $this->getDateAttribute()
         ]);
@@ -211,7 +217,7 @@ class Change extends Base
      *
      * @return string HTML
      */
-    public function getModelAttribute()
+    public function getModelNameHtmlAttribute()
     {
         $class = Decoy::controllerForModel($this->model);
 
@@ -295,7 +301,7 @@ class Change extends Base
             title="' . __('decoy::changes.standard_list.filter') . '"
             data-placement="left"></a>',
             $this->filterUrl(['model' => $this->model, 'key' => $this->key]),
-            strip_tags($this->getModelAttribute()));
+            strip_tags($this->getModelNameHtmlAttribute()));
     }
 
     /**
@@ -360,7 +366,11 @@ class Change extends Base
      */
     public function getPreviewUrlAttribute()
     {
-        return $this->changedModel->uri.'?view-change='.$this->id;
+        return vsprint('%s?%s=%s', [
+            $this->changedModel->uri,
+            static::QUERY_KEY,
+            $this->id,
+        ]);
     }
 
     /**

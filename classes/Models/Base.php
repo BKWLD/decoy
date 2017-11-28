@@ -33,7 +33,8 @@ abstract class Base extends Eloquent
         SluggableScopeHelpers,
         SupportsUploads,
         Traits\CanSerializeTransform,
-        Traits\Exportable
+        Traits\Exportable,
+        Traits\Loggable
     ;
 
     /**
@@ -113,28 +114,6 @@ abstract class Base extends Eloquent
     protected $admin_mutators = [];
 
     /**
-     * Constructor registers events and configures mass assignment
-     */
-    public function __construct(array $attributes = [])
-    {
-        // Remove any settings that affect JSON conversion (visible / hidden) and
-        // mass assignment protection (fillable / guarded) while in the admin
-        if (Decoy::handling()) {
-            $this->visible = $this->hidden = $this->fillable = $this->guarded = [];
-        }
-
-        // Blacklist special columns that aren't intended for the DB
-        $this->guarded = array_merge($this->guarded, [
-            'parent_controller', // Backbone.js sends this with sort updates
-            'parent_id', // Backbone.js may also send this with sort
-            'select-row', // This is the name of the checkboxes used for bulk delete
-        ]);
-
-        // Continue Laravel construction
-        parent::__construct($attributes);
-    }
-
-    /**
      * Disable mutators unless the active request isn't for the admin, the key
      * doesn't reference a true database-backed attribute, or the key was
      * expressly whitelisted in the admin_mutators property.
@@ -203,14 +182,30 @@ abstract class Base extends Eloquent
     public function onRemoving($parent) { }
     public function onRemoved($parent) { }
 
+    //---------------------------------------------------------------------------
+    // Instantiation
+    //---------------------------------------------------------------------------
+
     /**
-     * Get the polymorphic relationship to Changes
-     *
-     * @return Illuminate\Database\Eloquent\Relations\Relation
+     * Constructor registers events and configures mass assignment
      */
-    public function changes()
+    public function __construct(array $attributes = [])
     {
-        return $this->morphMany('Bkwld\Decoy\Models\Change', 'loggable', 'model', 'key');
+        // Remove any settings that affect JSON conversion (visible / hidden) and
+        // mass assignment protection (fillable / guarded) while in the admin
+        if (Decoy::handling()) {
+            $this->visible = $this->hidden = $this->fillable = $this->guarded = [];
+        }
+
+        // Blacklist special columns that aren't intended for the DB
+        $this->guarded = array_merge($this->guarded, [
+            'parent_controller', // Backbone.js sends this with sort updates
+            'parent_id', // Backbone.js may also send this with sort
+            'select-row', // This is the name of the checkboxes used for bulk delete
+        ]);
+
+        // Continue Laravel construction
+        parent::__construct($attributes);
     }
 
     //---------------------------------------------------------------------------
