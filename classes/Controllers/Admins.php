@@ -14,23 +14,6 @@ use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 class Admins extends Base
 {
     /**
-     * Normal Decoy controller config.  There is some increased specifity so that
-     * subclassing controllers don't have to have to specify everything.
-     *
-     * @var string
-     */
-    protected $description = 'Users who have access to the admin.';
-
-    /**
-     * @var array
-     */
-    protected $columns = [
-        'Name'          => 'getAdminTitleHtmlAttribute',
-        'Status'        => 'getAdminStatusAttribute',
-        'Email'         => 'email',
-    ];
-
-    /**
      * @var string
      */
     protected $show_view = 'decoy::admins.edit';
@@ -102,7 +85,6 @@ class Admins extends Base
         if (!app('decoy.user')->can('read', 'admins')) {
             return Redirect::to(app('decoy.user')->getUserUrl());
         }
-
         return parent::index();
     }
 
@@ -114,7 +96,6 @@ class Admins extends Base
     public function edit($id)
     {
         unset(Admin::$rules['password']);
-
         return parent::edit($id);
     }
 
@@ -185,7 +166,9 @@ class Admins extends Base
     }
 
     /**
-     * Populate protected properties on init
+     * Populate protected properties with localized labels on init
+     *
+     * @return $this
      */
     public function __construct()
     {
