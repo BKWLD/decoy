@@ -24,5 +24,6 @@ return [
     'standard_list.filter' => 'Filtrar para alterações apenas deste <b>%s</b>',
     'standard_list.view' => 'Ver atributos alterados',
     'standard_list.no_changed' => 'Nenhum atributo alterado',
+    'standard_list.preview' => 'Veja neste estado',
 
 ];

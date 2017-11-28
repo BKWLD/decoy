@@ -24,5 +24,6 @@ return [
     'standard_list.filter' => 'Filter to just changes of this <b>%s</b>',
     'standard_list.view' => 'View changed attributes',
     'standard_list.no_changed' => 'No changed attributes',
+    'standard_list.preview' => 'View at this state',
 
 ];

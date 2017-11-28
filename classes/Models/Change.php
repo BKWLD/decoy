@@ -25,7 +25,7 @@ class Change extends Base
     protected $with = ['admin'];
 
     /**
-     * List of all relationships
+     * Get the admin associated with the change
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
      */
@@ -35,11 +35,18 @@ class Change extends Base
     }
 
     /**
-     * @return mixed
+     * Get the logged model instance, even if soft deleted
+     *
+     * @return Model
      */
-    public function loggable()
+    public function model()
     {
-        return $this->morphTo();
+        $class = $this->model;
+        if (method_exists($class, 'trashed')) {
+            return $class::withTrashed()->find($this->key);
+        } else {
+            return $class::find($this->key);
+        }
     }
 
     /**
@@ -130,9 +137,10 @@ class Change extends Base
      */
     public static function getActions()
     {
-        return static::groupBy('action')->pluck('action', 'action')->mapWithKeys(function ($item) {
-            return [$item => __("decoy::changes.actions.$item")];
-        });
+        return static::groupBy('action')->pluck('action', 'action')
+            ->mapWithKeys(function ($item) {
+                return [$item => __("decoy::changes.actions.$item")];
+            });
     }
 
     /**
@@ -146,7 +154,7 @@ class Change extends Base
     }
 
     /**
-     * Format the the activity like a sentance
+     * Format the the activity like a sentence
      *
      * @return string HTML
      */
@@ -193,7 +201,7 @@ class Change extends Base
     }
 
     /**
-     * Format the model name by translating it through the contorller's defined
+     * Format the model name by translating it through the controllers's defined
      * title
      *
      * @return string HTML
@@ -263,34 +271,26 @@ class Change extends Base
      */
     public function makeAdminActions($data)
     {
-        $actions = [];
+        return array_filter([
+            $this->filter_action,
+            $this->changes_action,
+            $this->preview_action,
+        ]);
+    }
 
-        // Always add a filter icon
-        $actions[] = sprintf('<a href="%s"
+    /**
+     * Make the preview filter icon
+     *
+     * @return string
+     */
+    public function getFilterActionAttribute()
+    {
+        return sprintf('<a href="%s"
             class="glyphicon glyphicon-filter js-tooltip"
             title="' . __('decoy::changes.standard_list.filter') . '"
             data-placement="left"></a>',
             $this->filterUrl(['model' => $this->model, 'key' => $this->key]),
             strip_tags($this->getModelAttribute()));
-
-        // If there are changes, add the modal button
-        if ($this->changed) {
-            $actions[] = sprintf('<a href="%s"
-            class="glyphicon glyphicon-export js-tooltip changes-modal-link"
-            title="' . __('decoy::changes.standard_list.view') . '"
-            data-placement="left"></a>',
-            DecoyURL::action('changes@edit', $this->id));
-        }
-
-        // Else, show a disabled button
-        else {
-            $actions[] = '<span class="glyphicon glyphicon-export js-tooltip"
-            title="' . __('decoy::changes.standard_list.no_changed') . '"
-            data-placement="left"></span>';
-        }
-
-        // Return the actions
-        return $actions;
     }
 
     /**
@@ -301,6 +301,62 @@ class Change extends Base
     public function filterUrl($query)
     {
         return DecoyURL::action('changes').'?'.Search::query($query);
+    }
+
+    /**
+     * Make the changes icon
+     *
+     * @return string
+     */
+    public function getChangesActionAttribute()
+    {
+        // If there are changes, add the modal button
+        if ($this->changed) {
+            return sprintf('<a href="%s"
+                class="glyphicon glyphicon-export js-tooltip changes-modal-link"
+                title="%s" data-placement="left"></a>',
+                DecoyURL::action('changes@edit', $this->id),
+                __('decoy::changes.standard_list.view'));
+        }
+
+        // Else, show a disabled button
+        else {
+            return sprintf('<span
+            class="glyphicon glyphicon-export js-tooltip"
+            title="%s" data-placement="left"></span>', __('decoy::changes.standard_list.no_changed'));
+        }
+    }
+
+    /**
+     * Make link to preview a version as long as the model has a URI and the
+     * action wasn't a delete action.
+     *
+     * @return string
+     */
+    public function getPreviewActionAttribute()
+    {
+        if (($model = $this->model())
+            && ($uri = $model->uri)
+            && $this->action != 'deleted') {
+            return sprintf('<a href="%s" target="_blank"
+                class="glyphicon glyphicon-bookmark js-tooltip"
+                title="%s" data-placement="left"></a>',
+                $this->makePreviewUrl($uri),
+                __('decoy::changes.standard_list.preview'));
+        } else {
+            return '<span class="glyphicon glyphicon-bookmark disabled"></span>';
+        }
+    }
+
+    /**
+     * Make the preview URL for a the model
+     *
+     * @param  string $uri The initial url
+     * @return string
+     */
+    protected function makePreviewUrl($uri)
+    {
+        return $uri.'?view-change='.$this->id;
     }
 
     /**
