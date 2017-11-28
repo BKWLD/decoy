@@ -35,18 +35,23 @@ class Change extends Base
     }
 
     /**
-     * Get the logged model instance, even if soft deleted
+     * The polymorphic relation back to the parent model
+     *
+     * @var mixed
+     */
+    public function loggable()
+    {
+        return $this->morphTo('loggable', 'model', 'key');
+    }
+
+    /**
+     * Get the related model, including trashed instances
      *
      * @return Model
      */
-    public function model()
+    public function changedModel()
     {
-        $class = $this->model;
-        if (method_exists($class, 'trashed')) {
-            return $class::withTrashed()->find($this->key);
-        } else {
-            return $class::find($this->key);
-        }
+        return $this->loggable()->withTrashed();
     }
 
     /**
@@ -335,13 +340,13 @@ class Change extends Base
      */
     public function getPreviewActionAttribute()
     {
-        if (($model = $this->model())
-            && ($uri = $model->uri)
+        if ($this->changedModel
+            && $this->changedModel->uri
             && $this->action != 'deleted') {
             return sprintf('<a href="%s" target="_blank"
                 class="glyphicon glyphicon-bookmark js-tooltip"
                 title="%s" data-placement="left"></a>',
-                $this->makePreviewUrl($uri),
+                $this->preview_url,
                 __('decoy::changes.standard_list.preview'));
         } else {
             return '<span class="glyphicon glyphicon-bookmark disabled"></span>';
@@ -351,12 +356,11 @@ class Change extends Base
     /**
      * Make the preview URL for a the model
      *
-     * @param  string $uri The initial url
      * @return string
      */
-    protected function makePreviewUrl($uri)
+    public function getPreviewUrlAttribute()
     {
-        return $uri.'?view-change='.$this->id;
+        return $this->changedModel->uri.'?view-change='.$this->id;
     }
 
     /**
