@@ -25,13 +25,6 @@ class Change extends Base
     const QUERY_KEY = 'view-change';
 
     /**
-     * Always eager load the admins
-     *
-     * @var array
-     */
-    protected $with = ['admin'];
-
-    /**
      * Get the admin associated with the change
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
@@ -69,7 +62,7 @@ class Change extends Base
      */
     public function scopeOrdered($query)
     {
-        return $query->orderBy('changes.id', 'desc');
+        return $query->orderBy('changes.id', 'desc')->with('admin');
     }
 
     /**

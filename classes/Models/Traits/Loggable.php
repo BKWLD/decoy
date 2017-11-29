@@ -22,6 +22,14 @@ trait Loggable
     static public $LOGGABLE_SCOPE = 'view trashed versions';
 
     /**
+     * Previous (to the change referenced in the request query) changes made
+     * to this model
+     *
+     * @var Collection
+     */
+    private $previous_changes;
+
+    /**
      * Get the polymorphic relationship to Changes
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
@@ -42,6 +50,11 @@ trait Loggable
         static::addGlobalScope(static::$LOGGABLE_SCOPE, function (Builder $builder) {
             static::showTrashedVersion($builder);
         });
+
+        // Substitute attribute values from changes on load
+        static::retrieved(function($model) {
+            $model->replaceAttributesWithChange();
+        });
     }
 
     /**
@@ -50,7 +63,20 @@ trait Loggable
      * @param  Builder $builder
      * @return void
      */
-    public static function showTrashedVersion(Builder $builder)
+    private static function showTrashedVersion(Builder $builder)
+    {
+        if (($change = static::lookupRequestedChange())
+            && static::builderMatchesChange($change, $builder)) {
+            static::includeTrashed($change, $builder);
+        }
+    }
+
+    /**
+     * Get a Change record mentioned in the query, if appropriate
+     *
+     * @return Change|void
+     */
+    private static function lookupRequestedChange()
     {
         // Only run if the query param is present
         if (!$change_id = request(Change::QUERY_KEY)) {
@@ -65,15 +91,9 @@ trait Loggable
         }
 
         // Check whether the referenced Change is for this class
-        $change = Change::findOrFail($change_id);
-        if ($class != $change->model) {
-            return;
-        }
-
-        // If the builder matches the requested Change version, remove any
-        // trashed constraint.
-        if (static::builderMatchesChange($change, $builder)) {
-            static::includeTrashed($change, $builder);
+        $change = Change::find($change_id);
+        if ($class == $change->model) {
+            return $change;
         }
     }
 
@@ -85,7 +105,7 @@ trait Loggable
      * @param  Builder $builder
      * @return boolean
      */
-    static protected function builderMatchesChange(Change $change, Builder $builder)
+    private static function builderMatchesChange(Change $change, Builder $builder)
     {
         $class = $change->model;
         $route_key_name = (new $class)->getRouteKeyName();
@@ -122,7 +142,7 @@ trait Loggable
      * @param  Builder $builder
      * @return void
      */
-    static protected function includeTrashed(Change $change, Builder $builder)
+    private static function includeTrashed(Change $change, Builder $builder)
     {
         $class = $change->model;
         $table = (new $class)->getTable();
@@ -133,6 +153,77 @@ trait Loggable
                 break;
             }
         }
+    }
+
+    /**
+     * When getting a value, if the query key is defined, get the value from
+     * Changes.  The key of this model is looked up from the raw attributes
+     * array to prevent recursive issues.  And directly pass through the key
+     * value, this doesn't change and was causing recursive issues.
+     *
+     * @param  string  $key
+     * @return mixed
+     */
+    // public function getAttributeFromArray($key)
+    // {
+    //     $key_name = $this->getKeyName();
+    //     if ($key != $key_name
+    //         && ($change = static::lookupRequestedChange())
+    //         && $change->key == $this->attributes[$key_name]) {
+    //         return $this->buildValueFromChanges($key, $change);
+    //     } else {
+    //         return parent::getAttributeFromArray($key);
+    //     }
+    // }
+
+    /**
+     * Replace all the attributes with those from the specified Change specified
+     * in the reqeust query.
+     *
+     * @return void
+     */
+    private function replaceAttributesWithChange()
+    {
+        dd('called');
+    }
+
+    /**
+     * Iterate backwards through changes until a value is found for this
+     * attribute
+     *
+     * @param  string $key
+     * @param  Change $change
+     * @return mixed
+     */
+    private function buildValueFromChanges($key, Change $change)
+    {
+        $match = $this->previousChanges($change)
+            ->first(function(Change $change) use ($key) {
+                return property_exists(json_decode($change->changed), $key);
+            });
+        if ($match) {
+            return json_decode($match->changed)->$key;
+        }
+    }
+
+    /**
+     * Get the list of pervious changes of this model, storing it to reduce
+     * future lookups
+     *
+     * @param  Change $change
+     * @return Collection
+     */
+    private function previousChanges(Change $change)
+    {
+        if ($this->previous_changes) {
+            return $this->previous_changes;
+        } else {
+            return $this->previous_changes = $this->changes()
+                ->where('changes.id', '<=', $change->id)
+                ->orderBy('changes.id', 'desc')
+                ->get();
+        }
+
     }
 
 }
