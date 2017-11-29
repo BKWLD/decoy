@@ -368,7 +368,7 @@ class Change extends Base
      */
     public function getPreviewUrlAttribute()
     {
-        return vsprint('%s?%s=%s', [
+        return vsprintf('%s?%s=%s', [
             $this->changedModel->uri,
             static::QUERY_KEY,
             $this->id,
