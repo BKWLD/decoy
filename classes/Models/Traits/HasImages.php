@@ -30,15 +30,28 @@ trait HasImages
         // Delete all Images if the parent is deleted.  Need to use "each" to get
         // the Image deleted events to fire.
         static::deleted(function ($model) {
-            $model->images->each(function ($image) {
-                $image->delete();
-            });
+            if ($model->deleteImagesWithModel()) {
+                $model->images->each(function ($image) {
+                    $image->delete();
+                });
+            }
         });
 
         // Automatically eager load the images relationship
         static::addGlobalScope('images', function (Builder $builder) {
             $builder->with('images');
         });
+    }
+
+    /**
+     * Decide whether to delete images when the model is deleted.  We are
+     * piggybacking on Upchuck's config for this.
+     *
+     * @return Boolean
+     */
+    public function deleteImagesWithModel()
+    {
+        return !app('upchuck.observer')->keepsFilesOnDelete($this);
     }
 
     /**
