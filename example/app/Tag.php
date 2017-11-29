@@ -45,4 +45,13 @@ class Tag extends Base
     {
         $query->orderBy('name');
     }
+
+    /**
+     * A no-op that should return the URI (an absolute path or a fulL URL) to the record
+     *
+     * @return string
+     */
+    public function getUriAttribute() {
+        return route('tag', $this->id);
+    }
 }

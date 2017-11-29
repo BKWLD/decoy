@@ -18,3 +18,7 @@ Route::get('/', function () {
 Route::get('article/{slug}', ['as' => 'article', function ($slug) {
     return 'hello';
 }]);
+
+Route::get('tag/{tag}', ['as' => 'tag', function (App\Tag $tag) {
+    return $tag;
+}]);

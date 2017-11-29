@@ -81,5 +81,22 @@ class ChangesTest extends TestCase
             ]);
     }
 
+    /**
+     * Test viewing old chages by getting the preview url of the first change
+     * and checking that response json for it has the orginal name
+     *
+     * @return void
+     */
+    public function testPreview()
+    {
+        $response = $this->get(Change::find(1)->preview_url);
+        $response
+            ->assertStatus(200)
+            ->assertJson([
+                'id' => $this->tag->id,
+                'name' => 'Name',
+            ]);
+    }
+
 
 }
