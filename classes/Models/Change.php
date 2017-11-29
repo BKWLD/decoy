@@ -25,6 +25,15 @@ class Change extends Base
     const QUERY_KEY = 'view-change';
 
     /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'changed' => 'array',
+    ];
+
+    /**
      * Get the admin associated with the change
      *
      * @return Illuminate\Database\Eloquent\Relations\Relation
@@ -115,7 +124,7 @@ class Change extends Base
             'key' => $model->getKey(),
             'action' => $action,
             'title' => method_exists($model, 'getAdminTitleAttribute') ? $model->getAdminTitleAttribute() : null,
-            'changed' => $changed ? json_encode($changed) : null,
+            'changed' => $changed,
             'admin_id' => $admin->getKey(),
         ]);
 
@@ -375,7 +384,7 @@ class Change extends Base
     {
         // Remove some specific attributes.  Leaving empties in there so the updating
         // of values to NULL is displayed.
-        $attributes = array_except(json_decode($this->changed, true), [
+        $attributes = array_except($this->changed, [
             'id', 'updated_at', 'created_at', 'password', 'remember_token',
         ]);
 
