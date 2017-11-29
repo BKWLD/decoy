@@ -156,27 +156,6 @@ trait Loggable
     }
 
     /**
-     * When getting a value, if the query key is defined, get the value from
-     * Changes.  The key of this model is looked up from the raw attributes
-     * array to prevent recursive issues.  And directly pass through the key
-     * value, this doesn't change and was causing recursive issues.
-     *
-     * @param  string  $key
-     * @return mixed
-     */
-    // public function getAttributeFromArray($key)
-    // {
-    //     $key_name = $this->getKeyName();
-    //     if ($key != $key_name
-    //         && ($change = static::lookupRequestedChange())
-    //         && $change->key == $this->attributes[$key_name]) {
-    //         return $this->buildValueFromChanges($key, $change);
-    //     } else {
-    //         return parent::getAttributeFromArray($key);
-    //     }
-    // }
-
-    /**
      * Replace all the attributes with those from the specified Change specified
      * in the reqeust query.
      *
@@ -184,26 +163,27 @@ trait Loggable
      */
     private function replaceAttributesWithChange()
     {
-        dd('called');
+        if (($change = static::lookupRequestedChange())
+            && $change->key == $this->getKey()) {
+            $this->attributes = array_merge(
+                $this->attributes,
+                $this->attributesAtChange($change)
+            );
+        }
     }
 
     /**
-     * Iterate backwards through changes until a value is found for this
-     * attribute
+     * Get the attributes of the model at a given Change
      *
-     * @param  string $key
      * @param  Change $change
-     * @return mixed
+     * @return array
      */
-    private function buildValueFromChanges($key, Change $change)
+    private function attributesAtChange(Change $change)
     {
-        $match = $this->previousChanges($change)
-            ->first(function(Change $change) use ($key) {
-                return property_exists(json_decode($change->changed), $key);
-            });
-        if ($match) {
-            return json_decode($match->changed)->$key;
-        }
+        return $this->previousChanges($change)
+            ->reduce(function($attributes, $change) {
+                return array_merge($attributes, $change->changed);
+            }, []);
     }
 
     /**
@@ -215,14 +195,10 @@ trait Loggable
      */
     private function previousChanges(Change $change)
     {
-        if ($this->previous_changes) {
-            return $this->previous_changes;
-        } else {
-            return $this->previous_changes = $this->changes()
-                ->where('changes.id', '<=', $change->id)
-                ->orderBy('changes.id', 'desc')
-                ->get();
-        }
+        return $this->changes()
+            ->where('changes.id', '<=', $change->id)
+            ->orderBy('changes.id', 'asc')
+            ->get();
 
     }
 
