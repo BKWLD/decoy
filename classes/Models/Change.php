@@ -75,26 +75,6 @@ class Change extends Base
     }
 
     /**
-     * Check whether changes are enabled
-     *
-     * @return boolean
-     */
-    public static function enabled()
-    {
-        if ($check = Config::get('decoy.site.log_changes')) {
-            if (is_bool($check)) {
-                return $check;
-            }
-
-            if (is_callable($check)) {
-                return call_user_func($check, $model, $action, app('decoy.user'));
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * A convenience method for saving a change instance
      *
      * @param  Model  $model  The model being touched
