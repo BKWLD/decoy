@@ -108,7 +108,12 @@ class ChangesTest extends TestCase
      */
     public function testNoAdmin()
     {
+        // Verify no logout change was written for admin
         $this->logout();
+        $this->assertEquals(1,
+            Change::where('model', 'Bkwld\Decoy\Models\Admin')->count());
+
+        // Create the article
         $article = factory(Article::class)->create();
 
         // Did Change get written?
@@ -118,7 +123,6 @@ class ChangesTest extends TestCase
         $this->assertEquals(1, $changes->count());
         $change = $changes->first();
         $this->assertNull($change->admin_id);
-
 
         // Are views fine?
         $this->auth();
