@@ -1,6 +1,7 @@
 <?php
 namespace Tests\Integration;
 
+use App\Article;
 use App\Tag;
 use Bkwld\Decoy\Models\Change;
 use Cache;
@@ -36,16 +37,13 @@ class ChangesTest extends TestCase
     }
 
     /**
-     * Test that the commands page loads
+     * Test that the commands page loads and all 3 changes were made
      *
      * @return void
      */
     public function testIndex()
     {
-        $response = $this->get('admin/changes');
-        $response->assertStatus(200);
-
-        // Test that all the changes from the setUp were created
+        $this->get('admin/changes')->assertStatus(200);
         $this->assertEquals(3, Change::count());
     }
 
@@ -96,6 +94,32 @@ class ChangesTest extends TestCase
                 'id' => $this->tag->id,
                 'name' => 'Name',
             ]);
+    }
+
+    /**
+     * Test that an admin is optional by logging out, creating an Article, and
+     * then verifying that the changes were created and don't error.
+     *
+     * @return void
+     */
+    public function testNoAdmin()
+    {
+        $this->logout();
+        $article = factory(Article::class)->create();
+
+        // Did Change get written?
+        $changes = Change::where('model', 'App\Article')
+            ->where('key', $article->id)
+            ->get();
+        $this->assertEquals(1, $changes->count());
+        $change = $changes->first();
+        $this->assertNull($change->admin_id);
+
+
+        // Are views fine?
+        $this->auth();
+        $this->get('admin/changes')->assertStatus(200);
+        $this->get('admin/changes/'.$change->id.'/edit')->assertStatus(200);
     }
 
 

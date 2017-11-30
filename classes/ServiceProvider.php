@@ -65,11 +65,6 @@ class ServiceProvider extends BaseServiceProvider
              __DIR__.'/../config' => config_path('decoy')
         ], 'config');
 
-        // Publish migrations
-        $this->publishes([
-            __DIR__.'/../migrations/' => database_path('migrations')
-        ], 'migrations');
-
         // Publish decoy css and js to public directory
         $this->publishes([
             __DIR__.'/../dist' => public_path('assets/decoy')
@@ -85,6 +80,9 @@ class ServiceProvider extends BaseServiceProvider
 
         // Load translations
         $this->loadTranslationsFrom(__DIR__.'/../lang', 'decoy');
+
+        // Load migrations
+        $this->loadMigrationsFrom(__DIR__.'/../migrations/');
     }
 
     /**

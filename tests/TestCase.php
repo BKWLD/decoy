@@ -1,6 +1,7 @@
 <?php
 namespace Tests;
 
+use Auth;
 use Bkwld\Decoy\Models\Admin;
 use Cache;
 use Illuminate\Contracts\Console\Kernel;
@@ -70,6 +71,17 @@ abstract class TestCase extends LaravelTestCase
             'email' => 'test@domain.com',
             'password' => 'pass',
         ]), 'decoy');
+    }
+
+    /**
+     * Logout an admin
+     *
+     * @return void
+     */
+    protected function logout()
+    {
+        Auth::guard('decoy')->logout();
+        app()->forgetInstance('decoy.user');
     }
 
     /**

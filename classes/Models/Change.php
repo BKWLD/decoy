@@ -84,12 +84,9 @@ class Change extends Base
      */
     public static function log(Model $model, $action, Admin $admin = null)
     {
-        // If no admin provided, get the current one. And if no admin, abort.
+        // If no admin provided, use the current one
         if (!$admin) {
             $admin = app('decoy.user');
-        }
-        if (!$admin) {
-            return;
         }
 
         // Get the changed attributes
@@ -98,14 +95,18 @@ class Change extends Base
             $changed = null;
         }
 
+        // Get the title
+        $title = method_exists($model, 'getAdminTitleAttribute') ?
+            $model->getAdminTitleAttribute() : null;
+
         // Create a new change instance
         $change = static::create([
             'model' => get_class($model),
             'key' => $model->getKey(),
             'action' => $action,
-            'title' => method_exists($model, 'getAdminTitleAttribute') ? $model->getAdminTitleAttribute() : null,
+            'title' => $title,
             'changed' => $changed,
-            'admin_id' => $admin->getKey(),
+            'admin_id' => $admin ? $admin->getKey() : null,
         ]);
 
         // If the action was a deletion, mark all of the records for this model as
@@ -169,9 +170,13 @@ class Change extends Base
      */
     public function getAdminLinkAttribute()
     {
-        return sprintf('<a href="%s">%s</a>',
-            $this->filterUrl(['admin_id' => $this->admin_id]),
-            $this->admin->getAdminTitleHtmlAttribute());
+        if ($this->admin_id) {
+            return sprintf('<a href="%s">%s</a>',
+                $this->filterUrl(['admin_id' => $this->admin_id]),
+                $this->admin->getAdminTitleHtmlAttribute());
+        } else {
+            'Someone';
+        }
     }
 
     /**
