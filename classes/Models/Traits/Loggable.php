@@ -117,7 +117,7 @@ trait Loggable
                 if ($route_key_name == 'id') {
                     return $where['column'] == $route_key_name
                         && $where['operator'] == '='
-                        && $where['value'] == $change->id;
+                        && $where['value'] == $change->key;
 
                 // Otherwise compare against model logged by the change. The
                 // scope needs to be removed to prevent recursion.
