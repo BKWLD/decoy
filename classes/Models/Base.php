@@ -225,6 +225,7 @@ abstract class Base extends Eloquent
             'slug' => [
                 'source' => 'admin_title',
                 'maxLength' => 100,
+                'includeTrashed' => true,
             ]
         ];
     }
