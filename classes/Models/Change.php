@@ -175,7 +175,7 @@ class Change extends Base
                 $this->filterUrl(['admin_id' => $this->admin_id]),
                 $this->admin->getAdminTitleHtmlAttribute());
         } else {
-            'Someone';
+            return 'Someone';
         }
     }
 
