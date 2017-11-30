@@ -55,11 +55,6 @@ class Changes
             return;
         }
 
-        // Don't log an admin logging in or out
-        if (Route::is('decoy::account@postLogin', 'decoy::account@logout')) {
-            return;
-        }
-
         // Get the action of the event
         preg_match('#eloquent\.(\w+)#', $event, $matches);
         $action = $matches[1];
@@ -80,6 +75,12 @@ class Changes
                 return;
             }
         } else {
+            return;
+        }
+
+        // Check with the model itself to see if it should be logged
+        if (method_exists($model, 'shouldLogChange')
+            && !$model->shouldLogChange($action)) {
             return;
         }
 

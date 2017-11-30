@@ -75,12 +75,23 @@ class Change extends Base
     }
 
     /**
+     * Should this model log changes?  Can be overriden by a model
+     *
+     * @param  string $action
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        return true;
+    }
+
+    /**
      * A convenience method for saving a change instance
      *
      * @param  Model  $model  The model being touched
      * @param  string $action Generally a CRUD verb: "created", "updated", "deleted"
      * @param  Admin  $admin  The admin acting on the record
-     * @return static
+     * @return static|void
      */
     public static function log(Model $model, $action, Admin $admin = null)
     {

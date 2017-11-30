@@ -251,6 +251,22 @@ class Admin extends Base implements
     }
 
     /**
+     * Don't log if admin is logging in and out
+     *
+     * @param  string $action
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        if ($action != 'deleted'
+            && count($this->getDirty()) == 1
+            && $this->isDirty('remember_token')) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Send the password reset notification. This overrides a method inheritted
      * from the CanResetPassword trait
      *
