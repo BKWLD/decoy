@@ -44,7 +44,10 @@ class ChangesTest extends TestCase
     public function testIndex()
     {
         $this->get('admin/changes')->assertStatus(200);
-        $this->assertEquals(3, Change::count());
+        $changes = Change::where('model', 'App\Tag')
+            ->where('key', $this->tag->id)
+            ->get();
+        $this->assertEquals(3, $changes->count());
     }
 
     /**
@@ -54,7 +57,8 @@ class ChangesTest extends TestCase
      */
     public function testCreatedEdit()
     {
-        $response = $this->get('admin/changes/1/edit');
+        // Admin create change was created first as id = 1
+        $response = $this->get('admin/changes/2/edit');
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -70,7 +74,7 @@ class ChangesTest extends TestCase
      */
     public function testUpdatedEdit()
     {
-        $response = $this->get('admin/changes/2/edit');
+        $response = $this->get('admin/changes/3/edit');
         $response
             ->assertStatus(200)
             ->assertJson([
@@ -87,7 +91,7 @@ class ChangesTest extends TestCase
      */
     public function testPreview()
     {
-        $response = $this->get(Change::find(1)->preview_url);
+        $response = $this->get(Change::find(2)->preview_url);
         $response
             ->assertStatus(200)
             ->assertJson([
