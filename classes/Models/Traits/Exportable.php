@@ -114,8 +114,13 @@ trait Exportable
                 case 'id': return $key;
 
                 // Make common acronyms upper case
+                case 'uid':
+                case 'pid':
+                case 'guid':
                 case 'cta':
                 case 'url': return strtoupper($key);
+
+                // Default to title casing fields
                 default: return TextUtils::titleFromKey($key);
             }
         }, $headers);
