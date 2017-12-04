@@ -50,6 +50,9 @@ trait Exportable
         return tap(new static, function ($instance) {
             $instance->setRawAttributes($this->getAttributes());
             $instance->setRelations($this->relations);
+            $instance->setAppends($this->appends);
+            $instance->setVisible($this->visible);
+            $instance->setHidden($this->hidden);
         });
     }
 
