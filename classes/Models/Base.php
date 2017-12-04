@@ -583,12 +583,13 @@ abstract class Base extends Eloquent
 
         // Concatenate all the attributes with spaces and look for the term.
         switch(DB::getDriverName()) {
+            case 'sqlsrv':
             case 'mysql':
-                $source = DB::raw('CONCAT('.implode('," ",',$attributes).')');
+                $source = DB::raw('CONCAT('.implode('," ",', $attributes).')');
                 break;
             case 'sqlite':
             case 'pgsql':
-                $source = DB::raw(implode(' || ',$attributes));
+                $source = DB::raw(implode(' || ', $attributes));
                 break;
         }
 
