@@ -11,8 +11,12 @@
 
 		-# Download CSV
 		- if ($is_exportable)
-			- $url = DecoyURL::relative('csv', null, $controller)
-			- $disabled = !$listing->count()
+			:php
+				$url = DecoyURL::relative('csv', null, $controller);
+				if (request()->has('query')) {
+					$url .= '?query='.request('query');
+				}
+				$disabled = !$listing->count();
 			%a.btn.btn-sm.outline.download.js-tooltip(href=$disabled?null:$url
 				title="#{__('decoy::list.full_header.download')}"
 				disabled=$disabled)
