@@ -37,7 +37,7 @@ class Article extends \Bkwld\Decoy\Models\Base
      */
     public function scopeExporting($query)
     {
-        $query->whereNotNull('date');
+        $query->withTrashed();
     }
 }
 ```
