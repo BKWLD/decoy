@@ -110,7 +110,6 @@ class Search
             case '!%*%':
                 $comparison = substr($comparison, 1);
                 $input = str_replace('*', $input, $comparison);
-
                 return $query->where($field, 'NOT LIKE', $input);
 
             // Like
@@ -118,7 +117,6 @@ class Search
             case '%*':
             case '%*%':
                 $input = str_replace('*', $input, $comparison);
-
                 return $query->where($field, 'LIKE', $input);
 
             // Defaults
@@ -142,12 +140,15 @@ class Search
 		$safe_field = is_string($field) ? "`{$field}`" : $field;
 		$safe_input = $input  == '' ?
 			'NULL' : DB::connection()->getPdo()->quote($input);
+
 		// Different engines have different APIs
 		switch(DB::getDriverName())
 		{
 			case 'mysql': return $this->applyMysqlEquality(
 					$comparison, $query, $safe_field, $safe_input);
 			case 'sqlite': return $this->applySqliteEquality(
+					$comparison, $query, $safe_field, $safe_input);
+            case 'sqlsrv': return $this->applySqlServerEquality(
 					$comparison, $query, $safe_field, $safe_input);
         }
 	}
@@ -192,6 +193,28 @@ class Search
 				return $query->whereRaw($sql);
 			case '!=':
 				$sql = sprintf('%s IS NOT %s', $field, $input);
+				return $query->whereRaw($sql);
+		}
+	}
+
+    /**
+     * Make NULL-safe SQL Server query
+     * https://stackoverflow.com/a/802666/59160
+     *
+     * @param  string $comparison
+     * @param  Builder $query
+     * @param  string $field
+     * @param  string $input
+     * @return Builder
+     */
+    protected function applySqlServerEquality($comparison, $query, $field, $input) {
+		switch($comparison)
+		{
+			case '=':
+				$sql = sprintf('COALESCE(%s, "") = COALESCE(%s, "")', $field, $input);
+				return $query->whereRaw($sql);
+			case '!=':
+				$sql = sprintf('COALESCE(%s, "") != COALESCE(%s, "")', $field, $input);
 				return $query->whereRaw($sql);
 		}
 	}
