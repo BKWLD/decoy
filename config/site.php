@@ -102,7 +102,7 @@ return [
      */
     // 'log_changes' => true,
     'log_changes' => function ($model, $action, $admin_id) {
-        return true;
+        return Decoy::handling();
     },
 
 ];

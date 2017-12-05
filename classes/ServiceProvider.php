@@ -41,16 +41,15 @@ class ServiceProvider extends BaseServiceProvider
         // mutated by Decoy logic.  This is important, in particular, so the
         // Validation observer can alter validation rules before the onValidation
         // callback runs.
-        $this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
-        $this->app['events']->listen('decoy::model.*', 'Bkwld\Decoy\Observers\ModelCallbacks');
+        $this->app['events']->listen('eloquent.*',
+            'Bkwld\Decoy\Observers\ModelCallbacks');
+        $this->app['events']->listen('decoy::model.*',
+            'Bkwld\Decoy\Observers\ModelCallbacks');
 
-        // If logging changes hasn't been disabled, log all model events.  This
-        // should come after the callbacks in case they modify the record before
-        // being saved.  And we're logging ONLY admin actions, thus the handling
-        // condition.
-        if ($this->app['decoy']->handling() && config('decoy.site.log_changes')) {
-            $this->app['events']->listen('eloquent.*', 'Bkwld\Decoy\Observers\Changes');
-        }
+        // Log model change events after others in case they modified the record
+        // before being saved.
+        $this->app['events']->listen('eloquent.*',
+            'Bkwld\Decoy\Observers\Changes');
     }
 
     /**
