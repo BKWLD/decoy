@@ -1,4 +1,4 @@
-/*! 📝 Bukwild 💾 11.15.17 👍 */
+/*! 📝 Bukwild 💾 12.6.17 👍 */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -56826,28 +56826,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		// Dependencies
 		var $ = __webpack_require__(2),
-	        __ = __webpack_require__(15),
+			__ = __webpack_require__(15),
 			_ = __webpack_require__(5),
 			bootstrap = __webpack_require__(10),
 			tpl = _.template('\
-	            <div class="modal fade changes-modal">\
-	                <div class="modal-dialog">\
-	                    <div class="modal-content">\
-	                        <div class="modal-header">\
-	                            <button type="button" class="close" data-dismiss="modal" \
-	                            aria-label="' + __('changes.close') + '"><span aria-hidden="true">&times;</span></button>\
-	                            <h4 class="modal-title">' + __('changes.changes_to') + ' "<%=title%>"</h4>\
-	                        </div>\
-	                        <div class="modal-body">\
-	                            <%=body%>\
-	                        </div>\
-	                        <div class="modal-footer">\
-	                            <%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
-	                            <a href="<%=admin_edit%>"><%=admin%></a>\
-	                        </div>\
-	                    </div>\
-	                </div>\
-	            </div>');
+				<div class="modal fade changes-modal">\
+					<div class="modal-dialog">\
+						<div class="modal-content">\
+							<div class="modal-header">\
+									<button type="button" class="close" data-dismiss="modal" \
+									aria-label="' + __('changes.close') + '"><span aria-hidden="true">&times;</span></button>\
+									<h4 class="modal-title">' + __('changes.changes_to') + ' "<%=title%>"</h4>\
+							</div>\
+							<div class="modal-body">\
+									<%=body%>\
+							</div>\
+							<div class="modal-footer">\
+									<%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
+									<% if (admin_edit) { %>\
+										<a href="<%= admin_edit %>"><%= admin %></a>\
+									<% } else { %>\
+										<%= admin %>\
+									<% } %>\
+							</div>\
+						</div>\
+					</div>\
+				</div>');
 
 		/**
 		 * Request the attribtues from the server

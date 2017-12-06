@@ -19,7 +19,11 @@ define(function (require) {
 						</div>\
 						<div class="modal-footer">\
 								<%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
-								<a href="<%=admin_edit%>"><%=admin%></a>\
+								<% if (admin_edit) { %>\
+									<a href="<%= admin_edit %>"><%= admin %></a>\
+								<% } else { %>\
+									<%= admin %>\
+								<% } %>\
 						</div>\
 					</div>\
 				</div>\

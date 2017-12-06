@@ -89,12 +89,12 @@ class Changes extends Base
     public function edit($id)
     {
         $change = Change::findOrFail($id);
-
+        $admin = $change->admin;
         return Response::json([
             'action' => __("decoy::changes.actions.$change->action"),
             'title' => $change->title,
-            'admin' => $change->admin->getAdminTitleHtmlAttribute(),
-            'admin_edit' => $change->admin->getAdminEditAttribute(),
+            'admin' => $admin ? $admin->getAdminTitleHtmlAttribute() : 'someone',
+            'admin_edit' => $admin ? $admin->getAdminEditAttribute() : null,
             'date' => $change->getHumanDateAttribute(),
             'attributes' => $change->attributesForModal(),
         ]);
