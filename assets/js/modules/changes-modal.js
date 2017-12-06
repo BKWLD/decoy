@@ -2,28 +2,28 @@ define(function (require) {
 
 	// Dependencies
 	var $ = require('jquery'),
-        __ = require('../localize/translated'),
+		__ = require('../localize/translated'),
 		_ = require('lodash'),
 		bootstrap = require('bootstrap'),
 		tpl = _.template('\
-            <div class="modal fade changes-modal">\
-                <div class="modal-dialog">\
-                    <div class="modal-content">\
-                        <div class="modal-header">\
-                            <button type="button" class="close" data-dismiss="modal" \
-                            aria-label="' + __('changes.close') + '"><span aria-hidden="true">&times;</span></button>\
-                            <h4 class="modal-title">' + __('changes.changes_to') + ' "<%=title%>"</h4>\
-                        </div>\
-                        <div class="modal-body">\
-                            <%=body%>\
-                        </div>\
-                        <div class="modal-footer">\
-                            <%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
-                            <a href="<%=admin_edit%>"><%=admin%></a>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>');
+			<div class="modal fade changes-modal">\
+				<div class="modal-dialog">\
+					<div class="modal-content">\
+						<div class="modal-header">\
+								<button type="button" class="close" data-dismiss="modal" \
+								aria-label="' + __('changes.close') + '"><span aria-hidden="true">&times;</span></button>\
+								<h4 class="modal-title">' + __('changes.changes_to') + ' "<%=title%>"</h4>\
+						</div>\
+						<div class="modal-body">\
+								<%=body%>\
+						</div>\
+						<div class="modal-footer">\
+								<%=action%> ' + __('changes.on') + ' <%=date%> ' + __('changes.by') + ' \
+								<a href="<%=admin_edit%>"><%=admin%></a>\
+						</div>\
+					</div>\
+				</div>\
+			</div>');
 
 	/**
 	 * Request the attribtues from the server
