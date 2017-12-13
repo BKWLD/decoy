@@ -2,19 +2,16 @@
 use Bkwld\Decoy\Markup\UrlWindow;
 
 // Make a smaller window
-$window = new UrlWindow($paginator);
-$window->setEdgeCount(0);
-$window = $window->get(3);
+$window = (new UrlWindow($paginator))->get(3);
 
 // Add dots to the window
 $elements = [
     $window['first'],
     is_array($window['slider']) ? '...' : null,
     $window['slider'],
-    is_array($window['last']) ? '...' : null,
+    is_array($window['slider']) ? '...' : null,
     $window['last'],
 ];
-$elements = array_filter($elements);
 
 ?>
 @if ($paginator->hasPages())

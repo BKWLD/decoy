@@ -18,18 +18,6 @@ class UrlWindow extends LaravelUrlWindow {
     protected $edge_count = 2;
 
     /**
-     * Set edge count
-     *
-     * @param  int  $edge_count
-     * @return $this
-     */
-    public function setEdgeCount($edge_count)
-    {
-        $this->edge_count = $edge_count;
-        return $this;
-    }
-
-    /**
      * Get the slider of URLs when too close to beginning of window.
      *
      * @param  int  $window
@@ -71,7 +59,7 @@ class UrlWindow extends LaravelUrlWindow {
      */
     public function getStart()
     {
-        return $this->paginator->getUrlRange(1, $this->edge_count);
+        return false;
     }
 
     /**
@@ -81,10 +69,7 @@ class UrlWindow extends LaravelUrlWindow {
      */
     public function getFinish()
     {
-        return $this->paginator->getUrlRange(
-            $this->lastPage() - $this->edge_count + 1,
-            $this->lastPage()
-        );
+        return false;
     }
 
 }
