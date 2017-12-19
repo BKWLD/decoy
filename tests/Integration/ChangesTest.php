@@ -113,8 +113,10 @@ class ChangesTest extends TestCase
         $this->assertEquals(1,
             Change::where('model', 'Bkwld\Decoy\Models\Admin')->count());
 
-        // Create the article
-        $article = factory(Article::class)->create();
+        // Create the article unpublic so no published change gets written
+        $article = factory(Article::class)->create([
+            'public' => 0,
+        ]);
 
         // Did Change get written?
         $changes = Change::where('model', 'App\Article')
@@ -130,5 +132,52 @@ class ChangesTest extends TestCase
         $this->get('admin/changes/'.$change->id.'/edit')->assertStatus(200);
     }
 
+    /**
+     * Test that publishing and then hiding an article creat respective changes
+     *
+     * @return void
+     */
+    public function testPublishChanges()
+    {
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+        ]);
 
+        // Make an article that isn't publisehd
+        $article = factory(Article::class)->create([
+            'public' => 0,
+        ]);
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'published',
+        ]);
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'unpublished',
+        ]);
+
+        // Publish it
+        $article->public = 1;
+        $article->save();
+        $this->assertDatabaseHas('changes', [
+            'model' => 'App\Article',
+            'action' => 'published',
+        ]);
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'unpublished',
+        ]);
+
+        // Unpublish it
+        $article->public = 0;
+        $article->save();
+        $this->assertDatabaseHas('changes', [
+            'model' => 'App\Article',
+            'action' => 'published',
+        ]);
+        $this->assertDatabaseHas('changes', [
+            'model' => 'App\Article',
+            'action' => 'unpublished',
+        ]);
+    }
 }

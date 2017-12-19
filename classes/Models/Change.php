@@ -95,30 +95,17 @@ class Change extends Base
      */
     public static function log(Model $model, $action, Admin $admin = null)
     {
-        // If no admin provided, use the current one
-        if (!$admin) {
-            $admin = app('decoy.user');
-        }
-
         // Get the changed attributes
         $changed = $model->getDirty();
         if ($action == 'deleted' || empty($changed)) {
             $changed = null;
         }
 
-        // Get the title
-        $title = method_exists($model, 'getAdminTitleAttribute') ?
-            $model->getAdminTitleAttribute() : null;
-
         // Create a new change instance
-        $change = static::create([
-            'model' => get_class($model),
-            'key' => $model->getKey(),
-            'action' => $action,
-            'title' => $title,
-            'changed' => $changed,
-            'admin_id' => $admin ? $admin->getKey() : null,
-        ]);
+        $change = static::createLog($model, $action, $admin, $changed);
+
+        // Log published / unpblished changes
+        static::logPublishingChange($model, $action, $admin);
 
         // If the action was a deletion, mark all of the records for this model as
         // deleted
@@ -132,6 +119,78 @@ class Change extends Base
 
         // Return the changed instance
         return $change;
+    }
+
+    /**
+     * Create a change entry
+     *
+     * @param  Model  $model  The model being touched
+     * @param  string $action Generally a CRUD verb: "created", "updated", "deleted"
+     * @param  Admin  $admin  The admin acting on the record
+     */
+    static protected function createLog(
+        Model $model,
+        $action,
+        Admin $admin = null,
+        $changed = null)
+    {
+        return static::create([
+            'model' => get_class($model),
+            'key' => $model->getKey(),
+            'action' => $action,
+            'title' => static::getModelTitle($model),
+            'changed' => $changed,
+            'admin_id' => static::getAdminId($admin),
+        ]);
+    }
+
+    /**
+     * Get the title of the model
+     *
+     * @param  Model  $model  The model being touched
+     * @return string
+     */
+    static protected function getModelTitle(Model $model)
+    {
+        return method_exists($model, 'getAdminTitleAttribute') ?
+            $model->getAdminTitleAttribute() : null;
+    }
+
+    /**
+     * Get the admin id
+     *
+     * @param  Admin $admin
+     * @return integer
+     */
+    static protected function getAdminId(Admin $admin = null)
+    {
+        if (!$admin) {
+            $admin = app('decoy.user');
+        }
+        return $admin ? $admin->getKey() : null;
+    }
+
+    /**
+     * Log changes to publishing state.  The initial publish should be logged
+     * but not an initil unpublished state.
+     *
+     * @param  Model  $model  The model being touched
+     * @param  string $action
+     * @param  Admin $admin
+     * @return void
+     */
+    static public function logPublishingChange(
+        Model $model,
+        $action,
+        Admin $admin = null)
+    {
+        if ($model->isDirty('public')) {
+            if ($model->public) {
+                static::createLog($model, 'published', $admin);
+            } else if (!$model->public && $action != 'created') {
+                static::createLog($model, 'unpublished', $admin);
+            }
+        }
     }
 
     /**
@@ -201,6 +260,8 @@ class Change extends Base
             'created' => 'success',
             'updated' => 'warning',
             'deleted' => 'danger',
+            'published' => 'info',
+            'unpublished' => 'default',
         ];
 
         return sprintf('<a href="%s" class="label label-%s">%s</a>',
