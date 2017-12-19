@@ -143,7 +143,7 @@ class ChangesTest extends TestCase
             'model' => 'App\Article',
         ]);
 
-        // Make an article that isn't publisehd
+        // Make an article that isn't published
         $article = factory(Article::class)->create([
             'public' => 0,
         ]);
@@ -168,6 +168,13 @@ class ChangesTest extends TestCase
             'action' => 'unpublished',
         ]);
 
+        // Confirm that only changing the published state does not create a
+        // change
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'updated',
+        ]);
+
         // Unpublish it
         $article->public = 0;
         $article->save();
@@ -178,6 +185,16 @@ class ChangesTest extends TestCase
         $this->assertDatabaseHas('changes', [
             'model' => 'App\Article',
             'action' => 'unpublished',
+        ]);
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'updated',
+        ]);
+
+        // No update should be written
+        $this->assertDatabaseMissing('changes', [
+            'model' => 'App\Article',
+            'action' => 'updated',
         ]);
     }
 }

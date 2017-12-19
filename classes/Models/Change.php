@@ -95,14 +95,11 @@ class Change extends Base
      */
     public static function log(Model $model, $action, Admin $admin = null)
     {
-        // Get the changed attributes
-        $changed = $model->getDirty();
-        if ($action == 'deleted' || empty($changed)) {
-            $changed = null;
-        }
-
         // Create a new change instance
-        $change = static::createLog($model, $action, $admin, $changed);
+        if (static::shouldWriteChange($model)) {
+            $changed = static::getChanged($model, $action);
+            $change = static::createLog($model, $action, $admin, $changed);
+        }
 
         // Log published / unpblished changes
         static::logPublishingChange($model, $action, $admin);
@@ -113,20 +110,51 @@ class Change extends Base
             DB::table('changes')
                 ->where('model', get_class($model))
                 ->where('key', $model->getKey())
-                ->update(['deleted' => 1])
-            ;
+                ->update(['deleted' => 1]);
         }
 
         // Return the changed instance
-        return $change;
+        if (isset($change)) {
+            return $change;
+        }
+    }
+
+    /**
+     * Don't log changes when the only thing that changed was the published
+     * state
+     *
+     * @param  Model  $model  The model being touched
+     * @return boolean
+     */
+    static private function shouldWriteChange(Model $model)
+    {
+        $only_published_changed = count($model->getDirty()) == 1
+            && $model->isDirty('public');
+        return !$only_published_changed;
+    }
+
+    /**
+     * Get the changes attributes
+     *
+     * @param  Model  $model  The model being touched
+     * @param  string $action
+     * @return array|null
+     */
+    static private function getChanged(Model $model, $action)
+    {
+        $changed = $model->getDirty();
+        if ($action == 'deleted' || empty($changed)) {
+            $changed = null;
+        }
+        return $changed;
     }
 
     /**
      * Create a change entry
      *
-     * @param  Model  $model  The model being touched
-     * @param  string $action Generally a CRUD verb: "created", "updated", "deleted"
-     * @param  Admin  $admin  The admin acting on the record
+     * @param  Model  $model  Th
+     * @param  string $action
+     * @param  Admin  $admin
      */
     static protected function createLog(
         Model $model,
@@ -147,7 +175,7 @@ class Change extends Base
     /**
      * Get the title of the model
      *
-     * @param  Model  $model  The model being touched
+     * @param  Model  $model
      * @return string
      */
     static protected function getModelTitle(Model $model)
@@ -174,7 +202,7 @@ class Change extends Base
      * Log changes to publishing state.  The initial publish should be logged
      * but not an initil unpublished state.
      *
-     * @param  Model  $model  The model being touched
+     * @param  Model  $model
      * @param  string $action
      * @param  Admin $admin
      * @return void
