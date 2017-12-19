@@ -17,6 +17,8 @@ return [
     'actions.created' => 'criou',
     'actions.deleted' => 'deletou',
     'actions.updated' => 'atualizou',
+    'actions.published' => 'publicados',
+    'actions.unpublished' => 'inédito',
 
     'admin_title' => ':admin :action o :model ":model_title" aproximadamente :date',
     'human_date' => 'd \d\e F \d\e Y \à\s h\hi',

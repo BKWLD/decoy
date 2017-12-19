@@ -17,6 +17,8 @@ return [
     'actions.created' => 'created',
     'actions.deleted' => 'deleted',
     'actions.updated' => 'updated',
+    'actions.published' => 'published',
+    'actions.unpublished' => 'unpublished',
 
     'admin_title' => ':admin :action the :model ":model_title" about :date',
     'human_date' => 'M j, Y \a\t g:i A',
