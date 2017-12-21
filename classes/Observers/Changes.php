@@ -2,11 +2,11 @@
 
 namespace Bkwld\Decoy\Observers;
 
-use Event;
-use Route;
-use Config;
+// Deps
 use Bkwld\Decoy\Models;
 use Bkwld\Decoy\Models\Change;
+use Event;
+use Route;
 
 /**
  * Create a log of all model changing events
@@ -67,12 +67,15 @@ class Changes
 
         // If `log_changes` was configed as a callable, see if this model event
         // should not be logged
-        if ($check = Config::get('decoy.site.log_changes')) {
+        if ($check = config('decoy.site.log_changes')) {
             if (is_bool($check) && !$check) {
                 return;
             }
-            if (is_callable($check) && !call_user_func($check, $model, $action, $admin)) {
-                return;
+            if (is_callable($check)) {
+                \Log::error('Callable log_changes have been deprecated');
+                if (!call_user_func($check, $model, $action, $admin)) {
+                    return;
+                }
             }
         } else {
             return;

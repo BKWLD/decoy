@@ -87,20 +87,11 @@
     'auto_localize_root_models' => false,
 
     /**
-     * Store an entry in the database of all model changes.
+     * Store an entry in the database of all model changes.  Also see the
+     * shouldLogChange() function that can be overriden per-model
      *
-     * @var boolean|callable
-     *
-     * If a function, it's signature is:
-     *
-     * @param Illuminate\Database\Eloquent\Model $model The model being touched
-     * @param string $action Generally a CRUD verb: "created", "updated", "deleted"
-     * @param Bkwld\Decoy\Models\Admin $admin The admin acting on the record
-     * @return boolean
+     * @var boolean
      */
-    // 'log_changes' => true,
-    'log_changes' => function ($model, $action, $admin_id) {
-        return true;
-    },
-
+    'log_changes' => true,
+    
 ];

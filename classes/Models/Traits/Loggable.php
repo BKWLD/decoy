@@ -3,9 +3,11 @@
 namespace Bkwld\Decoy\Models\Traits;
 
 // Deps
+use App;
 use Bkwld\Decoy\Models\Admin;
 use Bkwld\Decoy\Models\Change;
 use Bkwld\Decoy\Models\Image;
+use Decoy;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
@@ -55,6 +57,20 @@ trait Loggable
         static::retrieved(function($model) {
             $model->replaceAttributesWithChange();
         });
+    }
+
+    /**
+     * Should this model log it's changes.  Defaults to true if the change
+     * happened while handling an admin request or via the console but not
+     * during a non-http unit test.
+     *
+     * @param  string $action Like "deleted", "updated", etc
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        return Decoy::handling()
+            || (App::runningInConsole() && request()->path() == '/');
     }
 
     /**
