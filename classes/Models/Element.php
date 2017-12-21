@@ -313,6 +313,18 @@ class Element extends Base
     }
 
     /**
+     * Don't log changes. To do this right, I should aggregate a bunch of
+     * Element changes into a single log.
+     *
+     * @param  string $action
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        return false;
+    }
+
+    /**
      * Render the element in a view
      *
      * @return string

@@ -527,4 +527,15 @@ class Image extends Base
             return floatval($matches[1])/100;
         }
     }
+
+    /**
+     * Don't log changes since they aren't really the result of admin input
+     *
+     * @param  string $action
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        return false;
+    }
 }

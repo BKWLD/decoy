@@ -263,7 +263,7 @@ class Admin extends Base implements
             && $this->isDirty('remember_token')) {
             return false;
         }
-        return true;
+        return parent::shouldLogChange($action);
     }
 
     /**

@@ -75,14 +75,14 @@ class Change extends Base
     }
 
     /**
-     * Should this model log changes?  Can be overriden by a model
+     * Don't log changes
      *
      * @param  string $action
      * @return boolean
      */
     public function shouldLogChange($action)
     {
-        return true;
+        return false;
     }
 
     /**

@@ -31,23 +31,6 @@ class Changes
     {
         list($model) = $payload;
 
-        // Don't log the Change model events
-        if (is_a($model, Models\Change::class)) {
-            return;
-        }
-
-        // Don't log encoding or Image events since they aren't really the result of
-        // admin input
-        if (is_a($model, Models\Encoding::class) || is_a($model, Models\Image::class)) {
-            return;
-        }
-
-        // Hide Elements.  To do this right, I should aggregate a bunch of Element
-        // changes into a single log.
-        if (is_a($model, Models\Element::class)) {
-            return;
-        }
-
         // Don't log changes to pivot models.  Even though a user may have initiated
         // this, it's kind of meaningless to them.  These events can happen when a
         // user messes with drag and drop positioning.

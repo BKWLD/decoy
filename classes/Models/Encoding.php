@@ -108,6 +108,17 @@ class Encoding extends Base
     }
 
     /**
+     * Don't log changes since they aren't really the result of admin input
+     *
+     * @param  string $action
+     * @return boolean
+     */
+    public function shouldLogChange($action)
+    {
+        return false;
+    }
+
+    /**
      * Make an instance of the encoding provider
      *
      * @param  array $input Request::input()
