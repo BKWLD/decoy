@@ -191,8 +191,8 @@ public function services() {
     ->withTimestamps();
 }
 public function servicesAsChild() {
-  return $this->morphedByMany('App\Service', 'serviceable')-
-    >withTimestamps();
+  return $this->morphedByMany('App\Service', 'serviceable')
+    ->withTimestamps();
 }
 ```
 
