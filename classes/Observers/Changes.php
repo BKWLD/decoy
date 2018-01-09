@@ -68,6 +68,10 @@ class Changes
         if (method_exists($model, 'shouldLogChange')
             && !$model->shouldLogChange($action)) {
             return;
+
+        // Default to not logging changes if there is no shouldLogChange()
+        } else {
+            return false;
         }
 
         // Log the event
