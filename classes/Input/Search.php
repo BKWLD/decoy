@@ -94,8 +94,9 @@ class Search
     {
         // Convert date formats
         if ($type == 'date') {
-            $field = DB::raw("DATE($field)");
-            $input = Carbon::createFromFormat(__('decoy::form.date.format'), $input)->format('Y-m-d');
+            $field = $this->convertDateField($field);
+            $input = Carbon::createFromFormat(__('decoy::form.date.format'), $input)
+                ->format('Y-m-d');
         }
 
         // Apply the where
@@ -122,6 +123,22 @@ class Search
             // Defaults
             default:
                 return $query->where($field, $comparison, $input);
+        }
+    }
+
+    /**
+     * Convert a datetime to a date (no time) value
+     * https://stackoverflow.com/a/113055/59160
+     *
+     * @param  string $field
+     * @return string
+     */
+    protected function convertDateField($field)
+    {
+    	switch(DB::getDriverName())
+		{
+            case 'sqlsrv': return DB::raw("CONVERT(date, [{$field}])");
+            default: return DB::raw("DATE(`{$field}`)");
         }
     }
 
