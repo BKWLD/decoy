@@ -65,13 +65,14 @@ class Changes
         }
 
         // Check with the model itself to see if it should be logged
-        if (method_exists($model, 'shouldLogChange')
-            && !$model->shouldLogChange($action)) {
-            return;
+        if (method_exists($model, 'shouldLogChange')) {
+            if (!$model->shouldLogChange($action)) {
+                return;
+            }
 
         // Default to not logging changes if there is no shouldLogChange()
         } else {
-            return false;
+            return;
         }
 
         // Log the event
