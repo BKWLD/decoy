@@ -121,16 +121,18 @@ class Change extends Base
 
     /**
      * Don't log changes when the only thing that changed was the published
-     * state
+     * state or updated timestamp.  We check if there are any attributes
+     * besides these that changed.
      *
      * @param  Model  $model  The model being touched
      * @return boolean
      */
     static private function shouldWriteChange(Model $model)
     {
-        $only_published_changed = count($model->getDirty()) == 1
-            && $model->isDirty('public');
-        return !$only_published_changed;
+        $changed_attributes = array_keys($model->getDirty());
+        $ignored = ['updated_at', 'public'];
+        $loggable = array_diff($changed_attributes, $ignored);
+        return count($loggable) > 0;
     }
 
     /**

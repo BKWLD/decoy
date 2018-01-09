@@ -158,6 +158,7 @@ class ChangesTest extends TestCase
 
         // Publish it
         $article->public = 1;
+        $article->updated_at = Carbon::now()->addSecond(1);
         $article->save();
         $this->assertDatabaseHas('changes', [
             'model' => 'App\Article',
