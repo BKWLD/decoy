@@ -309,7 +309,7 @@ class Change extends Base
         $class = Decoy::controllerForModel($this->model);
 
         // There is not a controller for the model
-        if (!$class) {
+        if (!$class || !class_exists($class)) {
             return sprintf('<b><a href="%s">%s</a></b>',
             $this->filterUrl(['model' => $this->model]),
             preg_replace('#(?<!\ )[A-Z]#', ' $0', $this->model));
@@ -317,7 +317,6 @@ class Change extends Base
 
         // There is a corresponding controller class
         $controller = new $class;
-
         return sprintf('<b class="js-tooltip" title="%s"><a href="%s">%s</a></b>',
             htmlentities($controller->description()),
             $this->filterUrl(['model' => $this->model]),
