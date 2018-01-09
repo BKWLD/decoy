@@ -137,7 +137,7 @@ class Search
     protected function applyEquality($comparison, $query, $field, $input)
 	{
 		// Make SQL safe values
-		$safe_field = is_string($field) ? "`{$field}`" : $field;
+		$safe_field = $this->makeSafeField($field);
 		$safe_input = $input  == '' ?
 			'NULL' : DB::connection()->getPdo()->quote($input);
 
@@ -152,6 +152,22 @@ class Search
 					$comparison, $query, $safe_field, $safe_input);
         }
 	}
+
+    /**
+     * Make SQL safe field name.  Different engines use different escapes:
+     * https://stackoverflow.com/a/2901502/59160
+     *
+     * @param  string $field
+     * @return string
+     */
+    protected function makeSafeField($field)
+    {
+        switch(DB::getDriverName())
+		{
+            case 'sqlsrv': return is_string($field) ? "[{$field}]" : $field;
+            default: return is_string($field) ? "`{$field}`" : $field;
+        }
+    }
 
     /**
      * Make NULL-safe MySQL query
