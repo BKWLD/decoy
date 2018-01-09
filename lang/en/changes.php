@@ -20,7 +20,7 @@ return [
     'actions.published' => 'published',
     'actions.unpublished' => 'unpublished',
 
-    'admin_title' => ':admin :action the :model ":model_title" about :date',
+    'admin_title' => ':admin :action the :model :model_title about :date',
     'human_date' => 'M j, Y \a\t g:i A',
 
     'standard_list.filter' => 'Filter to just changes of this <b>%s</b>',

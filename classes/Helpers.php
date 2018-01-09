@@ -356,7 +356,6 @@ class Helpers
 
         // Make it plural
         $offset = strrpos($controller, '\\') + 1;
-
         return substr($controller, 0, $offset).Str::plural(substr($controller, $offset));
     }
 

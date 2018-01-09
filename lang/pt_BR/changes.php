@@ -20,7 +20,7 @@ return [
     'actions.published' => 'publicados',
     'actions.unpublished' => 'inédito',
 
-    'admin_title' => ':admin :action o :model ":model_title" aproximadamente :date',
+    'admin_title' => ':admin :action o :model :model_title aproximadamente :date',
     'human_date' => 'd \d\e F \d\e Y \à\s h\hi',
 
     'standard_list.filter' => 'Filtrar para alterações apenas deste <b>%s</b>',

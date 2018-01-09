@@ -331,7 +331,8 @@ class Change extends Base
      */
     public function getLinkedTitleAttribute()
     {
-        return sprintf('<a href="%s">%s</a>',
+        if (!$this->title) return;
+        return sprintf('<a href="%s">"%s"</a>',
             $this->filterUrl(['model' => $this->model, 'key' => $this->key]),
             $this->title);
     }
