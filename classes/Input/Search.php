@@ -227,10 +227,10 @@ class Search
 		switch($comparison)
 		{
 			case '=':
-				$sql = sprintf('COALESCE(%s, "") = COALESCE(%s, "")', $field, $input);
+				$sql = sprintf("COALESCE(%s, '') = COALESCE(%s, '')", $field, $input);
 				return $query->whereRaw($sql);
 			case '!=':
-				$sql = sprintf('COALESCE(%s, "") != COALESCE(%s, "")', $field, $input);
+				$sql = sprintf("COALESCE(%s, '') != COALESCE(%s, '')", $field, $input);
 				return $query->whereRaw($sql);
 		}
 	}
