@@ -583,7 +583,6 @@ abstract class Base extends Eloquent
 
         // Concatenate all the attributes with spaces and look for the term.
         switch(DB::getDriverName()) {
-            case 'sqlsrv':
             case 'mysql':
                 $source = DB::raw('CONCAT('.implode('," ",', $attributes).')');
                 break;
@@ -591,6 +590,16 @@ abstract class Base extends Eloquent
             case 'pgsql':
                 $source = DB::raw(implode(' || ', $attributes));
                 break;
+
+            // For SQL Server, only support concatenating of two attributes so
+            // it works in 2008 and above.
+            // https://stackoverflow.com/a/47423292/59160
+            case 'sqlsrv':
+                if (count($attributes) == 2) {
+                    $source = DB::raw('{fn CONCAT('.implode(',', $attributes).')}');
+                } else {
+                    $source = $attributes[0];
+                }
         }
 
         return $exact ?
@@ -790,14 +799,17 @@ abstract class Base extends Eloquent
             return ['name'];
         }
 
+        // Search full names if people-type fields
         if (isset($row['first_name']) && isset($row['last_name'])) {
             return ['first_name', 'last_name'];
         }
 
+        // Standard location for the title
         if (isset($row['title'])) {
             return ['title'];
         }
 
+        // Default to no searchable attributes
         return [];
     }
 
