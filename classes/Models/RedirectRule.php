@@ -109,9 +109,10 @@ class RedirectRule extends Base
         return $query->where(function ($query) {
             $from = $this->pathAndQuery();
             $escaped_from = DB::connection()->getPdo()->quote($from);
-            $query->where('from', $from)->orWhereRaw("{$escaped_from} LIKE from");
+            $from_col = DB::getDriverName() == 'sqlsrv' ? '[from]' : '`from`';
+            $query->where('from', $from)->orWhereRaw("{$escaped_from} LIKE {$from_col}");
             if (Config::get('decoy::core.allow_regex_in_redirects')) {
-                $query->orWhereRaw("{$escaped_from} REGEXP from");
+                $query->orWhereRaw("{$escaped_from} REGEXP {$from_col}");
             }
         });
     }
