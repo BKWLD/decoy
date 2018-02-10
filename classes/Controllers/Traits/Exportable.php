@@ -21,7 +21,7 @@ trait Exportable
      */
     public function csv()
     {
-        $items = $this->makeIndexQuery()->exporting()->get();
+        $items = $this->makeCsvQuery()->get();
         if ($items->isEmpty()) abort(404);
         $csv = $this->makeCsv($items);
         return response($csv->getContent())->withHeaders([
@@ -31,6 +31,19 @@ trait Exportable
                 $this->makeCsvFileTitle()),
             'Content-Description' => 'File Transfer',
         ]);
+    }
+
+    /**
+     * Make the CSV query, removing eager loading of images because that can
+     * create a passing query that breaks some databases (like sql server)
+     *
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    protected function makeCsvQuery()
+    {
+        return $this->makeIndexQuery()
+            ->withoutGlobalScopes(['decoy.images'])
+            ->exporting();
     }
 
     /**
