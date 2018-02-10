@@ -38,7 +38,7 @@ trait HasImages
         });
 
         // Automatically eager load the images relationship
-        static::addGlobalScope('images', function (Builder $builder) {
+        static::addGlobalScope('decoy.images', function (Builder $builder) {
             $builder->with('images');
         });
     }
