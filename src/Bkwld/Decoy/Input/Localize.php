@@ -37,8 +37,8 @@ class Localize {
 	/**
 	 * Store a model instance
 	 *
-	 * @param Illuminate\Database\Eloquent\Model $item 
-	 * @return $this 
+	 * @param Illuminate\Database\Eloquent\Model $item
+	 * @return $this
 	 */
 	public function item($item) {
 		if (!$this->model) $this->model = get_class($item);
@@ -49,8 +49,8 @@ class Localize {
 	/**
 	 * Store the model class name
 	 *
-	 * @param string $model 
-	 * @return $this 
+	 * @param string $model
+	 * @return $this
 	 */
 	public function model($model) {
 		$this->model = $model;
@@ -60,8 +60,8 @@ class Localize {
 	/**
 	 * The title of this model, from the controller
 	 *
-	 * @param string $title 
-	 * @return $this 
+	 * @param string $title
+	 * @return $this
 	 */
 	public function title($title) {
 		$this->title = $title;
@@ -70,8 +70,8 @@ class Localize {
 
 	/**
 	 * Check if the localize UI should be displayed
-	 * 
-	 * @return boolean 
+	 *
+	 * @return boolean
 	 */
 	public function hidden() {
 		$class = $this->model; // Must be a local var to test
@@ -101,14 +101,14 @@ class Localize {
 	/**
 	 * Get a hash of locales that are available for the item
 	 *
-	 * @return array 
+	 * @return array
 	 */
 	public function localizableLocales() {
 		return array_diff_key( // Keep only locales that don't exist in
 			Config::get('decoy::site.locales'),
 			array_flip($this->other()->lists('locale')), // ... the locales of other localizations
 			[$this->item->locale => null] // ... and this locale
-		); 
+		);
 	}
 
 	/**
@@ -125,7 +125,7 @@ class Localize {
 
 	/**
 	 * Render the sidebar, "Localize" UI
-	 * 
+	 *
 	 * @return string
 	 */
 	public function __toString() {
