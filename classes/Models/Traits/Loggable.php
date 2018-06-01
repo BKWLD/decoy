@@ -9,6 +9,7 @@ use Bkwld\Decoy\Models\Change;
 use Bkwld\Decoy\Models\Image;
 use Decoy;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 /**
  * Enable logging changes to models
@@ -48,7 +49,8 @@ trait Loggable
      */
     public static function bootLoggable()
     {
-        // Automatically eager load the images relationship
+        // Add scope that will fetch trashed versions of models when the
+        // Change::QUERY_KEY is present.
         static::addGlobalScope(static::$LOGGABLE_SCOPE, function (Builder $builder) {
             static::showTrashedVersion($builder);
         });
@@ -83,7 +85,7 @@ trait Loggable
     {
         if (($change = static::lookupRequestedChange())
             && static::builderMatchesChange($change, $builder)) {
-            static::includeTrashed($change, $builder);
+            $builder->withoutGlobalScope(SoftDeletingScope::class);
         }
     }
 
@@ -147,28 +149,6 @@ trait Loggable
                         && $where['value'] == $value;
                 }
         });
-    }
-
-    /**
-     * Manually remove already added soft deleted where conditions.  This is
-     * necessary since withTrashed() can't be called on a Builder.
-     * http://yo.bkwld.com/1K04151B2h3M
-     *
-     * @param  Change $change
-     * @param  Builder $builder
-     * @return void
-     */
-    private static function includeTrashed(Change $change, Builder $builder)
-    {
-        $class = $change->model;
-        $table = (new $class)->getTable();
-        foreach($builder->getQuery()->wheres as $key => $where) {
-            if ($where['column'] == $table.'.deleted_at'
-                && $where['type'] == 'Null') {
-                unset($builder->getQuery()->wheres[$key]);
-                break;
-            }
-        }
     }
 
     /**
