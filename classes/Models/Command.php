@@ -35,7 +35,6 @@ class Command
         $commands['Laravel']['Seed'] = App::make('command.seed');
         $commands['Laravel']['Cache clear'] = App::make('command.cache.clear');
         $commands['Laravel']['Clear compiled classes'] = App::make('command.clear-compiled');
-        $commands['Laravel']['Optimize classes'] = App::make('command.optimize');
 
         // Return matching commands
         return $commands;
