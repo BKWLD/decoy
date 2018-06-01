@@ -19,6 +19,7 @@ class ElementsTable extends Migration
             $table->string('type');
             $table->mediumtext('value')->nullable();
             $table->string('locale');
+            $table->string('locale_group')->nullable();
 
             $table->primary(['key', 'locale']);
             $table->index(['locale', 'key']);
