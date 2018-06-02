@@ -138,7 +138,12 @@ class FileTest extends TestCase
 
         // Submit a save
         $response = $this->post('admin/articles/'.$article->id.'/edit', [
-            'title' => 'Ok?'
+            'title' => 'Ok?',
+            'images' => [
+                $image->id => [
+                    'name' => 'image'
+                ]
+            ],
         ]);
 
         $response->assertSessionMissing('errors');
