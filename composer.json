@@ -55,8 +55,7 @@
         "league/flysystem": "^1.0",
         "league/flysystem-vfs": "^1.0",
         "laravel/tinker": "^1.0",
-        "fideloper/proxy": "~3.3 || ^4.0",
-        "nunomaduro/collision": "^2.0"
+        "fideloper/proxy": "~3.3 || ^4.0"
     },
     "conflict": {
         "anahkiasen/html-object": "1.4.1",

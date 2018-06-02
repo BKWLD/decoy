@@ -9,21 +9,14 @@
         "fideloper/proxy": "~3.3 || ^4.0",
         "laravel/framework": "5.5.* || 5.6.*",
         "laravel/tinker": "^1.0",
-        "bkwld/decoy": "*"
+        "bkwld/decoy": "5.11.x-dev"
     },
     "require-dev": {
         "filp/whoops": "~2.0",
         "fzaninotto/faker": "~1.4",
         "mockery/mockery": "0.9.*",
-        "nunomaduro/collision": "^2.0",
         "phpunit/phpunit": "~6.0 || ~7.0"
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "../"
-        }
-    ],
     "autoload": {
         "classmap": [
             "database/seeds",
