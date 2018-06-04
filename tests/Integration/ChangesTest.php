@@ -37,7 +37,7 @@ class ChangesTest extends TestCase
     }
 
     /**
-     * Test that the commands page loads and all 3 changes were made
+     * Test that the changes page loads and all 3 changes were made
      *
      * @return void
      */

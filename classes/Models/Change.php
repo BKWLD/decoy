@@ -96,7 +96,7 @@ class Change extends Base
     public static function log(Model $model, $action, Admin $admin = null)
     {
         // Create a new change instance
-        if (static::shouldWriteChange($model)) {
+        if (static::shouldWriteChange($model, $action)) {
             $changed = static::getChanged($model, $action);
             $change = static::createLog($model, $action, $admin, $changed);
         }
@@ -125,10 +125,12 @@ class Change extends Base
      * besides these that changed.
      *
      * @param  Model  $model  The model being touched
+     * @param  string $action
      * @return boolean
      */
-    static private function shouldWriteChange(Model $model)
+    static private function shouldWriteChange(Model $model, $action)
     {
+        if (in_array($action, ['created', 'deleted'])) return true;
         $changed_attributes = array_keys($model->getDirty());
         $ignored = ['updated_at', 'public'];
         $loggable = array_diff($changed_attributes, $ignored);
