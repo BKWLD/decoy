@@ -123,8 +123,10 @@ class ServiceProvider extends BaseServiceProvider
         // Delegate events to Decoy observers
         $this->delegateAdminObservers();
 
-        // Use Boostrap 3 classes
-        Paginator::useBootstrapThree();
+        // Use Boostrap 3 classes in Laravel 5.6
+        if (method_exists(Paginator::class, 'useBootstrapThree')) {
+            Paginator::useBootstrapThree();
+        }
     }
 
     /**
