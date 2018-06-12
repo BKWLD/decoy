@@ -90,7 +90,7 @@ protected $search = array(
   'title',
   'category' => array(
     'type' => 'select',
-    'options' => 'Post::$categories'
+    'options' => App\Post::$categories
   ),
 );
 ```
@@ -115,7 +115,7 @@ You can edit a child model in the context of it's parent Through special naming 
 
 ```haml
 != Former::text('title')
-!= Former::text('_author[2][name]')
+!= Former::text('author[2][name]')
 ```
 
 When this form submits, Decoy will update the `title` attribute of the model like normal, but will also look up `$model->author()->find(2)` and set the `name` attribute on it to whatever was in the form.
