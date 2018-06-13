@@ -1,6 +1,6 @@
 # Customizing CSS & JS
 
-To customize the JS or CSS for Decoy, you can build your own js and css file and then tell Decoy to load it by editing the `core.php` config file, changing the `stylesheet` and `script` paths.
+To customize the JS or CSS for Decoy, you can build your own js and css file and then tell Decoy to load it by editing the `core.php` config file, changing the `stylesheet` and `script` paths.  [Here is an example](https://gist.github.com/weotch/153e5d6ab03b7c9f927e57562e8d2fe7) Webpack config.
 
 ## Add additional JS
 
