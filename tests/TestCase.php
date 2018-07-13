@@ -129,7 +129,7 @@ abstract class TestCase extends LaravelTestCase
         return new UploadedFile(
             $file_path,
             basename($file_path),
-            'image/jpeg',
+            'image/png',
             null,
             null,
             true

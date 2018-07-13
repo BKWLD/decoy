@@ -9,6 +9,7 @@ use Bkwld\Decoy\Observers\Validation;
 use Illuminate\Foundation\AliasLoader;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 
 class ServiceProvider extends BaseServiceProvider
@@ -121,6 +122,11 @@ class ServiceProvider extends BaseServiceProvider
 
         // Delegate events to Decoy observers
         $this->delegateAdminObservers();
+
+        // Use Boostrap 3 classes in Laravel 5.6
+        if (method_exists(Paginator::class, 'useBootstrapThree')) {
+            Paginator::useBootstrapThree();
+        }
     }
 
     /**

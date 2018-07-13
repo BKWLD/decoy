@@ -4,6 +4,7 @@ namespace Bkwld\Decoy\Observers;
 
 // Deps
 use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * When a form is updated (as opposed to created) the previous files are
@@ -77,16 +78,19 @@ class ValidateExistingFiles
     }
 
     /**
-     * Make a file instance using uphuck from the string input value
+     * Make an UploadedFile instance using Upchuck from the string input value
      *
      * @param string $path
-     * @return File
+     * @return UploadedFile
      */
     public function makeFileFromPath($path)
     {
         $upchuck_path = app('upchuck')->path($path);
         $absolute_path = config('upchuck.disk.path').'/'.$upchuck_path;
-        return new File($absolute_path);
+        return new UploadedFile(
+            $absolute_path, basename($absolute_path),
+            null, null, // Default mime and error
+            true); // Enable test mode so local file will be pass as uploaded
     }
 
 }
