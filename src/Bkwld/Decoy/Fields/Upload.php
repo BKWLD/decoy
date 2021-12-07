@@ -36,7 +36,7 @@ class Upload extends File {
 
 	/**
 	 * Prints out the field, wrapped in its group.  Additional review UI is tacked on here.
-	 * 
+	 *
 	 * @return string
 	 */
 	public function wrapAndRender() {
@@ -80,8 +80,8 @@ class Upload extends File {
 	}
 
 	/**
-	 * Check if the file is in the uploads directory. The use case for this arose 
-	 * with the Fragments system where the default images would usually be in the 
+	 * Check if the file is in the uploads directory. The use case for this arose
+	 * with the Fragments system where the default images would usually be in the
 	 * img directory
 	 *
 	 * @return boolean

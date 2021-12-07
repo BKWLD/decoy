@@ -21,7 +21,7 @@ class Search {
 	 *
 	 * @param  array $terms An associative array where the keys are "fields" and the
 	 *                      values are "inputs"
-	 * @return string 
+	 * @return string
 	 */
 	public static function query($terms) {
 		return 'query='.urlencode(json_encode(array_map(function($input, $field) {
@@ -31,7 +31,7 @@ class Search {
 
 	/**
 	 * Apply the effect of a search (which is communicated view Input::get('query'))
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  array $config Search config from the controller class definition
 	 * @return Illuminate\Database\Query\Builder
@@ -43,12 +43,12 @@ class Search {
 
 		// Expand the config
 		$config = $this->longhand($config);
-		
+
 		// Deserialize the query and loop through
 		$conditions = json_decode(Input::get('query'));
 		if (!is_array($conditions)) throw new Exception('Bad query');
 		foreach($conditions as $condition) {
-			
+
 			// Get the field name by taking the index and looking up which key it corresponds to
 			$field = $condition[0];
 			$field_config = $config[$field];
@@ -63,17 +63,17 @@ class Search {
 
 			// ... or one of the simple, standard ones
 			} else $this->condition($query, $field, $comparison, $input, $config[$field]['type']);
-			
+
 		}
-		
+
 		// Return the agumented query
 		return $query;
-		
+
 	}
 
 	/**
 	 * Add a condition to a query
-	 * 
+	 *
 	 * @param  Illuminate\Database\Query\Builder $query
 	 * @param  string $field The field name from search config
 	 * @param  string $comparison The operator string from the search UI
@@ -95,41 +95,41 @@ class Search {
 			// NULL safe equals and not equals
 			// http://stackoverflow.com/a/19778341/59160
 			case '=': return $query->whereRaw(sprintf('%s <=> %s',
-				is_string($field) ? "`{$field}`" : $field, 
+				is_string($field) ? "`{$field}`" : $field,
 				empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
 			case '!=': return $query->whereRaw(sprintf('NOT(%s <=> %s)',
-				is_string($field) ? "`{$field}`" : $field, 
+				is_string($field) ? "`{$field}`" : $field,
 				empty($input) ? 'NULL' : DB::connection()->getPdo()->quote($input)));
-			
+
 			// Not Like
 			case '!%*%':
 				$comparison = substr($comparison, 1);
 				$input = str_replace('*', $input, $comparison);
 				return $query->where($field, 'NOT LIKE', $input);
-			
+
 			// Like
 			case '*%':
 			case '%*':
 			case '%*%':
 				$input = str_replace('*', $input, $comparison);
 				return $query->where($field, 'LIKE', $input);
-			
+
 			// Defaults
 			default:
 				return $query->where($field, $comparison, $input);
 		}
 	}
-	
+
 	/**
 	 * Make the shorthand options of the search config explicit
-	 * 
+	 *
 	 * @param  array $config Search config from the controller class definition
 	 * @return array
 	 */
 	public function longhand($config) {
 		$search = array();
 		foreach($config as $key => $val) {
-			
+
 			// Make locale menu
 			if ($val == 'locale') {
 				$search['locale'] = [
@@ -141,11 +141,11 @@ class Search {
 			// Not associative assume it's a text field
 			} else if (is_numeric($key)) {
 				$search[$val] = array('type' => 'text', 'label' => Text::titleFromKey($val));
-			
+
 			// If value isn't an array, make a default label
 			} else if (!is_array($val)) {
 				$search[$key] = array('type' => $val, 'label' => Text::titleFromKey($key));
-			
+
 			// Add the meta array
 			} else {
 
@@ -153,9 +153,9 @@ class Search {
 				if (empty($val['label'])) $val['label'] = Text::titleFromKey($key);
 
 				// Support class static method or variable as options for a select
-				if (!empty($val['type']) 
-					&& $val['type'] == 'select' 
-					&& !empty($val['options']) 
+				if (!empty($val['type'])
+					&& $val['type'] == 'select'
+					&& !empty($val['options'])
 					&& is_string($val['options'])) {
 					$val['options'] = $this->longhandOptions($val['options']);
 				}
@@ -163,7 +163,7 @@ class Search {
 				// Apply the meta data
 				$search[$key] = $val;
 			}
-			
+
 		}
 		return $search;
 	}
@@ -171,8 +171,8 @@ class Search {
 	/**
 	 * Parse select options, returning a transformed array with static arrays
 	 * or callbacks executed
-	 * 
-	 * @param  array $options 
+	 *
+	 * @param  array $options
 	 * @return array
 	 */
 	private function longhandOptions($options) {
@@ -186,11 +186,11 @@ class Search {
 		} else if (preg_match('#::\$#', $options)) {
 			list($class, $var) = explode('::$', $options);
 			return $class::$$var;
-		
+
 		// Unknown format
 		} else throw new Exception('Could not parse option: '.$options);
 
 	}
 
-	
+
 }

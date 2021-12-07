@@ -51,7 +51,7 @@ class Image extends Upload {
 		$this->group->setAttribute('data-js-view', 'image-fullscreen');
 
 		// Make it accept only images
-		$this->accept('image');		
+		$this->accept('image');
 	}
 
 	/**
@@ -67,7 +67,7 @@ class Image extends Upload {
 	 * ** Deprecated function **
 	 *
 	 * @param  string $help       The help text
-	 * @return this 
+	 * @return this
 	 */
 	public function crops($crops) {
 		\Log::info('Image::crops() is deprecated.  The item is now fetched automatically from Former::populate');
@@ -105,8 +105,8 @@ class Image extends Upload {
 
 			// Convert array-like names to dot notation to match the supportsUploads
 			// map
-			$name = preg_match('#\]$#', $this->name) ? 
-				trim(str_replace(array('[', ']'), array('.', ''), $this->name), '.') : 
+			$name = preg_match('#\]$#', $this->name) ?
+				trim(str_replace(array('[', ']'), array('.', ''), $this->name), '.') :
 				$this->name;
 
 			// Get the model attribute for the name
@@ -134,7 +134,7 @@ class Image extends Upload {
 
 		// Open container
 		$html = '<div class="image-upload-cropper">';
-			
+
 		// Add the tabs
 		if (count($this->crops) > 1) {
 			$html .= '<div class="tabs" data-js-view="crop-styles">';
@@ -148,14 +148,14 @@ class Image extends Upload {
 			}
 			$html .= '</div>';
 		}
-	
+
 		// Add fullscreen button
 		$html .= '<span class="glyphicon glyphicon-fullscreen fullscreen-toggle"></span>';
-		
+
 		// Add the images
 		$html .= '<div class="imgs js-tooltip" title="Click and drag on the image to create cropping bounds.">';
 		foreach($this->crops as $key => $val) {
-			
+
 			// Figure out the raio and crop name
 			if (is_numeric($key)) {
 				$style = $val;
@@ -164,36 +164,36 @@ class Image extends Upload {
 				$style = $key;
 				$ratio = $val;
 			}
-			
+
 			// Create the HTML
 			$html .= '<a href="'.$this->value.'">
-				<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
-					class="'.$this->imgTag().'" 
-					data-ratio="'.$ratio.'" 
-					data-style="'.$style.'" 
+				<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'"
+					class="'.$this->imgTag().'"
+					data-ratio="'.$ratio.'"
+					data-style="'.$style.'"
 					data-js-view="crop">
 				</a>';
-	
+
 		}
 
 		// Close
 		$html .= '</div></div>';
 
 		// Add hidden field to store cropping choices. If the field use array-like
-		// naming, insert the _crops suffix inside the last bracket. 
-		$name = preg_match('#\]$#', $this->name) ? 
-			substr_replace($this->name, '_crops', -1, 0) : 
+		// naming, insert the _crops suffix inside the last bracket.
+		$name = preg_match('#\]$#', $this->name) ?
+			substr_replace($this->name, '_crops', -1, 0) :
 			$this->name.'_crops';
 		$html .= Former::hidden($name);
 
-		// After rendering a new Former field, the active former field must be reset 
+		// After rendering a new Former field, the active former field must be reset
 		// for form validation errors to work.
 		$this->app['former.field'] = $this;
 
 		// Return HTML
 		return $html;
 	}
-	
+
 	/**
 	 * Render the review image with croppa
 	 *
@@ -201,19 +201,19 @@ class Image extends Upload {
 	 */
 	protected function renderImageWithCroppa() {
 		return '<a href="'.$this->value.'">
-			<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'" 
+			<img src="'.Croppa::url($this->value, self::MAX_WIDTH).'"
 				class="'.$this->imgTag().' fullscreen-toggle">
 			</a>';
 	}
-	
+
 	/**
-	 * Render the 
+	 * Render the
 	 *
 	 * @return string HTML
 	 */
 	protected function renderImageWithoutCroppa() {
 		return '<a href="'.$this->value.'">
-			<img src="'.$this->value.'" 
+			<img src="'.$this->value.'"
 				class="'.$this->imgTag().' fullscreen-toggle">
 			</a>';
 	}
