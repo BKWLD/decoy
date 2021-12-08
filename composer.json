@@ -33,7 +33,7 @@
         "bkwld/laravel-haml": "~2.0",
         "bkwld/library": "^4.0.2",
         "bkwld/upchuck": "^2.4.1",
-        "cviebrock/eloquent-sluggable": "~4.0",
+        "cviebrock/eloquent-sluggable": "4.5.1.1",
         "illuminate/support": "^5.0",
         "illuminate/console": "^5.0",
         "symfony/yaml": "~2.5 || ^3.0 || ^4.0",
@@ -57,6 +57,12 @@
         "laravel/tinker": "^1.0",
         "fideloper/proxy": "~3.3 || ^4.0"
     },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:weotch/eloquent-sluggable.git"
+        }
+    ],
     "conflict": {
         "anahkiasen/html-object": "1.4.1",
         "laravel/framework": "<5.4.0"
@@ -67,10 +73,10 @@
         }
     },
     "autoload-dev": {
-            "psr-4": {
-                    "App\\": "example/app/",
-                    "Tests\\": "tests/"
-            }
+        "psr-4": {
+            "App\\": "example/app/",
+            "Tests\\": "tests/"
+        }
     },
     "extra": {
         "laravel": {
